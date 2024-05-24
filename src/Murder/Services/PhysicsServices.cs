@@ -422,20 +422,23 @@ namespace Murder.Services
 
             int depth = 0;
 
+            bool checkNeighbours = flags.HasFlag(NextAvailablePositionFlags.CheckNeighbours);
+
             while (_positionsToCheck.Count > 0)
             {
                 if (depth++ > 5)
                 {
                     // Let's not freeze our framerate by adding a limit here.
+                    GameLogger.Warning("FindNextAvailablePosition: Depth limit reached, returning null.");
                     return null;
                 }
 
-                var currentPosition = _positionsToCheck.Dequeue();
+                Vector2 currentPosition = _positionsToCheck.Dequeue();
                 Point startGridPoint = center.ToGrid();
 
                 bool CheckPosition(Vector2 position)
                 {
-                    if (!CollidesAt(map, ignoreId: e.EntityId, e.GetCollider(), position, collisionEntities, layerMask))
+                    if (!CollidesAt(map, ignoreId: e.EntityId, e.GetCollider(), position, collisionEntities, layerMask, out int _))
                     {
                         if (!flags.HasFlag(NextAvailablePositionFlags.CheckLineOfSight) ||
                             map.HasLineOfSight(startGridPoint, position.ToGrid(), excludeEdges: true, layerMask))
@@ -451,7 +454,7 @@ namespace Murder.Services
                     return currentPosition;
                 }
 
-                if (flags.HasFlag(NextAvailablePositionFlags.CheckNeighbours))
+                if (checkNeighbours)
                 {
                     foreach (Vector2 neighbour in currentPosition.Neighbours(world, 0.5f))
                     {
@@ -643,11 +646,9 @@ namespace Murder.Services
             }
         }
 
-        public static bool CollidesAt(in Map map, int ignoreId, ColliderComponent collider, Vector2 position, IEnumerable<(int id, ColliderComponent collider, IMurderTransformComponent position)> others, int mask)
-        {
-            return CollidesAt(map, ignoreId, collider, position, others, mask, out _);
-        }
-
+        /// <summary>
+        /// Checks for collision at a position, returns the minimum translation vector (MTV) to resolve the collision.
+        /// </summary>
         /// <summary>
         /// Checks for collision at a position, returns the minimum translation vector (MTV) to resolve the collision.
         /// </summary>
@@ -663,43 +664,60 @@ namespace Murder.Services
             out Vector2 mtv)
         {
             hitId = -1;
+            layer = CollisionLayersBase.NONE;
+            mtv = Vector2.Zero;
 
-            // First, check if there is a collision against a tile.
-            if (PhysicsServices.GetFirstMtvAtTile(map, collider, position, mask, out layer) is Vector2 tileMtv && tileMtv != Vector2.Zero)
+            Vector2 totalMtv = Vector2.Zero;
+            bool hasCollision = false;
+            float mtvLength = float.MaxValue;
+
+            // Check for tile collision
+            if (PhysicsServices.GetFirstMtvAtTile(map, collider, position, mask, out int tileLayer) is Vector2 tileMtv && tileMtv != Vector2.Zero)
             {
-                mtv = tileMtv;
-                return true;
+                layer = tileLayer;
+                totalMtv += tileMtv;
+                hasCollision = true;
+                mtvLength = tileMtv.Length();
             }
 
-            // Now, check against other entities.
+            // Check against other entities
             foreach (var shape in collider.Shapes)
             {
                 var polyA = shape.GetPolygon();
 
                 foreach (var other in others)
                 {
-                    if (ignoreIds.Contains(other.id)) continue; // That's me (or my parent)!
+                    if (ignoreIds.Contains(other.id)) continue; // Skip ignored IDs
 
-                    layer = other.collider.Layer;
-                    var otherCollider = other.collider;
-
-                    foreach (var otherShape in otherCollider.Shapes)
+                    foreach (var otherShape in other.collider.Shapes)
                     {
                         var polyB = otherShape.GetPolygon();
                         if (polyA.Polygon.Intersects(polyB.Polygon, position, other.position.Vector2) is Vector2 colliderMtv && colliderMtv.HasValue())
                         {
-                            hitId = other.id;
-                            mtv = colliderMtv;
-                            return true;
+                            float currentMtvLengthSquared = colliderMtv.LengthSquared();
+                            if (currentMtvLengthSquared < mtvLength)
+                            {
+                                hitId = other.id;
+                                layer = other.collider.Layer;
+                                mtvLength = currentMtvLengthSquared;
+                            }
+
+                            totalMtv += colliderMtv;
+                            hasCollision = true;
                         }
                     }
                 }
             }
 
-            layer = CollisionLayersBase.NONE;
-            mtv = Vector2.Zero;
-            return false;
+            if (hasCollision)
+            {
+                mtv = totalMtv;
+            }
+
+            return hasCollision;
         }
+
+
 
         /// <summary>
         /// Checks for collision at a position, returns the minimum translation vector (MTV) to resolve the collision.
@@ -781,7 +799,7 @@ namespace Murder.Services
             return mtvs;
         }
 
-        public static bool CollidesAt(in Map map, int ignoreId, ColliderComponent collider, Vector2 position, IEnumerable<(int id, ColliderComponent collider, IMurderTransformComponent position)> others, int mask, out int hitId)
+        public static bool CollidesAt(in Map map, int ignoreId, ColliderComponent collider, Vector2 position, ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)> others, int mask, out int hitId)
         {
             hitId = -1;
 

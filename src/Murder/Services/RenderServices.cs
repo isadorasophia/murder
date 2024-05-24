@@ -518,6 +518,20 @@ namespace Murder.Services
                              BLEND_NORMAL
                              );
         }
+
+        public static void DrawArrow(this Batch2D spriteBatch, Vector2 point1, Vector2 point2, Color color, float thickness, float headSize, float sort = 1f)
+        {
+            DrawLine(spriteBatch, point1, point2, color, thickness, sort);
+
+            Vector2 direction = Vector2.Normalize(point2 - point1);
+            Vector2 perpendicular = new Vector2(-direction.Y, direction.X);
+
+            Vector2 arrowPoint1 = point2 - direction * headSize + perpendicular * headSize;
+            Vector2 arrowPoint2 = point2 - direction * headSize - perpendicular * headSize;
+
+            DrawLine(spriteBatch, point2, arrowPoint1, color, thickness, sort);
+            DrawLine(spriteBatch, point2, arrowPoint2, color, thickness, sort);
+        }
         #endregion
 
         #region Circle and Arcs

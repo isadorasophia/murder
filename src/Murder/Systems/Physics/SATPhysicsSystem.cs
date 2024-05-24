@@ -12,139 +12,144 @@ using Murder.Services;
 using Murder.Utilities;
 using System.Numerics;
 
-namespace Murder.Systems.Physics
+namespace Murder.Systems.Physics;
+
+
+[Filter(typeof(ITransformComponent), typeof(VelocityComponent))]
+public class SATPhysicsSystem : IFixedUpdateSystem
 {
-    [Filter(typeof(ITransformComponent), typeof(VelocityComponent))]
-    public class SATPhysicsSystem : IFixedUpdateSystem
+    private const int ExhaustLimit = 10;
+    private const float MinVelocityMagnitude = 0.0001f;
+
+    private readonly List<NodeInfo<Entity>> _entityList = new();
+    private readonly HashSet<int> _ignore = new();
+    private readonly HashSet<int> _hitCounter = new();
+
+    public void FixedUpdate(Context context)
     {
-        private readonly List<NodeInfo<Entity>> _entityList = new();
-        private readonly HashSet<int> _ignore = new();
-        private readonly HashSet<int> _hitCounter = new();
+        Map map = context.World.GetUniqueMap().Map;
+        Quadtree qt = Quadtree.GetOrCreateUnique(context.World);
 
-        public void FixedUpdate(Context context)
+        _entityList.Clear();
+
+        foreach (Entity e in context.Entities)
         {
-            Map map = context.World.GetUniqueMap().Map;
-            Quadtree qt = Quadtree.GetOrCreateUnique(context.World);
+            bool ignoreCollisions = false;
 
-            _entityList.Clear();
+            var collider = e.TryGetCollider();
+            _ignore.Clear();
+            _ignore.Add(e.EntityId);
 
-            foreach (Entity e in context.Entities)
+            if (e.Parent is not null)
+                _ignore.Add(e.Parent.Value);
+
+            foreach (var child in e.Children)
             {
-                bool ignoreCollisions = false;
+                _ignore.Add(child);
+            }
 
-                var collider = e.TryGetCollider();
-                _ignore.Clear();
-                _ignore.Add(e.EntityId);
+            int mask = CollisionLayersBase.SOLID | CollisionLayersBase.HOLE;
+            if (e.TryGetCustomCollisionMask() is CustomCollisionMask agent)
+                mask = agent.CollisionMask;
 
-                if (e.Parent is not null)
-                    _ignore.Add(e.Parent.Value);
+            if (e.HasFreeMovement())
+            {
+                ignoreCollisions = true;
+            }
 
-                foreach (var child in e.Children)
+            // If the entity has a velocity, we'll move around by checking for collisions first.
+            if (e.TryGetVelocity()?.Velocity is Vector2 currentVelocity)
+            {
+                Vector2 velocity = currentVelocity * Game.FixedDeltaTime;
+                if (float.IsNaN(currentVelocity.X) || float.IsNaN(currentVelocity.Y))
                 {
-                    _ignore.Add(child);
+                    GameLogger.Warning("Non-Sane velocity detected, aborting");
+                    e.SetVelocity(Vector2.Zero);
+                    continue;
                 }
+                IMurderTransformComponent relativeStartPosition = e.GetMurderTransform();
+                Vector2 startPosition = relativeStartPosition.GetGlobal().ToVector2();
 
-                int mask = CollisionLayersBase.SOLID | CollisionLayersBase.HOLE;
-                if (e.TryGetCustomCollisionMask() is CustomCollisionMask agent)
-                    mask = agent.CollisionMask;
-
-                if (e.HasFreeMovement())
+                
+                // This is moving too slowly, checking for collisions is not necessary.
+                if ((startPosition + velocity).Round() == startPosition.Round())
                 {
                     ignoreCollisions = true;
                 }
 
-                // If the entity has a velocity, we'll move around by checking for collisions first.
-                if (e.TryGetVelocity()?.Velocity is Vector2 currentVelocity)
+                if (collider is not null && collider.Value.Layer == CollisionLayersBase.TRIGGER)
                 {
-                    Vector2 velocity = currentVelocity * Game.FixedDeltaTime;
-                    if (velocity.X is float.NaN || velocity.Y is float.NaN)
+                    ignoreCollisions = true;
+                }
+
+                if (collider is null)
+                {
+                    ignoreCollisions = true;
+                }
+
+                if (ignoreCollisions)
+                {
+                    e.SetGlobalPosition(startPosition + velocity);
+                }
+                else
+                {
+                    _entityList.Clear();
+                    _hitCounter.Clear();
+
+                    qt.GetCollisionEntitiesAt(collider!.Value.GetBoundingBox(startPosition + velocity), _entityList);
+                    var collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(_entityList, mask);
+
+                    int exhaustCounter = ExhaustLimit;
+
+                    bool collided = false;
+                    int hitId = -1;
+                    int hitLayer = -1;
+                    Vector2 moveToPosition = startPosition + velocity;
+                    Vector2 pushout;
+
+                    while (PhysicsServices.GetFirstMtvAt(map, _ignore, collider.Value, moveToPosition, collisionEntities, mask, out int id, out int layer, out pushout)
+                        && exhaustCounter-- > 0)
                     {
-                        GameLogger.Warning("Non-Sane velocity detected, aborting");
-                        e.SetVelocity(Vector2.Zero);
-                        continue;
-                    }
-                    IMurderTransformComponent relativeStartPosition = e.GetMurderTransform();
-                    Vector2 startPosition = relativeStartPosition.GetGlobal().ToVector2();
-
-                    if (MathF.Abs(currentVelocity.X) < 0.5f && MathF.Abs(currentVelocity.Y) < 0.5f)
-                    {
-                        ignoreCollisions = true;
-                    }
-
-                    if (collider is not null && collider.Value.Layer == CollisionLayersBase.TRIGGER)
-                    {
-                        ignoreCollisions = true;
-                    }
-
-                    if (collider is null)
-                    {
-                        ignoreCollisions = true;
-                    }
-
-                    if (ignoreCollisions)
-                    {
-                        e.SetGlobalPosition(startPosition + velocity);
-                    }
-                    else
-                    {
-                        _entityList.Clear();
-                        _hitCounter.Clear();
-
-                        qt.GetCollisionEntitiesAt(collider!.Value.GetBoundingBox(startPosition + velocity), _entityList);
-                        var collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(_entityList, mask);
-
-                        int exhaustCounter = 10;
-
-                        bool collided = false;
-                        int hitId = -1;
-                        int hitLayer = -1;
-                        Vector2 moveToPosition = startPosition + velocity;
-                        Vector2 pushout;
-
-                        while (PhysicsServices.GetFirstMtvAt(map, _ignore, collider.Value, moveToPosition, collisionEntities, mask, out int id, out int layer, out pushout)
-                            && exhaustCounter-- > 0)
-                        {
-                            moveToPosition = moveToPosition - pushout;
-                            _hitCounter.Add(id);
-                            hitLayer = layer;
-                            hitId = id;
-                            collided = true;
-                        }
-
-                        var endPosition = (moveToPosition - pushout);
-                        if (exhaustCounter <= 0 && _hitCounter.Count >= 2)
-                        {
-                            // Is stuck between 2 (or more!) objects, don't move at all.
-                        }
-                        else
-                        {
-                            e.SetGlobalPosition(endPosition);   
-                        }
-
-                        // Some collision was found!
-                        if (collided)
-                        {
-                            e.SendMessage(new CollidedWithMessage(hitId, hitLayer));
-
-                            // Slide the speed accordingly
-                            Vector2 translationVector = startPosition + velocity - moveToPosition;
-                            Vector2 edgePerpendicularToMTV = new Vector2(-translationVector.Y, translationVector.X);
-                            Vector2 normalizedEdge = edgePerpendicularToMTV.Normalized();
-                            float dotProduct = Vector2.Dot(currentVelocity, normalizedEdge);
-                            currentVelocity = normalizedEdge * dotProduct;
-                        }
-
+                        moveToPosition = moveToPosition - pushout;
+                        _hitCounter.Add(id);
+                        hitLayer = layer;
+                        hitId = id;
+                        collided = true;
                     }
 
-                    // Makes sure that the velocity snaps to zero if it's too small.
-                    if (currentVelocity.Manhattan() > 0.0001f)
+                    var endPosition = (moveToPosition - pushout);
+                    if (exhaustCounter <= 0 && _hitCounter.Count >= 2)
                     {
-                        e.SetVelocity(currentVelocity);
+                        // Is stuck between 2 (or more!) objects, don't move at all.
                     }
                     else
                     {
-                        e.RemoveVelocity();
+                        e.SetGlobalPosition(endPosition);   
                     }
+
+                    // Some collision was found!
+                    if (collided)
+                    {
+                        e.SendMessage(new CollidedWithMessage(hitId, hitLayer));
+
+                        // Slide the speed accordingly
+                        Vector2 translationVector = startPosition + velocity - moveToPosition;
+                        Vector2 edgePerpendicularToMTV = new Vector2(-translationVector.Y, translationVector.X);
+                        Vector2 normalizedEdge = edgePerpendicularToMTV.Normalized();
+                        float dotProduct = Vector2.Dot(currentVelocity, normalizedEdge);
+                        currentVelocity = normalizedEdge * dotProduct;
+                    }
+
+                }
+
+                // Makes sure that the velocity snaps to zero if it's too small.
+                if (currentVelocity.Manhattan() > MinVelocityMagnitude)
+                {
+                    e.SetVelocity(currentVelocity);
+                }
+                else
+                {
+                    e.RemoveVelocity();
                 }
             }
         }

@@ -634,6 +634,17 @@ namespace Murder.Utilities
             return (byte)((v >> 8) + v >> 8);
         }
 
+        /// <summary>
+        /// Returns from 0 if vectors point in opposite directions to 1 if they point to the same direction.
+        /// </summary>
+        internal static float Vector2Similarity(Vector2 a, Vector2 b)
+        {
+            Vector2 aNormalized = a.NormalizedWithSanity();
+            Vector2 bNormalized = b.NormalizedWithSanity();
+
+            return Remap(Vector2.Dot(aNormalized, bNormalized), -1, 1, 0, 1);
+        }
+
         #endregion
     }
 }
