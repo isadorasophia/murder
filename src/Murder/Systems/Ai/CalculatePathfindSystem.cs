@@ -73,6 +73,8 @@ namespace Murder.Systems
             }
         }
 
+        public const int LineOfSightCollisionMask = CollisionLayersBase.BLOCK_VISION | CollisionLayersBase.SOLID | CollisionLayersBase.HOLE | CollisionLayersBase.CARVE;
+
         private static void CalculatePath(World world, Map map, Entity e)
         {
             PathfindComponent pathfind = e.GetPathfind();
@@ -89,7 +91,7 @@ namespace Murder.Systems
             }
             else
             {
-                collisionMask = CollisionLayersBase.BLOCK_VISION | CollisionLayersBase.SOLID | CollisionLayersBase.HOLE | CollisionLayersBase.CARVE;
+                collisionMask = LineOfSightCollisionMask;
             }
 
             var path = map.FindPath(

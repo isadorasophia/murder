@@ -8,5 +8,7 @@ namespace Murder.Core
         public int Weight = 1;
 
         public MapTile() { }
+
+        public MapTile(int weight) => Weight = weight;
     }
 }

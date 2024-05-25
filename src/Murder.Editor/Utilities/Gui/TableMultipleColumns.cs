@@ -29,6 +29,30 @@ namespace Murder.Editor.ImGuiExtended
         /// <summary>
         /// Create a new table with specified width and column flag. The measurements will be scaled to the dpi.
         /// </summary>
+        public TableMultipleColumns(string id, string[] titles, ImGuiTableFlags flags = ImGuiTableFlags.BordersOuter, params (ImGuiTableColumnFlags Flags, int Width)[] widths)
+        {
+            bool dynamicWidth = widths.Any(d => d.Width < 0);
+
+            if (ImGui.BeginTable(id, widths.Length, flags,
+                outer_size: dynamicWidth ? System.Numerics.Vector2.Zero : new(widths.Select(t => t.Width).Sum(), 0)))
+            {
+                int index = 0;
+
+                foreach ((ImGuiTableColumnFlags columnFlags, int w) in widths)
+                {
+                    string label = index < titles.Length ? titles[index] : $"##c_{w}";
+                    ImGui.TableSetupColumn(label, columnFlags, w, 0);
+
+                    index++;
+                }
+
+                _opened = true;
+            }
+        }
+
+        /// <summary>
+        /// Create a new table with specified width and column flag. The measurements will be scaled to the dpi.
+        /// </summary>
         public TableMultipleColumns(string label, ImGuiTableFlags flags = ImGuiTableFlags.BordersOuter, params (ImGuiTableColumnFlags Flags, int Width)[] widths)
         {
             bool dynamicWidth = widths.Any(d => d.Width < 0);
@@ -38,7 +62,7 @@ namespace Murder.Editor.ImGuiExtended
             {
                 foreach ((ImGuiTableColumnFlags columnFlags, int w) in widths)
                 {
-                    ImGui.TableSetupColumn($"c_{w}", columnFlags, w, 0);
+                    ImGui.TableSetupColumn($"##c_{w}", columnFlags, w, 0);
                 }
 
                 _opened = true;

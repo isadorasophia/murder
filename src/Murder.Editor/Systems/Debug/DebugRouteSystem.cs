@@ -41,29 +41,8 @@ namespace Murder.Editor.Systems
                 }
             }
 
-            Color numberColor = new(.2f, .9f, .1f, .2f);
-
             Map map = context.World.GetUniqueMap().Map;
             (int minX, int maxX, int minY, int maxY) = render.Camera.GetSafeGridBounds(map);
-
-            for (int y = minY; y < maxY; y++)
-            {
-                for (int x = minX; x < maxX; x++)
-                {
-                    if (map.IsObstacle(new(x, y)))
-                    {
-                        continue;
-                    }
-
-                    RenderServices.DrawText(render.DebugBatch, MurderFonts.PixelFont, $"{map.WeightAt(x, y)}",
-                        new(x * Grid.CellSize + Grid.HalfCellSize, y * Grid.CellSize + Grid.HalfCellSize + 2),
-                        new DrawInfo(0)
-                        {
-                            Origin = new(0.5f, 0.5f),
-                            Color = numberColor,
-                        });
-                }
-            }
 
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
             if (hook.DrawQuadTree == EditorHook.ShowQuadTree.Pathfind)

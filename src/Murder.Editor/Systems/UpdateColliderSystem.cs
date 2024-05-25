@@ -21,7 +21,7 @@ namespace Murder.Editor.Systems
                 EditorHook hook = editor.EditorHook;
                 foreach (Entity e in entities)
                 {
-                    hook.OnComponentModified?.Invoke(e.EntityId, e.GetComponent<ColliderComponent>());
+                    hook.OnComponentModified?.Invoke(e.EntityId, e.GetCollider());
                 }
             }
         }
