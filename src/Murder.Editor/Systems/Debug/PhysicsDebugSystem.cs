@@ -25,7 +25,7 @@ public class PhysicsDebugSystem : IMurderRenderSystem
         {
             Vector2 position = e.GetGlobalTransform().Vector2;
             Vector2 velocity = e.GetVelocity().Velocity;
-            Color color = Color.Lerp(Color.Green, Color.Red, Calculator.Clamp01(velocity.Length() / 1000f));
+            Color color = Color.Lerp(Color.Green, Color.Red, Calculator.Clamp01(velocity.Length() / 350f));
 
             RenderServices.DrawArrow(render.DebugBatch, position, position + velocity * 0.5f, color, 1, 3, 1);
         }
