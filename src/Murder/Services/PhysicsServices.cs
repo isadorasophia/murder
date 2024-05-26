@@ -205,13 +205,33 @@ namespace Murder.Services
 
         public static bool HasLineOfSight(World world, Vector2 from, Vector2 to)
         {
-            if (Raycast(world, from, to, CollisionLayersBase.BLOCK_VISION, Enumerable.Empty<int>(), out RaycastHit hit))
+            if (Raycast(world, from, to, CollisionLayersBase.BLOCK_VISION, [], out RaycastHit hit))
             {
                 return false;
             }
 
             return true;
         }
+
+        /// <summary>
+        /// Returns whether <paramref name="from"/> an see an entity <paramref name="targetEntityId"/> before
+        /// it gets to <paramref name="to"/>.
+        /// </summary>
+        public static bool CanSeeEntity(World world, Vector2 from, Vector2 to, int selfEntityId, int targetEntityId)
+        {
+            if (!Raycast(world, from, to, CollisionLayersBase.ACTOR, [selfEntityId], out RaycastHit hit))
+            {
+                return false;
+            }
+
+            if (hit.Entity?.EntityId == targetEntityId)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public static bool HasLineOfSight(World world, Entity from, Entity to)
         {
             if (from.TryGetMurderTransform()?.Vector2 is not Vector2 origin)

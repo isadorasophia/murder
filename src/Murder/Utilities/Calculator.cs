@@ -394,9 +394,9 @@ namespace Murder.Utilities
         /// It is similar to a regular linear interpolation (lerp) but is designed to work effectively even when not using a fixed timestep.
         /// This makes it particularly useful for smooth transitions in animations or physics simulations where the update interval can vary.
         /// </remarks>
-        public static Vector2 LerpSmooth(Vector2 a, Vector2 b, float deltaTime, float halLife)
+        public static Vector2 LerpSmooth(Vector2 a, Vector2 b, float deltaTime, float halfLife)
         {
-            return new Vector2(LerpSmooth(a.X, b.X, deltaTime, halLife), LerpSmooth(a.Y, b.Y, deltaTime, halLife));
+            return new Vector2(LerpSmooth(a.X, b.X, deltaTime, halfLife), LerpSmooth(a.Y, b.Y, deltaTime, halfLife));
         }
 
         /// <summary>
@@ -411,7 +411,7 @@ namespace Murder.Utilities
         /// This method ensures that the interpolation takes the shortest path around the circle by normalizing the angles and adjusting them if necessary.
         /// It is particularly useful for smoothly interpolating rotational values where direct linear interpolation could result in a longer path.
         /// </remarks>
-        public static float LerpSmoothAngle(float a, float b, float deltaTime, float halLife)
+        public static float LerpSmoothAngle(float a, float b, float deltaTime, float halfLife)
         {
             a = NormalizeAngle(a);
             b = NormalizeAngle(b);
@@ -423,7 +423,7 @@ namespace Murder.Utilities
                 else
                     b -= MathF.PI * 2;
             }
-            return LerpSmooth(a, b, deltaTime, halLife);
+            return LerpSmooth(a, b, deltaTime, halfLife);
         }
 
         /// <summary>
@@ -438,9 +438,9 @@ namespace Murder.Utilities
         /// This method uses an exponential decay formula to interpolate the values, making it more suitable for smooth transitions even when not using a fixed timestep.
         /// If the difference between the two values is less than a small threshold (0.001), it directly returns the target value to avoid unnecessary calculations.
         /// </remarks>
-        public static float LerpSmooth(float a, float b, float deltaTime, float halLife)
+        public static float LerpSmooth(float a, float b, float deltaTime, float halfLife)
         {
-            return Math.Abs(a- b) < 0.001f? b : b + (a - b) * float.Exp2(-deltaTime / halLife);
+            return Math.Abs(a- b) < 0.001f? b : b + (a - b) * float.Exp2(-deltaTime / halfLife);
         }
 
         public static int FloorToInt(float v) => (int)MathF.Floor(v);
