@@ -75,12 +75,15 @@ namespace Murder.Editor.Systems
                     int weight = map.WeightAt(x, y);
                     if (pathfindMap is not null)
                     {
-                        Color solidPathfindColor = new Color(.2f, 1, .7f) * .3f;
+                        int collisionMaskForPathfind = pathfindMap.GetCollision(x, y);
+                        Color solidPathfindColor = ColorForPathfindTileMask(collisionMaskForPathfind);
 
                         int pathfind = pathfindMap.GetCollision(x, y);
                         DrawCarveCollision(pathfind, render, cellRectangle, solidPathfindColor);
 
                         weight += pathfindMap.WeightAt(x, y);
+
+                        hasTileCollision |= IsSolid(collisionMaskForPathfind);
                     }
 
                     if (editorHook.DrawPathfind && !hasTileCollision)
@@ -136,6 +139,21 @@ namespace Murder.Editor.Systems
             }
 
             return new Color(.2f, .2f, .2f) * .1f;
+        }
+
+        private Color ColorForPathfindTileMask(int mask)
+        {
+            if (IsSolid(mask))
+            {
+                return new Color(.2f, 1, .7f) * .7f;
+            }
+
+            if (IsBlockingLineOfSight(mask))
+            {
+                return new Color(.2f, 1, .7f) * .3f;
+            }
+
+            return new Color(.2f, 1, .7f) * .1f;
         }
 
         private bool IsSolid(int mask) =>

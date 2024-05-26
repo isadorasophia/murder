@@ -34,14 +34,18 @@ public class PathfindEditorSystem : IStartupSystem, IUpdateSystem, IGuiSystem, I
     {
         _coordinates = [];
 
-        if (context.World.TryGetUnique<PathfindMapComponent>() is null)
+        bool populatePathfindMap = false;
+
+        if (context.World.TryGetUnique<PathfindMapComponent>() is not PathfindMapComponent pathfindMap)
         {
             Map map = context.World.GetUniqueMap().Map;
 
-            PathfindMapComponent pathfindMap = new(map.Width, map.Height);
+            pathfindMap = new(map.Width, map.Height);
             pathfindMap.Map.ZeroAll();
 
             context.World.AddEntity(pathfindMap);
+
+            populatePathfindMap = true;
         }
 
         if (!context.HasAnyEntity)
@@ -61,6 +65,11 @@ public class PathfindEditorSystem : IStartupSystem, IUpdateSystem, IGuiSystem, I
         ImmutableArray<CellProperties> cells = context.Entity.GetPathfindGrid().Cells;
         foreach (CellProperties cell in cells)
         {
+            if (populatePathfindMap)
+            {
+                pathfindMap.Map.OverrideValueAt(cell.Point, cell.CollisionMask, cell.Weight);
+            }
+
             _coordinates[cell.Point] = cell;
         }
     }
@@ -101,7 +110,7 @@ public class PathfindEditorSystem : IStartupSystem, IUpdateSystem, IGuiSystem, I
             }
 
             cell = cell with { Weight = hook.CurrentPathfindWeight, CollisionMask = hook.CurrentPathfindCollisionMask };
-            map.SetAt(cell.Point, cell.CollisionMask, cell.Weight);
+            map.OverrideValueAt(cell.Point, cell.CollisionMask, cell.Weight);
 
             _coordinates[cursorGridPosition] = cell;
             modified = true;
@@ -116,7 +125,7 @@ public class PathfindEditorSystem : IStartupSystem, IUpdateSystem, IGuiSystem, I
             }
 
             cell = cell with { Weight = 0, CollisionMask = CollisionLayersBase.NONE };
-            map.SetAt(cell.Point, cell.CollisionMask, cell.Weight);
+            map.OverrideValueAt(cell.Point, cell.CollisionMask, cell.Weight);
 
             _coordinates[cursorGridPosition] = cell;
             modified = true;

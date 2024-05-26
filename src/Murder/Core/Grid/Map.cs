@@ -328,7 +328,7 @@ namespace Murder.Core
             }
         }
 
-        public void SetAt(Point p, int collisionMask, int weight)
+        public void OverrideValueAt(Point p, int collisionMask, int weight)
         {
             if (p.X < 0 || p.Y < 0 || p.X >= Width || p.Y >= Height)
             {

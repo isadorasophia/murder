@@ -106,7 +106,10 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                 {
                     ImGui.Checkbox("Collisions", ref hook.DrawCollisions);
                     ImGui.Checkbox("Grid", ref hook.DrawGrid);
-                    ImGui.Checkbox("Pathfind", ref hook.DrawPathfind);
+                    if (ImGui.Checkbox("Pathfind", ref hook.DrawPathfind))
+                    {
+                        hook.DrawGrid |= hook.DrawPathfind;
+                    }
                     ImGui.Checkbox("States", ref hook.ShowStates);
                     ImGui.Checkbox("Interactions", ref hook.DrawTargetInteractions);
                     ImGui.Checkbox("AnimationEvents", ref hook.DrawAnimationEvents);
