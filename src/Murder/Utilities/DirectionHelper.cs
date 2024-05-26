@@ -213,8 +213,28 @@ public static class DirectionHelper
 
     public static Vector2 ToVector(this Direction direction)
     {
-        float angle = direction.ToAngle();
-        return new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
+        switch (direction)
+        {
+            case Direction.Right:
+                return new Vector2(1, 0);
+            case Direction.DownRight:
+                return new Vector2(1, 1);
+            case Direction.Down:
+                return new Vector2(0, 1);
+            case Direction.DownLeft:
+                return new Vector2(-1, 1);
+            case Direction.Left:
+                return new Vector2(-1, 0);
+            case Direction.UpLeft:
+                return new Vector2(-1, -1);
+            case Direction.Up:
+                return new Vector2(0, -1);
+            case Direction.UpRight:
+                return new Vector2(1, -1);
+            default:
+                float angle = direction.ToAngle();
+                return new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
+        }
     }
 
     public static Direction Reverse(this Direction direction)

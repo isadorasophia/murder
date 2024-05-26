@@ -867,6 +867,12 @@ namespace Murder.Data
                 return font;
             }
 
+            if (_fonts.FirstOrDefault().Value is PixelFont firstFont)
+            {
+                GameLogger.Error($"Unable to find font with index {index}.");
+                return firstFont;
+            }
+
             throw new ArgumentException($"Unable to find font with index {index}.");
         }
 

@@ -24,7 +24,7 @@ public readonly struct FloatRange
         return random.NextFloat(Start, End);
     }
 
-    public float Get(float progress)
+    public float Lerp(float progress)
     {
         return Calculator.Lerp(Start, End, progress);
     }

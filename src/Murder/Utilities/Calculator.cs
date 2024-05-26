@@ -360,6 +360,12 @@ namespace Murder.Utilities
         {
             return origin * (1 - factor) + target * factor;
         }
+
+        public static Vector2 Lerp(Vector2 origin, Vector2 target, float factor)
+        {
+            return new Vector2(Lerp(origin.X, target.X, factor), Lerp(origin.Y, target.Y, factor));
+        }
+
         public static int LerpInt(float origin, float target, float factor)
         {
             return RoundToInt(origin * (1 - factor) + target * factor);
@@ -375,11 +381,36 @@ namespace Murder.Utilities
             return Math.Abs(target - origin) < threshold ? target : origin * (1 - factor) + target * factor;
         }
 
+        /// <summary>
+        /// Smoothly interpolates between two vectors over time using a linear interpolation method.
+        /// </summary>
+        /// <param name="a">The starting vector.</param>
+        /// <param name="b">The target vector.</param>
+        /// <param name="deltaTime">The elapsed time since the last interpolation step.</param>
+        /// <param name="halfLife">The half-life period, representing the time it takes to reach half of the remaining distance to the target vector.</param>
+        /// <returns>A new vector that is the result of the smooth interpolation between the starting and target vectors.</returns>
+        /// <remarks>
+        /// This method interpolates each component of the vector individually using the <see cref="LerpSmooth(float, float, float, float)"/> method.
+        /// It is similar to a regular linear interpolation (lerp) but is designed to work effectively even when not using a fixed timestep.
+        /// This makes it particularly useful for smooth transitions in animations or physics simulations where the update interval can vary.
+        /// </remarks>
         public static Vector2 LerpSmooth(Vector2 a, Vector2 b, float deltaTime, float halLife)
         {
             return new Vector2(LerpSmooth(a.X, b.X, deltaTime, halLife), LerpSmooth(a.Y, b.Y, deltaTime, halLife));
         }
 
+        /// <summary>
+        /// Smoothly interpolates between two angles over time using a linear interpolation method.
+        /// </summary>
+        /// <param name="a">The starting angle in radians.</param>
+        /// <param name="b">The target angle in radians.</param>
+        /// <param name="deltaTime">The elapsed time since the last interpolation step.</param>
+        /// <param name="halfLife">The half-life period, representing the time it takes to reach half of the remaining distance to the target angle.</param>
+        /// <returns>A new angle in radians that is the result of the smooth interpolation between the starting and target angles.</returns>
+        /// <remarks>
+        /// This method ensures that the interpolation takes the shortest path around the circle by normalizing the angles and adjusting them if necessary.
+        /// It is particularly useful for smoothly interpolating rotational values where direct linear interpolation could result in a longer path.
+        /// </remarks>
         public static float LerpSmoothAngle(float a, float b, float deltaTime, float halLife)
         {
             a = NormalizeAngle(a);
@@ -394,6 +425,19 @@ namespace Murder.Utilities
             }
             return LerpSmooth(a, b, deltaTime, halLife);
         }
+
+        /// <summary>
+        /// Smoothly interpolates between two float values over time using an exponential decay formula.
+        /// </summary>
+        /// <param name="a">The starting value.</param>
+        /// <param name="b">The target value.</param>
+        /// <param name="deltaTime">The elapsed time since the last interpolation step.</param>
+        /// <param name="halfLife">The half-life period, representing the time it takes to reach half of the remaining distance to the target value.</param>
+        /// <returns>A new float value that is the result of the smooth interpolation between the starting and target values.</returns>
+        /// <remarks>
+        /// This method uses an exponential decay formula to interpolate the values, making it more suitable for smooth transitions even when not using a fixed timestep.
+        /// If the difference between the two values is less than a small threshold (0.001), it directly returns the target value to avoid unnecessary calculations.
+        /// </remarks>
         public static float LerpSmooth(float a, float b, float deltaTime, float halLife)
         {
             return Math.Abs(a- b) < 0.001f? b : b + (a - b) * float.Exp2(-deltaTime / halLife);
