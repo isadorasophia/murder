@@ -106,5 +106,24 @@ namespace Murder.Utilities
         {
             return (float)Math.Atan2(vector.Y, vector.X);
         }
+
+        /// <summary>
+        /// Snap the angel to the nearest angle, based on the number of steps in a circle.
+        /// </summary>
+        public static Vector2 SnapAngle(this Vector2 vector, int steps)
+        {
+            float angle = vector.Angle();
+            float step = MathF.PI * 2 / steps;
+            float snapped = MathF.Round(angle / step) * step;
+            return new Vector2(MathF.Cos(snapped), MathF.Sin(snapped));
+        }
+
+        /// <summary>
+        /// Returns the perpendicular vector to the given vector.
+        /// </summary>
+        public static Vector2 Perpendicular(this Vector2 vector)
+        {
+            return new Vector2(-vector.Y, vector.X);
+        }
     }
 }
