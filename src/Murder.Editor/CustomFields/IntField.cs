@@ -1,10 +1,11 @@
 ﻿using ImGuiNET;
+using Murder.Attributes;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
-using System.Security.Cryptography;
+using Murder.Utilities;
 
 namespace Murder.Editor.CustomFields
 {
@@ -15,6 +16,12 @@ namespace Murder.Editor.CustomFields
         {
             bool modified = false;
             int number = Convert.ToInt32(fieldValue);
+
+            if (AttributeExtensions.TryGetAttribute(member, out SliderAttribute? slider))
+            {
+                DrawSlider(member, ref modified, ref number, slider);
+                return (modified, number);
+            }
 
             if (AttributeExtensions.IsDefined(member, typeof(CollisionLayerAttribute)))
             {
@@ -34,6 +41,11 @@ namespace Murder.Editor.CustomFields
             modified = ImGui.InputInt("", ref number, 1);
 
             return (modified, number);
+        }
+
+        private static void DrawSlider(EditorMember member, ref bool modified, ref int number, SliderAttribute slider)
+        {
+            modified |= ImGui.SliderInt("", ref number, Calculator.RoundToInt(slider.Minimum), Calculator.RoundToInt(slider.Maximum));
         }
 
         private static (bool modified, object? result) DrawFontSelector(EditorMember member, ref bool modified, ref int number)

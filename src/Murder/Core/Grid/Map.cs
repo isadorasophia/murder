@@ -50,6 +50,11 @@ namespace Murder.Core
             Array.Fill(_gridMap, new());
         }
 
+        public void ZeroAll()
+        {
+            Array.Fill(_gridMap, new(weight: 0));
+        }
+
         /// <summary>
         /// A fast Line of Sight check
         /// It is not exact by any means, just tries to draw A line of tiles between start and end.
@@ -183,6 +188,12 @@ namespace Murder.Core
             _gridMap[(y * Width) + x].CollisionType |= layer;
         }
 
+        public void SetOccupied(Point p, int collisionMask, int weight) =>
+            SetGridCollision(p.X, p.Y, 1, 1, collisionMask, @override: false, weight);
+
+        public void SetUnoccupied(Point p, int collisionMask, int weight) =>
+            UnsetGridCollision(p.X, p.Y, 1, 1, collisionMask, weight);
+
         public void SetOccupiedAsCarve(IntRectangle rect, bool blockVision, bool isObstacle, bool isClearPath, int weight)
         {
             int collisionMask = CollisionLayersBase.CARVE;
@@ -315,6 +326,17 @@ namespace Murder.Core
             {
                 return _gridMap[(y * Width) + x].Weight;
             }
+        }
+
+        public void OverrideValueAt(Point p, int collisionMask, int weight)
+        {
+            if (p.X < 0 || p.Y < 0 || p.X >= Width || p.Y >= Height)
+            {
+                return;
+            }
+
+            _gridMap[(p.Y * Width) + p.X].CollisionType = collisionMask;
+            _gridMap[(p.Y * Width) + p.X].Weight = weight;
         }
 
         public void SetFloorAt(int x, int y, int type)

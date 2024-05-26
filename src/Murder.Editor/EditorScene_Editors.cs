@@ -220,7 +220,6 @@ namespace Murder.Editor
                     bool showReflection = assetEditor.ShowReflection;
                     ImGui.Checkbox("Show Reflection", ref showReflection);
                     assetEditor.ShowReflection = showReflection;
-
                 }
 
                 if (customEditor.Editor is WorldAssetEditor worldEditor)

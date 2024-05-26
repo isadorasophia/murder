@@ -1,8 +1,11 @@
 ﻿using Bang;
 using Bang.Components;
 using Bang.Entities;
+using Murder.Attributes;
 using Murder.Core.Geometry;
+using Murder.Core.Physics;
 using Murder.Editor.Core;
+using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 using System.Numerics;
 
@@ -263,6 +266,15 @@ namespace Murder.Editor.Utilities
         /// Bound rectangles which will be displayed in the world.
         /// </summary>
         public Dictionary<Guid, Rectangle>? Dimensions { get; private set; }
+
+        /// <summary>
+        /// Used by <see cref="Murder.Editor.Systems.PathfindEditorSystem"/>
+        /// </summary>
+        [Slider(-1, 100)]
+        public int CurrentPathfindWeight = 100;
+
+        [CollisionLayer]
+        public int CurrentPathfindCollisionMask = CollisionLayersBase.BLOCK_VISION | CollisionLayersBase.CARVE;
 
         /// <summary>
         /// Add a dimension rectangle to the editor hook. This will be drawn in the world.

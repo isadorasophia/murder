@@ -16,7 +16,7 @@ namespace Murder.Services
 {
     public static class PhysicsServices
     {
-        public static IntRectangle GetCarveBoundingBox(this ColliderComponent collider, Point position)
+        public static IntRectangle GetCarveBoundingBox(this ColliderComponent collider, Vector2 position)
         {
             Rectangle rect = collider.GetBoundingBox(position);
             return rect.GetCarveBoundingBox(occupiedThreshold: .75f);
