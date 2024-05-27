@@ -5,78 +5,116 @@ using Murder.Components;
 using Murder.Utilities;
 using System.Numerics;
 using Murder.Diagnostics;
-using Murder.Helpers;
+using Murder.Messages;
+using Bang;
 
-namespace Murder.Systems;
-
-[Filter(ContextAccessorFilter.AllOf, typeof(TetheredComponent))]
-internal class TetherSystem : IFixedUpdateSystem
+namespace Murder.Systems
 {
-    public void FixedUpdate(Context context)
+    [Filter(ContextAccessorFilter.AllOf, typeof(TetheredComponent), typeof(PositionComponent))]
+    internal class TetherSystem : IFixedUpdateSystem
     {
-        foreach (var e in context.Entities)
+        public void FixedUpdate(Context context)
+        {
+            foreach (var e in context.Entities)
+            {
+                Vector2 position = e.GetGlobalTransform().Vector2;
+                var tetherComponent = e.GetTethered();
+                Vector2 velocity = e.TryGetVelocity()?.Velocity ?? Vector2.Zero;
+
+                foreach (var tetherPoint in tetherComponent.TetherPoints)
+                {
+                    if (context.World.TryGetEntity(tetherPoint.Target) is not Entity target)
+                    {
+                        GameLogger.Warning($"Couldn't find target {tetherPoint.Target} for {e.EntityId}, skipping tether point");
+                        continue;
+                    }
+
+                    Vector2 targetPosition = target.GetGlobalTransform().Vector2;
+                    Vector2 direction = targetPosition - position;
+                    float distance = direction.Length();
+
+                    if (distance > tetherPoint.Length)
+                    {
+                        float adjustmentDistance = distance - tetherPoint.Length;
+
+                        if (adjustmentDistance > tetherPoint.SnapDistance)
+                        {
+                            if (!TryAdjustPosition(context.World, e, target, tetherPoint.SnapDistance))
+                            {
+                                // Send a failure message if snapping fails
+                                e.SendThetherSnapMessage(e.EntityId);
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            Vector2 adjustment = direction.NormalizedWithSanity() * adjustmentDistance * 0.5f; // Split the adjustment between both entities
+
+                            // Apply velocity adjustment
+                            if (!target.HasStatic())
+                            {
+                                Vector2 targetVelocity = target.TryGetVelocity()?.Velocity ?? Vector2.Zero;
+                                targetVelocity -= adjustment / Game.FixedDeltaTime;
+                                target.SetVelocity(new VelocityComponent(targetVelocity));
+                            }
+
+                            if (!e.HasStatic())
+                            {
+                                velocity += 2 * adjustment / Game.FixedDeltaTime;
+                            }
+                        }
+                    }
+                }
+
+                e.SetVelocity(new VelocityComponent(velocity));
+            }
+        }
+
+        private bool TryAdjustPosition(World world, Entity e, Entity target, float snapDistance)
         {
             Vector2 position = e.GetGlobalTransform().Vector2;
-            TetheredComponent tetheredComponent = e.GetTethered();
-            if (context.World.TryGetEntity(tetheredComponent.Target) is not Entity target)
-            {
-                GameLogger.Warning($"Couldn't find target {tetheredComponent.Target} for {e.EntityId}, removing TetheredComponent");
-                e.RemoveTethered();
-                continue;
-            }
-
-            float desiredDistance = tetheredComponent.Distance;
             Vector2 targetPosition = target.GetGlobalTransform().Vector2;
-            Vector2 direction = (targetPosition - position).NormalizedWithSanity();
+            Vector2 direction = targetPosition - position;
+            Vector2 snapAdjustment = direction.NormalizedWithSanity() * snapDistance;
 
-            // Get target's facing direction
-            Vector2 targetFacing = target.GetFacing().Direction.ToVector();
-            float maxAngleDeviation = tetheredComponent.MaxAngleDeviation;
-
-            // Calculate the cosine of the maximum allowed angle deviation
-            float maxDotProduct = MathF.Cos(maxAngleDeviation);
-
-            // Calculate the dot product between the target's facing direction and the direction to the entity
-            float dotProduct = Vector2.Dot(direction, targetFacing);
-
-            // If the dot product is less than the cosine of the maximum allowed deviation, adjust the direction
-            if (dotProduct < maxDotProduct)
+            // Check if the target is attached to something else
+            if (target.HasComponent<TetheredComponent>())
             {
-                // Calculate the perpendicular vector to targetFacing
-                Vector2 perpendicular = new Vector2(-targetFacing.Y, targetFacing.X);
+                var targetTetherComponent = target.GetTethered();
+                foreach (var tetherPoint in targetTetherComponent.TetherPoints)
+                {
+                    if (world.TryGetEntity(tetherPoint.Target) is not Entity nextTarget)
+                    {
+                        GameLogger.Warning($"Couldn't find target {tetherPoint.Target} for {target.EntityId}, skipping tether point");
+                        continue;
+                    }
 
-                // Determine the sign of the adjustment
-                float sign = Vector2.Dot(perpendicular, direction) > 0 ? 1 : -1;
-
-                // Adjust the direction to be within the allowed deviation
-                float angle = MathF.Acos(maxDotProduct);
-                float adjustedAngle = sign * angle;
-                direction = Vector2.Transform(targetFacing, Matrix3x2.CreateRotation(adjustedAngle)).NormalizedWithSanity();
+                    if (!TryAdjustPosition(world, target, nextTarget, tetherPoint.SnapDistance))
+                    {
+                        // If adjustment fails, send a message and stop the entity
+                        e.SendThetherSnapMessage(e.EntityId);
+                        return false;
+                    }
+                }
             }
 
-            Vector2 desiredPosition = targetPosition - direction * desiredDistance;
-            Vector2 newPosition = Calculator.Lerp(position, desiredPosition, 0.5f);
-
-            // Calculate the distance between the new position and the target position
-            float distance = Vector2.Distance(newPosition, targetPosition);
-            float snapDistance = tetheredComponent.SnapDistance;
-
-            e.SetFacing(DirectionHelper.FromVector(direction));
-
-            // If the distance is smaller than the desired distance, do nothing
-            if (distance < desiredDistance)
+            // Apply the adjustment if the target is not static
+            if (!target.HasStatic())
             {
-                continue;
+                targetPosition -= snapAdjustment;
+                target.SetGlobalPosition(targetPosition);
+                target.SetVelocity(new VelocityComponent(Vector2.Zero)); // Stop the target's velocity
             }
 
-            // If the distance is greater than the snap distance, snap the entity to the target
-            if (distance > snapDistance)
+            // Apply the adjustment to the entity
+            if (!e.HasStatic())
             {
-                newPosition = targetPosition + direction * snapDistance;
+                position += snapAdjustment;
+                e.SetGlobalPosition(position);
+                e.SetVelocity(new VelocityComponent(Vector2.Zero)); // Stop the entity's velocity
             }
 
-            // Apply the new position to the entity
-            e.SetGlobalPosition(newPosition);
+            return true;
         }
     }
 }

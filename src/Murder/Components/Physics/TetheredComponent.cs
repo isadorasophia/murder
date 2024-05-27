@@ -1,50 +1,50 @@
 ﻿using Bang.Components;
-using Murder.Attributes;
+using System.Collections.Immutable;
 
 namespace Murder.Components
 {
     /// <summary>
-    /// Component that defines tethering behavior for an entity.
+    /// Represents a single tether point for an entity.
     /// </summary>
-    public readonly struct TetheredComponent : IComponent
+    public readonly struct TetherPoint
     {
         /// <summary>
-        /// The entity ID of the target to which this entity is tethered.
+        /// The entity ID of the tether target.
         /// </summary>
-        [Tooltip("The entity ID of the target to which this entity is tethered.")]
         public readonly int Target;
 
         /// <summary>
-        /// The desired distance to maintain from the target entity.
+        /// The desired distance from the tether target.
         /// </summary>
-        [Tooltip("The desired distance to maintain from the target entity.")]
-        public readonly float Distance;
+        public readonly float Length;
 
         /// <summary>
-        /// The distance threshold beyond which the entity will snap to the target.
+        /// The maximum allowable angle deviation from the target's facing direction.
         /// </summary>
-        [Tooltip("The distance threshold beyond which the entity will snap to the target.")]
-        public readonly float SnapDistance;
-
-        /// <summary>
-        /// The maximum allowed angular deviation from the target's facing direction, in radians.
-        /// </summary>
-        [Tooltip("The maximum allowed angular deviation from the target's facing direction, in radians.")]
         public readonly float MaxAngleDeviation;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TetheredComponent"/> struct.
+        /// The distance at which the entity snaps to the tether target.
         /// </summary>
-        /// <param name="target">The entity ID of the target to which this entity is tethered.</param>
-        /// <param name="distance">The desired distance to maintain from the target entity.</param>
-        /// <param name="snapDistance">The distance threshold beyond which the entity will snap to the target.</param>
-        /// <param name="maxAngleDeviation">The maximum allowed angular deviation from the target's facing direction, in radians.</param>
-        public TetheredComponent(int target, float distance, float snapDistance, float maxAngleDeviation)
+        public readonly float SnapDistance;
+
+
+        public TetherPoint(int target, float distance, float maxAngleDeviation, float snapDistance)
         {
             Target = target;
-            Distance = distance;
-            SnapDistance = snapDistance;
+            Length = distance;
             MaxAngleDeviation = maxAngleDeviation;
+            SnapDistance = snapDistance;
+        }
+    }
+
+    public readonly struct TetheredComponent : IComponent
+    {
+        public readonly ImmutableArray<TetherPoint> TetherPoints;
+
+        public TetheredComponent(ImmutableArray<TetherPoint> tetherPoints)
+        {
+            TetherPoints = tetherPoints;
         }
     }
 }
