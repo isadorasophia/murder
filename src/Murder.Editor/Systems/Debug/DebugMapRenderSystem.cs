@@ -1,6 +1,7 @@
 ﻿using Bang;
 using Bang.Contexts;
 using Bang.Systems;
+using Murder.Attributes;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
@@ -14,9 +15,10 @@ using Murder.Utilities;
 
 namespace Murder.Editor.Systems
 {
-    [OnlyShowOnDebugView]
     [WorldEditor(startActive: true)]
     [PathfindEditor]
+    [TileEditor]
+    [OnlyShowOnDebugView]
     [Filter(kind: ContextAccessorKind.Read, typeof(MapComponent))]
     internal class DebugMapRenderSystem : IMurderRenderSystem
     {
