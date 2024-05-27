@@ -7,6 +7,7 @@ using Murder.Diagnostics;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
 using Murder.Utilities.Attributes;
+using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -129,6 +130,8 @@ namespace Murder.Editor
 
         private Dictionary<string, IEnumerable<(string folder, Vector4 color, Type? createType, List<GameAsset> assets)>>? _folders = null;
 
+        private readonly object _foldersLock = new();
+
         /// <summary>
         /// Clear the cache on search.
         /// </summary>
@@ -144,44 +147,48 @@ namespace Murder.Editor
 
             string printName = GetFolderPrettyName(folderName, out char? icon);
 
-            if (_folders is null)
+            IEnumerable<(string folder, Vector4 color, Type? createType, List<GameAsset> assets)>? subfolders;
+            lock (_foldersLock)
             {
-                _folders = [];
-            }
-
-            // Initialize folders if necessary up to this point...
-            if (!_folders.TryGetValue(folderName, out var subfolders))
-            {
-                Dictionary<string, (Vector4 color, Type? createType, List<GameAsset> assets)> builder = [];
-
-                foreach (GameAsset asset in assets)
+                if (_folders is null)
                 {
-                    string[] folders = asset.GetSplitNameWithEditorPath();
-                    if (folders.Length > depth + 1)
+                    _folders = [];
+                }
+
+                // Initialize folders if necessary up to this point...
+                if (!_folders.TryGetValue(folderName, out subfolders))
+                {
+                    Dictionary<string, (Vector4 color, Type? createType, List<GameAsset> assets)> builder = [];
+
+                    foreach (GameAsset asset in assets)
                     {
-                        string currentFolder = folders[depth];
-                        if (!builder.TryGetValue(currentFolder, out var folderInfo))
+                        string[] folders = asset.GetSplitNameWithEditorPath();
+                        if (folders.Length > depth + 1)
                         {
-                            // Add create asset button to the folder if necessary
-                            Type t = asset.GetType();
+                            string currentFolder = folders[depth];
+                            if (!builder.TryGetValue(currentFolder, out var folderInfo))
+                            {
+                                // Add create asset button to the folder if necessary
+                                Type t = asset.GetType();
 
-                            folderInfo = (asset.EditorColor, t, []);
-                            builder[currentFolder] = folderInfo;
+                                folderInfo = (asset.EditorColor, t, []);
+                                builder[currentFolder] = folderInfo;
+                            }
+
+                            folderInfo.assets.Add(asset);
                         }
-
-                        folderInfo.assets.Add(asset);
                     }
+
+                    foreach (var s in builder)
+                    {
+                        s.Value.assets.Sort((x, y) => x.Name.CompareTo(y.Name));
+                    }
+
+                    subfolders =
+                        builder.OrderBy(kv => GetFolderPrettyName(kv.Key, out _)).Select(kv => (kv.Key, kv.Value.color, kv.Value.createType, kv.Value.assets));
+
+                    _folders[folderName] = subfolders;
                 }
-
-                foreach (var s in builder)
-                {
-                    s.Value.assets.Sort((x, y) => x.Name.CompareTo(y.Name));
-                }
-
-                subfolders =
-                    builder.OrderBy(kv => GetFolderPrettyName(kv.Key, out _)).Select(kv => (kv.Key, kv.Value.color, kv.Value.createType, kv.Value.assets));
-
-                _folders[folderName] = subfolders;
             }
 
             if (icon.HasValue && depth > 0)
@@ -439,8 +446,11 @@ namespace Murder.Editor
 
         public void OnAssetRenamedOrAddedOrDeleted()
         {
-            // Clear cache.
-            _folders = null;
+            lock (_foldersLock)
+            {
+                // Clear cache.
+                _folders = null;
+            }
         }
     }
 }

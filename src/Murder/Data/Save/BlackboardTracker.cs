@@ -420,7 +420,7 @@ namespace Murder.Save
             SetValue(info, fieldName, value);
         }
 
-        private bool SetValue<T>(BlackboardInfo info, string fieldName, T value, bool isRevertingTrigger = false) where T : notnull
+        protected bool SetValue<T>(BlackboardInfo info, string fieldName, T value, bool isRevertingTrigger = false) where T : notnull
         {
             FieldInfo? f = GetFieldFrom(info.Type, fieldName);
             if (f is null)
@@ -472,8 +472,19 @@ namespace Murder.Save
                 }
             }
 
+            OnFieldModified(info, f, fieldName, value);
             OnModified(info.Blackboard.Kind);
+
             return true;
+        }
+
+        /// <summary>
+        /// This provides custom proessing when a field is modified.
+        /// This is used when tracking custom attribute behaviors.
+        /// </summary>
+        protected virtual void OnFieldModified<T>(BlackboardInfo info, FieldInfo fieldInfo, string fieldName, T value) where T : notnull
+        {
+            // Implemented by third-party
         }
 
         /// <summary>

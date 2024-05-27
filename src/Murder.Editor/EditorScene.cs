@@ -361,13 +361,21 @@ namespace Murder.Editor
                 if (!string.IsNullOrEmpty(_searchAssetText) || _folders?.Count == 1)
                 {
                     // disable caching for ctrl-f to pick up.
-                    _folders = null;
+                    lock (_foldersLock)
+                    {
+                        _folders = null;
+                    }
+
                     _clearedFoldersOnSearch = false;
                 }
 
                 if (!_clearedFoldersOnSearch && string.IsNullOrEmpty(_searchAssetText))
                 {
-                    _folders = null;
+                    lock (_foldersLock)
+                    {
+                        _folders = null;
+                    }
+
                     _clearedFoldersOnSearch = true;
                 }
 
@@ -422,7 +430,10 @@ namespace Murder.Editor
             {
                 Architect.EditorData.DeleteAllSaves();
 
-                _folders = null;
+                lock (_foldersLock)
+                {
+                    _folders = null;
+                }
             }
 
             ImGui.PopStyleColor();

@@ -45,7 +45,11 @@ namespace Murder.Editor
                 if (ImGui.Button($"{tab.Icon}", new Vector2(-6, 36)))
                 {
                     _selectedExplorerWindow = isSelected ? null : tab;
-                    _folders = null;
+
+                    lock (_foldersLock)
+                    {
+                        _folders = null;
+                    }
                 }
 
                 ImGui.PopStyleColor();
