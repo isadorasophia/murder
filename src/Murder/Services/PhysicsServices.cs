@@ -1769,5 +1769,11 @@ namespace Murder.Services
                 }
             }
         }
+
+        public static void AddVelocity(this Entity entity, Vector2 addVelocity)
+        {
+            Vector2 velocity = entity.TryGetVelocity()?.Velocity ?? Vector2.Zero;
+            entity.SetVelocity(velocity + addVelocity);
+        }
     }
 }

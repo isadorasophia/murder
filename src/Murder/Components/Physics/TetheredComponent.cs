@@ -1,4 +1,5 @@
 ﻿using Bang.Components;
+using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 
 namespace Murder.Components
@@ -38,13 +39,22 @@ namespace Murder.Components
         }
     }
 
+    [RuntimeOnly]
     public readonly struct TetheredComponent : IComponent
     {
         public readonly ImmutableArray<TetherPoint> TetherPoints;
+        public readonly ImmutableDictionary<int, TetherPoint> TetherPointsDict;
 
         public TetheredComponent(ImmutableArray<TetherPoint> tetherPoints)
         {
             TetherPoints = tetherPoints;
+
+            var builder = ImmutableDictionary.CreateBuilder<int, TetherPoint>();
+            foreach (var point in tetherPoints)
+            {
+                builder.Add(point.Target, point);
+            }
+            TetherPointsDict = builder.ToImmutable();
         }
     }
 }
