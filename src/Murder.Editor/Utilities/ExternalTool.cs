@@ -111,7 +111,7 @@ namespace Murder.Editor.Utilities
         /// <remarks>
         /// It's apparently necessary to use the full path when running on some systems.
         /// </remarks>
-        private static string? FindCommand(string command)
+        public static string? FindCommand(string command)
         {
             // Expand any environment variables.
             command = Environment.ExpandEnvironmentVariables(command);
