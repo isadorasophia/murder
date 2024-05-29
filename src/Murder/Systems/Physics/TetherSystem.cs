@@ -9,6 +9,7 @@ using Bang;
 using System.Collections.Immutable;
 using Murder.Services;
 using System.Runtime.CompilerServices;
+using Murder.Helpers;
 
 namespace Murder.Systems
 {
@@ -53,6 +54,7 @@ namespace Murder.Systems
 
                     if (!isStatic)
                     {
+                        e.SetFacing(DirectionHelper.FromVector(direction));
                         if (target.TryGetVelocity()?.Velocity is Vector2 velocity)
                         {
                             e.AddVelocity(velocity * 0.5f / (float)MaxIterations);
