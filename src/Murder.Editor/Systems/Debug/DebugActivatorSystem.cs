@@ -18,7 +18,7 @@ namespace Murder.Editor.Systems
         private bool _showConsole = false;
         private bool _showEditorSystems = false;
 
-        private ImmutableArray<Type> _debugSystems = ImmutableArray<Type>.Empty;
+        private IEnumerable<Type> _debugSystems = ImmutableArray<Type>.Empty;
 
         public void Start(Context context)
         {
@@ -27,11 +27,12 @@ namespace Murder.Editor.Systems
                 _showEditorSystems = editorComponent.EditorHook.ShowDebug;
             }
 
-            _debugSystems = ReflectionHelper.GetAllTypesWithAttributeDefined<OnlyShowOnDebugViewAttribute>()
-                .ToImmutableArray();
+            _debugSystems = ReflectionHelper.GetAllTypesWithAttributeDefined<OnlyShowOnDebugViewAttribute>();
 
             UpdateConsoleSystem(context);
-            UpdateEditorSystems(context);
+
+            // [Perf] Only deactivate editor systems. All remaining editor systems should be DEACTIVATED by default. Or else.
+            context.World.DeactivateSystem<EditorSystem>();
         }
 
         public void Update(Context context)

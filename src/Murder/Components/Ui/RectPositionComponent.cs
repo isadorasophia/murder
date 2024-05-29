@@ -2,7 +2,6 @@
 using Bang.Entities;
 using Murder.Attributes;
 using Murder.Core.Geometry;
-using Newtonsoft.Json;
 using System.Numerics;
 
 namespace Murder.Components
@@ -12,13 +11,13 @@ namespace Murder.Components
         private readonly IComponent? _parentBox;
         public bool HasParent => _parentBox is not null;
 
-        [JsonProperty]
+        [Bang.Serialize]
         private readonly float _paddingTop;
-        [JsonProperty]
+        [Bang.Serialize]
         private readonly float _paddingLeft;
-        [JsonProperty]
+        [Bang.Serialize]
         private readonly float _paddingBottom;
-        [JsonProperty]
+        [Bang.Serialize]
         private readonly float _paddingRight;
 
         public readonly Vector2 Size;

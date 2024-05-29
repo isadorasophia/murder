@@ -5,7 +5,6 @@ using Murder.Assets;
 using Murder.Components;
 using Murder.Diagnostics;
 using Murder.Utilities;
-using Newtonsoft.Json;
 
 namespace Murder.Interactions
 {
@@ -21,13 +20,13 @@ namespace Murder.Interactions
     /// </summary>
     public readonly struct AddChildOnInteraction : IInteraction
     {
-        [JsonProperty]
+        [Serialize]
         private readonly AssetRef<PrefabAsset> _child = new();
 
-        [JsonProperty]
+        [Serialize]
         private readonly string? _name = null;
 
-        [JsonProperty]
+        [Serialize]
         private readonly AddChildProperties _properties = AddChildProperties.None;
 
         public AddChildOnInteraction() { }

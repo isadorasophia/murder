@@ -8,7 +8,5 @@
     public abstract class DynamicAsset : GameAsset
     {
         public override string EditorFolder => "Dynamics/";
-
-        public abstract void Initialize();
     }
 }

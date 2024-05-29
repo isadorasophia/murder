@@ -2,7 +2,6 @@
 using Bang.Components;
 using Murder.Assets;
 using Murder.Diagnostics;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
@@ -18,26 +17,34 @@ namespace Murder.Prefabs
         /// <summary>
         /// List of custom components that have been removed from the parent entity, if any.
         /// </summary>
-        [JsonProperty]
+        [Bang.Serialize]
         private readonly HashSet<Type> _removeComponent = new(new ComponentTypeComparator());
 
-        [JsonProperty]
+        [Bang.Serialize]
         private readonly Dictionary<Guid, EntityModifier> _childrenModifiers = new();
 
-        [JsonProperty]
+        [Bang.Serialize]
         private readonly bool _ignorePrefabChildren = false;
 
-        internal PrefabEntityInstance() { }
+        public PrefabEntityInstance() { }
 
-        internal PrefabEntityInstance(PrefabReference prefabReference, string? name, bool ignoreChildren, Guid? guid = null)
-            : base(name ?? prefabReference.Fetch().GetSimplifiedName(), guid)
+        internal PrefabEntityInstance(PrefabReference prefabRef, string? name, bool ignorePrefabChildren, Guid? guid = null)
+            : this(prefabRef, name ?? prefabRef.Fetch().GetSimplifiedName(), ignorePrefabChildren, guid ?? Guid.NewGuid())
         {
-            PrefabRef = prefabReference;
-            _ignorePrefabChildren = ignoreChildren;
+            PrefabRef = prefabRef;
+            _ignorePrefabChildren = ignorePrefabChildren;
+        }
+
+        [System.Text.Json.Serialization.JsonConstructor]
+        internal PrefabEntityInstance(PrefabReference prefabRef, string name, bool ignorePrefabChildren, Guid guid)
+            : base(name, guid)
+        {
+            PrefabRef = prefabRef;
+            _ignorePrefabChildren = ignorePrefabChildren;
         }
 
         public static PrefabEntityInstance CreateChildrenlessInstance(Guid assetGuid) =>
-            new(new(assetGuid), name: default, ignoreChildren: true);
+            new(new(assetGuid), name: default, ignorePrefabChildren: true);
 
         public override string? PrefabRefName => PrefabRef.Fetch().GetSimplifiedName();
 

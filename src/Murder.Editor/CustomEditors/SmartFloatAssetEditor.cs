@@ -1,15 +1,8 @@
 ﻿using ImGuiNET;
 using Murder.Assets;
-using Murder.Assets.Graphics;
 using Murder.Core.Graphics;
 using Murder.Editor.Attributes;
 using Murder.Editor.ImGuiExtended;
-using Murder.Editor.Stages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Murder.Editor.CustomEditors
 {

@@ -12,6 +12,13 @@ namespace Murder.Editor.Diagnostics
 
         private int _pressedBackCount = 0;
 
+        public static Dictionary<string, object> TrackedVariables = new();
+
+        public override void TrackImpl(string variableName, object value)
+        {
+            TrackedVariables[variableName] = value;
+        }
+
         public static EditorGameLogger OverrideInstanceWithEditor()
         {
             EditorGameLogger logger = new EditorGameLogger();

@@ -2,7 +2,7 @@ using Murder.Assets;
 using Murder.Assets.Localization;
 using Murder.Data;
 using Murder.Serialization;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Murder.Save
 {
@@ -10,46 +10,52 @@ namespace Murder.Save
     /// Tracks preferences of the current session. This is unique per run.
     /// Used to track the game settings that are not tied to any game run (for example, volume).
     /// </summary>
+    [Serializable]
     public class GamePreferences
     {
         private const string _filename = ".preferences";
-        private readonly static string _path = Path.Join(GameDataManager.SaveBasePath, _filename);
+        private readonly static string _path = Path.Join(Game.Data.SaveBasePath, _filename);
 
-        [JsonProperty]
+        [Bang.Serialize]
         protected float _soundVolume = 1;
 
-        [JsonProperty]
+        [Bang.Serialize]
         protected float _musicVolume = 1;
 
-        [JsonProperty]
+        [Bang.Serialize]
         protected bool _bloom = false;
 
-        [JsonProperty]
+        [Bang.Serialize]
         protected bool _downscale = false;
 
-        [JsonProperty]
+        [Bang.Serialize]
         protected LanguageId _language = LanguageId.English;
 
         protected void SaveSettings()
         {
-            FileHelper.SaveSerialized(this, _path, isCompressed: true);
+            Game.Data.FileManager.SaveSerialized(this, _path);
         }
 
         internal static GamePreferences? TryFetchPreferences()
         {
-            if (!FileHelper.FileExists(_path))
+            if (!File.Exists(_path))
             {
                 return null;
             }
 
-            return FileHelper.DeserializeGeneric<GamePreferences>(_path)!;
+            try
+            {
+                return Game.Data.FileManager.DeserializeGeneric<GamePreferences>(_path);
+            }
+            catch (JsonException)
+            {
+                return null;
+            }
         }
 
         public float SoundVolume => _soundVolume;
 
         public float MusicVolume => _musicVolume;
-        public bool Downscale => _downscale;
-        public bool Bloom => _bloom;
 
         public LanguageId Language => _language;
 
@@ -103,8 +109,12 @@ namespace Murder.Save
 
         public void SetLanguage(LanguageId id)
         {
-            _language = id;
+            if (_language == id)
+            {
+                return;
+            }
 
+            _language = id;
             OnPreferencesChanged();
         }
 

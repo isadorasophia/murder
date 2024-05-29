@@ -1,9 +1,10 @@
 using Bang;
 using Bang.Entities;
+using Murder.Diagnostics;
 using Murder.Prefabs;
 using Murder.Save;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
+using System.Text.Json.Serialization;
 
 namespace Murder.Assets
 {
@@ -16,7 +17,7 @@ namespace Murder.Assets
 
         public override bool IsStoredInSaveData => true;
 
-        [JsonProperty]
+        [Bang.Serialize]
         private readonly ImmutableDictionary<Guid, EntityInstance> _instances;
 
         private ImmutableArray<EntityInstance>? _cachedInstances;
@@ -31,10 +32,13 @@ namespace Murder.Assets
 
         internal SavedWorld() => _instances = ImmutableDictionary<Guid, EntityInstance>.Empty;
 
+        [JsonConstructor]
         internal SavedWorld(ImmutableDictionary<Guid, EntityInstance> instances) => _instances = instances;
 
         public static ValueTask<SavedWorld> CreateAsync(World world, ImmutableArray<Entity> entitiesOnSaveRequested)
         {
+            using PerfTimeRecorder recorder = new("Creating saved world");
+
             SavedWorldBuilder builder = new(world);
             return builder.CreateAsync(entitiesOnSaveRequested);
         }

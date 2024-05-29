@@ -5,7 +5,7 @@ using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Core.Physics;
-using Murder.Messages.Physics;
+using Murder.Diagnostics;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
@@ -46,6 +46,7 @@ namespace Murder.Systems.Physics
                 if (e.HasIgnoreTriggersUntil())
                 {
                     // [BUG] This should never happen
+                    GameLogger.Warning("This entity should not be here. It has IgnoreTriggersUntil but is being processed by the TriggerPhysicsSystem.");
                     continue;
                 }
 
@@ -175,8 +176,8 @@ namespace Murder.Systems.Physics
 
         private static void SendCollisionMessages(Entity trigger, Entity actor, CollisionDirection direction)
         {
-            actor.SendMessage(new OnCollisionMessage(trigger.EntityId, direction));
-            trigger.SendMessage(new OnCollisionMessage(actor.EntityId, direction));
+            actor.SendOnCollisionMessage(trigger.EntityId, direction);
+            trigger.SendOnCollisionMessage(actor.EntityId, direction);
         }
 
         public void OnDeactivated(World world, ImmutableArray<Entity> entities)
@@ -192,7 +193,7 @@ namespace Murder.Systems.Physics
         private static void RemoveCollisions(World world, ImmutableArray<Entity> entities)
         {
             var colliders = world.GetEntitiesWith(typeof(CollisionCacheComponent));
-            foreach (var deleted in entities)
+            foreach (Entity deleted in entities)
             {
                 bool thisIsAnActor = (deleted.GetCollider().Layer & (CollisionLayersBase.TRIGGER)) == 0;
 

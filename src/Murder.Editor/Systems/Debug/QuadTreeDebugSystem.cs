@@ -1,6 +1,6 @@
-﻿using Bang.Contexts;
+﻿using Bang;
+using Bang.Contexts;
 using Bang.Systems;
-using Murder.Components;
 using Murder.Core.Graphics;
 using Murder.Core.Physics;
 using Murder.Editor.Attributes;
@@ -15,7 +15,7 @@ namespace Murder.Editor.Systems.Debug
     {
         public void Draw(RenderContext render, Context context)
         {
-            Quadtree? qt = context.World.TryGetUnique<QuadtreeComponent>()?.Quadtree;
+            Quadtree? qt = context.World.TryGetUniqueQuadtree()?.Quadtree;
             if (qt is null)
             {
                 return;

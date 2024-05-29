@@ -16,7 +16,7 @@ namespace Murder.Services
 {
     public static class PhysicsServices
     {
-        public static IntRectangle GetCarveBoundingBox(this ColliderComponent collider, Point position)
+        public static IntRectangle GetCarveBoundingBox(this ColliderComponent collider, Vector2 position)
         {
             Rectangle rect = collider.GetBoundingBox(position);
             return rect.GetCarveBoundingBox(occupiedThreshold: .75f);
@@ -123,7 +123,7 @@ namespace Murder.Services
         /// <returns>Returns true if it hits a tile</returns>
         public static bool RaycastTiles(World world, Vector2 startPosition, Vector2 endPosition, int flags, out RaycastHit hit)
         {
-            Map map = world.GetUnique<MapComponent>().Map;
+            Map map = world.GetUniqueMap().Map;
             (float x0, float y0) = (startPosition / Grid.CellSize).XY();
             (float x1, float y1) = (endPosition / Grid.CellSize).XY();
 
@@ -205,13 +205,33 @@ namespace Murder.Services
 
         public static bool HasLineOfSight(World world, Vector2 from, Vector2 to)
         {
-            if (Raycast(world, from, to, CollisionLayersBase.BLOCK_VISION, Enumerable.Empty<int>(), out RaycastHit hit))
+            if (Raycast(world, from, to, CollisionLayersBase.BLOCK_VISION, [], out RaycastHit hit))
             {
                 return false;
             }
 
             return true;
         }
+
+        /// <summary>
+        /// Returns whether <paramref name="from"/> an see an entity <paramref name="targetEntityId"/> before
+        /// it gets to <paramref name="to"/>.
+        /// </summary>
+        public static bool CanSeeEntity(World world, Vector2 from, Vector2 to, int selfEntityId, int targetEntityId)
+        {
+            if (!Raycast(world, from, to, CollisionLayersBase.ACTOR, [selfEntityId], out RaycastHit hit))
+            {
+                return false;
+            }
+
+            if (hit.Entity?.EntityId == targetEntityId)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public static bool HasLineOfSight(World world, Entity from, Entity to)
         {
             if (from.TryGetMurderTransform()?.Vector2 is not Vector2 origin)
@@ -244,7 +264,7 @@ namespace Murder.Services
         public static bool Raycast(World world, Vector2 startPosition, Vector2 endPosition, int layerMask, IEnumerable<int> ignoreEntities, out RaycastHit hit)
         {
             hit = default;
-            Map map = world.GetUnique<MapComponent>().Map;
+            Map map = world.GetUniqueMap().Map;
             Line2 line = new(startPosition, endPosition);
             bool hitSomething = false;
             float closest = float.MaxValue;
@@ -271,7 +291,7 @@ namespace Murder.Services
                 closest = (startPosition - hitTile.Point).LengthSquared();
             }
 
-            var qt = world.GetUnique<QuadtreeComponent>().Quadtree;
+            var qt = world.GetUniqueQuadtree().Quadtree;
 
             float minX = Math.Clamp(MathF.Min(startPosition.X, endPosition.X), 0, map.Width * Grid.CellSize);
             float maxX = Math.Clamp(MathF.Max(startPosition.X, endPosition.X), 0, map.Width * Grid.CellSize);
@@ -389,7 +409,7 @@ namespace Murder.Services
             int layerMask,
             NextAvailablePositionFlags flags = NextAvailablePositionFlags.CheckTarget | NextAvailablePositionFlags.CheckNeighbours | NextAvailablePositionFlags.CheckRecursiveNeighbours)
         {
-            Map map = world.GetUnique<MapComponent>().Map;
+            Map map = world.GetUniqueMap().Map;
             var collisionEntities = FilterPositionAndColliderEntities(
                 world,
                 layerMask);
@@ -422,20 +442,23 @@ namespace Murder.Services
 
             int depth = 0;
 
+            bool checkNeighbours = flags.HasFlag(NextAvailablePositionFlags.CheckNeighbours);
+
             while (_positionsToCheck.Count > 0)
             {
                 if (depth++ > 5)
                 {
                     // Let's not freeze our framerate by adding a limit here.
+                    GameLogger.Warning("FindNextAvailablePosition: Depth limit reached, returning null.");
                     return null;
                 }
 
-                var currentPosition = _positionsToCheck.Dequeue();
+                Vector2 currentPosition = _positionsToCheck.Dequeue();
                 Point startGridPoint = center.ToGrid();
 
                 bool CheckPosition(Vector2 position)
                 {
-                    if (!CollidesAt(map, ignoreId: e.EntityId, e.GetCollider(), position, collisionEntities, layerMask))
+                    if (!CollidesAt(map, ignoreId: e.EntityId, e.GetCollider(), position, collisionEntities, layerMask, out int _))
                     {
                         if (!flags.HasFlag(NextAvailablePositionFlags.CheckLineOfSight) ||
                             map.HasLineOfSight(startGridPoint, position.ToGrid(), excludeEdges: true, layerMask))
@@ -451,7 +474,7 @@ namespace Murder.Services
                     return currentPosition;
                 }
 
-                if (flags.HasFlag(NextAvailablePositionFlags.CheckNeighbours))
+                if (checkNeighbours)
                 {
                     foreach (Vector2 neighbour in currentPosition.Neighbours(world, 0.5f))
                     {
@@ -477,7 +500,7 @@ namespace Murder.Services
             int width = 256;
             int height = 256;
 
-            if (world.TryGetUnique<MapComponent>() is MapComponent map)
+            if (world.TryGetUniqueMap() is MapComponent map)
             {
                 width = map.Width;
                 height = map.Height;
@@ -613,7 +636,7 @@ namespace Murder.Services
 
         public static IEnumerable<Entity> GetAllCollisionsAt(World world, Point position, ColliderComponent collider, int ignoreId, int mask)
         {
-            var qt = world.GetUnique<QuadtreeComponent>().Quadtree;
+            var qt = world.GetUniqueQuadtree().Quadtree;
             // Now, check against other entities.
             List<NodeInfo<Entity>> others = new();
             qt.GetCollisionEntitiesAt(GetBoundingBox(collider, position), others);
@@ -643,11 +666,9 @@ namespace Murder.Services
             }
         }
 
-        public static bool CollidesAt(in Map map, int ignoreId, ColliderComponent collider, Vector2 position, IEnumerable<(int id, ColliderComponent collider, IMurderTransformComponent position)> others, int mask)
-        {
-            return CollidesAt(map, ignoreId, collider, position, others, mask, out _);
-        }
-
+        /// <summary>
+        /// Checks for collision at a position, returns the minimum translation vector (MTV) to resolve the collision.
+        /// </summary>
         /// <summary>
         /// Checks for collision at a position, returns the minimum translation vector (MTV) to resolve the collision.
         /// </summary>
@@ -656,50 +677,70 @@ namespace Murder.Services
             HashSet<int> ignoreIds,
             ColliderComponent collider,
             Vector2 position,
-            IEnumerable<(int id, ColliderComponent collider, IMurderTransformComponent position)> others,
+            ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)> others,
             int mask,
             out int hitId,
             out int layer,
             out Vector2 mtv)
         {
             hitId = -1;
+            layer = CollisionLayersBase.NONE;
+            mtv = Vector2.Zero;
 
-            // First, check if there is a collision against a tile.
-            if (PhysicsServices.GetFirstMtvAtTile(map, collider, position, mask, out layer) is Vector2 tileMtv && tileMtv != Vector2.Zero)
+            Vector2 totalMtv = Vector2.Zero;
+            bool hasCollision = false;
+            float mtvLength = float.MaxValue;
+
+            // Check for tile collision
+            if (PhysicsServices.GetFirstMtvAtTile(map, collider, position, mask, out int tileLayer) is Vector2 tileMtv && tileMtv != Vector2.Zero)
             {
-                mtv = tileMtv;
-                return true;
+                layer = tileLayer;
+                totalMtv += tileMtv;
+                hasCollision = true;
+                mtvLength = tileMtv.Length();
             }
 
-            // Now, check against other entities.
+            // Check against other entities
             foreach (var shape in collider.Shapes)
             {
                 var polyA = shape.GetPolygon();
 
                 foreach (var other in others)
                 {
-                    if (ignoreIds.Contains(other.id)) continue; // That's me (or my parent)!
+                    if (ignoreIds.Contains(other.id)) continue; // Skip ignored IDs
 
-                    layer = other.collider.Layer;
-                    var otherCollider = other.collider;
-
-                    foreach (var otherShape in otherCollider.Shapes)
+                    foreach (var otherShape in other.collider.Shapes)
                     {
                         var polyB = otherShape.GetPolygon();
                         if (polyA.Polygon.Intersects(polyB.Polygon, position, other.position.Vector2) is Vector2 colliderMtv && colliderMtv.HasValue())
                         {
-                            hitId = other.id;
-                            mtv = colliderMtv;
-                            return true;
+                            // The hit ID is the ID of the closest entity
+                            float currentMtvLengthSquared = colliderMtv.LengthSquared();
+                            if (currentMtvLengthSquared < mtvLength)
+                            {
+                                hitId = other.id;
+                                layer = other.collider.Layer;
+                                mtvLength = currentMtvLengthSquared;
+                            }
+
+                            float similarity = Calculator.Vector2Similarity(totalMtv, colliderMtv);
+                            
+                            totalMtv += colliderMtv * (1 - similarity);
+                            hasCollision = true;
                         }
                     }
                 }
             }
 
-            layer = CollisionLayersBase.NONE;
-            mtv = Vector2.Zero;
-            return false;
+            if (hasCollision)
+            {
+                mtv = totalMtv;
+            }
+
+            return hasCollision;
         }
+
+
 
         /// <summary>
         /// Checks for collision at a position, returns the minimum translation vector (MTV) to resolve the collision.
@@ -781,7 +822,7 @@ namespace Murder.Services
             return mtvs;
         }
 
-        public static bool CollidesAt(in Map map, int ignoreId, ColliderComponent collider, Vector2 position, IEnumerable<(int id, ColliderComponent collider, IMurderTransformComponent position)> others, int mask, out int hitId)
+        public static bool CollidesAt(in Map map, int ignoreId, ColliderComponent collider, Vector2 position, ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)> others, int mask, out int hitId)
         {
             hitId = -1;
 
@@ -1553,7 +1594,7 @@ namespace Murder.Services
             Rectangle boundingBox = polygon.GetBoundingBox();
 
             _coneCheckCache.Clear();
-            world.GetUnique<QuadtreeComponent>().Quadtree.Collision.Retrieve(boundingBox, _coneCheckCache);
+            world.GetUniqueQuadtree().Quadtree.Collision.Retrieve(boundingBox, _coneCheckCache);
 
             foreach (var other in _coneCheckCache)
             {
@@ -1615,7 +1656,7 @@ namespace Murder.Services
             Rectangle rangeArea = new(fromPosition.X - range / 2f, fromPosition.Y - range / 2f, range, range);
 
             List<NodeInfo<Entity>> entities = new();
-            world.GetUnique<QuadtreeComponent>().Quadtree.Collision.Retrieve(rangeArea, entities);
+            world.GetUniqueQuadtree().Quadtree.Collision.Retrieve(rangeArea, entities);
 
             float shortestDistance = float.MaxValue;
             float maximumDistance = range * range;
@@ -1714,7 +1755,7 @@ namespace Murder.Services
         /// </summary>
         public static void GetAllCollisionsAtGrid(World world, Point grid, ref List<NodeInfo<Entity>> output)
         {
-            var qt = world.GetUnique<QuadtreeComponent>().Quadtree;
+            var qt = world.GetUniqueQuadtree().Quadtree;
             Rectangle rectangle = GridHelper.ToRectangle(grid);
             qt.GetCollisionEntitiesAt(rectangle, output);
 
@@ -1727,6 +1768,12 @@ namespace Murder.Services
                     output.RemoveAt(i);
                 }
             }
+        }
+
+        public static void AddVelocity(this Entity entity, Vector2 addVelocity)
+        {
+            Vector2 velocity = entity.TryGetVelocity()?.Velocity ?? Vector2.Zero;
+            entity.SetVelocity(velocity + addVelocity);
         }
     }
 }

@@ -2,6 +2,7 @@
 using Murder.Attributes;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
+using System.Text.Json.Serialization;
 
 namespace Murder.Components;
 
@@ -14,6 +15,7 @@ public readonly struct EventListenerComponent : IComponent
 
     public EventListenerComponent() { }
 
+    [JsonConstructor]
     public EventListenerComponent(ImmutableDictionary<string, SpriteEventInfo> events) =>
         Events = events;
 

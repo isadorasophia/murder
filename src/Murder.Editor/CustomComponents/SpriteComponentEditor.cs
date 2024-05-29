@@ -2,7 +2,6 @@
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Editor.Attributes;
-using Newtonsoft.Json.Linq;
 using System.Collections.Immutable;
 using System.Reflection.Emit;
 

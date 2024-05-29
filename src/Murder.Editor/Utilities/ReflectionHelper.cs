@@ -2,15 +2,18 @@
 using Bang.StateMachines;
 using Murder.Attributes;
 using Murder.Editor.Reflection;
-using Murder.Utilities.Attributes;
-using Newtonsoft.Json;
+using Murder.Utilities;
 using System.Reflection;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Murder.Editor.Utilities
 {
     public static class ReflectionHelper
     {
+        private static readonly CacheDictionary<Type, IEnumerable<Type>> _cachedTypesWithAttributes = new(12);
+        private static List<Type>? _allTypesInAllAssemblies = null;
+
         /// <summary>
         /// Find the first abstract class from the type <see cref="T"/>.
         /// </summary>
@@ -51,19 +54,26 @@ namespace Murder.Editor.Utilities
         public static IEnumerable<Type> GetAllImplementationsOf(Type type)
         {
             var types = SafeGetAllTypesInAllAssemblies()
-                .Where(p => !p.IsInterface && !p.IsAbstract && type.IsAssignableFrom(p))
+                .Where(p => !p.IsInterface && !p.IsAbstract && type.IsAssignableFrom(p) && 
+                       !Attribute.IsDefined(p, typeof(HideInEditorAttribute)))
                 .OrderBy(o => o.Name);
 
             return types;
         }
 
-        public static IEnumerable<Type> GetAllTypesWithAttributeDefined<T>() =>
-            GetAllTypesWithAttributeDefined(typeof(T));
+        public static IEnumerable<Type> GetAllTypesWithAttributeDefined<T>() => GetAllTypesWithAttributeDefined(typeof(T));
 
         public static IEnumerable<Type> GetAllTypesWithAttributeDefined(Type t)
         {
-            return SafeGetAllTypesInAllAssemblies()
-                .Where(p => Attribute.IsDefined(p, t));
+            if (_cachedTypesWithAttributes.TryGetValue(t, out var result))
+            {
+                return result;
+            }
+
+            result = SafeGetAllTypesInAllAssemblies().Where(p => Attribute.IsDefined(p, t));
+            _cachedTypesWithAttributes[t] = result;
+
+            return result;
         }
 
         public static IEnumerable<Type> GetAllTypesWithAttributeDefinedOfType<T>(Type ofType)
@@ -97,7 +107,7 @@ namespace Murder.Editor.Utilities
             // TODO: For now, we whitelist interaction fields. We might want to change that if we do that for other types...
             // We might declare custom editors for types instead of fields.
             var targetFields = allFields
-                .Where(f => f.IsPublic || Attribute.IsDefined(f, typeof(ShowInEditorAttribute)) || Attribute.IsDefined(f, typeof(SerializeAttribute)) || Attribute.IsDefined(f, typeof(JsonPropertyAttribute)) || filterSet.Contains(f.Name))
+                .Where(f => f.IsPublic || Attribute.IsDefined(f, typeof(ShowInEditorAttribute)) || Attribute.IsDefined(f, typeof(SerializeAttribute)) || Attribute.IsDefined(f, typeof(SerializeAttribute)) || filterSet.Contains(f.Name))
                 .Select(f => EditorMember.Create(f));
 
             PropertyInfo[] allProperties = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
@@ -110,10 +120,10 @@ namespace Murder.Editor.Utilities
 
             var result = targetFields
                 .Concat(targetProperties)
-                .Where(f => !AttributeExtensions.IsDefined(f, typeof(Newtonsoft.Json.JsonIgnoreAttribute))
+                .Where(f => !AttributeExtensions.IsDefined(f, typeof(JsonIgnoreAttribute))
                     && !AttributeExtensions.IsDefined(f, typeof(HideInEditorAttribute)));
 
-            return result;
+            return result ?? [];
         }
 
         /// <summary>
@@ -164,21 +174,43 @@ namespace Murder.Editor.Utilities
                 ?.GetCustomAttribute<TooltipAttribute>()?.Text;
         }
 
-        private static readonly HashSet<string> _ignoredAssemblies = new() { "Bang.Generator" };
+        private static readonly HashSet<string> _ignoredAssemblies = [ "Bang.Generator" ];
 
-        public static IEnumerable<Type> SafeGetAllTypesInAllAssemblies()
+        public static List<Type> SafeGetAllTypesInAllAssemblies()
         {
+            if (_allTypesInAllAssemblies is not null)
+            {
+                return _allTypesInAllAssemblies;
+            }
+
+            List<Type> allTypes = [];
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                var assemblyName = assembly.GetName().Name;
-                if (assemblyName is not null && _ignoredAssemblies.Contains(assemblyName))
+                string? assemblyName = assembly.GetName().Name;
+                if (assemblyName is null || assemblyName.StartsWith("System"))
+                {
                     continue;
+                }
+
+                if (_ignoredAssemblies.Contains(assemblyName))
+                {
+                    continue;
+                }
 
                 foreach (Type type in assembly.GetTypes())
                 {
-                    yield return type;
+                    allTypes.Add(type);
                 }
             }
+
+            _allTypesInAllAssemblies = allTypes;
+            return _allTypesInAllAssemblies;
+        }
+
+        public static void ClearCache()
+        {
+            _allTypesInAllAssemblies = null;
+            _cachedTypesWithAttributes.Clear();
         }
     }
 }

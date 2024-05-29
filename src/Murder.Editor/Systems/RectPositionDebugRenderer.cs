@@ -20,12 +20,12 @@ namespace Murder.Editor.Systems
                 var color = e.GetComponent<DebugColorComponent>().Color;
                 var colorFaded = color * 0.5f;
 
-                IntRectangle box = rect.GetBox(e, render.ScreenSize);
+                IntRectangle box = rect.GetBox(e, render.Viewport.NativeResolution);
 
-                RenderServices.DrawHorizontalLine(render.UiBatch, 0, box.Top, render.ScreenSize.X, colorFaded, 1);
-                RenderServices.DrawHorizontalLine(render.UiBatch, 0, box.Bottom, render.ScreenSize.X, colorFaded, 1);
-                RenderServices.DrawVerticalLine(render.UiBatch, box.Left, 0, render.ScreenSize.Y, colorFaded, 1);
-                RenderServices.DrawVerticalLine(render.UiBatch, box.Right, 0, render.ScreenSize.Y, colorFaded, 1);
+                RenderServices.DrawHorizontalLine(render.UiBatch, 0, box.Top, render.Viewport.NativeResolution.X, colorFaded, 1);
+                RenderServices.DrawHorizontalLine(render.UiBatch, 0, box.Bottom, render.Viewport.NativeResolution.X, colorFaded, 1);
+                RenderServices.DrawVerticalLine(render.UiBatch, box.Left, 0, render.Viewport.NativeResolution.Y, colorFaded, 1);
+                RenderServices.DrawVerticalLine(render.UiBatch, box.Right, 0, render.Viewport.NativeResolution.Y, colorFaded, 1);
                 RenderServices.DrawRectangleOutline(
                     render.UiBatch,
                     box,

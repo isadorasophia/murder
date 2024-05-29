@@ -2,6 +2,7 @@
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Services;
+using Murder.Utilities;
 using System.Numerics;
 
 namespace Murder.Core;
@@ -15,7 +16,6 @@ public class Mask2D : IDisposable
     public RenderTarget2D RenderTarget => _renderTarget;
     private readonly Batch2D _batch;
     private readonly Color _color;
-
     public Mask2D(int width, int height, Color? color = null)
     {
         _renderTarget = new(Game.GraphicsDevice, width, height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
@@ -38,39 +38,73 @@ public class Mask2D : IDisposable
 
     public Batch2D Begin(bool debug = false)
     {
-        Game.GraphicsDevice.SetRenderTarget(_renderTarget);
-        Game.GraphicsDevice.Clear(_color);
+        // TODO: Should this be in the End() instead?
+        SetRenderTarget();
+
         _batch.Begin(Matrix.Identity);
+
         if (debug)
         {
             _batch.DrawRectangleOutline(_renderTarget.Bounds, Color.Red);
         }
+
         return _batch;
     }
 
-    public Batch2D Begin(Color debug)
+    private void SetRenderTarget()
     {
         Game.GraphicsDevice.SetRenderTarget(_renderTarget);
         Game.GraphicsDevice.Clear(_color);
-        _batch.Begin(Matrix.Identity);
-        
-        _batch.DrawRectangleOutline(_renderTarget.Bounds, debug);
-        
-        return _batch;
     }
 
     public void End(Batch2D targetBatch, Vector2 position, Vector2 camera, DrawInfo drawInfo)
     {
-        _batch.SetTransform(camera);
+        _batch.SetTransform(camera.ToXnaVector2());
         End(targetBatch, position, drawInfo);
     }
 
     public void End(Batch2D targetBatch, Vector2 position, DrawInfo drawInfo)
     {
         _batch.End();
-        targetBatch.Draw(_renderTarget, position, _renderTarget.Bounds.Size.ToVector2(), _renderTarget.Bounds, drawInfo.Sort,
-            drawInfo.Rotation, drawInfo.Scale, drawInfo.ImageFlip, drawInfo.Color,
-            drawInfo.Origin, drawInfo.GetBlendMode());
+
+        targetBatch.Draw(
+            _renderTarget, 
+            position.ToXnaVector2(), 
+            _renderTarget.Bounds.XnaSize(), 
+            _renderTarget.Bounds, 
+            drawInfo.Sort,
+            drawInfo.Rotation, 
+            drawInfo.Scale.ToXnaVector2(), 
+            drawInfo.ImageFlip, 
+            drawInfo.Color,
+            drawInfo.Origin.ToXnaVector2(), 
+            drawInfo.GetBlendMode());
+    }
+
+    /// <summary>
+    /// Ends the batch (if it is still running) and draws the render target to the target batch. If already ended, it will just draw the render target.
+    /// </summary>
+    public void Draw(Batch2D targetBatch, Vector2 position, DrawInfo drawInfo)
+    {
+        if (_batch.IsBatching)
+        {
+            SetRenderTarget();
+            _batch.End();
+            RenderServices.DrawQuadOutline(_renderTarget.Bounds, Color.Red);
+        }
+
+        targetBatch.Draw(
+            _renderTarget, 
+            position.ToXnaVector2(), 
+            _renderTarget.Bounds.XnaSize(), 
+            _renderTarget.Bounds, 
+            drawInfo.Sort,
+            drawInfo.Rotation, 
+            drawInfo.Scale.ToXnaVector2(), 
+            drawInfo.ImageFlip, 
+            drawInfo.Color,
+            drawInfo.Origin.ToXnaVector2(), 
+            drawInfo.GetBlendMode());
     }
 
     public bool IsDisposed => _batch.IsDisposed;

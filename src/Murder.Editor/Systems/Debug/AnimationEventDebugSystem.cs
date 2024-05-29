@@ -5,8 +5,8 @@ using Bang.Systems;
 using Murder.Core.Graphics;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
+using Murder.Editor.Services;
 using Murder.Editor.Utilities;
-using Murder.Services;
 using Murder.Utilities;
 
 namespace Murder.Editor.Systems;
@@ -28,7 +28,7 @@ internal class AnimationEventDebugSystem : IMessagerSystem
         }
 
         AnimationEventMessage msg = (AnimationEventMessage)message;
-        DebugServices.DrawText(world, msg.Event, entity.GetGlobalTransform().Vector2 +
+        EditorDebugServices.DrawText(world, msg.Event, entity.GetGlobalTransform().Vector2 +
             new System.Numerics.Vector2(Game.Random.NextFloat(-5, 5), Game.Random.NextFloat(-5, 5)), 0.5f,
             msg.BroadcastedEvent ? Color.Orange : Color.Green);
     }

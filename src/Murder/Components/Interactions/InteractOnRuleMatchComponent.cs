@@ -2,7 +2,6 @@
 using Murder.Attributes;
 using Murder.Core.Dialogs;
 using Murder.Utilities.Attributes;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 
 namespace Murder.Components
@@ -47,7 +46,7 @@ namespace Murder.Components
         /// This will only be triggered once the component has been interacted with.
         /// Used if <see cref="AfterInteractRule.InteractOnReload"/> is set.
         /// </summary>
-        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public readonly bool Triggered = false;
 
         /// <summary>

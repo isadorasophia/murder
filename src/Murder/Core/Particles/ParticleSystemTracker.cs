@@ -1,5 +1,4 @@
 ﻿using Murder.Utilities;
-using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Numerics;
 
@@ -7,10 +6,10 @@ namespace Murder.Core.Particles
 {
     public struct ParticleSystemTracker
     {
-        [JsonProperty]
+        [Bang.Serialize]
         public readonly Particle Particle;
 
-        [JsonProperty]
+        [Bang.Serialize]
         public readonly Emitter Emitter;
 
         /// <summary>

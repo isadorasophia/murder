@@ -1,3 +1,4 @@
+using Murder.Assets;
 using Murder.Assets.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
@@ -44,7 +45,7 @@ namespace Murder.Editor.Data
             var timeStart = DateTime.Now;
 
             // Make sure our target exists.
-            FileHelper.GetOrCreateDirectory(sourcePackedPath);
+            FileManager.GetOrCreateDirectory(sourcePackedPath);
 
             Packer packer = new();
             packer.Process(rawResourcesPath, 4096, 1, false);
@@ -62,11 +63,11 @@ namespace Murder.Editor.Data
 
             // Make sure we also have the atlas save at the binaries path.
             string atlasBinDirectoryPath = Path.Join(binPackedPath, Game.Profile.AtlasFolderName);
-            _ = FileHelper.GetOrCreateDirectory(atlasBinDirectoryPath);
+            _ = FileManager.GetOrCreateDirectory(atlasBinDirectoryPath);
 
             // Save atlas descriptor at the source and binaries directory.
-            FileHelper.SaveSerialized(atlas, atlasDescriptorName);
-            FileHelper.DirectoryDeepCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath);
+            Game.Data.FileManager.SaveSerialized(atlas, atlasDescriptorName);
+            EditorFileManager.DirectoryDeepCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath);
 
             // Atlas should be manually loaded here so the AsepriteAnimation can grab the correct rects
 
@@ -92,24 +93,24 @@ namespace Murder.Editor.Data
                         // projects and we should not touch there. E.g. cursor that comes from Murder into the game.
                         CleanDirectory(sourceAsepritePath, binAsepritePath);
 
-                        FileHelper.GetOrCreateDirectory(sourceAsepritePath);
-                        FileHelper.GetOrCreateDirectory(binAsepritePath);
+                        FileManager.GetOrCreateDirectory(sourceAsepritePath);
+                        FileManager.GetOrCreateDirectory(binAsepritePath);
                     }
 
                     string assetName = $"{asset.Name}.json";
 
                     string sourceFilePath = Path.Join(sourceAsepritePath, assetName);
-                    FileHelper.SaveSerialized(asset, sourceFilePath);
+                    Game.Data.FileManager.SaveSerialized<GameAsset>(asset, sourceFilePath);
 
                     string binFilePath = Path.Join(binAsepritePath, assetName);
-                    _ = FileHelper.GetOrCreateDirectory(Path.GetDirectoryName(binFilePath)!);
+                    _ = FileManager.GetOrCreateDirectory(Path.GetDirectoryName(binFilePath)!);
 
                     File.Copy(sourceFilePath, binFilePath, overwrite: true);
                 }
             }
 
             // Also save the generated assets at the binaries directory.
-            FileHelper.DirectoryDeepCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath);
+            EditorFileManager.DirectoryDeepCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath);
 
             GameLogger.Log($"Packing '{atlas.Name}'({atlasCount} images, {maxWidth}x{maxHeight}) complete in {(DateTime.Now - timeStart).TotalSeconds}s with {atlas.CountEntries} entries", Game.Profile.Theme.Accent);
         }
@@ -122,7 +123,7 @@ namespace Murder.Editor.Data
                     File.Delete(file.Replace(sourceDirectoryPath, binDirectoryPath));
                 }
 
-            FileHelper.DeleteDirectoryIfExists(sourceDirectoryPath);
+            FileManager.DeleteDirectoryIfExists(sourceDirectoryPath);
         }
 
         private static IEnumerable<(string id, AtlasCoordinates coord)> PopulateAtlas(Packer packer, AtlasId atlasId, string sourcesPath)

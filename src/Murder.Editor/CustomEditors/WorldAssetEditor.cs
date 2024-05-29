@@ -128,7 +128,7 @@ namespace Murder.Editor.CustomEditors
                         // == Entities editor and room list ==
                         ImGui.BeginChild("Entities Editor", new Vector2(-1, _entitiesEditorSize), ImGuiChildFlags.None);
                         {
-                            currentStage.ActivateSystemsWith(enable: true, typeof(WorldEditorAttribute));
+                            DeactivateAndActivateSystemsForTab(currentStage, WorldTab.World);
                             DrawEntitiesEditor(currentStage);
                         }
                         ImGui.EndChild();
@@ -180,18 +180,13 @@ namespace Murder.Editor.CustomEditors
                         ImGui.EndChild();
                         ImGui.EndTabItem();
                     }
-                    else
-                    {
-                        currentStage.ActivateSystemsWith(enable: false, typeof(WorldEditorAttribute));
-                    }
 
                     if (ShouldDrawSystems)
                     {
                         if (ImGui.BeginTabItem($"{Icons.System} Systems"))
                         {
                             ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
-                            ImGui.BeginChild("systems_child", ImGui.GetContentRegionAvail()
-                                - new System.Numerics.Vector2(0, 5));
+                            ImGui.BeginChild("systems_child", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
 
                             DrawSystemsEditor();
 
@@ -207,10 +202,9 @@ namespace Murder.Editor.CustomEditors
                     {
                         _switchToTilesetsTab = false;
                         ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
-                        ImGui.BeginChild("tile_editor_child", ImGui.GetContentRegionAvail()
-                            - new System.Numerics.Vector2(0, 5));
+                        ImGui.BeginChild("tile_editor_child", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
 
-                        currentStage.ActivateSystemsWith(enable: true, typeof(TileEditorAttribute));
+                        DeactivateAndActivateSystemsForTab(currentStage, WorldTab.Tiles);
                         modified |= DrawTileEditor(currentStage);
 
                         ImGui.EndChild();
@@ -218,18 +212,27 @@ namespace Murder.Editor.CustomEditors
 
                         ImGui.EndTabItem();
                     }
-                    else
+
+                    if (ImGui.BeginTabItem($"{Icons.Map} Pathfind"))
                     {
-                        currentStage.ActivateSystemsWith(enable: false, typeof(TileEditorAttribute));
+                        ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
+                        ImGui.BeginChild("pathfind_editor_child", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
+
+                        DeactivateAndActivateSystemsForTab(currentStage, WorldTab.Pathfind);
+                        modified |= DrawPathfindEditor(currentStage);
+
+                        ImGui.EndChild();
+                        ImGui.PopStyleColor();
+
+                        ImGui.EndTabItem();
                     }
 
                     if (ImGui.BeginTabItem($"{Icons.Cutscene} Story"))
                     {
                         ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
-                        ImGui.BeginChild("cutscene_editor_child", ImGui.GetContentRegionAvail()
-                            - new System.Numerics.Vector2(0, 5));
+                        ImGui.BeginChild("cutscene_editor_child", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
 
-                        currentStage.ActivateSystemsWith(enable: true, typeof(StoryEditorAttribute));
+                        DeactivateAndActivateSystemsForTab(currentStage, WorldTab.Story);
                         modified |= DrawStoryEditor(currentStage);
 
                         ImGui.EndChild();
@@ -237,18 +240,13 @@ namespace Murder.Editor.CustomEditors
 
                         ImGui.EndTabItem();
                     }
-                    else
-                    {
-                        currentStage.ActivateSystemsWith(enable: false, typeof(StoryEditorAttribute));
-                    }
 
                     if (ImGui.BeginTabItem($"{Icons.Sound} Sounds"))
                     {
                         ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
-                        ImGui.BeginChild("sound_editor_child", ImGui.GetContentRegionAvail()
-                            - new System.Numerics.Vector2(0, 5));
+                        ImGui.BeginChild("sound_editor_child", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
 
-                        currentStage.ActivateSystemsWith(enable: true, typeof(SoundEditorAttribute));
+                        DeactivateAndActivateSystemsForTab(currentStage, WorldTab.Sound);
                         modified |= DrawSoundEditor(currentStage);
 
                         ImGui.EndChild();
@@ -264,8 +262,7 @@ namespace Murder.Editor.CustomEditors
                     if (ImGui.BeginTabItem($"{Icons.Settings} Settings"))
                     {
                         ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
-                        ImGui.BeginChild("cutscene_editor_child", ImGui.GetContentRegionAvail()
-                            - new System.Numerics.Vector2(0, 5));
+                        ImGui.BeginChild("cutscene_editor_child", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
 
                         ImGuiHelpers.ColorIcon('\uf57e', Game.Profile.Theme.Accent);
                         ImGuiHelpers.HelpTooltip("Display name of the world.");
@@ -744,5 +741,56 @@ namespace Murder.Editor.CustomEditors
 
             public string? HideGroupsExceptFor = null;
         }
+
+        private enum WorldTab
+        {
+            None = 0,
+            World = 1,
+            Systems = 2,
+            Tiles = 3,
+            Pathfind = 4,
+            Story = 5,
+            Sound = 6,
+            Settings = 7
+        }
+
+        private WorldTab _previousActiveTab = WorldTab.None;
+
+        private readonly static Dictionary<WorldTab, Type> _tabToAttributeToDeactivate = new()
+        {
+            { WorldTab.World, typeof(WorldEditorAttribute) },
+            { WorldTab.Tiles, typeof(TileEditorAttribute) },
+            { WorldTab.Pathfind, typeof(PathfindEditorAttribute) },
+            { WorldTab.Story, typeof(StoryEditorAttribute) },
+            { WorldTab.Sound, typeof(SoundEditorAttribute) }
+        };
+
+        private void DeactivateAndActivateSystemsForTab(Stage stage, WorldTab activeTab)
+        {
+            if (_previousActiveTab == activeTab)
+            {
+                return;
+            }
+
+            // First, deactivate previous systems.
+            foreach ((WorldTab tab, Type attr) in _tabToAttributeToDeactivate)
+            {
+                if (tab == activeTab)
+                {
+                    continue;
+                }
+
+                stage.ActivateSystemsWith(enable: false, attr);
+            }
+
+            ShowGrid = false;
+            ShowReflection = false;
+
+            // Now, activate current systems.
+            stage.ActivateSystemsWith(enable: true, _tabToAttributeToDeactivate[activeTab]);
+
+            _previousActiveTab = activeTab;
+        }
+
     }
 }

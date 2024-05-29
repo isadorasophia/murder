@@ -43,9 +43,9 @@ namespace Murder.Utilities
 
         public static (float x, float y) XY(this Vector2 vector) => (vector.X, vector.Y);
 
+        public static Vector2 Abs(this Vector2 vector) => new(MathF.Abs(vector.X), MathF.Abs(vector.Y));
         public static Point Ceiling(this Vector2 vector) =>
             new(Calculator.CeilToInt(vector.X), Calculator.CeilToInt(vector.Y));
-
         public static Point Round(this Vector2 vector) =>
             new(Calculator.RoundToInt(vector.X), Calculator.RoundToInt(vector.Y));
         public static Point Floor(this Vector2 vector) =>
@@ -105,6 +105,25 @@ namespace Murder.Utilities
         public static float Angle(this Vector2 vector)
         {
             return (float)Math.Atan2(vector.Y, vector.X);
+        }
+
+        /// <summary>
+        /// Snap the angel to the nearest angle, based on the number of steps in a circle.
+        /// </summary>
+        public static Vector2 SnapAngle(this Vector2 vector, int steps)
+        {
+            float angle = vector.Angle();
+            float step = MathF.PI * 2 / steps;
+            float snapped = MathF.Round(angle / step) * step;
+            return new Vector2(MathF.Cos(snapped), MathF.Sin(snapped));
+        }
+
+        /// <summary>
+        /// Returns the perpendicular vector to the given vector.
+        /// </summary>
+        public static Vector2 Perpendicular(this Vector2 vector)
+        {
+            return new Vector2(-vector.Y, vector.X);
         }
     }
 }

@@ -9,11 +9,10 @@ using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
-using Murder.Editor.EditorCore;
+using Murder.Editor.Core;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
 using Murder.Services;
-using SharpFont;
 using System;
 using System.Numerics;
 
@@ -78,11 +77,11 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                     ImGui.Separator();
 
                     ImGui.Text($"{Game.GraphicsDevice.Adapter.Description:0}:");
-                    ImGui.Text($"Loaded Textures: {Game.GraphicsDevice.Metrics.TextureCount:0}");
-                    ImGui.Text($"Clear Count: {Game.GraphicsDevice.Metrics.ClearCount:0}");
                     ImGui.Text($"Display: [{Game.GraphicsDevice.Adapter.CurrentDisplayMode.Width}px, {Game.GraphicsDevice.Adapter.CurrentDisplayMode.Height}px]");
-                    ImGui.Text($"Draw Calls: {Game.GraphicsDevice.Metrics.DrawCount}");
-                    ImGui.Text($"Primitives: {Game.GraphicsDevice.Metrics.PrimitiveCount}");
+
+                    ImGui.Text($"Scale: {render.Viewport.Scale}");
+                    ImGui.Text($"Viewport: {render.Viewport.Size}");
+                    ImGui.Text($"NativeResolution: {render.Viewport.NativeResolution}");
 
                     ImGui.Separator();
 
@@ -95,7 +94,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                     for (int i = 0; i < Game.Data.CustomGameShaders.Length; i++)
                     {
                         var shader = Game.Data.CustomGameShaders[i];
-                        ImGui.Text($"{i}:{shader.Name}");
+                        ImGui.Text($"{i}:{shader?.Name}");
                     }
 
                     ImGui.SetNextWindowBgAlpha(0.9f);
@@ -107,7 +106,10 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                 {
                     ImGui.Checkbox("Collisions", ref hook.DrawCollisions);
                     ImGui.Checkbox("Grid", ref hook.DrawGrid);
-                    ImGui.Checkbox("Pathfind", ref hook.DrawPathfind);
+                    if (ImGui.Checkbox("Pathfind", ref hook.DrawPathfind))
+                    {
+                        hook.DrawGrid |= hook.DrawPathfind;
+                    }
                     ImGui.Checkbox("States", ref hook.ShowStates);
                     ImGui.Checkbox("Interactions", ref hook.DrawTargetInteractions);
                     ImGui.Checkbox("AnimationEvents", ref hook.DrawAnimationEvents);

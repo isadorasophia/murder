@@ -4,7 +4,7 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Editor.Components;
-using Murder.Editor.EditorCore;
+using Murder.Editor.Core;
 using Murder.Editor.Utilities;
 using Murder.Services;
 using System.Numerics;
@@ -13,6 +13,8 @@ namespace Murder.Editor.Systems.Debug
 {
     public class DebugShowCameraBoundsSystem : IMurderRenderSystem, IUpdateSystem
     {
+        private readonly static int _hash = typeof(DebugShowCameraBoundsSystem).GetHashCode();
+
         private bool _takeScreenshot = false;
 
         public void Draw(RenderContext render, Context context)
@@ -91,19 +93,19 @@ namespace Murder.Editor.Systems.Debug
                         {
                             info.CenterOffset = cursorWorldPosition - info.Offset;
                             info.Dragging = true;
-                            editorHook.UsingCursor = true;
+                            editorHook.CursorIsBusy.Add(_hash);
                         }
                     }
 
                     if (!Game.Input.Down(MurderInputButtons.LeftClick))
                     {
-                        editorHook.UsingCursor = false;
+                        editorHook.CursorIsBusy.Remove(_hash);
                         info.Dragging = false;
                     }
 
                     if (info.Dragging)
                     {
-                        editorHook.UsingCursor = true;
+                        editorHook.CursorIsBusy.Add(_hash);
                         info.Offset = cursorWorldPosition - info.CenterOffset;
                     }
                 }
@@ -117,11 +119,10 @@ namespace Murder.Editor.Systems.Debug
                     editorHook.Cursor = CursorStyle.Point;
                     if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                     {
-                        editorHook.UsingCursor = true;
+                        editorHook.CursorIsBusy.Add(_hash);
                         _takeScreenshot = true;
                     }
                 }
-
             }
         }
     }

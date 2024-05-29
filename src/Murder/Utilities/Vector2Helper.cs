@@ -1,5 +1,6 @@
-﻿using System.Numerics;
-using System.Security.AccessControl;
+﻿using Murder.Core.Geometry;
+using System.Net.Http.Headers;
+using System.Numerics;
 
 namespace Murder.Utilities
 {
@@ -10,6 +11,10 @@ namespace Murder.Utilities
         public static Vector2 Up { get; } = new(0, -1);
         public static Vector2 Right { get; } = new(1,0);
         public static Vector2 Left { get; } = new(-1, 0);
+        public static Vector2 Max(this Vector2 first, Vector2 second) => new Vector2(Math.Max(first.X, second.X), Math.Max(first.Y, second.Y));
+        public static Vector2 Min(this Vector2 first, Vector2 second) => new Vector2(Math.Min(first.X, second.X), Math.Min(first.X, second.Y));
+        public static Vector2 LerpSmooth(Vector2 from, Vector2 to, float deltaTime, float halfLife) =>
+            new Vector2(Calculator.LerpSmooth(from.X, to.X, deltaTime, halfLife), Calculator.LerpSmooth(from.Y, to.Y, deltaTime, halfLife));
 
         public static Vector2 LerpSnap(Vector2 origin, Vector2 target, float factor, float threshold = 0.01f) =>
             new(Calculator.LerpSnap(origin.X, target.X, factor, threshold),
@@ -79,6 +84,19 @@ namespace Murder.Utilities
         public static Vector2 Squish(float ammount)
         {
             return new Vector2(1 + ammount, 1 - ammount);
+        }
+
+
+        /// <summary>
+        /// Returns the inner vector scaled to fit inside the outter vector, keeping the aspect ratio.
+        /// </summary>
+        /// <param name="outter"></param>
+        /// <param name="inner"></param>
+        /// <returns></returns>
+        internal static Point FitInside(Vector2 outter, Vector2 inner)
+        {
+            float ratio = Math.Min(outter.X / inner.X, outter.Y / inner.Y);
+            return new Point((int)(inner.X * ratio), (int)(inner.Y * ratio));
         }
     }
 }

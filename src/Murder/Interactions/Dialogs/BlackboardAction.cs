@@ -10,7 +10,7 @@ using System.Collections.Immutable;
 
 namespace Murder.Interactions
 {
-    internal readonly struct BlackboardAction
+    public readonly struct BlackboardAction
     {
         /// <summary>
         /// List of requirements which will trigger the interaction.

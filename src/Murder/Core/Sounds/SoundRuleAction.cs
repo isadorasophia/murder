@@ -1,4 +1,5 @@
 ﻿using Murder.Core.Dialogs;
+using System.Text.Json.Serialization;
 
 namespace Murder.Core.Sounds
 {
@@ -9,11 +10,12 @@ namespace Murder.Core.Sounds
     {
         public readonly SoundFact Fact = default;
         public readonly BlackboardActionKind Kind = BlackboardActionKind.Set;
-        public readonly object? Value = null;
+        public readonly int? Value = null;
 
         public SoundRuleAction() { }
 
-        public SoundRuleAction(SoundFact fact, BlackboardActionKind kind, object? value)
+        [JsonConstructor]
+        public SoundRuleAction(SoundFact fact, BlackboardActionKind kind, int? value)
         {
             Fact = fact;
             Kind = kind;

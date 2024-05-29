@@ -7,9 +7,9 @@ using Murder.Core.Geometry;
 using Murder.Prefabs;
 using Murder.Serialization;
 using Murder.Utilities;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace Murder.Assets
 {
@@ -28,13 +28,13 @@ namespace Murder.Assets
         public override System.Numerics.Vector4 EditorColor => new System.Numerics.Vector4(0.75f, 0.45f, 1, 1);
         public override string SaveLocation => Path.Join(Game.Profile.ContentECSPath, FileHelper.Clean(EditorFolder));
 
-        [JsonProperty]
+        [Bang.Serialize]
         private readonly EntityInstance _entity = new();
 
         /// <summary>
         /// Dimensions of the prefab. Used when drawing it on the map or the editor.
         /// </summary>
-        [JsonProperty]
+        [Bang.Serialize]
         public readonly TileDimensions Dimensions;
 
         /// <summary>

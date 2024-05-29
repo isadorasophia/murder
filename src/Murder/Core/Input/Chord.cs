@@ -9,6 +9,8 @@ namespace Murder.Core.Input;
 /// <param name="modifiers">Optional modifiers that need to be pressed along with the key.</param>
 public sealed class Chord(Keys key, params Keys[] modifiers)
 {
+    public static Chord None = new Chord(Keys.None);
+
     /// <summary>
     /// The key that needs to be pressed to trigger this chord.
     /// </summary>

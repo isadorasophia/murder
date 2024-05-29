@@ -1,8 +1,6 @@
-﻿using Microsoft.Xna.Framework.Content.Pipeline;
-using Murder.Core.Geometry;
+﻿using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Data;
-using Murder.Diagnostics;
 using Murder.Editor.Assets;
 using Murder.Editor.Data;
 using Murder.Editor.Utilities;

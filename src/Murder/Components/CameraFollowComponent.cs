@@ -1,7 +1,7 @@
 ﻿using Bang.Components;
 using Bang.Entities;
 using Murder.Core.Geometry;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Murder.Components;
 

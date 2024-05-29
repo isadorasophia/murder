@@ -19,7 +19,7 @@ namespace Murder.Systems
     {
         public void Start(Context context)
         {
-            if (context.World.TryGetUnique<MapComponent>()?.Map is not Map map)
+            if (context.World.TryGetUniqueMap()?.Map is not Map map)
             {
                 GameLogger.Error("Unable to find map dimensions in this world?");
                 return;
@@ -31,7 +31,7 @@ namespace Murder.Systems
 
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
-            Map map = world.GetUnique<MapComponent>().Map;
+            Map map = world.GetUniqueMap().Map;
             foreach (var e in entities)
             {
                 if (!e.HasPathfind())
@@ -43,7 +43,7 @@ namespace Murder.Systems
 
         public void OnModified(World world, ImmutableArray<Entity> entities)
         {
-            Map map = world.GetUnique<MapComponent>().Map;
+            Map map = world.GetUniqueMap().Map;
             foreach (var e in entities)
             {
                 if (!e.HasPathfind())
@@ -73,6 +73,8 @@ namespace Murder.Systems
             }
         }
 
+        public const int LineOfSightCollisionMask = CollisionLayersBase.BLOCK_VISION | CollisionLayersBase.SOLID | CollisionLayersBase.HOLE | CollisionLayersBase.CARVE;
+
         private static void CalculatePath(World world, Map map, Entity e)
         {
             PathfindComponent pathfind = e.GetPathfind();
@@ -89,7 +91,7 @@ namespace Murder.Systems
             }
             else
             {
-                collisionMask = CollisionLayersBase.BLOCK_VISION | CollisionLayersBase.SOLID | CollisionLayersBase.HOLE | CollisionLayersBase.CARVE;
+                collisionMask = LineOfSightCollisionMask;
             }
 
             var path = map.FindPath(

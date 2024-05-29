@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using Murder.Assets;
 using Murder.Core;
 using Murder.Editor.ImGuiExtended;
 using System.Collections.Immutable;
@@ -17,7 +18,7 @@ namespace Murder.Editor
         
         private ExplorerWindow? _selectedExplorerWindow;
         private readonly ImmutableArray<ExplorerWindow> _explorerPages;
-
+        
         private ImmutableArray<ExplorerWindow> CreateExplorerPages() => 
         [
             new("assets", "Assets", "\uf520", DrawAssetsWindow),
@@ -44,6 +45,11 @@ namespace Murder.Editor
                 if (ImGui.Button($"{tab.Icon}", new Vector2(-6, 36)))
                 {
                     _selectedExplorerWindow = isSelected ? null : tab;
+
+                    lock (_foldersLock)
+                    {
+                        _folders = null;
+                    }
                 }
 
                 ImGui.PopStyleColor();
@@ -87,5 +93,7 @@ namespace Murder.Editor
             string Icon,
             Action RenderCallback
         );
+
+
     }
 }

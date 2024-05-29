@@ -2,9 +2,7 @@
 using Bang.Components;
 using Bang.Entities;
 using Murder.Attributes;
-using Murder.Components;
 using Murder.Diagnostics;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
@@ -14,15 +12,16 @@ namespace Murder.Prefabs
     /// Represents an entity as an instance placed on the map.
     /// This map may be relative to the world or another entity.
     /// </summary>
+    [Serializable]
     public class EntityInstance : IEntity
     {
-        [JsonProperty]
+        [Bang.Serialize]
         private Guid _guid;
 
         [HideInEditor]
         public Guid Guid => _guid;
 
-        [JsonProperty]
+        [Bang.Serialize]
         [ShowInEditor]
         private string _name;
 
@@ -30,7 +29,7 @@ namespace Murder.Prefabs
         /// Entity id, if any. This will be persisted across save files.
         /// This only exists for instances in the world.
         /// </summary>
-        [JsonProperty]
+        [Bang.Serialize]
         [HideInEditor]
         public int? Id = default;
 
@@ -45,7 +44,7 @@ namespace Murder.Prefabs
         /// <summary>
         /// List of custom components that difer from the parent entity.
         /// </summary>
-        [JsonProperty]
+        [Bang.Serialize]
         protected readonly Dictionary<Type, IComponent> _components = new(new ComponentTypeComparator());
 
         /// <summary>
@@ -59,7 +58,7 @@ namespace Murder.Prefabs
         /// TODO: We might need to revisit on whether this is okay/actually scales well.
         /// </summary>
         [HideInEditor]
-        [JsonProperty]
+        [Bang.Serialize]
         public bool ActivateWithParent = false;
 
         private ImmutableArray<IComponent>? _cachedComponents;
@@ -73,7 +72,7 @@ namespace Murder.Prefabs
             }
         }
 
-        [JsonProperty]
+        [Bang.Serialize]
         protected Dictionary<Guid, EntityInstance>? _children;
 
         private ImmutableArray<EntityInstance>? _cachedChildren;
@@ -93,10 +92,13 @@ namespace Murder.Prefabs
 
         public EntityInstance() : this(name: default) { }
 
-        public EntityInstance(string? name, Guid? guid = null)
+        public EntityInstance(string? name, Guid? guid = null) : this(name ?? string.Empty, guid ?? Guid.NewGuid()) { }
+
+        [System.Text.Json.Serialization.JsonConstructor]
+        public EntityInstance(string name, Guid guid)
         {
-            _guid = guid ?? Guid.NewGuid();
-            _name = name ?? string.Empty;
+            _guid = guid;
+            _name = name;
         }
 
         public virtual bool IsEmpty

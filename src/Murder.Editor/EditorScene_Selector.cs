@@ -7,6 +7,7 @@ using Murder.Diagnostics;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
 using Murder.Utilities.Attributes;
+using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -16,6 +17,10 @@ namespace Murder.Editor
     public partial class EditorScene
     {
         private string _newAssetName = string.Empty;
+
+        private bool _colapseAll = false;
+        private readonly List<string> _expandTo = new List<string>();
+        private readonly Regex _nonAlphaNumeric = new Regex("[^a-zA-Z0-9 -]");
 
         private void DrawCreateAssetModal(Type type, string? path)
         {
@@ -123,7 +128,14 @@ namespace Murder.Editor
         private void DrawAssetFolder(string folderName, Vector4 color, Type? createType, IEnumerable<GameAsset> assets, bool unfoldAll) =>
             DrawAssetFolder(folderName, color, createType, assets, 0, string.Empty, unfoldAll);
 
-        private readonly Dictionary<string, Dictionary<string, (Vector4 color, Type? createType, List<GameAsset> assets)>> _folders = new();
+        private Dictionary<string, IEnumerable<(string folder, Vector4 color, Type? createType, List<GameAsset> assets)>>? _folders = null;
+
+        private readonly object _foldersLock = new();
+
+        /// <summary>
+        /// Clear the cache on search.
+        /// </summary>
+        private bool _clearedFoldersOnSearch = true;
 
         private void DrawAssetFolder(string folderName, Vector4 color, Type? createType, IEnumerable<GameAsset> assets, int depth, string folderRootPath, bool unfoldAll)
         {
@@ -135,27 +147,49 @@ namespace Murder.Editor
 
             string printName = GetFolderPrettyName(folderName, out char? icon);
 
-            Dictionary<string, (Vector4 color, Type? createType, List<GameAsset> assets)> foldersToDraw = new();
-            foreach (GameAsset asset in assets)
+            IEnumerable<(string folder, Vector4 color, Type? createType, List<GameAsset> assets)>? subfolders;
+            lock (_foldersLock)
             {
-                string[] folders = asset.GetSplitNameWithEditorPath();
-                if (folders.Length > depth + 1)
+                if (_folders is null)
                 {
-                    string currentFolder = folders[depth];
-                    if (!foldersToDraw.ContainsKey(currentFolder))
-                    {
-                        // Add create asset button to the folder if necessary
-                        Type t = asset.GetType();
+                    _folders = [];
+                }
 
-                        foldersToDraw[currentFolder] = (asset.EditorColor, t, new List<GameAsset>());
+                // Initialize folders if necessary up to this point...
+                if (!_folders.TryGetValue(folderName, out subfolders))
+                {
+                    Dictionary<string, (Vector4 color, Type? createType, List<GameAsset> assets)> builder = [];
+
+                    foreach (GameAsset asset in assets)
+                    {
+                        string[] folders = asset.GetSplitNameWithEditorPath();
+                        if (folders.Length > depth + 1)
+                        {
+                            string currentFolder = folders[depth];
+                            if (!builder.TryGetValue(currentFolder, out var folderInfo))
+                            {
+                                // Add create asset button to the folder if necessary
+                                Type t = asset.GetType();
+
+                                folderInfo = (asset.EditorColor, t, []);
+                                builder[currentFolder] = folderInfo;
+                            }
+
+                            folderInfo.assets.Add(asset);
+                        }
                     }
 
-                    foldersToDraw[currentFolder].assets.Add(asset);
+                    foreach (var s in builder)
+                    {
+                        s.Value.assets.Sort((x, y) => x.Name.CompareTo(y.Name));
+                    }
+
+                    subfolders =
+                        builder.OrderBy(kv => GetFolderPrettyName(kv.Key, out _)).Select(kv => (kv.Key, kv.Value.color, kv.Value.createType, kv.Value.assets));
+
+                    _folders[folderName] = subfolders;
                 }
             }
-
-            IEnumerable<(string folder, Vector4 color, Type? createType, List<GameAsset> assets)> orderedDirectories =
-                foldersToDraw.OrderBy(kv => GetFolderPrettyName(kv.Key, out _)).Select(kv => (kv.Key, kv.Value.color, kv.Value.createType, kv.Value.assets));
 
             if (icon.HasValue && depth > 0)
             {
@@ -166,8 +200,21 @@ namespace Murder.Editor
             if (depth <= 1) ImGui.PushStyleColor(ImGuiCol.Text, color);
 
             string currentDirectoryPath = depth < 2 ? string.Empty : string.IsNullOrEmpty(folderRootPath) ? printName : $"{folderRootPath}/{printName}";
+            if (_expandTo.Count > 0 &&
+                _nonAlphaNumeric.Replace(_expandTo[0], "").Equals(_nonAlphaNumeric.Replace(printName,""), StringComparison.InvariantCultureIgnoreCase))
+            {
+                    ImGui.SetNextItemOpen(true);
+                    _expandTo.RemoveAt(0);
+            }
+            else if (_colapseAll)
+            {
+                ImGui.SetNextItemOpen(false);
+            }
 
-            bool isFolderOpened = string.IsNullOrWhiteSpace(printName) || ImGui.TreeNodeEx(printName, (unfoldAll && (printName != "Generated")) ? ImGuiTreeNodeFlags.DefaultOpen : ImGuiTreeNodeFlags.None);
+            bool isFolderOpened = string.IsNullOrWhiteSpace(printName) || ImGui.TreeNodeEx(printName,
+                ((unfoldAll && (printName != "Generated")) ? ImGuiTreeNodeFlags.DefaultOpen : ImGuiTreeNodeFlags.None));
+            
+
             if (createType is not null && printName != "Generated")
             {
                 DrawAssetContextMenu(createType, folderPath: currentDirectoryPath);
@@ -182,7 +229,7 @@ namespace Murder.Editor
 
             if (isFolderOpened)
             {
-                foreach ((string folder, Vector4 folderColor, Type? folderCreateType, List<GameAsset> folderAssets) in orderedDirectories)
+                foreach ((string folder, Vector4 folderColor, Type? folderCreateType, List<GameAsset> folderAssets) in subfolders)
                 {
                     if (folder.StartsWith(GameAsset.SkipDirectoryIconCharacter))
                     {
@@ -282,7 +329,7 @@ namespace Murder.Editor
                 }
                 if (asset is PrefabAsset prefab && ImGui.MenuItem("Create instance"))
                 {
-                    string instanceName = Architect.EditorData.GetNextName($"{prefab.Name} Instance", Architect.EditorSettings.AssetNamePattern);
+                    string instanceName = Architect.EditorData.GetNextName(typeof(PrefabAsset), $"{prefab.Name} Instance", Architect.EditorSettings.AssetNamePattern);
 
                     GameAsset instance = prefab.ToInstanceAsAsset(instanceName);
                     Architect.Data.AddAsset(instance);
@@ -291,11 +338,12 @@ namespace Murder.Editor
                 }
                 if (ImGui.MenuItem("Duplicate"))
                 {
-                    string duplicateName = Architect.EditorData.GetNextName(asset.Name, Architect.EditorSettings.AssetNamePattern);
+                    string duplicateName = Architect.EditorData.GetNextName(asset.GetType(), asset.Name, Architect.EditorSettings.AssetNamePattern);
 
-                    GameAsset instance = asset.Duplicate(duplicateName);
-                    Architect.Data.AddAsset(instance);
+                    GameAsset copy = asset.Duplicate(duplicateName);
+                    Architect.Data.AddAsset(copy);
 
+                    OpenAssetEditor(copy, true);
                     ImGui.CloseCurrentPopup();
                 }
                 if (asset.CanBeRenamed && ImGui.Selectable("Rename", false, ImGuiSelectableFlags.DontClosePopups))
@@ -389,6 +437,20 @@ namespace Murder.Editor
             return prettyName;
         }
 
-        /* */
+        public Guid OpenOnTreeView(GameAsset asset, bool colapseAllOthers)
+        {
+            _colapseAll = colapseAllOthers;
+            _expandTo.AddRange(asset.GetSplitNameWithEditorPath());
+            return asset.Guid;
+        }
+
+        public void OnAssetRenamedOrAddedOrDeleted()
+        {
+            lock (_foldersLock)
+            {
+                // Clear cache.
+                _folders = null;
+            }
+        }
     }
 }

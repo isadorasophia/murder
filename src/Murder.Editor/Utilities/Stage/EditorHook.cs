@@ -1,8 +1,11 @@
 ﻿using Bang;
 using Bang.Components;
 using Bang.Entities;
+using Murder.Attributes;
 using Murder.Core.Geometry;
-using Murder.Editor.EditorCore;
+using Murder.Core.Physics;
+using Murder.Editor.Core;
+using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 using System.Numerics;
 
@@ -20,7 +23,7 @@ namespace Murder.Editor.Utilities
         }
 
         public bool UsingGui = false;
-        public bool UsingCursor = false;
+        public readonly HashSet<int> CursorIsBusy = new();
         public bool IsPopupOpen = false;
 
         /// <summary>
@@ -49,8 +52,6 @@ namespace Murder.Editor.Utilities
         public bool IsEntityHovered(int id) => _hovering.Contains(id);
 
         public ImmutableArray<int> Hovering => _hoveringCache ??= _hovering.ToImmutableArray();
-
-        public bool KeepOriginalColliderShapes;
 
         public void HoverEntity(Entity e, bool clear = false)
         {
@@ -197,7 +198,6 @@ namespace Murder.Editor.Utilities
 
         public bool DrawSelection = true;
 
-        public Action? RefreshAtlas;
         public Func<World, Entity, bool>? DrawEntityInspector;
 
         public Action<Guid, IComponent[], string?>? AddPrefabWithStage;
@@ -266,6 +266,15 @@ namespace Murder.Editor.Utilities
         /// Bound rectangles which will be displayed in the world.
         /// </summary>
         public Dictionary<Guid, Rectangle>? Dimensions { get; private set; }
+
+        /// <summary>
+        /// Used by <see cref="Murder.Editor.Systems.PathfindEditorSystem"/>
+        /// </summary>
+        [Slider(-1, 100)]
+        public int CurrentPathfindWeight = 100;
+
+        [CollisionLayer]
+        public int CurrentPathfindCollisionMask = CollisionLayersBase.BLOCK_VISION | CollisionLayersBase.CARVE;
 
         /// <summary>
         /// Add a dimension rectangle to the editor hook. This will be drawn in the world.

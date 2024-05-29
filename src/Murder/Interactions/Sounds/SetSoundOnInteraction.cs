@@ -52,7 +52,7 @@ namespace Murder.Interactions
 
                     default:
                         MurderSaveServices.CreateOrGetSave().BlackboardTracker
-                            .SetValue(action.Fact.Blackboard, action.Fact.Name, action.Value);
+                            .SetValue(action.Fact.Blackboard, action.Fact.Name, Convert.ToInt32(action.Value));
                         break;
                 }
             }

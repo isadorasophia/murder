@@ -1,9 +1,9 @@
-﻿using Murder.Assets.Graphics;
+﻿using Bang;
+using Murder.Assets.Graphics;
 using Murder.Assets.Localization;
 using Murder.Attributes;
 using Murder.Core.Graphics;
 using Murder.Data;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 
 namespace Murder.Assets
@@ -11,7 +11,7 @@ namespace Murder.Assets
     /// <summary>
     /// Represents the game profile asset containing configuration and resource paths.
     /// </summary>
-    public class GameProfile : GameAsset
+    public partial class GameProfile : GameAsset
     {
         public override char Icon => '\uf085';
         public override bool CanBeRenamed => false;
@@ -23,7 +23,7 @@ namespace Murder.Assets
         public override bool StoreInDatabase => false;
 
         /// <summary>Gets the game's intended aspect ratio</summary>
-        public float Aspect => GameHeight / GameWidth;
+        public float Aspect => GameHeight / (float)GameWidth;
                  
 
         /// <summary>
@@ -136,15 +136,17 @@ namespace Murder.Assets
         /// <summary>Game desired display height. Use <see cref="RenderContext.Camera"/> size for the runtime value.</summary>
         public readonly int GameHeight = 180;
         /// <summary>Game scaling factor.</summary>
-        public readonly int GameScale = 2;
+        public readonly float GameScale = 2;
 
-        [JsonProperty]
-        internal bool _enforceResolution = false;
+        /// <summary>
+        /// Used for reporting bugs and feedback.
+        /// </summary>
+        public readonly string FeedbackUrl = string.Empty;
+        public readonly string FeedbackKey = "changeme";
 
-        /// <summary>Indicates if resolution enforcement is active.</summary>
-        public bool EnforceResolution => _enforceResolution;
+        public readonly ViewportResizeStyle ResizeStyle = new();
 
-        [JsonProperty]
+        [Bang.Serialize]
         internal bool _scalingFilter = false;
 
         /// <summary>
@@ -171,7 +173,7 @@ namespace Murder.Assets
         /// actual game will be faster.
         /// </summary>
         [Tooltip("Load textures on start, slower startup but no delays in game")]
-        [JsonProperty]
+        [Serialize]
         public bool PreloadTextures = true;
 
         public readonly Theme Theme = new Theme();
@@ -184,7 +186,7 @@ namespace Murder.Assets
         /// </summary>
         public Color BackColor = Color.Black;
 
-        [SimpleTexture, JsonProperty]
+        [SimpleTexture, Serialize]
         internal string DefaultPalette = "images/murder_palette";
 
         /// <summary>

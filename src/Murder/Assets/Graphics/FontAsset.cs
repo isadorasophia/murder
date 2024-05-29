@@ -35,11 +35,11 @@ namespace Murder.Assets.Graphics
         [HideInEditor]
         public readonly ImmutableArray<Kerning> Kernings = ImmutableArray<Kerning>.Empty;
 
-        public FontAsset(int index, Dictionary<int, PixelFontCharacter> characters, ImmutableArray<Kerning> kernings, int size, string texturePath, float baseline, Point offset)
+        public FontAsset(int index, Dictionary<int, PixelFontCharacter> characters, ImmutableArray<Kerning> kernings, int lineHeight, string texturePath, float baseline, Point offset)
         {
             Index = index;
             Name = Path.GetFileNameWithoutExtension(texturePath);
-            LineHeight = size;
+            LineHeight = lineHeight;
             Baseline = baseline;
             Offset = offset;
             TexturePath = Name + ".png";

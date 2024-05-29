@@ -1,8 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Murder.Core.Geometry;
-using Murder.Data;
 using Murder.Diagnostics;
-using Murder.Serialization;
 using Murder.Services;
 using Murder.Utilities;
 using System.Diagnostics;
@@ -38,8 +36,6 @@ public class RenderContext : IDisposable
     /// </summary>
     public Batch2D UiBatch => GetBatch(Batches2D.UiBatchId);
 
-    public Vector2 Scale => _scale;
-    protected Vector2 _scale = Vector2.One;
     public Vector2 SubPixelOffset => _subPixelOffset;
     protected Vector2 _subPixelOffset;
 
@@ -61,6 +57,8 @@ public class RenderContext : IDisposable
 
     public BatchPreviewState PreviewState;
     public bool PreviewStretch;
+
+    public Viewport Viewport = new();
 
     public enum BatchPreviewState
     {
@@ -117,7 +115,6 @@ public class RenderContext : IDisposable
 
     public bool RenderToScreen = true;
 
-    public Point ScreenSize;
     public Color BackColor => Game.Data.GameProfile.BackColor;
 
     public Texture2D? ColorGrade;
@@ -125,7 +122,7 @@ public class RenderContext : IDisposable
     protected readonly bool _useDebugBatches;
 
     private Rectangle? _takeScreenShot;
-
+    private bool _initialized = false;
     public enum RenderTargets
     {
         MainBufferTarget,
@@ -164,6 +161,13 @@ public class RenderContext : IDisposable
 
     public virtual void Initialize()
     {
+        if (_initialized)
+        {
+            GameLogger.Warning("RenderContext already initialized.");
+            return;
+        }
+        _initialized = true;
+
         RegisterSpriteBatch(Batches2D.GameplayBatchId,
             new("Gameplay",
             _graphicsDevice,
@@ -287,27 +291,24 @@ public class RenderContext : IDisposable
 
 
     /// <summary>
-    /// Refresh the window size with <paramref name="size"/> with width and height information,
-    /// respectively.
+    /// Refreshes the window with the new viewport size and camera scale.
     /// </summary>
     /// <returns>
     /// Whether the window actually required a refresh.
     /// </returns>
-    public bool RefreshWindow(Point size, float scale) =>
-        RefreshWindow(_graphicsDevice, size, scale);
-
-    internal bool RefreshWindow(GraphicsDevice graphicsDevice, Point size, float scale)
+    public bool RefreshWindow(GraphicsDevice graphicsDevice, Point viewportSize, Point nativeResolution, ViewportResizeStyle viewportResizeMode)
     {
+        // No changes, skip
+        if (!Viewport.HasChanges(viewportSize, nativeResolution))
+        {
+            return false;
+        }
+        
         _graphicsDevice = graphicsDevice;
-        if (Game.Profile.EnforceResolution && RenderToScreen)
-        {
-            Camera.UpdateSize(Game.Profile.GameWidth, Game.Profile.GameHeight);
-        }
-        else
-        {
-            Camera.UpdateSize(size.X, size.Y);
-        }
-        UpdateBufferTarget(scale);
+        Viewport = new Viewport(viewportSize, nativeResolution, viewportResizeMode);
+
+        Camera.UpdateSize(Viewport.NativeResolution);
+        UpdateViewport();
 
         return true;
     }
@@ -353,8 +354,11 @@ public class RenderContext : IDisposable
             _finalTarget is not null,
             "Did not initialize buffer targets before calling RenderContext.End()?");
 
-        Game.Data.ShaderSimple.SetTechnique("Simple");
-        Game.Data.ShaderSprite.SetTechnique("Alpha");
+
+        // Setup the basic shader parameters
+
+        Game.Data.ShaderPixel?.TrySetParameter("viewportSize", (_tempTarget.Bounds.Size() * Viewport.Scale).ToXnaVector2());
+        Game.Data.ShaderPixel?.TrySetParameter("texelsScale", (Vector2.One / Viewport.Scale).ToXnaVector2());
 
         // =======================================================>
         // Draw the floor to a temp batch
@@ -388,29 +392,32 @@ public class RenderContext : IDisposable
 
         _graphicsDevice.SetRenderTarget(_finalTarget);
 
-        _scale = (_finalTarget.Bounds.Size.ToSysVector2() / _mainTarget.Bounds.Size.ToSysVector2());
-        _scale = _scale.Ceiling();
-
         _subPixelOffset = new Vector2(
             Camera.Position.Point().X - Camera.Position.X - CAMERA_BLEED / 2,
-            Camera.Position.Point().Y - Camera.Position.Y - CAMERA_BLEED / 2)
-            .Multiply(_scale).Point();
+            Camera.Position.Point().Y - Camera.Position.Y - CAMERA_BLEED / 2) * Viewport.Scale;
 
         _graphicsDevice.SetRenderTarget(_finalTarget);
-        RenderServices.DrawTextureQuad(_mainTarget,     // <=== Draws the game buffer to the final buffer using a cheap shader
+        
+        Game.Data.ShaderPixel?.TrySetParameter("viewportSize", (_mainTarget.Bounds.Size() * Viewport.Scale).ToXnaVector2());
+        Game.Data.ShaderPixel?.TrySetParameter("textureSize", _mainTarget.Bounds.Size());
+        RenderServices.DrawTextureQuad(_mainTarget,     // <=== Draws the game buffer to the final buffer using a optimized pixel shader
             _mainTarget.Bounds,
-            new Rectangle(_subPixelOffset, _mainTarget.Bounds.Size.ToSysVector2().Multiply(_scale)),
+            new Rectangle(_subPixelOffset, _mainTarget.Bounds.Size() * Viewport.Scale),
             Matrix.Identity,
-            Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
+            Color.White, Game.Data.ShaderPixel, BlendState.Opaque, true);
 
         CreateDebugPreviewIfNecessary(BatchPreviewState.Step2, _finalTarget);
         
         _graphicsDevice.SetRenderTarget(_finalTarget);
-        RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to the final buffer with a cheap shader
+
+        Game.Data.ShaderPixel?.TrySetParameter("viewportSize", (_uiTarget.Bounds.Size() * Viewport.Scale).ToXnaVector2());
+        Game.Data.ShaderPixel?.TrySetParameter("textureSize", _uiTarget.Bounds.Size());
+        RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to the final buffer using a optimized pixel shader
             _uiTarget.Bounds,
-            new Rectangle(Vector2.Zero, _uiTarget.Bounds.Size.ToSysVector2().Multiply(_scale)),
+            new Rectangle(Vector2.Zero, _uiTarget.Bounds.Size() * Viewport.Scale),
             Matrix.Identity,
-            Color.White, Game.Data.ShaderSimple, BlendState.NonPremultiplied, false);
+            Color.White, Game.Data.ShaderPixel, BlendState.AlphaBlend, true);
+
         CreateDebugPreviewIfNecessary(BatchPreviewState.Step3, _finalTarget);
 
         if (_useDebugBatches)
@@ -421,13 +428,13 @@ public class RenderContext : IDisposable
             _graphicsDevice.SetRenderTarget(_debugTarget);
             _graphicsDevice.Clear(Color.Transparent);
 
-            Game.Data.ShaderSimple.SetTechnique("Simple");
-            Game.Data.ShaderSprite.SetTechnique("DiagonalLines");
-            Game.Data.ShaderSprite.SetParameter("inputTime", Game.Now);
+            Game.Data.ShaderSimple?.SetTechnique("DefaultTechnique");
+            Game.Data.ShaderSprite?.SetTechnique("DiagonalLines");
+            Game.Data.ShaderSprite?.SetParameter("inputTime", Game.Now);
             DebugFxBatch.End();
 
-            Game.Data.ShaderSimple.SetTechnique("Simple");
-            Game.Data.ShaderSprite.SetTechnique("Alpha");
+            Game.Data.ShaderSimple?.SetTechnique("DefaultTechnique");
+            Game.Data.ShaderSprite?.SetTechnique("Alpha");
             GetBatch(Batches2D.DebugBatchId).End();
 
             CreateDebugPreviewIfNecessary(BatchPreviewState.Debug, _debugTarget);
@@ -435,7 +442,7 @@ public class RenderContext : IDisposable
 
             RenderServices.DrawTextureQuad(_debugTarget,     // <=== Draws the debug buffer to the final buffer
                 _debugTarget.Bounds,
-                new Rectangle(_subPixelOffset, _finalTarget.Bounds.Size.ToSysVector2() + _scale * CAMERA_BLEED * 2),
+                new Rectangle(_subPixelOffset, _finalTarget.Bounds.Size() + Viewport.Scale * CAMERA_BLEED * 2),
                 Matrix.Identity,
                 Color.White, Game.Data.ShaderSimple, BlendState.AlphaBlend, false);
         }
@@ -445,51 +452,23 @@ public class RenderContext : IDisposable
         // Time to draw this game to the screen!!
         // =======================================================>
         _graphicsDevice.SetRenderTarget(null);
+
         if (RenderToScreen)
         {
             _graphicsDevice.Clear(Game.Profile.BackColor);
 
+            // Draw the game normally
             if (_debugTargetPreview == null || PreviewState == BatchPreviewState.None)
             {
-                Game.Data.ShaderSimple.SetTechnique("Simple");
-                if (Game.Profile.EnforceResolution)
-                {
-                    float windowAspect = (float)_graphicsDevice.Viewport.Height / _graphicsDevice.Viewport.Width;
-                    var trim = new Rectangle(0, 0, _finalTarget.Bounds.Width - CAMERA_BLEED * 2, _finalTarget.Bounds.Height - CAMERA_BLEED * 2);
-
-                    if (windowAspect < Game.Profile.Aspect)
-                    {
-                        RenderServices.DrawTextureQuad(_finalTarget,
-                            trim,
-                            new Rectangle(
-                                -(_graphicsDevice.Viewport.Height / Game.Profile.Aspect - _graphicsDevice.Viewport.Width) / 2f,
-                                0,
-                                _graphicsDevice.Viewport.Height / Game.Profile.Aspect,
-                                _graphicsDevice.Viewport.Height),
-                            Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, Game.Profile.ScalingFilter);
-                    }
-                    else
-                    {
-                        RenderServices.DrawTextureQuad(_finalTarget,
-                            trim,
-                            new Rectangle(
-                                0,
-                                -(_graphicsDevice.Viewport.Width * Game.Profile.Aspect - _graphicsDevice.Viewport.Height) / 2f,
-                                _graphicsDevice.Viewport.Width,
-                                _graphicsDevice.Viewport.Width * Game.Profile.Aspect),
-                            Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, Game.Profile.ScalingFilter);
-                    }
-                }
-                else
-                {
-                    RenderServices.DrawTextureQuad(_finalTarget,
-                        _finalTarget.Bounds, _finalTarget.Bounds,
-                        Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
-                }
+                // Draw the final buffer to the viewport output rectangle
+                RenderServices.DrawTextureQuad(_finalTarget,
+                    _finalTarget.Bounds, 
+                    Viewport.OutputRectangle,
+                    Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
             }
+            // We are in preview mode, draw the preview buffer instead
             else
             {
-                Game.Data.ShaderSimple.SetTechnique("Simple");
                 RenderServices.DrawTextureQuad(_debugTargetPreview,
                     _debugTargetPreview.Bounds, PreviewStretch ? _finalTarget.Bounds : _debugTargetPreview.Bounds,
                     Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
@@ -550,18 +529,13 @@ public class RenderContext : IDisposable
         nameof(_tempTarget),
         nameof(_debugTarget),
         nameof(_finalTarget))]
-    public virtual void UpdateBufferTarget(float scale)
+    public virtual void UpdateViewport()
     {
-        if (Game.Preferences.Downscale)
-            ScreenSize = new Point(Camera.Width, Camera.Height);
-        else
-            ScreenSize = new Point(Camera.Width, Camera.Height) * scale;
-
         _uiTarget = SetupRenderTarget(_uiTarget, Camera.Width, Camera.Height, Color.Transparent, false);
         _mainTarget = SetupRenderTarget(_mainTarget, Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2, BackColor, true);
         _tempTarget = SetupRenderTarget(_tempTarget, Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2, Color.Transparent, true);
         _debugTarget = SetupRenderTarget(_debugTarget, Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2, BackColor, true);
-        _finalTarget = SetupRenderTarget(_finalTarget, Calculator.RoundToInt(ScreenSize.X) + CAMERA_BLEED, Calculator.RoundToInt(ScreenSize.Y) + CAMERA_BLEED, BackColor, true);
+        _finalTarget = SetupRenderTarget(_finalTarget, Viewport.OutputRectangle.Size.X + CAMERA_BLEED, Viewport.OutputRectangle.Size.Y + CAMERA_BLEED, BackColor, true);
 
         GameBufferSize = new Point(Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2);
     }
@@ -575,9 +549,6 @@ public class RenderContext : IDisposable
         Dispose();
 
         Camera.Reset();
-
-        Game.Data.ShaderSimple.SetTechnique("Simple");
-
         UnloadImpl();
 
         _graphicsDevice.SetRenderTarget(null);
@@ -625,7 +596,7 @@ public class RenderContext : IDisposable
             _graphicsDevice.SetRenderTarget(_debugTargetPreview);
             _graphicsDevice.Clear(Color.Transparent);
             RenderServices.DrawTextureQuad(target,
-            target.Bounds,
+                target.Bounds,
                 target.Bounds,
                 Matrix.Identity,
                 Color.White, Game.Data.ShaderSimple, BlendState.NonPremultiplied, false);

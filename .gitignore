@@ -15,3 +15,4 @@ src/**/Content/*.log
 lfs/
 hooks/
 docs/playbook/book
+*.qoi.gz

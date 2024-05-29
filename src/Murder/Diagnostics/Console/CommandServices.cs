@@ -1,6 +1,7 @@
 ﻿using Bang;
 using Bang.Entities;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text;
 
@@ -88,9 +89,12 @@ namespace Murder.Diagnostics
             public (Type Type, string Name)[] Arguments { get; init; }
             public string Help { get; init; }
 
+            [UnconditionalSuppressMessage("Trimming", "IL2026:Method name might have been trimmed.", Justification = "Assembly is not trimmed.")]
             public string Name => ToName(Method);
         }
 
+        [UnconditionalSuppressMessage("Trimming", "IL2026:GetTypes() might not get all the types if they are trimmed.", Justification = "Assembly is not trimmed.")]
+        [UnconditionalSuppressMessage("AOT", "IL2075:Calling non-public fields with reflection.", Justification = "Assembly is not trimmed.")]
         private static ImmutableDictionary<string, Command> FetchAllCommands()
         {
             var builder = ImmutableDictionary.CreateBuilder<string, Command>();
@@ -112,8 +116,8 @@ namespace Murder.Diagnostics
                         .GetMethods()
                         .Where(m => Attribute.IsDefined(m, typeof(CommandAttribute)) && !string.IsNullOrEmpty(m.Name))
                         .ToImmutableDictionary(
-                            m => ToName(m),
-                            m => ToCommand(m),
+                            ToName,
+                            ToCommand,
                             StringComparer.OrdinalIgnoreCase
                         ));
                 }

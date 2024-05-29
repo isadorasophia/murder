@@ -65,6 +65,13 @@ namespace Murder.Utilities
                 effect.Parameters[id].SetValue(val);
             }
         }
+        public static void TrySetParameter(this Effect effect, string id, Microsoft.Xna.Framework.Vector2 val)
+        {
+            if (effect.Parameters[id] != null)
+            {
+                effect.Parameters[id].SetValue(val);
+            }
+        }
         public static void SetParameter(this Effect effect, string id, float val)
         {
             if (effect.Parameters[id] != null)
@@ -94,11 +101,37 @@ namespace Murder.Utilities
         public static void SetParameter(this Effect effect, string id, Vector2 val) =>
             SetParameter(effect, id, new Microsoft.Xna.Framework.Vector2(val.X, val.Y));
 
+        public static void SetParameter(this Effect effect, string id, Microsoft.Xna.Framework.Vector3 val)
+        {
+            if (effect.Parameters[id] != null)
+            {
+                try
+                {
+                    effect.Parameters[id].SetValue(val);
+                }
+                catch (Exception e)
+                {
+                    GameLogger.Error($"Failed to set shader param '{id}' to {val}: {e}");
+                }
+            }
+            else
+            {
+                GameLogger.Warning($"Shader param '{id}' wasn't found");
+            }
+        }
+
         public static void SetParameter(this Effect effect, string id, Microsoft.Xna.Framework.Vector2 val)
         {
             if (effect.Parameters[id] != null)
             {
-                effect.Parameters[id].SetValue(val);
+                try
+                {
+                    effect.Parameters[id].SetValue(val);
+                }
+                catch (Exception e)
+                {
+                    GameLogger.Error($"Failed to set shader param '{id}' to {val}: {e}");
+                }
             }
             else
             {

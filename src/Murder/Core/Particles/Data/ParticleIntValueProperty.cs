@@ -1,42 +1,41 @@
-﻿using Murder.Utilities;
-using Newtonsoft.Json;
+﻿using Bang;
+using Murder.Utilities;
 
 namespace Murder.Core.Particles
 {
     public readonly struct ParticleIntValueProperty
     {
-        [JsonProperty]
+        [Serialize]
         public readonly ParticleValuePropertyKind Kind;
 
         /// <summary>
         /// Constant value set when <see cref="ParticleValuePropertyKind.Constant"/>.
         /// </summary>
-        [JsonProperty]
+        [Serialize]
         private readonly int _constant;
 
         /// <summary>
         /// Range value set when <see cref="ParticleValuePropertyKind.Range"/>.
         /// </summary>
-        [JsonProperty]
+        [Serialize]
         private readonly int _rangeStart;
-        [JsonProperty]
+        [Serialize]
         private readonly int _rangeEnd;
 
         /// <summary>
         /// Range value set when <see cref="ParticleValuePropertyKind.RangedStartAndRangedEnd"/>.
         /// </summary>
-        [JsonProperty]
+        [Serialize]
         private readonly int _rangeStartMin;
-        [JsonProperty]
+        [Serialize]
         private readonly int _rangeStartMax;
-        [JsonProperty]
+        [Serialize]
         private readonly int _rangeEndMin;
-        [JsonProperty]
+        [Serialize]
         private readonly int _rangeEndMax;
 
         // TODO: Curve.
 
-        [JsonConstructor]
         public ParticleIntValueProperty() { }
 
         public static ParticleIntValueProperty Empty => new(constant: 1);

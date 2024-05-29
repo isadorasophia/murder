@@ -8,7 +8,7 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Input;
 using Murder.Editor.Components;
-using Murder.Editor.EditorCore;
+using Murder.Editor.Core;
 using System.Numerics;
 
 namespace Murder.Editor.Systems
@@ -53,11 +53,13 @@ namespace Murder.Editor.Systems
                 }
                 else
                 {
+                    bool noEntitiesSelected = hook.AllSelectedEntities.IsEmpty;
+
                     if (ImGui.GetIO().WantTextInput)
                     {
                         // Handled by ImGui
                     }
-                    else if (!Game.Input.Down(Keys.LeftControl))
+                    else if (!Game.Input.Down(Keys.LeftControl) && noEntitiesSelected)
                     {
                         Vector2 cameraMovement = Architect.Input.GetAxis(MurderInputAxis.EditorCamera).Value * Game.DeltaTime * Architect.EditorSettings.WasdCameraSpeed * Math.Clamp((1f / hook.CurrentZoomLevel), .75f, 10f);
                         if (Game.Input.Down(Keys.LeftShift))

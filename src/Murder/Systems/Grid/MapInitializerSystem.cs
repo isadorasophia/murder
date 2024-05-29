@@ -1,4 +1,5 @@
-﻿using Bang.Contexts;
+﻿using Bang;
+using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Assets.Graphics;
@@ -34,7 +35,7 @@ namespace Murder.Systems
             mapEntity = context.World.AddEntity();
             mapEntity.SetMap(width, height);
 
-            if (context.World.TryGetUnique<TilesetComponent>()?.Tilesets is not ImmutableArray<Guid> tilesets)
+            if (context.World.TryGetUniqueTileset()?.Tilesets is not ImmutableArray<Guid> tilesets)
             {
                 return;
             }

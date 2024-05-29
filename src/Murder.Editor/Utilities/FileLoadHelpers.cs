@@ -21,8 +21,8 @@ namespace Murder.Editor.Utilities
                 return true;
             }
 
-            if (FileHelper.TryGetLastWrite(sourcePath) is DateTime lastSourceModified &&
-                FileHelper.TryGetLastWrite(resultPath) is DateTime lastDestinationCreated)
+            if (EditorFileManager.TryGetLastWrite(sourcePath) is DateTime lastSourceModified &&
+                EditorFileManager.TryGetLastWrite(resultPath) is DateTime lastDestinationCreated)
             {
                 return lastSourceModified > lastDestinationCreated;
             }
@@ -38,7 +38,7 @@ namespace Murder.Editor.Utilities
                 return false;
             }
 
-            if (FileHelper.TryGetLastWrite(sourcePath) is DateTime lastSourceModified)
+            if (EditorFileManager.TryGetLastWrite(sourcePath) is DateTime lastSourceModified)
             {
                 return lastSourceModified > lastTime;
             }

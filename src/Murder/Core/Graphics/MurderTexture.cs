@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Murder.Core.Geometry;
+using Murder.Utilities;
 using System.Numerics;
 
 namespace Murder.Core.Graphics
@@ -55,15 +56,15 @@ namespace Murder.Core.Graphics
 
                 batch2D.Draw(
                     texture,
-                    position,
-                    clip.Size,
+                    position.ToXnaVector2(),
+                    clip.Size.ToXnaVector2(),
                     clip,
                     sort,
                     0,
-                    scale,
+                    scale.ToXnaVector2(),
                     flip,
                     color,
-                    Vector2.Zero,
+                    Microsoft.Xna.Framework.Vector2.Zero,
                     blend);
             }
             else

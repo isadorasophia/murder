@@ -3,7 +3,6 @@ using System.Numerics;
 
 namespace Murder.Assets
 {
-    [Serializable]
     public class Theme
     {
         public Vector4 Bg = "#282a36".ToVector4Color();

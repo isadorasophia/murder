@@ -1,4 +1,5 @@
-﻿using Murder.Assets.Graphics;
+﻿using Murder.Assets;
+using Murder.Assets.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Data;
@@ -34,8 +35,8 @@ namespace Murder.Editor.Importers
             if (!reload)
             {
                 // Cleanup generated assets folder
-                FileHelper.DeleteDirectoryIfExists(dataPath);
-                FileHelper.GetOrCreateDirectory(outputPath);
+                FileManager.DeleteDirectoryIfExists(dataPath);
+                FileManager.GetOrCreateDirectory(outputPath);
 
                 files = AllFiles;
             }
@@ -47,7 +48,7 @@ namespace Murder.Editor.Importers
 
             if (files.Count > 0)
             {
-                FileHelper.GetOrCreateDirectory(outputPath);
+                FileManager.GetOrCreateDirectory(outputPath);
 
                 PackImages(files, sourcePath, outputPath, dataPath);
 
@@ -94,10 +95,10 @@ namespace Murder.Editor.Importers
             }
 
             // Make sure we also have the atlas save at the binaries path.
-            _ = FileHelper.GetOrCreateDirectory(outputPath);
+            _ = FileManager.GetOrCreateDirectory(outputPath);
 
             // Save atlas descriptor at the output path.
-            FileHelper.SaveSerialized(atlas, atlasDescriptorFullPath);
+            Game.Data.FileManager.SaveSerialized(atlas, atlasDescriptorFullPath);
 
             // Prepare an empty dictionary for a simple animation
             var animations = ImmutableDictionary.CreateBuilder<string, Animation>();
@@ -108,7 +109,7 @@ namespace Murder.Editor.Importers
             foreach (AtlasCoordinates image in atlas.GetAllEntries())
             {
                 SpriteAsset asset = new(
-                        FileHelper.GuidFromName(image.Name),
+                        EditorFileHelper.GuidFromName(image.Name),
                         atlas,
                         image.Name,
                         [image.Name],
@@ -119,7 +120,7 @@ namespace Murder.Editor.Importers
                     );
 
                 string sourceFilePath = Path.Join(dataPath, $"{asset.Name}.json");
-                FileHelper.SaveSerialized(asset, sourceFilePath);
+                Game.Data.FileManager.SaveSerialized<GameAsset>(asset, sourceFilePath);
             }
 
             return default;

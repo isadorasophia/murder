@@ -1,12 +1,12 @@
 using Bang;
 using Bang.Entities;
+using Murder.Assets.Save;
 using Murder.Attributes;
 using Murder.Components;
 using Murder.Core;
 using Murder.Diagnostics;
 using Murder.Save;
 using Murder.Services;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 
 namespace Murder.Assets
@@ -25,7 +25,7 @@ namespace Murder.Assets
         ///  [World Guid -> Saved World Guid]
         /// that does not belong to a run and should be persisted.
         /// </summary>
-        [JsonProperty]
+        [Serialize]
         [ShowInEditor]
         public ImmutableDictionary<Guid, Guid> SavedWorlds { get; private set; } = ImmutableDictionary<Guid, Guid>.Empty;
 
@@ -34,13 +34,13 @@ namespace Murder.Assets
         /// Mapped according to:
         /// [World guid -> [Entity Guid]]
         /// </summary>
-        [JsonProperty]
+        [Serialize]
         protected readonly Dictionary<Guid, HashSet<Guid>> _entitiesOnWorldToDestroy = new();
 
         /// <summary>
         /// This is the last world that the player was by the time this was saved.
         /// </summary>
-        [JsonProperty]
+        [Serialize]
         private Guid? _lastWorld = null;
 
         public Guid? CurrentWorld => _lastWorld;
@@ -48,35 +48,55 @@ namespace Murder.Assets
         /// <summary>
         /// These are all the dynamic assets within the game session.
         /// </summary>
-        [JsonProperty]
+        [Serialize]
         [ShowInEditor]
         public Dictionary<Type, Guid> DynamicAssets { get; private set; } = new();
 
-        [JsonProperty]
+        [Serialize]
         public readonly BlackboardTracker BlackboardTracker = null!;
+
+        protected virtual string GetDefaultSaveName() => "Unknown";
+
+        [Serialize]
+        private string _saveName = string.Empty;
 
         /// <summary>
         /// This is the name used in-game, specified by the user.
         /// </summary>
-        [JsonProperty]
-        public string SaveName { get; private set; } = string.Empty;
+        public string SaveName
+        {
+            get 
+            { 
+                return _saveName; 
+            }
+            private set
+            {
+                _saveName = value;
+
+                // Also update the save name at the tracker.
+                if (Game.Data.GetAllSaves().TryGetValue(SaveSlot, out SaveDataInfo? info))
+                {
+                    info.Name = value;
+                }
+            }
+        }
 
         /// <summary>
         /// This is save path, used by its assets.
         /// </summary>
-        [JsonProperty]
+        [Serialize]
         public string SaveRelativeDirectoryPath { get; private set; } = string.Empty;
 
         /// <summary>
         /// This is save path, used by its assets.
         /// </summary>
-        [JsonProperty]
+        [Serialize]
         public string SaveDataRelativeDirectoryPath { get; private set; } = string.Empty;
 
         /// <summary>
         /// Which save slot this belongs to. Default is zero.
         /// </summary>
-        [JsonProperty]
+        [Serialize]
         public readonly int SaveSlot = 0;
 
         /// <summary>
@@ -92,33 +112,35 @@ namespace Murder.Assets
 
         private readonly object _saveLock = new();
 
-        [JsonConstructor]
-        public SaveData() { }
+        protected SaveData(int saveSlot, float saveVersion, BlackboardTracker blackboardTracker)
+        {
+            SaveSlot = saveSlot;
+            SaveVersion = saveVersion;
 
-        protected SaveData(int slot, float version, BlackboardTracker tracker)
+            BlackboardTracker = blackboardTracker;
+
+            SaveRelativeDirectoryPath = $"{SaveSlot}";
+
+            FilePath = Path.Join(SaveRelativeDirectoryPath, $"{Name}.json");
+            SaveDataRelativeDirectoryPath = Path.Join(SaveRelativeDirectoryPath, DataDirectoryName);
+        }
+
+        public SaveData(int saveSlot, float saveVersion) : this(saveSlot, saveVersion, new BlackboardTracker()) { }
+
+        /// <summary>
+        /// Called after creating a fresh new save from this.
+        /// </summary>
+        public void Initialize()
         {
             Guid = Guid.NewGuid();
             Name = Guid.ToString();
 
-            SaveSlot = slot;
-            SaveVersion = version;
-
-            // For now, keep the guid as the name for this save.
-            ChangeSaveName(Name);
-
-            BlackboardTracker = tracker;
+            ChangeSaveName("Unknown");
         }
-
-        public SaveData(int slot, float version) : this(slot, version, new BlackboardTracker()) { }
 
         public void ChangeSaveName(string name)
         {
             SaveName = name;
-
-            SaveRelativeDirectoryPath = $"{name}_{SaveSlot}";
-
-            FilePath = Path.Join(SaveRelativeDirectoryPath, $"{Name}.json");
-            SaveDataRelativeDirectoryPath = Path.Join(SaveRelativeDirectoryPath, DataDirectoryName);
         }
 
         /// <summary>
@@ -268,7 +290,7 @@ namespace Murder.Assets
 
         protected Guid? EntityToGuid(World world, int id)
         {
-            if (world.TryGetUnique<InstanceToEntityLookupComponent>() is not InstanceToEntityLookupComponent lookup)
+            if (world.TryGetUniqueInstanceToEntityLookup() is not InstanceToEntityLookupComponent lookup)
             {
                 GameLogger.Warning("How does this world do not have InstanceToEntityLookupComponent setup?");
                 return null;

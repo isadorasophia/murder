@@ -1,9 +1,7 @@
 ﻿using Bang;
-using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
-using Murder.Components.Cutscenes;
 using Murder.Components.Serialization;
 using Murder.Core;
 using Murder.Core.Cutscenes;
@@ -13,9 +11,6 @@ using Murder.Diagnostics;
 using Murder.Prefabs;
 using Murder.Serialization;
 using Murder.Services;
-using Murder.Utilities;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Immutable;
 using System.Numerics;
 
@@ -43,26 +38,26 @@ namespace Murder.Assets
         /// <summary>
         /// Map of all the systems and whether they are active or not.
         /// </summary>
-        [JsonProperty]
+        [Serialize]
         private ImmutableArray<(Type systemType, bool isActive)> _systems = ImmutableArray<(Type systemType, bool isActive)>.Empty;
-        [JsonProperty]
+        [Serialize]
         private ImmutableArray<(Guid guid, bool isActive)> _features = ImmutableArray<(Guid guid, bool isActive)>.Empty;
 
         /// <summary>
         /// These are the collection of entities grouped within a folder, distinguished by name.
         /// </summary>
-        [JsonProperty]
+        [Serialize]
         private readonly Dictionary<string, ImmutableArray<Guid>> _folders = new();
 
         /// <summary>
         /// Additional optional filters.
         /// </summary>
-        [JsonProperty]
+        [Serialize]
         private readonly Dictionary<string, ImmutableArray<Guid>> _filterFolders = new();
 
         private ImmutableArray<Guid>? _instancesCache = null;
 
-        [JsonProperty]
+        [Serialize]
         private readonly Dictionary<Guid, EntityInstance> _entities = new();
 
         public ImmutableArray<(Type systemType, bool isActive)> Systems => _systems;
@@ -92,14 +87,14 @@ namespace Murder.Assets
         /// Track each group that an entity belongs. Used for speeding up removing entities
         /// and moving them around.
         /// </summary>
-        [JsonProperty]
+        [Serialize]
         private readonly Dictionary<Guid, string> _entitiesToFolder = new();
 
         /// <summary>
         /// Track each group that an entity belongs. Used for speeding up removing entities
         /// and moving them around.
         /// </summary>
-        [JsonProperty]
+        [Serialize]
         private readonly Dictionary<Guid, string> _entitiesToFilter = new();
 
         public bool HasSystems
@@ -214,7 +209,7 @@ namespace Murder.Assets
         /// <param name="instancesToEntities">A map of each serialized guid to an entity id in the world.</param>
         protected static void PostProcessEntities(World world, Dictionary<Guid, int> instancesToEntities)
         {
-            if (world.TryGetUniqueEntity<InstanceToEntityLookupComponent>() is not null)
+            if (world.TryGetUniqueEntityInstanceToEntityLookup() is not null)
             {
                 // Most likely, we are reloading a saved world. Do not post process this.
                 return;

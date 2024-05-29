@@ -8,9 +8,16 @@ namespace Murder.Components
     public readonly struct FreezeWorldComponent : IComponent
     {
         public readonly int Count = 1;
+        public readonly float StartTime;
+        public FreezeWorldComponent(float startTime)
+        {
+            StartTime = startTime;
+        }
 
-        public FreezeWorldComponent() { }
-
-        public FreezeWorldComponent(int count) => Count = count;
+        public FreezeWorldComponent(float startTime, int count)
+        {
+            StartTime = startTime;
+            Count = count;
+        } 
     }
 }

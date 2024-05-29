@@ -2,7 +2,6 @@
 using Bang.Diagnostics;
 using Bang.Systems;
 using Murder.Core.Graphics;
-using Newtonsoft.Json.Linq;
 
 namespace Murder.Core
 {
@@ -11,7 +10,6 @@ namespace Murder.Core
     /// </summary>
     public partial class MonoWorld
     {
-
         /// <summary>
         /// This has the duration of each reactive system (id) to its corresponding time (in ms).
         /// See <see cref="World.IdToSystem"/> on how to fetch the actual system.

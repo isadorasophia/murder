@@ -36,11 +36,6 @@ namespace Murder.Interactions
                 }
             }
 
-            if (world.TryGetUniqueEntity<MusicComponent>() is not Entity e)
-            {
-                e = world.AddEntity();
-            }
-
             _ = SoundServices.Play(Music, SoundProperties.Persist | SoundProperties.SkipIfAlreadyPlaying);
         }
     }

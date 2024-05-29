@@ -1,5 +1,4 @@
-﻿using CppNet;
-using Murder.Assets.Graphics;
+﻿using Murder.Assets.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Data;
@@ -8,7 +7,6 @@ using Murder.Editor.Assets;
 using Murder.Serialization;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
@@ -762,7 +760,7 @@ public partial class Aseprite
         (bool baked, Guid guid) = GetGuid(layer, sliceIndex);
 
         SpriteEventData? spriteEventData = null;
-        SpriteEventDataManagerAsset.TryGet()?.Events.TryGetValue(guid, out spriteEventData);
+        Architect.EditorData.TryGetSpriteEventData()?.Events.TryGetValue(guid, out spriteEventData);
 
         // Create an empty animation with all frames
         {
@@ -1017,7 +1015,7 @@ public partial class Aseprite
 
         // No baked guids were found. Create one on the fly based on the file name.
         using var md5 = MD5.Create();
-        Guid guid = new Guid(md5.ComputeHash(Encoding.Default.GetBytes($"{FileHelper.Normalize(Source)}_{Slices[sliceIndex].Name}")));
+        Guid guid = new Guid(md5.ComputeHash(Encoding.Default.GetBytes($"{EditorFileHelper.Normalize(Source)}_{Slices[sliceIndex].Name}")));
         GameLogger.Log($"Aseprite file {Source} doesn't have a baked GUID. Consider baking one on it for safety.");
         return (false, guid);
     }

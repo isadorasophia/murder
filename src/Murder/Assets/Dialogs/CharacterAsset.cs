@@ -2,7 +2,6 @@
 using Murder.Attributes;
 using Murder.Core.Dialogs;
 using Murder.Serialization;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 
 namespace Murder.Assets
@@ -23,19 +22,19 @@ namespace Murder.Assets
         /// <summary>
         /// List of tasks or events that the <see cref="Situations"/> may do.
         /// </summary>
-        [JsonProperty]
+        [Bang.Serialize]
         private SortedList<int, Situation> _situations = new();
 
         /// <summary>
         /// List of all the components that are modified within a dialog.
         /// </summary>
-        [JsonProperty]
+        [Bang.Serialize]
         private readonly ComplexDictionary<DialogItemId, IComponent> _components = new();
 
         /// <summary>
         /// List of all the portraits that are modified within a dialog.
         /// </summary>
-        [JsonProperty]
+        [Bang.Serialize]
         private readonly ComplexDictionary<DialogItemId, (Guid Speaker, string? Portrait)> _portraits = new();
 
         private ImmutableArray<Situation>? _cachedSituations;

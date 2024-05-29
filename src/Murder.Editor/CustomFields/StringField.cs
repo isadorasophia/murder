@@ -89,7 +89,7 @@ namespace Murder.Editor.CustomFields
 
             if (ImGui.BeginCombo("", text))
             {
-                foreach (var value in Game.Data.AvailableUniqueTextures)
+                foreach (var value in Architect.EditorData.AvailableUniqueTextures)
                 {
                     if (ImGui.MenuItem(value))
                     {

@@ -84,7 +84,14 @@ namespace Murder.Utilities
 
         #region Math
 
-
+        public static bool IsInteger(float value)
+        {
+            return value % 1 == 0;
+        }
+        public static bool IsInteger(Vector2 value)
+        {
+            return value.X % 1 == 0 && value.Y % 1 == 0;
+        }
         public static (float value, float velocity) Spring(
           float value, float velocity, float targetValue,
           float damping, float frequency, float deltaTime
@@ -219,7 +226,9 @@ namespace Murder.Utilities
         public static int WrapAround(int value, in int min, in int max)
         {
             if (max < min)
-                throw new ArgumentException("Max must be greater than min.");
+            {
+                return min;
+            }
 
             int range = max - min + 1;
 
@@ -258,7 +267,7 @@ namespace Murder.Utilities
         /// </remarks>
         public static float ClampTime(float elapsed, float maxTime)
         {
-            return Calculator.Clamp01(Math.Clamp(elapsed, 0, maxTime) / maxTime);
+            return Calculator.Clamp01(Math.Clamp(elapsed, 0, Math.Max(0, maxTime)) / maxTime);
         }
 
         /// <summary>
@@ -351,6 +360,12 @@ namespace Murder.Utilities
         {
             return origin * (1 - factor) + target * factor;
         }
+
+        public static Vector2 Lerp(Vector2 origin, Vector2 target, float factor)
+        {
+            return new Vector2(Lerp(origin.X, target.X, factor), Lerp(origin.Y, target.Y, factor));
+        }
+
         public static int LerpInt(float origin, float target, float factor)
         {
             return RoundToInt(origin * (1 - factor) + target * factor);
@@ -366,12 +381,37 @@ namespace Murder.Utilities
             return Math.Abs(target - origin) < threshold ? target : origin * (1 - factor) + target * factor;
         }
 
-        public static Vector2 LerpSmooth(Vector2 a, Vector2 b, float deltaTime, float halLife)
+        /// <summary>
+        /// Smoothly interpolates between two vectors over time using a linear interpolation method.
+        /// </summary>
+        /// <param name="a">The starting vector.</param>
+        /// <param name="b">The target vector.</param>
+        /// <param name="deltaTime">The elapsed time since the last interpolation step.</param>
+        /// <param name="halfLife">The half-life period, representing the time it takes to reach half of the remaining distance to the target vector.</param>
+        /// <returns>A new vector that is the result of the smooth interpolation between the starting and target vectors.</returns>
+        /// <remarks>
+        /// This method interpolates each component of the vector individually using the <see cref="LerpSmooth(float, float, float, float)"/> method.
+        /// It is similar to a regular linear interpolation (lerp) but is designed to work effectively even when not using a fixed timestep.
+        /// This makes it particularly useful for smooth transitions in animations or physics simulations where the update interval can vary.
+        /// </remarks>
+        public static Vector2 LerpSmooth(Vector2 a, Vector2 b, float deltaTime, float halfLife)
         {
-            return new Vector2(LerpSmooth(a.X, b.X, deltaTime, halLife), LerpSmooth(a.Y, b.Y, deltaTime, halLife));
+            return new Vector2(LerpSmooth(a.X, b.X, deltaTime, halfLife), LerpSmooth(a.Y, b.Y, deltaTime, halfLife));
         }
 
-        public static float LerpSmoothAngle(float a, float b, float deltaTime, float halLife)
+        /// <summary>
+        /// Smoothly interpolates between two angles over time using a linear interpolation method.
+        /// </summary>
+        /// <param name="a">The starting angle in radians.</param>
+        /// <param name="b">The target angle in radians.</param>
+        /// <param name="deltaTime">The elapsed time since the last interpolation step.</param>
+        /// <param name="halfLife">The half-life period, representing the time it takes to reach half of the remaining distance to the target angle.</param>
+        /// <returns>A new angle in radians that is the result of the smooth interpolation between the starting and target angles.</returns>
+        /// <remarks>
+        /// This method ensures that the interpolation takes the shortest path around the circle by normalizing the angles and adjusting them if necessary.
+        /// It is particularly useful for smoothly interpolating rotational values where direct linear interpolation could result in a longer path.
+        /// </remarks>
+        public static float LerpSmoothAngle(float a, float b, float deltaTime, float halfLife)
         {
             a = NormalizeAngle(a);
             b = NormalizeAngle(b);
@@ -383,11 +423,24 @@ namespace Murder.Utilities
                 else
                     b -= MathF.PI * 2;
             }
-            return LerpSmooth(a, b, deltaTime, halLife);
+            return LerpSmooth(a, b, deltaTime, halfLife);
         }
-        public static float LerpSmooth(float a, float b, float deltaTime, float halLife)
+
+        /// <summary>
+        /// Smoothly interpolates between two float values over time using an exponential decay formula.
+        /// </summary>
+        /// <param name="a">The starting value.</param>
+        /// <param name="b">The target value.</param>
+        /// <param name="deltaTime">The elapsed time since the last interpolation step.</param>
+        /// <param name="halfLife">The half-life period, representing the time it takes to reach half of the remaining distance to the target value.</param>
+        /// <returns>A new float value that is the result of the smooth interpolation between the starting and target values.</returns>
+        /// <remarks>
+        /// This method uses an exponential decay formula to interpolate the values, making it more suitable for smooth transitions even when not using a fixed timestep.
+        /// If the difference between the two values is less than a small threshold (0.001), it directly returns the target value to avoid unnecessary calculations.
+        /// </remarks>
+        public static float LerpSmooth(float a, float b, float deltaTime, float halfLife)
         {
-            return Math.Abs(a- b) < 0.001f? b : b + (a - b) * float.Exp2(-deltaTime / halLife);
+            return Math.Abs(a- b) < 0.001f? b : b + (a - b) * float.Exp2(-deltaTime / halfLife);
         }
 
         public static int FloorToInt(float v) => (int)MathF.Floor(v);
@@ -403,12 +456,6 @@ namespace Murder.Utilities
         public static int RoundToInt(float v) => (int)MathF.Round(v);
 
         public static int RoundToEven(float v) => (int)MathF.Round(v / 2, MidpointRounding.AwayFromZero) * 2;
-
-        public static Point ToPoint(this Vector2 vector) => new(RoundToInt(vector.X), RoundToInt(vector.Y));
-        public static Vector2 ToSysVector2(this Microsoft.Xna.Framework.Point point) => new((float)point.X, (float)point.Y);
-        public static Vector2 ToSysVector2(this Microsoft.Xna.Framework.Vector2 vector) => new(vector.X, vector.Y);
-        public static Microsoft.Xna.Framework.Vector2 ToXnaVector2(this Vector2 vector) => new(vector.X, vector.Y);
-        public static Vector2 ToCore(this Vector2 vector) => new(vector.X, vector.Y);
 
         public static int ManhattanDistance(Point point1, Point point2)
         {
@@ -629,6 +676,19 @@ namespace Murder.Utilities
         {
             int v = a * b + 0x80;
             return (byte)((v >> 8) + v >> 8);
+        }
+
+        /// <summary>
+        /// Returns from 0 if vectors point in opposite directions to 1 if they point to the same direction.
+        /// </summary>
+        internal static float Vector2Similarity(Vector2 a, Vector2 b)
+        {
+            if (a == Vector2.Zero || b == Vector2.Zero)
+                return 0;
+            Vector2 aNormalized = a.NormalizedWithSanity();
+            Vector2 bNormalized = b.NormalizedWithSanity();
+
+            return Remap(Vector2.Dot(aNormalized, bNormalized), -1, 1, 0, 1);
         }
 
         #endregion

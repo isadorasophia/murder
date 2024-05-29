@@ -1,14 +1,10 @@
 ﻿using Bang.Entities;
-using Microsoft.Xna.Framework.Graphics;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Graphics;
-using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Globalization;
 using System.Numerics;
-using System.Security;
 
 namespace Murder.Helpers;
 
@@ -217,13 +213,41 @@ public static class DirectionHelper
 
     public static Vector2 ToVector(this Direction direction)
     {
-        float angle = direction.ToAngle();
-        return new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
+        switch (direction)
+        {
+            case Direction.Right:
+                return new Vector2(1, 0);
+            case Direction.DownRight:
+                return new Vector2(1, 1);
+            case Direction.Down:
+                return new Vector2(0, 1);
+            case Direction.DownLeft:
+                return new Vector2(-1, 1);
+            case Direction.Left:
+                return new Vector2(-1, 0);
+            case Direction.UpLeft:
+                return new Vector2(-1, -1);
+            case Direction.Up:
+                return new Vector2(0, -1);
+            case Direction.UpRight:
+                return new Vector2(1, -1);
+            default:
+                float angle = direction.ToAngle();
+                return new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
+        }
     }
 
     public static Direction Reverse(this Direction direction)
     {
         return FromVector(direction.ToVector().Reverse());
+    }
+
+    public static ImageFlip GetFlippedHorizontal(this Direction direction)
+    {
+        var vector = ToVector(direction);
+        // Added a small threshold to avoid flipping when the vector is very close to 0
+        var horizontalFlags = (vector.X < 0 && MathF.Abs(vector.X) > 0.01f) ? ImageFlip.Horizontal : ImageFlip.None;
+        return horizontalFlags;
     }
 
     public static ImageFlip GetFlipped(this Direction direction)

@@ -1,8 +1,10 @@
-﻿using Murder.Attributes;
+﻿using Bang;
+using Murder.Attributes;
 using Murder.Serialization;
 using Murder.Utilities;
-using Newtonsoft.Json;
+using System.Collections.Immutable;
 using System.Numerics;
+using System.Text.Json.Serialization;
 
 namespace Murder.Assets
 {
@@ -31,7 +33,6 @@ namespace Murder.Assets
     /// }
     /// </code>
     /// </remarks>
-        [Serializable]
     public abstract class GameAsset
     {
         public const char SkipDirectoryIconCharacter = '#';
@@ -49,7 +50,6 @@ namespace Murder.Assets
 
         public string GetSimplifiedName() =>
             _simplifiedName ??= GetSplitNameWithEditorPath().Last();
-
         /** **/
 
         private string _filePath = string.Empty;
@@ -71,7 +71,7 @@ namespace Murder.Assets
         }
 
         [HideInEditor]
-        [JsonProperty]
+        [Serialize]
         public Guid Guid { get; protected set; }
 
         private bool _fileChanged = false;
@@ -99,7 +99,9 @@ namespace Murder.Assets
             set
             {
                 _rename = value;
+
                 FileChanged = value;
+                Game.Data.OnAssetRenamedOrAddedOrDeleted();
             }
         }
         
@@ -168,6 +170,8 @@ namespace Murder.Assets
         /// Called after the asset is deserialized, override to implement custom post-deserialization logic.
         /// </summary>
         public virtual void AfterDeserialized() { }
+
+        public GameAsset() { }
 
         /// <summary>
         /// Generates and assigns a new globally unique identifier (GUID) to the object.

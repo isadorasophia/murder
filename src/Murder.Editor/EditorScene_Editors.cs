@@ -181,7 +181,7 @@ namespace Murder.Editor
                     string? path = asset.GetEditorAssetDirectoryPath();
                     if (path is not null)
                     {
-                        FileHelper.OpenFolder(path);
+                        EditorFileManager.OpenFolder(path);
                     }
                     else
                     {
@@ -220,7 +220,6 @@ namespace Murder.Editor
                     bool showReflection = assetEditor.ShowReflection;
                     ImGui.Checkbox("Show Reflection", ref showReflection);
                     assetEditor.ShowReflection = showReflection;
-
                 }
 
                 if (customEditor.Editor is WorldAssetEditor worldEditor)
@@ -319,7 +318,6 @@ namespace Murder.Editor
 
             _guidToEditors.Remove(guid);
         }
-
         public Guid OpenAssetEditor(GameAsset asset, bool overwrite)
         {
             GameLogger.Verify(RenderContext is not null);

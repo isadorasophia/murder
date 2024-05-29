@@ -1,7 +1,6 @@
 ﻿using Bang;
 using Bang.Entities;
 using ImGuiNET;
-using Murder.Assets;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Components.Graphics;
@@ -10,13 +9,14 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Editor.Components;
-using Murder.Editor.EditorCore;
+using Murder.Editor.Core;
 using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Numerics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Murder.Editor.Systems
 {
@@ -29,7 +29,10 @@ namespace Murder.Editor.Systems
         /// Entity that is being dragged, if any.
         /// </summary>
         private Entity? _dragging = null;
+        private Entity? _startedDragging = null;
         private Vector2? _dragStart = null;
+
+        private Point _previousKeyboardDelta = Point.Zero;
 
         private bool _isShowingImgui = false;
         private string _filter = string.Empty;
@@ -226,7 +229,7 @@ namespace Murder.Editor.Systems
         /// the user selects an empty state and supports selecting multiple entities.
         /// Otherwise, it will only allow selecting one entity at a time.
         /// </param>
-        public void Update(World world, ImmutableArray<Entity> entities, bool clearOnlyWhenSelectedNewEntity = false)
+        public void Update(World world, ImmutableArray<Entity> entities, bool clearOnlyWhenSelectedNewEntity = false, bool ignoreCursorOnCollidersSelected = true)
         {
             EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
             
@@ -247,7 +250,9 @@ namespace Murder.Editor.Systems
                 hook.UnselectAll();
             }
 
-            if (hook.UsingCursor || hook.UsingGui)
+            bool isCursorBusy = hook.CursorIsBusy.Any() && ignoreCursorOnCollidersSelected;
+
+            if (isCursorBusy || hook.UsingGui)
             // Someone else is using our cursor, let's wait out turn.
             {
                 _startedGroupInWorld = null;
@@ -264,6 +269,7 @@ namespace Murder.Editor.Systems
             }
 
             bool clicked = Game.Input.Pressed(MurderInputButtons.LeftClick) && !hook.IsPopupOpen;
+            bool down = Game.Input.Down(MurderInputButtons.LeftClick);
             bool released = Game.Input.Released(MurderInputButtons.LeftClick);
 
             MonoWorld monoWorld = (MonoWorld)world;
@@ -343,35 +349,54 @@ namespace Murder.Editor.Systems
                 }
             }
 
-            if (!hook.UsingCursor && (clicked || (cycle && released && _dragStart == cursorPosition)))
+            if (!isCursorBusy)
             {
                 if (SelectSmallestEntity(world, cursorPosition, hook.Hovering, hook.AllSelectedEntities.Keys.ToImmutableArray(), released) is Entity entity)
                 {
-                    if (!isMultiSelecting)
+                    if (clicked || (cycle && released && _dragStart == cursorPosition))
                     {
-                        isMultiSelecting |= hook.IsEntitySelected(entity.EntityId);
-                    }
-                    hook.SelectEntity(entity, clear: clearOnlyWhenSelectedNewEntity || !isMultiSelecting);
-                    clickedOnEntity = true;
+                        if (!isMultiSelecting)
+                        {
+                            isMultiSelecting |= hook.IsEntitySelected(entity.EntityId);
+                        }
+                        hook.SelectEntity(entity, clear: clearOnlyWhenSelectedNewEntity || !isMultiSelecting);
+                        clickedOnEntity = true;
 
-                    _offset = entity.GetGlobalTransform().Vector2 - cursorPosition;
-                    _dragging = entity;
-                    _dragStart = cursorPosition;
+                        if (_dragStart == null)
+                        {
+                            _dragStart = cursorPosition;
+                            _startedDragging = entity;
+                        }
+                    }
+                }
+
+                if (_dragging == null && _dragStart != null && _startedDragging!=null && down)
+                {
+                    float distance = (cursorPosition - _dragStart.Value).Length();
+                    if (distance > 4)
+                    {
+                        _dragging = _startedDragging;
+                        _offset = _startedDragging.GetGlobalTransform().Vector2 - cursorPosition;
+                    }
                 }
             }
 
             if (released)
             {
                 _previousHovering = hook.Hovering;
+                _dragStart = null;
             }
 
-            if (_dragging != null)
+            if (_dragging != null && !isCursorBusy)
             {
                 Vector2 delta = cursorPosition - _dragging.GetGlobalTransform().Vector2 + _offset;
 
                 // On "ctrl", snap entities to the grid.
-                bool snapToGrid = Game.Input.Down(MurderInputButtons.Ctrl);
+                bool snapToGrid = Game.Input.Down(Keys.LeftControl);
 
+                // On "shift", constrain entities to the axis corresponding to the direction are being dragged in.
+                bool snapToAxis = Game.Input.Down(Keys.LeftShift);
+                
                 // Drag all the entities which are currently selected.
                 foreach ((int _, Entity e) in selectedEntities)
                 {
@@ -387,14 +412,64 @@ namespace Murder.Editor.Systems
                     }
 
                     IMurderTransformComponent newTransform = e.GetGlobalTransform().Add(delta);
+
                     if (snapToGrid)
                     {
                         newTransform = newTransform.SnapToGridDelta();
                     }
 
+                    if (snapToAxis && _dragStart != null)
+                    {
+                        Vector2 entityOffset = cursorPosition.ToVector2() - newTransform.ToVector2();
+                        Vector2 start = _dragStart.Value - entityOffset;
+                        Vector2 dragDistance = newTransform.Vector2 - start;
+
+                        if (dragDistance != Vector2.Zero)
+                        {
+                            Vector2 unitDirection = Vector2.One - RoundToAbsoluteAxis(dragDistance);
+                            Vector2 newPosition = start + (dragDistance * unitDirection);
+                            Vector2 newDelta = newPosition - start;
+
+                            newTransform = newTransform.Subtract(newDelta);
+                        }
+                    }
+
                     e.SetGlobalTransform(newTransform);
                 }
             }
+            else
+            {
+                Point delta = GetKeyboardDelta();
+
+                if (delta != _previousKeyboardDelta)
+                {
+                    // On "ctrl", snap entities to the grid.
+                    bool snapToGrid = Game.Input.Down(Keys.LeftControl);
+
+                    foreach ((int _, Entity e) in selectedEntities)
+                    {
+                        if (!e.HasTransform())
+                        {
+                            continue;
+                        }
+
+                        IMurderTransformComponent newTransform = e.GetGlobalTransform();
+
+                        if (snapToGrid)
+                        {
+                            newTransform = newTransform.Add(delta * Grid.CellSize)/*.SnapToGridDelta()*/;
+                        }
+                        else
+                        {
+                            newTransform = newTransform.Add(delta);
+                        }
+
+                        e.SetGlobalTransform(newTransform);
+                    }
+                }
+            }
+
+            _previousKeyboardDelta = GetKeyboardDelta();
 
             if (!Game.Input.Down(MurderInputButtons.LeftClick))
             {
@@ -446,6 +521,45 @@ namespace Murder.Editor.Systems
             {
                 hook.UnselectAll();
             }
+        }
+
+        private Vector2 RoundToAbsoluteAxis(Vector2 vector)
+        {
+            if (MathF.Abs(vector.X) > MathF.Abs(vector.Y))
+            {
+                return new Vector2(1, 0);
+            } 
+            else
+            {
+                return new Vector2(0, 1);
+            }
+        }
+
+        private Point GetKeyboardDelta()
+        {
+            Point delta = Point.Zero;
+
+            if (Game.Input.Pressed(Keys.Up))
+            {
+                delta += new Point(0, -1);
+            }
+
+            if (Game.Input.Pressed(Keys.Down))
+            {
+                delta += new Point(0, 1);
+            }
+
+            if (Game.Input.Pressed(Keys.Left))
+            {
+                delta += new Point(-1, 0);
+            }
+
+            if (Game.Input.Pressed(Keys.Right))
+            {
+                delta += new Point(1, 0);
+            }
+
+            return delta;
         }
 
         private Rectangle GetSeletionBoundingBox(Entity e, World world, Vector2 position, out bool HasBox)

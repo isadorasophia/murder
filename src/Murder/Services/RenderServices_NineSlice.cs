@@ -13,6 +13,8 @@ using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Numerics;
 using System.Security.AccessControl;
+using static System.Formats.Asn1.AsnWriter;
+using static System.Net.Mime.MediaTypeNames;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 
@@ -22,6 +24,13 @@ namespace Murder.Services
     public static partial class RenderServices
     {
 
+        public static void Draw9SliceWithText(Batch2D batch, Guid sprite, string text, int font, Rectangle target, DrawInfo textDrawInfo, DrawInfo sliceDrawInfo, AnimationInfo sliceAnimationInfo)
+        {
+            RenderServices.Draw9Slice(batch, sprite, target, sliceDrawInfo, sliceAnimationInfo);
+
+            // Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth
+            RenderServices.DrawText(batch, font, text, target.Center, (int)target.Width, textDrawInfo);
+        }
         public static void Draw3Slice(
             Batch2D batch,
             AtlasCoordinates texture,

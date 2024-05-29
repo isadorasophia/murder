@@ -371,19 +371,19 @@ public class PixelFontSize
                 {
                     if (shadowColor.HasValue)
                     {
-                        texture.Draw(spriteBatch, pos + new Point(-1, 2) * scale, scale, glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(0, 2) * scale, scale, glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(1, 2) * scale, scale, glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(-1, 2) * scale, scale, glyph, shadowColor.Value, ImageFlip.None, sort + 0.0002f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(0, 2) * scale, scale, glyph, shadowColor.Value, ImageFlip.None, sort + 0.0002f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(1, 2) * scale, scale, glyph, shadowColor.Value, ImageFlip.None, sort + 0.0002f, RenderServices.BLEND_NORMAL);
                     }
 
-                    texture.Draw(spriteBatch, pos + new Point(-1, -1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(0, -1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(1, -1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(-1, 0) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(1, 0) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(-1, 1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(0, 1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(1, 1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(-1, -1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(0, -1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(1, -1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(-1, 0) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(1, 0) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(-1, 1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(0, 1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(1, 1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
                 }
                 else if (shadowColor.HasValue)
                 {
@@ -552,7 +552,7 @@ public class PixelFont
     public Point Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, Vector2 scale, float sort, Color color, Color? strokeColor, 
         Color? shadowColor, int maxWidth = -1, int visibleCharacters = -1, bool debugBox = false)
     {
-        if (_pixelFontSize == null)
+        if (_pixelFontSize == null || string.IsNullOrEmpty(text))
         {
             return Point.Zero;
         }

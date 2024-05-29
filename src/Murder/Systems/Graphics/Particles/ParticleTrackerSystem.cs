@@ -15,7 +15,7 @@ namespace Murder.Systems
     {
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
-            if (world.TryGetUnique<ParticleSystemWorldTrackerComponent>()?.Tracker is WorldParticleSystemTracker tracker)
+            if (world.TryGetUniqueParticleSystemWorldTracker()?.Tracker is WorldParticleSystemTracker tracker)
             {
                 foreach (Entity e in entities)
                 {
@@ -34,7 +34,7 @@ namespace Murder.Systems
 
         public void OnModified(World world, ImmutableArray<Entity> entities)
         {
-            if (world.TryGetUnique<ParticleSystemWorldTrackerComponent>()?.Tracker is WorldParticleSystemTracker tracker)
+            if (world.TryGetUniqueParticleSystemWorldTracker()?.Tracker is WorldParticleSystemTracker tracker)
             {
                 foreach (Entity e in entities)
                 {
@@ -45,7 +45,7 @@ namespace Murder.Systems
 
         public void OnRemoved(World world, ImmutableArray<Entity> entities)
         {
-            if (world.TryGetUnique<ParticleSystemWorldTrackerComponent>()?.Tracker is WorldParticleSystemTracker tracker)
+            if (world.TryGetUniqueParticleSystemWorldTracker()?.Tracker is WorldParticleSystemTracker tracker)
             {
                 foreach (Entity e in entities)
                 {

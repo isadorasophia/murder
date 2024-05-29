@@ -55,7 +55,7 @@ public class SystemsDiagnosticsSystem : IGuiSystem
             size_max: new Vector2(EditorSystem.WINDOW_MAX_WIDTH, EditorSystem.WINDOW_MAX_HEIGHT));
 
         int padding = 25;
-        ImGui.SetWindowPos(new(x: render.ScreenSize.X - maxWidth, y: padding), ImGuiCond.Appearing);
+        ImGui.SetWindowPos(new(x: render.Viewport.Size.X - maxWidth, y: padding), ImGuiCond.Appearing);
 
         if (!ImGui.Begin("Diagnostics", ref _showDiagnostics))
         {
@@ -89,7 +89,7 @@ public class SystemsDiagnosticsSystem : IGuiSystem
                 Dictionary<int, SmoothCounter>? stats = default;
                 switch (_targetView)
                 {
-                    case TargetView.None:
+                    case TargetView.Total:
                         break;
 
                     case TargetView.Update:
@@ -114,6 +114,10 @@ public class SystemsDiagnosticsSystem : IGuiSystem
 
                     case TargetView.GuiRender:
                         stats = world.GuiCounters;
+                        break;
+
+                    case TargetView.Startup:
+                        stats = world.StartCounters;
                         break;
                 }
 
@@ -212,13 +216,14 @@ public class SystemsDiagnosticsSystem : IGuiSystem
         PreRender = 3,
         Render = 4,
         GuiRender = 5,
-        None = 6
+        Startup = 6,
+        Total = 7
     }
 
     /// <summary>
     /// This is the overall time reported per each system.
     /// </summary>
-    private readonly double[] _timePerSystems = new double[6];
+    private readonly double[] _timePerSystems = new double[(int)TargetView.Total];
 
     private TargetView _targetView = TargetView.Update;
 
@@ -253,6 +258,12 @@ public class SystemsDiagnosticsSystem : IGuiSystem
         {
             _targetView = TargetView.GuiRender;
         }
+
+        if (ImGui.Selectable($"Startup ({PrintTime(TargetView.Startup)})###startup", _targetView == TargetView.Startup))
+        {
+            _targetView = TargetView.Startup;
+        }
+
         ImGui.Separator();
     }
 
@@ -326,6 +337,7 @@ public class SystemsDiagnosticsSystem : IGuiSystem
         _timePerSystems[(int)TargetView.PreRender] = world.PreRenderCounters.Sum(k => k.Value.MaximumTime);
         _timePerSystems[(int)TargetView.Render] = world.RenderCounters.Sum(k => k.Value.MaximumTime);
         _timePerSystems[(int)TargetView.GuiRender] = world.GuiCounters.Sum(k => k.Value.MaximumTime);
+        _timePerSystems[(int)TargetView.Startup] = world.StartCounters.Sum(k => k.Value.MaximumTime);
     }
 
     private Dictionary<int, (string name, double size)> CalculateStatistics(MonoWorld world, double overallTime, IDictionary<int, SmoothCounter> stats)
@@ -351,6 +363,11 @@ public class SystemsDiagnosticsSystem : IGuiSystem
     {
         foreach (var shader in Game.Data.CustomGameShaders)
         {
+            if (shader is null)
+            {
+                continue;
+            }
+
             ImGui.TextColored(Game.Profile.Theme.HighAccent, shader.Name);
 
             foreach (var p in shader.Parameters)
@@ -395,7 +412,7 @@ public class SystemsDiagnosticsSystem : IGuiSystem
                                     stringValue = p.GetValueSingle().ToString();
                                     break;
                                 case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Vector:
-                                    if (p.Elements.Count == 0)
+                                    if (p.Elements?.Count == 0)
                                     {
                                         if (p.ColumnCount == 2)
                                         {

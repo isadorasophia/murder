@@ -1,22 +1,30 @@
-﻿using Bang.Systems;
-using Microsoft.Xna.Framework.Content.Pipeline.Processors;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets;
 using Murder.Assets.Localization;
 using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Editor.Assets;
+using Murder.Editor.CustomEditors;
 using Murder.Editor.Data.Graphics;
-using Murder.Editor.EditorCore;
+using Murder.Editor.Core;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Importers;
+using Murder.Editor.Systems.Debug;
+using Murder.Editor.Systems;
 using Murder.Editor.Utilities;
 using Murder.Serialization;
+using Murder.Systems.Graphics;
+using Murder.Systems;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using static Murder.Editor.Data.Graphics.FontLookup;
+using Murder.Services;
+using Murder.Assets.Graphics;
+using Murder.Assets.Save;
+using Bang.Diagnostics;
+using Murder.Utilities;
 
 namespace Murder.Editor.Data
 {
@@ -29,26 +37,14 @@ namespace Murder.Editor.Data
 
         public const string EditorSettingsFileName = "editor_config";
 
-        public const string HiddenAssetsRelativePath = "_Hidden";
-
         public override bool IgnoreSerializationErrors => true;
 
-        private string AssetsDataPath => FileHelper.GetPath(Path.Join(EditorSettings.BinResourcesPath, GameProfile.AssetResourcesPath));
+        public ImmutableArray<string> AvailableUniqueTextures = [];
 
         private readonly Dictionary<Guid, GameAsset> _saveAssetsForEditor = new();
-
         public ImmutableArray<GameAsset> GetAllSaveAssets() => _saveAssetsForEditor.Values.ToImmutableArray();
 
-        public ImmutableArray<string> HiResImages;
-
-        private string _sourceResourcesDirectory = "resources";
-
-        protected string? _assetsSourceDirectoryPath;
-
-        public string AssetsSourceDirectoryPath => _assetsSourceDirectoryPath!;
-
         private string? _packedSourceDirectoryPath;
-
         public string PackedSourceDirectoryPath => _packedSourceDirectoryPath!;
 
         private CursorTextureManager? _cursorTextureManager = null;
@@ -57,12 +53,18 @@ namespace Murder.Editor.Data
         private readonly ImGuiTextureManager _imGuiTextureManager = new();
         public ImGuiTextureManager ImGuiTextureManager => _imGuiTextureManager;
 
+        protected string? _assetsSourceDirectoryPath;
+        public string AssetsSourceDirectoryPath => _assetsSourceDirectoryPath!;
+
+        private string _sourceResourcesDirectory = "resources";
+
         /// <summary>
         /// A dictionary matching file extensions to their corresponding <see cref="ResourceImporter"/>s.
         /// </summary>
         internal ImmutableArray<ResourceImporter> AllImporters = ImmutableArray<ResourceImporter>.Empty;
 
-        public EditorDataManager(IMurderGame? game) : base(game) { }
+        public EditorDataManager(IMurderGame? game) : base(game, new EditorFileManager()) 
+        { }
 
         [MemberNotNull(
             nameof(_assetsSourceDirectoryPath),
@@ -86,7 +88,7 @@ namespace Murder.Editor.Data
 
             FetchResourceImporters();
         }
-        
+
         protected override LocalizationAsset GetLocalization(LanguageId id)
         {
             LocalizationAsset? asset;
@@ -140,9 +142,17 @@ namespace Murder.Editor.Data
         /// </summary>
         public void ReloadOnWindowForeground()
         {
-            if (Architect.Instance.ActiveScene is EditorScene scene)
+            if (CallAfterLoadContent)
             {
-                scene.ReloadOnWindowForeground();
+                // we are still loading, skip any foreground actions.
+                return;
+            }
+
+            EditorScene? editorScene = Architect.Instance.ActiveScene as EditorScene;
+
+            if (ReloadDialogs())
+            {
+                editorScene?.ReloadEditorsOfType<CharacterEditor>();
             }
 
             // Reload sprites regardless of the active scene.
@@ -154,7 +164,7 @@ namespace Murder.Editor.Data
             // Convert TTF Fonts
             ConvertTTFToSpriteFont();
 
-            bool skipIfNoChangesFound = EditorSettings.OnlyReloadAtlasWithChanges;
+            bool skipIfNoChangesFound = !EditorSettings.AlwaysBuildAtlasOnStartup;
 
             FetchResourcesForImporters(reload: false, skipIfNoChangesFound);
             LoadResourceImporters(reload: false, skipIfNoChangesFound);
@@ -174,10 +184,42 @@ namespace Murder.Editor.Data
             LoadAssetsAtPath(hiddenFolderPath, hasEditorPath: true);
             SkipLoadingAssetsAt(hiddenFolderPath);
 
-            await LoadResourceImportersAsync(reload: false, skipIfNoChangesFound: EditorSettings.OnlyReloadAtlasWithChanges);
+            await LoadResourceImportersAsync(reload: false, skipIfNoChangesFound: !EditorSettings.AlwaysBuildAtlasOnStartup);
         }
 
         private ImmutableArray<(Type, bool)>? _cachedDiagnosticsSystems = null;
+
+        private readonly CacheDictionary<Type, ImmutableDictionary<Guid, GameAsset>> _cachedFilteredAssetsWithImplementation = new(6);
+
+        /// <summary>
+        /// Filter all the assets and any types that implement those types.
+        /// Cautious: this may be slow or just imply extra allocations.
+        /// </summary>
+        public ImmutableDictionary<Guid, GameAsset> FilterAllAssetsWithImplementation(Type type)
+        {
+            if (_cachedFilteredAssetsWithImplementation.TryGetValue(type, out var result))
+            {
+                return result;
+            }
+
+            var builder = ImmutableDictionary.CreateBuilder<Guid, GameAsset>();
+
+            builder.AddRange(FilterAllAssets(type));
+
+            // If the type is abstract, also gather all the assets that implement it.
+            foreach (Type assetType in _database.Keys)
+            {
+                if (type.IsAssignableFrom(assetType))
+                {
+                    builder.AddRange(FilterAllAssets(assetType));
+                }
+            }
+
+            result = builder.ToImmutableDictionary();
+
+            _cachedFilteredAssetsWithImplementation.TryAdd(type, result);
+            return result;
+        }
 
         /// <inheritdoc/>
         protected override ImmutableArray<(Type, bool)> FetchSystemsToStartWith()
@@ -186,7 +228,7 @@ namespace Murder.Editor.Data
             {
                 var builder = ImmutableArray.CreateBuilder<(Type, bool)>();
 
-                ImmutableDictionary<Guid, GameAsset> assets = Game.Data.FilterAllAssetsWithImplementation(typeof(FeatureAsset));
+                ImmutableDictionary<Guid, GameAsset> assets = Architect.EditorData.FilterAllAssetsWithImplementation(typeof(FeatureAsset));
                 foreach ((_, GameAsset g) in assets)
                 {
                     if (g is not FeatureAsset f || !f.IsDiagnostics)
@@ -208,9 +250,9 @@ namespace Murder.Editor.Data
         /// <summary>
         /// Always loads all the assets in the editor. Except! When already loaded when generating assets.
         /// </summary>
-        protected override bool ShouldSkipAsset(FileInfo f)
+        protected override bool ShouldSkipAsset(string fullFilename)
         {
-            return IsPathOnSkipLoading(f.FullName);
+            return IsPathOnSkipLoading(fullFilename);
         }
 
         internal void ConvertTTFToSpriteFont()
@@ -237,7 +279,7 @@ namespace Murder.Editor.Data
 
                 if (lookup.GetInfo(fontName + ".ttf") is FontInfo info)
                 {
-                    if (FontImporter.GenerateFontJsonAndPng(info.Index, ttfFile, info.Size, info.Offset, fontName))
+                    if (FontImporter.GenerateFontJsonAndPng(info.Index, ttfFile, info.Size, info.Offset, info.Padding, fontName, info.Chars))
                     {
                         GameLogger.Log($"Converting {ttfFile}...");
                     }
@@ -249,49 +291,60 @@ namespace Murder.Editor.Data
             }
         }
 
-        public override void LoadFontsAndTextures()
-        {
-            base.LoadFontsAndTextures();
-            ScanHighResImages();
-        }
-
-        private void ScanHighResImages()
-        {
-            if (!Directory.Exists(EditorSettings.RawResourcesPath))
-            {
-                GameLogger.Log($"Unable to find raw resources path at {FileHelper.GetPath(EditorSettings.RawResourcesPath)}. " +
-                    $"Use this directory for images that will be built into the atlas.");
-
-                return;
-            }
-
-            var builder = ImmutableArray.CreateBuilder<string>();
-            foreach (var file in FileHelper.GetAllFilesInFolder(FileHelper.GetPath(EditorSettings.RawResourcesPath, "/hires_images/"), "*.png", true))
-            {
-                builder.Add(Path.GetRelativePath(FileHelper.GetPath(EditorSettings.RawResourcesPath) + "/hires_images/", FileHelper.GetPathWithoutExtension(file.FullName)));
-            }
-
-            HiResImages = builder.ToImmutable();
-        }
-
         public void RefreshAfterSave()
         {
-            LoadAllSaveAssets();
+            _ = LoadAllSaveAssets();
         }
 
-        private void LoadAllSaveAssets()
+        private async Task LoadAllSaveAssets()
         {
             _saveAssetsForEditor.Clear();
 
-            foreach (GameAsset asset in FetchAssetsAtPath(SaveBasePath, stopOnFailure: true))
+            await Task.Yield();
+
+            using PerfTimeRecorder recorder = new("Loading Saves (for editor)");
+
+            string trackerPath = Path.Join(SaveBasePath, SaveDataTracker.Name);
+            if (!File.Exists(trackerPath))
             {
-                _saveAssetsForEditor[asset.Guid] = asset;
+                return;
+            }
+
+            SaveDataTracker? tracker = FileManager.UnpackContent<SaveDataTracker>(trackerPath);
+            if (tracker is null)
+            {
+                return;
+            }
+
+            foreach ((int slot, SaveDataInfo save) in tracker.Value.Info)
+            {
+                string saveDataPath = save.GetFullPackedSavePath(slot);
+                string saveDataAssetsPath = save.GetFullPackedAssetsSavePath(slot);
+                if (!File.Exists(saveDataPath) || !File.Exists(saveDataAssetsPath))
+                {
+                    continue;
+                }
+
+                PackedSaveData? packedData = FileManager.UnpackContent<PackedSaveData>(saveDataPath);
+                PackedSaveAssetsData? packedAssetsData = FileManager.UnpackContent<PackedSaveAssetsData>(saveDataAssetsPath);
+                if (packedData is null || packedAssetsData is null)
+                {
+                    continue;
+                }
+
+                _saveAssetsForEditor[packedData.Data.Guid] = packedData.Data;
+
+                foreach (GameAsset asset in packedAssetsData.Assets)
+                {
+                    _saveAssetsForEditor[asset.Guid] = asset;
+                }
             }
         }
 
         public override void DeleteAllSaves()
         {
             _saveAssetsForEditor.Clear();
+
             base.DeleteAllSaves();
         }
 
@@ -299,26 +352,27 @@ namespace Murder.Editor.Data
         {
             string editorSettingsPath = Path.Join(SaveBasePath, EditorSettingsFileName);
 
-            if (FileHelper.Exists(editorSettingsPath))
+            if (FileManager.Exists(editorSettingsPath))
             {
-                EditorSettings = FileHelper.DeserializeAsset<EditorSettingsAsset>(editorSettingsPath)!;
-                GameLogger.Log("Successfully loaded editor configurations.");
+                EditorSettings = FileManager.DeserializeAsset<EditorSettingsAsset>(editorSettingsPath)!;
             }
 
             if (EditorSettings is null)
             {
                 GameLogger.Warning($"Didn't find {EditorSettingsFileName} file. Creating one.");
 
-                EditorSettings = new EditorSettingsAsset(Game.Data.GameDirectory);
+                EditorSettings = CreateEditorSettings();
                 EditorSettings.MakeGuid();
                 SaveAsset(EditorSettings);
             }
 
+            PopulateEditorSettings(EditorSettings);
+
             string gameProfilePath = FileHelper.GetPath(Path.Join(EditorSettings.SourceResourcesPath, GameProfileFileName));
 
-            if (FileHelper.Exists(gameProfilePath))
+            if (FileManager.Exists(gameProfilePath))
             {
-                _gameProfile = FileHelper.DeserializeAsset<GameProfile>(gameProfilePath)!;
+                _gameProfile = (GameProfile)FileManager.DeserializeAsset<GameAsset>(gameProfilePath)!;
             }
 
             // Create a game profile, if none was provided from the base game or if the game
@@ -354,19 +408,23 @@ namespace Murder.Editor.Data
             }
             else if (_saveAssetsForEditor.TryGetValue(assetGuid, out GameAsset? saveAsset))
             {
-                FileHelper.DeleteFileIfExists(saveAsset.FilePath);
+                FileManager.DeleteFileIfExists(saveAsset.FilePath);
                 _saveAssetsForEditor.Remove(assetGuid);
             }
+
+            _cachedFilteredAssetsWithImplementation.Clear();
         }
 
         internal GameAsset CreateNewAsset(Type type, string assetName)
         {
-            var asset = Activator.CreateInstance(type) as GameAsset;
+            GameAsset? asset = Activator.CreateInstance(type) as GameAsset;
             GameLogger.Verify(asset != null);
 
-            asset.Name = GetNextName(assetName, EditorSettings.AssetNamePattern);
+            asset.Name = GetNextName(type, assetName, EditorSettings.AssetNamePattern);
 
             AddAsset(asset);
+
+            _cachedFilteredAssetsWithImplementation.Clear();
             return asset;
         }
 
@@ -378,7 +436,7 @@ namespace Murder.Editor.Data
                 string? editorPath = EditorSettings.GetEditorAssetPath();
                 if (editorPath is not null)
                 {
-                    FileHelper.SaveSerialized(EditorSettings, editorPath);
+                    FileManager.SaveSerialized<GameAsset>(EditorSettings, editorPath);
                 }
             }
 
@@ -398,7 +456,7 @@ namespace Murder.Editor.Data
                 string? profilePath = GameProfile.GetEditorAssetPath();
                 if (profilePath is not null)
                 {
-                    FileHelper.SaveSerialized(GameProfile, profilePath);
+                    FileManager.SaveSerialized<GameAsset>(GameProfile, profilePath);
                 }
             }
         }
@@ -430,6 +488,8 @@ namespace Murder.Editor.Data
                 return;
             }
 
+            OnAssetRenamedOrAddedOrDeleted();
+
             // File is about to be synchronized, so it's not changed.
             asset.FileChanged = false;
 
@@ -437,7 +497,7 @@ namespace Murder.Editor.Data
             {
                 if (asset.CanBeDeleted)
                 {
-                    if (!FileHelper.DeleteFileIfExists(sourcePath))
+                    if (!FileManager.DeleteFileIfExists(sourcePath))
                     {
                         // Right now, we will throw this on a rename or deleting without saving a file.
                         // TODO: Do we need to reenable this?
@@ -446,7 +506,7 @@ namespace Murder.Editor.Data
 
                     if (binPath is not null)
                     {
-                        _ = FileHelper.DeleteFileIfExists(binPath);
+                        _ = FileManager.DeleteFileIfExists(binPath);
                     }
                 }
 
@@ -471,7 +531,7 @@ namespace Murder.Editor.Data
                     a => string.Equals(_allAssets[a].Name, asset.Name, StringComparison.OrdinalIgnoreCase) && _allAssets[a] != asset) > 0)
                 {
                     // Since we already have an existing asset with the same name, create a new name for this.
-                    asset.Name = GetNextName(asset.Name, EditorSettings.AssetNamePattern);
+                    asset.Name = GetNextName(typeof(T), asset.Name, EditorSettings.AssetNamePattern);
                     asset.FilePath = asset.Name + ".json";
 
                     sourcePath = asset.GetEditorAssetPath()!;
@@ -481,13 +541,13 @@ namespace Murder.Editor.Data
 
             // Now that we know we have an actual valid path, create the relative path to this new file.
             // We save twice: one in source to persist and in bin to reflect in the executable.
-            FileHelper.CreateDirectoryPathIfNotExists(sourcePath);
-            FileHelper.SaveSerialized(asset, sourcePath);
+            FileManager.CreateDirectoryPathIfNotExists(sourcePath);
+            FileManager.SaveSerialized<GameAsset>(asset, sourcePath);
 
             if (binPath is not null)
             {
-                FileHelper.CreateDirectoryPathIfNotExists(binPath);
-                FileHelper.SaveSerialized(asset, binPath);
+                FileManager.CreateDirectoryPathIfNotExists(binPath);
+                FileManager.SaveSerialized<GameAsset>(asset, binPath);
             }
 
             // Also save any extra assets at this point.
@@ -507,20 +567,27 @@ namespace Murder.Editor.Data
             }
         }
 
-        private GameAsset? GetAssetByName(string name)
+        private bool HasAssetOfName(Type type, string name)
         {
-            foreach (GameAsset other in _allAssets.Values)
+            if (!_database.ContainsKey(type))
             {
-                if (string.Equals(other.Name, name, StringComparison.OrdinalIgnoreCase))
+                return false;
+            }
+            HashSet<Guid> assets = _database[type];
+
+            foreach (Guid g in assets)
+            {
+                string otherName = _allAssets[g].Name;
+                if (string.Equals(otherName, name, StringComparison.OrdinalIgnoreCase))
                 {
-                    return other;
+                    return true;
                 }
             }
 
-            return null;
+            return false;
         }
 
-        public string GetNextName(string name, string pattern)
+        public string GetNextName(Type type, string name, string pattern)
         {
             string tmp = string.Format(pattern, 1);
             if (tmp == pattern)
@@ -528,7 +595,7 @@ namespace Murder.Editor.Data
                 throw new ArgumentException("The pattern must include an index place-holder like '{0}'", "pattern");
             }
 
-            if (GetAssetByName(name) is null)
+            if (!HasAssetOfName(type, name))
             {
                 return name;
             }
@@ -554,7 +621,7 @@ namespace Murder.Editor.Data
             for (int i = min; i < max; i++)
             {
                 candidate = r.Replace(candidate, $"{i}");
-                if (GetAssetByName(candidate) == null)
+                if (!HasAssetOfName(type, candidate))
                     return candidate;
             }
 
@@ -581,10 +648,23 @@ namespace Murder.Editor.Data
                 return false;
             }
 
-            string mgfxcPath = Path.Combine(assemblyPath, "mgfxc.dll");
-            if (!File.Exists(mgfxcPath))
+            string? fxcPath = ShaderHelpers.ProbeFxcPath();
+            if (fxcPath is null)
             {
-                GameLogger.Log($"Couldn't find mgfxc.dll to compile shader.");
+                GameLogger.Warning(
+                    $$"""
+                    Unable to find a valid shader path for fxc.exe. You have a couple of options:
+                        - You may download DirectX 9: https://www.microsoft.com/en-us/download/details.aspx?id=6812 
+                        - Install a Windows SDK version with Visual Studio
+                        - Provide your custom path for fxc.exe at Editor Settings -> FxcPath (recommended for non-Windows OS)
+                    This is not mandatory but the shaders won't compile until this is set!
+                    """);
+                return false;
+            }
+
+            if (!File.Exists(fxcPath))
+            {
+                GameLogger.Warning("How did we return an invalid fxc.exe path from our probe?");
                 return false;
             }
 
@@ -602,40 +682,39 @@ namespace Murder.Editor.Data
             }
 
             string binOutputFilePath = FileHelper.GetPath(PackedBinDirectoryPath, string.Format(ShaderRelativePath, path));
-            string arguments = "\"" + mgfxcPath + "\" \"" + sourceFile + "\" \"" + binOutputFilePath + "\" /Profile:OpenGL /Debug";
+            string arguments = $"/nologo /T fx_2_0 {sourceFile} /Fo {binOutputFilePath}";
+
+            // The tool needs that the output directory exists.
+            FileManager.CreateDirectoryPathIfNotExists(binOutputFilePath);
 
             bool success;
             string stderr;
 
             try
             {
-                success = ExternalTool.Run("dotnet", arguments, out string _, out stderr) == 0;
+                success = ExternalTool.Run(fxcPath, arguments, out string _, out stderr) == 0;
             }
             catch (Exception ex)
             {
-                GameLogger.Error($"Error running dotnet shader command: {ex.Message}");
+                GameLogger.Error($"Error running shader command: {ex.Message}");
                 return false;
             }
 
-            if (success)
-            {
-                // Copy the output to the source directory as well.
-                string sourceOutputFilePath = Path.Join(PackedSourceDirectoryPath, string.Format(ShaderRelativePath, path));
-
-                FileHelper.CreateDirectoryPathIfNotExists(sourceOutputFilePath);
-                File.Copy(binOutputFilePath, sourceOutputFilePath, true);
-
-                // GameLogger.Log($"Sucessfully compiled {name}.fx");
-            }
-            else
+            if (!success)
             {
                 GameLogger.Error(stderr);
                 Debugger.Log(2, "Shader Compile Error", stderr);
+
+                return false;
             }
 
-            CompiledEffectContent compiledEffect = new CompiledEffectContent(File.ReadAllBytes(binOutputFilePath));
-            result = new Effect(Game.GraphicsDevice, compiledEffect.GetEffectCode());
+            // Copy the output to the source directory as well.
+            string sourceOutputFilePath = Path.Join(PackedSourceDirectoryPath, string.Format(ShaderRelativePath, path));
 
+            FileManager.CreateDirectoryPathIfNotExists(sourceOutputFilePath);
+            File.Copy(binOutputFilePath, sourceOutputFilePath, true);
+
+            result = new Effect(Game.GraphicsDevice, File.ReadAllBytes(binOutputFilePath));
             return true;
         }
 
@@ -643,7 +722,7 @@ namespace Murder.Editor.Data
         {
             // Load editor assets so the editor is *clean*.
             string editorPath = FileHelper.GetPath(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath, "Generated", "editor");
-            
+
             LoadAssetsAtPath(editorPath, hasEditorPath: true);
             SkipLoadingAssetsAt(editorPath);
 
@@ -661,7 +740,23 @@ namespace Murder.Editor.Data
             ReloadDialogs();
             FlushResourceImporters();
 
+            InitializeShaderFileSystemWather();
+
+            _cachedFilteredAssetsWithImplementation.Clear();
             CallAfterLoadContent = false;
+        }
+
+        /// <summary>
+        /// Called after the content was loaded back from the main thread.
+        /// </summary>
+        public override void AfterContentLoadedFromMainThread()
+        {
+            if (_gameProfile?.PreloadTextures is not true)
+            {
+                return;
+            }
+
+            base.AfterContentLoadedFromMainThread();
         }
 
         private void LoadTextureManagers()
@@ -688,6 +783,58 @@ namespace Murder.Editor.Data
             }
 
             GameLogger.Warning($"Set EditorSettings.SaveDeserializedAssetOnError to change how asset errors are handled.");
+        }
+
+        private static EditorSettingsAsset CreateEditorSettings()
+        {
+            return new EditorSettingsAsset(
+                name: EditorSettingsFileName,
+                gameSourcePath: $"../../../../{Game.Data.GameDirectory}",
+                editorSystems: [
+                (typeof(EditorStartOnCursorSystem), true),
+                (typeof(EditorSystem), true),
+                (typeof(TileEditorSystem), false),
+                (typeof(EditorCameraControllerSystem), true),
+                (typeof(SpriteRenderDebugSystem), true),
+                (typeof(DebugColliderRenderSystem), true),
+                (typeof(CursorSystem), true),
+                (typeof(TilemapAndFloorRenderSystem), true),
+                (typeof(RectangleRenderSystem), true),
+                (typeof(RectPositionDebugRenderer), true),
+                (typeof(UpdatePositionSystem), true),
+                (typeof(UpdateColliderSystem), true),
+                (typeof(StateMachineSystem), false),
+                (typeof(CustomDrawRenderSystem), true),
+                (typeof(UpdateTileGridSystem), false),
+                (typeof(EntitiesPlacerSystem), true),
+                (typeof(DebugShowInteractionsSystem), true),
+                (typeof(DebugShowCameraBoundsSystem), true),
+                (typeof(CutsceneEditorSystem), false),
+                (typeof(UpdateAnchorSystem), false),
+                (typeof(EditorFloorRenderSystem), true),
+                (typeof(ParticleRendererSystem), true),
+                (typeof(DebugParticlesSystem), true),
+                (typeof(ParticleDisableTrackerSystem), true),
+                (typeof(ParticleTrackerSystem), true),
+                (typeof(SpriteThreeSliceRenderSystem), true),
+                (typeof(DialogueNodeSystem), false),
+                (typeof(StoryEditorSystem), false),
+                (typeof(PolygonSpriteRenderSystem), true)
+                ]);
+        }
+
+        private static void PopulateEditorSettings(EditorSettingsAsset settings)
+        {
+            settings.FilePath = EditorSettingsFileName;
+        }
+
+        public override void OnAssetRenamedOrAddedOrDeleted()
+        {
+            // Only apply this if the active scene is the editor scene (probably).
+            if (Architect.Instance.ActiveScene is EditorScene scene)
+            {
+                scene.OnAssetRenamedOrAddedOrDeleted();
+            }
         }
     }
 }

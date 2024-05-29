@@ -468,5 +468,11 @@ namespace Murder.Utilities
             var delta = Math.Clamp(Game.Now - tweenStart, 0, duration) / duration;
             return easeMethod(delta);
         }
+
+
+        public static float JumpArc(float t)
+        {
+            return MathF.Sin(Calculator.Clamp01(t) * MathF.PI);
+        }
     }
 }

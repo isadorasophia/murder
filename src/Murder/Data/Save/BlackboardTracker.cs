@@ -6,9 +6,10 @@ using Murder.Core.Dialogs;
 using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Serialization;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 namespace Murder.Save
 {
@@ -17,20 +18,20 @@ namespace Murder.Save
     /// </summary>
     public class BlackboardTracker
     {
-        [JsonProperty]
+        [Serialize]
         private ImmutableDictionary<string, BlackboardInfo>? _blackboards;
 
         /// <summary>
         /// Tracks properties that does not belong in any blackboard and only take place
         /// in the story.
         /// </summary>
-        [JsonProperty]
-        private readonly Dictionary<string, object> _variablesWithoutBlackboard = new(StringComparer.InvariantCultureIgnoreCase);
+        [Serialize]
+        private readonly Dictionary<string, OrphanBlackboardContext> _variablesWithoutBlackboard = new(StringComparer.InvariantCultureIgnoreCase);
 
-        [JsonProperty]
+        [Serialize]
         private readonly Dictionary<Guid, ImmutableDictionary<string, BlackboardInfo>> _characterBlackboards = [];
 
-        [JsonProperty]
+        [Serialize]
         private readonly ComplexDictionary<(Guid Character, int SituationId, int DialogId), int> _dialogCounter = [];
 
         private BlackboardInfo? DefaultBlackboard => _defaultBlackboard ??= _defaultBlackboardName is null ?
@@ -39,7 +40,7 @@ namespace Murder.Save
         // Do not persist this, or it will not map correctly to the reference in _blackboards.
         private BlackboardInfo? _defaultBlackboard;
 
-        [JsonProperty]
+        [Serialize]
         private string? _defaultBlackboardName;
 
         [JsonIgnore]
@@ -50,7 +51,7 @@ namespace Murder.Save
         /// <summary>
         /// Triggered modified values that must be cleaned up.
         /// </summary>
-        [JsonProperty, HideInEditor]
+        [Serialize, HideInEditor]
         private readonly List<(BlackboardInfo info, string fieldName, object value)> _pendingModifiedValues = new();
 
         public virtual ImmutableDictionary<string, BlackboardInfo> FetchBlackboards() =>
@@ -199,6 +200,7 @@ namespace Murder.Save
         /// <summary>
         /// Return whether a <paramref name="fieldName"/> exists on <paramref name="blackboardName"/>.
         /// </summary>
+        [UnconditionalSuppressMessage("AOT", "IL2075:GetField() might have been trimmed.", Justification = "Assembly is not trimmed.")]
         public bool HasVariable(string? blackboardName, string fieldName)
         {
             if (FindBlackboard(blackboardName, null) is not BlackboardInfo info)
@@ -297,6 +299,16 @@ namespace Murder.Save
             }
         }
 
+        public float GetFloat(string? name, string fieldName, Guid? character = null)
+        {
+            if (FindBlackboard(name, character) is not BlackboardInfo info)
+            {
+                return 0;
+            }
+
+            return GetValue<float>(info, fieldName);
+        }
+
         public void SetFloat(string? name, string fieldName, BlackboardActionKind kind, float value, Guid? character = null)
         {
             float originalValue;
@@ -384,12 +396,12 @@ namespace Murder.Save
         /// </summary>
         private T GetValue<T>(string name) where T : notnull
         {
-            if (!_variablesWithoutBlackboard.TryGetValue(name, out object? result))
+            if (!_variablesWithoutBlackboard.TryGetValue(name, out OrphanBlackboardContext orphanContext))
             {
                 return default!;
             }
 
-            if (result is not T resultAsT)
+            if (orphanContext.GetValue() is not T resultAsT)
             {
                 GameLogger.Error($"Invalid expected type of {typeof(T).Name} for {name}!");
                 return default!;
@@ -408,7 +420,7 @@ namespace Murder.Save
             SetValue(info, fieldName, value);
         }
 
-        private bool SetValue<T>(BlackboardInfo info, string fieldName, T value, bool isRevertingTrigger = false) where T : notnull
+        protected bool SetValue<T>(BlackboardInfo info, string fieldName, T value, bool isRevertingTrigger = false) where T : notnull
         {
             FieldInfo? f = GetFieldFrom(info.Type, fieldName);
             if (f is null)
@@ -460,8 +472,19 @@ namespace Murder.Save
                 }
             }
 
+            OnFieldModified(info, f, fieldName, value);
             OnModified(info.Blackboard.Kind);
+
             return true;
+        }
+
+        /// <summary>
+        /// This provides custom proessing when a field is modified.
+        /// This is used when tracking custom attribute behaviors.
+        /// </summary>
+        protected virtual void OnFieldModified<T>(BlackboardInfo info, FieldInfo fieldInfo, string fieldName, T value) where T : notnull
+        {
+            // Implemented by third-party
         }
 
         /// <summary>
@@ -469,7 +492,7 @@ namespace Murder.Save
         /// </summary>
         private void SetValue<T>(string name, T value) where T : notnull
         {
-            _variablesWithoutBlackboard[name] = value;
+            _variablesWithoutBlackboard[name] = new(value);
 
             // do not trigger modified since this does not imply in story outside of the dialogue.
         }
@@ -683,6 +706,7 @@ namespace Murder.Save
             return false;
         }
 
+        [UnconditionalSuppressMessage("AOT", "IL2070:GetField() might have been trimmed.", Justification = "Assembly is not trimmed.")]
         private FieldInfo? GetFieldFrom(Type type, string fieldName)
         {
             FieldInfo? f = type.GetField(fieldName, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
@@ -694,6 +718,7 @@ namespace Murder.Save
             return f;
         }
 
+        [UnconditionalSuppressMessage("Trimming", "IL2026:GetTypes() might be inconsistent due to trimming.", Justification = "Assembly is not trimmed.")]
         private IEnumerable<Type> FindAllBlackboards(Type tInterface, Type? tFilterOut = null)
         {
             bool isBlackboard(Type t)
@@ -724,6 +749,7 @@ namespace Murder.Save
             }
         }
 
+        [UnconditionalSuppressMessage("AOT", "IL2072:Calling public constructors.", Justification = "Assemblies are not trimmed.")]
         private ImmutableDictionary<string, BlackboardInfo> InitializeBlackboards()
         {
             var result = ImmutableDictionary.CreateBuilder<string, BlackboardInfo>();
@@ -753,6 +779,7 @@ namespace Murder.Save
 
         private ImmutableArray<Type>? _cachedCharacterBlackboards = null;
 
+        [UnconditionalSuppressMessage("AOT", "IL2072:Calling public constructors.", Justification = "Assemblies are not trimmed.")]
         private ImmutableDictionary<string, BlackboardInfo> InitializeCharacterBlackboards()
         {
             _cachedCharacterBlackboards ??= FindAllBlackboards(typeof(ICharacterBlackboard)).ToImmutableArray();

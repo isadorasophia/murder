@@ -3,20 +3,29 @@ using Microsoft.Xna.Framework.Input;
 using Murder.Assets;
 using Murder.Core.Input;
 using Murder.Diagnostics;
-using Murder.Editor.Assets;
+using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Services;
 using Murder.Editor.Utilities;
-using Murder.Serialization;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
+using static Murder.Editor.ImGuiExtended.SearchBox;
 
 namespace Murder.Editor;
 
 public partial class EditorScene
 {
-    private FileSystemWatcher? _shaderFileSystemWatcher = null;
-
+    private static readonly Vector2 _commandPaletteWindowSize = new(400, 350);
+    private static readonly Vector2 _commandPalettePadding = new(20, 0);
+    private static readonly Vector2 _commandPaletteSearchBoxPadding = new (20, 20);
+    private static readonly SearchBox.SearchBoxSizeConfiguration _commandPaletteSizeConfiguration = new(
+        SearchFrameSize: _commandPaletteWindowSize - _commandPalettePadding,
+        SearchBoxContainerSize: _commandPaletteWindowSize - _commandPaletteSearchBoxPadding
+    );
+    
     private readonly ImmutableDictionary<ShortcutGroup, List<Shortcut>> _shortcuts;
+    private readonly Dictionary<string, Shortcut> _shortcutSearchValues;
+
+    private bool _commandPaletteIsVisible;
 
     private ImmutableDictionary<ShortcutGroup, List<Shortcut>> CreateShortcutList() =>
         new Dictionary<ShortcutGroup, List<Shortcut>>
@@ -30,28 +39,28 @@ public partial class EditorScene
                 new ActionShortcut("Game Logger", Keys.F1, ToggleGameLogger),
                 new ToggleShortcut("ImGui Demo", new Chord(Keys.G, _leftOsActionModifier, Keys.LeftShift),
                     ToggleImGuiDemo),
-                new ToggleShortcut("Metrics", new Chord(Keys.M, _leftOsActionModifier, Keys.LeftShift),
+                new ToggleShortcut("Imgui Metrics", new Chord(Keys.M, _leftOsActionModifier, Keys.LeftShift),
                     ToggleShowingMetricsWindow),
                 new ToggleShortcut("Style Editor", new Chord(Keys.E, _leftOsActionModifier, Keys.LeftShift),
                     ToggleShowingStyleEditor)
             ],
             [ShortcutGroup.Assets] =
             [
-                new ActionShortcut("Save All Assets", new Chord(Keys.S, _leftOsActionModifier, Keys.LeftShift),
+                new ActionShortcut("Save All Assets", Chord.None,
                     SaveAllAssets),
                 new ActionShortcut("Bake Aseprite Guids", new Chord(Keys.B, _leftOsActionModifier, Keys.LeftShift),
                     BakeAsepriteGuids)
             ],
-            [ShortcutGroup.Reload] = 
+            [ShortcutGroup.Reload] =
             [
-                new ActionShortcut("Content and Atlas", Keys.F3, ReloadContentAndAtlas),
                 new ActionShortcut("Shaders", Keys.F6, ReloadShaders),
                 new ActionShortcut("Sounds", Keys.F7, ReloadSounds),
+                new ActionShortcut("Metadata", new Chord(Keys.F8, Keys.LeftShift), ReloadMetadata),
                 new ToggleShortcut(
-                    name: "Only Reload Atlas With Changes",
+                    name: "Always Build Atlas (on Startup)",
                     chord: new Chord(Keys.F3, Keys.LeftShift),
                     toggle: ReloadAtlasWithChangesToggled,
-                    defaultCheckedValue: Architect.EditorSettings.OnlyReloadAtlasWithChanges
+                    defaultCheckedValue: Architect.EditorSettings.AlwaysBuildAtlasOnStartup
                 ),
                 new ToggleShortcut(
                     name: "Enable Hot Reload on Shaders",
@@ -63,43 +72,23 @@ public partial class EditorScene
             [ShortcutGroup.Tools] =
             [
                 new ActionShortcut("Refresh Window", Keys.F4, RefreshEditorWindow),
-                new ActionShortcut("Run diagnostics", new Chord(Keys.D, _leftOsActionModifier, Keys.LeftShift),  RunDiagnostics)
+                new ActionShortcut("Run Diagnostics", new Chord(Keys.D, _leftOsActionModifier, Keys.LeftShift),  RunDiagnostics),
+                new ActionShortcut("Command Palette", new Chord(Keys.A, _leftOsActionModifier, Keys.LeftShift), ToggleCommandPalette)
+            ],
+            [ShortcutGroup.Publish] =
+            [
+                new ActionShortcut("Ready to ship!", new Chord(Keys.P, _leftOsActionModifier, Keys.Enter), PackAssetsToPublishedGame)
             ]
         }.ToImmutableDictionary();
 
-    [MemberNotNull(nameof(_shaderFileSystemWatcher))]
-    private void InitializeShaderFileSystemWather()
+    private void ToggleCommandPalette()
     {
-        string shaderPath = FileHelper.GetPath(
-            Path.Join(Architect.EditorSettings.RawResourcesPath, Game.Data.GameProfile.ShadersPath, "src"));
-
-        _shaderFileSystemWatcher = new FileSystemWatcher(shaderPath);
-
-        _shaderFileSystemWatcher.Changed += SetShadersNeedReloading;
-        _shaderFileSystemWatcher.Renamed += SetShadersNeedReloading;
-        _shaderFileSystemWatcher.Created += SetShadersNeedReloading;
-
-        _shaderFileSystemWatcher.EnableRaisingEvents = Architect.EditorSettings.AutomaticallyHotReloadShaderChanges;
-    }
-
-    private void SetShadersNeedReloading(object sender, FileSystemEventArgs e)
-    {
-        lock (_shadersReloadingLock)
-        {
-            _shadersNeedReloading = true;
-        }
+        _commandPaletteIsVisible = !_commandPaletteIsVisible;
     }
 
     private void ToggleHotReloadShader(bool value)
     {
-        Architect.EditorSettings.AutomaticallyHotReloadShaderChanges = value;
-
-        if (_shaderFileSystemWatcher is null)
-        {
-            InitializeShaderFileSystemWather();
-        }
-
-        _shaderFileSystemWatcher.EnableRaisingEvents = value;
+        Architect.EditorData.ToggleHotReloadShader(value);
     }
 
     private void ToggleShowingStyleEditor(bool value)
@@ -163,21 +152,71 @@ public partial class EditorScene
 
         ImGui.EndMainMenuBar();
         
-        if (Game.Input.Shortcut(Keys.Escape) && GameLogger.IsShowing)
+        // We need to check for the visibility of escapable elements in order and dismiss whatever is on top.
+        if (Game.Input.Shortcut(Keys.Escape))
         {
-            ToggleGameLogger();
+            // First, we hide the command palette, since it takes the whole screen.
+            if (_commandPaletteIsVisible)
+            {
+                _commandPaletteIsVisible = false;
+            }
+            // Next we hide the logger.
+            else if (GameLogger.IsShowing)
+            {
+                ToggleGameLogger();
+            }
         }
         
         if (Game.Input.Shortcut(Keys.W, _leftOsActionModifier) ||
             Game.Input.Shortcut(Keys.W, _rightOsActionModifier))
         {
-            CloseTab(_selectedAssets[_selectedTab]);
+            if (_selectedAssets.Count > 0)
+            {
+                CloseTab(_selectedAssets[_selectedTab]);
+            }
         }
 
         if (Game.Input.Shortcut(Keys.F, _leftOsActionModifier) || 
             Game.Input.Shortcut(Keys.F, _rightOsActionModifier))
         {
             _focusOnFind = true;
+        }
+
+        if (_commandPaletteIsVisible)
+        {    
+            Vector2 viewportSize = ImGui.GetMainViewport().Size;
+
+            // Background of the command palette, slightly darker and prevents interaction with the editor.
+            ImGui.SetNextWindowBgAlpha(0.5f);
+            ImGui.Begin("Command Palette Background", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize);
+            ImGui.SetWindowPos(Vector2.Zero);
+            ImGui.SetWindowSize(viewportSize);
+            ImGui.End();
+            
+            // Command palette window.
+            ImGui.Begin("Command Palette",  ImGuiWindowFlags.Modal | ImGuiWindowFlags.NoDecoration);
+            ImGui.SetWindowPos((viewportSize - _commandPaletteWindowSize) / 2f);
+            ImGui.SetWindowPos((viewportSize - _commandPaletteWindowSize) / 2f);
+            ImGui.SetWindowSize(_commandPaletteWindowSize);
+            ImGui.SetWindowFocus();
+
+            var lazy = new Lazy<Dictionary<string, Shortcut>>(() => _shortcutSearchValues);
+
+            SearchBoxSettings<Shortcut> settings = new(initialText: "Type a command");
+
+            if (SearchBox.Search(
+                $"command_palette", 
+                settings,
+                values: lazy,
+                flags: SearchBoxFlags.Unfolded,
+                sizeConfiguration: _commandPaletteSizeConfiguration, 
+                out Shortcut? shortcut))
+            {
+                shortcut.Execute();
+                _commandPaletteIsVisible = false;
+            }
+            
+            ImGui.End();
         }
     }
 
@@ -203,6 +242,11 @@ public partial class EditorScene
         Architect.Instance.RefreshWindow();
     }
 
+    private void PackAssetsToPublishedGame()
+    {
+        Architect.EditorData.PackPublishedGame();
+    }
+
     private void RunDiagnostics()
     {
         if (_selectedTab == Guid.Empty || !_selectedAssets.TryGetValue(_selectedTab, out GameAsset? asset))
@@ -225,23 +269,26 @@ public partial class EditorScene
 
     private void ReloadAtlasWithChangesToggled(bool value)
     {
-        Architect.EditorSettings.OnlyReloadAtlasWithChanges = value;
+        Architect.EditorSettings.AlwaysBuildAtlasOnStartup = value;
+
+        // Persist changes immediately.
+        Architect.EditorData.SaveAsset(Architect.EditorSettings);
     }
 
-    private static void ReloadContentAndAtlas()
+    private static void ReloadMetadata()
     {
-        _ = Architect.EditorData.ReloadSprites();
         AssetsFilter.RefreshCache();
+        ReflectionHelper.ClearCache();
     }
 
     private static void ReloadShaders()
     {
-        Architect.Instance.ReloadShaders();
+        Architect.EditorData.ReloadShaders();
     }
 
     private static void ReloadSounds()
     {
-        _ = Game.Data.LoadSounds(reload: true);
+        _ = Game.Data.LoadSoundsAsync(reload: true);
     }
 
     private static void SaveAllAssets()
@@ -271,7 +318,8 @@ public partial class EditorScene
         Assets,
         View,
         Reload,
-        Tools
+        Tools,
+        Publish
     }
 
     private abstract record Shortcut(string Name, Chord Chord)

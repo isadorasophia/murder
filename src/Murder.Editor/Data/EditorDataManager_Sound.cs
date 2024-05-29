@@ -25,12 +25,24 @@ namespace Murder.Editor.Data
             string soundsPackedPath = FileHelper.GetPath(Path.Join(EditorSettings.SourcePackedPath, GameProfile.SoundsPath));
             string soundsBinPath = FileHelper.GetPath(Path.Join(EditorSettings.BinResourcesPath, GameProfile.SoundsPath));
 
-            FileHelper.DeleteDirectoryIfExists(soundsBinPath);
-            FileHelper.DeleteDirectoryIfExists(soundsPackedPath);
+            FileManager.DeleteDirectoryIfExists(soundsBinPath);
+            FileManager.DeleteDirectoryIfExists(soundsPackedPath);
 
             // Make sure we are copying the latest contents into packed and binary directories!
-            FileHelper.DirectoryDeepCopy(soundsRawResourcesPath, soundsPackedPath);
-            FileHelper.DirectoryDeepCopy(soundsRawResourcesPath, soundsBinPath);
+            EditorFileManager.DirectoryDeepCopy(soundsRawResourcesPath, soundsPackedPath);
+            EditorFileManager.DirectoryDeepCopy(soundsRawResourcesPath, soundsBinPath);
+        }
+
+        protected override async Task LoadSoundsImplAsync(bool reload)
+        {
+            if (reload)
+            {
+                await Game.Sound.ReloadAsync();
+            }
+            else
+            {
+                await Game.Sound.LoadContentAsync(packedData: null);
+            }
         }
     }
 }

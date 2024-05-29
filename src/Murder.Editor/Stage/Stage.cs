@@ -133,10 +133,7 @@ namespace Murder.Editor.Stages
             {
                 Point diff = _renderContext.Camera.Size - cameraSize;
 
-                // TODO : Implement DPI
-                // var dpi = ImGui.GetIO().FontGlobalScale;
-
-                if (_renderContext.RefreshWindow(cameraSize, 1))
+                if (_renderContext.RefreshWindow(Architect.GraphicsDevice, cameraSize, cameraSize, new ViewportResizeStyle(ViewportResizeMode.None)))
                 {
                     if (_imGuiRenderTexturePtr == 0) // Not initialized yet
                     {

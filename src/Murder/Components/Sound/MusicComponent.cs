@@ -8,6 +8,7 @@ namespace Murder.Components
     /// Music component which will be immediately played and destroyed.
     /// </summary>
     [Sound]
+    [Unique]
     public readonly struct MusicComponent : IComponent
     {
         public readonly SoundEventId Id = new();

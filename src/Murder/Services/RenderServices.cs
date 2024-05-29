@@ -8,13 +8,10 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Diagnostics;
-using Murder.Messages;
 using Murder.Services.Info;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Numerics;
-using System.Security.AccessControl;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 
@@ -266,15 +263,15 @@ namespace Murder.Services
         {
             batch.Draw(
                 texture,
-                position,
-                texture.Bounds.Size.ToSysVector2(),
+                position.ToXnaVector2(),
+                texture.Bounds.Size(),
                 texture.Bounds,
                 drawInfo.Sort,
                 drawInfo.Rotation,
-                drawInfo.Scale,
+                drawInfo.Scale.ToXnaVector2(),
                 drawInfo.ImageFlip,
                 drawInfo.Color,
-                drawInfo.Origin,
+                drawInfo.Origin.ToXnaVector2(),
                 BLEND_NORMAL
                 );
         }
@@ -462,15 +459,15 @@ namespace Murder.Services
         {
             batch.Draw(
                 texture: SharedResources.GetOrCreatePixel(),
-                position: rectangle.TopLeft,
+                position: rectangle.TopLeft.ToXnaVector2(),
                 targetSize: Point.One,
                 sourceRectangle: default,
                 sort: sorting,
                 rotation: 0,
-                scale: rectangle.Size,
+                scale: rectangle.Size.ToXnaVector2(),
                 flip: ImageFlip.None,
                 color: color,
-                offset: Vector2.Zero,
+                offset: Microsoft.Xna.Framework.Vector2.Zero,
                 BLEND_COLOR_ONLY
                 );
         }
@@ -509,17 +506,31 @@ namespace Murder.Services
             var halfPixel = new Vector2(thickness / 2f, 0);
             // stretch the pixel between the two vectors
             spriteBatch.Draw(SharedResources.GetOrCreatePixel(),
-                             point - halfPixel.Rotate(angle),
-                             Vector2.One,
+                             (point - halfPixel.Rotate(angle)).ToXnaVector2(),
+                             Microsoft.Xna.Framework.Vector2.One,
                              default,
                              sort,
                              angle,
-                             new Vector2(length + 1, thickness),
+                             new Microsoft.Xna.Framework.Vector2(length + 1, thickness),
                              ImageFlip.None,
                              color,
-                             new Vector2(0, 0.5f),
+                             new Microsoft.Xna.Framework.Vector2(0, 0.5f),
                              BLEND_NORMAL
                              );
+        }
+
+        public static void DrawArrow(this Batch2D spriteBatch, Vector2 point1, Vector2 point2, Color color, float thickness, float headSize, float sort = 1f)
+        {
+            DrawLine(spriteBatch, point1, point2, color, thickness, sort);
+
+            Vector2 direction = Vector2.Normalize(point2 - point1);
+            Vector2 perpendicular = new Vector2(-direction.Y, direction.X);
+
+            Vector2 arrowPoint1 = point2 - direction * headSize + perpendicular * headSize;
+            Vector2 arrowPoint2 = point2 - direction * headSize - perpendicular * headSize;
+
+            DrawLine(spriteBatch, point2, arrowPoint1, color, thickness, sort);
+            DrawLine(spriteBatch, point2, arrowPoint2, color, thickness, sort);
         }
         #endregion
 
@@ -558,11 +569,11 @@ namespace Murder.Services
 
         #region Drawing
 
-        public static Microsoft.Xna.Framework.Vector3 BLEND_NORMAL = new(1, 0, 0);
-        public static Microsoft.Xna.Framework.Vector3 BLEND_WASH = new(0, 1, 0);
-        public static Microsoft.Xna.Framework.Vector3 BLEND_COLOR_ONLY = new(0, 0, 1);
+        public static Vector3 BLEND_NORMAL = new(1, 0, 0);
+        public static Vector3 BLEND_WASH = new(0, 1, 0);
+        public static Vector3 BLEND_COLOR_ONLY = new(0, 0, 1);
 
-        public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, Effect effect, BlendState blend, bool smoothing)
+        public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, Effect? effect, BlendState blend, bool smoothing)
         {
             (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BLEND_NORMAL);
 
@@ -574,9 +585,9 @@ namespace Murder.Services
             (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BLEND_NORMAL);
 
             if (blend == BlendState.Additive)
-                Game.Data.ShaderSprite.SetTechnique("Add");
+                Game.Data.ShaderSprite?.SetTechnique("Add");
             else
-                Game.Data.ShaderSprite.SetTechnique("Alpha");
+                Game.Data.ShaderSprite?.SetTechnique("Alpha");
 
             DrawIndexedVertices(
                 matrix,
@@ -586,9 +597,9 @@ namespace Murder.Services
                 false);
         }
 
-        public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, BlendState blend, Effect shaderEffect)
+        public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, BlendState blend, Effect? shaderEffect)
             => DrawTextureQuad(texture, source, destination,matrix, color, blend, shaderEffect, BLEND_NORMAL);
-        public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, BlendState blend, Effect shaderEffect, Vector3 colorBlend)
+        public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, BlendState blend, Effect? shaderEffect, Vector3 colorBlend)
         {
             (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, colorBlend);
 
@@ -611,7 +622,8 @@ namespace Murder.Services
         {
             (VertexInfo[] verts, short[] indices) = MakeRegularQuad(rect, color, BLEND_COLOR_ONLY);
 
-            Game.Data.ShaderSprite.SetTechnique("Alpha");
+            Game.Data.ShaderSprite?.SetTechnique("Alpha");
+
             DrawIndexedVertices(
                 Microsoft.Xna.Framework.Matrix.CreateTranslation(Microsoft.Xna.Framework.Vector3.Zero),
                 Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, Game.Data.ShaderSprite,
@@ -716,10 +728,10 @@ namespace Murder.Services
             // |  \|
             // 3---2
 
-            Vector2 uvTopLeft = new(source.X / sourceSize.X, source.Y / sourceSize.Y);
-            Vector2 uvTopRight = new((source.X + source.Width) / sourceSize.X, source.Y / sourceSize.Y);
-            Vector2 uvBottomRight = new((source.X + source.Width) / sourceSize.X, (source.Y + source.Height) / sourceSize.Y);
-            Vector2 uvBottomLeft = new(source.X / sourceSize.X, (source.Y + source.Height) / sourceSize.Y);
+            Microsoft.Xna.Framework.Vector2 uvTopLeft = new(source.X / sourceSize.X, source.Y / sourceSize.Y);
+            Microsoft.Xna.Framework.Vector2 uvTopRight = new((source.X + source.Width) / sourceSize.X, source.Y / sourceSize.Y);
+            Microsoft.Xna.Framework.Vector2 uvBottomRight = new((source.X + source.Width) / sourceSize.X, (source.Y + source.Height) / sourceSize.Y);
+            Microsoft.Xna.Framework.Vector2 uvBottomLeft = new(source.X / sourceSize.X, (source.Y + source.Height) / sourceSize.Y);
 
             _cachedVertices[0].Position = destination.TopLeft.ToVector3();
             _cachedVertices[0].Color = color;
@@ -752,7 +764,7 @@ namespace Murder.Services
             return (_cachedVertices, _cachedIndices);
         }
 
-        public static void DrawIndexedVertices<T>(Matrix matrix, GraphicsDevice graphicsDevice, T[] vertices, int vertexCount, short[] indices, int primitiveCount, Effect effect, BlendState? blendState = null, Texture2D? texture = null, bool smoothing = false) where T : struct, IVertexType
+        public static void DrawIndexedVertices<T>(Matrix matrix, GraphicsDevice graphicsDevice, T[] vertices, int vertexCount, short[] indices, int primitiveCount, Effect? effect, BlendState? blendState = null, Texture2D? texture = null, bool smoothing = false) where T : struct, IVertexType
         {
             var b = blendState ?? BlendState.AlphaBlend;
 
@@ -763,24 +775,36 @@ namespace Murder.Services
 
             graphicsDevice.RasterizerState = RasterizerState.CullNone;
             graphicsDevice.BlendState = b;
-            graphicsDevice.SamplerStates[0] = smoothing ? SamplerState.AnisotropicClamp : SamplerState.PointClamp;
+            graphicsDevice.SamplerStates[0] = smoothing ? SamplerState.LinearClamp : SamplerState.PointClamp;
 
-            effect.Parameters["MatrixTransform"].SetValue(matrix);
-            if (texture != null)
+
+            if (effect is not null)
             {
-                foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+                effect.Parameters["MatrixTransform"].SetValue(matrix);
+
+                if (texture is not null)
                 {
-                    pass.Apply();
-                    graphicsDevice.Textures[0] = texture;
-                    graphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertexCount, indices, 0, primitiveCount);
+                    foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+                    {
+                        try
+                        {
+                            pass.Apply();
+                        }
+                        catch (Exception e)
+                        {
+                            GameLogger.Error($"Error applying effect pass: {e.Message}");
+                        }
+                        graphicsDevice.Textures[0] = texture;
+                        graphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertexCount, indices, 0, primitiveCount);
+                    }
                 }
-            }
-            else // Saving that 1 check for performance
-            {
-                foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+                else // Saving that 1 check for performance
                 {
-                    pass.Apply();
-                    graphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertexCount, indices, 0, primitiveCount);
+                    foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+                    {
+                        pass.Apply();
+                        graphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertexCount, indices, 0, primitiveCount);
+                    }
                 }
             }
         }

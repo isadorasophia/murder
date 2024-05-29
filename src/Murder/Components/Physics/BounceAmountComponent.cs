@@ -1,7 +1,6 @@
-﻿
-using Bang.Components;
+﻿using Bang.Components;
 
-namespace Murder.Component;
+namespace Murder.Components;
 
 public readonly struct BounceAmountComponent : IComponent
 {

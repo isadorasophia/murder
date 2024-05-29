@@ -8,7 +8,7 @@ public struct SmartFloat
     public readonly int Index;
     public readonly float Custom;
 
-    private SmartFloatAsset? _asset = null;
+    private SmartFloatAsset? _cachedAsset = null;
 
     public SmartFloat()
     {
@@ -26,11 +26,11 @@ public struct SmartFloat
     {
         get
         {
-            if (_asset is not SmartFloatAsset asset)
+            if (_cachedAsset is not SmartFloatAsset asset)
             {
                 if (Asset != Guid.Empty && Game.Data.TryGetAsset<SmartFloatAsset>(Asset) is SmartFloatAsset loaded)
                 {
-                    _asset = loaded;
+                    _cachedAsset = loaded;
                     asset = loaded;
                 }
                 else

@@ -1,4 +1,6 @@
-﻿using Murder.Diagnostics;
+﻿using Murder.Data;
+using Murder.Diagnostics;
+using System.Collections.Immutable;
 
 namespace Murder.Core.Sounds
 {
@@ -6,7 +8,7 @@ namespace Murder.Core.Sounds
     {
         public void Initialize(string resourcesPath) { }
 
-        public Task LoadContentAsync() => Task.CompletedTask;
+        public Task LoadContentAsync(PackedSoundData? packedData) => Task.CompletedTask;
 
         public Task ReloadAsync() => Task.CompletedTask;
 
@@ -44,5 +46,9 @@ namespace Murder.Core.Sounds
         }
 
         public float GetGlobalParameter(ParameterId _) => 0;
+
+        public ImmutableDictionary<string, List<string>> FetchAllBanks() => ImmutableDictionary<string, List<string>>.Empty;
+
+        public ImmutableArray<string> FetchAllPlugins() => [];
     }
 }

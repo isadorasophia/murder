@@ -2,6 +2,7 @@
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
+using Microsoft.Xna.Framework.Input;
 using Murder.Components;
 using Murder.Components.Cutscenes;
 using Murder.Core;
@@ -26,8 +27,8 @@ namespace Murder.Editor.Systems
     [Filter(ContextAccessorFilter.NoneOf, typeof(CutsceneAnchorsComponent), typeof(SoundParameterComponent))] // Skip cutscene and sounds.
     public class DebugColliderRenderSystem : IMurderRenderSystem
     {
+        private readonly static int _hash = typeof(DebugColliderRenderSystem).GetHashCode();
         private bool _wasClicking = false;
-
         public void Draw(RenderContext render, Context context)
         {
             DrawImpl(render, context, allowEditingByDefault: false, ref _wasClicking);
@@ -45,6 +46,7 @@ namespace Murder.Editor.Systems
             {
                 return;
             }
+            bool usingCursor = false;
 
             foreach (Entity e in context.Entities)
             {
@@ -55,7 +57,10 @@ namespace Murder.Editor.Systems
                 ImmutableArray<IShape> newShapes = [];
 
                 bool showHandles = allowEditingByDefault ? true : e.HasComponent<ShowColliderHandlesComponent>();
-                bool usingCursor = false;
+                if (showHandles)
+                {
+                    usingCursor = true;
+                }
 
                 bool isSolid = collider.Layer.HasFlag(CollisionLayersBase.SOLID);
                 for (int shapeIndex = 0; shapeIndex < collider.Shapes.Length; shapeIndex++)
@@ -68,62 +73,36 @@ namespace Murder.Editor.Systems
                         continue;
 
                     // Draw bounding box
-                    // RenderServices.DrawRectangleOutline(render.DebugBatch, shape.GetBoundingBox().AddPosition(globalPosition.Vector2), Color.WarmGray);
-
-                    if (editor.EditorHook.KeepOriginalColliderShapes)
+                    if (DrawOriginalHandles(
+                        shape,
+                        $"offset_{e.EntityId}_{shapeIndex}",
+                        globalPosition,
+                        render,
+                        editor.EditorHook,
+                        showHandles,
+                        color * (isSolid ? 1f : 0.5f),
+                        e.TryGetFacing() is FacingComponent facing && facing.Direction.Flipped(), out var newShapeResult))
                     {
-                        if (DrawOriginalHandles(
-                            shape,
-                            $"offset_{e.EntityId}_{shapeIndex}",
-                            globalPosition,
-                            render,
-                            editor.EditorHook,
-                            showHandles,
-                            color,
-                            /* flip: isSolid, */
-                            e.TryGetFacing() is FacingComponent facing && facing.Direction.Flipped(), out var newShapeResult))
-                        {
-                            newShape = newShapeResult;
-                            usingCursor = true;
-                        }
-                        else
-                        {
-                            newShape = null;
-                        }
+                        newShape = newShapeResult;
+                        usingCursor = true;
                     }
                     else
                     {
-                        newShape = DrawPolyHandles(
-                            shape,
-                            $"offset_{e.EntityId}_{shapeIndex}",
-                            globalPosition,
-                            render,
-                            editor.EditorHook.CursorWorldPosition,
-                            showHandles,
-                            color,
-                            e.TryGetFacing() is FacingComponent facing && facing.Direction.Flipped());
+                        newShape = null;
                     }
 
                     if (newShape is not null)
                     {
                         newShapes = collider.Shapes.SetItem(shapeIndex, newShape);
                         wasClicking = true;
-                        editor.EditorHook.UsingCursor = true;
                     }
-                    else if (wasClicking)
+                    else if (wasClicking && !usingCursor)
                     {
-                        if (usingCursor)
-                        {
-                            editor.EditorHook.UsingCursor = true;
-                        }
-                        else
-                        {
-                            wasClicking = false;
-                        }
+                        wasClicking = false;   
                     }
                     else if (allowEditingByDefault)
                     {
-                        editor.EditorHook.UsingCursor = false;
+                        usingCursor = false;
                     }
                 }
 
@@ -131,6 +110,15 @@ namespace Murder.Editor.Systems
                 {
                     e.SetCollider(new ColliderComponent(newShapes, collider.Layer, collider.DebugColor));
                 }
+            }
+
+            if (usingCursor)
+            {
+                editor.EditorHook.CursorIsBusy.Add(_hash);
+            }
+            else
+            {
+                editor.EditorHook.CursorIsBusy.Remove(_hash);
             }
         }
 
@@ -170,7 +158,7 @@ namespace Murder.Editor.Systems
             EditorHook hook,
             bool showHandles,
             Color color,
-            bool solid,
+            bool _,
             out IShape newShape)
         {
             newShape = shape;
@@ -182,7 +170,7 @@ namespace Murder.Editor.Systems
             bool isReadonly = hook.UsingGui;
 
             Batch2D batch = render.DebugBatch;
-            color = solid ? color : color * 0.5f;
+            color = color * 0.85f;
             switch (shape)
             {
                 case PolygonShape polyShape:
@@ -192,12 +180,11 @@ namespace Murder.Editor.Systems
 
                     if (showHandles)
                     {
-                        if (EditorServices.PolyHandle(id, render, globalPosition.Vector2, cursorPosition, poly, color, out var newPolygonResult))
+                        if (EditorServices.PolyHandle(id, render, globalPosition.Vector2, cursorPosition, poly, Color.White, color, out var newPolygonResult))
                         {
 
                             if (!isReadonly)
                             {
-                                hook.UsingCursor = true;
                                 newShape = new PolygonShape(newPolygonResult);
                                 return true;
                             }
@@ -224,10 +211,6 @@ namespace Murder.Editor.Systems
                             {
                                 newShape = new BoxShape(box.Origin, (newRectangle.TopLeft - globalPosition.Vector2).Point(), newRectangle.Width, newRectangle.Height);
                                 bool hasChanges = !newShape.Equals(shape);
-                                if (hasChanges)
-                                {
-                                    hook.UsingCursor = true;
-                                }
                                 return true;
                             }
                         }

@@ -2,7 +2,7 @@
 using Murder.Components;
 using Murder.Core.Graphics;
 
-namespace Road.Components;
+namespace Murder.Components;
 
 public readonly struct FadeScreenWithSolidColorComponent : IComponent
 {

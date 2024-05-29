@@ -1,8 +1,9 @@
 ﻿using Bang.Components;
+using Murder.Attributes;
 
-namespace Murder.Components
+namespace Murder.Components;
+
+[DoNotPersistOnSave]
+public readonly struct DoNotPauseComponent : IComponent
 {
-    public readonly struct DoNotPauseComponent : IComponent
-    {
-    }
 }

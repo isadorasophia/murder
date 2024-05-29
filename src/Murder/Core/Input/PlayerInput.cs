@@ -197,8 +197,8 @@ namespace Murder.Core.Input
 
             // Even if the mouse is consumed, we can still know it's position.
             CursorPosition = new(
-                Calculator.RoundToInt(mouseState.Position.X),
-                Calculator.RoundToInt(mouseState.Position.Y));
+                Calculator.RoundToInt(mouseState.X),
+                Calculator.RoundToInt(mouseState.Y));
         }
 
         public void Bind(int button, Action<InputState> action)
@@ -210,6 +210,11 @@ namespace Murder.Core.Input
 
         public bool Shortcut(Keys key, params Keys[] modifiers)
         {
+            if (key == Keys.None)
+            {
+                return false;
+            }
+
             foreach (Keys k in modifiers)
             {
                 if (!_rawCurrentKeyboardState.IsKeyDown(k))
@@ -688,11 +693,11 @@ namespace Murder.Core.Input
 
             if (enable)
             {
-                Game.Instance.Window.TextInput += OnDesktopTextInput;
+                TextInputEXT.TextInput += OnDesktopTextInput;
             }
             else
             {
-                Game.Instance.Window.TextInput -= OnDesktopTextInput;
+                TextInputEXT.TextInput -= OnDesktopTextInput;
             }
 
             _userKeyboardInput = new();
@@ -703,10 +708,9 @@ namespace Murder.Core.Input
 
         public string GetKeyboardInput() => _userKeyboardInput.ToString();
 
-        private void OnDesktopTextInput(object? sender, Microsoft.Xna.Framework.TextInputEventArgs args)
+        private void OnDesktopTextInput(char c)
         {
-            Keys key = args.Key;
-            if (key == Keys.Back)
+            if (c == (char)8 /* backspace */)
             {
                 if (_userKeyboardInput.Length > 0)
                 {
@@ -715,14 +719,19 @@ namespace Murder.Core.Input
 
                 return;
             }
-            else if (key == Keys.Enter || key == Keys.Escape)
+            else if (c == (char)10 /* enter */ || c == (char)13 /* enter */ || c == (char)33 /* escape */)
             {
                 return;
             }
 
-            char c = args.Character;
             if (_userKeyboardInput.Length >= _maxCharacters)
             {
+                return;
+            }
+
+            if (c < 33)
+            {
+                // This means this was a special character. Bypass the event.
                 return;
             }
 

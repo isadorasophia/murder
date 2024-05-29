@@ -146,7 +146,7 @@ namespace Murder.Editor.CustomEditors
         {
             GameLogger.Verify(_sprite is not null);
 
-            SpriteEventDataManagerAsset manager = SpriteEventDataManagerAsset.GetOrCreate();
+            SpriteEventDataManagerAsset manager = Architect.EditorData.GetOrCreateSpriteEventData();
 
             // Start by updating our manager.
             SpriteEventData data = manager.GetOrCreate(_sprite.Guid);
@@ -165,7 +165,7 @@ namespace Murder.Editor.CustomEditors
         {
             GameLogger.Verify(_sprite is not null);
 
-            SpriteEventDataManagerAsset manager = SpriteEventDataManagerAsset.GetOrCreate();
+            SpriteEventDataManagerAsset manager = Architect.EditorData.GetOrCreateSpriteEventData();
 
             SpriteEventData data = manager.GetOrCreate(_sprite.Guid);
             data.RemoveEvent(animation, frame);

@@ -6,7 +6,6 @@ using Murder.Assets;
 using Murder.Attributes;
 using Murder.Components;
 using Murder.Utilities;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 
 namespace Murder.Interactions
@@ -23,7 +22,6 @@ namespace Murder.Interactions
         [ShowInEditor]
         private readonly ImmutableArray<IComponent> _customComponents = ImmutableArray<IComponent>.Empty;
 
-        [JsonConstructor]
         public AddEntityOnInteraction() { }
 
         public AddEntityOnInteraction(Guid prefab) => _prefab = prefab;

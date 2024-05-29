@@ -3,6 +3,7 @@ using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using Murder.Assets;
 using Murder.Components;
+using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Editor.Assets;
@@ -66,24 +67,6 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
-
-        // TODO: Pedro, clean this up.
-        public bool KeepColliderShapes
-        {
-            get => _keepColliderShapes;
-            set
-            {
-                if (_keepColliderShapes == value)
-                    return;
-
-                _keepColliderShapes = value;
-                foreach (var stage in Stages)
-                {
-                    stage.Value.EditorHook.KeepOriginalColliderShapes = value;
-                }
-            }
-        }
-
         public bool ShowReflection
         {
             get => _showReflection;
@@ -106,7 +89,6 @@ namespace Murder.Editor.CustomEditors
         public abstract IEntity? SelectedEntity { get; }
 
         private bool _showReflection = true;
-        private bool _keepColliderShapes = true;
         private bool _showColliders = true;
         private bool _showGrid = false;
 
@@ -129,7 +111,7 @@ namespace Murder.Editor.CustomEditors
             if (Architect.EditorSettings.CameraPositions.TryGetValue(targetGuid, out PersistStageInfo info))
             {
                 renderContext.Camera.Position = info.Position;
-                renderContext.RefreshWindow(info.Size, RenderContextEditorScale);
+                renderContext.RefreshWindow(Architect.GraphicsDevice, info.Size, info.Size, new ViewportResizeStyle(ViewportResizeMode.None));
             }
             else if (target is not PrefabAsset)
             {
@@ -159,7 +141,6 @@ namespace Murder.Editor.CustomEditors
 
             Stages[guid].EditorHook.OnComponentModified += OnEntityModified;
             Stages[guid].EditorHook.DrawCollisions = _showColliders;
-            Stages[guid].EditorHook.KeepOriginalColliderShapes = _keepColliderShapes;
 
             _stageInfo[guid] = new();
         }
@@ -209,14 +190,15 @@ namespace Murder.Editor.CustomEditors
                     ImGui.SameLine();
                     ImGui.TextColored(Game.Profile.Theme.White, $"{name}");
                     ImGui.SameLine();
-                    ImGuiHelpers.HelpTooltip("Open original in a new tab");
                     if (ImGui.SmallButton(""))
                     {
                         if (prefabEntityInstance.PrefabRef.CanFetch && prefabEntityInstance.PrefabRef.Fetch() is PrefabAsset asset)
                         {
+                            editorScene.OpenOnTreeView(asset, true);
                             editorScene.OpenAssetEditor(asset, false);
                         }
                     }
+                    ImGuiHelpers.HelpTooltip("Open original in a new tab");
 
                     ImGui.Separator();
                 }

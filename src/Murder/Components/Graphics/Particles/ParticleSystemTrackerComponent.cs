@@ -2,7 +2,7 @@
 using Murder.Attributes;
 using Murder.Core.Particles;
 using Murder.Utilities.Attributes;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Murder.Components
 {

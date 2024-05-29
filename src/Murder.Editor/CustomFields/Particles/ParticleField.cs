@@ -1,13 +1,9 @@
 ﻿using ImGuiNET;
 using Murder.Assets.Graphics;
-using Murder.Core.Geometry;
 using Murder.Core.Particles;
 using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
-using Murder.Editor.Utilities;
-using Murder.Utilities;
-using Newtonsoft.Json.Linq;
 
 namespace Murder.Editor.CustomFields
 {

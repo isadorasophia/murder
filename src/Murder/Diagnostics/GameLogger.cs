@@ -144,6 +144,7 @@ public class GameLogger
     /// <summary>
     /// This will verify a condition. If false, this will paste <paramref name="message"/> in the log.
     /// </summary>
+    [UnconditionalSuppressMessage("Trimming", "IL2026:Frame names might not be available.", Justification = "Optional message to debug.")]
     public static void Verify([DoesNotReturnIf(false)] bool condition, string message)
     {
 #if DEBUG
@@ -302,22 +303,34 @@ public class GameLogger
     /// <summary>
     /// Used to filter exceptions once a crash is yet to happen.
     /// </summary>
-    public static bool CaptureCrash(Exception ex, string logFile = "crash.log")
+    public static bool CaptureCrash(Exception _, string logFile = "crash.log")
     {
         string currentDirectory = Environment.CurrentDirectory;
         string logFilePath = Path.Join(currentDirectory, logFile);
 
+        StringBuilder content = new(GetCurrentLog());
+
+        File.AppendAllTextAsync(logFilePath, content.ToString());
+
+        return false;
+    }
+
+    public static string GetCurrentLog()
+    {
         StringBuilder content = new();
         foreach (string line in GameLogger.FetchLogs())
         {
             content.AppendLine(line);
         }
 
-        content.AppendLine($"Exception thrown: '{ex.Message}'");
-        content.AppendLine(ex.StackTrace);
-
-        File.AppendAllTextAsync(logFilePath, content.ToString());
-
-        return false;
+        return content.ToString();
+    }
+    public virtual void TrackImpl(string variableName, object value)
+    {
+        // Not implemented by game, only by editor.
+    }
+    public static void Track(string variableName, object value)
+    {
+        GameLogger._instance?.TrackImpl(variableName, value);
     }
 }

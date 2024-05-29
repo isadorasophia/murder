@@ -22,7 +22,7 @@ namespace Murder.Editor.Systems
         private Type[]? _filter = null;
 
         private ImmutableArray<Entity> FetchEntities(World world) => _filter is null || _filter.Length == 0 ?
-            ImmutableArray<Entity>.Empty : world.GetEntitiesWith(ContextAccessorFilter.AnyOf, _filter);
+            [] : world.GetEntitiesWith(ContextAccessorFilter.AnyOf, _filter);
 
         public void Start(Context context)
         {
@@ -31,7 +31,8 @@ namespace Murder.Editor.Systems
 
         public void Update(Context context)
         {
-            Update(context.World, context.Entities, clearOnlyWhenSelectedNewEntity: true);
+            ImmutableArray<Entity> entities = FetchEntities(context.World);
+            Update(context.World, entities, clearOnlyWhenSelectedNewEntity: true, ignoreCursorOnCollidersSelected: false);
         }
 
         public void Draw(RenderContext render, Context context)

@@ -1,6 +1,5 @@
 ﻿using Murder.Core.Geometry;
 using Murder.Utilities;
-using Newtonsoft.Json;
 using System.Numerics;
 
 namespace Murder.Core.Particles
@@ -13,7 +12,6 @@ namespace Murder.Core.Particles
         public readonly Line2 Line = new(new(0, 0), new(1, 0));
         public readonly Circle Circle = new(1);
 
-        [JsonConstructor]
         public EmitterShape() { }
 
         public Vector2 GetRandomPosition(Random random)

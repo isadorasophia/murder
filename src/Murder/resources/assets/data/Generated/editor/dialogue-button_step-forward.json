@@ -1,261 +1,189 @@
 {
-  "$type": "Murder.Assets.Graphics.SpriteAsset, Murder",
-  "Atlas": 2,
-  "Frames": {
-    "$type": "System.Collections.Immutable.ImmutableArray`1[[Murder.Core.Graphics.AtlasCoordinates, Murder]], System.Collections.Immutable",
-    "$values": [
-      {
-        "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
-        "AtlasIndex": 0,
-        "Name": "dialogue-button_step-forward_0000",
-        "Size": {
-          "$type": "Murder.Core.Geometry.Point, Murder",
-          "X": 16,
-          "Y": 16
-        },
-        "SourceRectangle": {
-          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 114,
-          "Y": 162,
-          "Width": 16,
-          "Height": 16
-        },
-        "UV": {
-          "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.22265625,
-          "Y": 0.31640625,
-          "Width": 0.03125,
-          "Height": 0.03125
-        },
-        "TrimArea": {
-          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 0,
-          "Y": 0,
-          "Width": 16,
-          "Height": 16
-        },
-        "AtlasId": 2
-      },
-      {
-        "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
-        "AtlasIndex": 0,
-        "Name": "dialogue-button_step-forward_0001",
-        "Size": {
-          "$type": "Murder.Core.Geometry.Point, Murder",
-          "X": 16,
-          "Y": 16
-        },
-        "SourceRectangle": {
-          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 97,
-          "Y": 179,
-          "Width": 16,
-          "Height": 16
-        },
-        "UV": {
-          "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.18945312,
-          "Y": 0.34960938,
-          "Width": 0.03125,
-          "Height": 0.03125
-        },
-        "TrimArea": {
-          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 0,
-          "Y": 0,
-          "Width": 16,
-          "Height": 16
-        },
-        "AtlasId": 2
-      },
-      {
-        "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
-        "AtlasIndex": 0,
-        "Name": "dialogue-button_step-forward_0002",
-        "Size": {
-          "$type": "Murder.Core.Geometry.Point, Murder",
-          "X": 16,
-          "Y": 16
-        },
-        "SourceRectangle": {
-          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 0,
-          "Y": 277,
-          "Width": 16,
-          "Height": 15
-        },
-        "UV": {
-          "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.0,
-          "Y": 0.5410156,
-          "Width": 0.03125,
-          "Height": 0.029296875
-        },
-        "TrimArea": {
-          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 0,
-          "Y": 1,
-          "Width": 16,
-          "Height": 15
-        },
-        "AtlasId": 2
-      },
-      {
-        "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
-        "AtlasIndex": 0,
-        "Name": "dialogue-button_step-forward_0003",
-        "Size": {
-          "$type": "Murder.Core.Geometry.Point, Murder",
-          "X": 16,
-          "Y": 16
-        },
-        "SourceRectangle": {
-          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 17,
-          "Y": 243,
-          "Width": 16,
-          "Height": 16
-        },
-        "UV": {
-          "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.033203125,
-          "Y": 0.47460938,
-          "Width": 0.03125,
-          "Height": 0.03125
-        },
-        "TrimArea": {
-          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 0,
-          "Y": 0,
-          "Width": 16,
-          "Height": 16
-        },
-        "AtlasId": 2
-      }
-    ]
+  "$type": "Murder.Assets.Graphics.SpriteAsset",
+  "Animations": {
+    "disabled": {
+      "Frames": [
+        3
+      ],
+      "FramesDuration": [
+        100
+      ],
+      "Events": {},
+      "AnimationDuration": 0.1
+    },
+    "normal": {
+      "Frames": [
+        0
+      ],
+      "FramesDuration": [
+        100
+      ],
+      "Events": {},
+      "AnimationDuration": 0.1
+    },
+    "down": {
+      "Frames": [
+        2
+      ],
+      "FramesDuration": [
+        100
+      ],
+      "Events": {},
+      "AnimationDuration": 0.1
+    },
+    "hover": {
+      "Frames": [
+        1
+      ],
+      "FramesDuration": [
+        100
+      ],
+      "Events": {},
+      "AnimationDuration": 0.1
+    },
+    "": {
+      "Frames": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "FramesDuration": [
+        100,
+        100,
+        100,
+        100
+      ],
+      "Events": {},
+      "AnimationDuration": 0.4
+    }
   },
+  "Atlas": 2,
+  "Frames": [
+    {
+      "AtlasIndex": 0,
+      "Name": "dialogue-button_step-forward_0000",
+      "Size": {
+        "X": 16,
+        "Y": 16
+      },
+      "SourceRectangle": {
+        "X": 114,
+        "Y": 162,
+        "Width": 16,
+        "Height": 16
+      },
+      "UV": {
+        "X": 0.22265625,
+        "Y": 0.31640625,
+        "Width": 0.03125,
+        "Height": 0.03125
+      },
+      "TrimArea": {
+        "X": 0,
+        "Y": 0,
+        "Width": 16,
+        "Height": 16
+      },
+      "AtlasId": 2
+    },
+    {
+      "AtlasIndex": 0,
+      "Name": "dialogue-button_step-forward_0001",
+      "Size": {
+        "X": 16,
+        "Y": 16
+      },
+      "SourceRectangle": {
+        "X": 97,
+        "Y": 179,
+        "Width": 16,
+        "Height": 16
+      },
+      "UV": {
+        "X": 0.18945312,
+        "Y": 0.34960938,
+        "Width": 0.03125,
+        "Height": 0.03125
+      },
+      "TrimArea": {
+        "X": 0,
+        "Y": 0,
+        "Width": 16,
+        "Height": 16
+      },
+      "AtlasId": 2
+    },
+    {
+      "AtlasIndex": 0,
+      "Name": "dialogue-button_step-forward_0002",
+      "Size": {
+        "X": 16,
+        "Y": 16
+      },
+      "SourceRectangle": {
+        "X": 0,
+        "Y": 277,
+        "Width": 16,
+        "Height": 15
+      },
+      "UV": {
+        "X": 0,
+        "Y": 0.5410156,
+        "Width": 0.03125,
+        "Height": 0.029296875
+      },
+      "TrimArea": {
+        "X": 0,
+        "Y": 1,
+        "Width": 16,
+        "Height": 15
+      },
+      "AtlasId": 2
+    },
+    {
+      "AtlasIndex": 0,
+      "Name": "dialogue-button_step-forward_0003",
+      "Size": {
+        "X": 16,
+        "Y": 16
+      },
+      "SourceRectangle": {
+        "X": 17,
+        "Y": 243,
+        "Width": 16,
+        "Height": 16
+      },
+      "UV": {
+        "X": 0.033203125,
+        "Y": 0.47460938,
+        "Width": 0.03125,
+        "Height": 0.03125
+      },
+      "TrimArea": {
+        "X": 0,
+        "Y": 0,
+        "Width": 16,
+        "Height": 16
+      },
+      "AtlasId": 2
+    }
+  ],
   "Origin": {
-    "$type": "Murder.Core.Geometry.Point, Murder",
     "X": 0,
     "Y": 0
   },
   "Size": {
-    "$type": "Murder.Core.Geometry.Point, Murder",
     "X": 16,
     "Y": 16
   },
   "NineSlice": {
-    "$type": "Murder.Core.Geometry.Rectangle, Murder",
-    "X": 0.0,
-    "Y": 0.0,
-    "Width": 0.0,
-    "Height": 0.0
-  },
-  "_editorPath": "#Generated\\editor",
-  "Animations": {
-    "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.String, System.Private.CoreLib],[Murder.Core.Graphics.Animation, Murder]], System.Collections.Immutable",
-    "": {
-      "$type": "Murder.Core.Graphics.Animation, Murder",
-      "Frames": {
-        "$type": "System.Collections.Immutable.ImmutableArray`1[[System.Int32, System.Private.CoreLib]], System.Collections.Immutable",
-        "$values": [
-          0,
-          1,
-          2,
-          3
-        ]
-      },
-      "FramesDuration": {
-        "$type": "System.Collections.Immutable.ImmutableArray`1[[System.Single, System.Private.CoreLib]], System.Collections.Immutable",
-        "$values": [
-          100.0,
-          100.0,
-          100.0,
-          100.0
-        ]
-      },
-      "Events": {
-        "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.String, System.Private.CoreLib]], System.Collections.Immutable"
-      },
-      "AnimationDuration": 0.4
-    },
-    "down": {
-      "$type": "Murder.Core.Graphics.Animation, Murder",
-      "Frames": {
-        "$type": "System.Collections.Immutable.ImmutableArray`1[[System.Int32, System.Private.CoreLib]], System.Collections.Immutable",
-        "$values": [
-          2
-        ]
-      },
-      "FramesDuration": {
-        "$type": "System.Collections.Immutable.ImmutableArray`1[[System.Single, System.Private.CoreLib]], System.Collections.Immutable",
-        "$values": [
-          100.0
-        ]
-      },
-      "Events": {
-        "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.String, System.Private.CoreLib]], System.Collections.Immutable"
-      },
-      "AnimationDuration": 0.1
-    },
-    "normal": {
-      "$type": "Murder.Core.Graphics.Animation, Murder",
-      "Frames": {
-        "$type": "System.Collections.Immutable.ImmutableArray`1[[System.Int32, System.Private.CoreLib]], System.Collections.Immutable",
-        "$values": [
-          0
-        ]
-      },
-      "FramesDuration": {
-        "$type": "System.Collections.Immutable.ImmutableArray`1[[System.Single, System.Private.CoreLib]], System.Collections.Immutable",
-        "$values": [
-          100.0
-        ]
-      },
-      "Events": {
-        "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.String, System.Private.CoreLib]], System.Collections.Immutable"
-      },
-      "AnimationDuration": 0.1
-    },
-    "hover": {
-      "$type": "Murder.Core.Graphics.Animation, Murder",
-      "Frames": {
-        "$type": "System.Collections.Immutable.ImmutableArray`1[[System.Int32, System.Private.CoreLib]], System.Collections.Immutable",
-        "$values": [
-          1
-        ]
-      },
-      "FramesDuration": {
-        "$type": "System.Collections.Immutable.ImmutableArray`1[[System.Single, System.Private.CoreLib]], System.Collections.Immutable",
-        "$values": [
-          100.0
-        ]
-      },
-      "Events": {
-        "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.String, System.Private.CoreLib]], System.Collections.Immutable"
-      },
-      "AnimationDuration": 0.1
-    },
-    "disabled": {
-      "$type": "Murder.Core.Graphics.Animation, Murder",
-      "Frames": {
-        "$type": "System.Collections.Immutable.ImmutableArray`1[[System.Int32, System.Private.CoreLib]], System.Collections.Immutable",
-        "$values": [
-          3
-        ]
-      },
-      "FramesDuration": {
-        "$type": "System.Collections.Immutable.ImmutableArray`1[[System.Single, System.Private.CoreLib]], System.Collections.Immutable",
-        "$values": [
-          100.0
-        ]
-      },
-      "Events": {
-        "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.String, System.Private.CoreLib]], System.Collections.Immutable"
-      },
-      "AnimationDuration": 0.1
-    }
+    "X": 0,
+    "Y": 0,
+    "Width": 0,
+    "Height": 0
   },
   "Name": "dialogue-button_step-forward",
-  "Guid": "bbbaf440-1261-2598-8af2-b8d0e9e6922e"
+  "Guid": "bbbaf440-1261-2598-8af2-b8d0e9e6922e",
+  "editorPath": "#\uF085Generated\\editor"
 }

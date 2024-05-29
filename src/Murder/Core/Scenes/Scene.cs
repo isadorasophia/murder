@@ -1,9 +1,14 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets;
+using Murder.Components;
+using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Utilities;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
+using System.Threading.Channels;
 
 namespace Murder.Core
 {
@@ -66,32 +71,35 @@ namespace Murder.Core
         public virtual void SuspendImpl() { }
         public virtual Task UnloadAsyncImpl() => Task.CompletedTask;
 
-        public virtual int RefreshWindow(GraphicsDevice graphics, GameProfile settings)
+        /// <summary>
+        /// Refresh the window size, updating the camera and render context.
+        /// </summary>
+        /// <param name="viewportSize"></param>
+        /// <param name="graphics"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        public virtual void RefreshWindow(Point viewportSize, GraphicsDevice graphics, GameProfile settings)
         {
-            GameLogger.Verify(RenderContext is not null);
+            GameLogger.Verify(RenderContext is not null, "RenderContext should not be null at this point.");
 
-            var scale = Math.Max(1, Calculator.RoundToInt((float)graphics.Viewport.Width / settings.GameWidth));
-            scale = Math.Max(scale, Calculator.RoundToInt((float)graphics.Viewport.Height / settings.GameHeight));
+            Point nativeResolution = new Point(settings.GameWidth, settings.GameHeight);
+            ViewportResizeStyle viewportResizeMode = settings.ResizeStyle;
 
-            bool changed = RenderContext.RefreshWindow(graphics, new(
-                Calculator.CeilToInt(graphics.Viewport.Width / (float)scale),
-                Calculator.CeilToInt(graphics.Viewport.Height / (float)scale)
-                ), scale);
+            bool changed = RenderContext.RefreshWindow(graphics, viewportSize, nativeResolution, viewportResizeMode);
 
             if (changed)
             {
                 _onRefreshWindow?.Invoke();
             }
-            GameLogger.Verify(RenderContext is not null);
-
-            return scale;
         }
 
         public virtual void Start()
         {
-            RefreshWindow(Game.GraphicsDevice, Game.Profile);
-
             World?.Start();
+
+            // Since the viewport might be some other texture, we need to reset it to the main render target so we can measure it.
+            Game.GraphicsDevice.SetRenderTarget(null);
+            RefreshWindow(new Point(Game.GraphicsDevice.Viewport.Width, Game.GraphicsDevice.Viewport.Height), Game.GraphicsDevice, Game.Profile);
             _calledStart = true;
         }
 

@@ -1,6 +1,5 @@
 ﻿using Murder.Diagnostics;
 using Murder.Utilities;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 using System.Numerics;
 
@@ -25,10 +24,10 @@ namespace Murder.Assets
         /// <summary>
         /// Map of all the systems and whether they are active or not.
         /// </summary>
-        [JsonProperty]
+        [Bang.Serialize]
         private ImmutableArray<(Type systemType, bool isActive)> _systems = ImmutableArray<(Type systemType, bool isActive)>.Empty;
 
-        [JsonProperty]
+        [Bang.Serialize]
         private ImmutableArray<(Guid feature, bool isActive)> _features = ImmutableArray<(Guid feature, bool isActive)>.Empty;
 
         public bool HasSystems

@@ -1,9 +1,9 @@
-﻿using Assimp;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Editor.Data.Graphics;
+using Murder.Editor.Services;
 using Murder.Serialization;
 using Murder.Services;
 using Murder.Utilities;
@@ -279,22 +279,19 @@ namespace Murder.Editor.Data
 
             if (Path.GetDirectoryName(targetFilePathWithoutExtension) is string directory)
             {
-                FileHelper.GetOrCreateDirectory(directory);
+                FileManager.GetOrCreateDirectory(directory);
             }
 
             int width = 0;
             int height = 0;
             foreach (Atlas atlas in Atlasses)
             {
-                string suffix = string.Format("{0:000}" + ".png", atlasCount);
+                string suffix = string.Format("{0:000}" + TextureServices.QOI_GZ_EXTENSION, atlasCount);
                 string filePath = targetFilePathWithoutExtension + suffix;
-
+                
                 // 1: Save images
                 using Texture2D img = CreateAtlasImage(atlas);
-
-                FileStream stream = File.OpenWrite(filePath);
-                img.SaveAsPng(stream, img.Width, img.Height);
-                stream.Close();
+                EditorTextureServices.SaveAsQoiGz(img, filePath);
 
                 width = Math.Max(width, img.Width);
                 height = Math.Max(height, img.Height);
@@ -429,7 +426,8 @@ namespace Murder.Editor.Data
 
         private void ScanPngFile(string path)
         {
-            using Texture2D img = Texture2D.FromFile(Architect.GraphicsDevice, path);
+            using Texture2D img = TextureServices.FromFile(Architect.GraphicsDevice, path);
+
             if (img != null)
             {
                 if (img.Width <= _atlasSize && img.Height <= _atlasSize)
@@ -614,8 +612,9 @@ namespace Murder.Editor.Data
                             sourceImg = CreateAsepriteImageFromNode(n);
                             break;
 
-                        case ".png":
-                            sourceImg = Texture2D.FromFile(graphicsDevice, n.Texture.Source);
+                        case TextureServices.QOI_GZ_EXTENSION:
+                        case TextureServices.PNG_EXTENSION:
+                            sourceImg = TextureServices.FromFile(graphicsDevice, n.Texture.Source);
 
                             RenderServices.DrawTextureQuad(sourceImg,
                                 source: n.Texture.CroppedBounds,

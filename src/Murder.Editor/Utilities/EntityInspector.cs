@@ -4,6 +4,7 @@ using Bang.Entities;
 using ImGuiNET;
 using Murder.Components;
 using Murder.Core.Input;
+using Murder.Diagnostics;
 using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
 using Murder.Prefabs;
@@ -20,32 +21,16 @@ namespace Murder.Editor.Utilities
 
             if (ImGui.Begin($"{entity.EntityId}##Entity_Inspector", ref isOpen))
             {
-                var cameraMan = world.GetUniqueEntity<CameraFollowComponent>();
-                if (cameraMan.HasIdTarget())
-                {
-                    if (ImGui.SmallButton("release camera"))
-                    {
-                        cameraMan.RemoveIdTarget();
-                    }
-                }
-                else if (ImGui.SmallButton("focus"))
-                {
-                    cameraMan.SetIdTarget(entity.EntityId);
-                }
-
-
-                ImGui.TextColored(Game.Profile.Theme.Faded, $"{entity.EntityId}:");
-                ImGui.SameLine();
                 if (EntityServices.TryGetEntityName(entity) is string entityName)
                 {
-                    ImGui.TextColored(Game.Profile.Theme.HighAccent, entityName);
+                    StartEntityTree(world, entity, entityName, false);
                 }
                 else
                 {
-                    ImGui.TextColored(Game.Profile.Theme.Faded, "Unnamed Enitity");
+                    StartEntityTree(world, entity, "Unnamed Entity", false);
                 }
 
-                DrawInpsectorCore(world, entity);
+                DrawInspectorCore(world, entity);
 
             }
             ImGui.End();
@@ -53,18 +38,38 @@ namespace Murder.Editor.Utilities
             return isOpen;
         }
 
-        private static void DrawInpsectorCore(World world, Entity entity)
+        private static void DrawInspectorCore(World world, Entity entity)
         {
             foreach (IComponent c in entity.Components)
             {
+                string componentName = ReflectionHelper.GetGenericName(c.GetType());
 
-                if (ImGui.TreeNode($"{c.GetType().Name}##Component_inspector_{c.GetType().Name}"))
+                if (ImGui.TreeNode($"{componentName}##Component_inspector_{componentName}"))
                 {
+                    bool succeededCopy = true;
+
                     // This is modifying the memory of all readonly structs, so only create a copy if this 
                     // is not a modifiable component.
-                    IComponent copy = c is IModifiableComponent ? c : SerializationHelper.DeepCopy(c);
+                    IComponent copy;
+                    try
+                    {
+                        copy = c is IModifiableComponent ? c : SerializationHelper.DeepCopy(c);
+                    }
+                    catch (NotSupportedException)
+                    {
+                        // We might not support deep copying some runtime fields.
+                        // This is probably okay because we won't serialize this anyway in real world.
+                        copy = c;
+                        succeededCopy = false;
+                    }
+
                     if (CustomComponent.ShowEditorOf(ref copy))
                     {
+                        if (!succeededCopy)
+                        {
+                            GameLogger.Warning("Modifying field that is not supported to be serialized!");
+                        }
+
                         // This will trigger reactive systems.
                         entity.ReplaceComponent(copy, copy.GetType());
                     }
@@ -84,20 +89,69 @@ namespace Murder.Editor.Utilities
 
             ImGui.SeparatorText("Children");
 
-
             foreach (var childId in entity.FetchChildrenWithNames)
             {
                 if (world.TryGetEntity(childId.Key) is Entity child)
                 {
-                    ImGui.TextColored(Game.Profile.Theme.Faded, $"{childId.Key}:");
-                    ImGui.SameLine();
-
-                    if (ImGui.TreeNode($"{childId.Value}##Entity_Inspector_{child.EntityId}"))
+                    if (StartEntityTree(world, child, childId.Value ?? "Unnamed Entity", true))
                     {
-                        DrawInpsectorCore(world, child);
+                        DrawInspectorCore(world, child);
                         ImGui.TreePop();
                     }
                 }
+            }
+        }
+
+        private static bool StartEntityTree(World world, Entity entity, string entityName, bool pushTree)
+        {
+            ImGui.TextColored(Game.Profile.Theme.Faded, $"{entity.EntityId}:");
+            ImGui.SameLine();
+
+            bool isEntityActive = entity.IsActive;
+            if (ImGui.Checkbox($"##Entity_Inspector_Checkbox_{entity.EntityId}", ref isEntityActive))
+            {
+                if (isEntityActive)
+                {
+                    entity.Activate();
+                }
+                else
+                {
+                    entity.Deactivate();
+                }
+            }
+            ImGui.SameLine();
+
+
+
+            var cameraMan = world.GetUniqueEntityCameraFollow();
+
+            if (cameraMan.HasIdTarget())
+            {
+                ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Green);
+                if (ImGui.Button(""))
+                {
+                    cameraMan.RemoveIdTarget();
+                }
+            }
+            else
+            {
+                ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Faded);
+                if (ImGui.Button(""))
+                {
+                    cameraMan.SetIdTarget(entity.EntityId);
+                }
+            }
+            ImGui.PopStyleColor();
+            ImGui.SameLine();
+
+            if (pushTree)
+            {
+                return ImGui.TreeNode($"{entityName}##Entity_Inspector_{entity.EntityId}");
+            }
+            else
+            {
+                ImGui.Text(entityName);
+                return false;
             }
         }
     }

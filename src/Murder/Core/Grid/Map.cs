@@ -1,10 +1,8 @@
 ﻿using Murder.Core.Geometry;
 using Murder.Core.Physics;
 using Murder.Utilities;
-using Newtonsoft.Json;
-using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace Murder.Core
 {
@@ -14,13 +12,13 @@ namespace Murder.Core
 
         private readonly object _lock = new();
 
-        [JsonProperty]
+        [Bang.Serialize]
         private readonly MapTile[] _gridMap;
 
         /// <summary>
         /// Map all the properties of the floor based on an arbitrary enum (defined by a game implementation).
         /// </summary>
-        [JsonProperty]
+        [Bang.Serialize]
         private readonly int[] _floorMap;
 
         public MapTile GetGridMap(int x, int y)
@@ -50,6 +48,11 @@ namespace Murder.Core
             _floorMap = new int[width * height];
 
             Array.Fill(_gridMap, new());
+        }
+
+        public void ZeroAll()
+        {
+            Array.Fill(_gridMap, new(weight: 0));
         }
 
         /// <summary>
@@ -185,6 +188,12 @@ namespace Murder.Core
             _gridMap[(y * Width) + x].CollisionType |= layer;
         }
 
+        public void SetOccupied(Point p, int collisionMask, int weight) =>
+            SetGridCollision(p.X, p.Y, 1, 1, collisionMask, @override: false, weight);
+
+        public void SetUnoccupied(Point p, int collisionMask, int weight) =>
+            UnsetGridCollision(p.X, p.Y, 1, 1, collisionMask, weight);
+
         public void SetOccupiedAsCarve(IntRectangle rect, bool blockVision, bool isObstacle, bool isClearPath, int weight)
         {
             int collisionMask = CollisionLayersBase.CARVE;
@@ -317,6 +326,17 @@ namespace Murder.Core
             {
                 return _gridMap[(y * Width) + x].Weight;
             }
+        }
+
+        public void OverrideValueAt(Point p, int collisionMask, int weight)
+        {
+            if (p.X < 0 || p.Y < 0 || p.X >= Width || p.Y >= Height)
+            {
+                return;
+            }
+
+            _gridMap[(p.Y * Width) + p.X].CollisionType = collisionMask;
+            _gridMap[(p.Y * Width) + p.X].Weight = weight;
         }
 
         public void SetFloorAt(int x, int y, int type)

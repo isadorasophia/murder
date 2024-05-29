@@ -1,4 +1,5 @@
 ﻿using Murder.Assets;
+using Murder.Assets.Save;
 using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
@@ -16,33 +17,47 @@ namespace Murder.Data
         /// <summary>
         /// Creates an implementation of SaveData for the game.
         /// </summary>
-        protected virtual SaveData CreateSaveDataWithVersion(int slot) =>
-            _game is not null ? _game.CreateSaveData(slot) : new SaveData(slot, _game?.Version ?? 0);
+        protected virtual SaveData CreateSaveDataWithVersion(int slot)
+        {
+            SaveData data = _game is not null ? _game.CreateSaveData(slot) : new SaveData(slot, _game?.Version ?? 0);
+            data.Initialize();
+
+            return data;
+        }
 
         /// <summary>
         /// Directory used for saving custom data.
         /// </summary>
         public virtual string GameDirectory => _game?.Name ?? "Murder";
 
+        private string? _saveBasePath = null;
+
         /// <summary>
         /// Save directory path used when serializing user data.
         /// </summary>
-        public static string SaveBasePath => Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Game.Data.GameDirectory);
+        public string SaveBasePath 
+        {
+            get
+            {
+                if (_saveBasePath is not null)
+                {
+                    return _saveBasePath;
+                }
+
+                _saveBasePath = FileHelper.GetSaveBasePath(GameDirectory);
+                return _saveBasePath;
+            }
+        }
 
         /// <summary>
         /// This is the collection of save data according to the slots.
         /// </summary>
-        protected readonly Dictionary<int, SaveData> _allSavedData = [];
+        protected readonly Dictionary<int, SaveDataInfo> _allSavedData = [];
 
         /// <summary>
         /// Stores all the save assets tied to the current <see cref="ActiveSaveData"/>.
         /// </summary>
         private readonly ConcurrentDictionary<Guid, GameAsset> _currentSaveAssets = new();
-
-        /// <summary>
-        /// Stores all pending assets which will be removed on serializing the save.
-        /// </summary>
-        private readonly List<string> _pendingAssetsToDeleteOnSerialize = new();
 
         private SaveData? _activeSaveData;
 
@@ -50,6 +65,23 @@ namespace Murder.Data
         public ImmutableArray<Color> CurrentPalette;
 
         private bool _loadedSaveFiles = false;
+
+        // Fancy variables for keeping track of async operations.
+        private volatile bool _waitPendingSaveTrackerOperation = false;
+
+        public bool WaitPendingSaveTrackerOperation 
+        {
+            get
+            {
+                if (_activeSaveData is not null && !_activeSaveData.HasFinishedSaveWorld())
+                {
+                    return true;
+                }
+
+                return _waitPendingSaveTrackerOperation;
+            }
+        }
+
 
         /// <summary>
         /// Active saved run in the game.
@@ -108,24 +140,15 @@ namespace Murder.Data
                 return null;
             }
 
-            LoadSaveAtPath(path);
             LoadSaveAsCurrentSave(slot);
 
             return _activeSaveData;
         }
 
-        private string CurrentSaveDataDirectoryPath
-        {
-            get
-            {
-                return Path.Join(SaveBasePath, ActiveSaveData.SaveDataRelativeDirectoryPath);
-            }
-        }
-
         /// <summary>
         /// List all the available saves within the game.
         /// </summary>
-        public Dictionary<int, SaveData> GetAllSaves() => _allSavedData;
+        public Dictionary<int, SaveDataInfo> GetAllSaves() => _allSavedData;
 
         /// <summary>
         /// Create a new save data based on a name.
@@ -143,8 +166,6 @@ namespace Murder.Data
 
             SaveData data = CreateSaveDataWithVersion(slot);
             TrackSaveAsset(data);
-
-            _activeSaveData = data;
 
             return data;
         }
@@ -170,13 +191,28 @@ namespace Murder.Data
                 slot = _allSavedData.ContainsKey(0) ? 0 : _allSavedData.Keys.First();
             }
 
-            if (!_allSavedData.TryGetValue(slot, out SaveData? data))
+            if (!_allSavedData.TryGetValue(slot, out SaveDataInfo? data))
             {
                 return false;
             }
 
-            _activeSaveData = data;
-            LoadAllAssetsForCurrentSave();
+            string saveDataPath = data.GetFullPackedSavePath(slot);
+            string saveDataAssetsPath = data.GetFullPackedAssetsSavePath(slot);
+            if (!File.Exists(saveDataPath) || !File.Exists(saveDataAssetsPath))
+            {
+                return false;
+            }
+
+            PackedSaveData? packedData = FileManager.UnpackContent<PackedSaveData>(saveDataPath);
+            PackedSaveAssetsData? packedAssetsData = FileManager.UnpackContent<PackedSaveAssetsData>(saveDataAssetsPath);
+
+            if (packedData is null || packedAssetsData is null)
+            {
+                return false;
+            }
+
+            _activeSaveData = packedData.Data;
+            LoadAllAssetsForCurrentSave(packedAssetsData.Assets);
 
             return true;
         }
@@ -245,21 +281,10 @@ namespace Murder.Data
             GameLogger.Verify(!string.IsNullOrWhiteSpace(asset.Name));
             GameLogger.Verify(!string.IsNullOrWhiteSpace(asset.FilePath));
 
-            _allSavedData.Add(asset.SaveSlot, asset);
+            _allSavedData.Add(asset.SaveSlot, new(asset.SaveVersion, asset.SaveName));
+            _activeSaveData = asset;
 
             return true;
-        }
-
-        private async ValueTask SaveGameDataAsync(GameAsset asset)
-        {
-            if (asset.GetGameAssetPath() is string path)
-            {
-                await FileHelper.SaveSerializedAsync(asset, path, isCompressed: true);
-            }
-            else
-            {
-                GameLogger.Error($"Unable to save {asset.Name} save data.");
-            }
         }
 
         public bool AddAssetForCurrentSave(GameAsset asset)
@@ -301,7 +326,23 @@ namespace Murder.Data
                 return false;
             }
 
+            _waitPendingSaveTrackerOperation = true;
+            Game.Instance.SetWaitForSaveComplete();
+
             await Task.Yield();
+
+            int slot = _activeSaveData.SaveSlot;
+            SaveDataInfo info = _allSavedData[slot];
+
+            using PerfTimeRecorder recorder = new("Serializing save");
+
+            SaveDataTracker tracker = new(_allSavedData);
+            string trackerJson = FileManager.SerializeToJson(tracker);
+
+            PackedSaveData packedData = new(_activeSaveData);
+            string packedDataJson = FileManager.SerializeToJson(packedData);
+
+            _waitPendingSaveTrackerOperation = false;
 
             // Wait for any pending operations.
             if (_activeSaveData.PendingOperation is not null)
@@ -309,28 +350,20 @@ namespace Murder.Data
                 await _activeSaveData.PendingOperation;
             }
 
-            await SaveGameDataAsync(_activeSaveData);
+            using PerfTimeRecorder recorderSerialize = new("Writing save to file");
 
-            GameAsset[] assets = [.. _currentSaveAssets.Values];
-            foreach (GameAsset asset in assets)
-            {
-                if (string.IsNullOrEmpty(asset.FilePath))
-                {
-                    asset.FilePath = Path.Join(CurrentSaveDataDirectoryPath, $"{asset.Name}.json");
-                }
+            PackedSaveAssetsData packedAssetsData = new([.. _currentSaveAssets.Values]);
+            string packedAssetsDataJson = FileManager.SerializeToJson(packedAssetsData);
 
-                await SaveGameDataAsync(asset);
-            }
+            string packedSavePath = Path.Join(info.GetFullPackedSavePath(slot));
+            string packedSaveAssetsPath = Path.Join(info.GetFullPackedAssetsSavePath(slot));
 
-            foreach (string path in _pendingAssetsToDeleteOnSerialize)
-            {
-                if (!FileHelper.DeleteFileIfExists(path))
-                {
-                    GameLogger.Warning($"Unable to delete save asset at path: {path}");
-                }
-            }
+            FileManager.CreateDirectoryPathIfNotExists(packedSavePath);
 
-            _pendingAssetsToDeleteOnSerialize.Clear();
+            await Task.WhenAll(
+                FileManager.PackContentAsync(trackerJson, path: Path.Join(Game.Data.SaveBasePath, SaveDataTracker.Name)),
+                FileManager.PackContentAsync(packedDataJson, path: packedSavePath),
+                FileManager.PackContentAsync(packedAssetsDataJson, packedSaveAssetsPath));
 
             return true;
         }
@@ -340,11 +373,6 @@ namespace Murder.Data
             if (!_currentSaveAssets.TryGetValue(guid, out GameAsset? asset))
             {
                 return false;
-            }
-
-            if (!string.IsNullOrEmpty(asset.FilePath))
-            {
-                _pendingAssetsToDeleteOnSerialize.Add(asset.FilePath);
             }
 
             bool removed = _currentSaveAssets.TryRemove(asset.Guid, out _);
@@ -359,44 +387,56 @@ namespace Murder.Data
 
         public bool LoadAllSaves()
         {
+            if (_loadedSaveFiles)
+            {
+                // already loaded, bye.
+                return true;
+            }
+
             using PerfTimeRecorder recorder = new("Loading Saves");
 
             _allSavedData.Clear();
+            _loadedSaveFiles = true;
 
             // Load all the save data assets.
-            foreach (string savePath in FileHelper.ListAllDirectories(SaveBasePath))
+            string trackerPath = Path.Join(SaveBasePath, SaveDataTracker.Name);
+
+            if (!File.Exists(trackerPath))
             {
-                LoadSaveAtPath(savePath);
+                return true;
             }
 
-            _loadedSaveFiles = true;
-            return true;
-        }
-
-        private bool LoadSaveAtPath(string path)
-        {
-            foreach (GameAsset asset in FetchAssetsAtPath(path, recursive: false, skipFailures: false, stopOnFailure: true))
+            SaveDataTracker? tracker = FileManager.UnpackContent<SaveDataTracker>(trackerPath);
+            if (tracker is null)
             {
-                if (asset is SaveData saveData)
+                return true;
+            }
+
+            foreach ((int slot, SaveDataInfo save) in tracker.Value.Info)
+            {
+                if (save.Version < _game?.Version)
                 {
-                    if (saveData.SaveVersion < _game?.Version)
-                    {
-                        // Skip loading saves with incompatible version, for now.
-                        continue;
-                    }
-
-                    _allSavedData[saveData.SaveSlot] = saveData;
+                    // Skip this info... for now.
+                    continue;
                 }
+
+                string saveDataPath = save.GetFullPackedSavePath(slot);
+                if (!File.Exists(saveDataPath))
+                {
+                    continue;
+                }
+
+                _allSavedData[slot] = save;
             }
 
             return true;
         }
 
-        private bool LoadAllAssetsForCurrentSave()
+        private bool LoadAllAssetsForCurrentSave(List<GameAsset> assets)
         {
             _currentSaveAssets.Clear();
 
-            foreach (GameAsset asset in FetchAssetsAtPath(CurrentSaveDataDirectoryPath))
+            foreach (GameAsset asset in assets)
             {
                 _currentSaveAssets.TryAdd(asset.Guid, asset);
             }
@@ -415,7 +455,6 @@ namespace Murder.Data
             _currentSaveAssets.Clear();
 
             _activeSaveData = null;
-            _pendingAssetsToDeleteOnSerialize.Clear();
 
             _loadedSaveFiles = false;
             return true;
@@ -440,9 +479,7 @@ namespace Murder.Data
         /// </summary>
         public void UnloadAllSaves()
         {
-            _allSavedData.Clear();
             _currentSaveAssets.Clear();
-
             _activeSaveData = null;
 
             _loadedSaveFiles = false;
@@ -452,8 +489,10 @@ namespace Murder.Data
         {
             UnloadAllSaves();
 
-            FileHelper.DeleteContent(SaveBasePath, deleteRootFiles: false);
-            _pendingAssetsToDeleteOnSerialize.Clear();
+            _allSavedData.Clear();
+
+            File.Delete(Path.Join(SaveBasePath, SaveDataTracker.Name));
+            FileManager.DeleteContent(SaveBasePath, deleteRootFiles: false);
         }
 
         public virtual bool DeleteSaveAt(int slot)
@@ -463,22 +502,26 @@ namespace Murder.Data
                 LoadAllSaves();
             }
 
-            if (!_allSavedData.TryGetValue(slot, out SaveData? data))
+            if (!_allSavedData.TryGetValue(slot, out SaveDataInfo? data))
             {
                 return false;
             }
 
-            if (string.IsNullOrEmpty(data.SaveRelativeDirectoryPath))
+            string path = data.GetFullPackedSaveDirectory(slot);
+            if (string.IsNullOrEmpty(path))
             {
-                FileHelper.DeleteContent(SaveBasePath, deleteRootFiles: false);
+                FileManager.DeleteContent(SaveBasePath, deleteRootFiles: false);
             }
             else
             {
-                string directory = Path.Join(SaveBasePath, data.SaveRelativeDirectoryPath);
-                FileHelper.DeleteDirectoryIfExists(directory);
+                FileManager.DeleteDirectoryIfExists(path);
             }
 
             UnloadSaveAt(slot);
+
+            // Update tracker that a save has just been deleted.
+            SaveDataTracker tracker = new(_allSavedData);
+            FileManager.PackContent(tracker, path: Path.Join(Game.Data.SaveBasePath, SaveDataTracker.Name));
 
             return true;
         }

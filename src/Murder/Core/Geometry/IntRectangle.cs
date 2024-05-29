@@ -1,6 +1,7 @@
 ﻿using Murder.Utilities;
-using Newtonsoft.Json;
+using System.ComponentModel;
 using System.Numerics;
+using System.Text.Json.Serialization;
 
 namespace Murder.Core.Geometry
 {
@@ -47,6 +48,7 @@ namespace Murder.Core.Geometry
         public static implicit operator IntRectangle(Microsoft.Xna.Framework.Rectangle p) => new(p.X, p.Y, p.Width, p.Height);
         public static implicit operator Microsoft.Xna.Framework.Rectangle(IntRectangle p) => new(p.X, p.Y, p.Width, p.Height);
 
+        public static Rectangle operator +(IntRectangle p, IntRectangle v) => new(p.X + v.X, p.Y + v.Y, p.Width + v.Width, p.Height + v.Height);
         public static Rectangle operator +(IntRectangle p, Point v) => new(p.X + v.X, p.Y + v.Y, p.Width, p.Height);
         public static Rectangle operator -(IntRectangle p, Point v) => new(p.X - v.X, p.Y - v.Y, p.Width, p.Height);
         public static IntRectangle operator *(IntRectangle p, float v) => new(p.X * v, p.Y * v, p.Width * v, p.Height * v);
@@ -55,6 +57,7 @@ namespace Murder.Core.Geometry
         public IntRectangle AddPosition(Vector2 position) => new IntRectangle(X + Calculator.RoundToInt(position.X), Y + Calculator.RoundToInt(position.Y), Width, Height);
         public IntRectangle AddPosition(Point position) => new IntRectangle(X + position.X, Y + position.Y, Width, Height);
         public IntRectangle Expand(int value) => new IntRectangle(X - value, Y - value, Width + value * 2, Height + value * 2);
+        public IntRectangle Expand(int x, int y) => new IntRectangle(X - x, Y - y, Width + x * 2, Height + y * 2);
         public IntRectangle Expand(float value) => new IntRectangle(X - value, Y - value, Width + value * 2, Height + value * 2);
 
         public IntRectangle(Point position, Point size)

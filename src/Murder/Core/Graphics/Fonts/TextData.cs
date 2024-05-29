@@ -59,6 +59,11 @@ public readonly record struct RuntimeLetterProperties
     public int Pause { get; init; }
 
     /// <summary>
+    /// Amount of small pauses after this letter is printed.
+    /// </summary>
+    public int SmallPause { get; init; }
+
+    /// <summary>
     /// Whether this will trigger a !SHAKE! (and intensity).
     /// </summary>
     public float Shake { get; init; }
@@ -413,7 +418,7 @@ public static partial class TextDataServices
             }
         }
 
-        ImmutableDictionary<int, RuntimeLetterProperties>.Builder? letters = null;
+        ImmutableDictionary<int, RuntimeLetterProperties>.Builder? letters = ImmutableDictionary.CreateBuilder<int, RuntimeLetterProperties>();
 
         string parsedText;
         if (allocatedLengthForSpecialCharacters == 0)
@@ -454,7 +459,6 @@ public static partial class TextDataServices
                 }
             }
 
-            letters = ImmutableDictionary.CreateBuilder<int, RuntimeLetterProperties>();
             for (int i = 0; i < indices.Length; ++i)
             {
                 RuntimeLetterProperties properties = lettersBuilder[i];
@@ -476,6 +480,35 @@ public static partial class TextDataServices
             }
 
             parsedText = result.ToString();
+        }
+
+        // Now, manually apply pauses according to the pontuaction.
+        // We don't bother adding this to very last character, though.
+        for (int i = 0; i < parsedText.Length - 1; ++i)
+        {
+            char c = parsedText[i];
+            if (!letters.TryGetValue(i, out RuntimeLetterProperties l))
+            {
+                l = new();
+            }
+
+            switch (c)
+            {
+                case '!':
+                // case ',': // I don't like this pause here.
+                case ':':
+                case '?':
+                    letters[i] = l with { SmallPause = l.SmallPause + 1 };
+                    break;
+
+                case '.':
+                    if (l.Pause == 0)
+                    {
+                        letters[i] = l with { Pause = 1 };
+                    }
+
+                    break;
+            }
         }
 
         if (settings.MaxWidth > 0)
@@ -503,27 +536,27 @@ public static partial class TextDataServices
     [GeneratedRegex(" {2,}")]
     private static partial Regex TrimSpaces();
 
-    [GeneratedRegex("<c=([^>]+)>|</c>")]
+    [GeneratedRegex("<c=([^>]+)>|</c>", RegexOptions.IgnoreCase)]
     public static partial Regex EscapeRegex();
 
     [GeneratedRegex("\\|{1,}")]
     private static partial Regex TrimPauses();
 
-    [GeneratedRegex("<shake=([^\\/]+)\\/>|<shake\\/>")]
+    [GeneratedRegex("<shake=([^\\/]+)\\/>|<shake\\/>", RegexOptions.IgnoreCase)]
     private static partial Regex ShakeTags();
 
-    [GeneratedRegex("<glitch=([^\\/]+)\\/>|<glitch=([^>]+)>(.*?)</glitch>")]
+    [GeneratedRegex("<glitch=([^\\/]+)\\/>|<glitch=([^>]+)>(.*?)</glitch>", RegexOptions.IgnoreCase)]
     private static partial Regex GlitchTags();
 
-    [GeneratedRegex("<c=([^>]+)>(.*?)</c>")]
+    [GeneratedRegex("<c=([^>]+)>(.*?)</c>", RegexOptions.IgnoreCase)]
     private static partial Regex ColorTags();
 
-    [GeneratedRegex("<wave>(.*?)<\\/wave>")]
+    [GeneratedRegex("<wave>(.*?)<\\/wave>", RegexOptions.IgnoreCase)]
     private static partial Regex WaveTags();
 
-    [GeneratedRegex("<fear>(.*?)<\\/fear>")]
+    [GeneratedRegex("<fear>(.*?)<\\/fear>", RegexOptions.IgnoreCase)]
     private static partial Regex FearTags();
 
-    [GeneratedRegex("<speed=([^\\/]+)\\/>|<speed=([^>]+)>(.*?)</speed>")]
+    [GeneratedRegex("<speed=([^\\/]+)\\/>|<speed=([^>]+)>(.*?)</speed>", RegexOptions.IgnoreCase)]
     private static partial Regex SpeedTags();
 }

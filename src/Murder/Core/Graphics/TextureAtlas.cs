@@ -1,11 +1,12 @@
+using Bang;
 using Microsoft.Xna.Framework.Graphics;
-using Murder.Core.Geometry;
 using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Serialization;
 using Murder.Services;
 using Murder.Utilities;
-using Newtonsoft.Json;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace Murder.Core.Graphics
 {
@@ -13,19 +14,21 @@ namespace Murder.Core.Graphics
     /// A texture atlas, the texture2D can be loaded and unloaded from the GPU at any time
     /// We will keep the texture lists in memory all the time, though.
     /// </summary>
+    [Serializable]
     public class TextureAtlas : IDisposable
     {
-        /// <summary>Used publically only for the json serializer</summary>
-        public Dictionary<string, AtlasCoordinates> _entries = new(StringComparer.InvariantCultureIgnoreCase);
-
-        [JsonIgnore]
-        private GraphicsDevice? _graphicsDevice;
-
         public readonly string Name;
         public readonly AtlasId Id;
 
-        [JsonIgnore]
-        private Texture2D[] _textures = null!;
+        [Serialize]
+        private readonly Dictionary<string, AtlasCoordinates> _entries = new(StringComparer.InvariantCultureIgnoreCase);
+
+        [Serialize]
+        private int _atlasMaxIndex;
+
+        private Texture2D[]? _textures = null!;
+        private GraphicsDevice? _graphicsDevice;
+
         internal Texture2D[] Textures
         {
             get
@@ -35,7 +38,7 @@ namespace Murder.Core.Graphics
                     LoadTextures();
                 }
 
-                return _textures!;
+                return _textures;
             }
         }
 
@@ -45,36 +48,44 @@ namespace Murder.Core.Graphics
             Id = id;
         }
 
-        public bool Exist(string id) => _entries.ContainsKey(id.EscapePath());
         public int CountEntries => _entries.Count;
+
         public IEnumerable<AtlasCoordinates> GetAllEntries() => _entries.Values;
 
         public void PopulateAtlas(IEnumerable<(string id, AtlasCoordinates coord)> entries)
         {
-            foreach (var entry in entries)
+            _atlasMaxIndex = -1;
+
+            foreach ((string Id, AtlasCoordinates Coord) entry in entries)
             {
-                _entries[entry.id] = entry.coord;
+                if (entry.Coord.AtlasIndex > _atlasMaxIndex)
+                {
+                    _atlasMaxIndex = entry.Coord.AtlasIndex;
+                }
+
+                _entries[entry.Id.EscapePath()] = entry.Coord;
             }
         }
 
         public bool HasId(string id)
         {
-            return _entries.ContainsKey(id.EscapePath());
+            return _entries.ContainsKey(id);
         }
         public bool TryGet(string id, out AtlasCoordinates coord)
         {
-            if (_entries.TryGetValue(id.EscapePath(), out AtlasCoordinates result))
+            if (_entries.TryGetValue(id, out AtlasCoordinates result))
             {
                 coord = result;
                 return true;
             }
+
             coord = AtlasCoordinates.Empty;
             return false;
         }
 
         public AtlasCoordinates Get(string id)
         {
-            if (_entries.TryGetValue(id.EscapePath(), out AtlasCoordinates coord))
+            if (_entries.TryGetValue(id, out AtlasCoordinates coord))
             {
                 return coord;
             }
@@ -91,14 +102,14 @@ namespace Murder.Core.Graphics
         /// <param name="textureCoord">Coordinate of where the texture is located in the atlas.</param>
         /// <param name="format">Specifies the surface format. Some resources require Color or some other setting.</param>
         /// <param name="scale">Scale which will be applied to result.</param>
-        public Texture2D CreateTextureFromAtlas(AtlasCoordinates textureCoord, SurfaceFormat format = SurfaceFormat.Color, int scale = 1)
+        public Texture2D CreateTextureFromAtlas(AtlasCoordinates textureCoord, SurfaceFormat format = SurfaceFormat.Color, float scale = 1)
         {
             _graphicsDevice ??= Game.GraphicsDevice;
 
             RenderTarget2D result =
                 new RenderTarget2D(_graphicsDevice,
-                Math.Max(1, textureCoord.SourceRectangle.Width) * scale,
-                Math.Max(1, textureCoord.SourceRectangle.Height) * scale, false, format, DepthFormat.None);
+                Calculator.RoundToInt(Math.Max(1, textureCoord.SourceRectangle.Width) * scale),
+                Calculator.RoundToInt(Math.Max(1, textureCoord.SourceRectangle.Height) * scale), false, format, DepthFormat.None);
 
             _graphicsDevice.SetRenderTarget(result);
             _graphicsDevice.Clear(Color.Transparent);
@@ -125,7 +136,7 @@ namespace Murder.Core.Graphics
         /// </summary>
         public Texture2D CreateTextureFromAtlas(string id)
         {
-            if (_entries.TryGetValue(id.EscapePath(), out var textureCoord))
+            if (_entries.TryGetValue(id, out var textureCoord))
             {
                 return CreateTextureFromAtlas(textureCoord);
             }
@@ -141,39 +152,48 @@ namespace Murder.Core.Graphics
         /// <param name="id"></param>
         /// <param name="texture"></param>
         /// <returns></returns>
-        public bool TryCreateTexture(string id, out Texture2D texture)
+        public bool TryCreateTexture(string id, [NotNullWhen(true)] out Texture2D? texture)
         {
-            var cleanName = id.EscapePath();
-
-            if (!string.IsNullOrWhiteSpace(cleanName))
+            if (!string.IsNullOrWhiteSpace(id))
             {
-                if (_entries.ContainsKey(cleanName))
+                if (_entries.ContainsKey(id))
                 {
-                    texture = CreateTextureFromAtlas(cleanName);
-                    return true;
+                    try
+                    {
+                        texture = CreateTextureFromAtlas(id);
+                        return true;
+                    }
+                    catch
+                    { }
                 }
             }
 
-            texture = null!;
+            texture = null;
             return false;
         }
 
+        [MemberNotNull(nameof(_textures))]
         public void LoadTextures()
         {
-            string atlasPath = Path.Join(Game.Data.PackedBinDirectoryPath, Game.Profile.AtlasFolderName);
-            var atlasFiles = new DirectoryInfo(atlasPath).EnumerateFiles($"{Id.GetDescription()}????.png").ToArray();
+            string atlasPath = FileHelper.GetPath(Game.Data.PackedBinDirectoryPath, Game.Profile.AtlasFolderName);
+            if (!Directory.Exists(atlasPath))
+            {
+                throw new FileNotFoundException($"Atlas '{Id}' not found in '{atlasPath}'. No atlas directory exists!");
+            }
 
-            if (atlasFiles.Length == 0)
+            if (_atlasMaxIndex == -1)
             {
                 throw new FileNotFoundException($"Atlas '{Id}' not found in '{atlasPath}'");
             }
 
-            _textures = new Texture2D[atlasFiles.Length];
+            _textures = new Texture2D[_atlasMaxIndex + 1];
 
-            for (int i = 0; i < atlasFiles.Length; i++)
+            string atlasIdName = Id.GetDescription();
+            for (int i = 0; i < _textures.Length; ++i)
             {
-                var path = atlasFiles[i].FullName;
-                Textures[i] = Texture2D.FromFile(Game.GraphicsDevice, path);
+                string path = Path.Join(atlasPath, $"{atlasIdName}{i:000}{TextureServices.QOI_GZ_EXTENSION}");
+                _textures[i] = TextureServices.FromFile(Game.GraphicsDevice, path);
+
                 GameLogger.Verify(Textures[i] is not null, $"Couldn't load atlas file at {path}");
             }
         }
@@ -181,10 +201,14 @@ namespace Murder.Core.Graphics
         public void UnloadTextures()
         {
             if (_textures != null)
+            {
                 foreach (var t in _textures)
                 {
-                    t.Dispose();
+                    t?.Dispose();
                 }
+            }
+
+            _textures = null;
         }
 
         public void Dispose()

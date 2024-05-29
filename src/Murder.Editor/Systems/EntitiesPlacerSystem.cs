@@ -117,10 +117,9 @@ namespace Murder.Editor.Systems
                     string? targetGroup = EditorTileServices.FindTargetGroup(world, hook, cursorWorldPosition);
 
                     hook.AddEntityWithStage?.Invoke(
-                        new IComponent[]
-                        {
+                        [
                             new PositionComponent(cursorWorldPosition)
-                        },
+                        ],
                         targetGroup,
                         /* name */ null);
                 }
@@ -131,11 +130,10 @@ namespace Murder.Editor.Systems
                     string? targetGroup = EditorTileServices.FindTargetGroup(world, hook, cursorWorldPosition);
 
                     hook.AddEntityWithStage?.Invoke(
-                        new IComponent[]
-                        {
+                        [
                             new PositionComponent(cursorWorldPosition),
                             new SpriteComponent(),
-                        },
+                        ],
                         targetGroup,
                         /* name */ null);
                 }

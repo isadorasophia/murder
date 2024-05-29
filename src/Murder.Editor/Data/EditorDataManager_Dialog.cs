@@ -51,7 +51,7 @@ namespace Murder.Editor.Data
 
             GameLogger.Log("Finished generating dialogs!");
 
-            FileHelper.CreateDirectoryPathIfNotExists(descriptorPath);
+            FileManager.CreateDirectoryPathIfNotExists(descriptorPath);
 
             // Create descriptor file to refresh the cache.
             File.Create(descriptorPath);

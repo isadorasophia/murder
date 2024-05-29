@@ -1,6 +1,6 @@
 ﻿using Bang.Components;
 using Murder.Attributes;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Murder.Components;
 

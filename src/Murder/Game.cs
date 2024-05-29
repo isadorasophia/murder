@@ -11,6 +11,7 @@ using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Save;
 using System.Numerics;
+using Murder.Utilities;
 
 namespace Murder
 {
@@ -102,6 +103,11 @@ namespace Murder
         public static float NowUnscaled => (float)Instance._unscaledElapsedTime;
 
         /// <summary>
+        /// Gets the absolute time since the game started. This is not affected by pause, freeze frames or time scaling.
+        /// </summary>
+        public static float NowAbsolute => (float)Instance._absoluteElapsedTime;
+
+        /// <summary>
         /// Time from previous fixed update.
         /// </summary>
         public static float PreviousNowUnscaled => (float)Instance._unscaledPreviousElapsedTime;
@@ -109,7 +115,7 @@ namespace Murder
         /// <summary>
         /// Gets the fixed delta time in seconds.
         /// </summary>
-        public static float FixedDeltaTime => Instance._fixedUpdateDelta * Instance._slowDownScale;
+        public static float FixedDeltaTime => Instance._fixedUpdateDelta * Instance.TimeScale;
 
         /// <summary>
         /// Beautiful hardcoded grid so it's very easy to access in game!
@@ -124,6 +130,7 @@ namespace Murder
         /* *** Protected helpers *** */
 
         protected readonly Microsoft.Xna.Framework.GraphicsDeviceManager _graphics;
+        public Microsoft.Xna.Framework.GraphicsDeviceManager GraphicsDeviceManager => _graphics;
 
         protected readonly PlayerInput _playerInput;
 
@@ -156,11 +163,6 @@ namespace Murder
         public float RenderTime { get; private set; }
         
         /// <summary>
-        /// Gets the time in seconds since the last draw.
-        /// </summary>
-        public float TimeSinceLastDraw => (float)_timeSinceLastDraw.TotalSeconds;
-
-        /// <summary>
         /// Gets the longest render time ever recorded.
         /// </summary>
         public float LongestRenderTime { get; private set; }
@@ -172,6 +174,7 @@ namespace Murder
         /// </summary>
         public float PreviousElapsedTime => (float)_scaledPreviousElapsedTime;
 
+        public float TimeScale = 1f;
         public bool IsPaused { get; private set; }
 
         private GridConfiguration _grid = new(cellSize: 24 /* default size, just in case, who knows */);
@@ -214,8 +217,6 @@ namespace Murder
         /// </summary>
         private bool _initialiazedAfterContentLoaded = false;
 
-        private float _slowDownScale = 1;
-        
         /// <summary>
         /// Always run update before fixed update. Override this for a different behavior.
         /// </summary>
@@ -270,17 +271,18 @@ namespace Murder
 
         private double _scaledElapsedTime = 0;
         private double _unscaledElapsedTime = 0;
+        private double _absoluteElapsedTime = 0;
 
         private double _scaledPreviousElapsedTime = 0;
         private double _unscaledPreviousElapsedTime = 0;
 
-        private DateTime _lastRenderTime = DateTime.MinValue;
-        private TimeSpan _timeSinceLastDraw = TimeSpan.Zero;
+        private double _lastRenderTime = 0;
+        private double _timeSinceLastDraw = 0;
 
         private double _scaledDeltaTime = 0;
         private double _unscaledDeltaTime = 0;
 
-        private DateTime _previousFrameTime = DateTime.Now;
+        private double _previousFrameTime = 0;
 
         /// <summary>
         /// This is the underlying implementation of the game. This listens to the murder game events.
@@ -320,14 +322,14 @@ namespace Murder
             Instance = this;
 
             Window.AllowUserResizing = true;
+            
             Window.ClientSizeChanged += (s, e) =>
             {
-                if (_graphics != null)
+                if (s is not Microsoft.Xna.Framework.GameWindow window)
                 {
-                    _graphics.ApplyChanges();
+                    throw new Exception("Window is not a GameWindow");
                 }
-
-                ActiveScene?.RefreshWindow(GraphicsDevice, Profile); // TODO: Change this to the scale defined in the options
+                ActiveScene?.RefreshWindow(new (window.ClientBounds.Width, window.ClientBounds.Height), GraphicsDevice, Profile);
             };
 
             Content.RootDirectory = "Content";
@@ -386,7 +388,6 @@ namespace Murder
                 new InputButtonAxis(Keys.Up, Keys.Left, Keys.Down, Keys.Right));
 
             base.Initialize(); // Content is loaded here
-            _gameData.InitializeAssets();
 
             // Setting window size
             RefreshWindow();
@@ -417,10 +418,8 @@ namespace Murder
                 // This seems to be a bug in Monogame
                 // This line must be repeated otherwise the window won't be
                 // borderless.
-                Window.IsBorderless = false;
+                Window.IsBorderlessEXT = false;
             }
-
-            ActiveScene?.RefreshWindow(GraphicsDevice, Profile);
         }
 
         /// <summary>
@@ -433,16 +432,13 @@ namespace Murder
         /// </remarks>
         protected virtual void SetWindowSize(Point screenSize)
         {
+            _graphics.SynchronizeWithVerticalRetrace = true;
             if (Fullscreen)
             {
-                _windowedSize = _graphics.GraphicsDevice.Viewport.Bounds.Size;
+                _windowedSize = _graphics.GraphicsDevice.Viewport.Bounds.Size();
 
-                Window.IsBorderless = true;
-                _graphics.HardwareModeSwitch = false;
+                Window.IsBorderlessEXT = true;
                 _graphics.IsFullScreen = true;
-#if DEBUG
-                _graphics.SynchronizeWithVerticalRetrace = true;
-#endif
 
                 _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
                 _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
@@ -450,10 +446,7 @@ namespace Murder
             else
             {
                 _graphics.IsFullScreen = false;
-                Window.IsBorderless = false;
-#if DEBUG
-                _graphics.SynchronizeWithVerticalRetrace = false;
-#endif
+                Window.IsBorderlessEXT = false;
 
                 if (_windowedSize.X > 0 && _windowedSize.Y > 0)
                 {
@@ -473,8 +466,6 @@ namespace Murder
         /// </summary>
         protected override void LoadContent()
         {
-            using PerfTimeRecorder recorder = new("Game Content");
-
             // Initialize our actual sound player!
             SoundPlayer.Initialize(_gameData.BinResourcesDirectoryPath);
 
@@ -484,7 +475,7 @@ namespace Murder
 
             LoadContentImpl();
 
-            _gameData.LoadShaders(true);
+            _gameData.LoadShaders(breakOnFail: false);
 
             // Load assets, textures, content, etc
             _gameData.LoadContent();
@@ -597,38 +588,8 @@ namespace Murder
         /// <returns>True if the game can resume, false otherwise.</returns>
         public bool CanResumeAfterSaveComplete()
         {
-            bool result;
-
-            if (Data.TryGetActiveSaveData() is not SaveData save)
-            {
-                // No active save, so yes?
-                result = true;
-            }
-            else
-            {
-                result = save.HasFinishedSaveWorld();
-            }
-
-            if (result)
-            {
-                _waitForSaveComplete = false;
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// This will slow down the game time.
-        /// TODO: What if we have multiple slow downs in the same run?
-        /// </summary>
-        public void SlowDown(float scale)
-        {
-            _slowDownScale = scale;
-        }
-
-        public void RevertSlowDown()
-        {
-            _slowDownScale = 1;
+            _waitForSaveComplete = Data.WaitPendingSaveTrackerOperation;
+            return !_waitForSaveComplete;
         }
 
         /// <summary>
@@ -636,7 +597,6 @@ namespace Murder
         /// </summary>
         public void Resume()
         {
-            _slowDownScale = 1;
             IsPaused = false;
         }
         
@@ -661,6 +621,9 @@ namespace Murder
             }
 
             UpdateImpl(gameTime);
+            
+            // Absolute time is ALWAYS updated.
+            _absoluteElapsedTime += gameTime.ElapsedGameTime.TotalSeconds;
 
             while (_isSkippingDeltaTimeOnUpdate)
             {
@@ -696,8 +659,8 @@ namespace Murder
             DoPendingWorldTransition();
 
             GameLogger.Verify(ActiveScene is not null);
-
-            var startTime = DateTime.Now;
+            
+            var startTime = gameTime.TotalGameTime.TotalSeconds;
             var calculatedDelta = startTime - _previousFrameTime;
 
             _previousFrameTime = startTime;
@@ -709,8 +672,8 @@ namespace Murder
             }
             else
             {
-                TimeTrackerDiagnoostics.Update(calculatedDelta.TotalSeconds);
-                deltaTime = Math.Clamp(calculatedDelta.TotalSeconds, 0, FixedDeltaTime * 2);
+                TimeTrackerDiagnoostics.Update(calculatedDelta);
+                deltaTime = Math.Clamp(calculatedDelta, 0, FixedDeltaTime * 2);
             }
 
             if (_freezeFrameCountPending > 0)
@@ -721,7 +684,7 @@ namespace Murder
 
             UpdateUnscaledDeltaTime(deltaTime);
 
-            double scaledDeltaTime = deltaTime * _slowDownScale;
+            double scaledDeltaTime = deltaTime * TimeScale;
 
             if (IsPaused)
             {
@@ -761,7 +724,7 @@ namespace Murder
 
             base.Update(gameTime); // Monogame/XNA internal Update
 
-            UpdateTime = (float)(DateTime.Now - startTime).TotalMilliseconds;
+            UpdateTime = (float)(gameTime.TotalGameTime.TotalSeconds - startTime);
 
             if (Now > _longestUpdateTimeAt + LONGEST_TIME_RESET)
             {
@@ -808,10 +771,10 @@ namespace Murder
             base.Draw(gameTime);
             DrawImGui(gameTime);
 
-            _timeSinceLastDraw = DateTime.Now - _lastRenderTime;
-            _lastRenderTime = DateTime.Now;
+            _timeSinceLastDraw = gameTime.TotalGameTime.TotalSeconds - _lastRenderTime;
+            _lastRenderTime = gameTime.TotalGameTime.TotalSeconds;
 
-            RenderTime = (float)_timeSinceLastDraw.TotalMilliseconds;
+            RenderTime = (float)_timeSinceLastDraw / 1000f;
 
             if (Now > _longestRenderTimeAt + LONGEST_TIME_RESET)
             {
@@ -831,9 +794,14 @@ namespace Murder
         /// <summary>
         /// Display drawing for the load animation.
         /// </summary>
-        protected virtual void OnLoadingDraw(RenderContext renderContext)
+        protected virtual void OnLoadingDraw(RenderContext render)
         {
-            _game?.OnLoadingDraw(renderContext);
+            bool rendered = _game?.OnLoadingDraw(render) ?? false;
+
+            if (!rendered)
+            {
+                GraphicsDevice.SetRenderTarget(null);
+            }
         }
 
         /// <summary>

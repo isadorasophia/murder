@@ -7,17 +7,29 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     
     <GenerateDocumentationFile Condition="'$(Configuration)' == 'Debug'">true</GenerateDocumentationFile>
+
+    <PublishAot>true</PublishAot>
+    <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Murder.FNA" Version="24.4.3" />
   </ItemGroup>
 
-  <!-- Copy resources -->
-  <ItemGroup>
+  <!-- When running the editor, copy everything! -->
+  <ItemGroup Condition="'$(Configuration)' == 'Debug' Or '$(EDITOR)' == 'true'">
     <Content Include="resources\**" CopyToOutputDirectory="PreserveNewest" LinkBase="resources" />
     <Content Include="packed\**" CopyToOutputDirectory="PreserveNewest" TargetPath="resources\%(RecursiveDir)\%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <!-- Only copy the root files out of resources and packed content. -->
+  <ItemGroup Condition="'$(Configuration)' != 'Debug'">
+    <Content Include="resources\*" CopyToOutputDirectory="PreserveNewest" LinkBase="resources" />
+    <Content Include="packed\**\*.gz" CopyToOutputDirectory="PreserveNewest" TargetPath="resources\%(RecursiveDir)\%(Filename)%(Extension)" />
+    <Content Include="packed\**\*.qoi.gz" CopyToOutputDirectory="PreserveNewest" TargetPath="resources\%(RecursiveDir)\%(Filename)%(Extension)" />
+    <Content Include="packed\atlas\*.json" CopyToOutputDirectory="PreserveNewest" TargetPath="resources\atlas\%(RecursiveDir)\%(Filename)%(Extension)" />
+    <Content Include="packed\images\**" CopyToOutputDirectory="PreserveNewest" TargetPath="resources\images\%(RecursiveDir)\%(Filename)%(Extension)" />
+    <Content Include="packed\shaders\**" CopyToOutputDirectory="PreserveNewest" TargetPath="resources\shaders\%(RecursiveDir)\%(Filename)%(Extension)" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -32,7 +44,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\bang\src\Bang\Bang.csproj" />
-    
+
     <!-- Pretty analyzers! -->
     <ProjectReference Condition="'$(Configuration)' == 'Debug'" Include="..\..\bang\src\Bang.Analyzers\Bang.Analyzers.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
@@ -41,6 +53,12 @@
 
     <!-- And generators! -->
     <ProjectReference Include="..\..\bang\src\Bang.Generator\Bang.Generator.csproj">
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <OutputItemType>Analyzer</OutputItemType>
+    </ProjectReference>
+    
+    <!-- Serialization generator -->
+    <ProjectReference Include="..\Murder.Serializer\Murder.Serializer.csproj">
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
       <OutputItemType>Analyzer</OutputItemType>
     </ProjectReference>

@@ -12,10 +12,10 @@ using Murder.Editor.Components;
 using Murder.Editor.Core;
 using Murder.Editor.Data;
 using Murder.Editor.Diagnostics;
-using Murder.Editor.EditorCore;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Systems.Debug;
 using Murder.Editor.Utilities;
+using Murder.Utilities;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -50,7 +50,7 @@ namespace Murder.Editor
 
         /* *** SDL helpers *** */
 
-        private const string SDL = "SDL2.dll";
+        private const string SDL = "SDL2";
         private const int SDL_WINDOW_MAXIMIZED = 0x00000080;
 
         [DllImport(SDL, CallingConvention = CallingConvention.Cdecl)]
@@ -137,7 +137,8 @@ namespace Murder.Editor
 
             if (!IsMaximized() && EditorSettings.WindowStartPosition.X > 0 && EditorSettings.WindowStartPosition.Y > 0)
             {
-                Window.Position = EditorSettings.WindowStartPosition - new Point(-2, 0);
+                Point size = EditorSettings.WindowStartPosition - new Point(-2, 0);
+                SetWindowPosition(size);
             }
 
             if (EditorSettings.WindowSize.X > 0 && EditorSettings.WindowSize.Y > 0)
@@ -146,13 +147,11 @@ namespace Murder.Editor
                 _graphics.PreferredBackBufferHeight = EditorSettings.WindowSize.Y;
             }
 
-            if (EditorSettings.StartMaximized)
+            if (EditorSettings.StartMaximized && GetWindowPosition() is Point startPosition)
             {
-                var titleBar = 32;
-                Window.Position = new Microsoft.Xna.Framework.Point(Window.Position.X - 2, titleBar);
-                //_graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
-                //_graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height - titleBar;
+                int titleBar = 32;
 
+                SetWindowPosition(new Point(startPosition.X - 2, titleBar));
                 MaximizeWindow();
             }
         }
@@ -220,19 +219,12 @@ namespace Murder.Editor
 
             Resume();
 
-            for (int i = (int)GraphicsDevice.Metrics.TextureCount - 1; i >= 0; i--)
-            {
-                GraphicsDevice.Textures[i]?.Dispose();
-            }
-
             GameLogger.Verify(_sceneLoader is not null);
 
             SaveWindowPosition();
             _isPlayingGame = true;
 
-            ActiveScene?.RefreshWindow(GraphicsDevice, Profile);
-
-            Data.InitializeAssets();
+            //ActiveScene?.RefreshWindow(new Point(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), GraphicsDevice, Profile);
 
             bool shouldLoad = true;
             if (info.IsQuickplay)
@@ -331,16 +323,10 @@ namespace Murder.Editor
             if (ActiveScene?.World is World world)
             {
                 world.AddEntity(new EditorComponent());
-                var hook = world.GetUnique<EditorComponent>().EditorHook;
-                hook.DrawEntityInspector += EntityInspector.DrawInspector;
-                hook.RefreshAtlas = Architect.Instance.ReloadImages;
-            }
-        }
+                EditorHook? hook = world.GetUnique<EditorComponent>().EditorHook;
 
-        private void ReloadImages()
-        {
-            Data.LoadFontsAndTextures();
-            EditorData.ReloadSprites();
+                hook.DrawEntityInspector += EntityInspector.DrawInspector;
+            }
         }
 
         private bool _isForeground = false;
@@ -450,8 +436,12 @@ namespace Murder.Editor
                 GameLogger.Fail("How was this called out of an Editor scene?");
             }
 
-            EditorSettings.WindowStartPosition = Window.Position;
-            EditorSettings.WindowSize = Window.ClientBounds.Size;
+            if (GetWindowPosition() is Point position)
+            {
+                EditorSettings.WindowStartPosition = position;
+            }
+
+            EditorSettings.WindowSize = Window.ClientBounds.Size();
             EditorSettings.StartMaximized = IsMaximized();
         }
 
@@ -470,30 +460,61 @@ namespace Murder.Editor
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-
-                var windowState = SDL_GetWindowFlags(Window.Handle);
+                nint windowState = SDL_GetWindowFlags(Window.Handle);
                 SDL_MaximizeWindow(Window.Handle);
             }
         }
 
-        public void ReloadShaders()
+        protected Point? GetWindowPosition()
         {
-            Data.LoadShaders(breakOnFail: false, forceReload: true);
+            // Not sure what is not supported here?
+            bool supportedOs = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
 
-            Data.InitShaders();
-            if (ActiveScene != null)
+            if (supportedOs)
             {
-                var scale = ActiveScene.RefreshWindow(_graphics.GraphicsDevice, Profile);
-                ActiveScene.RenderContext?.UpdateBufferTarget(scale); // This happens twice, but it's not a big deal.
+                SDL2.SDL.SDL_GetWindowPosition(Window.Handle, out int x, out int y);
+                return new(x, y);
             }
+
+            return null;
+        }
+
+        protected bool SetWindowPosition(Point p)
+        {
+            // Not sure what is not supported here?
+            bool supportedOs = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+
+            if (supportedOs)
+            {
+                SDL2.SDL.SDL_SetWindowPosition(Window.Handle, p.X, p.Y);
+                return true;
+            }
+
+            return false;
         }
 
         public override void RefreshWindow()
         {
-            var io = ImGui.GetIO();
+            ImGuiIOPtr io = ImGui.GetIO();
             io.ConfigFlags = ImGuiConfigFlags.DockingEnable;
             io.FontGlobalScale = Math.Clamp(Architect.EditorSettings.FontScale, 1, 2);
+
             base.RefreshWindow();
+        }
+
+        /// <summary>
+        /// Refresh buffer target after reloading shaders. This CANNOT be called while drawing! Or it will crash!
+        /// </summary>
+        public void RefreshWindowsBufferAfterReloadingShaders()
+        {
+            if (ActiveScene is null)
+            {
+                return;
+            }
+            // TODO: Is this really necessary??
+            // ActiveScene.RefreshWindow(_graphics.GraphicsDevice, Profile);
         }
 
         protected override void ExitGame()
@@ -520,6 +541,12 @@ namespace Murder.Editor
             Input.KeyboardConsumed = ImGui.GetIO().WantCaptureKeyboard;
 
             base.Update(gameTime);
+
+            if (EditorData.ShadersNeedReloading)
+            {
+                // We must make sure this is not called while drawing.
+                EditorData.ReloadShaders();
+            }
             
             UpdateCursor();
         }

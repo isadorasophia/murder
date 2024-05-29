@@ -1,5 +1,7 @@
-﻿using Bang.Contexts;
+﻿using Bang;
+using Bang.Contexts;
 using Bang.Systems;
+using Murder.Attributes;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
@@ -8,13 +10,15 @@ using Murder.Core.Physics;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Services;
+using Murder.Systems;
 using Murder.Utilities;
-using SharpFont;
 
 namespace Murder.Editor.Systems
 {
-    [OnlyShowOnDebugView]
     [WorldEditor(startActive: true)]
+    [PathfindEditor]
+    [TileEditor]
+    [OnlyShowOnDebugView]
     [Filter(kind: ContextAccessorKind.Read, typeof(MapComponent))]
     internal class DebugMapRenderSystem : IMurderRenderSystem
     {
@@ -27,11 +31,13 @@ namespace Murder.Editor.Systems
                 return;
             }
 
-            Map? map = context.World.TryGetUnique<MapComponent>()?.Map;
+            Map? map = context.World.TryGetUniqueMap()?.Map;
             if (map is null)
             {
                 return;
             }
+
+            Map? pathfindMap = context.World.TryGetUnique<PathfindMapComponent>()?.Map;
 
             (int minX, int maxX, int minY, int maxY) = render.Camera.GetSafeGridBounds(map);
             Color gridColor = Color.CreateFrom256(r: 170, g: 227, b: 12) * .1f;
@@ -56,11 +62,44 @@ namespace Murder.Editor.Systems
                     int botLeft = map.GetCollision(x - 1, y);
                     int botRight = map.GetCollision(x, y);
 
-                    Color solidGridColor = new Color(.1f, .9f, .9f) * .4f;
-                    Color solidCarveColor = new Color(.9f, .2f, .8f) * .4f;
+                    int collisionMask = map.GetGridMap(x, y).CollisionType;
+                    bool hasTileCollision = IsSolid(collisionMask);
 
+                    Color solidGridColor = new Color(.1f, .9f, .9f) * .4f;
                     DrawTileCollisions(topLeft, topRight, botLeft, botRight, render, tileRectangle, solidGridColor);
-                    DrawCarveCollision(botRight, render, cellRectangle, solidCarveColor);
+
+                    Color color = ColorForTileMask(collisionMask);
+                    if (!hasTileCollision)
+                    {
+                        DrawCarveCollision(botRight, render, cellRectangle, color);
+                    }
+
+                    int weight = map.WeightAt(x, y);
+                    if (pathfindMap is not null)
+                    {
+                        int collisionMaskForPathfind = pathfindMap.GetCollision(x, y);
+                        Color solidPathfindColor = ColorForPathfindTileMask(collisionMaskForPathfind);
+
+                        int pathfind = pathfindMap.GetCollision(x, y);
+                        DrawCarveCollision(pathfind, render, cellRectangle, solidPathfindColor);
+
+                        weight += pathfindMap.WeightAt(x, y);
+
+                        hasTileCollision |= IsSolid(collisionMaskForPathfind);
+                    }
+
+                    if (editorHook.DrawPathfind && !hasTileCollision)
+                    {
+                        Color numberColor = ColorForTileWeight(weight);
+
+                        RenderServices.DrawText(render.DebugBatch, MurderFonts.PixelFont, $"{weight}",
+                            cellRectangle.TopLeft + Grid.HalfCellDimensions,
+                            new DrawInfo(0)
+                            {
+                                Origin = new(0.5f, 0.5f),
+                                Color = numberColor,
+                            });
+                    }
                 }
             }
 
@@ -73,6 +112,57 @@ namespace Murder.Editor.Systems
                     gridColor);
             }
         }
+
+        private Color ColorForTileWeight(int weight)
+        {
+            if (weight == 1)
+            {
+                return Color.CreateFrom256(123, 133, 208);
+            }
+
+            if (weight > 101)
+            {
+                return Color.CreateFrom256(248, 91, 131);
+            }
+
+            return Color.CreateFrom256(255, 159, 255);
+        }
+
+        private Color ColorForTileMask(int mask)
+        {
+            if (IsSolid(mask))
+            {
+                return new Color(.1f, .9f, .9f) * .4f;
+            }
+
+            if (IsBlockingLineOfSight(mask))
+            {
+                return new Color(.9f, .2f, .8f) * .4f;
+            }
+
+            return new Color(.2f, .2f, .2f) * .1f;
+        }
+
+        private Color ColorForPathfindTileMask(int mask)
+        {
+            if (IsSolid(mask))
+            {
+                return new Color(.2f, 1, .7f) * .7f;
+            }
+
+            if (IsBlockingLineOfSight(mask))
+            {
+                return new Color(.2f, 1, .7f) * .3f;
+            }
+
+            return new Color(.2f, 1, .7f) * .1f;
+        }
+
+        private bool IsSolid(int mask) =>
+            (mask & CollisionLayersBase.SOLID) != 0;
+
+        private bool IsBlockingLineOfSight(int mask) =>
+            (mask & CalculatePathfindSystem.LineOfSightCollisionMask) != 0;
 
         private void DrawTileCollisions(int topLeft, int topRight, int botLeft, int botRight,
             RenderContext render, Rectangle rectangle, Color color)

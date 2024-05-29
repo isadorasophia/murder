@@ -41,7 +41,7 @@ namespace Murder.Utilities
 
             if (asset.IsStoredInSaveData)
             {
-                return Path.Join(GameDataManager.SaveBasePath, asset.FilePath);
+                return Path.Join(Game.Data.SaveBasePath, asset.FilePath);
             }
 
             return FileHelper.GetPath(

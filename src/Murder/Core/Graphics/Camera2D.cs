@@ -89,10 +89,8 @@ namespace Murder.Core.Graphics
             {
                 if (ShakeTime > 0)
                 {
-                    // Using Date.Now to ignore any freeze frames
-                    float absoluteNow = DateTime.Now.Second + DateTime.Now.Millisecond / 1000f;
-                    float shakeX = (float)Math.Sin((absoluteNow * 200f) * 31) * 2 - 1; // The numbers here can be adjusted for different shake patterns
-                    float shakeY = (float)Math.Sin((absoluteNow * 200f) * 17) * 2 - 1; // These should ideally be irrational numbers
+                    float shakeX = (float)Math.Sin((Game.NowAbsolute * 200f) * 31) * 2 - 1; // The numbers here can be adjusted for different shake patterns
+                    float shakeY = (float)Math.Sin((Game.NowAbsolute * 200f) * 17) * 2 - 1; // These should ideally be irrational numbers
                     return _position + new Vector2(shakeX, shakeY) * ShakeIntensity;
                 }
                 return _position;
@@ -130,20 +128,22 @@ namespace Murder.Core.Graphics
 
         public Vector2 ScreenToWorldPosition(Vector2 screenPosition)
         {
-            return Microsoft.Xna.Framework.Vector2.Transform(screenPosition,
+            return Microsoft.Xna.Framework.Vector2.Transform(
+                screenPosition.ToXnaVector2(),
                 Matrix.Invert(WorldViewProjection)).ToSysVector2();
         }
 
         public Vector2 WorldToScreenPosition(Vector2 screenPosition)
         {
-            return Microsoft.Xna.Framework.Vector2.Transform(screenPosition,
+            return Microsoft.Xna.Framework.Vector2.Transform(
+                screenPosition.ToXnaVector2(),
                 WorldViewProjection).ToSysVector2();
         }
 
-        internal void UpdateSize(int width, int height)
+        internal void UpdateSize(Point size)
         {
-            Width = Math.Max(1, width);
-            Height = Math.Max(1, height);
+            Width = Math.Max(1, size.X);
+            Height = Math.Max(1, size.Y);
 
             _cachedWorldViewProjection = null;
         }
@@ -187,12 +187,12 @@ namespace Murder.Core.Graphics
                 zPosition: 0);
 
             var inverseMatrix = Matrix.Invert(view);
-            var topLeftCorner = Microsoft.Xna.Framework.Vector2.Transform(new Vector2(0, 0), inverseMatrix);
+            Microsoft.Xna.Framework.Vector2 topLeftCorner = Microsoft.Xna.Framework.Vector2.Transform(Microsoft.Xna.Framework.Vector2.Zero, inverseMatrix);
             // var topRightCorner = Vector2.Transform(new Vector2(Width, 0), inverseMatrix);
             // var bottomLeftCorner = Vector2.Transform(new Vector2(0, Height), inverseMatrix);
-            var bottomRightCorner = Microsoft.Xna.Framework.Vector2.Transform(new Vector2(Width, Height), inverseMatrix);
+            Microsoft.Xna.Framework.Vector2 bottomRightCorner = Microsoft.Xna.Framework.Vector2.Transform(new Microsoft.Xna.Framework.Vector2(Width, Height), inverseMatrix);
 
-            Bounds = new Rectangle(topLeftCorner.ToPoint(), (bottomRightCorner - topLeftCorner).ToPoint());
+            Bounds = new Rectangle(topLeftCorner.ToSysVector2(), (bottomRightCorner - topLeftCorner).ToSysVector2());
             SafeBounds = Bounds.Expand(Grid.CellSize * 2);
             return view;
         }

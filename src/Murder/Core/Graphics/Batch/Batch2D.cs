@@ -5,8 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Murder.Diagnostics;
 using Murder.Services;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
-using System.Xml.Linq;
 using XnaColor = Microsoft.Xna.Framework.Color;
 
 namespace Murder.Core.Graphics
@@ -39,7 +37,7 @@ namespace Murder.Core.Graphics
 
         public Batch2D(string name,
             GraphicsDevice graphicsDevice,
-            Effect effect,
+            Effect? effect,
             BatchMode batchMode,
             BlendState blendState,
             SamplerState samplerState,
@@ -60,15 +58,15 @@ namespace Murder.Core.Graphics
         { }
         
         public Batch2D(string name,
-        GraphicsDevice graphicsDevice,
-        bool followCamera,
-        Effect effect,
-        BatchMode batchMode,
-        BlendState blendState,
-        SamplerState samplerState,
-        DepthStencilState? depthStencilState = null,
-        RasterizerState? rasterizerState = null,
-        bool autoHandleAlphaBlendedSprites = false)
+            GraphicsDevice graphicsDevice,
+            bool followCamera,
+            Effect? effect,
+            BatchMode batchMode,
+            BlendState blendState,
+            SamplerState samplerState,
+            DepthStencilState? depthStencilState = null,
+            RasterizerState? rasterizerState = null,
+            bool autoHandleAlphaBlendedSprites = false)
         {
             Name = name;
 
@@ -107,7 +105,7 @@ namespace Murder.Core.Graphics
 #endif
 
         public bool IsBatching { get; private set; }
-        public Effect Effect { get; set; }
+        public Effect? Effect { get; set; } = null;
 
         /// <summary>
         /// Auto handle any non-opaque (i.e. with some transparency; Opacity &lt; 1.0f) sprite rendering.
@@ -164,17 +162,17 @@ namespace Murder.Core.Graphics
         /// <param name="sort">A number from 0 to 1 that will be used to sort the images. 0 is behind, 1 is in front.</param>
         /// <exception cref="InvalidOperationException"></exception>
         public void Draw(
-        Texture2D texture,
-        Vector2 position,
-        Vector2 targetSize,
-        Rectangle sourceRectangle,
-        float sort,
-        float rotation,
-        Vector2 scale,
-        ImageFlip flip,
-        XnaColor color,
-        Vector2 offset,
-        Vector3 blendStyle)
+            Texture2D texture,
+            Vector2 position,
+            Vector2 targetSize,
+            Rectangle sourceRectangle,
+            float sort,
+            float rotation,
+            Vector2 scale,
+            ImageFlip flip,
+            XnaColor color,
+            Vector2 offset,
+            Vector3 blendStyle)
         {
             if (!IsBatching)
             {
@@ -469,25 +467,25 @@ namespace Murder.Core.Graphics
             GraphicsDevice.DepthStencilState = depthStencilState;
             GraphicsDevice.RasterizerState = RasterizerState;
 
-            if (Effect.Parameters["MatrixTransform"] != null)
+            if (Effect is not null)
             {
-                Effect.Parameters["MatrixTransform"].SetValue(matrix);
-            }
+                Effect.Parameters["MatrixTransform"]?.SetValue(matrix);
 
-            foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                GraphicsDevice.Textures[0] = texture;
+                foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
+                {
+                    pass.Apply();
+                    GraphicsDevice.Textures[0] = texture;
 
-                GraphicsDevice.DrawUserIndexedPrimitives(
-                    PrimitiveType.TriangleList,
-                    vertexData: vertices,
-                    vertexOffset: 0,
-                    numVertices: verticesLength,
-                    indexData: indices,
-                    indexOffset: 0,
-                    primitiveCount: indicesLength / 3
-                );
+                    GraphicsDevice.DrawUserIndexedPrimitives(
+                        PrimitiveType.TriangleList,
+                        vertexData: vertices,
+                        vertexOffset: 0,
+                        numVertices: verticesLength,
+                        indexData: indices,
+                        indexOffset: 0,
+                        primitiveCount: indicesLength / 3
+                    );
+                }
             }
 
 #if DEBUG

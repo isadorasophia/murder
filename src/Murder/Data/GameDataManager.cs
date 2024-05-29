@@ -8,11 +8,13 @@ using Murder.Diagnostics;
 using Murder.Serialization;
 using Murder.Services;
 using Murder.Utilities;
+using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Security.Cryptography;
+using System.Text.Json;
 using Effect = Microsoft.Xna.Framework.Graphics.Effect;
 using Texture2D = Microsoft.Xna.Framework.Graphics.Texture2D;
 
@@ -28,6 +30,8 @@ namespace Murder.Data
 
         public const char SKIP_CHAR = '_';
 
+        public const string HiddenAssetsRelativePath = "_Hidden";
+
         /// <summary>
         /// Maps:
         /// [Game asset type] -> [Guid] 
@@ -41,40 +45,30 @@ namespace Murder.Data
         protected readonly Dictionary<Guid, GameAsset> _allAssets = new();
 
         public readonly CacheDictionary<string, Texture2D> CachedUniqueTextures = new(32);
-        public ImmutableArray<string> AvailableUniqueTextures;
 
         public ImmutableDictionary<int, PixelFont> _fonts = ImmutableDictionary<int, PixelFont>.Empty;
+
+        private readonly HashSet<AtlasId> _referencedAtlases = [];
 
         /// <summary>
         /// The cheapest and simplest shader.
         /// </summary>
-        public Effect ShaderSimple = null!;
+        public Effect? ShaderSimple = null;
 
         /// <summary>
         /// Actually a fancy shader, has some sprite effect tools for us, like different color blending modes.
         /// </summary>
-        public Effect ShaderSprite = null!;
+        public Effect? ShaderSprite = null;
 
         /// <summary>
-        /// A shader that can blur and find brightness areas in images
+        /// A shader specialized for rendering pixel art.
         /// </summary>
-        public Effect BloomShader = null!;
-
-
-        /// <summary>
-        /// A shader that can blur and find brightness areas in images
-        /// </summary>
-        public Effect PosterizerShader = null!;
-
-        /// <summary>
-        /// A shader that mask images
-        /// </summary>
-        public Effect MaskShader = null!;
+        public Effect? ShaderPixel = null;
 
         /// <summary>
         /// Custom optional game shaders, provided by <see cref="_game"/>.
         /// </summary>
-        public Effect[] CustomGameShaders = new Effect[0];
+        public Effect?[] CustomGameShaders = [];
 
         /// <summary>
         /// Current localization data.
@@ -94,7 +88,6 @@ namespace Murder.Data
         public string AssetsBinDirectoryPath => _assetsBinDirectoryPath!;
 
         private string? _packedBinDirectoryPath;
-
         public string PackedBinDirectoryPath => _packedBinDirectoryPath!;
 
         public string BinResourcesDirectoryPath => _binResourcesDirectory!;
@@ -109,15 +102,17 @@ namespace Murder.Data
             protected set => _gameProfile = value;
         }
 
+        public JsonSerializerOptions SerializationOptions => _game?.Options ?? MurderSerializerOptionsExtensions.Options;
+
         protected virtual GameProfile CreateGameProfile() => _game?.CreateGameProfile() ?? new();
 
         public const string GameProfileFileName = @"game_config";
 
-        protected readonly string ShaderRelativePath = Path.Join("shaders", "{0}.mgfxo");
+        protected readonly string ShaderRelativePath = Path.Join("shaders", "{0}.fxb");
 
         protected string _binResourcesDirectory = "resources";
 
-        private readonly IMurderGame? _game;
+        protected readonly IMurderGame? _game;
 
         /// <summary>
         /// Used for loading the editor asynchronously.
@@ -147,13 +142,23 @@ namespace Murder.Data
         /// </summary>
         public virtual bool IgnoreSerializationErrors => false;
 
+        public readonly FileManager FileManager;
+
         /// <summary>
         /// Creates a new game data manager.
         /// </summary>
         /// <param name="game">This is set when overriding Murder utilities.</param>
-        public GameDataManager(IMurderGame? game)
+        public GameDataManager(IMurderGame? game) : this(game, new FileManager()) { }
+
+        /// <summary>
+        /// Creates a new game data manager.
+        /// </summary>
+        /// <param name="game">This is set when overriding Murder utilities.</param>
+        /// <param name="fileManager">File manager for the game.</param>
+        protected GameDataManager(IMurderGame? game, FileManager fileManager)
         {
             _game = game;
+            FileManager = fileManager;
         }
 
         public LocalizationAsset Localization => GetLocalization(CurrentLocalization.Id);
@@ -228,37 +233,19 @@ namespace Murder.Data
 
         protected void PreloadContent()
         {
-            string dataResourcesPath = FileHelper.GetPath(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath);
-
-            // We specifically load a few assets to show progress: preload and editor assets.
-
-            string preloadPath = Path.Join(dataResourcesPath, "Generated", "preload_images");
-            LoadAssetsAtPath(preloadPath, hasEditorPath: true);
-            SkipLoadingAssetsAt(preloadPath);
-
-            string libraryPath = Path.Join(dataResourcesPath, "Libraries");
-            LoadAssetsAtPath(libraryPath, hasEditorPath: true);
-            SkipLoadingAssetsAt(libraryPath);
-
+            PreloadContentImpl();
             OnAfterPreloadLoaded();
         }
-
-        /// <summary>
-        /// Immediately fired once the "fast" loading finishes.
-        /// </summary>
-        protected virtual void OnAfterPreloadLoaded() { }
 
         protected async Task LoadContentAsync()
         {
             await Task.Yield();
-
-            LoadFontsAndTextures();
-
             await LoadContentAsyncImpl();
-            await LoadSounds();
 
-            LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath));
-            LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.ContentECSPath));
+            await Task.WhenAll(
+                LoadSoundsAsync(),
+                LoadAllAssetsAsync(),
+                LoadFontsAndTexturesAsync());
 
             LoadAllSaves();
             ChangeLanguage(Game.Preferences.Language);
@@ -277,58 +264,92 @@ namespace Murder.Data
 
         protected virtual Task LoadContentAsyncImpl() => Task.CompletedTask;
 
-        public virtual void LoadFontsAndTextures()
+        protected virtual void PreloadContentImpl()
         {
-            using PerfTimeRecorder recorder = new("Loading Fonts and Textures");
+            using PerfTimeRecorder recorder = new($"Loading Preload Assets");
 
-            GameLogger.Verify(_packedBinDirectoryPath is not null, "Why hasn't LoadContent() been called?");
-
-            DisposeAtlases();
-
-            string? murderFontsFolder = Path.Join(PackedBinDirectoryPath, "fonts");
-            string? noAtlasFolder = Path.Join(PackedBinDirectoryPath, "images");
-
-            ImmutableArray<string>.Builder uniqueTextures = ImmutableArray.CreateBuilder<string>();
-
-            foreach (string texture in Directory.EnumerateFiles(noAtlasFolder))
+            string path = Path.Join(PublishedPackedAssetsFullPath, PreloadPackedGameData.Name);
+            if (!File.Exists(path))
             {
-                if (Path.GetExtension(texture) == ".png")
-                {
-                    uniqueTextures.Add(FileHelper.GetPathWithoutExtension(Path.GetRelativePath(PackedBinDirectoryPath, texture)));
-                }
+                GameLogger.Warning("Unable to preload content. Did you pack the game assets?");
+
+                throw new InvalidOperationException("Unable to find preload content.");
             }
 
-            foreach (string file in Directory.EnumerateFiles(murderFontsFolder))
+            PreloadPackedGameData? data = FileManager.UnpackContent<PreloadPackedGameData>(path);
+            if (data is null)
             {
-                if (Path.GetExtension(file) == ".png")
-                {
-                    uniqueTextures.Add(FileHelper.GetPathWithoutExtension(Path.GetRelativePath(PackedBinDirectoryPath, file)));
-                }
-                else if (Path.GetExtension(file) == ".json")
-                {
-                    LoadFont(file);
-                }
-            }
-
-            AvailableUniqueTextures = uniqueTextures.ToImmutable();
-        }
-
-        private void LoadFont(string fontPath)
-        {
-            GameLogger.Log($"Loading font '{fontPath}");
-            var asset = FileHelper.DeserializeAsset<FontAsset>(fontPath)!;
-            Game.Data.AddAsset(asset);
-
-            PixelFont font = new(asset);
-
-            if (_fonts.ContainsKey(font.Index))
-            {
-                GameLogger.Error($"Unable to load font: {fontPath}. Duplicate index found!");
                 return;
             }
 
-            // font.AddFontSize(XmlHelper.LoadXML(Path.Join(PackedBinDirectoryPath, "fonts", $"{fontName}.fnt")).DocumentElement!, AtlasId.None);
-            _fonts = _fonts.Add(font.Index, font);
+            foreach (GameAsset asset in data.Assets)
+            {
+                AddAsset(asset);
+
+                if (asset is SpriteAsset spriteAsset)
+                {
+                    FetchAtlas(spriteAsset.Atlas).LoadTextures();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Immediately fired once the "fast" loading finishes.
+        /// </summary>
+        protected virtual void OnAfterPreloadLoaded() { }
+
+        protected virtual async Task LoadAllAssetsAsync()
+        {
+            using PerfTimeRecorder recorder = new($"Loading All Assets");
+
+            await Task.Yield();
+
+            string path = Path.Join(PublishedPackedAssetsFullPath, PackedGameData.Name);
+            if (!File.Exists(path))
+            {
+                GameLogger.Warning("Unable to load game content. Did you pack the game assets?");
+
+                throw new InvalidOperationException("Unable to find game content.");
+            }
+
+            PackedGameData? data = FileManager.UnpackContent<PackedGameData>(path);
+            if (data is null)
+            {
+                return;
+            }
+
+            foreach (GameAsset asset in data.Assets)
+            {
+                AddAsset(asset);
+
+                if (asset is FontAsset font)
+                {
+                    TrackFont(font);
+                }
+
+                if (asset is SpriteAsset sprite)
+                {
+                    _referencedAtlases.Add(sprite.Atlas);
+                }
+            }
+        }
+
+        protected virtual Task LoadFontsAndTexturesAsync() => Task.CompletedTask;
+
+        protected void TrackFont(FontAsset asset)
+        {
+            PixelFont font = new(asset);
+
+            lock (_fonts)
+            {
+                if (_fonts.ContainsKey(font.Index))
+                {
+                    GameLogger.Error($"Unable to load font: {asset.Name}. Duplicate index found!");
+                    return;
+                }
+
+                _fonts = _fonts.Add(font.Index, font);
+            }
         }
 
         /// <summary>
@@ -336,9 +357,19 @@ namespace Murder.Data
         /// </summary>
         private void PreloadFontTextures()
         {
-            foreach ((_, PixelFont f) in _fonts)
+            using PerfTimeRecorder recorder = new($"Loading Fonts and Atlas");
+
+            lock (_fonts)
             {
-                f.Preload();
+                foreach ((_, PixelFont f) in _fonts)
+                {
+                    f.Preload();
+                }
+            }
+
+            foreach (AtlasId id in _referencedAtlases)
+            {
+                FetchAtlas(id).LoadTextures();
             }
         }
 
@@ -355,9 +386,7 @@ namespace Murder.Data
 
             if (LoadShader("sprite2d", out result, breakOnFail, forceReload)) ShaderSprite = result;
             if (LoadShader("simple", out result, breakOnFail, forceReload)) ShaderSimple = result;
-            if (LoadShader("bloom", out result, breakOnFail, forceReload)) BloomShader = result;
-            if (LoadShader("posterize", out result, breakOnFail, forceReload)) PosterizerShader = result;
-            if (LoadShader("mask", out result, breakOnFail, forceReload)) MaskShader = result;
+            if (LoadShader("pixel_art", out result, breakOnFail, forceReload)) ShaderPixel = result;
 
             if (_game is IShaderProvider { Shaders.Length: > 0 } provider)
             {
@@ -374,16 +403,6 @@ namespace Murder.Data
 
         public virtual void InitShaders() { }
 
-        public void InitializeAssets()
-        {
-            ImmutableDictionary<Guid, GameAsset> dynamicAssets = FilterAllAssetsWithImplementation(typeof(DynamicAsset));
-
-            foreach (var (_, asset) in dynamicAssets)
-            {
-                ((DynamicAsset)asset).Initialize();
-            }
-        }
-
         /// <summary>
         /// Load and return shader of name <paramref name="name"/>.
         /// </summary>
@@ -398,6 +417,10 @@ namespace Murder.Data
                 {
                     effect = compiledShader;
                     effect.Name = name;
+                    if (effect.Techniques.FirstOrDefault()?.Name == "DefaultTechnique")
+                    {
+                        effect.SetTechnique("DefaultTechnique");
+                    }
                     return true;
                 }
             }
@@ -406,6 +429,10 @@ namespace Murder.Data
             {
                 effect = shaderFromFile;
                 effect.Name = name;
+                if (effect.Techniques.FirstOrDefault()?.Name == "DefaultTechnique")
+                {
+                    effect.SetTechnique("DefaultTechnique");
+                }
                 return true;
             }
 
@@ -432,8 +459,14 @@ namespace Murder.Data
 
         private bool TryLoadShaderFromFile(string name, [NotNullWhen(true)] out Effect? result)
         {
-            string shaderPath = OutputPathForShaderOfName(name);
             result = null;
+
+            string shaderPath = OutputPathForShaderOfName(name);
+            if (!File.Exists(shaderPath))
+            {
+                return false;
+            }
+
             try
             {
                 result = new Effect(Game.GraphicsDevice, File.ReadAllBytes(shaderPath));
@@ -451,9 +484,9 @@ namespace Murder.Data
         {
             string gameProfilePath = FileHelper.GetPath(Path.Join(_binResourcesDirectory, GameProfileFileName));
 
-            if (_gameProfile is null && FileHelper.Exists(gameProfilePath))
+            if (_gameProfile is null && File.Exists(gameProfilePath))
             {
-                GameProfile = FileHelper.DeserializeAsset<GameProfile>(gameProfilePath)!;
+                GameProfile = (GameProfile)FileManager.DeserializeAsset<GameAsset>(gameProfilePath)!;
                 GameLogger.Log("Successfully loaded game profile settings.");
             }
             else if (_gameProfile is null)
@@ -493,14 +526,14 @@ namespace Murder.Data
         /// This will skip loading assets that start with a certain char. This is used to filter assets
         /// that are only used in the editor.
         /// </summary>
-        protected virtual bool ShouldSkipAsset(FileInfo f)
+        protected virtual bool ShouldSkipAsset(string fullFilename)
         {
-            if (f.Name.StartsWith(SKIP_CHAR))
+            if (Path.GetFileName(fullFilename).StartsWith(SKIP_CHAR))
             {
                 return true;
             }
 
-            return IsPathOnSkipLoading(f.FullName);
+            return IsPathOnSkipLoading(fullFilename);
         }
 
         public bool IsPathOnSkipLoading(string name)
@@ -517,59 +550,11 @@ namespace Murder.Data
             return false;
         }
 
-        protected void LoadAssetsAtPath(in string relativePath, bool hasEditorPath = false)
-        {
-            string fullPath = FileHelper.GetPath(relativePath);
-
-            using PerfTimeRecorder recorder = new($"Loading Assets at {fullPath}");
-
-            foreach (GameAsset asset in FetchAssetsAtPath(fullPath, skipFailures: true, hasEditorPath: hasEditorPath))
-            {
-                AddAsset(asset);
-            }
-        }
-
         public void SkipLoadingAssetsAt(string path)
         {
             lock (_skipLoadingAssetAtPaths)
             {
                 _skipLoadingAssetAtPaths.Add(path);
-            }
-        }
-
-        /// <summary>
-        /// Fetch all assets at a given path.
-        /// </summary>
-        /// <param name="fullPath">Full directory path.</param>
-        /// <param name="recursive">Whether it should iterate over its nested elements.</param>
-        /// <param name="skipFailures">Whether it should skip reporting load errors as warnings.</param>
-        /// <param name="stopOnFailure">Whether it should immediately stop after finding an issue.</param>
-        /// <param name="hasEditorPath">Whether the editor path is already appended in <paramref name="fullPath"/>.</param>
-        protected IEnumerable<GameAsset> FetchAssetsAtPath(string fullPath,
-            bool recursive = true, bool skipFailures = true, bool stopOnFailure = false, bool hasEditorPath = false)
-        {
-            foreach (FileInfo file in FileHelper.GetAllFilesInFolder(fullPath, "*.json", recursive))
-            {
-                if (ShouldSkipAsset(file))
-                {
-                    continue;
-                }
-
-                GameAsset? asset = TryLoadAsset(file.FullName, fullPath, skipFailures, hasEditorPath: hasEditorPath);
-                if (asset == null && stopOnFailure)
-                {
-                    // Immediately stop iterating.
-                    yield break;
-                }
-
-                if (asset != null)
-                {
-                    yield return asset;
-                }
-                else
-                {
-                    GameLogger.Warning($"Unable to deserialize {file.FullName}.");
-                }
             }
         }
 
@@ -587,7 +572,7 @@ namespace Murder.Data
 
             try
             {
-                asset = FileHelper.DeserializeAsset<GameAsset>(path);
+                asset = FileManager.DeserializeAsset<GameAsset>(path);
             }
             catch (Exception ex) when (skipFailures)
             {
@@ -620,17 +605,62 @@ namespace Murder.Data
             {
                 string finalRelative = hasEditorPath ?
                     FileHelper.GetPath(relativePath) :
-                    FileHelper.GetPath(Path.Join(relativePath, FileHelper.Clean(asset.EditorFolder)));
+                    FileHelper.GetPath(Path.Join(relativePath, Serialization.FileHelper.Clean(asset.EditorFolder)));
 
-                string filename = Path.GetRelativePath(finalRelative, path).EscapePath();
+                asset.FilePath = Path.GetRelativePath(finalRelative, path).EscapePath();
+            }
+            else
+            {
+                // For save files, just use the full path. We don't want to be smart about it at this point, as
+                // we don't have to keep data back and forth from different relative paths.
+                asset.FilePath = path;
+            }
 
-                // Do we need this check?
-                //if (filename != cleanName)
-                //{
-                //    GameLogger.Warning($"Inconsistent file and asset name ('{filename}' != '{cleanName}')");
-                //}
+            return asset;
+        }
 
-                asset.FilePath = filename;
+        public async Task<GameAsset?> TryLoadAssetAsync(string path, string relativePath, bool skipFailures = true, bool hasEditorPath = false)
+        {
+            GameAsset? asset;
+
+            try
+            {
+                asset = await FileManager.DeserializeAssetAsync<GameAsset>(path);
+            }
+            catch (Exception ex) when (skipFailures)
+            {
+                GameLogger.Warning($"Error loading [{path}]:{ex}");
+                return null;
+            }
+
+            if (_errorLoadingLastAsset)
+            {
+                _errorLoadingLastAsset = false;
+                GameLogger.Warning($"Error loading data at '{path}'.");
+
+                if (asset is not null)
+                {
+                    OnAssetLoadError(asset);
+                }
+            }
+
+            if (asset is null)
+            {
+                if (!skipFailures)
+                {
+                    GameLogger.Warning($"Unable to deserialize {path}.");
+                }
+
+                return null;
+            }
+
+            if (!asset.IsStoredInSaveData)
+            {
+                string finalRelative = hasEditorPath ?
+                    FileHelper.GetPath(relativePath) :
+                    FileHelper.GetPath(Path.Join(relativePath, Serialization.FileHelper.Clean(asset.EditorFolder)));
+
+                asset.FilePath = Path.GetRelativePath(finalRelative, path).EscapePath();
             }
             else
             {
@@ -661,6 +691,8 @@ namespace Murder.Data
 
             _allAssets.Remove(assetGuid);
             databaseSet.Remove(assetGuid);
+
+            OnAssetRenamedOrAddedOrDeleted();
         }
 
         public void AddAsset<T>(T asset, bool overwriteDuplicateGuids = false) where T : GameAsset
@@ -705,6 +737,8 @@ namespace Murder.Data
 
                 databaseSet.Add(asset.Guid);
                 _allAssets[asset.Guid] = asset;
+
+                OnAssetRenamedOrAddedOrDeleted();
             }
         }
         public bool HasAsset<T>(Guid id) where T : GameAsset =>
@@ -809,31 +843,6 @@ namespace Murder.Data
         }
 
         /// <summary>
-        /// Filter all the assets and any types that implement those types.
-        /// Cautious: this may be slow or just imply extra allocations.
-        /// </summary>
-        public ImmutableDictionary<Guid, GameAsset> FilterAllAssetsWithImplementation(params Type[] types)
-        {
-            var builder = ImmutableDictionary.CreateBuilder<Guid, GameAsset>();
-
-            builder.AddRange(FilterAllAssets(types));
-
-            foreach (var t in types)
-            {
-                // If the type is abstract, also gather all the assets that implement it.
-                foreach (Type assetType in _database.Keys)
-                {
-                    if (t.IsAssignableFrom(assetType))
-                    {
-                        builder.AddRange(FilterAllAssets(assetType));
-                    }
-                }
-            }
-
-            return builder.ToImmutableDictionary();
-        }
-
-        /// <summary>
         /// Return all the assets except the ones in <paramref name="types"/>.
         /// </summary>
         public ImmutableDictionary<Guid, GameAsset> FilterOutAssets(params Type[] types)
@@ -858,6 +867,12 @@ namespace Murder.Data
                 return font;
             }
 
+            if (_fonts.FirstOrDefault().Value is PixelFont firstFont)
+            {
+                GameLogger.Error($"Unable to find font with index {index}.");
+                return firstFont;
+            }
+
             throw new ArgumentException($"Unable to find font with index {index}.");
         }
 
@@ -866,25 +881,7 @@ namespace Murder.Data
             DisposeAtlases();
         }
 
-        public Texture2D? TryFetchTexture(string path)
-        {
-            if (CachedUniqueTextures.ContainsKey(path))
-            {
-                return CachedUniqueTextures[path];
-            }
-
-            string file = Path.Join(_packedBinDirectoryPath, $"{path.EscapePath()}.png");
-            if (File.Exists(file))
-            {
-                var texture = TextureServices.FromFile(Game.GraphicsDevice, file, true);
-                texture.Name = path;
-                CachedUniqueTextures[path] = texture;
-
-                return texture;
-            }
-
-            return null;
-        }
+        public virtual void OnAssetRenamedOrAddedOrDeleted() { }
 
         public Texture2D FetchTexture(string path)
         {
@@ -893,8 +890,14 @@ namespace Murder.Data
                 return value;
             }
 
-            Texture2D texture = TextureServices.FromFile(
-                Game.GraphicsDevice, Path.Join(_packedBinDirectoryPath, $"{path.EscapePath()}.png"), true);
+            string fullPath = Path.Join(_packedBinDirectoryPath, $"{path.EscapePath()}{TextureServices.QOI_GZ_EXTENSION}");
+            if (!File.Exists(fullPath))
+            {
+                // We also support .png
+                fullPath = Path.Join(_packedBinDirectoryPath, $"{path.EscapePath()}{TextureServices.PNG_EXTENSION}");
+            }
+
+            Texture2D texture = TextureServices.FromFile(Game.GraphicsDevice, fullPath);
 
             texture.Name = path;
             CachedUniqueTextures[path] = texture;
@@ -912,7 +915,7 @@ namespace Murder.Data
             if (!LoadedAtlasses.ContainsKey(atlas))
             {
                 string filepath = Path.Join(_packedBinDirectoryPath, GameProfile.AtlasFolderName, $"{atlas.GetDescription()}.json");
-                TextureAtlas? newAtlas = FileHelper.DeserializeGeneric<TextureAtlas>(filepath, warnOnError);
+                TextureAtlas? newAtlas = FileManager.DeserializeGeneric<TextureAtlas>(filepath, warnOnError);
 
                 if (newAtlas is not null)
                 {
@@ -934,14 +937,19 @@ namespace Murder.Data
                 return null;
             }
 
-            if (!LoadedAtlasses.ContainsKey(atlas))
+            if (!LoadedAtlasses.TryGetValue(atlas, out TextureAtlas? texture))
             {
                 string path = Path.Join(_packedBinDirectoryPath, GameProfile.AtlasFolderName, $"{atlas.GetDescription()}.json");
-                TextureAtlas? newAtlas = FileHelper.DeserializeGeneric<TextureAtlas>(path, warnOnErrors: false);
-
-                if (newAtlas is not null)
+                if (!File.Exists(path))
                 {
-                    LoadedAtlasses[atlas] = newAtlas;
+                    return null;
+                }
+
+                texture = FileManager.DeserializeGeneric<TextureAtlas>(path, warnOnErrors: false);
+
+                if (texture is not null)
+                {
+                    LoadedAtlasses[atlas] = texture;
                 }
                 else
                 {
@@ -949,12 +957,7 @@ namespace Murder.Data
                 }
             }
 
-            if (LoadedAtlasses.TryGetValue(atlas, out TextureAtlas? texture))
-            {
-                return texture;
-            }
-
-            return null;
+            return texture;
         }
 
         public void ReplaceAtlas(AtlasId atlasId, TextureAtlas newAtlas)

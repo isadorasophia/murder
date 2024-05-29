@@ -56,7 +56,7 @@ namespace Murder.Editor.Systems.Debug
                 size_max: new System.Numerics.Vector2(maxWidth, 800));
 
             int padding = 25;
-            ImGui.SetWindowPos(new(x: render.ScreenSize.X - maxWidth, y: padding), ImGuiCond.Appearing);
+            ImGui.SetWindowPos(new(x: render.Viewport.Size.X - maxWidth, y: padding), ImGuiCond.Appearing);
 
             if (!ImGui.Begin("Blackboards"))
             {

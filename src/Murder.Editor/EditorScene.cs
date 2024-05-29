@@ -40,9 +40,6 @@ namespace Murder.Editor
                 Keys.RightWindows : /* This is equivalent to Cmd ⌘ */
                 Keys.RightControl;
 
-        private readonly object _shadersReloadingLock = new();
-        private volatile bool _shadersNeedReloading = true;
-
         private bool _isLoadingContent = true;
         int _changingScenesLock = 3;
         
@@ -56,6 +53,9 @@ namespace Murder.Editor
             _selectedExplorerWindow = _explorerPages.First();
 
             _shortcuts = CreateShortcutList();
+            _shortcutSearchValues = _shortcuts
+                .Keys.SelectMany(group => _shortcuts[group].Select(shortcut => (group, shortcut)))
+                .ToDictionary(tuple => $"{tuple.group} > {tuple.shortcut.Name}", tuple => tuple.shortcut);
         }
 
         /// <summary>
@@ -97,8 +97,6 @@ namespace Murder.Editor
             _randomCrow = new Random(DateTime.Now.Millisecond).Next(3);
             _changingScenesLock = 3;
 
-            InitializeShaderFileSystemWather();
-
             base.Start();
         }
 
@@ -132,15 +130,6 @@ namespace Murder.Editor
             
             UpdateSelectedEditor();
             UpdateShortcuts();
-
-            if (_shadersNeedReloading)
-            {
-                lock (_shadersReloadingLock)
-                {
-                    ReloadShaders();
-                    _shadersNeedReloading = false;
-                }
-            }
         }
 
         public override void Draw()
@@ -297,7 +286,7 @@ namespace Murder.Editor
                 {
                     if (ImGui.TreeNode("No Atlas"))
                     {
-                        foreach (var texture in Game.Data.AvailableUniqueTextures.Where(t => t.Contains(_atlasSearchBoxTmp)))
+                        foreach (var texture in Architect.EditorData.AvailableUniqueTextures.Where(t => t.Contains(_atlasSearchBoxTmp)))
                         {
                             ImGui.Selectable(FileHelper.GetPathWithoutExtension(texture), false);
                             if (ImGui.IsItemHovered())
@@ -365,8 +354,38 @@ namespace Murder.Editor
                     _focusOnFind = false;
                     ImGui.SetKeyboardFocusHere();
                 }
-                ImGui.InputTextWithHint("##search_assets", "Search...", ref _searchAssetText, 256);
+
+                ImGui.InputTextWithHint("##search_assets", "Search...", ref _searchAssetText, 256);                
                 ImGui.PopItemWidth();
+
+                if (!string.IsNullOrEmpty(_searchAssetText) || _folders?.Count == 1)
+                {
+                    // disable caching for ctrl-f to pick up.
+                    lock (_foldersLock)
+                    {
+                        _folders = null;
+                    }
+
+                    _clearedFoldersOnSearch = false;
+                }
+
+                if (!_clearedFoldersOnSearch && string.IsNullOrEmpty(_searchAssetText))
+                {
+                    lock (_foldersLock)
+                    {
+                        _folders = null;
+                    }
+
+                    _clearedFoldersOnSearch = true;
+                }
+
+                if (ImGui.Button(""))
+                {
+                    _colapseAll = true;
+                }
+                ImGuiHelpers.HelpTooltip("Collaps all folders");
+
+                ImGui.Separator();
 
                 // Draw asset tree
                 ImGui.BeginChild("");
@@ -380,6 +399,9 @@ namespace Murder.Editor
 
                 DrawAssetInList(Architect.EditorData.EditorSettings, Game.Profile.Theme.White, Architect.EditorData.EditorSettings.Name);
                 DrawAssetInList(Architect.EditorData.GameProfile, Game.Profile.Theme.White, Architect.EditorData.GameProfile.Name);
+
+                _colapseAll = false;
+                _expandTo.Clear();
 
                 // Button to add a new asset
                 CreateAssetButton(typeof(GameAsset));
@@ -407,6 +429,11 @@ namespace Murder.Editor
             if (ImGuiHelpers.FadedSelectableWithIcon($"Kill all saves", '\uf54c', false))
             {
                 Architect.EditorData.DeleteAllSaves();
+
+                lock (_foldersLock)
+                {
+                    _folders = null;
+                }
             }
 
             ImGui.PopStyleColor();
@@ -520,22 +547,15 @@ namespace Murder.Editor
         }
 
         /// <summary>
-        /// Do operations once a scene has been resumed from foreground.
+        /// Typically called after a hot reload action that requires a refresh.
         /// </summary>
-        public bool ReloadOnWindowForeground()
+        /// <typeparam name="T"></typeparam>
+        public void ReloadEditorsOfType<T>()
         {
-            if (Architect.EditorData.ReloadDialogs())
+            if (_editors.TryGetValue(typeof(T), out CustomEditorInstance? value))
             {
-                // Hardcode to the dialog. If we need to do that more often, rethink that?
-                if (_editors.TryGetValue(typeof(CharacterEditor), out CustomEditorInstance? value))
-                {
-                    value.Editor.ReloadEditor();
-                }
-
-                return true;
+                value.Editor.ReloadEditor();
             }
-
-            return false;
         }
 
         internal void ReopenTabs()

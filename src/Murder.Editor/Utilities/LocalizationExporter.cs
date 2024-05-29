@@ -62,7 +62,7 @@ internal static class LocalizationExporter
         }
 
         string fullLocalizationPath = GetFullRawLocalizationPath(asset.Name);
-        FileHelper.CreateDirectoryPathIfNotExists(fullLocalizationPath);
+        FileManager.CreateDirectoryPathIfNotExists(fullLocalizationPath);
 
         _ = File.WriteAllTextAsync(fullLocalizationPath, builder.ToString(), Encoding.UTF8);
         return true;
