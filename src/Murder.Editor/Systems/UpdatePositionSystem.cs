@@ -1,35 +1,24 @@
 ﻿using Bang;
+using Bang.Components;
 using Bang.Entities;
 using Bang.Systems;
-using Murder.Components;
-using Murder.Core.Input;
 using Murder.Editor.Components;
+using Murder.Editor.Messages;
 using Murder.Editor.Utilities;
-using System.Collections.Immutable;
 
-namespace Murder.Editor.Systems
+namespace Murder.Editor.Systems;
+
+[Messager(typeof(AssetUpdatedMessage))]
+public class UpdatePositionSystem : IMessagerSystem
 {
-    [Watch(typeof(IMurderTransformComponent))]
-    public class UpdatePositionSystem : IReactiveSystem
+    public void OnMessage(World world, Entity entity, IMessage message)
     {
-        public void OnAdded(World world, ImmutableArray<Entity> entities)
-        { }
-
-        public void OnModified(World world, ImmutableArray<Entity> entities)
+        if (world.TryGetUnique<EditorComponent>() is not EditorComponent editor)
         {
-            if (world.TryGetUnique<EditorComponent>() is not EditorComponent editor)
-            {
-                return;
-            }
-
-            EditorHook hook = editor.EditorHook;
-            foreach (Entity e in entities)
-            {
-                hook.OnComponentModified?.Invoke(e.EntityId, e.GetTransform());
-            }
+            return;
         }
 
-        public void OnRemoved(World world, ImmutableArray<Entity> entities)
-        { }
+        EditorHook hook = editor.EditorHook;
+        hook.OnComponentModified?.Invoke(entity.EntityId, entity.GetTransform());
     }
 }

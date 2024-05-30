@@ -240,10 +240,11 @@ namespace Murder.Data
         protected async Task LoadContentAsync()
         {
             await Task.Yield();
+
+            await LoadSoundsAsync();
             await LoadContentAsyncImpl();
 
             await Task.WhenAll(
-                LoadSoundsAsync(),
                 LoadAllAssetsAsync(),
                 LoadFontsAndTexturesAsync());
 

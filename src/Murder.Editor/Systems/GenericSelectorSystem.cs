@@ -17,6 +17,7 @@ using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Numerics;
 using Microsoft.Xna.Framework.Input;
+using Murder.Editor.Messages;
 
 namespace Murder.Editor.Systems
 {
@@ -381,12 +382,6 @@ namespace Murder.Editor.Systems
                 }
             }
 
-            if (released)
-            {
-                _previousHovering = hook.Hovering;
-                _dragStart = null;
-            }
-
             if (_dragging != null && !isCursorBusy)
             {
                 Vector2 delta = cursorPosition - _dragging.GetGlobalTransform().Vector2 + _offset;
@@ -465,17 +460,29 @@ namespace Murder.Editor.Systems
                         }
 
                         e.SetGlobalTransform(newTransform);
+                        e.SendMessage(new AssetUpdatedMessage(typeof(PositionComponent)));
                     }
                 }
+            }
+
+            if (released)
+            {
+                _previousHovering = hook.Hovering;
+                _dragStart = null;
             }
 
             _previousKeyboardDelta = GetKeyboardDelta();
 
             if (!Game.Input.Down(MurderInputButtons.LeftClick))
             {
-                // The user stopped clicking, so no longer drag anything.
-                _dragging = null;
-                _dragStart = null;
+                if (_dragging != null)
+                {
+                    _dragging.SendMessage(new AssetUpdatedMessage(typeof(PositionComponent)));
+
+                    // The user stopped clicking, so no longer drag anything.
+                    _dragging = null;
+                    _dragStart = null;
+                }
             }
 
             if (hook.IsMouseOnStage && clicked && !clickedOnEntity)
