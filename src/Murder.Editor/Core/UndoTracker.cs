@@ -22,6 +22,8 @@ public class UndoTracker
     {
         _undo.Push(action);
         _redo.Clear();
+
+        action.Perform();
     }
 
     public void Undo()
