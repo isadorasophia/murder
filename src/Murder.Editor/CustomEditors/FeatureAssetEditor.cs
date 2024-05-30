@@ -33,6 +33,13 @@ namespace Murder.Editor.CustomEditors
 
             if (DrawSystemsEditor(_featureAsset.SystemsOnly, _featureAsset.FetchAllSystems(true), out var newSystemsList))
             {
+                var currentSystems = _featureAsset.SystemsOnly;
+                UndoStack.PerformAction(
+                    new SimpleUndoableAction(
+                        perform: () => _featureAsset.SetSystems(newSystemsList),
+                        undo: () => _featureAsset.SetSystems(currentSystems)
+                    )
+                );
                 _featureAsset.SetSystems(newSystemsList);
             }
 
@@ -40,7 +47,13 @@ namespace Murder.Editor.CustomEditors
 
             if (DrawFeaturesEditor(_featureAsset.FeaturesOnly, out var newFeaturesList))
             {
-                _featureAsset.SetFeatures(newFeaturesList);
+                var currentFeatureSet = _featureAsset.FeaturesOnly;
+                UndoStack.PerformAction(
+                    new SimpleUndoableAction(
+                        perform: () => _featureAsset.SetFeatures(newFeaturesList),
+                        undo: () => _featureAsset.SetFeatures(currentFeatureSet)
+                    )
+                );
             }
         }
 
