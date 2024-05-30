@@ -256,11 +256,6 @@ namespace Murder.Editor
             _selectedAssets.Remove(asset.Guid);
         }
 
-        private void Undo()
-        {
-            throw new NotImplementedException();
-        }
-
         public void SaveEditorState()
         {
             Architect.EditorSettings.OpenedTabs = new Guid[_selectedAssets.Count];

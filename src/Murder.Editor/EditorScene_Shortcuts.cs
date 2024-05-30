@@ -36,8 +36,8 @@ public partial class EditorScene
             ],
             [ShortcutGroup.Edit] =
             [
-                new ActionShortcut("Undo", new Chord(Keys.Z, _leftOsActionModifier), UndoStack.Undo),
-                new ActionShortcut("Redo", new Chord(Keys.Z, _leftOsActionModifier, Keys.LeftShift), UndoStack.Redo),
+                new ActionShortcut("Undo", new Chord(Keys.Z, _leftOsActionModifier), Architect.Undo.Undo),
+                new ActionShortcut("Redo", new Chord(Keys.Y, _leftOsActionModifier), Architect.Undo.Redo),
             ],
             [ShortcutGroup.View] =
             [
@@ -331,18 +331,6 @@ public partial class EditorScene
     private abstract record Shortcut(string Name, Chord Chord)
     {
         public abstract void Execute();
-    }
-
-    private sealed record UndoableActionShortcut(
-        string Name,
-        Chord Chord,
-        IUndoableAction Action
-    ) : Shortcut(Name, Chord)
-    {
-        public override void Execute()
-        {
-            UndoStack.PerformAction(Action);
-        }
     }
 
     private sealed record ActionShortcut(

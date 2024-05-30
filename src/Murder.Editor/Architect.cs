@@ -33,6 +33,8 @@ namespace Murder.Editor
 
         internal static EditorGraphLogger EditorGraphLogger => (EditorGraphLogger)Instance.GraphLogger;
 
+        public static UndoTracker Undo => Instance._undo;
+
         /// <summary>
         /// Debug and editor buffer renderer.
         /// Called in <see cref="Initialize"/>.
@@ -46,19 +48,12 @@ namespace Murder.Editor
 
         private EditorScene? _editorScene = null;
 
+        private readonly UndoTracker _undo = new(capacity: 32);
+
         protected override Scene InitialScene => _editorScene ??= new();
 
         /* *** SDL helpers *** */
-
-        private const string SDL = "SDL2";
         private const int SDL_WINDOW_MAXIMIZED = 0x00000080;
-
-        [DllImport(SDL, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void SDL_MaximizeWindow(IntPtr window);
-
-        [DllImport(SDL, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int SDL_GetWindowFlags(IntPtr window);
-
 
         /* *** Architect state *** */
         private bool _isPlayingGame = false;
@@ -449,7 +444,7 @@ namespace Murder.Editor
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                var windowState = SDL_GetWindowFlags(Window.Handle);
+                var windowState = SDL2.SDL.SDL_GetWindowFlags(Window.Handle);
                 return (windowState & SDL_WINDOW_MAXIMIZED) != 0;
             }
 
@@ -460,8 +455,8 @@ namespace Murder.Editor
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                nint windowState = SDL_GetWindowFlags(Window.Handle);
-                SDL_MaximizeWindow(Window.Handle);
+                uint windowState = SDL2.SDL.SDL_GetWindowFlags(Window.Handle);
+                SDL2.SDL.SDL_MaximizeWindow(Window.Handle);
             }
         }
 
