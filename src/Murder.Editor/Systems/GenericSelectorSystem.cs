@@ -379,7 +379,12 @@ namespace Murder.Editor.Systems
                     {
                         _dragging = _startedDragging;
                         _offset = _startedDragging.GetGlobalTransform().Vector2 - cursorPosition;
-                        _dragging.AddOrReplaceComponent(new EditorTween(Game.NowUnscaled, 0.4f, EditorTweenType.Lift));
+
+                        foreach ((int _, Entity e) in selectedEntities)
+                        {
+                            e.AddOrReplaceComponent(new EditorTween(Game.NowUnscaled, 0.4f, EditorTweenType.Lift));
+                        }
+
                     }
                 }
             }
@@ -480,8 +485,12 @@ namespace Murder.Editor.Systems
             {
                 if (_dragging != null)
                 {
-                    _dragging.SendMessage(new AssetUpdatedMessage(typeof(PositionComponent)));
-                    _dragging.AddOrReplaceComponent(new EditorTween(Game.NowUnscaled, 0.7f, EditorTweenType.Place));
+                    foreach ((int _, Entity e) in selectedEntities)
+                    {
+                        e.SendMessage(new AssetUpdatedMessage(typeof(PositionComponent)));
+                        e.AddOrReplaceComponent(new EditorTween(Game.NowUnscaled, 0.7f, EditorTweenType.Place));
+                    }
+
 
                     // The user stopped clicking, so no longer drag anything.
                     _dragging = null;
