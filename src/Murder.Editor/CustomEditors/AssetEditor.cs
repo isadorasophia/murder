@@ -358,7 +358,7 @@ namespace Murder.Editor.CustomEditors
                         {   
                             RemoveComponent(parent, entityInstance, t);
                         }
-                        else if (canRevert && ImGuiHelpers.IconButton('\uf1da', $"revert_{t}", sameLine: true))
+                        else if (canRevert && ImGuiHelpers.IconButton('\uf1da', $"revert_{t}", sameLine: true, tooltip: "Revert"))
                         {
                             RevertComponent(parent, entityInstance, t);
                         }
