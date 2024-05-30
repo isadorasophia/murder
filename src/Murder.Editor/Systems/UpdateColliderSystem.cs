@@ -16,13 +16,15 @@ namespace Murder.Editor.Systems
 
         public void OnModified(World world, ImmutableArray<Entity> entities)
         {
-            if (world.TryGetUnique<EditorComponent>() is EditorComponent editor)
+            if (world.TryGetUnique<EditorComponent>() is not EditorComponent editor)
             {
-                EditorHook hook = editor.EditorHook;
-                foreach (Entity e in entities)
-                {
-                    hook.OnComponentModified?.Invoke(e.EntityId, e.GetCollider());
-                }
+                return;
+            }
+
+            EditorHook hook = editor.EditorHook;
+            foreach (Entity e in entities)
+            {
+                hook.OnComponentModified?.Invoke(e.EntityId, e.GetCollider());
             }
         }
 

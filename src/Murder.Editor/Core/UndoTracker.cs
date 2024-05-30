@@ -1,12 +1,5 @@
 ﻿namespace Murder.Editor.Core;
 
-public interface IUndoableAction
-{
-    void Perform();
-
-    void Undo();
-}
-
 public class UndoTracker
 {
     private readonly Stack<IUndoableAction> _undo;
@@ -18,13 +11,13 @@ public class UndoTracker
         _redo = new(capacity);
     }
 
-    public void Act(IUndoableAction action)
+    public void Track(IUndoableAction action)
     {
         _undo.Push(action);
         _redo.Clear();
-
-        action.Perform();
     }
+
+    public void Track(Action @do, Action @undo) => Track(new UndoableAction(@do, @undo));
 
     public void Undo()
     {
@@ -51,4 +44,27 @@ public class UndoTracker
 
         _undo.Push(action);
     }
+}
+
+public interface IUndoableAction
+{
+    void Perform();
+
+    void Undo();
+}
+
+public class UndoableAction : IUndoableAction
+{
+    private readonly Action _do;
+    private readonly Action _undo;
+
+    public UndoableAction(Action perform, Action undo)
+    {
+        _do = perform;
+        _undo = undo;
+    }
+
+    public void Perform() => _do.Invoke();
+
+    public void Undo() => _undo.Invoke();
 }

@@ -8,6 +8,7 @@ using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Editor.Assets;
 using Murder.Editor.Components;
+using Murder.Editor.Core;
 using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Stages;
@@ -326,7 +327,7 @@ namespace Murder.Editor.CustomEditors
 
                     // Check if this is an aseprite component.
                     // This defines whether we will draw it on the stage.
-                    bool isAseprite = t == typeof(SpriteComponent);
+                    bool isSprite = t == typeof(SpriteComponent);
                     bool isCollider = t == typeof(ColliderComponent);
                     bool isOpen = false;
 
@@ -354,7 +355,7 @@ namespace Murder.Editor.CustomEditors
                     {
                         ImGui.TreePop();
                         if (ImGuiHelpers.DeleteButton($"Delete_{t}"))
-                        {
+                        {   
                             RemoveComponent(parent, entityInstance, t);
                         }
                         else if (canRevert && ImGuiHelpers.IconButton('\uf1da', $"revert_{t}", sameLine: true))
@@ -368,8 +369,9 @@ namespace Murder.Editor.CustomEditors
                             
                             if (CustomComponent.ShowEditorOf(ref copy))
                             {
-                                // Asset was already modified, just pass along the updated asset.
-                                ReplaceComponent(parent, entityInstance, (IComponent)copy);
+                                ActWithUndo(
+                                    @do: () => ReplaceComponent(parent, entityInstance, copy),
+                                    undo: () => ReplaceComponent(parent, entityInstance, c));
                             }
 
                             isOpen = true;
@@ -388,7 +390,7 @@ namespace Murder.Editor.CustomEditors
                     }
 
                     // Do leftover stuff
-                    if (isAseprite)
+                    if (isSprite)
                     {
                         if (isOpen)
                         {
@@ -969,11 +971,19 @@ namespace Murder.Editor.CustomEditors
             Stage stage = Stages[_asset.Guid];
             if (stage.FindInstance(entityId) is IEntity entity)
             {
-                if (!entity.GetComponent(c.GetType()).Equals(c))
+                IComponent componentBefore = entity.GetComponent(c.GetType());
+                if (!componentBefore.Equals(c))
                 {
-                    entity.AddOrReplaceComponent(c);
-
-                    _asset.FileChanged = true;
+                    ActWithUndo(
+                        @do: () =>
+                        {
+                            entity.AddOrReplaceComponent(c);
+                            _asset.FileChanged = true;
+                        },
+                        @undo: () =>
+                        {
+                            ReplaceComponent(parent: null, entity, componentBefore);
+                        });
                 }
             }
             else if (stage.FindChildInstance(entityId) is (IEntity parent, Guid child))
@@ -981,8 +991,21 @@ namespace Murder.Editor.CustomEditors
                 if (parent.TryGetComponentForChild(child, c.GetType()) is IComponent childComponent &&
                     !childComponent.Equals(c))
                 {
-                    parent.AddOrReplaceComponentForChild(child, c);
-                    _asset.FileChanged = true;
+                    ActWithUndo(
+                        @do: () =>
+                        {
+                            parent.AddOrReplaceComponentForChild(child, c);
+                            _asset.FileChanged = true;
+                        },
+                        @undo: () =>
+                        {
+                            if (!parent.TryGetChild(child, out EntityInstance? instance))
+                            {
+                                return;
+                            }
+
+                            ReplaceComponent(parent, instance, childComponent);
+                        });
                 }
             }
         }
@@ -1005,6 +1028,30 @@ namespace Murder.Editor.CustomEditors
             GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
 
             Stages[_asset.Guid].ToggleSystem(t, enable);
+        }
+
+        public void ActWithUndo(Action @do, Action undo)
+        {
+            if (_asset is null)
+            {
+                return;
+            }
+
+            bool wasAssetModified = _asset.FileChanged;
+            @do.Invoke();
+
+            void WrappedUndo()
+            {
+                if (_asset is null || !Stages.ContainsKey(_asset.Guid))
+                {
+                    return;
+                }
+
+                undo.Invoke();
+                _asset.FileChanged = wasAssetModified;
+            }
+
+            Architect.Undo.Track(new UndoableAction(@do, WrappedUndo));
         }
 
         private class StageAssetInfo
