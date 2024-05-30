@@ -2,6 +2,7 @@
 using Bang.Components;
 using Bang.Entities;
 using Bang.Systems;
+using Murder.Components;
 using Murder.Editor.Components;
 using Murder.Editor.Messages;
 using Murder.Editor.Utilities;
@@ -17,8 +18,15 @@ public class UpdatePositionSystem : IMessagerSystem
         {
             return;
         }
-
         EditorHook hook = editor.EditorHook;
-        hook.OnComponentModified?.Invoke(entity.EntityId, entity.GetTransform());
+
+        Type type = ((AssetUpdatedMessage)message).UpdatedComponent;
+
+        if (type == typeof(PositionComponent))
+        {
+            hook.OnComponentModified?.Invoke(entity.EntityId, entity.GetTransform());
+        }
+
+        
     }
 }

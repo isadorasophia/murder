@@ -220,6 +220,28 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
                 renderPosition += spriteOffset.Offset;
             }
 
+            bool isSelected = e.HasComponent<IsSelectedComponent>();
+
+            if (e.TryGetComponent<EditorTween>() is EditorTween editorTween)
+            {
+                float delta = Calculator.ClampTime(Game.Now - editorTween.StartTime, editorTween.Duration);
+                if (editorTween.Type == EditorTweenType.Lift)
+                {
+                    scale *= 1 + 0.05f * Ease.BounceIn(1 - delta);
+                    rotation = rotation + 0.05f * Ease.JumpArc(delta);
+                    isSelected = false;
+                }
+                else if (editorTween.Type == EditorTweenType.Place)
+                {
+                    scale *= 1 + 0.1f * Ease.BounceIn(1 - delta);
+                }
+                else if (editorTween.Type == EditorTweenType.Move && delta < 1)
+                {
+                    isSelected = false;
+                }
+            }
+
+
             AnimationInfo info = new AnimationInfo(animationId, start) with { OverrideCurrentTime = overrideCurrentTime };
             FrameInfo frameInfo = RenderServices.DrawSprite(
                 batch,
@@ -234,7 +256,7 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
                     Sort = ySort,
                     Scale = scale,
                     Color = baseColor,
-                    Outline = e.HasComponent<IsSelectedComponent>() ? Color.White.FadeAlpha(0.65f) : null,
+                    Outline = isSelected ? Color.White.FadeAlpha(0.65f) : null,
                 },
                 info);
 
