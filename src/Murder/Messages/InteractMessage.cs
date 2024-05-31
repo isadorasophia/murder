@@ -1,5 +1,6 @@
 ﻿using Bang.Components;
 using Bang.Entities;
+using Murder.Attributes;
 using Murder.Utilities.Attributes;
 
 namespace Murder.Messages

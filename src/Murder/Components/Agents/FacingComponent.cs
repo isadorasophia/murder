@@ -33,6 +33,6 @@ public readonly struct FacingComponent : IComponent
     public FacingComponent(float angle)
     {
         Angle = (angle % (2 * MathF.PI) + 2 * MathF.PI) % (2 * MathF.PI);
-        _direction = DirectionHelper.FromAngle(Angle);
+        _direction = DirectionHelper.FromAngle(angle);
     }
 }

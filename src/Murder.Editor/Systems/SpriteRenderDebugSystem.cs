@@ -224,7 +224,7 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
 
             if (e.TryGetComponent<EditorTween>() is EditorTween editorTween)
             {
-                float delta = Calculator.ClampTime(Game.Now - editorTween.StartTime, editorTween.Duration);
+                float delta = Calculator.ClampTime(Game.NowUnscaled - editorTween.StartTime, editorTween.Duration);
                 if (editorTween.Type == EditorTweenType.Lift)
                 {
                     scale *= 1 + 0.05f * Ease.BounceIn(1 - delta);

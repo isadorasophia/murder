@@ -33,6 +33,7 @@ namespace Murder.Editor.Systems
         private Entity? _dragging = null;
         private Entity? _startedDragging = null;
         private Vector2? _dragStart = null;
+        private float _selectionStartTime = 0;
 
         private Point _previousKeyboardDelta = Point.Zero;
 
@@ -357,6 +358,11 @@ namespace Murder.Editor.Systems
                 {
                     if (clicked || (cycle && released && _dragStart == cursorPosition))
                     {
+                        if (!hook.IsEntitySelected(entity.EntityId))
+                        {
+                            _selectionStartTime = Game.NowUnscaled;
+                        }
+
                         if (!isMultiSelecting)
                         {
                             isMultiSelecting |= hook.IsEntitySelected(entity.EntityId);
@@ -384,7 +390,6 @@ namespace Murder.Editor.Systems
                         {
                             e.AddOrReplaceComponent(new EditorTween(Game.NowUnscaled, 0.4f, EditorTweenType.Lift));
                         }
-
                     }
                 }
             }
@@ -694,6 +699,14 @@ namespace Murder.Editor.Systems
 
         private readonly Color _hoverColor = (Game.Profile.Theme.Accent * .7f);
 
+        private readonly ImmutableArray<Vector2> _xPointsCache = [
+
+                        new Vector2(-4, 4),  // Top left
+                        new Vector2(4, -4),  // Bottom right
+                        new Vector2(4, 4),   // Top right
+                        new Vector2(-4, -4)  // Bottom left
+        ];
+
         protected void DrawImpl(RenderContext render, World world, ImmutableArray<Entity> entities)
         {
             EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
@@ -710,6 +723,15 @@ namespace Murder.Editor.Systems
 
                 if (hook.IsEntitySelected(e.EntityId))
                 {
+                    float rotation = Ease.BackOut(Calculator.ClampTime(_selectionStartTime, Game.NowUnscaled, .6f)) * MathF.PI * 0.5f;
+
+                    // Define the rotation matrix
+                    Matrix3x2 rotationMatrix = Matrix3x2.CreateRotation(rotation, Vector2.Zero);
+
+                    // Draw the rotated lines
+                    RenderServices.DrawLine(render.DebugBatch, Vector2.Transform(_xPointsCache[0], rotationMatrix) + position, Vector2.Transform(_xPointsCache[1], rotationMatrix) + position, Game.Profile.Theme.Yellow, 0.5f);
+                    RenderServices.DrawLine(render.DebugBatch, Vector2.Transform(_xPointsCache[2], rotationMatrix) + position, Vector2.Transform(_xPointsCache[3], rotationMatrix) + position, Game.Profile.Theme.Yellow, 0.5f);
+
                     if (_dragging != null)
                     {
                         if (_dragging.TryGetComponent<EditorTween>() is EditorTween draggingTween)
@@ -752,12 +774,6 @@ namespace Murder.Editor.Systems
 
                         if (alpha > 0)
                         {
-                            int centerSize = 2;
-                            RenderServices.DrawLine(render.DebugBatch, new Vector2(position.X - centerSize, (int)position.Y - centerSize + 1), new Vector2(position.X + centerSize, position.Y + centerSize + 1), Game.Profile.Theme.Bg, 0.5f);
-                            RenderServices.DrawLine(render.DebugBatch, new Vector2(position.X + centerSize, (int)position.Y - centerSize + 1), new Vector2(position.X - centerSize, position.Y + centerSize + 1), Game.Profile.Theme.Bg, 0.5f);
-                            RenderServices.DrawLine(render.DebugBatch, new Vector2(position.X - centerSize, (int)position.Y - centerSize), new Vector2(position.X + centerSize, position.Y + centerSize), Game.Profile.Theme.Yellow);
-                            RenderServices.DrawLine(render.DebugBatch, new Vector2(position.X + centerSize, (int)position.Y - centerSize), new Vector2(position.X - centerSize, position.Y + centerSize), Game.Profile.Theme.Yellow);
-
                             RenderServices.DrawRectangle(render.DebugFxBatch, bounds, _hoverColor * (hook.IsEntityHovered(e.EntityId) ? 0.65f : 0.45f) * alpha);
                             RenderServices.DrawRectangleOutline(render.DebugFxBatch, bounds, alpha * Game.Profile.Theme.Accent * 0.45f);
                         }
@@ -766,39 +782,36 @@ namespace Murder.Editor.Systems
                 else if (hook.IsEntityHovered(e.EntityId))
                 {
                     RenderServices.DrawRectangleOutline(render.DebugFxBatch, bounds, _hoverColor * 0.45f);
+                    DrawSelectionTween(render, position);
                 }
                 else if (!hasBox)
                 {
                     RenderServices.DrawCircleOutline(render.DebugBatch, position, 2, 6, Game.Profile.Theme.Yellow);
                 }
+                
             }
 
-
-            DrawSelectionTween(render);
             DrawSelectionRectangle(render);
         }
 
-        private void DrawSelectionTween(RenderContext render)
+        private void DrawSelectionTween(RenderContext render, Vector2 position)
         {
-            if (_selectPosition is Vector2 position)
+            float tween = Ease.ZeroToOne(Ease.BackOut, 2f, _tweenStart);
+            if (tween == 1)
             {
-                float tween = Ease.ZeroToOne(Ease.BackOut, 2f, _tweenStart);
-                if (tween == 1)
-                {
-                    _selectPosition = null;
-                }
-                else
-                {
-                    float expand = (1 - tween) * 3;
+                _selectPosition = null;
+            }
+            else
+            {
+                float expand = (1 - tween) * 3;
 
-                    float startAlpha = .9f;
-                    Color color = Game.Profile.Theme.Accent * (startAlpha - startAlpha * tween);
+                float startAlpha = .9f;
+                Color color = Game.Profile.Theme.Accent * (startAlpha - startAlpha * tween);
 
-                    Vector2 size = _selectionBox.Add(expand * 2);
-                    Rectangle rectangle = new(position - size / 2f, size);
+                Vector2 size = _selectionBox.Add(expand * 2);
+                Rectangle rectangle = new(position - size / 2f, size);
 
-                    RenderServices.DrawRectangleOutline(render.DebugBatch, rectangle, color);
-                }
+                RenderServices.DrawRectangleOutline(render.DebugBatch, rectangle, color);
             }
         }
 
