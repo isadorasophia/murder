@@ -36,8 +36,9 @@ namespace Murder.Editor.CustomFields
                 return (modified, Enum.ToObject(t, intValue));
             }
 
-            (modified, intValue) = ImGuiHelpers.DrawEnumField($"##{member.Name}", t, intValue);
-            return (modified, Enum.ToObject(t, intValue));
+            object enumValue;
+            (modified, enumValue) = ImGuiHelpers.DrawEnumField($"##{member.Name}", t, intValue);
+            return (modified, Enum.ToObject(t, enumValue));
         }
 
     }

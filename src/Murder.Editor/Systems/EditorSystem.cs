@@ -138,8 +138,8 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
 
                     if (_showRenderInspector && ImGui.Begin("Render Inspector", ref _showRenderInspector, ImGuiWindowFlags.None))
                     {
-                        (bool mod, _inspectingRenderTarget) = ImGuiHelpers.DrawEnumField("Render Target", typeof(RenderContext.RenderTargets), _inspectingRenderTarget);
-                        var image = render.GetRenderTargetFromEnum((RenderContext.RenderTargets)_inspectingRenderTarget);
+                        (bool mod, object inspectingRenderTargetObject) = ImGuiHelpers.DrawEnumField("Render Target", typeof(RenderContext.RenderTargets), _inspectingRenderTarget);
+                        var image = render.GetRenderTargetFromEnum((RenderContext.RenderTargets)inspectingRenderTargetObject);
                         Architect.Instance.ImGuiRenderer.BindTexture(_renderInspectorPtr, image, false);
                         ImGui.Text($"{image.Width}x{image.Height}");
                         var size = ImGui.GetContentRegionAvail();

@@ -9,7 +9,27 @@ public unsafe static class OperatingSystemHelpers
 {
     private static IntPtr _clipboard;
 
-    public static bool HasMacOsClipboardDependency() => File.Exists(AppKit);
+    public static bool HasMacOsAppkit() => File.Exists(AppKit);
+    public static bool HasMacOsClipboardDependency()
+    {
+        var appKitExist = HasMacOsAppkit();
+        if (appKitExist)
+        {
+            return true;
+        }
+        try
+        {
+            Marshal.Prelink(typeof(OperatingSystemHelpers).GetMethod(nameof(OperatingSystemHelpers.SDL_GetClipboardText_Mac),
+                BindingFlags.Public | BindingFlags.Static)!);
+            Marshal.Prelink(typeof(OperatingSystemHelpers).GetMethod(nameof(OperatingSystemHelpers.SDL_SetClipboardText_Mac),
+                BindingFlags.Public | BindingFlags.Static)!);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
 
     public static bool HasLinuxClipboardDependency()
     {
@@ -61,7 +81,7 @@ public unsafe static class OperatingSystemHelpers
 
         if (OperatingSystem.IsMacOS())
         {
-            result = GetTextForOsx() ?? string.Empty;
+            result = HasMacOsAppkit() ? GetTextForOsx() ?? string.Empty : SDL_GetClipboardText_Mac() ?? string.Empty;
             length = Encoding.UTF8.GetByteCount(result);
         }
 
@@ -92,7 +112,11 @@ public unsafe static class OperatingSystemHelpers
 
         if (OperatingSystem.IsMacOS())
         {
-            SetTextForOsx(result);
+            if (HasMacOsAppkit())
+                SetTextForOsx(result);
+            else
+                SDL_SetClipboardText_Mac(result);
+            return;
         }
 
         if (OperatingSystem.IsLinux())
@@ -145,7 +169,7 @@ public unsafe static class OperatingSystemHelpers
         return null;
     }
 
-    public const string AppKit = "/System/Library/Frameworks/AppKit.framework/AppKit";
+    public const string AppKit = "/System/Library/Frameworks/AppKit.framework/Versions/Current/AppKit";
 
     [DllImport(AppKit)]
     static extern IntPtr objc_getClass(string className);
@@ -174,4 +198,12 @@ public unsafe static class OperatingSystemHelpers
 
     [DllImport(SDL, CallingConvention = CallingConvention.Cdecl)]
     private static extern string SDL_GetClipboardText();
+    
+    public const string SDL_MacOS = "libSDL2.dylib";
+
+    [DllImport(SDL_MacOS, EntryPoint = "SDL_SetClipboardText", CallingConvention = CallingConvention.Cdecl)]
+    public static extern int SDL_SetClipboardText_Mac(string text);
+
+    [DllImport(SDL_MacOS, EntryPoint = "SDL_GetClipboardText", CallingConvention = CallingConvention.Cdecl)]
+    public static extern string SDL_GetClipboardText_Mac();
 }
