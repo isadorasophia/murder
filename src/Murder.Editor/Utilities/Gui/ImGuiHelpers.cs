@@ -285,7 +285,7 @@ public static class ImGuiHelpers
 
         ImGui.PushStyleColor(ImGuiCol.ButtonHovered, theme.Red);
         ImGui.PushStyleColor(ImGuiCol.Button, theme.Faded);
-        var result = IconButton('\uf2ed', id);
+        var result = IconButton('\uf2ed', id, tooltip: "Delete");
         ImGui.PopStyleColor();
         ImGui.PopStyleColor();
         return result;
@@ -304,7 +304,7 @@ public static class ImGuiHelpers
         return result;
     }
 
-    public static bool IconButton(char icon, string id, Vector4? color = null, Vector4? bgColor = null, bool sameLine = false)
+    public static bool IconButton(char icon, string id, Vector4? color = null, Vector4? bgColor = null, bool sameLine = false, string? tooltip = null)
     {
         if (sameLine)
         {
@@ -333,6 +333,11 @@ public static class ImGuiHelpers
         if (bgColor is not null)
         {
             ImGui.PopStyleColor();
+        }
+       
+        if (tooltip is not null)
+        {
+            HelpTooltip(tooltip);
         }
 
         return result;

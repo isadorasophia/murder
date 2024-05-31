@@ -35,19 +35,19 @@ namespace Murder.Editor.CustomFields
             ImGui.PopItemWidth();
 
             ImGui.SameLine();
-            if (ImGuiHelpers.IconButton('', "TopLeft"))
+            if (ImGuiHelpers.IconButton('', "TopLeft", tooltip: "Top-left"))
             {
                 return (true, Vector2.Zero);
             }
 
             ImGui.SameLine();
-            if (ImGuiHelpers.IconButton('', "Center"))
+            if (ImGuiHelpers.IconButton('', "Center", tooltip: "Center"))
             {
                 return (true, Vector2.One * 0.5f);
             }
 
             ImGui.SameLine();
-            if (ImGuiHelpers.IconButton('', "BCenter"))
+            if (ImGuiHelpers.IconButton('', "BCenter", tooltip: "Bottom center"))
             {
                 return (true, new Vector2(0.5f, 1));
             }

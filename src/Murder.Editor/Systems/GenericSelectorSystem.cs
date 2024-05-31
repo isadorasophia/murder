@@ -17,6 +17,8 @@ using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Numerics;
 using Microsoft.Xna.Framework.Input;
+using Murder.Editor.Messages;
+using Murder.Prefabs;
 
 namespace Murder.Editor.Systems
 {
@@ -314,7 +316,7 @@ namespace Murder.Editor.Systems
 
                     if (released)
                     {
-                        _tweenStart = Game.Now;
+                        _tweenStart = Game.NowUnscaled;
                         _selectPosition = position;
                     }
 
@@ -377,14 +379,14 @@ namespace Murder.Editor.Systems
                     {
                         _dragging = _startedDragging;
                         _offset = _startedDragging.GetGlobalTransform().Vector2 - cursorPosition;
+
+                        foreach ((int _, Entity e) in selectedEntities)
+                        {
+                            e.AddOrReplaceComponent(new EditorTween(Game.NowUnscaled, 0.4f, EditorTweenType.Lift));
+                        }
+
                     }
                 }
-            }
-
-            if (released)
-            {
-                _previousHovering = hook.Hovering;
-                _dragStart = null;
             }
 
             if (_dragging != null && !isCursorBusy)
@@ -465,17 +467,35 @@ namespace Murder.Editor.Systems
                         }
 
                         e.SetGlobalTransform(newTransform);
+                        e.SendMessage(new AssetUpdatedMessage(typeof(PositionComponent)));
+                        e.AddOrReplaceComponent(new EditorTween(Game.NowUnscaled, 1f, EditorTweenType.Move));
                     }
                 }
+            }
+
+            if (released)
+            {
+                _previousHovering = hook.Hovering;
+                _dragStart = null;
             }
 
             _previousKeyboardDelta = GetKeyboardDelta();
 
             if (!Game.Input.Down(MurderInputButtons.LeftClick))
             {
-                // The user stopped clicking, so no longer drag anything.
-                _dragging = null;
-                _dragStart = null;
+                if (_dragging != null)
+                {
+                    foreach ((int _, Entity e) in selectedEntities)
+                    {
+                        e.SendMessage(new AssetUpdatedMessage(typeof(PositionComponent)));
+                        e.AddOrReplaceComponent(new EditorTween(Game.NowUnscaled, 0.7f, EditorTweenType.Place));
+                    }
+
+
+                    // The user stopped clicking, so no longer drag anything.
+                    _dragging = null;
+                    _dragStart = null;
+                }
             }
 
             if (hook.IsMouseOnStage && clicked && !clickedOnEntity)
@@ -690,14 +710,58 @@ namespace Murder.Editor.Systems
 
                 if (hook.IsEntitySelected(e.EntityId))
                 {
-                    int centerSize = 2;
-                    RenderServices.DrawLine(render.DebugBatch, new Vector2(position.X - centerSize, (int)position.Y - centerSize + 1), new Vector2(position.X + centerSize, position.Y + centerSize + 1), Game.Profile.Theme.Bg, 0.5f);
-                    RenderServices.DrawLine(render.DebugBatch, new Vector2(position.X + centerSize, (int)position.Y - centerSize + 1), new Vector2(position.X - centerSize, position.Y + centerSize + 1), Game.Profile.Theme.Bg, 0.5f);
-                    RenderServices.DrawLine(render.DebugBatch, new Vector2(position.X - centerSize, (int)position.Y - centerSize), new Vector2(position.X + centerSize, position.Y + centerSize), Game.Profile.Theme.Yellow);
-                    RenderServices.DrawLine(render.DebugBatch, new Vector2(position.X + centerSize, (int)position.Y - centerSize), new Vector2(position.X - centerSize, position.Y + centerSize), Game.Profile.Theme.Yellow);
+                    if (_dragging != null)
+                    {
+                        if (_dragging.TryGetComponent<EditorTween>() is EditorTween draggingTween)
+                        {
+                            float delta = Ease.BackOut(Calculator.ClampTime(draggingTween.StartTime, Game.NowUnscaled, draggingTween.Duration));
+                            float cornerSize = 6 * delta;
+                            float corners = 1 - delta;
 
-                    RenderServices.DrawRectangle(render.DebugFxBatch, bounds, _hoverColor * (hook.IsEntityHovered(e.EntityId) ? 0.65f : 0.45f));
-                    RenderServices.DrawRectangleOutline(render.DebugFxBatch, bounds, Game.Profile.Theme.Accent * 0.45f);
+                            Vector2 topLeft = bounds.TopLeft + new Vector2(corners, corners) * 4;
+                            RenderServices.DrawLine(render.DebugFxBatch, topLeft, topLeft + new Vector2(cornerSize, 0), Game.Profile.Theme.HighAccent, 0.5f);
+                            RenderServices.DrawLine(render.DebugFxBatch, topLeft, topLeft + new Vector2(0, cornerSize), Game.Profile.Theme.HighAccent, 0.5f);
+
+                            Vector2 topRight = bounds.TopRight + new Vector2(-corners, corners) * 4;
+                            RenderServices.DrawLine(render.DebugFxBatch, topRight, topRight + new Vector2(-cornerSize, 0), Game.Profile.Theme.HighAccent, 0.5f);
+                            RenderServices.DrawLine(render.DebugFxBatch, topRight, topRight + new Vector2(0, cornerSize), Game.Profile.Theme.HighAccent, 0.5f);
+
+                            Vector2 bottomLeft = bounds.BottomLeft + new Vector2(corners, -corners) * 4;
+                            RenderServices.DrawLine(render.DebugFxBatch, bottomLeft, bottomLeft + new Vector2(cornerSize, 0), Game.Profile.Theme.HighAccent, 0.5f);
+                            RenderServices.DrawLine(render.DebugFxBatch, bottomLeft, bottomLeft + new Vector2(0,-cornerSize), Game.Profile.Theme.HighAccent, 0.5f);
+
+                            Vector2 bottomRight = bounds.BottomRight + new Vector2(-corners, -corners) * 4;
+                            RenderServices.DrawLine(render.DebugFxBatch, bottomRight, bottomRight + new Vector2(-cornerSize, 0), Game.Profile.Theme.HighAccent, 0.5f);
+                            RenderServices.DrawLine(render.DebugFxBatch, bottomRight, bottomRight + new Vector2(0, -cornerSize), Game.Profile.Theme.HighAccent, 0.5f);
+                        }
+                    }
+                    else
+                    {
+                        float alpha = 1f;
+                        if (e.TryGetComponent<EditorTween>() is EditorTween editorTween &&
+                        editorTween.StartTime + editorTween.Duration > Game.NowUnscaled)
+                        {
+                            float delta = Calculator.ClampTime(editorTween.StartTime, Game.NowUnscaled, editorTween.Duration);
+                            alpha = Ease.CubeOut(delta);
+
+                            if (editorTween.Type == EditorTweenType.Move && delta < 1)
+                            {
+                                alpha = 0;
+                            }
+                        }
+
+                        if (alpha > 0)
+                        {
+                            int centerSize = 2;
+                            RenderServices.DrawLine(render.DebugBatch, new Vector2(position.X - centerSize, (int)position.Y - centerSize + 1), new Vector2(position.X + centerSize, position.Y + centerSize + 1), Game.Profile.Theme.Bg, 0.5f);
+                            RenderServices.DrawLine(render.DebugBatch, new Vector2(position.X + centerSize, (int)position.Y - centerSize + 1), new Vector2(position.X - centerSize, position.Y + centerSize + 1), Game.Profile.Theme.Bg, 0.5f);
+                            RenderServices.DrawLine(render.DebugBatch, new Vector2(position.X - centerSize, (int)position.Y - centerSize), new Vector2(position.X + centerSize, position.Y + centerSize), Game.Profile.Theme.Yellow);
+                            RenderServices.DrawLine(render.DebugBatch, new Vector2(position.X + centerSize, (int)position.Y - centerSize), new Vector2(position.X - centerSize, position.Y + centerSize), Game.Profile.Theme.Yellow);
+
+                            RenderServices.DrawRectangle(render.DebugFxBatch, bounds, _hoverColor * (hook.IsEntityHovered(e.EntityId) ? 0.65f : 0.45f) * alpha);
+                            RenderServices.DrawRectangleOutline(render.DebugFxBatch, bounds, alpha * Game.Profile.Theme.Accent * 0.45f);
+                        }
+                    }
                 }
                 else if (hook.IsEntityHovered(e.EntityId))
                 {
