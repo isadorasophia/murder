@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="ImGui.NET" Version="1.90.0.1" />
-    <PackageReference Include="SkiaSharp" Version="2.88.6" />
+    <PackageReference Include="SkiaSharp" Version="2.88.8" />
   </ItemGroup>
 
   <!-- Copy resources -->
