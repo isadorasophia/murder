@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Murder.FNA" Version="24.4.3" />
+    <PackageReference Include="Murder.FNA" Version="24.6" />
   </ItemGroup>
 
   <!-- When running the editor, copy everything! -->
