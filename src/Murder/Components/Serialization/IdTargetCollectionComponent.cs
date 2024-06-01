@@ -1,4 +1,6 @@
-﻿using Bang.Components;
+﻿using Bang;
+using Bang.Components;
+using Bang.Entities;
 using Murder.Attributes;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
@@ -20,5 +22,16 @@ namespace Murder.Components
             ImmutableDictionary<string, int>.Empty.WithComparers(StringComparer.InvariantCultureIgnoreCase);
 
         public IdTargetCollectionComponent(ImmutableDictionary<string, int> targets) => Targets = targets;
+
+
+        public Entity? TryGetEntiy(World world, string id)
+        {
+            if (Targets.TryGetValue(id, out var entityId))
+            {
+                return world.TryGetEntity(entityId);
+            }
+
+            return null;
+        }
     }
 }
