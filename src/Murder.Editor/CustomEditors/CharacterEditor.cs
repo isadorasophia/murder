@@ -104,7 +104,7 @@ namespace Murder.Editor.CustomEditors
 
                 DrawSpeaker();
                 DrawSituations(info, 150);
-                DrawCurrentDialog(info, totalHeight - 150);
+                DrawCurrentDialog(info, totalHeight - 200);
 
                 ImGui.EndTable();
             }
