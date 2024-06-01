@@ -39,21 +39,19 @@ public readonly struct TargetedInteractionCollection : IInteraction
 
         foreach (TargetedInteractionCollectionItem item in Interactives)
         {
-            if (!guidToIdTargetCollection.Targets.TryGetValue(item.Target, out int id))
+            if (!string.IsNullOrEmpty(item.Target) && guidToIdTargetCollection.Targets.TryGetValue(item.Target, out int id) && world.TryGetEntity(id) is Entity targetEntity)
             {
-                GameLogger.Error($"No GUID found for {item.Target}");
-                continue;
+                foreach (var interactive in item.InteractionCollection)
+                {
+                    interactive.Interact(world, interactor, targetEntity);
+                }
             }
-
-            if (world.TryGetEntity(id) is not Entity targetEntity)
+            else
             {
-                GameLogger.Error($"No target entity found for {id}");
-                continue;
-            }
-
-            foreach (var interactive in item.InteractionCollection)
-            {
-                interactive.Interact(world, interactor, targetEntity);
+                foreach (var interactive in item.InteractionCollection)
+                {
+                    interactive.Interact(world, interactor, null);
+                }
             }
         }
     }
