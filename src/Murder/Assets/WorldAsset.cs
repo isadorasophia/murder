@@ -415,7 +415,6 @@ namespace Murder.Assets
         public bool MoveToGroup(string? targetGroup, Guid instance, int targetPosition)
         {
             ImmutableArray<Guid> instances;
-
             // First, remove from any prior group, if it belong to one.
             if (_entitiesToFolder.TryGetValue(instance, out string? fromGroup) &&
                 _folders.TryGetValue(fromGroup, out instances))

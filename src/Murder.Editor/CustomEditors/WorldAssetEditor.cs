@@ -7,6 +7,7 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
+using Murder.Editor.Assets;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.CustomDiagnostics;
@@ -80,7 +81,28 @@ namespace Murder.Editor.CustomEditors
             Stages[guid].EditorHook.MoveEntitiesToFolder += MoveEntitiesToGroup;
             Stages[guid].EditorHook.GetAvailableFolders = GetAvailableGroups;
 
-            _worldStageInfo[guid] = new();
+            if (Architect.EditorSettings.WorldAssetInfo.TryGetValue(guid, out PersistWorldStageInfo info))
+            {
+                _worldStageInfo[guid] = new()
+                {
+                    HiddenGroups = info.HiddenGroups,
+                    SkipGroups = info.LockedGroups,
+                };
+
+                foreach (string group in info.LockedGroups)
+                {
+                    SkipGroupInEditor(group, true);
+                }
+
+                foreach (string group in info.HiddenGroups)
+                {
+                    SwitchGroupVisibility(group, false); 
+                }
+            }
+            else
+            {
+                _worldStageInfo[guid] = new();
+            }
         }
 
         private IEntity? _openedEntity = null;
@@ -735,9 +757,9 @@ namespace Murder.Editor.CustomEditors
 
         private class WorldStageInfo
         {
-            public readonly HashSet<string> HiddenGroups = new();
+            public HashSet<string> HiddenGroups { get; init; } = new();
 
-            public readonly HashSet<string> SkipGroups = new();
+            public HashSet<string> SkipGroups { get; init; } = new();
 
             public string? HideGroupsExceptFor = null;
         }

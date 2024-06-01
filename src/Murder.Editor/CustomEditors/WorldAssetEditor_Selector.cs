@@ -496,6 +496,8 @@ namespace Murder.Editor.CustomEditors
                     stage.RemoveComponentForInstance(g, typeof(SkipComponent));
                 }
             }
+
+            SavePersistentWorldInfo(info);
         }
 
         private bool IsGroupVisible(string groupName)
@@ -551,6 +553,22 @@ namespace Murder.Editor.CustomEditors
 
                 info.HideGroupsExceptFor = groupName;
             }
+
+            SavePersistentWorldInfo(info);
+        }
+
+        private void SavePersistentWorldInfo(WorldStageInfo info)
+        {
+            if (_world!.Guid == Guid.Empty)
+            {
+                GameLogger.Warning("Unable to save persistent world info without a valid world.");
+                return;
+            }
+            Architect.EditorSettings.WorldAssetInfo[_world.Guid] = new()
+            {
+                HiddenGroups = info.HiddenGroups,
+                LockedGroups = info.SkipGroups
+            };
         }
 
         private void SwitchGroupVisibility(string groupName, bool show)
@@ -578,6 +596,8 @@ namespace Murder.Editor.CustomEditors
                     HideInstanceInEditor(g);
                 }
             }
+            
+            SavePersistentWorldInfo(info);
         }
     }
 }

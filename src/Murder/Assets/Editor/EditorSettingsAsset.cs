@@ -137,6 +137,9 @@ public class EditorSettingsAsset : GameAsset
 
     [Serialize, HideInEditor]
     public readonly Dictionary<Guid, PersistStageInfo> CameraPositions = new();
+    
+    [Serialize, HideInEditor]
+    public readonly Dictionary<Guid, PersistWorldStageInfo> WorldAssetInfo = new();
 
     [Tooltip("Whether an asset should be overriden (by a save) after an error loading it")]
     [Serialize]
