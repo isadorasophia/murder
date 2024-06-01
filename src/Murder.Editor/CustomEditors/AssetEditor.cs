@@ -1051,7 +1051,7 @@ namespace Murder.Editor.CustomEditors
                 _asset.FileChanged = wasAssetModified;
             }
 
-            Architect.Undo.Track(new UndoableAction(@do, WrappedUndo));
+            Architect.Undo.Track(new UndoableAction(@do, WrappedUndo, addedAt: Game.NowUnscaled));
         }
 
         private class StageAssetInfo

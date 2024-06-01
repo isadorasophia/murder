@@ -48,7 +48,7 @@ namespace Murder.Editor
 
         private EditorScene? _editorScene = null;
 
-        private readonly UndoTracker _undo = new(capacity: 32);
+        private readonly UndoTracker _undo = new(capacity: 256);
 
         protected override Scene InitialScene => _editorScene ??= new();
 

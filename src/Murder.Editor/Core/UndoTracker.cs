@@ -2,8 +2,13 @@
 
 public class UndoTracker
 {
-    private readonly Stack<IUndoableAction> _undo;
-    private readonly Stack<IUndoableAction> _redo;
+    /// <summary>
+    /// Minimum time before grouping actions.
+    /// </summary>
+    private const float TimeBetweenGroupingActions = .5f;
+
+    private readonly Stack<UndoableAction> _undo;
+    private readonly Stack<UndoableAction> _redo;
 
     public UndoTracker(int capacity)
     {
@@ -11,13 +16,19 @@ public class UndoTracker
         _redo = new(capacity);
     }
 
-    public void Track(IUndoableAction action)
+    public void Track(UndoableAction action)
     {
+        if (_undo.TryPeek(out UndoableAction? peekAction) && peekAction.AddedAt + TimeBetweenGroupingActions >= action.AddedAt)
+        {
+            peekAction.Append(action);
+            return;
+        }
+
         _undo.Push(action);
         _redo.Clear();
     }
 
-    public void Track(Action @do, Action @undo) => Track(new UndoableAction(@do, @undo));
+    public void Track(Action @do, Action @undo) => Track(new UndoableAction(@do, @undo, Game.NowUnscaled));
 
     public void Undo()
     {
@@ -26,7 +37,7 @@ public class UndoTracker
             return;
         }
 
-        IUndoableAction action = _undo.Pop();
+        UndoableAction action = _undo.Pop();
         action.Undo();
 
         _redo.Push(action);
@@ -39,32 +50,38 @@ public class UndoTracker
             return;
         }
 
-        IUndoableAction action = _redo.Pop();
+        UndoableAction action = _redo.Pop();
         action.Perform();
 
         _undo.Push(action);
     }
 }
 
-public interface IUndoableAction
+public class UndoableAction
 {
-    void Perform();
+    private Action _do;
+    private Action _undo;
 
-    void Undo();
-}
+    /// <summary>
+    /// Time when the undoable action was added.
+    /// </summary>
+    public readonly float AddedAt;
 
-public class UndoableAction : IUndoableAction
-{
-    private readonly Action _do;
-    private readonly Action _undo;
-
-    public UndoableAction(Action perform, Action undo)
+    public UndoableAction(Action perform, Action undo, float addedAt)
     {
         _do = perform;
         _undo = undo;
+
+        AddedAt = addedAt;
     }
 
     public void Perform() => _do.Invoke();
 
     public void Undo() => _undo.Invoke();
+
+    public void Append(UndoableAction otherAction)
+    {
+        _do += otherAction.Perform;
+        _undo += otherAction.Undo;
+    }
 }
