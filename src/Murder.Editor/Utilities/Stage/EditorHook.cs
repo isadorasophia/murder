@@ -230,7 +230,6 @@ namespace Murder.Editor.Utilities
         public bool DrawAnimationEvents = true;
 
         public CameraBoundsInfo? DrawCameraBounds = null;
-        public bool HideStatic = false;
         public class CameraBoundsInfo
         {
             public bool Dragging = false;

@@ -645,31 +645,6 @@ namespace Murder.Editor.CustomEditors
                 }
             }
         }
-        public bool HideStatic
-        {
-            get
-            {
-                foreach ((Guid guid, Stage stage) in Stages)
-                {
-                    if (guid == _world?.Guid)
-                    {
-                        return stage.EditorHook.HideStatic;
-                    }
-                }
-                return false;
-            }
-            set
-            {
-                foreach ((Guid guid, Stage stage) in Stages)
-                {
-                    if (guid == _world?.Guid)
-                    {
-                        stage.EditorHook.HideStatic = value;
-                    }
-                }
-            }
-        }
-
 
         internal void ResetCamera()
         {

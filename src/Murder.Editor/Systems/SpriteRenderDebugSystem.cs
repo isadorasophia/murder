@@ -61,11 +61,6 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
 
         foreach (var e in context.Entities)
         {
-            if (hook.HideStatic && e.HasStatic())
-            {
-                continue;
-            }
-
             SpriteComponent? sprite = e.TryGetSprite();
             AgentSpriteComponent? agentSprite = e.TryGetAgentSprite();
             IMurderTransformComponent transform = e.GetGlobalTransform();
