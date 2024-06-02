@@ -180,6 +180,7 @@ public struct Rectangle : IEquatable<Rectangle>
 
     /// <summary>
     /// Gets whether or not the other <see cref="Rectangle"/> intersects with this rectangle.
+    /// Just touching the edges is not enough, they need to be inside one another.
     /// </summary>
     /// <param name="other">The other rectangle for testing.</param>
     /// <returns><c>true</c> if other <see cref="Rectangle"/> intersects with this rectangle; <c>false</c> otherwise.

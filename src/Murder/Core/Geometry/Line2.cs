@@ -115,6 +115,7 @@ namespace Murder.Core.Geometry
 
         #region Public Methods
 
+
         /// <summary>
         /// Intersection test on another line. (http://ideone.com/PnPJgb)
         /// </summary>
@@ -153,7 +154,8 @@ namespace Murder.Core.Geometry
 
             return (t >= 0f) && (t <= 1f) && (u >= 0f) && (u <= 1f);
         }
-        public bool TryGetIntersectingPoint(Line2 other, out Vector2 hitPoint)
+
+    public bool TryGetIntersectingPoint(Line2 other, out Vector2 hitPoint)
         {
             return TryGetIntersectingPoint(this, other, out hitPoint);
         }

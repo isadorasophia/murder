@@ -22,6 +22,8 @@ namespace Murder.Components
 
         public readonly EaseKind EaseKind;
 
+        public readonly bool AvoidActors { get; init; } = true;
+
         private MoveToPerfectComponent(in Vector2 target, in Vector2 startPosition,
             float startTime, float duration, EaseKind ease) =>
             (Target, StartPosition, StartTime, Duration, EaseKind) =

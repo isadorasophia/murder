@@ -748,10 +748,11 @@ namespace Murder.Services
         public static List<Vector2> GetMtvAt(in Map map, int ignoreId, ColliderComponent collider, Vector2 position, IEnumerable<(int id, ColliderComponent collider, IMurderTransformComponent position)> others, int mask, out int hitId)
         {
             hitId = -1;
-            List<Vector2> mtvs = new();
-
-            // First, check if there is a collision against a tile.
-            mtvs.AddRange(PhysicsServices.GetMtvAtTile(map, collider, position, mask));
+            List<Vector2> mtvs =
+            [
+                // First, check if there is a collision against a tile.
+                .. PhysicsServices.GetMtvAtTile(map, collider, position, mask),
+            ];
 
             // Now, check against other entities.
 
@@ -778,6 +779,41 @@ namespace Murder.Services
 
             return mtvs;
         }
+
+
+
+        /// <summary>
+        /// Checks for collision at a position, returns the minimum translation vector (MTV) to resolve the collision.
+        /// </summary>
+        public static Vector2 GetFirstMtv(int entityId, ColliderComponent collider, Vector2 position, IEnumerable<(int id, ColliderComponent collider, IMurderTransformComponent position)> others, out int hitId)
+        {
+            hitId = -1;
+
+            // Now, check against other entities.
+            foreach (var shape in collider.Shapes)
+            {
+                var polyA = shape.GetPolygon();
+
+                foreach (var other in others)
+                {
+                    var otherCollider = other.collider;
+                    if (entityId == other.id) continue; // That's me!
+
+                    foreach (var otherShape in otherCollider.Shapes)
+                    {
+                        var polyB = otherShape.GetPolygon();
+                        if (polyA.Polygon.Intersects(polyB.Polygon, position.Point(), other.position.Point) is Vector2 mtv && mtv.HasValue())
+                        {
+                            hitId = other.id;
+                            return mtv;
+                        }
+                    }
+                }
+            }
+
+            return Vector2.Zero;
+        }
+
 
         private static Vector2 GetFirstMtvAtTile(Map map, ColliderComponent collider, Vector2 position, int mask, out int layer)
         {
