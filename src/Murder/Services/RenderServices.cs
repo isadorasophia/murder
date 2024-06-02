@@ -216,18 +216,16 @@ namespace Murder.Services
                 {
                     e.PlaySpriteAnimation(s.NextAnimations.RemoveAt(0));
                 }
-                else
-                {
-                    e.SendAnimationCompleteMessage();
-                    e.RemoveAnimationComplete();
-                }
+                
+                e.SendAnimationCompleteMessage(Messages.AnimationCompleteStyle.Single);
+                e.RemoveAnimationComplete();
             }
             else
             {
                 if (!e.HasAnimationComplete())
                 {
                     e.SetAnimationComplete();
-                    e.SendAnimationCompleteMessage();
+                    e.SendAnimationCompleteMessage(Messages.AnimationCompleteStyle.Sequence);
                 }
             }
         }

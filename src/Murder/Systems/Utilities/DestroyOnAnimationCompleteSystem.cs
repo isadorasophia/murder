@@ -13,6 +13,13 @@ namespace Murder.Systems.Util
     {
         public void OnMessage(World world, Entity entity, IMessage message)
         {
+            var msg = (AnimationCompleteMessage)message;
+
+            if (msg.CompleteStyle != AnimationCompleteStyle.Sequence)
+            {
+                return;
+            }
+
             if (entity.TryGetSprite() is SpriteComponent sprite)
             {
                 if (sprite.NextAnimations.Length > 1)
