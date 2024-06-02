@@ -41,7 +41,8 @@ public readonly struct Animation
         [0f],
         ImmutableDictionary<int, string>.Empty,
         animationDuration: 0,
-        null);
+        null
+        );
 
     /// <summary>
     /// An array of integers representing the indices of the frames in the animation

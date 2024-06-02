@@ -208,7 +208,7 @@ namespace Murder.Services
             return frameInfo;
         }
 
-        public static void MessageCompleteAnimations(Entity e, SpriteComponent s)
+        public static void DealWithCompleteAnimations(Entity e, SpriteComponent s)
         {
             if (s.NextAnimations.Length > 1)
             {
@@ -216,9 +216,11 @@ namespace Murder.Services
                 {
                     e.PlaySpriteAnimation(s.NextAnimations.RemoveAt(0));
                 }
-
-                e.SendAnimationCompleteMessage();
-                e.RemoveAnimationComplete();
+                else
+                {
+                    e.SendAnimationCompleteMessage();
+                    e.RemoveAnimationComplete();
+                }
             }
             else
             {

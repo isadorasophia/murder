@@ -9,6 +9,23 @@ namespace Murder.Services
 {
     public static class EffectsServices
     {
+        private static int _quickSpriteCount = 0;
+        public static void CreateQuickSprite(World world, QuickSpriteInfo info, Entity? parent)
+        {
+            var e = world.AddEntity(
+                new SpriteComponent(info.Sprite, Vector2.Zero, info.Animations, info.YSortOffset, false, false, OutlineStyle.None, info.TargetSpriteBatch),
+                new DestroyOnAnimationCompleteComponent(),
+                new PositionComponent(info.Offset),
+                new DoNotPersistEntityOnSaveComponent()
+            );
+
+            if (parent != null)
+            {
+                parent.AddChild(e.EntityId, $"quick_sprite_{_quickSpriteCount++}");
+            }
+        }
+
+
         /// <summary>
         /// Add an entity which will apply a "fade-in" effect. Darkening the screen to black.
         /// </summary>

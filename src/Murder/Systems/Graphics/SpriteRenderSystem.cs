@@ -172,27 +172,15 @@ namespace Murder.Systems.Graphics
                 // Animations do not send complete messages until the current sequence is done
                 if (frameInfo.Complete)
                 {
-                    if (frameInfo.Animation.NextAnimation is AnimationSequence sequence)
+                    // Handle animation sequences imported by Aseprite and baked into the asset
+                    if (frameInfo.Animation.NextAnimation is AnimationSequence sequence && Game.Random.TryWithChanceOf(sequence.Chance))
                     {
-                        if (Game.Random.TryWithChanceOf(sequence.Chance))
-                        {
-                            if (!string.IsNullOrWhiteSpace(sequence.Next))
-                                e.PlaySpriteAnimation(sequence.Next);
-
-                            e.SendMessage(new AnimationCompleteMessage());
-                            e.RemoveAnimationComplete();
-                        }
-                        else
-                        {
-                            e.PlaySpriteAnimation(s.NextAnimations);
-
-                            e.SendMessage(new AnimationCompleteMessage());
-                            e.RemoveAnimationComplete();
-                        }
+                        if (!string.IsNullOrWhiteSpace(sequence.Next))
+                            e.PlaySpriteAnimation(sequence.Next);
                     }
                     else
                     {
-                        RenderServices.MessageCompleteAnimations(e, s);
+                        RenderServices.DealWithCompleteAnimations(e, s);
                     }
                 }
 
