@@ -687,15 +687,15 @@ namespace Murder.Editor.Data
             // which causes the fxc compiler to mistakenly recognize the path parameters as fxc options,
             // so I replaced the slash at the beginning of the directory with a backslash
             string paramBinOutputFilePath = binOutputFilePath;
-            if ( paramBinOutputFilePath.StartsWith( '/' ) )
+            if (paramBinOutputFilePath.StartsWith('/'))
             {
-                paramBinOutputFilePath = $"\\{paramBinOutputFilePath.Substring(1)}";
+                paramBinOutputFilePath = $"\\{paramBinOutputFilePath[1..]}";
             }
 
             string paramSourceFile = sourceFile;
-            if ( paramSourceFile.StartsWith( '/' ) )
+            if (paramSourceFile.StartsWith('/'))
             {
-                paramSourceFile = $"\\{paramSourceFile.Substring(1)}";
+                paramSourceFile = $"\\{paramSourceFile[1..]}";
             }
             
             string arguments = $"/nologo /T fx_2_0 {paramSourceFile} /Fo {paramBinOutputFilePath}";
@@ -714,21 +714,26 @@ namespace Murder.Editor.Data
                 }
                 else if (OperatingSystem.IsMacOS() || OperatingSystem.IsLinux())
                 {
-                    var cmdWine64 = ExternalTool.FindCommand("wine64");
+                    string? cmdWine64 = ExternalTool.FindCommand("wine64");
                     if (cmdWine64 is not null)
                     {
                         success = ExternalTool.Run(cmdWine64, $"{fxcPath} {arguments}", out string _, out stderr) == 0;
                     }
                     else
                     {
-                        success = false;
-                        stderr = string.Empty;
-                        GameLogger.Warning( "We need to install Wine to run the fxc compiler and make sure wine is added to PATH!");
+                        GameLogger.Warning(
+                            $$"""
+                            Unable to find a valid Wine installation path. 
+                            Please install Wine to run the fxc compiler and make sure wine is added to PATH!
+                            """);
+
+                        return false;
                     }
                 }
                 else
                 {
-                    throw new NotSupportedException();
+                    GameLogger.Error("Unsupported operating system for compiling the shaders! We should implement this...?");
+                    return false;
                 }
             }
             catch (Exception ex)
