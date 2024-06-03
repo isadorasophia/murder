@@ -682,7 +682,23 @@ namespace Murder.Editor.Data
             }
 
             string binOutputFilePath = FileHelper.GetPath(PackedBinDirectoryPath, string.Format(ShaderRelativePath, path));
-            string arguments = $"/nologo /T fx_2_0 {sourceFile} /Fo {binOutputFilePath}";
+            
+            // NOTE: In Unix systems, absolute paths usually start with a slash:/
+            // which causes the fxc compiler to mistakenly recognize the path parameters as fxc options,
+            // so I replaced the slash at the beginning of the directory with a backslash
+            string paramBinOutputFilePath = binOutputFilePath;
+            if ( paramBinOutputFilePath.StartsWith( '/' ) )
+            {
+                paramBinOutputFilePath = $"\\{paramBinOutputFilePath.Substring(1)}";
+            }
+
+            string paramSourceFile = sourceFile;
+            if ( paramSourceFile.StartsWith( '/' ) )
+            {
+                paramSourceFile = $"\\{paramSourceFile.Substring(1)}";
+            }
+            
+            string arguments = $"/nologo /T fx_2_0 {paramSourceFile} /Fo {paramBinOutputFilePath}";
 
             // The tool needs that the output directory exists.
             FileManager.CreateDirectoryPathIfNotExists(binOutputFilePath);
@@ -692,7 +708,28 @@ namespace Murder.Editor.Data
 
             try
             {
-                success = ExternalTool.Run(fxcPath, arguments, out string _, out stderr) == 0;
+                if (OperatingSystem.IsWindows())
+                {
+                    success = ExternalTool.Run(fxcPath, arguments, out string _, out stderr) == 0;
+                }
+                else if (OperatingSystem.IsMacOS() || OperatingSystem.IsLinux())
+                {
+                    var cmdWine64 = ExternalTool.FindCommand("wine64");
+                    if (cmdWine64 is not null)
+                    {
+                        success = ExternalTool.Run(cmdWine64, $"{fxcPath} {arguments}", out string _, out stderr) == 0;
+                    }
+                    else
+                    {
+                        success = false;
+                        stderr = string.Empty;
+                        GameLogger.Warning( "We need to install Wine to run the fxc compiler and make sure wine is added to PATH!");
+                    }
+                }
+                else
+                {
+                    throw new NotSupportedException();
+                }
             }
             catch (Exception ex)
             {
