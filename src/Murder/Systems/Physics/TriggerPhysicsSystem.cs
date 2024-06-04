@@ -42,7 +42,6 @@ namespace Murder.Systems.Physics
             Quadtree qt = Quadtree.GetOrCreateUnique(world);
             foreach (Entity e in entities)
             {
-                _others.Clear();
                 if (e.HasIgnoreTriggersUntil())
                 {
                     // [BUG] This should never happen
@@ -67,6 +66,7 @@ namespace Murder.Systems.Physics
                 // Triggers don't touch other triggers, and so on.
                 bool thisIsAnActor = (collider.Layer & (CollisionLayersBase.TRIGGER)) == 0;
 
+                _others.Clear();
                 qt.Collision.Retrieve(collider.GetBoundingBox(e.GetGlobalTransform().Point), _others);
 
                 CollisionCacheComponent collisionCache = e.TryGetCollisionCache() ?? new CollisionCacheComponent();
@@ -100,8 +100,9 @@ namespace Murder.Systems.Physics
                     return true;
                 }
 
-                foreach (NodeInfo<Entity> node in _others)
+                for (int i = 0; i < _others.Count; i++)
                 {
+                    NodeInfo<Entity> node = _others[i];
                     Entity other = node.EntityInfo;
                     if (!other.IsActive)
                     {

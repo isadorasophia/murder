@@ -338,8 +338,13 @@ namespace Murder.Editor
             {
                 _isForeground = true;
 
-                ImGui.SetNextWindowBgAlpha(0.5f);
+                ImGui.SetNextWindowBgAlpha(0f);
                 ImGui.Begin("Editor is not focused!", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize);
+                ImGui.BeginDisabled();
+                ImGui.PushStyleColor(ImGuiCol.Button, Profile.Theme.Faded);
+                ImGui.Button("Murder Engine is not focused.");
+                ImGui.PopStyleColor();
+                ImGui.EndDisabled();
                 ImGui.SetWindowPos(new System.Numerics.Vector2());
                 ImGui.SetWindowSize(ImGui.GetMainViewport().Size);
                 ImGui.SetWindowFocus();

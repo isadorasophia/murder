@@ -15,7 +15,7 @@ namespace Murder.Components
     public readonly struct SpriteComponent : IComponent
     {
         [SpriteBatchReference]
-        public readonly int TargetSpriteBatch = Batches2D.GameplayBatchId;
+        public readonly int TargetSpriteBatch { get; init; } = Batches2D.GameplayBatchId;
 
         /// <summary>
         /// The Guid of the Aseprite file.

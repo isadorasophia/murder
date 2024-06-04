@@ -150,5 +150,34 @@ namespace Murder.Utilities
                 GameLogger.Warning($"Shader param '{id}' wasn't found");
             }
         }
+
+        public static Vector2? TryGetAnotationVector2(EffectParameter parameter, string anotationName)
+        {
+            if (parameter.Annotations[anotationName] is EffectAnnotation annotation)
+            {
+                if (annotation.ParameterClass == EffectParameterClass.Vector)
+                {
+                    try
+                    {
+                        return annotation.GetValueVector2().ToSysVector2();
+                    }
+                    catch (Exception e)
+                    {
+                        GameLogger.Error($"Failed to parse shader param '{parameter.Name}' anotation '{anotationName}' into Vector2: {e}");
+                        return null;
+                    }
+                }
+                else
+                {
+                    GameLogger.Error($"Failed to parse shader param '{parameter.Name}' anotation '{anotationName}'. Annotation is not Vector2: {annotation.ParameterClass} is not a Vector2");
+                    return null;
+                }
+                
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

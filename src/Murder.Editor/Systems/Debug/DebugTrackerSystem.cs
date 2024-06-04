@@ -12,7 +12,7 @@ namespace Murder.Editor.Systems.Debug;
 [Filter(ContextAccessorFilter.None)]
 public class DebugTrackerSystemm : IGuiSystem   
 {
-    private bool _showHierarchy = true;
+    private bool _showHierarchy = false;
     public void DrawGui(RenderContext render, Context context)
     {
 
