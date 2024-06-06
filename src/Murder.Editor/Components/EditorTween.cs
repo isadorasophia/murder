@@ -1,4 +1,5 @@
 ﻿using Bang.Components;
+using Murder.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ public enum EditorTweenType
     Move,
 }
 
+[DoNotPersistOnSave]
 public readonly struct EditorTween : IComponent
 {
     public readonly float StartTime;

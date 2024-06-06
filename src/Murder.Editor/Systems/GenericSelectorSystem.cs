@@ -410,8 +410,7 @@ namespace Murder.Editor.Systems
                                 {
                                     Type type = component.GetType();
 
-                                    //if (component is not IsSelectedComponent and not RenderedSpriteCacheComponent and not EditorTween)
-                                    if (type.IsDefined(typeof(DoNotPersistOnSaveAttribute), true) || type == typeof(EditorTween))
+                                    if (type.IsDefined(typeof(DoNotPersistOnSaveAttribute), true))
                                     {
                                         continue;
                                     }
