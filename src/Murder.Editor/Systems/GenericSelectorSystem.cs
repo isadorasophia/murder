@@ -417,8 +417,8 @@ namespace Murder.Editor.Systems
                                     components.Add(component);
                                 }
 
-                                string entityName = hook.GetNameForEntityId?.Invoke(id) ?? "";
-                                string groupName = EditorTileServices.FindTargetGroup(world, hook, cursorPosition) ?? "";
+                                string? entityName = hook.GetNameForEntityId?.Invoke(id);
+                                string? groupName = EditorTileServices.FindTargetGroup(world, hook, cursorPosition);
 
                                 hook.AddEntityWithStage?.Invoke([.. components], groupName, entityName);
                             }
