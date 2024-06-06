@@ -410,11 +410,10 @@ namespace Murder.Editor.Systems
                                 {
                                     Type type = component.GetType();
 
-                                    if (type.IsDefined(typeof(DoNotPersistOnSaveAttribute), true))
+                                    if (!type.IsDefined(typeof(DoNotPersistOnSaveAttribute), true))
                                     {
-                                        continue;
+                                        components.Add(component);
                                     }
-                                    components.Add(component);
                                 }
 
                                 string? entityName = hook.GetNameForEntityId?.Invoke(id);
