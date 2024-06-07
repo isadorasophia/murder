@@ -18,6 +18,8 @@ namespace Murder.Assets
 
         public readonly Portrait? CustomBox;
 
+        public readonly float fade = 0.45f;
+
         [Font]
         public readonly int? CustomFont;
 
