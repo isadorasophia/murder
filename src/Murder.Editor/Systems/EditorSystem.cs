@@ -213,7 +213,11 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         Point cursorPosition = world.Camera.GetCursorWorldPosition(hook.Offset, new(hook.StageSize.X, hook.StageSize.Y));
         hook.Cursor = CursorStyle.Normal;
         hook.CursorWorldPosition = cursorPosition;
-        hook.LastCursorWorldPosition = cursorPosition;
+
+        if (!hook.IsPopupOpen)
+        {
+            hook.LastCursorWorldPosition = cursorPosition;
+        }
     }
 
     public void Draw(RenderContext render, Context context)

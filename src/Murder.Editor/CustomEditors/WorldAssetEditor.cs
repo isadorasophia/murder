@@ -182,7 +182,7 @@ namespace Murder.Editor.CustomEditors
                         {
                             // == Entities Inspector ==
 
-                            ImGui.DockSpace(id: 555);
+                            ImGui.DockSpace(dockspace_id: 555);
 
                             if (_selectedAsset is Guid selectedGuid && _world?.TryGetInstance(selectedGuid) is EntityInstance instance)
                             {

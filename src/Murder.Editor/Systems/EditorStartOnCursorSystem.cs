@@ -98,16 +98,14 @@ namespace Murder.Editor.Systems
         {
             EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
 
-            ImGui.PushID("start_from_cursor");
-            if (ImGui.BeginPopupContextItem())
+            if (ImGui.BeginPopupContextItem("GameplayContextMenu", ImGuiPopupFlags.MouseButtonRight | ImGuiPopupFlags.NoReopen))
             {
                 hook.IsPopupOpen = true;
-
                 if (ImGui.Selectable("Start playing here"))
                 {
                     hook.Cursor = CursorStyle.Normal;
 
-                    Architect.EditorSettings.TestWorldPosition = EditorCameraServices.GetCursorWorldPosition((MonoWorld)world);
+                    Architect.EditorSettings.TestWorldPosition = hook.LastCursorWorldPosition;
                     Architect.Instance.QueueStartPlayingGame(quickplay: false, startingScene: world.Guid());
                 }
 
@@ -117,8 +115,6 @@ namespace Murder.Editor.Systems
             {
                 hook.IsPopupOpen = false;
             }
-
-            ImGui.PopID();
 
             return true;
         }

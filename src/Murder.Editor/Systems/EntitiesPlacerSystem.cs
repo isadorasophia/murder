@@ -13,6 +13,7 @@ using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.Services;
 using Murder.Editor.Utilities;
+using Murder.Utilities;
 using System.Collections.Immutable;
 
 namespace Murder.Editor.Systems
@@ -107,10 +108,10 @@ namespace Murder.Editor.Systems
         /// </summary>
         private bool DrawCreateEmptyEntity(World world, EditorHook hook)
         {
-            ImGui.PushID("create_empty_entity");
-
-            if (ImGui.BeginPopupContextItem())
+            if (ImGui.BeginPopupContextItem("GameplayContextMenu", ImGuiPopupFlags.MouseButtonRight | ImGuiPopupFlags.NoReopen))
             {
+                Point screenPosition = ImGui.GetMousePosOnOpeningCurrentPopup().Point();
+
                 if (ImGui.Selectable("Add empty entity"))
                 {
                     Point cursorWorldPosition = hook.LastCursorWorldPosition;
@@ -140,8 +141,6 @@ namespace Murder.Editor.Systems
 
                 ImGui.EndPopup();
             }
-
-            ImGui.PopID();
 
             return true;
         }
