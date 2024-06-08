@@ -349,6 +349,12 @@ namespace Murder.Services
             rectangle.Width - amount * 2,
             rectangle.Height - amount * 2);
 
+        public static Rectangle Expand(this Rectangle rectangle, Vector2 size) => new(
+            rectangle.X,
+            rectangle.Y,
+            rectangle.Width + size.X,
+            rectangle.Height + size.Y);
+
         public static Vector2 PointInCircleEdge(float percent)
         {
             var angle = percent * Math.PI * 2;
