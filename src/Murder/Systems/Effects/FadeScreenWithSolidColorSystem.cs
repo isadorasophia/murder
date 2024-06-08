@@ -28,6 +28,7 @@ namespace Murder.Systems
         private float _duration;
 
         private float _currentAlpha = 0;
+        private float _currentSort = .05f;
 
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
@@ -59,6 +60,7 @@ namespace Murder.Systems
 
                 _color = f.Color;
                 _duration = f.Duration;
+                _currentSort = f.Sort;
             }
         }
 
@@ -103,13 +105,13 @@ namespace Murder.Systems
                 render.GameUiBatch,
                 render.Camera.SafeBounds,
                 _color * _currentAlpha,
-                .05f);
+                _currentSort);
 
             RenderServices.DrawRectangle(
                 render.UiBatch,
                 new Rectangle(Vector2.Zero, render.Camera.Size),
-                new Color(_color.R, _color .G, _color .B, _currentAlpha * 0.5f),
-                .05f);
+                new Color(_color.R, _color .G, _color .B, _currentAlpha),
+                _currentSort);
         }
     }
 }
