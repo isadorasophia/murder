@@ -103,7 +103,7 @@ namespace Murder.Systems
 
             RenderServices.DrawRectangle(
                 render.UiBatch,
-                new Rectangle(Vector2.Zero, render.Camera.Size),
+                new Rectangle(Vector2.Zero, render.Camera.SafeBounds.Size),
                 _color * _currentAlpha,
                 _currentSort);
         }
