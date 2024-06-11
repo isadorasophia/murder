@@ -21,6 +21,12 @@ namespace Murder.Core.Input
 
         public bool Pressed => Down && (IntValue != IntPreviousValue);
         public bool PressedX => Down && (IntValue.X != IntPreviousValue.X);
+
+        /// <summary>
+        /// Like a keyboard, 1 when pressed and then every <see cref="_tickDelay"/>. First tick is <see cref="_firstTickDelay"/>.
+        /// </summary>
+        public Point Tick => new Point(_tickX ? IntValue.X : 0, _tickY ? IntValue.Y : 0);
+
         /// <summary>
         /// Like a keyboardkey, true on pressed and then every <see cref="_tickDelay"/>. First tick is <see cref="_firstTickDelay"/>.
         /// </summary>

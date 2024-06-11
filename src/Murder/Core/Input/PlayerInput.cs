@@ -707,6 +707,11 @@ namespace Murder.Core.Input
         }
 
         public string GetKeyboardInput() => _userKeyboardInput.ToString();
+        public void SetKeyboardInput(string value)
+        {
+            _userKeyboardInput.Clear();
+            _userKeyboardInput.Append(value);
+        }
 
         private void OnDesktopTextInput(char c)
         {
