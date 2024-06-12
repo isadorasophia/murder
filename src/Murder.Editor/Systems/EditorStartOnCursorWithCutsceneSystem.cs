@@ -70,8 +70,9 @@ namespace Murder.Editor.Systems
         /// </summary>
         private bool DrawStartHere(World world)
         {
-            if (ImGui.BeginPopupContextItem())
+            if (ImGui.BeginPopupContextItem("GameplayContextMenu", ImGuiPopupFlags.MouseButtonRight | ImGuiPopupFlags.NoReopen))
             {
+                ImGui.Separator();
                 if (ImGui.Selectable("\ue131 Start playing with..."))
                 {
                     ImGui.CloseCurrentPopup();

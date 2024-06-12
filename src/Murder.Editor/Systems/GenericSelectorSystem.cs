@@ -253,7 +253,7 @@ namespace Murder.Editor.Systems
                 hook.UnselectAll();
             }
 
-            bool isCursorBusy = hook.CursorIsBusy.Any() && ignoreCursorOnCollidersSelected;
+            bool isCursorBusy = hook.CursorIsBusy.Any(); // && ignoreCursorOnCollidersSelected;
 
             if (isCursorBusy || hook.UsingGui)
             // Someone else is using our cursor, let's wait out turn.

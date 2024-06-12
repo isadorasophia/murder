@@ -49,8 +49,9 @@ namespace Murder.Editor.Systems
                     availableFolders is not null && availableFolders.Any())
                 {
                     // Move to context menu
-                    if (ImGui.BeginPopupContextItem())
+                    if (ImGui.BeginPopupContextItem("GameplayContextMenu", ImGuiPopupFlags.MouseButtonRight | ImGuiPopupFlags.NoReopen))
                     {
+                        ImGui.Separator();
                         if (ImGui.BeginMenu("Move To..."))
                         {
                             foreach (string room in availableFolders)

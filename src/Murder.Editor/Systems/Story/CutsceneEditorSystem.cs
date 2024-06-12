@@ -169,15 +169,11 @@ namespace Murder.Editor.Systems
                     }
                 }
             }
-            else
-            {
-                hook.CursorIsBusy.Remove(_hash);
-            }
-
             if (!Game.Input.Down(MurderInputButtons.LeftClick))
             {
                 // The user stopped clicking, so no longer drag anything.
                 _dragged = null;
+                hook.CursorIsBusy.Remove(_hash);
             }
         }
 
@@ -367,8 +363,7 @@ namespace Murder.Editor.Systems
         /// </summary>
         private bool DrawAddCutsceneOrAnchor(EditorHook hook, Context context)
         {
-            ImGui.PushID("Popup!");
-            if (ImGui.BeginPopupContextItem())
+            if (ImGui.BeginPopupContextItem("GameplayContextMenu", ImGuiPopupFlags.MouseButtonRight | ImGuiPopupFlags.NoReopen))
             {
                 if (ImGui.Selectable("Add anchor"))
                 {
@@ -420,8 +415,6 @@ namespace Murder.Editor.Systems
 
                 ImGui.EndPopup();
             }
-
-            ImGui.PopID();
 
             return true;
         }
