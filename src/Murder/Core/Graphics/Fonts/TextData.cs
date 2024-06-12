@@ -534,7 +534,7 @@ public static partial class TextDataServices
     private static partial Regex ReplaceTwoNewLines();
 
     [GeneratedRegex(" {2,}")]
-    private static partial Regex TrimSpaces();
+    public static partial Regex TrimSpaces();
 
     [GeneratedRegex("<c=([^>]+)>|</c>", RegexOptions.IgnoreCase)]
     public static partial Regex EscapeRegex();

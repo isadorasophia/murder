@@ -1,9 +1,6 @@
-﻿using Murder.Core.Dialogs;
-using Murder.Core.Input;
-using Murder.Diagnostics;
+﻿using Murder.Core.Graphics;
 using System.ComponentModel;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Murder.Utilities
@@ -123,11 +120,49 @@ namespace Murder.Utilities
             return string.Join($"{separator} ", someStringArray.Take(someStringArray.Count() - 1)) + (someStringArray.Count() <= 1 ? "" : $" {lastItemSeparator} ") + someStringArray.LastOrDefault();
         }
 
-        public static string CapitalizeFirstLetter(string input)
+        [Flags]
+        public enum StringHelperCapitalizeFlags
+        {
+            FirstOnly = 1,
+            AfterSpace = 0b10,
+            TrimSpaces = 0b100
+        }
+
+        public static string CapitalizeFirstLetter(string input, StringHelperCapitalizeFlags flags = StringHelperCapitalizeFlags.FirstOnly)
         {
             if (string.IsNullOrEmpty(input))
             {
                 return string.Empty;
+            }
+
+            if (flags.HasFlag(StringHelperCapitalizeFlags.FirstOnly))
+            {
+                return CapitalizeWord(input);
+            }
+
+            if (flags.HasFlag(StringHelperCapitalizeFlags.TrimSpaces))
+            {
+                input = TextDataServices.TrimSpaces().Replace(input, " ");
+                if (input.Length > 0 && input[0] == ' ')
+                {
+                    input = input[1..];
+                }
+            }
+
+            string[] words = input.Split(' ');
+            for (int i = 0; i < words.Length; ++i)
+            {
+                words[i] = CapitalizeWord(words[i]);
+            }
+
+            return string.Join(' ', words);
+        }
+
+        private static string CapitalizeWord(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return input;
             }
 
             char upperLetter = char.ToUpper(input[0]);

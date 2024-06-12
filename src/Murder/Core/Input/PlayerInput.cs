@@ -734,7 +734,7 @@ namespace Murder.Core.Input
                 return;
             }
 
-            if (c < 33)
+            if (c < 32)
             {
                 // This means this was a special character. Bypass the event.
                 return;
