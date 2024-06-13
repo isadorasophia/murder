@@ -43,5 +43,7 @@ namespace Murder.Components
         public readonly ImmutableArray<SpriteEventInfo> Events = ImmutableArray<SpriteEventInfo>.Empty;
 
         public EventListenerEditorComponent() { }
+
+        public EventListenerEditorComponent(ImmutableArray<SpriteEventInfo> events) => Events = events;
     }
 }

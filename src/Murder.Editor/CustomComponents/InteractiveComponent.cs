@@ -23,12 +23,12 @@ namespace Murder.Editor.CustomComponents
                 return false;
             }
 
-            return ProcessInput(target, interactionMember, () => (DrawInteraction(interactionObj), interactionObj));
+            return ProcessInput(target, interactionMember, () => DrawInteraction(interactionObj));
         }
 
-        protected virtual bool DrawInteraction(object? interaction)
+        protected virtual (bool, object?) DrawInteraction(object? interaction)
         {
-            return ShowEditorOf(interaction);
+            return (ShowEditorOf(ref interaction), interaction);
         }
     }
 }

@@ -7,13 +7,18 @@ namespace Murder.Utilities
     {
         public static EventListenerComponent ToEventListener(this EventListenerEditorComponent c)
         {
+            return new(ToEventListener(c.Events));
+        }
+
+        public static ImmutableDictionary<string, SpriteEventInfo> ToEventListener(ImmutableArray<SpriteEventInfo> messages)
+        {
             var builder = ImmutableDictionary.CreateBuilder<string, SpriteEventInfo>(StringComparer.OrdinalIgnoreCase);
-            foreach (SpriteEventInfo info in c.Events)
+            foreach (SpriteEventInfo info in messages)
             {
                 builder[info.Id] = info;
             }
 
-            return new(builder.ToImmutable());
+            return builder.ToImmutable();
         }
     }
 }

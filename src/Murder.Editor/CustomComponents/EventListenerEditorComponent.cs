@@ -165,7 +165,7 @@ namespace Murder.Editor.CustomComponents
                     EditorServices.SaveAssetWhenSelectedAssetIsSaved(spriteAsset.Guid);
                 }
 
-                field.SetValue(target, events.Where(s => (eventNames is not null && !eventNames.Contains(s.Id)) || s.Sound is not null).ToImmutableArray());
+                field.SetValue(target, events.Where(s => (eventNames is not null && !eventNames.Contains(s.Id)) || s.Sound is not null || eventNames is null).ToImmutableArray());
             }
 
             return fileChanged;

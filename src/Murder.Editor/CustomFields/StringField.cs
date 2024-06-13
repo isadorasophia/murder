@@ -9,7 +9,7 @@ using Murder.Utilities.Attributes;
 namespace Murder.Editor.CustomFields
 {
     [CustomFieldOf(typeof(string))]
-    internal class StringField : CustomField
+    public class StringField : CustomField
     {
         public override (bool modified, object? result) ProcessInput(EditorMember member, object? fieldValue)
         {

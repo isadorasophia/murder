@@ -1,21 +1,17 @@
 ﻿using Bang.Interactions;
 using ImGuiNET;
-using Murder.Core.Dialogs;
 using Murder.Editor.Attributes;
-using Murder.Editor.CustomEditors;
-using Murder.Editor.CustomFields;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using Murder.Interactions;
-using System.Collections.Immutable;
 
 namespace Murder.Editor.CustomComponents
 {
     [CustomComponentOf(typeof(InteractiveComponent<TalkToInteraction>))]
     public class InteractiveTalkToComponent : InteractiveComponent
     {
-        protected override bool DrawInteraction(object? interaction)
+        protected override (bool, object?) DrawInteraction(object? interaction)
         {
             if (interaction is not TalkToInteraction talkToInteraction)
             {
@@ -26,7 +22,7 @@ namespace Murder.Editor.CustomComponents
                 flags: ImGuiTableFlags.SizingFixedSame | ImGuiTableFlags.BordersOuter,
                 (-1, ImGuiTableColumnFlags.WidthFixed), (-1, ImGuiTableColumnFlags.WidthStretch));
 
-            return DrawMembersForTarget(interaction, TalkToMembers());
+            return (DrawMembersForTarget(interaction, TalkToMembers()), interaction);
         }
 
         private IList<(string, EditorMember)>? _cachedMembers = null;

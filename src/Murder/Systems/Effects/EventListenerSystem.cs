@@ -37,6 +37,12 @@ namespace Murder.Systems.Effects
                     _ = SoundServices.Play(sound, entity, info.Persist ? SoundProperties.Persist : SoundProperties.None);
                 }
             }
+
+            if (entity.TryGetBroadcastEventMessage() is BroadcastEventMessageComponent broadcast && 
+                entity.TryFetchChild(broadcast.Target) is Entity target)
+            {
+                target.SendAnimationEventMessage(animationEvent);
+            }
         }
     }
 }

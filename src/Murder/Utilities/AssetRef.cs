@@ -15,6 +15,6 @@ namespace Murder.Utilities
         }
 
         public T Asset => Game.Data.GetAsset<T>(Guid);
-        public T? TryAsset => Game.Data.TryGetAsset<T>(Guid);
+        public T? TryAsset => Guid == Guid.Empty ? null : Game.Data.TryGetAsset<T>(Guid);
     }
 }
