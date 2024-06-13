@@ -182,6 +182,27 @@ namespace Murder.Editor.CustomFields
             return (modified, text);
         }
 
+        public static bool ProcessStringCombo(string id, ref string text, string[] names)
+        {
+            bool modified = false;
+
+            if (ImGui.BeginCombo(id, text))
+            {
+                foreach (string name in names)
+                {
+                    if (ImGui.MenuItem(name))
+                    {
+                        text = name;
+                        modified = true;
+                    }
+                }
+
+                ImGui.EndCombo();
+            }
+
+            return modified;
+        }
+
         public static bool ProcessStringCombo(string id, ref string text, HashSet<string> names)
         {
             bool modified = false;
