@@ -1,6 +1,8 @@
 ﻿using Bang;
 using Bang.Components;
 using Bang.Entities;
+using Murder.Assets;
+using Murder.Assets.Sounds;
 using Murder.Components;
 using Murder.Diagnostics;
 using Murder.Utilities;
@@ -123,6 +125,17 @@ namespace Murder.Prefabs
             {
                 e.RemoveEventListenerEditor();
                 e.SetEventListener(eventListenerEditor.ToEventListener());
+            }
+
+            if (e.TryGetSpeakerEditorListener() is SpeakerEditorListenerComponent eventSpeakerEditor)
+            {
+                e.RemoveSpeakerEditorListener();
+
+                if (eventSpeakerEditor.Speaker.TryAsset is SpeakerAsset speaker && 
+                    speaker.Events?.TryAsset is SpeakerEventsAsset speakerEvents)
+                {
+                    e.SetEventListener(speakerEvents.Events);
+                }
             }
         }
 
