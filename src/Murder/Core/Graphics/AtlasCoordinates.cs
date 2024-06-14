@@ -75,19 +75,6 @@ namespace Murder.Core.Graphics
                     offset: finalOffset.ToXnaVector2(),
                     blendStyle: blend,
                     sort: sort);
-
-                //spriteBatch.Draw(
-                //    texture: Atlas,
-                //    position: position + new Vector2((flipH ? Size.X * scale.X : 0), 0).Rotate(rotation),
-                //    targetSize: SourceRectangle.Size,
-                //    sourceRectangle: SourceRectangle,
-                //    rotation: rotation,
-                //    scale: scale,
-                //    flip: imageFlip,
-                //    color: color,
-                //    offset: new Vector2((flipH ? TrimArea.Right + offset.X : -TrimArea.X + offset.X), offset.Y - TrimArea.Y),
-                //    blendStyle: blend,
-                //    sort: sort);
             }
             else
             {

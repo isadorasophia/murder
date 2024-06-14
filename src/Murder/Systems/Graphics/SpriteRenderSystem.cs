@@ -21,6 +21,7 @@ namespace Murder.Systems.Graphics
     [Filter(ContextAccessorFilter.NoneOf, typeof(InvisibleComponent), typeof(ThreeSliceComponent))]
     public class SpriteRenderSystem : IMurderRenderSystem, IFixedUpdateSystem
     {
+        private readonly Dictionary<Guid, SpriteAsset> _spriteAssetCache = new Dictionary<Guid, SpriteAsset>();
         public void Draw(RenderContext render, Context context)
         {
             foreach (Entity e in context.Entities)
@@ -29,9 +30,16 @@ namespace Murder.Systems.Graphics
 
                 IMurderTransformComponent transform = e.GetGlobalTransform();
                 SpriteComponent s = e.GetSprite();
+
+                if (!_spriteAssetCache.TryGetValue(s.AnimationGuid, out SpriteAsset? asset))
+                {
+                    if (Game.Data.TryGetAsset<SpriteAsset>(s.AnimationGuid) is not SpriteAsset loadedAsset)
+                        continue;
+
+                    _spriteAssetCache[s.AnimationGuid] = loadedAsset;
+                    asset = loadedAsset;
+                }
                 
-                if (Game.Data.TryGetAsset<SpriteAsset>(s.AnimationGuid) is not SpriteAsset asset)
-                    continue;
 
                 Vector2 renderPosition;
                 if (e.TryGetParallax() is ParallaxComponent parallax)
@@ -134,7 +142,7 @@ namespace Murder.Systems.Graphics
 
                 var frameInfo = RenderServices.DrawSprite(
                     render.GetBatch(s.TargetSpriteBatch),
-                    asset.Guid,
+                    asset,
                     renderPosition,
                     new DrawInfo(ySort)
                     {
