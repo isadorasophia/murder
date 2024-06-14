@@ -20,6 +20,7 @@ namespace Murder.Systems
         public void FixedUpdate(Context context)
         {
             bool anyActorAvoidant = false;
+
             ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)>? actors = null;
             foreach (Entity e in context.Entities)
             {
@@ -45,13 +46,11 @@ namespace Murder.Systems
                 double easedDelta = Ease.Evaluate(delta, moveToPerfect.EaseKind);
 
                 Vector2 current = Vector2Helper.LerpSnap(startPosition, moveToPerfect.Target, easedDelta);
-                Vector2 previousPosition = e.GetGlobalTransform().Vector2;
                 e.SetGlobalTransform(e.GetMurderTransform().With(current.Point()));
 
-                if (anyActorAvoidant && moveToPerfect.AvoidActors && actors != null)
+                if (anyActorAvoidant && moveToPerfect.AvoidActors && actors != null && e.TryGetCollider() is ColliderComponent collider)
                 {
-                    var collider = e.GetCollider();
-                    var position = e.GetGlobalTransform().Vector2;
+                    Vector2 position = e.GetGlobalTransform().Vector2;
 
                     // Avoid actors
                     if (PhysicsServices.GetFirstMtv(e.EntityId, collider, position, actors, out int hit) is Vector2 mtv)
