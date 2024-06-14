@@ -30,6 +30,9 @@ namespace Murder.Editor.Data
         private ImmutableDictionary<DialogItemId, (Guid Speaker, string? Portrait)> _portraits =
             ImmutableDictionary<DialogItemId, (Guid, string?)>.Empty;
 
+        private ImmutableDictionary<DialogItemId, LineInfo> _info =
+            ImmutableDictionary<DialogItemId, LineInfo>.Empty;
+
         private Guid _speakerOwner = Guid.Empty;
 
         /// <summary>
@@ -54,6 +57,7 @@ namespace Murder.Editor.Data
 
             _components = asset.Components;
             _portraits = asset.Portraits;
+            _info = asset.Info;
 
             _speakerOwner = asset.Owner;
 
@@ -260,12 +264,19 @@ namespace Murder.Editor.Data
             Guid? speaker = null;
 
             DialogItemId id = new(situation, dialog, lineIndex);
-            if (_portraits.TryGetValue(id, out var info))
+
+            string? @event = null;
+            if (_info.TryGetValue(id, out var eventInfo))
+            {
+                @event = eventInfo.Event;
+            }
+
+            if (_portraits.TryGetValue(id, out var portraitInfo))
             {
                 // If this matches, it means that the user previously set the portrait with a custom value.
                 // We override whatever was set in the dialog.
                 _matchedPortraits.Add(id);
-                return new(info.Speaker, info.Portrait, TryGetLocalizedString(gumLine.Text), gumLine.Delay);
+                return new(portraitInfo.Speaker, portraitInfo.Portrait, TryGetLocalizedString(gumLine.Text), gumLine.Delay, @event);
             }
 
             string? gumSpeaker = gumLine.Speaker;
@@ -295,7 +306,7 @@ namespace Murder.Editor.Data
 
             }
 
-            return new(speaker, portrait, TryGetLocalizedString(gumLine.Text), gumLine.Delay);
+            return new(speaker, portrait, TryGetLocalizedString(gumLine.Text), gumLine.Delay, @event);
         }
 
         private Guid? FindSpeaker(string name)

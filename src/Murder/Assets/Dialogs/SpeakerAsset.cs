@@ -1,5 +1,7 @@
-﻿using Murder.Attributes;
+﻿using Murder.Assets.Sounds;
+using Murder.Attributes;
 using Murder.Core;
+using Murder.Utilities;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 
@@ -15,6 +17,9 @@ namespace Murder.Assets
 
         [Tooltip("Portrait that will be shown by default, if none is specified.")]
         public readonly string? DefaultPortrait = "Idle";
+
+        [Tooltip("Speaker events")]
+        public readonly AssetRef<SpeakerEventsAsset>? Events = null;
 
         public readonly Portrait? CustomBox;
 

@@ -11,6 +11,11 @@ namespace Murder.Core.Dialogs
         public readonly string? Portrait = null;
 
         /// <summary>
+        /// Optional sound event that will be fired with this line.
+        /// </summary>
+        public readonly string? Event = null;
+
+        /// <summary>
         /// If the caption has a text, this will be the information.
         /// </summary>
         public readonly LocalizedString? Text = null;
@@ -39,18 +44,20 @@ namespace Murder.Core.Dialogs
         /// </summary>
         public Line(Guid? speaker, float delay) => (Speaker, Delay) = (speaker, delay);
 
-        public Line(Guid? speaker, string? portrait, LocalizedString? text, float? delay) : this(speaker) =>
-            (Portrait, Text, Delay) = (portrait, text, delay);
+        public Line(Guid? speaker, string? portrait, LocalizedString? text, float? delay, string? @event) : this(speaker) =>
+            (Portrait, Text, Delay, Event) = (portrait, text, delay, @event);
 
-        public Line WithText(LocalizedString text) => new(Speaker, Portrait, text, Delay);
+        public Line WithText(LocalizedString text) => new(Speaker, Portrait, text, Delay, Event);
 
-        public Line WithDelay(float delay) => new(Speaker, Portrait, Text, delay);
+        public Line WithDelay(float delay) => new(Speaker, Portrait, Text, delay, Event);
 
-        public Line WithSpeaker(Guid speaker) => new(speaker, Portrait, Text, Delay);
+        public Line WithSpeaker(Guid speaker) => new(speaker, Portrait, Text, Delay, Event);
 
-        public Line WithSpeakerAndPortrait(Guid speaker, string? portrait) => new(speaker, portrait, Text, Delay);
+        public Line WithSpeakerAndPortrait(Guid speaker, string? portrait) => new(speaker, portrait, Text, Delay, Event);
 
-        public Line WithPortrait(string? portrait) => new(Speaker, portrait, Text, Delay);
+        public Line WithPortrait(string? portrait) => new(Speaker, portrait, Text, Delay, Event);
+
+        public Line WithEvent(string? @event) => new(Speaker, Portrait, Text, Delay, @event);
 
         public bool IsText => Text is not null;
     }

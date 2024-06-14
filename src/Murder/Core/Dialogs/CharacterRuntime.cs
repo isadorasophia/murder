@@ -3,6 +3,7 @@ using Bang.Components;
 using Bang.Entities;
 using Bang.Interactions;
 using Murder.Assets;
+using Murder.Assets.Sounds;
 using Murder.Components;
 using Murder.Diagnostics;
 using Murder.Messages;
@@ -152,6 +153,7 @@ namespace Murder.Core.Dialogs
                 if (_activeLine < dialog.Lines.Length)
                 {
                     TrackInteracted();
+                    DoLineEvents(target, dialog.Lines[_activeLine]);
 
                     return new(FormatLine(dialog.Lines[_activeLine++]));
                 }
@@ -182,22 +184,6 @@ namespace Murder.Core.Dialogs
             // We also have our built-in character support for amount of times we interacted with a speaker.
             tracker.SetInt(BaseCharacterBlackboard.Name, nameof(BaseCharacterBlackboard.TotalInteractions),
                 BlackboardActionKind.Add, 1, Guid);
-        }
-
-        public void DoChoice(int choice, World world, Entity? target = null)
-        {
-            Debug.Assert(_currentDialog is not null);
-
-            ImmutableArray<int> choices = ActiveSituation.Edges[_currentDialog.Value].Dialogs;
-
-            // Go to the choice made by the player.
-            _currentDialog = choices[choice];
-
-            // And choose whatever's next from there.
-            if (!TryMatchNextDialog(world, track: true, target))
-            {
-                _currentDialog = null;
-            }
         }
 
         /// <summary>
@@ -434,6 +420,25 @@ namespace Murder.Core.Dialogs
             return valid;
         }
 
+        public void DoChoice(int choice, World world, Entity? target = null)
+        {
+            Debug.Assert(_currentDialog is not null);
+
+            ImmutableArray<int> choices = ActiveSituation.Edges[_currentDialog.Value].Dialogs;
+
+            Line choiceLine = ActiveSituation.Dialogs[choices[choice]].Lines[0];
+            DoLineEvents(target, choiceLine);
+
+            // Go to the choice made by the player.
+            _currentDialog = choices[choice];
+
+            // And choose whatever's next from there.
+            if (!TryMatchNextDialog(world, track: true, target))
+            {
+                _currentDialog = null;
+            }
+        }
+
         private bool DoActionsForActiveDialog(World world, Entity? target)
         {
             // First, do all the actions for this dialog.
@@ -467,6 +472,38 @@ namespace Murder.Core.Dialogs
             }
 
             return false;
+        }
+
+        private bool DoLineEvents(Entity? target, Line line)
+        {
+            if (string.IsNullOrEmpty(line.Event))
+            {
+                // No event to play, whatever.
+                return false;
+            }
+
+            Guid speakerGuid = line.Speaker ?? _character.Speaker;
+
+            SpeakerAsset? speaker = Game.Data.TryGetAsset<SpeakerAsset>(speakerGuid);
+            if (speaker is null)
+            {
+                GameLogger.Error("Unable to find speaker for playing event!");
+                return false;
+            }
+
+            if (speaker.Events?.TryAsset is not SpeakerEventsAsset speakerEvents)
+            {
+                return false;
+            }
+
+            if (!speakerEvents.Events.TryGetValue(line.Event, out SpriteEventInfo info) || info.Sound is null)
+            {
+                return false;
+            }
+
+            SoundServices.Play(info.Sound.Value, target: target);
+
+            return true;
         }
 
         private void DoAction(Entity? actionEntity, BlackboardTracker tracker, DialogAction action)

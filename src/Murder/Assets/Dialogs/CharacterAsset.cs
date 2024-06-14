@@ -1,4 +1,5 @@
-﻿using Bang.Components;
+﻿using Bang;
+using Bang.Components;
 using Murder.Attributes;
 using Murder.Core.Dialogs;
 using Murder.Serialization;
@@ -6,6 +7,16 @@ using System.Collections.Immutable;
 
 namespace Murder.Assets
 {
+    public readonly struct LineInfo
+    {
+        public readonly Guid Speaker { get; init; } = Guid.Empty;
+        public readonly string? Portrait { get; init; } = null;
+
+        public string? Event { get; init; } = null;
+
+        public LineInfo() { }
+    }
+
     public class CharacterAsset : GameAsset
     {
         public override char Icon => '\uf075';
@@ -22,20 +33,26 @@ namespace Murder.Assets
         /// <summary>
         /// List of tasks or events that the <see cref="Situations"/> may do.
         /// </summary>
-        [Bang.Serialize]
+        [Serialize]
         private SortedList<int, Situation> _situations = new();
 
         /// <summary>
         /// List of all the components that are modified within a dialog.
         /// </summary>
-        [Bang.Serialize]
+        [Serialize]
         private readonly ComplexDictionary<DialogItemId, IComponent> _components = new();
 
         /// <summary>
         /// List of all the portraits that are modified within a dialog.
         /// </summary>
-        [Bang.Serialize]
+        [Serialize]
         private readonly ComplexDictionary<DialogItemId, (Guid Speaker, string? Portrait)> _portraits = new();
+
+        /// <summary>
+        /// List of all the lines that have custom information within a dialogue.
+        /// </summary>
+        [Serialize]
+        private readonly ComplexDictionary<DialogItemId, LineInfo> _info = [];
 
         private ImmutableArray<Situation>? _cachedSituations;
 
@@ -93,6 +110,12 @@ namespace Murder.Assets
             FileChanged = true;
         }
 
+        public void SetEventInfoAt(DialogItemId id, string? @event)
+        {
+            _info[id] = new() { Event = @event };
+            FileChanged = true;
+        }
+
         public void RemoveCustomComponents(IEnumerable<DialogItemId> actionIds)
         {
             foreach (DialogItemId id in actionIds)
@@ -116,5 +139,7 @@ namespace Murder.Assets
         public ImmutableDictionary<DialogItemId, IComponent> Components => _components.ToImmutableDictionary();
 
         public ImmutableDictionary<DialogItemId, (Guid Speaker, string? Portrait)> Portraits => _portraits.ToImmutableDictionary();
+
+        public ImmutableDictionary<DialogItemId, LineInfo> Info => _info.ToImmutableDictionary();
     }
 }
