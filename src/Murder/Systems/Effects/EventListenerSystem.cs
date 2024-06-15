@@ -45,4 +45,26 @@ namespace Murder.Systems.Effects
             }
         }
     }
+
+    [DefaultEditorSystem(startActive: false)]
+    [Filter(typeof(BroadcastEventMessageComponent))]
+    [Filter(ContextAccessorFilter.NoneOf, typeof(MuteEventsComponent))]
+    [Messager(typeof(AnimationEventMessage))]
+    public class EventBroadcasterSystem : IMessagerSystem
+    {
+        public void OnMessage(World world, Entity entity, IMessage message)
+        {
+            if (message is not AnimationEventMessage animationEvent)
+            {
+                GameLogger.Error("How did we receive a message that is not AnimationEventMessage on EventListenerSystem?");
+                return;
+            }
+
+            BroadcastEventMessageComponent broadcast = entity.GetBroadcastEventMessage();
+            if (entity.TryFetchChild(broadcast.Target) is Entity target)
+            {
+                target.SendAnimationEventMessage(animationEvent);
+            }
+        }
+    }
 }
