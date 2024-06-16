@@ -36,21 +36,13 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
             currentTime = timeline.Time;
         }
 
-        foreach (Entity e in context.Entities)
-        {
-            if (e.TryGetRenderedSpriteCache() is not RenderedSpriteCacheComponent cache)
-            {
-                continue;
-            }
-
-            RenderServices.TriggerEventsIfNeeded(e, cache, previousTime: _previousLastTime, currentTime);
-        }
-
         _previousLastTime = currentTime;
     }
 
     public void Draw(RenderContext render, Context context)
     {
+        bool issueSlowdownWarning = false;
+
         EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
 
         float overrideCurrentTime = -1;
@@ -237,10 +229,10 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
             }
 
 
-            AnimationInfo info = new AnimationInfo(animationId, start) with { OverrideCurrentTime = overrideCurrentTime };
+            AnimationInfo animationInfo = new AnimationInfo(animationId, start) with { OverrideCurrentTime = overrideCurrentTime };
             FrameInfo frameInfo = RenderServices.DrawSprite(
                 batch,
-                asset.Guid,
+                asset,
                 renderPosition,
                 new DrawInfo()
                 {
@@ -253,7 +245,9 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
                     Color = baseColor,
                     Outline = isSelected ? Color.White.FadeAlpha(0.65f) : null,
                 },
-                info);
+                animationInfo);
+
+            issueSlowdownWarning = RenderServices.TriggerEventsIfNeeded(e, asset.Guid, animationInfo, frameInfo);
 
             e.SetRenderedSpriteCache(new RenderedSpriteCacheComponent() with
             {
@@ -266,8 +260,9 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
                 Scale = scale,
                 Color = baseColor,
                 Outline = sprite?.HighlightStyle ?? OutlineStyle.None,
-                AnimInfo = info,
+                AnimInfo = animationInfo,
                 Sorting = ySort,
+                LastFrameIndex = frameInfo.InternalFrame
             });
 
             if (frameInfo.Complete && overload != null)
@@ -311,6 +306,11 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
                     },
                     new AnimationInfo(animationId, start) with { OverrideCurrentTime = overrideCurrentTime });
             }
+        }
+
+        if (issueSlowdownWarning)
+        {
+            // Do nothing! But we could issue an warning somewhere.
         }
     }
 

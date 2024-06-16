@@ -5,25 +5,25 @@ using Bang.Systems;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Components.Graphics;
-using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Diagnostics;
 using Murder.Helpers;
-using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
-using System.Diagnostics;
 using System.Numerics;
 
 namespace Murder.Systems.Graphics
 {
     [Filter(ContextAccessorFilter.AllOf, typeof(SpriteComponent), typeof(ITransformComponent), typeof(InCameraComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(InvisibleComponent), typeof(ThreeSliceComponent))]
-    public class SpriteRenderSystem : IMurderRenderSystem, IFixedUpdateSystem
+    public class SpriteRenderSystem : IMurderRenderSystem
     {
         private readonly Dictionary<Guid, SpriteAsset> _spriteAssetCache = new Dictionary<Guid, SpriteAsset>();
         public void Draw(RenderContext render, Context context)
         {
+            bool issueSlowdownWarning = false;
+
             foreach (Entity e in context.Entities)
             {
                 ImageFlip flip = ImageFlip.None;
@@ -39,7 +39,7 @@ namespace Murder.Systems.Graphics
                     _spriteAssetCache[s.AnimationGuid] = loadedAsset;
                     asset = loadedAsset;
                 }
-                
+
 
                 Vector2 renderPosition;
                 if (e.TryGetParallax() is ParallaxComponent parallax)
@@ -85,8 +85,8 @@ namespace Murder.Systems.Graphics
                 float ySortOffsetRaw = transform.Y + s.YSortOffset;
 
                 string animation = s.CurrentAnimation;
-                
-                
+
+
                 float startTime = e.TryGetAnimationStarted()?.StartTime ?? (s.UseUnscaledTime ? Game.Now : Game.NowUnscaled);
 
                 AnimationOverloadComponent? overload = null;
@@ -119,7 +119,7 @@ namespace Murder.Systems.Graphics
                     Name = animation,
                     Start = startTime,
                     UseScaledTime = !e.HasPauseAnimation() && !s.UseUnscaledTime,
-                    Loop = 
+                    Loop =
                         s.NextAnimations.Length <= 1 &&             // if this is a sequence, don't loop
                         !e.HasDoNotLoop() &&                       // if this has the DoNotLoop component, don't loop
                         !e.HasDestroyOnAnimationComplete() &&     // if you want to destroy this, don't loop
@@ -158,6 +158,8 @@ namespace Murder.Systems.Graphics
                         Outline = e.TryGetHighlightSprite()?.Color ?? null,
                     }, animationInfo);
 
+                issueSlowdownWarning = RenderServices.TriggerEventsIfNeeded(e, s.AnimationGuid, animationInfo, frameInfo);
+
                 e.SetRenderedSpriteCache(new RenderedSpriteCacheComponent() with
                 {
                     RenderedSprite = asset.Guid,
@@ -172,6 +174,7 @@ namespace Murder.Systems.Graphics
                     Outline = s.HighlightStyle,
                     AnimInfo = animationInfo,
                     Sorting = ySort,
+                    LastFrameIndex = frameInfo.Frame
                 });
 
                 if (frameInfo.Failed)
@@ -193,17 +196,10 @@ namespace Murder.Systems.Graphics
                 }
 
             }
-        }
 
-        public void FixedUpdate(Context context)
-        {
-            foreach (Entity e in context.Entities)
+            if (issueSlowdownWarning)
             {
-                if (e.TryGetRenderedSpriteCache() is not RenderedSpriteCacheComponent cache)
-                    continue;
-
-                SpriteComponent sprite = e.GetSprite();
-                RenderServices.TriggerEventsIfNeeded(e, cache, sprite.UseUnscaledTime);
+                GameLogger.Warning("Animation event loop reached. Breaking out of loop. This was probably caused by a major slowdown.");
             }
         }
 

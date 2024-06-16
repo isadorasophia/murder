@@ -889,31 +889,69 @@ namespace Murder.Services
             return rt;
         }
 
-        public static void TriggerEventsIfNeeded(Entity e, RenderedSpriteCacheComponent cache, bool useUnscaledTime)
+        public static bool TriggerEventsIfNeeded(Entity e, Guid currentAnimationGuid, AnimationInfo animationInfo, Core.FrameInfo frameInfo)
         {
-            TriggerEventsIfNeeded(e,
-                cache,
-                previousTime: useUnscaledTime ? Game.PreviousNowUnscaled : Game.PreviousNow,
-                currentTime: useUnscaledTime ? Game.NowUnscaled : Game.Now);
-        }
+            // Check for animation events
+            // First, assume that we are starting a new animation
+            RenderedSpriteCacheComponent? previousCache = e.TryGetRenderedSpriteCache();
+            int previousFrame = previousCache?.LastFrameIndex ?? -1;
 
-        public static void TriggerEventsIfNeeded(Entity e, RenderedSpriteCacheComponent cache, float previousTime, float currentTime)
-        {
-            // Don't even bother if there are no events
-            if (cache.CurrentAnimation.Events is null || cache.CurrentAnimation.Events.IsEmpty)
-                return;
-
-            // [PERF] This probably can be cached, and we only need the frame number
-            var previousFrameInfo = cache.CurrentAnimation.Evaluate(previousTime - cache.AnimInfo.Start, cache.AnimInfo.Loop);
-            var currentFrameInfo = cache.CurrentAnimation.Evaluate(currentTime - cache.AnimInfo.Start, cache.AnimInfo.Loop);
-
-            for (int i = previousFrameInfo.InternalFrame; i < currentFrameInfo.InternalFrame; i++)
+            // Quickly check if we even changed frames, if not, don't bother with events
+            if (frameInfo.InternalFrame != previousFrame)
             {
-                if (cache.CurrentAnimation.Events.TryGetValue(i, out string? @event))
+                // Make sure we didn't change animations
+                if (previousCache is not RenderedSpriteCacheComponent cache ||
+                    cache.RenderedSprite != currentAnimationGuid ||
+                    !string.Equals(cache.AnimInfo.Name, animationInfo.Name, StringComparison.InvariantCulture))
                 {
-                    e.SendAnimationEventMessage(@event);
+                    // We changed animations, so we need to reset to -1 so we can trigger the first frame event
+                    previousFrame = frameInfo.InternalFrame - 1;
+                }
+
+                Animation currentAnimation = frameInfo.Animation;
+
+                int lastFrame = previousFrame;
+                while (lastFrame != frameInfo.InternalFrame)
+                {
+                    // Trigger events on the next frame (most likelly the frame just rendered, uunless there was a major slowdown)
+
+                    if (animationInfo.Loop)
+                    {
+                        int next = Calculator.WrapAround(lastFrame + 1, 0, currentAnimation.FrameCount - 1);
+
+                        if (currentAnimation.Events.TryGetValue(next, out string? eventName))
+                        {
+                            e.SendAnimationEventMessage(eventName);
+                        }
+
+                        lastFrame = next;
+
+                        if (previousFrame == lastFrame)
+                        {
+                            // We've looped through all the frames and didn't find the previous frame, so we're stuck in a loop or a major slowdown happened
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        int next = Math.Min(lastFrame + 1, currentAnimation.FrameCount - 1);
+
+                        if (currentAnimation.Events.TryGetValue(next, out string? eventName))
+                        {
+                            e.SendAnimationEventMessage(eventName);
+                        }
+                        lastFrame = next;
+
+                        // This animation doesn't loop and we've reached the end, so we're done
+                        if (next == currentAnimation.FrameCount -1)
+                        {
+                            return false;
+                        }
+                    }
+
                 }
             }
+            return false;
         }
 
         #endregion

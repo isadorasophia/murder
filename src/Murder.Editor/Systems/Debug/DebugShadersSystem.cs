@@ -33,7 +33,7 @@ public class DebugShadersSystem : IGuiSystem
             return;
         }
 
-        if (ImGui.BeginChild("shaders", new System.Numerics.Vector2(), ImGuiChildFlags.AlwaysAutoResize | ImGuiChildFlags.AutoResizeY));
+        if (ImGui.BeginChild("shaders", new System.Numerics.Vector2(), ImGuiChildFlags.AlwaysAutoResize | ImGuiChildFlags.AutoResizeY))
         {
             DrawShaders();
         }
@@ -187,6 +187,11 @@ public class DebugShadersSystem : IGuiSystem
 
     private static string DrawFloatInt(EffectParameter? p)
     {
+        if ( p == null )
+        {
+            ImGui.Text("Null parameter");
+            return string.Empty;
+        }
         var floatValue = p.GetValueInt32();
 
         if (ShaderHelper.TryGetAnotationVector2(p, "slider") is System.Numerics.Vector2 minMax)
@@ -203,6 +208,12 @@ public class DebugShadersSystem : IGuiSystem
     }
     private static string DrawFloatField(EffectParameter? p)
     {
+        if (p == null)
+        {
+            ImGui.Text("Null parameter");
+            return string.Empty;
+        }
+
         string stringValue = p.GetValueVector2().ToString();
         var floatValue = p.GetValueSingle();
 
@@ -220,6 +231,12 @@ public class DebugShadersSystem : IGuiSystem
     }
     private static string DrawVector2Field(EffectParameter? p)
     {
+        if (p == null)
+        {
+            ImGui.Text("Null parameter");
+            return string.Empty;
+        }
+
         var vector2Value = p.GetValueVector2().ToSysVector2();
         string stringValue = $"{vector2Value.X:0.0000}, {vector2Value.Y:0.0000s}";
 

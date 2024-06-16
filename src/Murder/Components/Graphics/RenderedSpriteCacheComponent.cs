@@ -22,5 +22,9 @@ namespace Murder.Components.Graphics
         public readonly AnimationInfo AnimInfo { get; init; }
         public readonly OutlineStyle Outline { get; init; }
         public readonly Color Color { get; init; }
+        /// <summary>
+        /// The last recorded animation frame. Uses the internal animation frame, not the generic frame index.
+        /// </summary>
+        public readonly int LastFrameIndex { get; init; }
     }
 }

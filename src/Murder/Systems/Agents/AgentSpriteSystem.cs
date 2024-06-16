@@ -10,6 +10,7 @@ using Murder.Components.Graphics;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Diagnostics;
 using Murder.Helpers;
 using Murder.Services;
 using Murder.Utilities;
@@ -19,10 +20,12 @@ namespace Murder.Systems
 {
     [Filter(ContextAccessorFilter.AllOf, typeof(ITransformComponent), typeof(AgentSpriteComponent), typeof(FacingComponent))]
     [ShowInEditor]
-    public class AgentSpriteSystem : IMurderRenderSystem, IFixedUpdateSystem
+    public class AgentSpriteSystem : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)
         {
+            bool issueSlowdownWarning = false;
+
             foreach (var e in context.Entities)
             {
                 IMurderTransformComponent transform = e.GetGlobalTransform();
@@ -174,7 +177,7 @@ namespace Murder.Systems
                 // Draw to the sprite batch
                 FrameInfo frameInfo = RenderServices.DrawSprite(
                     render.GetBatch((int)target),
-                    assetGuid: spriteAsset.Guid,
+                    spriteAsset,
                     position: renderPosition,
                     new DrawInfo(ySort)
                     {
@@ -186,6 +189,8 @@ namespace Murder.Systems
                         Sort = ySort,
                         Outline = e.TryGetHighlightSprite()?.Color,
                     }, animationInfo);
+
+                issueSlowdownWarning = RenderServices.TriggerEventsIfNeeded(e, spriteAsset.Guid, animationInfo, frameInfo);
 
                 e.SetRenderedSpriteCache(new RenderedSpriteCacheComponent() with
                 {
@@ -200,6 +205,7 @@ namespace Murder.Systems
                     Outline = OutlineStyle.None,
                     AnimInfo = animationInfo,
                     Sorting = ySort,
+                    LastFrameIndex = frameInfo.InternalFrame
                 });
 
                 // The animation overload is now done
@@ -239,16 +245,10 @@ namespace Murder.Systems
                     e.RemoveAnimationComplete();
                 }
             }
-        }
 
-        public void FixedUpdate(Context context)
-        {
-            foreach (Entity e in context.Entities)
+            if (issueSlowdownWarning)
             {
-                if (e.TryGetRenderedSpriteCache() is not RenderedSpriteCacheComponent cache)
-                    continue;
-
-                RenderServices.TriggerEventsIfNeeded(e, cache, false);
+                GameLogger.Warning("Animation event loop reached. Breaking out of loop. This was probably caused by a major slowdown.");
             }
         }
 
