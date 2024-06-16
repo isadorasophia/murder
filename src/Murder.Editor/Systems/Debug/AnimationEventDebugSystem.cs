@@ -27,6 +27,12 @@ internal class AnimationEventDebugSystem : IMessagerSystem
             return;
         }
 
+        if (entity.TryFetchParent()?.HasAnimationEventMessage() ?? false)
+        {
+            // Parent already received the message and this was just propagated, let's not show it twice.
+            return;
+        }
+
         AnimationEventMessage msg = (AnimationEventMessage)message;
         EditorDebugServices.DrawText(world, msg.Event, entity.GetGlobalTransform().Vector2 +
             new System.Numerics.Vector2(Game.Random.NextFloat(-5, 5), Game.Random.NextFloat(-5, 5)), 0.5f,
