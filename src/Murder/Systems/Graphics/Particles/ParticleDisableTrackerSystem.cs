@@ -32,6 +32,14 @@ namespace Murder.Systems
             {
                 foreach (Entity e in entities)
                 {
+                    if (!tracker.IsTracking(e.EntityId))
+                    {
+                        if (e.GetParticleSystem().Asset != Guid.Empty)
+                        {
+                            tracker.Track(e);
+                        }
+                    }
+
                     tracker.Activate(e.EntityId);
                 }
             }

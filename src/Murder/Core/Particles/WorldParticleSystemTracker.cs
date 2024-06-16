@@ -151,6 +151,11 @@ namespace Murder.Core.Particles
             _activeParticleSystems.Remove(id);
         }
 
+        public bool IsTracking(int id)
+        {
+            return _activeParticleSystems.Contains(id);
+        }
+
         /// <summary>
         /// Set the alpha for a particle system itself according to the <paramref name="entityId"/>.
         /// </summary>
