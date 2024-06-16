@@ -174,7 +174,7 @@ namespace Murder.Systems.Graphics
                     Outline = s.HighlightStyle,
                     AnimInfo = animationInfo,
                     Sorting = ySort,
-                    LastFrameIndex = frameInfo.Frame
+                    LastFrameIndex = frameInfo.InternalFrame
                 });
 
                 if (frameInfo.Failed)
