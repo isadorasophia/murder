@@ -75,6 +75,11 @@ namespace Murder.Core.Particles
 
         public bool Track(Entity particleEntity)
         {
+            if (particleEntity.HasDisableParticleSystem())
+            {
+                return false;
+            }
+
             if (_particleSystems.ContainsKey(particleEntity.EntityId))
             {
                 return false;
