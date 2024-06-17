@@ -11,12 +11,17 @@ namespace Murder.Editor.Components
     {
         public readonly EditorHook EditorHook;
 
-        public EditorComponent() => EditorHook = new();
-
-        public EditorComponent(EditorHook? hook) => EditorHook = hook ?? new();
-
         public void Subscribe(Action _) { }
 
         public void Unsubscribe(Action _) { }
+        public EditorComponent()
+        {
+            EditorHook = new EditorHook(true);
+        }
+        public EditorComponent(EditorHook hook) => EditorHook = hook;
+        public EditorComponent(bool playMode)
+        {
+            EditorHook = new EditorHook(playMode);
+        }
     }
 }

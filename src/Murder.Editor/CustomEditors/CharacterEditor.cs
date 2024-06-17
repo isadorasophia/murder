@@ -32,7 +32,7 @@ namespace Murder.Editor.CustomEditors
 
             if (!ActiveEditors.ContainsKey(_script.Guid))
             {
-                Stage stage = new(imGuiRenderer, renderContext);
+                Stage stage = new(imGuiRenderer, renderContext, false);
 
                 ScriptInformation info = new(stage);
                 ActiveEditors[_script.Guid] = info;

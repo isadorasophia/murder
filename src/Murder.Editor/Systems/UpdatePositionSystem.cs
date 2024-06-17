@@ -27,6 +27,9 @@ public class UpdatePositionSystem : IMessagerSystem
             hook.OnComponentModified?.Invoke(entity.EntityId, entity.GetTransform());
         }
 
-        
+        if (type == typeof(SpriteComponent))
+        {
+            hook.OnComponentModified?.Invoke(entity.EntityId, entity.GetSprite());
+        }
     }
 }

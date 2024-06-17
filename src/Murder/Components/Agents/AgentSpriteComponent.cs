@@ -15,7 +15,7 @@ namespace Murder.Components
         [SpriteBatchReference]
         public readonly int TargetSpriteBatch = Batches2D.GameplayBatchId;
 
-        public readonly int YSortOffset = 0;
+        public readonly int YSortOffset { get; init; } = 0;
 
         public readonly string IdlePrefix = "idle";
         public readonly string WalkPrefix = "walk";

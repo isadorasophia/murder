@@ -126,7 +126,7 @@ namespace Murder.Editor.Systems
             if (_dragged is DraggedAnchor draggedAnchor)
             {
                 hook.Cursor = CursorStyle.Hand;
-                hook.CursorIsBusy.Add(_hash);
+                hook.CursorIsBusy.Add(typeof(CutsceneEditorSystem));
 
                 Entity dragged = draggedAnchor.Owner;
                 string? name = draggedAnchor.Id;
@@ -173,7 +173,7 @@ namespace Murder.Editor.Systems
             {
                 // The user stopped clicking, so no longer drag anything.
                 _dragged = null;
-                hook.CursorIsBusy.Remove(_hash);
+                hook.CursorIsBusy.Remove(typeof(CutsceneEditorSystem));
             }
         }
 

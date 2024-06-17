@@ -1,5 +1,9 @@
-﻿using ImGuiNET;
+﻿using Bang;
+using Bang.Entities;
+using ImGuiNET;
 using Microsoft.Xna.Framework.Graphics;
+using Murder.Assets.Graphics;
+using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
@@ -35,8 +39,10 @@ namespace Murder.Editor.Stages
         public bool ShowInfo { get; set; } = true;
         public string? FocusOnGroup = null;
 
-        public Stage(ImGuiRenderer imGuiRenderer, RenderContext renderContext, Guid? worldGuid = null) :
-            this(imGuiRenderer, renderContext, hook: new(), worldGuid) { }
+        private HashSet<int> _hiddenIds = new HashSet<int>();
+
+        public Stage(ImGuiRenderer imGuiRenderer, RenderContext renderContext, bool playMode, Guid? worldGuid = null) :
+            this(imGuiRenderer, renderContext, hook: new(playMode), worldGuid) { }
 
         public Stage(ImGuiRenderer imGuiRenderer, RenderContext renderContext, EditorHook hook, Guid? worldGuid = null)
         {
@@ -160,33 +166,68 @@ namespace Murder.Editor.Stages
             DrawWorld();
 
             _imGuiRenderer.BindTexture(_imGuiRenderTexturePtr, _renderContext.LastRenderTarget!, unloadPrevious: false);
+            // Draw the game window
             drawList.AddImage(_imGuiRenderTexturePtr, topLeft, bottomRight);
 
-            if (ShowInfo)
+            if (EditorHook.EditorMode == EditorHook.EditorModes.EditMode)
             {
-                // Add useful coordinates
-                var cursorWorld = EditorHook.CursorWorldPosition;
-                var cursorScreen = EditorHook.CursorScreenPosition;
+                uint faded = ImGuiHelpers.MakeColor32(new Vector4(Game.Profile.Theme.Accent.X, Game.Profile.Theme.Accent.Y, Game.Profile.Theme.Accent.Z, 0.30f));
 
-                DrawTextRoundedRect(drawList, new Vector2(10, 10) + topLeft,
-                    Game.Profile.Theme.Bg, Game.Profile.Theme.Accent, (cursorWorld!=null?
-                    $"Cursor: {cursorWorld.Value.X}, {cursorWorld.Value.Y}": "Not Available"));
-
-                float yText = 20;
-                if (!EditorHook.SelectionBox.IsEmpty)
-                {
-                    DrawTextRoundedRect(drawList, new Vector2(10, 10 + yText) + topLeft,
-                        Game.Profile.Theme.Bg, Game.Profile.Theme.Accent,
-                        $"Rect: {EditorHook.SelectionBox.X:0.##}, {EditorHook.SelectionBox.Y:0.##}, {EditorHook.SelectionBox.Width:0.##}, {EditorHook.SelectionBox.Height:0.##}");
-                    yText += 20;
-                }
-
-                DrawTextRoundedRect(drawList, new Vector2(10, 10 + yText) + topLeft,
-                    Game.Profile.Theme.Bg, Game.Profile.Theme.Accent,
-                    $"Camera: {_world.Camera.Position.X:0.000}, {_world.Camera.Position.Y:0.000} (z: {_world.Camera.Zoom})");
+                Point border = new Point(24, 24);
+                drawList.AddRectFilled(topLeft, new Vector2(bottomRight.X, topLeft.Y + border.Y), faded, 0);
+                drawList.AddRectFilled(topLeft + new Vector2(0, border.Y), new Vector2(topLeft.X + border.X, bottomRight.Y - border.Y), faded, 0);
+                drawList.AddRectFilled(new Vector2(bottomRight.X - border.X, topLeft.Y + border.Y), bottomRight + new Vector2(0, -border.Y), faded, 0);
+                drawList.AddRectFilled(new Vector2(topLeft.X, bottomRight.Y - border.Y), new Vector2(bottomRight.X, bottomRight.Y), faded, 0);
             }
 
             drawList.PopClipRect();
+
+
+            if (ShowInfo)
+            {
+                ImGui.SetNextWindowPos(topLeft);
+                ImGui.SetNextWindowBgAlpha(0.85f);
+                if (ImGui.Begin("Stage Info", 
+                    ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.AlwaysAutoResize))
+                {
+                    if (EditorHook.EditorMode == EditorHook.EditorModes.EditMode)
+                    {
+                        if (ImGui.Button("Edit Mode"))
+                        {
+                            EditorHook.EditorMode = EditorHook.EditorModes.ObjectMode;
+                        }
+                        ImGui.TextColored(Game.Profile.Theme.Faded, "[Press TAB to exit]");
+                        ImGui.Separator();
+                        foreach (var entity in EditorHook.AllSelectedEntities)
+                        {
+                            DrawCheckboxes(_world, entity.Key, GetNameForEntityId(entity.Key) ?? "Unnamed");
+                        }
+                        EditorHook.HideEditIds = _hiddenIds;
+                    }
+                    else if (EditorHook.EditorMode == EditorHook.EditorModes.ObjectMode)
+                    {
+                        if (EditorHook.AllSelectedEntities.Count > 0)
+                        {
+                            if (ImGui.Button("Object Mode"))
+                            {
+                                EditorHook.EditorMode = EditorHook.EditorModes.EditMode;
+                            }
+                            ImGui.TextColored(Game.Profile.Theme.Faded, $"{EditorHook.AllSelectedEntities.Count} selected");
+                        }
+                        else
+                        {
+                            ImGui.TextColored(Game.Profile.Theme.HighAccent, "Object Mode");
+                            ImGui.TextColored(Game.Profile.Theme.Faded, $"Click on an entity to select");
+                        }
+
+                    }
+                    else
+                    {
+                        ImGui.TextColored(Game.Profile.Theme.HighAccent, "Play Mode");
+                    }
+                    ImGui.End();
+                }
+            }
 
             if (_world.Guid() != Guid.Empty)
             {
@@ -198,11 +239,68 @@ namespace Murder.Editor.Stages
             }
         }
 
+        private void DrawCheckboxes(World world, int id, string name)
+        {
+            if (world.TryGetEntity(id) is Entity entity)
+            {
+                bool isActive = !_hiddenIds.Contains(id);
+                if (ImGui.Checkbox($"{name}({id})", ref isActive))
+                {
+                    if (!isActive)
+                    {
+                        _hiddenIds.Add(id);
+                    }
+                    else
+                    {
+                        _hiddenIds.Remove(id);
+                    }
+                }
+
+                if(entity.TryGetCollider() is ColliderComponent collider)
+                {
+                    ImGui.SameLine();
+                    ImGui.TextColored(collider.DebugColor.ToSysVector4(), $"[{collider.Shapes.Length} shapes]");
+                }
+
+                if (entity.TryGetSprite() is SpriteComponent sprite)
+                {
+                    ImGui.SameLine();
+                    ImGui.TextColored(Game.Profile.Theme.Accent, $"[{Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid)?.Name}]");
+                }
+
+                if (entity.TryGetAgentSprite() is AgentSpriteComponent agentSprite)
+                {
+                    ImGui.SameLine();
+                    ImGui.TextColored(Game.Profile.Theme.Accent, $"[{Game.Data.TryGetAsset<SpriteAsset>(agentSprite.AnimationGuid)?.Name}]");
+                }
+                ImGui.TreePush($"{id}");
+                foreach (var child in entity.FetchChildrenWithNames)
+                {
+                    DrawCheckboxes(world, child.Key, child.Value);
+                }
+                ImGui.TreePop();
+            }
+        }
+
         private static void DrawTextRoundedRect(ImDrawListPtr drawList, Vector2 position, Vector4 bgColor, Vector4 textColor, string text)
         {
-            drawList.AddRectFilled(position + new Vector2(-4, -2), position + new Vector2(text.Length * 7 + 4, 16),
+            Vector2 textSize = ImGui.GetFont().CalcTextSizeA(ImGui.GetFontSize(), 1000, 1000, text);
+
+            drawList.AddRectFilled(position + new Vector2(-4, -2), position + new Vector2(textSize.X + 8, textSize.Y + 4),
                 ImGuiHelpers.MakeColor32(bgColor), 8f);
             drawList.AddText(position, ImGuiHelpers.MakeColor32(textColor), text);
+        }
+
+        private static void DrawTextRoundedRect(ImDrawListPtr drawList, Vector2 position, Vector4 bgColor, Vector4 textColor, Vector4 tipColor, string text, string tip)
+        {
+            Vector2 textSize = ImGui.GetFont().CalcTextSizeA(ImGui.GetFontSize(), 1000, 1000, text + tip);
+
+            drawList.AddRectFilled(position + new Vector2(-4, -2), position + new Vector2(textSize.X + 8, textSize.Y + 4),
+                ImGuiHelpers.MakeColor32(bgColor), 8f);
+            drawList.AddText(position, ImGuiHelpers.MakeColor32(textColor), text);
+            
+            textSize = ImGui.GetFont().CalcTextSizeA(ImGui.GetFontSize(), 1000, 1000, text);
+            drawList.AddText(position + new Vector2(textSize.X + 2, 0), ImGuiHelpers.MakeColor32(tipColor), tip);
         }
 
         private float _targetFixedUpdateTime = 0;

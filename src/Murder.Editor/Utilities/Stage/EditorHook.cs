@@ -23,8 +23,16 @@ namespace Murder.Editor.Utilities
         }
 
         public bool UsingGui = false;
-        public readonly HashSet<int> CursorIsBusy = new();
+        public readonly HashSet<Type> CursorIsBusy = new();
         public bool IsPopupOpen = false;
+
+        public EditorModes EditorMode = EditorModes.ObjectMode;
+        public enum EditorModes
+        {
+            ObjectMode = 0,
+            EditMode = 1,
+            PlayMode = 2,
+        }
 
         /// <summary>
         /// Last available position from the cursor. 
@@ -274,6 +282,8 @@ namespace Murder.Editor.Utilities
 
         [CollisionLayer]
         public int CurrentPathfindCollisionMask = CollisionLayersBase.BLOCK_VISION | CollisionLayersBase.CARVE;
+        
+        internal HashSet<int> HideEditIds = new();
 
         /// <summary>
         /// Add a dimension rectangle to the editor hook. This will be drawn in the world.
@@ -305,6 +315,26 @@ namespace Murder.Editor.Utilities
         {
             _hovering.Clear();
             _hoveringCache = null;
+        }
+
+        internal bool IsEntitySelectedOrParent(Entity e)
+        {
+            if (AllSelectedEntities.ContainsKey(e.EntityId))
+            {
+                return true;
+            }
+
+            if (e.TryFetchParent() is Entity parent)
+            {
+                return IsEntitySelectedOrParent(parent);
+            }
+
+            return false;
+        }
+
+        public EditorHook(bool playMode)
+        {
+            EditorMode = playMode ? EditorModes.PlayMode : EditorModes.ObjectMode;
         }
     }
 }

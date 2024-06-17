@@ -1,8 +1,8 @@
-﻿using Bang.Components;
+﻿using Bang;
+using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
-using Microsoft.Xna.Framework.Input;
 using Murder.Components;
 using Murder.Components.Cutscenes;
 using Murder.Core;
@@ -46,8 +46,10 @@ namespace Murder.Editor.Systems
             {
                 return;
             }
-            bool usingCursor = false;
 
+            bool usingCursor = false;
+            EditorHook hook = editor.EditorHook;
+            
             foreach (Entity e in context.Entities)
             {
                 ColliderComponent collider = e.GetCollider();
@@ -56,11 +58,10 @@ namespace Murder.Editor.Systems
                 Color color = collider.DebugColor * .6f;
                 ImmutableArray<IShape> newShapes = [];
 
-                bool showHandles = allowEditingByDefault ? true : e.HasComponent<ShowColliderHandlesComponent>();
-                if (showHandles)
-                {
-                    usingCursor = true;
-                }
+                bool showHandles = allowEditingByDefault ? true :
+                    (!hook.HideEditIds.Contains(e.EntityId)) &&
+                    (hook.EditorMode == EditorHook.EditorModes.EditMode && hook.IsEntitySelectedOrParent(e)) &&
+                    (hook.CursorIsBusy.Count==1 && hook.CursorIsBusy.Contains(typeof(DebugColliderRenderSystem)) || !hook.CursorIsBusy.Any());
 
                 bool isSolid = collider.Layer.HasFlag(CollisionLayersBase.SOLID);
                 for (int shapeIndex = 0; shapeIndex < collider.Shapes.Length; shapeIndex++)
@@ -114,11 +115,11 @@ namespace Murder.Editor.Systems
 
             if (usingCursor)
             {
-                editor.EditorHook.CursorIsBusy.Add(_hash);
+                editor.EditorHook.CursorIsBusy.Add(typeof(DebugColliderRenderSystem));
             }
             else
             {
-                editor.EditorHook.CursorIsBusy.Remove(_hash);
+                editor.EditorHook.CursorIsBusy.Remove(typeof(DebugColliderRenderSystem));
             }
         }
 

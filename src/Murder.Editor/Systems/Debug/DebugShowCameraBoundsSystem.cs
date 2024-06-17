@@ -93,19 +93,19 @@ namespace Murder.Editor.Systems.Debug
                         {
                             info.CenterOffset = cursorWorldPosition - info.Offset;
                             info.Dragging = true;
-                            editorHook.CursorIsBusy.Add(_hash);
+                            editorHook.CursorIsBusy.Add(typeof(DebugShowCameraBoundsSystem));
                         }
                     }
 
                     if (!Game.Input.Down(MurderInputButtons.LeftClick))
                     {
-                        editorHook.CursorIsBusy.Remove(_hash);
+                        editorHook.CursorIsBusy.Remove(typeof(DebugShowCameraBoundsSystem));
                         info.Dragging = false;
                     }
 
                     if (info.Dragging)
                     {
-                        editorHook.CursorIsBusy.Add(_hash);
+                        editorHook.CursorIsBusy.Add(typeof(DebugShowCameraBoundsSystem));
                         info.Offset = cursorWorldPosition - info.CenterOffset;
                     }
                 }
@@ -119,7 +119,7 @@ namespace Murder.Editor.Systems.Debug
                     editorHook.Cursor = CursorStyle.Point;
                     if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                     {
-                        editorHook.CursorIsBusy.Add(_hash);
+                        editorHook.CursorIsBusy.Add(typeof(DebugShowCameraBoundsSystem));
                         _takeScreenshot = true;
                     }
                 }

@@ -235,6 +235,11 @@ namespace Murder.Editor.Systems
         public void Update(World world, ImmutableArray<Entity> entities, bool clearOnlyWhenSelectedNewEntity = false, bool ignoreCursorOnCollidersSelected = true)
         {
             EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
+
+            if (hook.EditorMode == EditorHook.EditorModes.EditMode)
+            {
+                return;
+            }
             
             if (hook.EntityToBePlaced is not null)
             {

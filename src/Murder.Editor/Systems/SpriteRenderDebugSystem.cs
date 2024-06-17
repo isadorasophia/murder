@@ -2,13 +2,16 @@
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
+using ImGuiNET;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Components.Graphics;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Core.Input;
 using Murder.Editor.Components;
+using Murder.Editor.Messages;
 using Murder.Editor.Utilities;
 using Murder.Helpers;
 using Murder.Messages;
@@ -22,22 +25,11 @@ namespace Murder.Editor.Systems;
 [Filter(filter: ContextAccessorFilter.AnyOf, typeof(SpriteComponent), typeof(AgentSpriteComponent))]
 [Filter(ContextAccessorFilter.NoneOf, typeof(ThreeSliceComponent))]
 [Filter(ContextAccessorFilter.NoneOf, typeof(InvisibleComponent))]
-internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
+internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
 {
-    private float _previousLastTime = 0;
-
-    public void FixedUpdate(Context context)
-    {
-        EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
-
-        float currentTime = Game.NowUnscaled;
-        if (hook is TimelineEditorHook timeline)
-        {
-            currentTime = timeline.Time;
-        }
-
-        _previousLastTime = currentTime;
-    }
+    private readonly static int _hash = typeof(DebugColliderRenderSystem).GetHashCode();
+    private int _draggingY = -1;
+    private int _hoverY = -1;
 
     public void Draw(RenderContext render, Context context)
     {
@@ -46,6 +38,8 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
         EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
 
         float overrideCurrentTime = -1;
+        _hoverY = -1;
+
         if (hook is TimelineEditorHook timeline)
         {
             overrideCurrentTime = timeline.Time;
@@ -133,15 +127,81 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
                 render.GameplayBatch;
 
             int ySortOffset = sprite.HasValue ? sprite.Value.YSortOffset : agentSprite!.Value.YSortOffset;
-            if (e.HasComponent<ShowYSortComponent>())
+
+
+            bool showHandles = 
+                (hook.EditorMode == EditorHook.EditorModes.EditMode && hook.IsEntitySelectedOrParent(e));
+
+            if (showHandles)
             {
+                Vector2 screenPosition = render.Camera.WorldToScreenPosition(transform.Vector2);
+                
+                Color color;
+                if (_draggingY==e.EntityId)
+                {
+                    color = Architect.Profile.Theme.HighAccent;
+                    
+                    int newYSortOffset = (int)((hook.CursorScreenPosition.Y - screenPosition.Y) / render.Camera.Zoom);
+                    if (sprite != null)
+                    {
+                        e.SetSprite(sprite.Value with { YSortOffset = newYSortOffset });
+                    }
+                    else if (agentSprite != null)
+                    {
+                        e.SetAgentSprite(agentSprite.Value with { YSortOffset = newYSortOffset });
+                    }
+
+                    if (!Game.Input.Down(MurderInputButtons.LeftClick))
+                    {
+                        hook.CursorIsBusy.Remove(typeof(SpriteRenderDebugSystem));
+                        _draggingY = -1;
+                        if (sprite != null)
+                        {
+                            e.SendMessage(new AssetUpdatedMessage(typeof(SpriteComponent)));
+                        }
+                        else if (agentSprite != null)
+                        {
+                            e.SendMessage(new AssetUpdatedMessage(typeof(AgentSpriteComponent)));
+                        }
+                    }
+                }
+                else
+                {
+                    if (hook.HideEditIds.Contains(e.EntityId))
+                    {
+                        color = Color.Red * 0.1f;
+                    }
+                    else if (
+                        hook.CursorScreenPosition.Y > screenPosition.Y + (ySortOffset - 2) * render.Camera.Zoom &&
+                        hook.CursorScreenPosition.Y < screenPosition.Y + (ySortOffset + 2) * render.Camera.Zoom)
+                    {
+                        color = Color.White;
+                        if (Game.Input.Pressed(MurderInputButtons.LeftClick) && !hook.CursorIsBusy.Any())
+                        {
+                            hook.CursorIsBusy.Add(typeof(SpriteRenderDebugSystem));
+                            _draggingY = e.EntityId;
+                            _hoverY = e.EntityId;
+                        }
+
+                        if (_draggingY < 0)
+                        {
+                            _hoverY = e.EntityId;
+                        }
+                    }
+                    else
+                    {
+                        color = Color.BrightGray;
+                    }
+                }
+
                 RenderServices.DrawHorizontalLine(
                 render.DebugBatch,
                 (int)render.Camera.Bounds.Left,
                 (int)(transform.Y + ySortOffset),
                 (int)render.Camera.Bounds.Width,
-                Color.BrightGray,
+                color,
                 0.2f);
+
             }
 
             float rotation = transform.Angle;
@@ -328,5 +388,34 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
         SpriteAsset? SpriteAsset = Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid);
 
         return (prefix + suffix, SpriteAsset, start, flip ? ImageFlip.Horizontal : ImageFlip.None);
+    }
+
+    public void DrawGui(RenderContext render, Context context)
+    {
+        if (_draggingY > 0 && context.World.TryGetEntity(_draggingY) is Entity entity)
+        {
+            EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
+
+            if (ImGui.BeginTooltip())
+            {
+                ImGui.Text($"Dragging ({entity.EntityId}) {hook.GetNameForEntityId?.Invoke(entity.EntityId)}");
+                ImGui.Text($"YSort: {entity.TryGetSprite()?.YSortOffset}");
+
+                ImGui.EndTooltip();
+            }
+        }
+        else
+        {
+            if (_hoverY > 0 && context.World.TryGetEntity(_hoverY) is Entity hovered)
+            {
+                EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
+
+                if (ImGui.BeginTooltip())
+                {
+                    ImGui.Text($"YSort for ({hovered.EntityId}) {hook.GetNameForEntityId?.Invoke(hovered.EntityId)}");
+                    ImGui.EndTooltip();
+                }
+            }
+        }
     }
 }

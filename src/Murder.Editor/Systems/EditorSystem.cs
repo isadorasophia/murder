@@ -44,7 +44,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         }
         else
         {
-            var component = new EditorComponent();
+            var component = new EditorComponent(true);
             hook = component.EditorHook;
             context.World.AddEntity(component);
         }
@@ -217,6 +217,22 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         if (!hook.IsPopupOpen)
         {
             hook.LastCursorWorldPosition = cursorPosition;
+        }
+
+        if (!hook.UsingGui && Game.Input.Shortcut(Microsoft.Xna.Framework.Input.Keys.Tab))
+        {
+            if (hook.EditorMode == EditorHook.EditorModes.EditMode)
+            {
+                hook.EditorMode = EditorHook.EditorModes.ObjectMode;
+            }
+            else if (hook.EditorMode == EditorHook.EditorModes.ObjectMode && hook.AllSelectedEntities.Count > 0)
+            {
+                hook.EditorMode = EditorHook.EditorModes.EditMode;
+            }
+            else
+            {
+                // Pressing TAB in play mode doesn't do anything
+            }
         }
     }
 
