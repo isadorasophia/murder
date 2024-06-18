@@ -10,7 +10,7 @@ namespace Murder.Core.Ai
             if (_pendingCalculate != null && !_pendingCalculate.IsCompleted)
             {
                 // Use astar while the calculation is pending!
-                return Astar.FindPath(map, initial, target);
+                return Astar.FindPath(map, initial, target, false);
             }
 
             (Node nInitial, bool discardInitial) = InsertNode(map, initial);
@@ -60,7 +60,7 @@ namespace Murder.Core.Ai
                     continue;
                 }
 
-                var (path, cost) = Astar.FindPathWithCost(map, o.P, p);
+                var (path, cost) = Astar.FindPathWithCost(map, o.P, p, false);
 
                 if (cost < int.MaxValue)
                 {

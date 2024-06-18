@@ -23,8 +23,11 @@ namespace Murder.Core.Ai
 
             switch (kind)
             {
+                case PathfindAlgorithmKind.AstarStrict:
+                    return Astar.FindPath(map, initial, target, true);
+
                 case PathfindAlgorithmKind.Astar:
-                    return Astar.FindPath(map, initial, target);
+                    return Astar.FindPath(map, initial, target, false);
 
                 case PathfindAlgorithmKind.HAAstar:
                     if (world.TryGetUniqueHAAStarPathfind()?.Data is not HAAStar haastar)
@@ -65,24 +68,51 @@ namespace Murder.Core.Ai
                 haastar.Refresh(map);
             }
         }
-
+        
         /// <summary>
-        /// Returns all the neighbours of a position within a collision map.
-        /// </summary>
-        internal static ReadOnlySpan<Point> NeighboursWithoutCollision(this Point p, Map map)
+         /// Returns all the neighbours of a position within a collision map. Strict means that it will only allow diagonal movement if both the horizontal and vertical neighbours are open.
+         /// </summary>
+        internal static ReadOnlySpan<Point> NeighboursWithoutCollision(this Point p, Map map, bool strict)
         {
             int index = 0;
             Span<Point> result = new Point[8];
 
             foreach (Point n in p.Neighbours(map.Width, map.Height, includeDiagonals: true))
             {
-                if (!map.IsObstacle(n))
+                if (strict)
                 {
-                    result[index++] = n;
+                    // Determine if the movement is diagonal
+                    bool isDiagonal = Math.Abs(n.X - p.X) == 1 && Math.Abs(n.Y - p.Y) == 1;
+                    if (isDiagonal)
+                    {
+                        // Check horizontal and vertical neighbors
+                        Point horizontal = new Point(n.X, p.Y);
+                        Point vertical = new Point(p.X, n.Y);
+
+                        if (!map.IsObstacle(horizontal) && !map.IsObstacleOrBlockVision(vertical) && !map.IsObstacleOrBlockVision(n))
+                        {
+                            result[index++] = n;
+                        }
+                    }
+                    else
+                    {
+                        if (!map.IsObstacle(n))
+                        {
+                            result[index++] = n;
+                        }
+                    }
+                }
+                else
+                {
+                    if (!map.IsObstacle(n))
+                    {
+                        result[index++] = n;
+                    }
                 }
             }
 
             return result.Slice(0, index);
         }
+
     }
 }

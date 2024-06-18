@@ -5,14 +5,14 @@ namespace Murder.Core.Ai
 {
     internal static class Astar
     {
-        public static ImmutableDictionary<Point, Point> FindPath(Map map, Point initial, Point target)
+        public static ImmutableDictionary<Point, Point> FindPath(Map map, Point initial, Point target, bool strict)
         {
-            var (path, _) = FindPathWithCost(map, initial, target);
+            var (path, _) = FindPathWithCost(map, initial, target, strict);
             return path;
         }
 
         internal static (ImmutableDictionary<Point, Point> Path, double Cost) FindPathWithCost(
-            Map map, Point initial, Point target)
+            Map map, Point initial, Point target, bool strict)
         {
             var from = new Dictionary<Point, Point>();
 
@@ -36,7 +36,7 @@ namespace Murder.Core.Ai
                     break;
                 }
 
-                foreach (Point p in current.NeighboursWithoutCollision(map))
+                foreach (Point p in current.NeighboursWithoutCollision(map, strict))
                 {
                     double cost = costForVisitedNode[current] + map.WeightAt(p.X, p.Y);
 

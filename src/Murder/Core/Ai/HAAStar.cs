@@ -173,7 +173,7 @@ namespace Murder.Core.Ai
                             continue;
                         }
 
-                        var (path, cost) = Astar.FindPathWithCost(map, p1, p2);
+                        var (path, cost) = Astar.FindPathWithCost(map, p1, p2, false);
 
                         if (cost < int.MaxValue)
                         {

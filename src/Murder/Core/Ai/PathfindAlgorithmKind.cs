@@ -4,6 +4,7 @@
     {
         None = 0,
         Astar = 1,
-        HAAstar = 2
+        HAAstar = 2,
+        AstarStrict = 3,
     }
 }
