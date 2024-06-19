@@ -910,6 +910,11 @@ namespace Murder.Services
 
                 Animation currentAnimation = frameInfo.Animation;
 
+                if (currentAnimation.Events == null || currentAnimation.Events.Count == 0)
+                {
+                    return false;
+                }
+
                 int lastFrame = previousFrame;
                 while (lastFrame != frameInfo.InternalFrame)
                 {
