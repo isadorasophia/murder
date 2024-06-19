@@ -192,11 +192,18 @@ namespace Murder.Editor.Stages
                 {
                     if (EditorHook.EditorMode == EditorHook.EditorModes.EditMode)
                     {
-                        if (ImGui.Button("Edit Mode"))
+                        if (EditorHook.CanSwitchModes)
                         {
-                            EditorHook.EditorMode = EditorHook.EditorModes.ObjectMode;
+                            if (ImGui.Button("Edit Mode"))
+                            {
+                                EditorHook.EditorMode = EditorHook.EditorModes.ObjectMode;
+                            }
+                            ImGui.TextColored(Game.Profile.Theme.Faded, "[Press TAB to exit]");
                         }
-                        ImGui.TextColored(Game.Profile.Theme.Faded, "[Press TAB to exit]");
+                        else
+                        {
+                            ImGui.TextColored(Game.Profile.Theme.HighAccent, "Edit Mode");
+                        }
                         ImGui.Separator();
                         foreach (var entity in EditorHook.AllSelectedEntities)
                         {

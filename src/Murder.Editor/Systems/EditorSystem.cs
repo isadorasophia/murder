@@ -219,7 +219,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
             hook.LastCursorWorldPosition = cursorPosition;
         }
 
-        if (!hook.UsingGui && Game.Input.Shortcut(Microsoft.Xna.Framework.Input.Keys.Tab))
+        if (hook.CanSwitchModes && !hook.UsingGui && Game.Input.Shortcut(Microsoft.Xna.Framework.Input.Keys.Tab))
         {
             if (hook.EditorMode == EditorHook.EditorModes.EditMode)
             {

@@ -27,11 +27,12 @@ namespace Murder.Editor.Utilities
         public bool IsPopupOpen = false;
 
         public EditorModes EditorMode = EditorModes.ObjectMode;
+        public bool CanSwitchModes = true;
         public enum EditorModes
         {
             ObjectMode = 0,
             EditMode = 1,
-            PlayMode = 2,
+            PlayMode = 2
         }
 
         /// <summary>
