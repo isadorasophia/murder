@@ -20,6 +20,11 @@ namespace Murder.Editor.Data
         /// </summary>
         public bool ReloadDialogs(bool force = false)
         {
+            if (!EditorSettings.EnableDialogueHotReload)
+            {
+                return false;
+            }
+
             string fullRawResourcesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath);
             if (!Directory.Exists(fullRawResourcesPath))
             {

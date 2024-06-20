@@ -77,4 +77,10 @@ public partial class EditorDataManager
             _shaderFileSystemWatcher.EnableRaisingEvents = value;
         }
     }
+
+    public void ToggleHotReloadDialogue(bool value)
+    {
+        EditorSettings.EnableDialogueHotReload = value;
+        SaveAsset(EditorSettings);
+    }
 }

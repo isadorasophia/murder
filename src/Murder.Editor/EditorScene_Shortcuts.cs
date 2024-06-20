@@ -68,10 +68,16 @@ public partial class EditorScene
                     defaultCheckedValue: Architect.EditorSettings.AlwaysBuildAtlasOnStartup
                 ),
                 new ToggleShortcut(
-                    name: "Enable Hot Reload on Shaders",
+                    name: "Hot Reload for Shaders",
                     chord: new Chord(Keys.F6, Keys.LeftShift),
                     toggle: ToggleHotReloadShader,
                     defaultCheckedValue: Architect.EditorSettings.AutomaticallyHotReloadShaderChanges
+                ),
+                new ToggleShortcut(
+                    name: "Hot Reload for Dialogues",
+                    chord: new Chord(Keys.F7, Keys.LeftShift),
+                    toggle: ToggleHotReloadDialogue,
+                    defaultCheckedValue: Architect.EditorSettings.EnableDialogueHotReload
                 )
             ],
             [ShortcutGroup.Tools] =
@@ -94,6 +100,11 @@ public partial class EditorScene
     private void ToggleHotReloadShader(bool value)
     {
         Architect.EditorData.ToggleHotReloadShader(value);
+    }
+
+    private void ToggleHotReloadDialogue(bool value)
+    {
+        Architect.EditorData.ToggleHotReloadDialogue(value);
     }
 
     private void ToggleShowingStyleEditor(bool value)

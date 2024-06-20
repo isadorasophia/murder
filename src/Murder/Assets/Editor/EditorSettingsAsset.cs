@@ -149,7 +149,7 @@ public class EditorSettingsAsset : GameAsset
     public bool AutomaticallyHotReloadShaderChanges = false;
 
     [Tooltip("Whether we will automatically apply any chances made to dialogues")]
-    public bool AutomaticallyHotReloadDialogueChanges = true;
+    public bool EnableDialogueHotReload = false;
 
     public void UpdateSystems(ImmutableArray<(Type systemType, bool isActive)> systems) => _editorSystems = systems;
 
