@@ -1,6 +1,8 @@
 ﻿using ImGuiNET;
+using Murder.Diagnostics;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
+using Murder.Prefabs;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
@@ -8,6 +10,9 @@ namespace Murder.Editor.CustomFields
 {
     public abstract class ImmutableArrayField<T> : CustomField
     {
+        private int _draggedIndex = -1;
+        private string _draggedId = string.Empty;
+
         protected abstract bool Add(in EditorMember member, [NotNullWhen(true)] out T? element);
 
         public override (bool modified, object? result) ProcessInput(EditorMember member, object? fieldValue)
@@ -32,71 +37,56 @@ namespace Murder.Editor.CustomFields
             }
 
             int maxLength = 128;
+            string id = $"{member.Member.ReflectedType}";
             for (int index = 0; index < Math.Min(maxLength, elements.Length); index++)
             {
-                ImGui.PushID($"{member.Member.ReflectedType}_{index}");
+                
+                ImGui.PushID($"{id}_{index}");
                 element = elements[index];
 
                 ImGui.BeginGroup();
-                ImGuiHelpers.IconButton('', $"{member.Name}_alter", Game.Data.GameProfile.Theme.Accent);
-
-                if (ImGui.IsItemHovered())
                 {
-                    ImGui.OpenPopup($"{member.Member.ReflectedType}_{index}_extras");
-                    ImGui.SetNextWindowPos(ImGui.GetItemRectMin() + new System.Numerics.Vector2(-12, -2));
-                }
+                    ImGuiHelpers.IconButton('\uf0c9', $"{member.Name}_alter", Game.Data.GameProfile.Theme.Bg);
 
-                if (ImGui.BeginPopup($"{member.Member.ReflectedType}_{index}_extras"))
-                {
-                    ImGui.BeginGroup();
-                    if (ImGuiHelpers.IconButton('', $"{member.Name}_remove", Game.Data.GameProfile.Theme.HighAccent))
+                    if (ImGui.IsItemHovered())
                     {
-                        elements = elements.RemoveAt(index);
-                        modified = true;
+                        ImGui.OpenPopup($"{member.Member.ReflectedType}_{index}_extras");
+                        ImGui.SetNextWindowPos(ImGui.GetItemRectMin() + new System.Numerics.Vector2(-12, -2));
                     }
-                    ImGuiHelpers.HelpTooltip("Remove");
+                    ImGui.SameLine();
 
-                    if (ImGuiHelpers.IconButton('', $"{member.Name}_duplicate", Game.Data.GameProfile.Theme.HighAccent))
-                    {
-                        elements = elements.Insert(index, elements[index]);
-                        modified = true;
-                    }
-                    ImGuiHelpers.HelpTooltip("Duplicate");
+                    DrawDragHandle(ref modified, ref elements, id, index);
 
-                    if (ImGuiHelpers.IconButton('', $"{member.Name}_move_up", Game.Data.GameProfile.Theme.HighAccent))
+                    if (ImGui.BeginPopup($"{member.Member.ReflectedType}_{index}_extras"))
                     {
-                        if (index > 0)
+                        ImGui.BeginGroup();
+                        if (ImGuiHelpers.IconButton('', $"{member.Name}_remove", Game.Data.GameProfile.Theme.Bg))
                         {
-                            elements = elements.RemoveAt(index).Insert(index - 1, elements[index]);
+                            elements = elements.RemoveAt(index);
                             modified = true;
                         }
-                    }
-                    ImGuiHelpers.HelpTooltip("Move up");
+                        ImGuiHelpers.HelpTooltip("Remove");
+                        ImGui.SameLine();
 
-                    if (ImGuiHelpers.IconButton('', $"{member.Name}_move_down", Game.Data.GameProfile.Theme.HighAccent))
-                    {
-                        if (index < elements.Length - 1)
+                        if (ImGuiHelpers.IconButton('', $"{member.Name}_duplicate", Game.Data.GameProfile.Theme.Bg))
                         {
-                            elements = elements.RemoveAt(index).Insert(index + 1, elements[index]);
+                            elements = elements.Insert(index, elements[index]);
                             modified = true;
                         }
+                        ImGuiHelpers.HelpTooltip("Duplicate");
+
+                        ImGui.EndGroup();
+                        if (!ImGui.IsWindowAppearing() && ImGui.IsWindowFocused() && !ImGui.IsMouseHoveringRect(ImGui.GetWindowPos(), ImGui.GetWindowPos() + ImGui.GetWindowSize()))
+                            ImGui.CloseCurrentPopup();
+                        ImGui.EndPopup();
                     }
-                    ImGuiHelpers.HelpTooltip("Move down");
 
-                    ImGui.EndGroup();
-                    if (!ImGui.IsWindowAppearing() && ImGui.IsWindowFocused() && !ImGui.IsMouseHoveringRect(ImGui.GetWindowPos(), ImGui.GetWindowPos() + ImGui.GetWindowSize()))
-                        ImGui.CloseCurrentPopup();
-                    ImGui.EndPopup();
+                    if (DrawElement(ref element, member, index))
+                    {
+                        elements = elements.SetItem(index, element!);
+                        modified = true;
+                    }
                 }
-
-                ImGui.SameLine();
-
-                if (DrawElement(ref element, member, index))
-                {
-                    elements = elements.SetItem(index, element!);
-                    modified = true;
-                }
-
                 ImGui.EndGroup();
                 ImGui.PopID();
             }
@@ -105,6 +95,52 @@ namespace Murder.Editor.CustomFields
                 ImGui.Text($"List is too long ({elements.Length} items hidden)...");
             }
             return (modified, elements);
+        }
+
+        private void DrawDragHandle(ref bool modified, ref ImmutableArray<T> elements, string id, int index)
+        {
+            ImGui.PushStyleColor(ImGuiCol.Button, System.Numerics.Vector4.Zero);
+            ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
+            ImGui.PushStyleColor(ImGuiCol.ButtonHovered, System.Numerics.Vector4.Zero);
+            ImGui.PushStyleColor(ImGuiCol.ButtonActive, System.Numerics.Vector4.Zero);
+            ImGui.Button("\uf256");
+            ImGui.PopStyleColor(4);
+            ImGuiHelpers.HelpTooltip("Drag to reorder");
+
+            if (ImGui.BeginDragDropSource())
+            {
+                ImGui.SetDragDropPayload("Child", IntPtr.Zero, 0);
+                _draggedIndex = index;
+                _draggedId = id;
+
+                ImGui.Text($"Moving '{id}' element...");
+                ImGui.EndDragDropSource();
+            }
+
+            if (_draggedId.Equals(id) && ImGui.BeginDragDropTarget())
+            {
+                ImGuiPayloadPtr payload = ImGui.AcceptDragDropPayload("Child");
+
+                bool hasDropped;
+                unsafe
+                {
+                    hasDropped = payload.NativePtr != null;
+                }
+
+                if (hasDropped)
+                {
+                    // Make sure we can insert the dragged element at the new index.
+                    if (elements.Length > _draggedIndex && elements.Length>index)
+                    {
+                        elements = elements.RemoveAt(_draggedIndex).Insert(index, elements[_draggedIndex]);
+                        modified = true;
+                    }
+                }
+
+                ImGui.EndDragDropTarget();
+            }
+
+            ImGui.SameLine();
         }
 
         protected virtual bool DrawElement(ref T? element, EditorMember member, int index)
