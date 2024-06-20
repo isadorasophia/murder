@@ -38,6 +38,11 @@ namespace Murder.Editor.CustomFields
 
             int maxLength = 128;
             string id = $"{member.Member.ReflectedType}";
+            ImGui.BeginGroup();
+            ImGui.Dummy(new System.Numerics.Vector2(2, 2));
+            ImGui.SameLine();
+            ImGui.BeginGroup();
+            ImGui.Dummy(new System.Numerics.Vector2(2, 2));
             for (int index = 0; index < Math.Min(maxLength, elements.Length); index++)
             {
                 
@@ -90,6 +95,14 @@ namespace Murder.Editor.CustomFields
                 ImGui.EndGroup();
                 ImGui.PopID();
             }
+            ImGui.Dummy(new System.Numerics.Vector2(2,2));
+            ImGui.EndGroup();
+            ImGui.SameLine();
+            ImGui.Dummy(new System.Numerics.Vector2(2, 2));
+
+            ImGui.EndGroup();
+            ImGuiHelpers.DrawBorderOnPreviousItem(Game.Profile.Theme.BgFaded, 1);
+
             if (elements.Length >= maxLength)
             {
                 ImGui.Text($"List is too long ({elements.Length} items hidden)...");
