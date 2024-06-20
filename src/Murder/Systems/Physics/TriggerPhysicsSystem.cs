@@ -42,14 +42,7 @@ namespace Murder.Systems.Physics
             Quadtree qt = Quadtree.GetOrCreateUnique(world);
             foreach (Entity e in entities)
             {
-                if (e.HasIgnoreTriggersUntil())
-                {
-                    // [BUG] This should never happen
-                    GameLogger.Warning("This entity should not be here. It has IgnoreTriggersUntil but is being processed by the TriggerPhysicsSystem.");
-                    continue;
-                }
-
-                if (!e.IsActive)
+                if (e.HasIgnoreTriggersUntil() || !e.IsActive)
                 {
                     continue;
                 }
