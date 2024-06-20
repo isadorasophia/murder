@@ -16,6 +16,7 @@ using Murder.Editor.Utilities;
 using Murder.Prefabs;
 using Murder.Utilities;
 using Murder.Utilities.Attributes;
+using System;
 using System.Collections.Immutable;
 using System.Numerics;
 
@@ -235,9 +236,9 @@ namespace Murder.Editor.CustomEditors
                 {
                     bool active = !instance.IsDeactivated;
                     ImGui.PushStyleColor(ImGuiCol.Text, active ? Architect.Profile.Theme.White : Architect.Profile.Theme.Faded);
-                    if (ImGui.Checkbox("", ref active))
+                    if (ImGui.Checkbox($"##{entityInstance.Guid}", ref active))
                     {
-                        instance.IsDeactivated = !active;
+                        EnableEntity(parent?.Guid, instance, active);
                     }
                     ImGuiHelpers.HelpTooltip("Entity is enabled on runtime");
                     ImGui.PopStyleColor();
@@ -394,11 +395,11 @@ namespace Murder.Editor.CustomEditors
                     {
                         if (isOpen)
                         {
-                            Stages[_asset.Guid].AddComponentForInstance(entityInstance.Guid, new ShowYSortComponent());
+                            Stages[_asset.Guid].AddComponentForInstance(parent?.Guid, entityInstance.Guid, new ShowYSortComponent());
                         }
                         else
                         {
-                            Stages[_asset.Guid].RemoveComponentForInstance(entityInstance.Guid, typeof(ShowYSortComponent));
+                            Stages[_asset.Guid].RemoveComponentForInstance(parent?.Guid, entityInstance.Guid, typeof(ShowYSortComponent));
                         }
                     }
 
@@ -406,11 +407,11 @@ namespace Murder.Editor.CustomEditors
                     {
                         if (isOpen)
                         {
-                            Stages[_asset.Guid].AddComponentForInstance(entityInstance.Guid, new ShowColliderHandlesComponent());
+                            Stages[_asset.Guid].AddComponentForInstance(parent?.Guid, entityInstance.Guid, new ShowColliderHandlesComponent());
                         }
                         else
                         {
-                            Stages[_asset.Guid].RemoveComponentForInstance(entityInstance.Guid, typeof(ShowColliderHandlesComponent));
+                            Stages[_asset.Guid].RemoveComponentForInstance(parent?.Guid, entityInstance.Guid, typeof(ShowColliderHandlesComponent));
                         }
                     }
                 }
@@ -678,7 +679,7 @@ namespace Murder.Editor.CustomEditors
                 component = entityInstance.GetComponent(t);
             }
 
-            Stages[_asset.Guid].ReplaceComponentForInstance(entityInstance.Guid, component);
+            Stages[_asset.Guid].ReplaceComponentForInstance(parent?.Guid, entityInstance.Guid, component);
             _asset.FileChanged = true;
         }
 
@@ -695,7 +696,7 @@ namespace Murder.Editor.CustomEditors
                 entityInstance.AddOrReplaceComponent(c);
             }
 
-            Stages[_asset.Guid].ReplaceComponentForInstance(entityInstance.Guid, c);
+            Stages[_asset.Guid].ReplaceComponentForInstance(parent?.Guid, entityInstance.Guid, c);
             _asset.FileChanged = true;
         }
 
@@ -712,8 +713,32 @@ namespace Murder.Editor.CustomEditors
                 entityInstance.RemoveComponent(t);
             }
 
-            Stages[_asset.Guid].RemoveComponentForInstance(entityInstance.Guid, t);
+            Stages[_asset.Guid].RemoveComponentForInstance(parent?.Guid, entityInstance.Guid, t);
             _asset.FileChanged = true;
+        }
+
+        protected void EnableEntity(Guid? parentGuid, EntityInstance entityInstance, bool enable)
+        {
+            GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
+
+            entityInstance.IsDeactivated = !enable;
+            _asset.FileChanged = true;
+
+            StageAssetInfo info = _stageInfo[_asset.Guid];
+            if (info.InvisibleEntities.Contains(entityInstance.Guid))
+            {
+                return;
+            }
+
+            Stage targetStage = Stages[_asset.Guid];
+            if (enable)
+            {
+                targetStage.ActivateInstance(parentGuid, entityInstance.Guid);
+            }
+            else
+            {
+                targetStage.DeactivateInstance(parentGuid, entityInstance.Guid);
+            }
         }
 
         private void AddChild(IEntity? parent, IEntity entityInstance, EntityInstance child)
@@ -762,42 +787,38 @@ namespace Murder.Editor.CustomEditors
             Guid guid = entityInstance.Guid;
             if (info.InvisibleEntities.Contains(guid))
             {
-                if (parent is not null)
+                if (!entityInstance.IsDeactivated)
                 {
-                    targetStage.AddChildForInstance(parent, entityInstance);
-                }
-                else
-                {
-                    targetStage.AddEntity(entityInstance);
+                    ShowInstanceInEditor(parent?.Guid, guid);
                 }
 
                 info.InvisibleEntities.Remove(guid);
             }
             else
             {
-                HideInstanceInEditor(guid);
+                HideInstanceInEditor(parent?.Guid, guid);
             }
         }
 
-        protected virtual void ShowInstanceInEditor(Guid guid)
+        protected virtual void ShowInstanceInEditor(Guid? parent, Guid guid)
         {
             GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
 
             Stage targetStage = Stages[_asset.Guid];
             StageAssetInfo info = _stageInfo[_asset.Guid];
 
-            targetStage.ActivateInstance(guid);
+            targetStage.ActivateInstance(parent, guid);
             info.InvisibleEntities.Remove(guid);
         }
 
-        protected virtual void HideInstanceInEditor(Guid guid)
+        protected virtual void HideInstanceInEditor(Guid? parent, Guid guid)
         {
             GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
 
             Stage targetStage = Stages[_asset.Guid];
             StageAssetInfo info = _stageInfo[_asset.Guid];
 
-            targetStage.DeactivateInstance(guid);
+            targetStage.DeactivateInstance(parent, guid);
             info.InvisibleEntities.Add(guid);
         }
 
@@ -810,7 +831,7 @@ namespace Murder.Editor.CustomEditors
                 parent.RemoveChild(instanceGuid);
             }
 
-            Stages[_asset.Guid].RemoveInstance(instanceGuid);
+            Stages[_asset.Guid].RemoveInstance(parent?.Guid, instanceGuid);
             _asset.FileChanged = true;
         }
 
@@ -835,7 +856,7 @@ namespace Murder.Editor.CustomEditors
                 entityInstance.AddOrReplaceComponent(component);
             }
 
-            Stages[_asset.Guid].AddComponentForInstance(entityInstance.Guid, component);
+            Stages[_asset.Guid].AddComponentForInstance(parent?.Guid, entityInstance.Guid, component);
             _asset.FileChanged = true;
 
             // If this component require other components, make sure we also add all of them (if not already present).
@@ -1019,7 +1040,8 @@ namespace Murder.Editor.CustomEditors
 
             foreach (IComponent c in components)
             {
-                Stages[_asset.Guid].AddComponentForInstance(entityInstance.Guid, c);
+                // TODO: Should we propagate a parent here? I guess children are unsupported.
+                Stages[_asset.Guid].AddComponentForInstance(parentGuid: null, entityInstance.Guid, c);
             }
         }
 

@@ -8,10 +8,19 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Prefabs;
 using Murder.Services;
 using Murder.Utilities;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace Murder.Editor.Stages
 {
+    public readonly record struct ChildInstanceId
+    {
+        public readonly Guid Parent;
+        public readonly Guid Id;
+
+        public ChildInstanceId(Guid parent, Guid id) => (Parent, Id) = (parent, id);
+    }
+
     /// <summary>
     /// Base implementation for placing rendering entities in the stage.
     /// </summary>
@@ -29,6 +38,18 @@ namespace Murder.Editor.Stages
         ///  [Entity id] -> [Parent id]
         /// </summary>
         private readonly Dictionary<int, int> _childEntities = new();
+
+        /// <summary>
+        /// Maps all the children guid.
+        ///  [Parent id, Child id] -> [Entity id]
+        /// </summary>
+        private readonly Dictionary<ChildInstanceId, int> _childInstanceToWorld = new();
+
+        /// <summary>
+        /// Maps all the children guid.
+        ///  [Entity id] -> [Parent id, Child id]
+        /// </summary>
+        private readonly Dictionary<int, ChildInstanceId> _worldToChildInstance = new();
 
         private const int MAXIMUM_CHILD_DEPTH = 15;
 
@@ -118,7 +139,7 @@ namespace Murder.Editor.Stages
             return true;
         }
 
-        private void TrackInstance(int id, Guid instance, IEntity? instanceEntity = default, int depth = 0)
+        private void TrackInstance(int id, Guid instance, IEntity? instanceEntity = default, Guid? parentGuid = null, int depth = 0)
         {
             if (depth > MAXIMUM_CHILD_DEPTH)
             {
@@ -126,9 +147,19 @@ namespace Murder.Editor.Stages
                 return;
             }
 
-            // Add itself.
-            _instanceToWorld[instance] = id;
-            _worldToInstance[id] = instance;
+            if (parentGuid is null)
+            {
+                // Add itself.
+                _instanceToWorld[instance] = id;
+                _worldToInstance[id] = instance;
+            }
+            else
+            {
+                ChildInstanceId childInstanceId = new(parentGuid.Value, instance);
+
+                _childInstanceToWorld[childInstanceId] = id;
+                _worldToChildInstance[id] = childInstanceId;
+            }
 
             Entity? e = _world.TryGetEntity(id);
             GameLogger.Verify(e is not null);
@@ -148,13 +179,13 @@ namespace Murder.Editor.Stages
 
                 if (parent is null)
                 {
-                    if (FindChildInstance(e.Parent.Value) is (IEntity parentOfParent, Guid parentGuid))
+                    if (FindChildInstance(e.Parent.Value) is (IEntity parentOfParent, Guid parentOfParentGuid))
                     {
                         if (parentOfParent is PrefabEntityInstance)
                         {
                             parent = parentOfParent;
                         }
-                        else if (parentOfParent.TryGetChild(parentGuid, out EntityInstance? parentInstance))
+                        else if (parentOfParent.TryGetChild(parentOfParentGuid, out EntityInstance? parentInstance))
                         {
                             parent = parentInstance;
                         }
@@ -164,7 +195,8 @@ namespace Murder.Editor.Stages
                 // Now, try to ask the parent (if any!) where is our instance.
                 EntityInstance? childInstanceEntity = default;
                 parent?.TryGetChild(instance, out childInstanceEntity);
-                instanceEntity = childInstanceEntity as IEntity;
+
+                instanceEntity = childInstanceEntity;
             }
 
             if (instanceEntity is null)
@@ -210,7 +242,7 @@ namespace Murder.Editor.Stages
                 // Map the child back to its parent.
                 _childEntities.Add(childrenAsId[i], id);
 
-                TrackInstance(childrenAsId[i], childrenAsInstances[i].Guid, childrenAsInstances[i], depth + 1);
+                TrackInstance(childrenAsId[i], childrenAsInstances[i].Guid, childrenAsInstances[i], parentGuid: instance, depth + 1);
             }
         }
 
@@ -224,6 +256,12 @@ namespace Murder.Editor.Stages
             _worldToInstance.Remove(id);
 
             _childEntities.Remove(id);
+
+            if (_worldToChildInstance.TryGetValue(id, out ChildInstanceId childInstanceId))
+            {
+                _childInstanceToWorld.Remove(childInstanceId);
+                _worldToChildInstance.Remove(id);
+            }
 
             Entity? e = _world.TryGetEntity(id);
             if (e is null)
@@ -239,10 +277,9 @@ namespace Murder.Editor.Stages
             }
         }
 
-        public virtual bool AddComponentForInstance(Guid entityGuid, IComponent c)
+        public virtual bool AddComponentForInstance(Guid? parentGuid, Guid entityGuid, IComponent c)
         {
-            if (!_instanceToWorld.TryGetValue(entityGuid, out int id) ||
-                _world.TryGetEntity(id) is not Entity entity)
+            if (FindEntity(parentGuid, entityGuid) is not Entity entity)
             {
                 return false;
             }
@@ -253,10 +290,9 @@ namespace Murder.Editor.Stages
             return true;
         }
 
-        public virtual bool ReplaceComponentForInstance(Guid entityGuid, IComponent c)
+        public virtual bool ReplaceComponentForInstance(Guid? parentGuid, Guid entityGuid, IComponent c)
         {
-            if (!_instanceToWorld.TryGetValue(entityGuid, out int id) ||
-                _world.TryGetEntity(id) is not Entity entity)
+            if (FindEntity(parentGuid, entityGuid) is not Entity entity)
             {
                 return false;
             }
@@ -278,10 +314,9 @@ namespace Murder.Editor.Stages
             return c;
         }
 
-        public virtual bool RemoveComponentForInstance(Guid entityGuid, Type t)
+        public virtual bool RemoveComponentForInstance(Guid? parentGuid, Guid entityGuid, Type t)
         {
-            if (!_instanceToWorld.TryGetValue(entityGuid, out int id) ||
-                _world.TryGetEntity(id) is not Entity entity)
+            if (FindEntity(parentGuid, entityGuid) is not Entity entity)
             {
                 return false;
             }
@@ -304,7 +339,7 @@ namespace Murder.Editor.Stages
 
             parent.AddChild(childId);
 
-            TrackInstance(childId, childInstance.Guid, childInstance);
+            TrackInstance(childId, childInstance.Guid, childInstance, parentGuid: parentInstance?.Guid);
 
             // Map the child back to its parent.
             _childEntities.Add(childId, parentId);
@@ -312,79 +347,58 @@ namespace Murder.Editor.Stages
             return true;
         }
 
-        public virtual bool RemoveInstance(Guid instanceGuid)
+        public virtual bool RemoveInstance(Guid? parentGuid, Guid instanceGuid)
         {
-            if (!_instanceToWorld.TryGetValue(instanceGuid, out int instanceId))
+            if (FindEntity(parentGuid, instanceGuid) is not Entity entity)
             {
                 return false;
             }
 
-            if (_world.TryGetEntity(instanceId) is not Entity entity)
-            {
-                return false;
-            }
-
-            UntrackEntity(instanceId);
+            UntrackEntity(entity.EntityId);
             entity.Destroy();
 
             return true;
         }
 
-        public virtual bool ActivateInstance(Guid instanceGuid)
+        public virtual bool ActivateInstance(Guid? parentGuid, Guid instanceGuid)
         {
-            if (!_instanceToWorld.TryGetValue(instanceGuid, out int instanceId))
-            {
-                return false;
-            }
-
-            if (_world.TryGetEntity(instanceId) is not Entity entity)
+            if (FindEntity(parentGuid, instanceGuid) is not Entity entity)
             {
                 return false;
             }
 
             entity.Activate();
-
             return true;
         }
 
-        public virtual bool DeactivateInstance(Guid instanceGuid)
+        public virtual bool DeactivateInstance(Guid? parentGuid, Guid instanceGuid)
         {
-            if (!_instanceToWorld.TryGetValue(instanceGuid, out int instanceId))
-            {
-                return false;
-            }
-
-            if (_world.TryGetEntity(instanceId) is not Entity entity)
+            if (FindEntity(parentGuid, instanceGuid) is not Entity entity)
             {
                 return false;
             }
 
             entity.Deactivate();
-
             return true;
         }
 
-        protected Guid? TryGetParent(Guid childGuid)
+        private Entity? FindEntity(Guid? parentGuid, Guid instanceGuid)
         {
-            if (!_instanceToWorld.ContainsKey(childGuid))
+            int entityId;
+
+            if (parentGuid is not null)
             {
-                return default;
+                if (!_childInstanceToWorld.TryGetValue(new ChildInstanceId(parentGuid.Value, instanceGuid), out entityId))
+                {
+                    return null;
+                }
+            }
+            else if (!_instanceToWorld.TryGetValue(instanceGuid, out entityId))
+            {
+                return null;
             }
 
-            int childId = _instanceToWorld[childGuid];
-
-            if (_world.TryGetEntity(childId) is not Entity child)
-            {
-                return default;
-            }
-
-            int? parentId = child.Parent;
-            if (parentId is null)
-            {
-                return default;
-            }
-
-            return _worldToInstance[parentId.Value];
+            return _world.TryGetEntity(entityId);
         }
     }
 }

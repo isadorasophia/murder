@@ -4,7 +4,6 @@ using Murder.Assets;
 using Murder.Core.Geometry;
 using Murder.Editor.Utilities;
 using Murder.Prefabs;
-using Murder.Utilities;
 using System.Collections.Immutable;
 
 namespace Murder.Editor.Stages
@@ -66,14 +65,19 @@ namespace Murder.Editor.Stages
             return default;
         }
 
-        internal Guid? FindInstanceGuid(int id)
+        internal (Guid? parent, Guid? instance) FindInstanceGuid(int id)
         {
             if (_worldToInstance.TryGetValue(id, out Guid entityGuid))
             {
-                return entityGuid;
+                return (parent: null, entityGuid);
             }
 
-            return null;
+            if (_worldToChildInstance.TryGetValue(id, out ChildInstanceId childInstanceId))
+            {
+                return (parent: childInstanceId.Parent, childInstanceId.Id);
+            }
+
+            return (null, null);
         }
 
         internal IEntity? FindInstance(int id)

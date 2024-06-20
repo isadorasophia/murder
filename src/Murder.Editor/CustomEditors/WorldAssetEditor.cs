@@ -594,7 +594,7 @@ namespace Murder.Editor.CustomEditors
 
             foreach (int entityId in entities)
             {
-                Guid? g = stage.FindInstanceGuid(entityId);
+                (Guid? parent, Guid? g) = stage.FindInstanceGuid(entityId);
                 if (g is null)
                 {
                     continue;
@@ -605,12 +605,12 @@ namespace Murder.Editor.CustomEditors
                 // Check if we "inherited" anything from this new group...
                 if (info.HiddenGroups.Contains(targetGroup))
                 {
-                    HideInstanceInEditor(g.Value);
+                    HideInstanceInEditor(parent, g.Value);
                 }
 
                 if (info.SkipGroups.Contains(targetGroup))
                 {
-                    stage.ReplaceComponentForInstance(g.Value, new SkipComponent());
+                    stage.ReplaceComponentForInstance(parent, g.Value, new SkipComponent());
                 }
             }
         }

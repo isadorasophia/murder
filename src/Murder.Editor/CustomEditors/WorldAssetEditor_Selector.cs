@@ -484,7 +484,7 @@ namespace Murder.Editor.CustomEditors
 
                 foreach (Guid g in entities)
                 {
-                    stage.ReplaceComponentForInstance(g, new SkipComponent());
+                    stage.ReplaceComponentForInstance(parentGuid: null, g, new SkipComponent());
                 }
             }
             else
@@ -493,7 +493,7 @@ namespace Murder.Editor.CustomEditors
 
                 foreach (Guid g in entities)
                 {
-                    stage.RemoveComponentForInstance(g, typeof(SkipComponent));
+                    stage.RemoveComponentForInstance(parentGuid: null, g, typeof(SkipComponent));
                 }
             }
 
@@ -584,7 +584,7 @@ namespace Murder.Editor.CustomEditors
 
                 foreach (Guid g in entities)
                 {
-                    ShowInstanceInEditor(g);
+                    ShowInstanceInEditor(parent: null, g);
                 }
             }
             else
@@ -593,7 +593,7 @@ namespace Murder.Editor.CustomEditors
 
                 foreach (Guid g in entities)
                 {
-                    HideInstanceInEditor(g);
+                    HideInstanceInEditor(parent: null, g);
                 }
             }
             

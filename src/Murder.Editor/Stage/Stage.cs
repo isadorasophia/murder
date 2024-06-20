@@ -39,7 +39,7 @@ namespace Murder.Editor.Stages
         public bool ShowInfo { get; set; } = true;
         public string? FocusOnGroup = null;
 
-        private HashSet<int> _hiddenIds = new HashSet<int>();
+        private readonly HashSet<int> _hiddenIds = new HashSet<int>();
 
         public Stage(ImGuiRenderer imGuiRenderer, RenderContext renderContext, bool playMode, Guid? worldGuid = null) :
             this(imGuiRenderer, renderContext, hook: new(playMode), worldGuid) { }
@@ -283,7 +283,7 @@ namespace Murder.Editor.Stages
                 ImGui.TreePush($"{id}");
                 foreach (var child in entity.FetchChildrenWithNames)
                 {
-                    DrawCheckboxes(world, child.Key, child.Value);
+                    DrawCheckboxes(world, child.Key, child.Value ?? string.Empty);
                 }
                 ImGui.TreePop();
             }
