@@ -26,10 +26,17 @@ public class UpdatePositionSystem : IMessagerSystem
         {
             hook.OnComponentModified?.Invoke(entity.EntityId, entity.GetTransform());
         }
-
-        if (type == typeof(SpriteComponent))
+        else if (type == typeof(SpriteComponent))
         {
             hook.OnComponentModified?.Invoke(entity.EntityId, entity.GetSprite());
+        }
+        else if (type == typeof(AgentSpriteComponent))
+        {
+            hook.OnComponentModified?.Invoke(entity.EntityId, entity.GetAgentSprite());
+        }
+        else if (type == typeof(ColliderComponent))
+        {
+            hook.OnComponentModified?.Invoke(entity.EntityId, entity.GetCollider());
         }
     }
 }

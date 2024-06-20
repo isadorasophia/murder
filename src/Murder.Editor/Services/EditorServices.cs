@@ -338,7 +338,7 @@ namespace Murder.Editor.Services
 
                         if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                         {
-                            newPolygon = polygon.RemoveVerticeAt(_draggingAnchor + 1);
+                            newPolygon = polygon.RemoveVerticeAt(Calculator.WrapAround(_draggingAnchor + 1, 0, polygon.Vertices.Length - 1));
                             return true;
                         }
                     }

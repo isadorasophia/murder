@@ -25,9 +25,13 @@ namespace Murder.Editor.CustomEditors
 
             if (forceInit || !Stages.ContainsKey(_asset.Guid))
             {
-                var stage = new Editor.Stages.Stage(imGuiRenderer, renderContext, (PrefabAsset)_asset);
+                var stage = new Stages.Stage(imGuiRenderer, renderContext, false);
+
+                int entity = stage.AddEntity((PrefabAsset)_asset);
+                stage.SelectEntity(entity, true);
                 stage.EditorHook.EditorMode = EditorHook.EditorModes.EditMode;
                 stage.EditorHook.CanSwitchModes = false;
+
                 InitializeStage(stage, _asset.Guid);
             }
 

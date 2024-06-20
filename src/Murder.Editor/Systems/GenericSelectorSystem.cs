@@ -715,6 +715,10 @@ namespace Murder.Editor.Systems
         protected void DrawImpl(RenderContext render, World world, ImmutableArray<Entity> entities)
         {
             EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
+            if (hook.EditorMode == EditorHook.EditorModes.EditMode)
+            {
+                return;
+            }
 
             foreach (Entity e in entities)
             {

@@ -421,20 +421,35 @@ namespace Murder.Editor.CustomEditors
 
             ImGui.Separator();
 
-            if (!(entityInstance.HasComponent(typeof(ITransformComponent)) || entityInstance.HasComponent(typeof(RectPositionComponent))))
+            if (!(entityInstance.HasComponent(typeof(ITransformComponent))))
             {
-                if (ImGui.Button("Add Position"))
+                if (ImGui.Button("+\uf0b2"))
                 {
                     AddComponent(parent, entityInstance, typeof(PositionComponent));
                 }
+                ImGuiHelpers.HelpTooltip("Add PositionComponent");
                 ImGui.SameLine();
-                if (ImGui.Button("Add Basics"))
+            }
+            if (!(entityInstance.HasComponent(typeof(SpriteComponent))))
+            {
+                if (ImGui.Button("+\uf03e"))
                 {
-                    AddComponent(parent, entityInstance, typeof(PositionComponent));
                     AddComponent(parent, entityInstance, typeof(SpriteComponent));
+                }
+                ImGuiHelpers.HelpTooltip("Add SpriteComponent");
+                ImGui.SameLine();
+            }
+
+            if (!(entityInstance.HasComponent(typeof(ColliderComponent))))
+            {
+                if (ImGui.Button("+\uf0c8"))
+                {
                     AddComponent(parent, entityInstance, typeof(ColliderComponent));
                 }
+                ImGuiHelpers.HelpTooltip("Add ColliderComponent");
+                ImGui.SameLine();
             }
+
             Type? newComponentToAdd = SearchBox.SearchComponent(entityInstance.Components);
             if (newComponentToAdd is not null)
             {

@@ -132,7 +132,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
             bool showHandles = 
                 (hook.EditorMode == EditorHook.EditorModes.EditMode && hook.IsEntitySelectedOrParent(e));
 
-            if (showHandles)
+            if (showHandles && !hook.UsingGui)
             {
                 Vector2 screenPosition = render.Camera.WorldToScreenPosition(transform.Vector2);
                 

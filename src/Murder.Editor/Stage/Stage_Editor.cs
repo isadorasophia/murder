@@ -80,6 +80,23 @@ namespace Murder.Editor.Stages
             return (null, null);
         }
 
+        internal (IEntity parent, Guid childId)? FindChildInstance(int id)
+        {
+            (Guid? parentGuid, Guid? instanceGuid) = FindInstanceGuid(id);
+            if (parentGuid is null || instanceGuid is null)
+            {
+                return null;
+            }
+
+            if (!_instanceToWorld.TryGetValue(parentGuid.Value, out int parentId) ||
+                FindInstance(parentId) is not IEntity parent)
+            {
+                return null;
+            }
+
+            return (parent, instanceGuid.Value);
+        }
+
         internal IEntity? FindInstance(int id)
         {
             if (_worldToInstance.TryGetValue(id, out Guid entity))
@@ -96,21 +113,6 @@ namespace Murder.Editor.Stages
             {
                 return null;
             }
-        }
-
-        internal (IEntity parent, Guid childId)? FindChildInstance(int id)
-        {
-            if (_childEntities.TryGetValue(id, out int parentId))
-            {
-                if (FindInstance(parentId) is IEntity parent &&
-                    _worldToInstance.TryGetValue(id, out Guid child))
-                {
-                    return (parent, child);
-                }
-
-            }
-
-            return null;
         }
 
         public void AddDimension(Guid entityGuid, Rectangle rect) =>

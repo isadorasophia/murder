@@ -877,6 +877,8 @@ namespace Murder.Editor.Data
             {
                 scene.OnAssetRenamedOrAddedOrDeleted();
             }
+
+            _cachedFilteredAssetsWithImplementation.Clear();
         }
     }
 }

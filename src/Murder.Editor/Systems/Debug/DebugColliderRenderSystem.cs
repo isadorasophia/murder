@@ -11,6 +11,7 @@ using Murder.Core.Graphics;
 using Murder.Core.Physics;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
+using Murder.Editor.Messages;
 using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using Murder.Helpers;
@@ -60,7 +61,7 @@ namespace Murder.Editor.Systems
 
                 bool showHandles = allowEditingByDefault ? true :
                     (!hook.HideEditIds.Contains(e.EntityId)) &&
-                    (hook.EditorMode == EditorHook.EditorModes.EditMode && hook.IsEntitySelectedOrParent(e)) &&
+                    (hook.EditorMode == EditorHook.EditorModes.EditMode && (!hook.CanSwitchModes || hook.IsEntitySelectedOrParent(e))) &&
                     (hook.CursorIsBusy.Count==1 && hook.CursorIsBusy.Contains(typeof(DebugColliderRenderSystem)) || !hook.CursorIsBusy.Any());
 
                 bool isSolid = collider.Layer.HasFlag(CollisionLayersBase.SOLID);

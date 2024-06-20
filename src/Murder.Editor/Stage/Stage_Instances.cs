@@ -56,14 +56,6 @@ namespace Murder.Editor.Stages
         public Stage(
             ImGuiRenderer imGuiRenderer,
             RenderContext renderContext,
-            IEntity asset) : this(imGuiRenderer, renderContext, false)
-        {
-            AddEntity(asset);
-        }
-
-        public Stage(
-            ImGuiRenderer imGuiRenderer,
-            RenderContext renderContext,
             IWorldAsset worldAsset) : this(imGuiRenderer, renderContext, false, worldAsset.WorldGuid)
         {
             _worldAsset = worldAsset;
