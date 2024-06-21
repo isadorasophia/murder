@@ -243,9 +243,12 @@ namespace Murder.Editor.Stages
         /// </summary>
         private void UntrackEntity(int id)
         {
-            // Remove itself.
-            _instanceToWorld.Remove(_worldToInstance[id]);
-            _worldToInstance.Remove(id);
+            if (_worldToInstance.TryGetValue(id, out Guid g))
+            {
+                // Remove itself.
+                _instanceToWorld.Remove(g);
+                _worldToInstance.Remove(id);
+            }
 
             _childEntities.Remove(id);
 
