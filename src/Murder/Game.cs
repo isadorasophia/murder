@@ -706,7 +706,7 @@ namespace Murder
                 _unscaledPreviousElapsedTime = _unscaledElapsedTime;
                 _scaledPreviousElapsedTime = _scaledElapsedTime;
 
-                _targetFixedUpdateTime += _fixedUpdateDelta;
+                _targetFixedUpdateTime += _fixedUpdateDelta / TimeScale;
 
                 if (maxRecoverFrames-- == 0)
                 {

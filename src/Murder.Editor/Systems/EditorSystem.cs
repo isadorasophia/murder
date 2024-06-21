@@ -104,6 +104,18 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
 
                 if (ImGui.BeginTabItem("View"))
                 {
+                    float timeScale = Game.Instance.TimeScale;
+                    if (ImGui.SliderFloat("Time Scale", ref timeScale, 0, 2))
+                    {
+                        Game.Instance.TimeScale = timeScale;
+                    }
+                    ImGui.SameLine();
+                    if (ImGui.Button("Reset Time Scale"))
+                    {
+                        Game.Instance.TimeScale = 1;
+                    }
+                    ImGui.Separator();
+
                     ImGui.Checkbox("Collisions", ref hook.DrawCollisions);
                     ImGui.Checkbox("Grid", ref hook.DrawGrid);
                     if (ImGui.Checkbox("Pathfind", ref hook.DrawPathfind))
