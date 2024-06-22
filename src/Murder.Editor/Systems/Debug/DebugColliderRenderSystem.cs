@@ -48,6 +48,11 @@ namespace Murder.Editor.Systems
                 return;
             }
 
+            if (Game.Input.Down(InputHelpers.OSActionModifier))
+            {
+                return;
+            }
+
             bool usingCursor = false;
             EditorHook hook = editor.EditorHook;
             

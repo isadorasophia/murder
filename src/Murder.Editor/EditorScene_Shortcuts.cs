@@ -6,6 +6,7 @@ using Murder.Diagnostics;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Services;
 using Murder.Editor.Utilities;
+using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Numerics;
 using static Murder.Editor.ImGuiExtended.SearchBox;
@@ -36,24 +37,24 @@ public partial class EditorScene
             ],
             [ShortcutGroup.Edit] =
             [
-                new ActionShortcut("Undo", new Chord(Keys.Z, _leftOsActionModifier), Architect.Undo.Undo),
-                new ActionShortcut("Redo", new Chord(Keys.Y, _leftOsActionModifier), Architect.Undo.Redo),
+                new ActionShortcut("Undo", new Chord(Keys.Z, InputHelpers.OSActionModifier), Architect.Undo.Undo),
+                new ActionShortcut("Redo", new Chord(Keys.Y, InputHelpers.OSActionModifier), Architect.Undo.Redo),
             ],
             [ShortcutGroup.View] =
             [
                 new ActionShortcut("Game Logger", Keys.F1, ToggleGameLogger),
-                new ToggleShortcut("ImGui Demo", new Chord(Keys.G, _leftOsActionModifier, Keys.LeftShift),
+                new ToggleShortcut("ImGui Demo", new Chord(Keys.G, InputHelpers.OSActionModifier, Keys.LeftShift),
                     ToggleImGuiDemo),
-                new ToggleShortcut("Imgui Metrics", new Chord(Keys.M, _leftOsActionModifier, Keys.LeftShift),
+                new ToggleShortcut("Imgui Metrics", new Chord(Keys.M, InputHelpers.OSActionModifier, Keys.LeftShift),
                     ToggleShowingMetricsWindow),
-                new ToggleShortcut("Style Editor", new Chord(Keys.E, _leftOsActionModifier, Keys.LeftShift),
+                new ToggleShortcut("Style Editor", new Chord(Keys.E, InputHelpers.OSActionModifier, Keys.LeftShift),
                     ToggleShowingStyleEditor)
             ],
             [ShortcutGroup.Assets] =
             [
                 new ActionShortcut("Save All Assets", Chord.None,
                     SaveAllAssets),
-                new ActionShortcut("Bake Aseprite Guids", new Chord(Keys.B, _leftOsActionModifier, Keys.LeftShift),
+                new ActionShortcut("Bake Aseprite Guids", new Chord(Keys.B, InputHelpers.OSActionModifier, Keys.LeftShift),
                     BakeAsepriteGuids)
             ],
             [ShortcutGroup.Reload] =
@@ -83,12 +84,12 @@ public partial class EditorScene
             [ShortcutGroup.Tools] =
             [
                 new ActionShortcut("Refresh Window", Keys.F4, RefreshEditorWindow),
-                new ActionShortcut("Run Diagnostics", new Chord(Keys.D, _leftOsActionModifier, Keys.LeftShift),  RunDiagnostics),
-                new ActionShortcut("Command Palette", new Chord(Keys.A, _leftOsActionModifier, Keys.LeftShift), ToggleCommandPalette)
+                new ActionShortcut("Run Diagnostics", new Chord(Keys.D, InputHelpers.OSActionModifier, Keys.LeftShift),  RunDiagnostics),
+                new ActionShortcut("Command Palette", new Chord(Keys.A, InputHelpers.OSActionModifier, Keys.LeftShift), ToggleCommandPalette)
             ],
             [ShortcutGroup.Publish] =
             [
-                new ActionShortcut("Ready to ship!", new Chord(Keys.P, _leftOsActionModifier, Keys.Enter), PackAssetsToPublishedGame)
+                new ActionShortcut("Ready to ship!", new Chord(Keys.P, InputHelpers.OSActionModifier, Keys.Enter), PackAssetsToPublishedGame)
             ]
         }.ToImmutableDictionary();
 
@@ -183,8 +184,8 @@ public partial class EditorScene
             }
         }
         
-        if (Game.Input.Shortcut(Keys.W, _leftOsActionModifier) ||
-            Game.Input.Shortcut(Keys.W, _rightOsActionModifier))
+        if (Game.Input.Shortcut(Keys.W, InputHelpers.OSActionModifier) ||
+            Game.Input.Shortcut(Keys.W, InputHelpers.OSActionModifier))
         {
             if (_selectedAssets.Count > 0)
             {
@@ -192,8 +193,8 @@ public partial class EditorScene
             }
         }
 
-        if (Game.Input.Shortcut(Keys.F, _leftOsActionModifier) || 
-            Game.Input.Shortcut(Keys.F, _rightOsActionModifier))
+        if (Game.Input.Shortcut(Keys.F, InputHelpers.OSActionModifier) || 
+            Game.Input.Shortcut(Keys.F, InputHelpers.OSActionModifier))
         {
             _focusOnFind = true;
         }

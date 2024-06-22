@@ -720,6 +720,11 @@ namespace Murder.Editor.Systems
                 return;
             }
 
+            if (Game.Input.Down(InputHelpers.OSActionModifier))
+            {
+                return;
+            }
+
             foreach (Entity e in entities)
             {
                 if (!e.HasTransform()) continue;

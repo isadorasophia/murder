@@ -30,16 +30,6 @@ namespace Murder.Editor
         private Guid _tabToSelect;
         private int _randomCrow = 0;
 
-        private static readonly Keys _leftOsActionModifier =
-            OperatingSystem.IsMacOS() ?
-                Keys.LeftWindows : /* This is equivalent to Cmd ⌘ */
-                Keys.LeftControl;
-        
-        private static readonly Keys _rightOsActionModifier =
-            OperatingSystem.IsMacOS() ?
-                Keys.RightWindows : /* This is equivalent to Cmd ⌘ */
-                Keys.RightControl;
-
         private bool _isLoadingContent = true;
         int _changingScenesLock = 3;
         

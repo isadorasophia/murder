@@ -1,9 +1,22 @@
-﻿using Murder.Services;
+﻿using Microsoft.Xna.Framework.Input;
+using Murder.Services;
 
 namespace Murder.Utilities
 {
     public static class InputHelpers
     {
+        public static Keys OSActionModifier => _leftOsActionModifier;
+
+        private static readonly Keys _leftOsActionModifier =
+            OperatingSystem.IsMacOS() ?
+                Keys.LeftWindows : /* This is equivalent to Cmd ⌘ */
+                Keys.LeftControl;
+
+        private static readonly Keys _rightOsActionModifier =
+            OperatingSystem.IsMacOS() ?
+                Keys.RightWindows : /* This is equivalent to Cmd ⌘ */
+                Keys.RightControl;
+
         public static void Clamp(int length)
         {
             Game.Input.ClampText(length);

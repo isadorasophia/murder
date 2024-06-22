@@ -45,6 +45,8 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
             overrideCurrentTime = timeline.Time;
         }
 
+        bool previewMode = Game.Input.Down(InputHelpers.OSActionModifier);
+
         foreach (var e in context.Entities)
         {
             SpriteComponent? sprite = e.TryGetSprite();
@@ -129,7 +131,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
             int ySortOffset = sprite.HasValue ? sprite.Value.YSortOffset : agentSprite!.Value.YSortOffset;
 
 
-            bool showHandles = 
+            bool showHandles = !previewMode &&
                 (hook.EditorMode == EditorHook.EditorModes.EditMode && hook.IsEntitySelectedOrParent(e));
 
             if (showHandles && !hook.UsingGui)
@@ -267,7 +269,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
                 renderPosition += spriteOffset.Offset;
             }
 
-            bool isSelected = e.HasComponent<IsSelectedComponent>();
+            bool isSelected = !previewMode && e.HasComponent<IsSelectedComponent>();
 
             if (e.TryGetComponent<EditorTween>() is EditorTween editorTween)
             {
