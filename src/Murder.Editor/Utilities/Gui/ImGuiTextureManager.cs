@@ -70,13 +70,13 @@ namespace Murder.Editor.ImGuiExtended
             string name = "missingImage";
             string id = $"preview_{name}";
 
-            return GetEditorImage(name, id);
+            return GetEditorImage(name, id, 1f);
         }
 
         /// <summary>
         /// Get the pointer for an editor image. If no pointer if found, try to load it.
         /// </summary>
-        public nint? GetEditorImage(string path, string id)
+        public nint? GetEditorImage(string path, string id, float scale)
         {
             if (_images.TryGetValue(id, out IntPtr textureId))
             {
@@ -90,7 +90,7 @@ namespace Murder.Editor.ImGuiExtended
                 return null;
             }
 
-            if (!atlas.TryCreateTexture(path, out Texture2D? texture, Architect.EditorSettings.DpiScale))
+            if (!atlas.TryCreateTexture(path, out Texture2D? texture, scale))
             {
                 GameLogger.Warning($"Unable to retrieve editor image {path}");
                 return null;

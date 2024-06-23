@@ -99,6 +99,14 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                     {
                         ResizeWindow(2, render);
                     }
+
+                    ImGui.SameLine();
+                    if (ImGui.Button("3x"))
+                    {
+                        ResizeWindow(2, render);
+                    }
+
+                    ImGui.EndTabItem();
                 }
 
                 if (ImGui.BeginTabItem("View"))

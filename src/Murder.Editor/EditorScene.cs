@@ -228,7 +228,7 @@ namespace Murder.Editor
 
                 if (!_isLoadingContent)
                 {
-                    if (Architect.EditorData.ImGuiTextureManager.GetEditorImage("crow_0000", "empty_canvas") is nint emptyImage)
+                    if (Architect.EditorData.ImGuiTextureManager.GetEditorImage("crow_0000", "empty_canvas", Architect.EditorSettings.DpiScale > 1 ? 2 : 1) is nint emptyImage)
                     {
                         draw.AddImage(emptyImage, rectangle.TopLeft, rectangle.BottomRight, Vector2.Zero, Vector2.One, Color.ToUint(new Vector4(1, 1, 1, .8f)));
                     }
@@ -237,7 +237,7 @@ namespace Murder.Editor
                 {
                     int frame = _randomCrow * 2 + ((Game.NowUnscaled % 0.5f) > 0.25f ? 1 : 2);
                     string frameName = $"crow_{frame:0000}";
-                    if (Architect.EditorData.ImGuiTextureManager.GetEditorImage(frameName, $"loading_{frame}") is nint emptyImage) 
+                    if (Architect.EditorData.ImGuiTextureManager.GetEditorImage(frameName, $"loading_{frame}", Architect.EditorSettings.DpiScale > 1 ? 2 : 1) is nint emptyImage) 
                     {
                         draw.AddImage(emptyImage, rectangle.TopLeft, rectangle.BottomRight, Vector2.Zero, Vector2.One, Color.ToUint(new Vector4(1, 1, 1, 1f)));
                     }
