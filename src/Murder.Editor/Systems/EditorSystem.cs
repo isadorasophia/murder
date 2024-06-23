@@ -13,6 +13,8 @@ using Murder.Editor.Core;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
 using Murder.Services;
+using Murder.Systems;
+using Murder.Utilities;
 using System;
 using System.Numerics;
 
@@ -33,6 +35,9 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
     private int _inspectingRenderTarget = 0;
     private IntPtr _renderInspectorPtr;
     private RenderContext.BatchPreviewState _renderPreview = RenderContext.BatchPreviewState.None;
+
+
+    private float _hovered;
 
     public void Start(Context context)
     {
@@ -60,34 +65,32 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
 
         var hook = context.World.GetUnique<EditorComponent>().EditorHook;
 
+        ImGui.BeginMainMenuBar();
+
+        if (ImGui.BeginMenu("Show"))
+        {
+            ImGui.MenuItem("Render Inspector", "", ref _showRenderInspector);
+            ImGui.EndMenu();
+        }
+
+        ImGui.EndMainMenuBar();
+
         // FPS Window
-        ImGui.SetNextWindowBgAlpha(0.9f);
-        if (ImGui.Begin("Insights"))
+        ImGui.SetNextWindowBgAlpha(Calculator.Lerp(0.5f, 1f, _hovered));
+        if (ImGui.Begin("Insights", ImGuiWindowFlags.AlwaysAutoResize))
         {
             if (ImGui.BeginTabBar("Insights Tabs"))
             {
                 ImGui.SetWindowPos(new(0, 0), ImGuiCond.Appearing);
 
-                if (ImGui.BeginTabItem("Performance"))
+                if (ImGui.BeginTabItem("Overview"))
                 {
+                    ImGui.SeparatorText("Performance");
                     ImGui.Text($"FPS: {_frameRate.Value}");
                     ImGui.Text($"Update: {Game.Instance.UpdateTime:00.00} ({Game.Instance.LongestUpdateTime:00.00})");
                     ImGui.Text($"Render: {Game.Instance.RenderTime:00.00} ({Game.Instance.LongestRenderTime:00.00})");
-
-                    ImGui.Separator();
-
-                    ImGui.Text($"{Game.GraphicsDevice.Adapter.Description:0}:");
-                    ImGui.Text($"Display: [{Game.GraphicsDevice.Adapter.CurrentDisplayMode.Width}px, {Game.GraphicsDevice.Adapter.CurrentDisplayMode.Height}px]");
-
-                    ImGui.Text($"Scale: {render.Viewport.Scale}");
-                    ImGui.Text($"Viewport: {render.Viewport.Size}");
-                    ImGui.Text($"NativeResolution: {render.Viewport.NativeResolution}");
-
-                    ImGui.Separator();
-
                     ImGui.Text($"Entities: {context.World.EntityCount}");
-                    ImGui.Text($"Now: {Game.Now:0.0}");
-                    ImGui.Text($"Now(Unscaled): {Game.NowUnscaled:0.0}");
+
 
                     ImGui.SeparatorText("Window Scale");
                     if (ImGui.Button("1x"))
@@ -103,25 +106,49 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                     ImGui.SameLine();
                     if (ImGui.Button("3x"))
                     {
-                        ResizeWindow(2, render);
+                        ResizeWindow(3, render);
                     }
 
-                    ImGui.EndTabItem();
-                }
 
-                if (ImGui.BeginTabItem("View"))
-                {
+                    ImGui.SameLine();
+                    if (ImGui.Button("4x"))
+                    {
+                        ResizeWindow(3, render);
+                    }
+
+                    ImGui.SeparatorText("Time");
+
+
                     float timeScale = Game.Instance.TimeScale;
-                    if (ImGui.SliderFloat("Time Scale", ref timeScale, 0, 2))
+                    ImGui.TextColored(Game.Profile.Theme.Faded, "Time Scale");
+                    if (ImGui.SliderFloat("##Time Scale", ref timeScale, 0, 2))
                     {
                         Game.Instance.TimeScale = timeScale;
                     }
                     ImGui.SameLine();
-                    if (ImGui.Button("Reset Time Scale"))
+                    if (ImGui.Button("Reset"))
                     {
                         Game.Instance.TimeScale = 1;
                     }
-                    ImGui.Separator();
+                    ImGui.Spacing();
+
+                    if (context.World.IsPaused)
+                    {
+                        ImGui.TextColored(Game.Profile.Theme.Yellow, "Paused");
+                    }
+                    else
+                    {
+                        ImGui.TextColored(Game.Profile.Theme.Faded, "Not Paused");
+                    }
+                    ImGui.Text($"Now: {Game.Now:0.0}");
+                    ImGui.Text($"Now(Unscaled): {Game.NowUnscaled:0.0}");
+
+                    ImGui.EndTabItem();
+                }
+
+                if (ImGui.BeginTabItem("Settings"))
+                {
+                    ImGui.SeparatorText("Gizmos");
 
                     ImGui.Checkbox("Collisions", ref hook.DrawCollisions);
                     ImGui.Checkbox("Grid", ref hook.DrawGrid);
@@ -150,11 +177,6 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                     }
                     ImGui.Checkbox("Stretch", ref render.PreviewStretch);
 
-                    if (ImGui.Button("Show Render Inspector"))
-                    {
-                        _showRenderInspector = true;
-                    }
-
                     if (_showRenderInspector && ImGui.Begin("Render Inspector", ref _showRenderInspector, ImGuiWindowFlags.None))
                     {
                         (bool mod, _inspectingRenderTarget) = ImGuiHelpers.DrawEnumField("Render Target", typeof(RenderContext.RenderTargets), _inspectingRenderTarget);
@@ -181,15 +203,43 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                     ImGui.EndTabItem();
                 }
                 
-                if (ImGui.BeginTabItem("Delta Time Monitor"))
+                if (ImGui.BeginTabItem("Details"))
                 {
+                    ImGui.SeparatorText("Performance");
+
+                    ImGui.Text($"FPS: {_frameRate.Value}");
+                    ImGui.Text($"Update: {Game.Instance.UpdateTime:00.00} ({Game.Instance.LongestUpdateTime:00.00})");
+                    ImGui.Text($"Render: {Game.Instance.RenderTime:00.00} ({Game.Instance.LongestRenderTime:00.00})");
+                    ImGui.Text($"Entities: {context.World.EntityCount}");
+
+                    ImGui.Separator();
                     PlotDeltaTimeGraph();
+
+                    ImGui.SeparatorText("Display Details");
+
+                    ImGui.Text($"{Game.GraphicsDevice.Adapter.Description:0}:");
+                    ImGui.Text($"Display: [{Game.GraphicsDevice.Adapter.CurrentDisplayMode.Width}px, {Game.GraphicsDevice.Adapter.CurrentDisplayMode.Height}px]");
+
+                    ImGui.Text($"Scale: {render.Viewport.Scale}");
+                    ImGui.Text($"Viewport: {render.Viewport.Size}");
+                    ImGui.Text($"NativeResolution: {render.Viewport.NativeResolution}");
+
                     ImGui.EndTabItem();
                 }
 
                 ImGui.EndTabBar();
             }
         }
+
+        if (ImGui.IsWindowHovered())
+        {
+            _hovered = Calculator.Approach(_hovered, 1, Game.DeltaTime * 5);
+        }
+        else
+        {
+            _hovered = Calculator.Approach(_hovered, 0, Game.DeltaTime * 5);
+        }
+
         ImGui.End();
 
         if (hook.AllSelectedEntities.Count > 0)
@@ -304,20 +354,15 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         int gen2Count = GC.CollectionCount(generation: 2);
 
         // ImGui.Text($"Gen 1/Gen 2 GC Count: {gen1Count}, {gen2Count}");
-
-        if (ImGui.BeginChild("delta_time_monitor"))
+        UpdateTimeTracker tracker = Game.TimeTrackerDiagnoostics;
+        if (tracker.Length >= 0)
         {
-            UpdateTimeTracker tracker = Game.TimeTrackerDiagnoostics;
-            if (tracker.Length >= 0)
-            {
-                ImGui.PlotHistogram("##fps_histogram", ref tracker.Sample[0], tracker.Length, 0, "Delta Time Tracker (ms)", 0, Game.FixedDeltaTime * 1.5f * 1000, ImGui.GetContentRegionMax());
-            }
-            else
-            {
-                ImGui.Text($"Graph is empty. Is DIAGNOSTICS_MODE enabled?");
-            }
+            ImGui.PlotHistogram("##fps_histogram", ref tracker.Sample[0], tracker.Length, 0, "Delta Time Tracker (ms)", 0, Game.FixedDeltaTime * 1.5f * 1000, new Vector2(ImGui.GetContentRegionAvail().X, 80));
+        }
+        else
+        {
+            ImGui.Text($"Graph is empty. Is DIAGNOSTICS_MODE enabled?");
         }
 
-        ImGui.EndChild();
     }
 }
