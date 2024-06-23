@@ -134,11 +134,11 @@ namespace Murder.Core.Graphics
         /// <summary>
         /// This creates a new texture on the fly and should be *AVOIDED!*. Use `Get` instead.
         /// </summary>
-        public Texture2D CreateTextureFromAtlas(string id)
+        public Texture2D CreateTextureFromAtlas(string id, float scale)
         {
             if (_entries.TryGetValue(id, out var textureCoord))
             {
-                return CreateTextureFromAtlas(textureCoord);
+                return CreateTextureFromAtlas(textureCoord, SurfaceFormat.Color, scale);
             }
             else
             {
@@ -152,7 +152,7 @@ namespace Murder.Core.Graphics
         /// <param name="id"></param>
         /// <param name="texture"></param>
         /// <returns></returns>
-        public bool TryCreateTexture(string id, [NotNullWhen(true)] out Texture2D? texture)
+        public bool TryCreateTexture(string id, [NotNullWhen(true)] out Texture2D? texture, float scale)
         {
             if (!string.IsNullOrWhiteSpace(id))
             {
@@ -160,7 +160,7 @@ namespace Murder.Core.Graphics
                 {
                     try
                     {
-                        texture = CreateTextureFromAtlas(id);
+                        texture = CreateTextureFromAtlas(id, scale);
                         return true;
                     }
                     catch

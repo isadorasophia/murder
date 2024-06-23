@@ -51,9 +51,9 @@ namespace Murder.Editor.ImGuiExtended
         /// Creates a texture based on <paramref name="atlas"/> at <paramref name="atlasFrameId"/>.
         /// Caches the texture according to <paramref name="textureName"/>.
         /// </summary>
-        public nint? CreateTexture(TextureAtlas atlas, string atlasFrameId, string textureName)
+        public nint? CreateTexture(TextureAtlas atlas, string atlasFrameId, string textureName, float scale)
         {
-            if (!atlas.TryCreateTexture(atlasFrameId, out Texture2D? t))
+            if (!atlas.TryCreateTexture(atlasFrameId, out Texture2D? t, scale))
             {
                 return null;
             }
@@ -90,14 +90,15 @@ namespace Murder.Editor.ImGuiExtended
                 return null;
             }
 
-            if (!atlas.TryCreateTexture(path, out Texture2D? t))
+            if (!atlas.TryCreateTexture(path, out Texture2D? texture, Architect.EditorSettings.DpiScale))
             {
                 GameLogger.Warning($"Unable to retrieve editor image {path}");
                 return null;
             }
 
-            t.Name = path;
-            return CacheTexture(id, t);
+            texture.Name = path;
+            
+            return CacheTexture(id, texture);
         }
 
         public bool DrawPreviewImage(string atlasFrameId, float maxSize, TextureAtlas? atlas, float scale = 1)
@@ -124,7 +125,7 @@ namespace Murder.Editor.ImGuiExtended
                 return true;
             }
 
-            nint? AtlasCoordinatesId = CreateTexture(atlas, atlasFrameId, id);
+            nint? AtlasCoordinatesId = CreateTexture(atlas, atlasFrameId, id, 1f);
             if (AtlasCoordinatesId is not null)
             {
                 DrawImage(AtlasCoordinatesId.Value, Architect.Instance.ImGuiRenderer.GetLoadedTexture(AtlasCoordinatesId.Value)!, maxSize, scale);

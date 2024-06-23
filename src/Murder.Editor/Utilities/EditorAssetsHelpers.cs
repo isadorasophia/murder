@@ -165,7 +165,7 @@ public static class EditorAssetHelpers
                 TextureAtlas? atlas = Game.Data.TryFetchAtlas(aseprite.Atlas);
                 if (atlas is not null)
                 {
-                    texturePtr = Architect.ImGuiTextureManager.CreateTexture(atlas, frameId, id);
+                    texturePtr = Architect.ImGuiTextureManager.CreateTexture(atlas, frameId, id, 1f);
                 }
             }
         }
@@ -244,7 +244,7 @@ public static class EditorAssetHelpers
 
         if (texturePtr is null && Game.Data.TryFetchAtlas(asset.Atlas) is TextureAtlas atlas)
         {
-            texturePtr = Architect.ImGuiTextureManager.CreateTexture(atlas, frameName, textureId);
+            texturePtr = Architect.ImGuiTextureManager.CreateTexture(atlas, frameName, textureId, 1f);
         }
 
         if (texturePtr is null)

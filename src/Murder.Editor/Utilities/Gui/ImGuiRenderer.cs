@@ -392,14 +392,25 @@ namespace Murder.Editor.ImGuiExtended
             _graphicsDevice.BlendState = BlendState.NonPremultiplied;
             _graphicsDevice.RasterizerState = _rasterizerState;
             _graphicsDevice.DepthStencilState = DepthStencilState.DepthRead;
-            _graphicsDevice.SamplerStates[0] = SamplerState.AnisotropicClamp;
+
+            if (Architect.EditorSettings.DpiScale % 1 == 0)
+            {
+                _graphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
+            }
+            else
+            {
+                _graphicsDevice.SamplerStates[0] = SamplerState.AnisotropicClamp;
+            }
 
             // Handle cases of screen coordinates != from framebuffer coordinates (e.g. retina displays)
             drawData.ScaleClipRects(ImGui.GetIO().DisplayFramebufferScale);
 
             // Setup projection
-            _graphicsDevice.Viewport = new Viewport(0, 0, _graphicsDevice.PresentationParameters.BackBufferWidth, _graphicsDevice.PresentationParameters.BackBufferHeight);
-
+            if (_graphicsDevice.Viewport.Width != _graphicsDevice.PresentationParameters.BackBufferWidth || _graphicsDevice.Viewport.Height != _graphicsDevice.PresentationParameters.BackBufferHeight)
+            {
+                _graphicsDevice.Viewport = new Viewport(0, 0, _graphicsDevice.PresentationParameters.BackBufferWidth, _graphicsDevice.PresentationParameters.BackBufferHeight);
+            }
+            
             UpdateBuffers(drawData);
 
             RenderCommandLists(drawData);
