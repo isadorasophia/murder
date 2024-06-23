@@ -168,7 +168,7 @@ public partial class EditorScene
         }
 
         ImGui.EndMainMenuBar();
-        
+
         // We need to check for the visibility of escapable elements in order and dismiss whatever is on top.
         if (Game.Input.Shortcut(Keys.Escape))
         {

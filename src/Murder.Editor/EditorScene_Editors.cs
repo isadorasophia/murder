@@ -68,20 +68,20 @@ namespace Murder.Editor
             {
                 bool show = true;
 
-                // TODO: [Pedro?] Fix this. For some reason, after reopening the editor
-                // ImGui thinks that it can open *all* the tabs until it settles down,
-                // which makes the window "flicker". I am very annoyed with this.
-                if (_initializedEditors && _tabToSelect == currentAsset.Guid)
-                {
-                    ImGui.SetNextWindowFocus();
-                    _tabToSelect = Guid.Empty;
-                }
-
                 ImGui.SetNextWindowDockID(EDITOR_DOCK_ID, ImGuiCond.Appearing);
                 ImGuiWindowFlags fileSaved = currentAsset.FileChanged ? ImGuiWindowFlags.UnsavedDocument : ImGuiWindowFlags.None;
-                if (ImGui.Begin($"{currentAsset.Icon} {currentAsset.GetSimplifiedName()}##{currentAsset.Guid}", ref show, fileSaved) &&
+
+                if (_openAsset!= Guid.Empty || !_initializedEditors && Architect.EditorSettings.LastOpenedAsset == currentAsset.Guid)
+                {
+                    _openAsset= Guid.Empty;
+                    ImGui.SetNextWindowFocus();
+                }
+
+                if (ImGui.Begin($"{currentAsset.Icon} {currentAsset.GetSimplifiedName()}##{currentAsset.Guid}", ref show, fileSaved | ImGuiWindowFlags.NoFocusOnAppearing) &&
                     _initializedEditors)
                 {
+                    Architect.EditorSettings.LastOpenedAsset = currentAsset.Guid;
+
                     if (_selectedTab != currentAsset.Guid)
                     {
                         _selectedTab = currentAsset.Guid;

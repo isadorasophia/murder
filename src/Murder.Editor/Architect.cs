@@ -2,6 +2,7 @@
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using Murder.Assets;
+using Murder.Attributes;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
@@ -69,6 +70,12 @@ namespace Murder.Editor
         public override GraphLogger GraphLogger { get; } = new EditorGraphLogger();
 
         public CursorStyle Cursor { get; set; } = CursorStyle.Normal;
+
+        /// <summary>
+        /// Last asset opened in the editor.
+        /// </summary>
+        [HideInEditor]
+        public Guid LastOpenedAsset = Guid.Empty;
 
         protected override bool HasCursor => true;
 

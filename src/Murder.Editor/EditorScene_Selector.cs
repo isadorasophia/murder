@@ -17,6 +17,7 @@ namespace Murder.Editor
     public partial class EditorScene
     {
         private string _newAssetName = string.Empty;
+        private Guid _openAsset;
 
         private bool _colapseAll = false;
         private readonly List<string> _expandTo = new List<string>();
@@ -306,6 +307,7 @@ namespace Murder.Editor
 
             if (ImGuiHelpers.SelectableWithIconColor($"{name}{(asset.FileChanged ? "*" : "")}", asset.Icon, color, color * 0.8f, _selectedAssets.ContainsKey(asset.Guid)))
             {
+                _openAsset = asset.Guid;
                 OpenAssetEditor(asset, false);
             }
 

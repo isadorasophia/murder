@@ -188,7 +188,9 @@ namespace Murder.Editor.Stages
                 ImGui.SetNextWindowPos(topLeft);
                 ImGui.SetNextWindowBgAlpha(0.85f);
                 if (ImGui.Begin("Stage Info", 
-                    ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoNav))
+                    ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoCollapse |
+                    ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoNav |
+                    ImGuiWindowFlags.NoDecoration))
                 {
                     if (EditorHook.EditorMode == EditorHook.EditorModes.EditMode)
                     {
