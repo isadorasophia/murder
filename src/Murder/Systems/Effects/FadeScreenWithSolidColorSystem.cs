@@ -30,6 +30,8 @@ namespace Murder.Systems
         private float _currentAlpha = 0;
         private float _currentSort = .05f;
 
+        private int _targetBatch = Batches2D.UiBatchId;
+
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
             OnModified(world, entities);
@@ -61,6 +63,7 @@ namespace Murder.Systems
                 _color = f.Color;
                 _duration = f.Duration;
                 _currentSort = f.Sort;
+                _targetBatch = f.BatchId;
             }
         }
 
@@ -102,7 +105,7 @@ namespace Murder.Systems
             }
 
             RenderServices.DrawRectangle(
-                render.UiBatch,
+                render.GetBatch(_targetBatch),
                 new Rectangle(Vector2.Zero, render.Camera.SafeBounds.Size),
                 _color * _currentAlpha,
                 _currentSort);
