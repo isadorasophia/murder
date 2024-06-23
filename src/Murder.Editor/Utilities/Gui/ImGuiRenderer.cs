@@ -306,7 +306,7 @@ namespace Murder.Editor.ImGuiExtended
                     io.AddKeyEvent(imguikey, keyboard.IsKeyDown(key));
                 }
             }
-
+            
             io.DisplaySize = new System.Numerics.Vector2(_graphicsDevice.PresentationParameters.BackBufferWidth/dpiScale, _graphicsDevice.PresentationParameters.BackBufferHeight/ dpiScale);
             io.DisplayFramebufferScale = new System.Numerics.Vector2(dpiScale, dpiScale);
         }

@@ -133,7 +133,7 @@ namespace Murder.Editor
 
         public override void DrawGui()
         {
-            var screenSize = new Vector2(Architect.Instance.Window.ClientBounds.Width, Architect.Instance.Window.ClientBounds.Height);
+            var screenSize = new Vector2(Architect.Instance.Window.ClientBounds.Width, Architect.Instance.Window.ClientBounds.Height) / Architect.EditorSettings.DpiScale;
 
             var staticWindowFlags =
                 ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoDecoration |
@@ -224,7 +224,7 @@ namespace Murder.Editor
                 Vector2 pixelSize = new Vector2(96, 80);
                 float ratio = Math.Clamp(Math.Min((size.X / pixelSize.X), (size.Y / pixelSize.Y)), 1, 2);
                 Vector2 finalSize = pixelSize * ratio;
-                Rectangle rectangle = Rectangle.CenterRectangle(min + size / 2f, finalSize.X, finalSize.Y);
+                Rectangle rectangle = Rectangle.CenterRectangle(min + (size) / 2f, finalSize.X, finalSize.Y);
 
                 if (!_isLoadingContent)
                 {
@@ -242,7 +242,7 @@ namespace Murder.Editor
                         draw.AddImage(emptyImage, rectangle.TopLeft, rectangle.BottomRight, Vector2.Zero, Vector2.One, Color.ToUint(new Vector4(1, 1, 1, 1f)));
                     }
                 }
-
+                draw.AddRect(min, min + size, Color.ToUint(Game.Profile.Theme.BgFaded));
                 ImGui.EndTable();
             }
             ImGui.EndChild();
