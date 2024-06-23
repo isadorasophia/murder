@@ -430,7 +430,7 @@ namespace Murder
         /// In windowed mode, uses either the saved window size or the provided screen size.
         /// Synchronizes with vertical retrace in debug mode.
         /// </remarks>
-        protected virtual void SetWindowSize(Point screenSize)
+        public virtual void SetWindowSize(Point screenSize)
         {
             _graphics.SynchronizeWithVerticalRetrace = true;
             if (Fullscreen)

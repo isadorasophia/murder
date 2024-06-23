@@ -46,7 +46,7 @@ namespace Murder.Editor.Systems
                         e.SetCameraFollow(false);
                     }
 
-                    Vector2 delta = (_previousCursorPosition - hook.CursorScreenPosition).ToVector2() / camera.Zoom;
+                    Vector2 delta = (_previousCursorPosition - hook.CursorScreenPosition).ToVector2() / (camera.Zoom * Architect.EditorSettings.DpiScale);
 
                     camera.Position += delta;
                     hook.Cursor = CursorStyle.Eye;

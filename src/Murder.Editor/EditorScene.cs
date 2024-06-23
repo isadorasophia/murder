@@ -148,9 +148,18 @@ namespace Murder.Editor
             if (_showStyleEditor)
             {
                 ImGui.Begin("Style Editor", ref _showStyleEditor, ImGuiWindowFlags.AlwaysAutoResize);
-                if (ImGui.SliderFloat("Editor Scale", ref Architect.EditorSettings.FontScale, 1f, 2f))
-                    ImGui.GetIO().FontGlobalScale = Math.Clamp(Architect.EditorSettings.FontScale, 1, 2);
-            
+                if (ImGui.InputFloat("Dpi Scale", ref Architect.EditorSettings.DpiScale, 0.25f, 1f))
+                {
+
+                }
+
+                var io = ImGui.GetIO();
+                float fontScale = io.FontGlobalScale;
+                if (ImGui.InputFloat("Font Scale", ref fontScale, 0.25f, 1f))
+                {
+                    io.FontGlobalScale = fontScale;
+                }
+
                 ImGui.End();
             }
             

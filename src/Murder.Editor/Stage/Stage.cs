@@ -155,9 +155,9 @@ namespace Murder.Editor.Stages
 
             if (_world.GetUnique<EditorComponent>() is EditorComponent editorComponent)
             {
-                editorComponent.EditorHook.Offset = topLeft.Point();
-                editorComponent.EditorHook.StageSize = rectToDrawStage?.Size ?? 
-                    Rectangle.FromCoordinates(topLeft, bottomRight).Size;
+                editorComponent.EditorHook.Offset = (topLeft * Architect.EditorSettings.DpiScale).Point();
+                editorComponent.EditorHook.StageSize = (rectToDrawStage?.Size ?? 
+                    Rectangle.FromCoordinates(topLeft, bottomRight).Size) * Architect.EditorSettings.DpiScale;
             }
 
             ImDrawListPtr drawList = ImGui.GetWindowDrawList();

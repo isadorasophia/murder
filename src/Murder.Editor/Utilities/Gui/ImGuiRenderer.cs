@@ -278,11 +278,13 @@ namespace Murder.Editor.ImGuiExtended
         {
             if (!_game.IsActive) return;
 
+            float dpiScale = Architect.EditorSettings.DpiScale;
+
             var io = ImGui.GetIO();
 
             var mouse = Mouse.GetState();
             var keyboard = Keyboard.GetState();
-            io.AddMousePosEvent(mouse.X, mouse.Y);
+            io.AddMousePosEvent(mouse.X / dpiScale, mouse.Y / dpiScale);
             io.AddMouseButtonEvent(0, mouse.LeftButton == ButtonState.Pressed);
             io.AddMouseButtonEvent(1, mouse.RightButton == ButtonState.Pressed);
             io.AddMouseButtonEvent(2, mouse.MiddleButton == ButtonState.Pressed);
@@ -305,8 +307,8 @@ namespace Murder.Editor.ImGuiExtended
                 }
             }
 
-            io.DisplaySize = new System.Numerics.Vector2(_graphicsDevice.PresentationParameters.BackBufferWidth, _graphicsDevice.PresentationParameters.BackBufferHeight);
-            io.DisplayFramebufferScale = new System.Numerics.Vector2(1f, 1f);
+            io.DisplaySize = new System.Numerics.Vector2(_graphicsDevice.PresentationParameters.BackBufferWidth/dpiScale, _graphicsDevice.PresentationParameters.BackBufferHeight/ dpiScale);
+            io.DisplayFramebufferScale = new System.Numerics.Vector2(dpiScale, dpiScale);
         }
 
 
@@ -390,6 +392,7 @@ namespace Murder.Editor.ImGuiExtended
             _graphicsDevice.BlendState = BlendState.NonPremultiplied;
             _graphicsDevice.RasterizerState = _rasterizerState;
             _graphicsDevice.DepthStencilState = DepthStencilState.DepthRead;
+            _graphicsDevice.SamplerStates[0] = SamplerState.AnisotropicClamp;
 
             // Handle cases of screen coordinates != from framebuffer coordinates (e.g. retina displays)
             drawData.ScaleClipRects(ImGui.GetIO().DisplayFramebufferScale);

@@ -183,6 +183,7 @@ public class EditorSettingsAsset : GameAsset
     [Serialize, HideInEditor]
     public (Guid Entity, IStateMachineComponent? Component)? TestStartWithEntityAndComponent;
 
+    public float DpiScale = 1f;
     public override void AfterDeserialized()
     {
         bool changed = false;

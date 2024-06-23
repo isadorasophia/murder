@@ -89,17 +89,16 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                     ImGui.Text($"Now: {Game.Now:0.0}");
                     ImGui.Text($"Now(Unscaled): {Game.NowUnscaled:0.0}");
 
-                    ImGui.Separator();
-                    ImGui.Text($"Custom Shaders:");
-                    for (int i = 0; i < Game.Data.CustomGameShaders.Length; i++)
+                    ImGui.SeparatorText("Window Scale");
+                    if (ImGui.Button("1x"))
                     {
-                        var shader = Game.Data.CustomGameShaders[i];
-                        ImGui.Text($"{i}:{shader?.Name}");
+                        ResizeWindow(1, render);
                     }
-
-                    ImGui.SetNextWindowBgAlpha(0.9f);
-                    
-                    ImGui.EndTabItem();
+                    ImGui.SameLine();
+                    if (ImGui.Button("2x"))
+                    {
+                        ResizeWindow(2, render);
+                    }
                 }
 
                 if (ImGui.BeginTabItem("View"))
@@ -203,6 +202,14 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
             ImGui.PopStyleVar();
         }
 
+    }
+
+    private static void ResizeWindow(float scale, RenderContext render)
+    {
+        Point windowSize = new(Game.Profile.GameWidth * scale, Game.Profile.GameHeight * scale);
+        Game.Instance.SetWindowSize(windowSize);
+        Game.Instance.GraphicsDeviceManager.ApplyChanges();
+        render.RefreshWindow(Game.GraphicsDevice, windowSize, new Point(Game.Profile.GameWidth, Game.Profile.GameHeight), Game.Profile.ResizeStyle);
     }
 
     public void Update(Context context)
