@@ -321,13 +321,11 @@ namespace Murder.Editor.Stages
             return true;
         }
 
-        public virtual bool AddChildForInstance(IEntity parentInstance, EntityInstance childInstance)
+        public virtual bool AddChildForInstance(Guid? parentOfParentGuid, IEntity parentInstance, EntityInstance childInstance)
         {
             // First, add both entities to the world.
             int childId = childInstance.Create(_world, parentInstance);
-
-            int parentId = _instanceToWorld[parentInstance.Guid];
-            if (_world.TryGetEntity(parentId) is not Entity parent)
+            if (FindEntity(parentOfParentGuid, parentInstance.Guid) is not Entity parent)
             {
                 return false;
             }
@@ -337,7 +335,7 @@ namespace Murder.Editor.Stages
             TrackInstance(childId, childInstance.Guid, childInstance, parentGuid: parentInstance?.Guid);
 
             // Map the child back to its parent.
-            _childEntities.Add(childId, parentId);
+            _childEntities.Add(childId, parent.EntityId);
 
             return true;
         }

@@ -771,7 +771,7 @@ namespace Murder.Editor.CustomEditors
                 entityInstance.AddChild(child);
             }
 
-            Stages[_asset.Guid].AddChildForInstance(entityInstance, child);
+            Stages[_asset.Guid].AddChildForInstance(parent?.Guid, entityInstance, child);
             _asset.FileChanged = true;
         }
 
