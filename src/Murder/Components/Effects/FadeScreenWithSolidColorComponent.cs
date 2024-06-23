@@ -1,8 +1,10 @@
 ﻿using Bang.Components;
+using Murder.Attributes;
 using Murder.Core.Graphics;
 
 namespace Murder.Components;
 
+[DoNotPersistOnSave]
 public readonly struct FadeScreenWithSolidColorComponent : IComponent
 {
     public readonly Color Color;
