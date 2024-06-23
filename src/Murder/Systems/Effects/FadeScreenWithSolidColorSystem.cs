@@ -104,9 +104,13 @@ namespace Murder.Systems
                 return;
             }
 
+            Rectangle area = _targetBatch == Batches2D.GameUiBatchId ?
+                render.Camera.SafeBounds :
+                new Rectangle(Vector2.Zero, render.Camera.SafeBounds.Size);
+
             RenderServices.DrawRectangle(
                 render.GetBatch(_targetBatch),
-                new Rectangle(Vector2.Zero, render.Camera.SafeBounds.Size),
+                area,
                 _color * _currentAlpha,
                 _currentSort);
         }
