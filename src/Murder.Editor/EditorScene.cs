@@ -242,7 +242,6 @@ namespace Murder.Editor
                         draw.AddImage(emptyImage, rectangle.TopLeft, rectangle.BottomRight, Vector2.Zero, Vector2.One, Color.ToUint(new Vector4(1, 1, 1, 1f)));
                     }
                 }
-                draw.AddRect(min, min + size, Color.ToUint(Game.Profile.Theme.BgFaded));
                 ImGui.EndTable();
             }
             ImGui.EndChild();
