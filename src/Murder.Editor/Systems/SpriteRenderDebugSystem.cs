@@ -134,16 +134,14 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
             bool showHandles = !previewMode &&
                 (hook.EditorMode == EditorHook.EditorModes.EditMode && hook.IsEntitySelectedOrParent(e));
 
-            if (showHandles && !hook.UsingGui)
+            if (showHandles && !hook.UsingGui && hook.CursorWorldPosition is Point cursorPosition)
             {
-                Vector2 screenPosition = render.Camera.WorldToScreenPosition(transform.Vector2);
-                
                 Color color;
                 if (_draggingY==e.EntityId)
                 {
                     color = Architect.Profile.Theme.HighAccent;
                     
-                    int newYSortOffset = (int)((hook.CursorScreenPosition.Y - screenPosition.Y) / render.Camera.Zoom);
+                    int newYSortOffset = (int)((cursorPosition.Y - transform.Vector2.Y) / render.Camera.Zoom);
                     if (sprite != null)
                     {
                         e.SetSprite(sprite.Value with { YSortOffset = newYSortOffset });
@@ -174,8 +172,8 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
                         color = Color.Red * 0.1f;
                     }
                     else if (
-                        hook.CursorScreenPosition.Y > screenPosition.Y + (ySortOffset - 2) * render.Camera.Zoom &&
-                        hook.CursorScreenPosition.Y < screenPosition.Y + (ySortOffset + 2) * render.Camera.Zoom)
+                        cursorPosition.Y > transform.Y + (ySortOffset - 3) &&
+                        cursorPosition.Y < transform.Y + (ySortOffset + 3) )
                     {
                         color = Color.White;
                         if (Game.Input.Pressed(MurderInputButtons.LeftClick) && !hook.CursorIsBusy.Any())
