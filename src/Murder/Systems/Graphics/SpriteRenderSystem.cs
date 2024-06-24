@@ -20,6 +20,12 @@ namespace Murder.Systems.Graphics
     public class SpriteRenderSystem : IMurderRenderSystem
     {
         private readonly Dictionary<Guid, SpriteAsset> _spriteAssetCache = new Dictionary<Guid, SpriteAsset>();
+        
+        public void ClearCache()
+        {
+            _spriteAssetCache.Clear();
+        }
+
         public void Draw(RenderContext render, Context context)
         {
             bool issueSlowdownWarning = false;
