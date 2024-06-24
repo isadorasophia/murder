@@ -5,41 +5,27 @@ using System.Numerics;
 
 namespace Murder.Services;
 
-public struct DrawMenuStyle
+public readonly struct DrawMenuStyle
 {
-    public Vector2 Origin = new(0.5f, 0);
+    public Vector2 Origin { get; init; } = new(0.5f, 0);
 
     [Font]
-    public int Font = (int)MurderFonts.LargeFont;
+    public int Font { get; init; } = (int)MurderFonts.LargeFont;
 
     [PaletteColor]
-    public Color SelectedColor = Color.White;
+    public Color SelectedColor { get; init; } = Color.White;
     [PaletteColor]
-    public Color Color = Color.ColdGray;
+    public Color Color { get; init; } = Color.ColdGray;
     [PaletteColor]
-    public Color Shadow = Color.Black;
+    public Color Shadow { get; init; } = Color.Black;
 
-    public EaseKind Ease;
-    public float SelectorMoveTime;
+    public EaseKind Ease { get; init; }
+    public float SelectorMoveTime { get; init; }
 
-    public int ExtraVerticalSpace = 2;
+    public int ExtraVerticalSpace { get; init; } = 2;
 
     public DrawMenuStyle()
     {
     }
 
-    public DrawMenuStyle WithOrigin(Vector2 origin)
-    {
-        return new DrawMenuStyle() with
-        {
-            Origin = origin,
-            Font = Font,
-            SelectedColor = SelectedColor,
-            Color = Color,
-            Shadow = Shadow,
-            Ease = Ease,
-            SelectorMoveTime = SelectorMoveTime,
-            ExtraVerticalSpace = ExtraVerticalSpace
-        };
-    }
 }

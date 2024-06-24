@@ -70,14 +70,15 @@ namespace Murder.Editor
 
                 ImGui.SetNextWindowDockID(EDITOR_DOCK_ID, ImGuiCond.Appearing);
                 ImGuiWindowFlags fileSaved = currentAsset.FileChanged ? ImGuiWindowFlags.UnsavedDocument : ImGuiWindowFlags.None;
+                ImGuiWindowFlags focus = ImGuiWindowFlags.NoFocusOnAppearing;
 
-                if (_openAsset!= Guid.Empty || !_initializedEditors && Architect.EditorSettings.LastOpenedAsset == currentAsset.Guid)
+                if (_openAsset == currentAsset.Guid || !_initializedEditors && Architect.EditorSettings.LastOpenedAsset == currentAsset.Guid)
                 {
                     _openAsset= Guid.Empty;
                     ImGui.SetNextWindowFocus();
                 }
 
-                if (ImGui.Begin($"{currentAsset.Icon} {currentAsset.GetSimplifiedName()}##{currentAsset.Guid}", ref show, fileSaved | ImGuiWindowFlags.NoFocusOnAppearing) &&
+                if (ImGui.Begin($"{currentAsset.Icon} {currentAsset.GetSimplifiedName()}##{currentAsset.Guid}", ref show, fileSaved | focus) &&
                     _initializedEditors)
                 {
                     Architect.EditorSettings.LastOpenedAsset = currentAsset.Guid;
