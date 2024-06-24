@@ -212,7 +212,7 @@ namespace Murder.Editor.Systems
                     if (showHandles)
                     {
                         if (EditorServices.BoxHandle(id, render,
-                            cursorPosition, box.Rectangle + globalPosition.Point, color, out IntRectangle newRectangle))
+                            cursorPosition, box.Rectangle + globalPosition.Point, color, out IntRectangle newRectangle, false))
                         {
                             if (!isReadonly)
                             {

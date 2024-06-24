@@ -100,7 +100,7 @@ namespace Murder.Editor.CustomEditors
 
             foreach ((string filter, _) in _world.FetchFilters())
             {
-                if (TreeEntityGroupNode(filter, Game.Profile.Theme.Yellow, icon: '\uf1bb'))
+                if (TreeEntitySoundGroupNode(filter, Game.Profile.Theme.Yellow, icon: '\uf1bb'))
                 {
                     List<IEntity> entities = _world.FetchEntitiesInFilter(filter);
                     DrawEntityList(stage, entities, filterGroup: filter);

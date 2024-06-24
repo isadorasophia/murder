@@ -849,5 +849,44 @@ namespace Murder.Editor.Systems
                 e.RemoveComponent<IsSelectedComponent>();
             }
         }
+
+
+        protected void ShowAllPossibleSelections(EditorHook hook, ref float lastCursorMoved, ref Vector2 previousCursorPosition)
+        {
+            if (hook.Hovering.Length > 0)
+            {
+                if (hook.CursorWorldPosition is not null)
+                {
+                    if (previousCursorPosition == hook.CursorWorldPosition)
+                    {
+                        if (lastCursorMoved < Game.NowUnscaled - 0.2f && !hook.CursorIsBusy.Any() && !hook.UsingGui)
+                        {
+                            if (ImGui.BeginTooltip())
+                            {
+                                foreach (var entity in hook.Hovering)
+                                {
+                                    if (hook.AllSelectedEntities.Where(e => e.Key == entity).Any())
+                                    {
+                                        ImGui.TextColored(Game.Profile.Theme.Accent, $"({entity}) {hook.GetNameForEntityId?.Invoke(entity)}");
+                                    }
+                                    else
+                                    {
+                                        ImGui.Text($"({entity}) {hook.GetNameForEntityId?.Invoke(entity)}");
+                                    }
+                                }
+
+                                ImGui.EndTooltip();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        previousCursorPosition = hook.CursorWorldPosition.Value;
+                        lastCursorMoved = Game.NowUnscaled;
+                    }
+                }
+
+            }
+        }
     }
 }

@@ -45,7 +45,7 @@ namespace Murder.Editor.Systems
 
                 IEnumerable<string>? availableFolders = hook.GetAvailableFolders?.Invoke();
 
-                if (hook.AllSelectedEntities.Count > 0 && 
+                if (hook.AllSelectedEntities.Count > 0 &&
                     availableFolders is not null && availableFolders.Any())
                 {
                     // Move to context menu
@@ -68,41 +68,7 @@ namespace Murder.Editor.Systems
                         ImGui.EndPopup();
                     }
                 }
-
-                if (hook.Hovering.Length > 0)
-                {
-                    if (hook.CursorWorldPosition is not null)
-                    {
-                        if (_previousCursorPosition == hook.CursorWorldPosition)
-                        {
-                            if (_lastMove < Game.NowUnscaled - 0.2f && !hook.CursorIsBusy.Any() && !hook.UsingGui)
-                            {
-                                if (ImGui.BeginTooltip())
-                                {
-                                    foreach (var entity in hook.Hovering)
-                                    {
-                                        if (hook.AllSelectedEntities.Where(e => e.Key == entity).Any())
-                                        {
-                                            ImGui.TextColored(Game.Profile.Theme.Accent, $"({entity}) {hook.GetNameForEntityId?.Invoke(entity)}");
-                                        }
-                                        else
-                                        {
-                                            ImGui.Text($"({entity}) {hook.GetNameForEntityId?.Invoke(entity)}");
-                                        }
-                                    }
-
-                                    ImGui.EndTooltip();
-                                }
-                            }
-                        }
-                        else
-                        {
-                            _previousCursorPosition = hook.CursorWorldPosition.Value;
-                            _lastMove = Game.NowUnscaled;
-                        }
-                    }
-
-                }
+                ShowAllPossibleSelections(hook, ref _lastMove, ref _previousCursorPosition);
             }
         }
 

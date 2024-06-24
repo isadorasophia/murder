@@ -470,6 +470,7 @@ namespace Murder.Assets
             return null;
         }
 
+        public ImmutableArray<Guid> FetchEntitiesOfSoundGroup(string name) => _filterFolders[name];
         public ImmutableArray<Guid> FetchEntitiesOfGroup(string name) => _folders[name];
 
         public int GroupsCount() => _folders.Count;

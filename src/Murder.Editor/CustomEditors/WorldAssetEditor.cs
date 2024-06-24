@@ -732,6 +732,7 @@ namespace Murder.Editor.CustomEditors
 
         private class WorldStageInfo
         {
+            public HashSet<string> HiddenSoundGroups { get; init; } = new();
             public HashSet<string> HiddenGroups { get; init; } = new();
 
             public HashSet<string> SkipGroups { get; init; } = new();

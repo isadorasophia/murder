@@ -2,6 +2,7 @@
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
+using ImGuiNET;
 using Murder.Components;
 using Murder.Core.Graphics;
 using Murder.Editor.Attributes;
@@ -17,9 +18,11 @@ namespace Murder.Editor.Systems.Sounds
 {
     [SoundEditor]
     [Filter(ContextAccessorFilter.AnyOf, typeof(SoundComponent), typeof(MusicComponent), typeof(SoundParameterComponent))]
-    internal class SoundEditorSystem : GenericSelectorSystem, IStartupSystem, IUpdateSystem, IMurderRenderSystem
+    internal class SoundEditorSystem : GenericSelectorSystem, IStartupSystem, IUpdateSystem, IMurderRenderSystem, IGuiSystem
     {
         private Type[]? _filter = null;
+        private float _lastMove;
+        private Vector2 _previousCursorPosition;
 
         private ImmutableArray<Entity> FetchEntities(World world) => _filter is null || _filter.Length == 0 ?
             ImmutableArray<Entity>.Empty : world.GetEntitiesWith(ContextAccessorFilter.AnyOf, _filter);
@@ -115,6 +118,12 @@ namespace Murder.Editor.Systems.Sounds
                 position,
                 new DrawInfo() { Origin = Vector2Helper.Center, Sort = 0, Outline = isHighlighted ? Color.White : null },
                 AnimationInfo.Default);
+        }
+
+        public void DrawGui(RenderContext render, Context context)
+        {
+            var hook = context.World.GetUnique<EditorComponent>().EditorHook;
+            ShowAllPossibleSelections(hook, ref _lastMove, ref _previousCursorPosition);
         }
     }
 }

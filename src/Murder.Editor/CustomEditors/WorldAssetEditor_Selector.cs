@@ -251,14 +251,33 @@ namespace Murder.Editor.CustomEditors
             ImGui.Text(label);
         }
 
-        private bool TreeEntityGroupNode(string name, System.Numerics.Vector4 textColor, char icon = '\ue1b0', ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.None) =>
-            ImGuiHelpers.TreeNodeWithIconAndColor(
+        private bool TreeEntitySoundGroupNode(string name, System.Numerics.Vector4 textColor, char icon = '\ue1b0', ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.None)
+        {
+            bool visible = IsSoundGroupVisible(name);
+            if (ImGui.Checkbox($"##{name}_checkbox", ref visible))
+            {
+                SwitchSoundGroupVisibility(name, show: visible);
+            }
+
+            ImGui.SameLine();
+            return ImGuiHelpers.TreeNodeWithIconAndColor(
                 icon: icon,
                 label: name,
                 flags: ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.FramePadding | flags,
                 text: textColor,
                 background: Game.Profile.Theme.BgFaded,
                 active: Game.Profile.Theme.Bg);
+        }
+        private bool TreeEntityGroupNode(string name, System.Numerics.Vector4 textColor, char icon = '\ue1b0', ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.None)
+        {
+            return ImGuiHelpers.TreeNodeWithIconAndColor(
+                icon: icon,
+                label: name,
+                flags: ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.FramePadding | flags,
+                text: textColor,
+                background: Game.Profile.Theme.BgFaded,
+                active: Game.Profile.Theme.Bg);
+        }
 
         /// <summary>
         /// Draw the entity list of <paramref name="group"/>.
@@ -500,6 +519,14 @@ namespace Murder.Editor.CustomEditors
             SavePersistentWorldInfo(info);
         }
 
+        private bool IsSoundGroupVisible(string groupName)
+        {
+            GameLogger.Verify(_world is not null);
+
+            WorldStageInfo info = _worldStageInfo[_world.Guid];
+            return !info.HiddenSoundGroups.Contains(groupName);
+        }
+
         private bool IsGroupVisible(string groupName)
         {
             GameLogger.Verify(_world is not null);
@@ -571,6 +598,34 @@ namespace Murder.Editor.CustomEditors
             };
         }
 
+        private void SwitchSoundGroupVisibility(string groupName, bool show)
+        {
+            GameLogger.Verify(_world is not null);
+
+            WorldStageInfo info = _worldStageInfo[_world.Guid];
+            ImmutableArray<Guid> entities = _world.FetchEntitiesOfSoundGroup(groupName);
+
+            if (show)
+            {
+                info.HiddenSoundGroups.Remove(groupName);
+
+                foreach (Guid g in entities)
+                {
+                    ShowInstanceInEditor(parent: null, g);
+                }
+            }
+            else
+            {
+                info.HiddenSoundGroups.Add(groupName);
+
+                foreach (Guid g in entities)
+                {
+                    HideInstanceInEditor(parent: null, g);
+                }
+            }
+
+            SavePersistentWorldInfo(info);
+        }
         private void SwitchGroupVisibility(string groupName, bool show)
         {
             GameLogger.Verify(_world is not null);

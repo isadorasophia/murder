@@ -31,7 +31,7 @@ namespace Murder.Editor.Systems.Sounds
 
         public void Draw(RenderContext render, Context context)
         {
-            DebugColliderRenderSystem.DrawImpl(render, context, allowEditingByDefault: true, ref _wasClicking);
+            DebugColliderRenderSystem.DrawImpl(render, context, allowEditingByDefault: false, ref _wasClicking);
         }
     }
 }
