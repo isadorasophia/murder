@@ -190,10 +190,17 @@ namespace Murder.Systems.Graphics
                 if (frameInfo.Complete)
                 {
                     // Handle animation sequences imported by Aseprite and baked into the asset
-                    if (frameInfo.Animation.NextAnimation is AnimationSequence sequence && Game.Random.TryWithChanceOf(sequence.Chance))
+                    if (frameInfo.Animation.NextAnimation is AnimationSequence sequence)
                     {
-                        if (!string.IsNullOrWhiteSpace(sequence.Next))
-                            e.PlaySpriteAnimation(sequence.Next);
+                        if (Game.Random.TryWithChanceOf(sequence.Chance))
+                        {
+                            if (!string.IsNullOrWhiteSpace(sequence.Next))
+                                e.PlaySpriteAnimation(sequence.Next);
+                        }
+                        else
+                        {
+                            e.PlaySpriteAnimation(animation);
+                        }
                     }
                     else
                     {
