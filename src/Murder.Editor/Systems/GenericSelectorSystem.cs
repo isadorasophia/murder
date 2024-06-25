@@ -19,6 +19,8 @@ using System.Numerics;
 using Microsoft.Xna.Framework.Input;
 using Murder.Editor.Messages;
 using Murder.Prefabs;
+using Bang.Components;
+using Murder.Attributes;
 
 namespace Murder.Editor.Systems
 {
@@ -47,6 +49,9 @@ namespace Murder.Editor.Systems
         private ImmutableArray<int> _previousHovering = ImmutableArray<int>.Empty;
 
         int _previousSelection = -1;
+
+        private bool _duplicateOnDrag = false;
+
         public void StartImpl(World world)
         {
             if (world.TryGetUnique<EditorComponent>()?.EditorHook is EditorHook hook)
@@ -296,6 +301,11 @@ namespace Murder.Editor.Systems
 
             bool clickedOnEntity = false;
 
+            if (!Game.Input.Down(Keys.LeftAlt))
+            {
+                _duplicateOnDrag = false;
+            }
+
             hook.ClearHoveringEntities();
             foreach (Entity e in entities)
             {
@@ -380,6 +390,11 @@ namespace Murder.Editor.Systems
                             _dragStart = cursorPosition;
                             _startedDragging = entity;
                         }
+
+                        if (Game.Input.Down(Keys.LeftAlt))
+                        {
+                            _duplicateOnDrag = true;
+                        }
                     }
                 }
 
@@ -390,6 +405,29 @@ namespace Murder.Editor.Systems
                     {
                         _dragging = _startedDragging;
                         _offset = _startedDragging.GetGlobalTransform().Vector2 - cursorPosition;
+
+                        if (_duplicateOnDrag)
+                        {
+                            foreach ((int id, Entity e) in selectedEntities)
+                            {
+                                List<IComponent> components = [];
+                                foreach (var component in e.Components)
+                                {
+                                    Type type = component.GetType();
+
+                                    if (!type.IsDefined(typeof(DoNotPersistOnSaveAttribute), true))
+                                    {
+                                        components.Add(component);
+                                    }
+                                }
+
+                                string? entityName = hook.GetNameForEntityId?.Invoke(id);
+                                string? groupName = EditorTileServices.FindTargetGroup(world, hook, cursorPosition);
+
+                                hook.AddEntityWithStage?.Invoke([.. components], groupName, entityName);
+                            }
+                            _duplicateOnDrag = false;
+                        }
 
                         foreach ((int _, Entity e) in selectedEntities)
                         {
