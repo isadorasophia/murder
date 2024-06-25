@@ -471,7 +471,15 @@ namespace Murder.Assets
         }
 
         public ImmutableArray<Guid> FetchEntitiesOfSoundGroup(string name) => _filterFolders[name];
-        public ImmutableArray<Guid> FetchEntitiesOfGroup(string name) => _folders[name];
+        public ImmutableArray<Guid> FetchEntitiesOfGroup(string name)
+        {
+            if (_folders.ContainsKey(name))
+            {
+                return _folders[name];
+            }
+
+            return [];
+        }
 
         public int GroupsCount() => _folders.Count;
 
