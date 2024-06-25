@@ -200,6 +200,15 @@ namespace Murder.Editor
             _queueStartPlayGame = info;
         }
 
+        /// <summary>
+        /// Queues an operation for start playing a game. This will be queued and executed in the next
+        /// update call.
+        /// </summary>
+        public void QueueStartPlayingGame(StartPlayGameInfo info)
+        {
+            _queueStartPlayGame = info;
+        }
+
         private void PlayGame(StartPlayGameInfo info)
         {
             Guid actualStartingScene = info.StartingScene ?? Profile.StartingScene;
@@ -241,7 +250,7 @@ namespace Murder.Editor
             if (shouldLoad)
             {
                 // Make sure we load the save before playing the game.
-                Data.LoadSaveAsCurrentSave(slot: -1);
+                Data.LoadSaveAsCurrentSave(slot: info.SaveSlot ?? -1);
 
                 LoadSceneAsync(waitForAllContent: true).Wait();
             }

@@ -6,5 +6,7 @@ public readonly struct StartPlayGameInfo
 
     public readonly Guid? StartingScene { get; init; } = null;
 
+    public readonly int? SaveSlot { get; init; } = null;
+
     public StartPlayGameInfo() { }
 }
