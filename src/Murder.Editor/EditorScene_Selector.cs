@@ -442,6 +442,7 @@ namespace Murder.Editor
         public Guid OpenOnTreeView(GameAsset asset, bool colapseAllOthers)
         {
             _colapseAll = colapseAllOthers;
+            _openAsset = asset.Guid;
             _expandTo.AddRange(asset.GetSplitNameWithEditorPath());
             return asset.Guid;
         }

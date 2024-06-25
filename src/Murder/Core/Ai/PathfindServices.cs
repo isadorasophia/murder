@@ -72,41 +72,41 @@ namespace Murder.Core.Ai
         /// <summary>
          /// Returns all the neighbours of a position within a collision map. Strict means that it will only allow diagonal movement if both the horizontal and vertical neighbours are open.
          /// </summary>
-        internal static ReadOnlySpan<Point> NeighboursWithoutCollision(this Point p, Map map, bool strict)
+        internal static ReadOnlySpan<Point> NeighboursWithoutCollision(this Point point, Map map, bool strict)
         {
             int index = 0;
             Span<Point> result = new Point[8];
 
-            foreach (Point n in p.Neighbours(map.Width, map.Height, includeDiagonals: true))
+            foreach (Point neighbour in point.Neighbours(map.Width, map.Height, includeDiagonals: true))
             {
                 if (strict)
                 {
                     // Determine if the movement is diagonal
-                    bool isDiagonal = Math.Abs(n.X - p.X) == 1 && Math.Abs(n.Y - p.Y) == 1;
+                    bool isDiagonal = Math.Abs(neighbour.X - point.X) == 1 && Math.Abs(neighbour.Y - point.Y) == 1;
                     if (isDiagonal)
                     {
                         // Check horizontal and vertical neighbors
-                        Point horizontal = new Point(n.X, p.Y);
-                        Point vertical = new Point(p.X, n.Y);
+                        Point horizontal = new Point(neighbour.X, point.Y);
+                        Point vertical = new Point(point.X, neighbour.Y);
 
-                        if (!map.IsObstacle(horizontal) && !map.IsObstacleOrBlockVision(vertical) && !map.IsObstacleOrBlockVision(n))
+                        if (!map.IsObstacleOrBlockVision(horizontal) && !map.IsObstacleOrBlockVision(vertical) && !map.IsObstacleOrBlockVision(neighbour))
                         {
-                            result[index++] = n;
+                            result[index++] = neighbour;
                         }
                     }
                     else
                     {
-                        if (!map.IsObstacle(n))
+                        if (!map.IsObstacle(neighbour))
                         {
-                            result[index++] = n;
+                            result[index++] = neighbour;
                         }
                     }
                 }
                 else
                 {
-                    if (!map.IsObstacle(n))
+                    if (!map.IsObstacle(neighbour))
                     {
-                        result[index++] = n;
+                        result[index++] = neighbour;
                     }
                 }
             }

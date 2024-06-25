@@ -35,10 +35,15 @@ namespace Murder.Core.Ai
                 {
                     break;
                 }
-
+                
                 foreach (Point p in current.NeighboursWithoutCollision(map, strict))
                 {
                     double cost = costForVisitedNode[current] + map.WeightAt(p.X, p.Y);
+                    // Increase the cost if it's diagonal
+                    if (current.X != p.X && current.Y != p.Y)
+                    {
+                        cost += 0.414f;
+                    }
 
                     // If we have not visited this node yet, or we just found a cheaper path.
                     if (!costForVisitedNode.ContainsKey(p) || cost < costForVisitedNode[p])
