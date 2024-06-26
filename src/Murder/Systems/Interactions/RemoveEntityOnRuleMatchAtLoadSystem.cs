@@ -12,7 +12,7 @@ namespace Murder.Systems
 {
     [Filter(typeof(RemoveEntityOnRuleMatchAtLoadComponent))]
     [Watch(typeof(RemoveEntityOnRuleMatchAtLoadComponent))]
-    internal class InteractOnLoadSystem : IReactiveSystem
+    internal class RemoveEntityOnRuleMatchAtLoadSystem : IReactiveSystem
     {
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {

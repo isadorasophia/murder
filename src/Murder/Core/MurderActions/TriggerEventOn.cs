@@ -23,6 +23,7 @@ namespace Murder.Core
     {
         public readonly string Name = string.Empty;
 
+        [Tooltip("If none, this will always automatically start")]
         public readonly ImmutableArray<RequirementsCollection> Requirements = ImmutableArray<RequirementsCollection>.Empty;
 
         public readonly ImmutableArray<IInteractiveComponent> Triggers = ImmutableArray<IInteractiveComponent>.Empty;
@@ -41,20 +42,28 @@ namespace Murder.Core
 
         public IComponent[] CreateComponents()
         {
-            var builder = ImmutableArray.CreateBuilder<InteractOnRuleMatchComponent>();
-            foreach (RequirementsCollection r in Requirements)
+            List<IComponent> result = [];
+            if (Requirements.IsEmpty)
             {
-                builder.Add(new InteractOnRuleMatchComponent(
-                    InteractOn.AddedOrModified,
-                    OnlyOnce ? AfterInteractRule.RemoveEntity : AfterInteractRule.Always,
-                    r.Requirements));
+                result.Add(new InteractOnStartComponent());
+            }
+            else
+            {
+                var builder = ImmutableArray.CreateBuilder<InteractOnRuleMatchComponent>();
+                foreach (RequirementsCollection r in Requirements)
+                {
+                    builder.Add(new InteractOnRuleMatchComponent(
+                        InteractOn.AddedOrModified,
+                        OnlyOnce ? AfterInteractRule.RemoveEntity : AfterInteractRule.Always,
+                        r.Requirements));
+                }
+
+                result.Add(new InteractOnRuleMatchCollectionComponent(builder.ToImmutable()));
             }
 
-            return new IComponent[]
-            {
-                new InteractOnRuleMatchCollectionComponent(builder.ToImmutable()),
-                new InteractiveComponent<InteractionCollection>(new InteractionCollection(Triggers))
-            };
+            result.Add(new InteractiveComponent<InteractionCollection>(new InteractionCollection(Triggers)));
+
+            return [.. result];
         }
     }
 }
