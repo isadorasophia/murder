@@ -3,6 +3,7 @@ using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
+using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
@@ -19,7 +20,7 @@ namespace Murder.Systems
     [Filter(typeof(FadeScreenWithSolidColorComponent))]
     [Watch(typeof(FadeScreenWithSolidColorComponent))]
     [DoNotPause]
-    public class FadeScreenWithSolidColorSystem : IUpdateSystem, IReactiveSystem, IMurderRenderSystem
+    public class FadeScreenWithSolidColorSystem : IUpdateSystem, IReactiveSystem, IMurderRenderSystem, IExitSystem
     {
         private float _fadeInTime = -1;
         private float _fadeOutTime = -1;
@@ -101,6 +102,7 @@ namespace Murder.Systems
         {
             if (_currentAlpha == 0)
             {
+                render.ScreenFade = 0;
                 return;
             }
 
@@ -113,6 +115,16 @@ namespace Murder.Systems
                 area,
                 _color * _currentAlpha,
                 _currentSort);
+
+            render.ScreenFade = _currentAlpha;
+        }
+
+        public void Exit(Context context)
+        {
+            if (Game.Instance.ActiveScene is Scene scene && scene.RenderContext is RenderContext render)
+            {
+                render.ScreenFade = 0;
+            }
         }
     }
 }

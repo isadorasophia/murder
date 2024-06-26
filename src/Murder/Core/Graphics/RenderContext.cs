@@ -60,6 +60,11 @@ public class RenderContext : IDisposable
 
     public Viewport Viewport = new();
 
+    /// <summary>
+    /// Not used by the base RenderContext, but can be used by derived classes.
+    /// </summary>
+    public float ScreenFade = 0;
+
     public enum BatchPreviewState
     {
         None,
