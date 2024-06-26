@@ -52,8 +52,9 @@ public static class EditorAssetHelpers
 
         if (asset.IsStoredInSaveData)
         {
-            return Path.GetDirectoryName(
-                Path.Join(Game.Data.SaveBasePath, asset.SaveLocation, asset.FilePath));
+            return string.IsNullOrEmpty(asset.FilePath) ?
+                Game.Data.SaveBasePath : 
+                Path.GetDirectoryName(Path.Join(Game.Data.SaveBasePath, asset.FilePath));
         }
 
         return Path.GetDirectoryName(FileHelper.GetPath(

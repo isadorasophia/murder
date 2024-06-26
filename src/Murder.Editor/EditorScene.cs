@@ -416,6 +416,12 @@ namespace Murder.Editor
             // Get all assets
             var assets = Architect.EditorData.GetAllSaveAssets();
 
+            lock (_foldersLock)
+            {
+                // Make sure we always clean up the cache here.
+                _folders = null;
+            }
+
             // Draw asset tree
             DrawAssetFolder("#\uf07b", Architect.Profile.Theme.White, typeof(GameAsset), assets, false);
 
