@@ -4,7 +4,7 @@ namespace Murder.Editor.Services
 {
     internal static class BlackboardServices
     {
-        public static Criterion WithFact(this Criterion @this, Fact fact, Type targetType)
+        public static Criterion WithFact(this Criterion @this, Fact fact, Type? targetType)
         {
             bool? @bool = @this.BoolValue;
             int? @int = @this.IntValue;
@@ -32,7 +32,7 @@ namespace Murder.Editor.Services
                     break;
 
                 default:
-                    value = Activator.CreateInstance(targetType);
+                    value = targetType is not null ? Activator.CreateInstance(targetType) : null;
                     break;
             }
 

@@ -262,6 +262,11 @@ namespace Murder.Editor.Utilities
                 InitializeFactsFromBlackboards();
             }
 
+            if (string.IsNullOrWhiteSpace(fact))
+            {
+                return null;
+            }
+
             _factsToType.TryGetValue(fact, out Type? value);
             return value;
         }

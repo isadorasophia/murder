@@ -60,11 +60,18 @@ namespace Murder.Editor.CustomFields
             Criterion criterion = node.Criterion;
 
             // -- Facts across all blackboards --
-            if (SearchBox.SearchFacts($"{member.Name}_fact_search", criterion.Fact) is Fact newFact &&
-                AssetsFilter.FetchTypeForFact(newFact.EditorName) is Type target)
+            if (SearchBox.SearchFacts($"{member.Name}_fact_search", criterion.Fact) is Fact newFact)
             {
-                node = node.WithCriterion(criterion.WithFact(newFact, target));
-                changed = true;
+                if (AssetsFilter.FetchTypeForFact(newFact.EditorName) is Type target)
+                {
+                    node = node.WithCriterion(criterion.WithFact(newFact, target));
+                    changed = true;
+                }
+                else
+                {
+                    node = node.WithCriterion(criterion.WithFact(newFact, null));
+                    changed = true;
+                }
             }
 
             ImGui.TableNextColumn();
