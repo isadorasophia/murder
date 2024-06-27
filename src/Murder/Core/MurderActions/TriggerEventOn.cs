@@ -33,7 +33,7 @@ namespace Murder.Core
         [Default("Only on world...")]
         public readonly Guid? World = null;
 
-        [Tooltip("Whether this should be applied only once for each world")]
+        [Tooltip("This will only place once (if the map loads again after saving, it won't play)")]
         public readonly bool OnlyOnce = false;
 
         public TriggerEventOn() { }
