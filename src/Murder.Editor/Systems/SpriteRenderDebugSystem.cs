@@ -141,7 +141,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
                 {
                     color = Architect.Profile.Theme.HighAccent;
                     
-                    int newYSortOffset = (int)((cursorPosition.Y - transform.Vector2.Y) / render.Camera.Zoom);
+                    int newYSortOffset = (int)((cursorPosition.Y - transform.Vector2.Y) );
                     if (sprite != null)
                     {
                         e.SetSprite(sprite.Value with { YSortOffset = newYSortOffset });
