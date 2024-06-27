@@ -57,21 +57,17 @@ namespace Murder.Editor.Systems
 
                     Rectangle cellRectangle = new Rectangle(x * Grid.CellSize, y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
 
-                    int topLeft = map.GetCollision(x - 1, y - 1);
-                    int topRight = map.GetCollision(x, y - 1);
-                    int botLeft = map.GetCollision(x - 1, y);
-                    int botRight = map.GetCollision(x, y);
+                    int mask = map.GetCollision(x, y);
 
                     int collisionMask = map.GetGridMap(x, y).CollisionType;
                     bool hasTileCollision = IsSolid(collisionMask);
 
-                    Color solidGridColor = new Color(.1f, .9f, .9f) * .4f;
-                    DrawTileCollisions(topLeft, topRight, botLeft, botRight, render, tileRectangle, solidGridColor);
+                    DrawTileCollisions(mask, render, new Point(x, y) * Grid.CellSize);
 
                     Color color = ColorForTileMask(collisionMask);
                     if (!hasTileCollision)
                     {
-                        DrawCarveCollision(botRight, render, cellRectangle, color);
+                        DrawCarveCollision(mask, render, cellRectangle, color);
                     }
 
                     int weight = map.WeightAt(x, y);
@@ -160,34 +156,27 @@ namespace Murder.Editor.Systems
 
         private bool IsSolid(int mask) =>
             (mask & CollisionLayersBase.SOLID) != 0;
+        private bool IsHole(int mask) =>
+                    (mask & CollisionLayersBase.HOLE) != 0;
 
         private bool IsBlockingLineOfSight(int mask) =>
             (mask & CalculatePathfindSystem.LineOfSightCollisionMask) != 0;
 
-        private void DrawTileCollisions(int topLeft, int topRight, int botLeft, int botRight,
-            RenderContext render, Rectangle rectangle, Color color)
+        private void DrawTileCollisions(int mask, RenderContext render, Point position)
         {
             float sorting = 1;
-            int mask = CollisionLayersBase.SOLID;
+            Color solidGridColor = new Color(.1f, .9f, .9f) * .4f;
+            Color holeGridColor = new Color(.9f, .5f, .1f) * .4f;
 
-            if ((topLeft & mask) != 0)
+
+            if (IsSolid(mask))
             {
-                render.DebugBatch.DrawRectangle(new Rectangle(rectangle.X, rectangle.Y, Grid.HalfCellSize, Grid.HalfCellSize), color, sorting);
+                render.DebugBatch.DrawRectangle(new Rectangle(position.X, position.Y, Grid.CellSize, Grid.CellSize), solidGridColor, sorting);
             }
 
-            if ((topRight & mask) != 0)
+            if (IsHole(mask))
             {
-                render.DebugBatch.DrawRectangle(new Rectangle(rectangle.X + Grid.HalfCellSize, rectangle.Y, Grid.HalfCellSize, Grid.HalfCellSize), color, sorting);
-            }
-
-            if ((botLeft & mask) != 0)
-            {
-                render.DebugBatch.DrawRectangle(new Rectangle(rectangle.X, rectangle.Y + Grid.HalfCellSize, Grid.HalfCellSize, Grid.HalfCellSize), color, sorting);
-            }
-
-            if ((botRight & mask) != 0)
-            {
-                render.DebugBatch.DrawRectangle(new Rectangle(rectangle.X + Grid.HalfCellSize, rectangle.Y + Grid.HalfCellSize, Grid.HalfCellSize, Grid.HalfCellSize), color, sorting);
+                render.DebugBatch.DrawRectangle(new Rectangle(position.X, position.Y, Grid.CellSize, Grid.CellSize), holeGridColor, sorting);
             }
         }
 
