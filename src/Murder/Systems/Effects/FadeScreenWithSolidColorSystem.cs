@@ -20,7 +20,7 @@ namespace Murder.Systems
     [Filter(typeof(FadeScreenWithSolidColorComponent))]
     [Watch(typeof(FadeScreenWithSolidColorComponent))]
     [DoNotPause]
-    public class FadeScreenWithSolidColorSystem : IUpdateSystem, IReactiveSystem, IMurderRenderSystem, IExitSystem
+    public class FadeScreenWithSolidColorSystem : IReactiveSystem, IMurderRenderSystem, IExitSystem
     {
         private float _fadeInTime = -1;
         private float _fadeOutTime = -1;
@@ -70,40 +70,36 @@ namespace Murder.Systems
 
         public void OnRemoved(World world, ImmutableArray<Entity> entities) { }
 
-        public void Update(Context context)
-        {
-            if (_fadeInTime == -1 && _fadeOutTime == -1)
-            {
-                return;
-            }
-
-            if (_fadeInTime != -1)
-            {
-                _currentAlpha = Math.Min(Game.NowUnscaled - _fadeInTime, _duration) / _duration;
-
-                if (_currentAlpha == 1)
-                {
-                    _fadeInTime = -1;
-                }
-            }
-
-            if (_fadeOutTime != -1)
-            {
-                _currentAlpha = 1 - Math.Min(Game.NowUnscaled - _fadeOutTime, _duration) / _duration;
-
-                if (_currentAlpha == 0)
-                {
-                    _fadeOutTime = -1;
-                }
-            }
-        }
 
         public void Draw(RenderContext render, Context context)
         {
-            if (_currentAlpha == 0)
+            if (_fadeInTime != -1 || _fadeOutTime != -1)
             {
-                render.ScreenFade = 0;
-                return;
+                if (_fadeInTime != -1)
+                {
+                    _currentAlpha = Math.Min(Game.NowUnscaled - _fadeInTime, _duration) / _duration;
+
+                    if (_currentAlpha == 1)
+                    {
+                        _fadeInTime = -1;
+                    }
+                }
+
+                if (_fadeOutTime != -1)
+                {
+                    _currentAlpha = 1 - Math.Min(Game.NowUnscaled - _fadeOutTime, _duration) / _duration;
+
+                    if (_currentAlpha == 0)
+                    {
+                        _fadeOutTime = -1;
+                    }
+                }
+
+                if (_currentAlpha == 0)
+                {
+                    render.ScreenFade = 0;
+                    return;
+                }
             }
 
             Rectangle area = _targetBatch == Batches2D.GameUiBatchId ?
