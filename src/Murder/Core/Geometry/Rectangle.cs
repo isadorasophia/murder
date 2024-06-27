@@ -193,6 +193,17 @@ public struct Rectangle : IEquatable<Rectangle>
                Top < other.Bottom;
     }
 
+    /// <summary>
+    /// Checks if a rectangle is completely inside another rectangle.
+    /// </summary>
+    public bool IsInside(Rectangle other)
+    {
+        return other.Left <= Left &&
+               other.Right >= Right &&
+               other.Top <= Top &&
+               other.Bottom >= Bottom;
+    }
+
     public bool Contains(Vector2 vector) => Contains(vector.X, vector.Y);
     public bool Contains(float X, float Y) => Contains(Calculator.RoundToInt(X), Calculator.RoundToInt(Y));
 

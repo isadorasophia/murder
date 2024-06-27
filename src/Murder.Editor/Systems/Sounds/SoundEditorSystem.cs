@@ -103,7 +103,7 @@ namespace Murder.Editor.Systems.Sounds
 
                 if (!isSelected)
                 {
-                    RenderSprite(render, asset, position, isSelected);
+                    RenderSprite(render, asset, position, false);
                 }
 
                 entitiesDrawn.Add(e.EntityId);

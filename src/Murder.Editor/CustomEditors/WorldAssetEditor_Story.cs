@@ -258,7 +258,7 @@ namespace Murder.Editor.CustomEditors
 
                 ImGui.SameLine();
 
-                ImGui.PushID($"Entity_bar_{entity}");
+                ImGui.PushID($"Entity_bar_{entity.Guid}");
 
                 bool isSelected = stage.IsSelected(entity.Guid);
 

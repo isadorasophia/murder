@@ -293,8 +293,9 @@ namespace Murder.Editor.Systems
 
             ImmutableDictionary<int, Entity> selectedEntities = hook.AllSelectedEntities;
             bool isMultiSelecting = Game.Input.Down(MurderInputButtons.Shift);
-
             bool clickedOnEntity = false;
+
+            Rectangle cameraRect = monoWorld.Camera.SafeBounds;
 
             hook.ClearHoveringEntities();
             foreach (Entity e in entities)
@@ -308,6 +309,14 @@ namespace Murder.Editor.Systems
                 {
                     // We block dragging entities on world editors otherwise it would be too confusing (signed: Pedro).
                     continue;
+                }
+                bool isInsideCamera = cameraRect.IsInside(rect);
+                bool isMuchBiggerThanCamera = rect.Width > cameraRect.Width && rect.Height > cameraRect.Height;
+
+                if (isInsideCamera && isMuchBiggerThanCamera)
+                {
+                    // If the entity is much bigger than the camera, you can still select it by clicking on the very center of it.
+                    rect = new Rectangle(rect.Center - new Point(5), new Point(10));
                 }
 
                 if (rect.Contains(cursorPosition) && !EditorCameraControllerSystem.IsDragging())
@@ -731,9 +740,9 @@ namespace Murder.Editor.Systems
                 if (e.Parent != null) continue;
 
                 Vector2 position = e.GetGlobalTransform().Vector2;
-                if (!render.Camera.SafeBounds.Contains(position))
-                    continue;
                 Rectangle bounds = GetSeletionBoundingBox(e, world, position, out var hasBox);
+                if (!render.Camera.SafeBounds.TouchesInside(bounds))
+                    continue;
 
                 if (hook.IsEntitySelected(e.EntityId))
                 {
