@@ -1,4 +1,5 @@
 ﻿using Bang;
+using Bang.Entities;
 using Bang.Components;
 using Bang.Contexts;
 using Bang.Systems;
@@ -13,6 +14,7 @@ using Murder.Editor.Utilities;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using Murder.Editor.Data.Graphics;
 
 namespace Murder.Editor.Systems
 {
@@ -20,6 +22,7 @@ namespace Murder.Editor.Systems
     [Filter(typeof(ITransformComponent), typeof(RouteComponent))]
     public class DebugRouteSystem : IMurderRenderSystem
     {
+        private readonly HashSet<Point> _loopCheck = new();
         public void Draw(RenderContext render, Context context)
         {
             if (context.World.TryGetUnique<EditorComponent>() is EditorComponent editorComponent && !editorComponent.EditorHook.DrawPathfind)
@@ -31,14 +34,49 @@ namespace Murder.Editor.Systems
             var rectSize = Grid.CellDimensions - offset * 2;
             foreach (var e in context.Entities)
             {
-                ImmutableDictionary<Point, Point> path = e.GetComponent<RouteComponent>().Nodes;
+                ImmutableDictionary<Point, Point> path = e.GetRoute().Nodes;
 
+                Point position = e.GetGlobalTransform().Point;
+                Point gridPosition = position.ToGrid();
+
+
+                if (e.TryGetPathfind() is PathfindComponent pathfindComponent)
+                {
+                    RenderServices.DrawText(render.DebugBatch, MurderFonts.PixelFont,
+                        $"Entity {e.EntityId}\n\n{pathfindComponent.Algorithm}", position, new DrawInfo(Game.Profile.Theme.Accent, 0)
+                        {
+                            Outline = Game.Profile.Theme.Bg,
+                        });
+                }
+
+                _loopCheck.Clear();
+                if (path.ContainsKey(gridPosition))
+                {
+                    DrawPoint(render, path, gridPosition, _loopCheck);
+                }
+                else
+                {
+                    // Look for the closest cell to start drawing the path.
+                    Point closest = path.Keys.OrderBy(p => (gridPosition - p).LengthSquared()).FirstOrDefault();
+                    DrawPoint(render, path, gridPosition, _loopCheck);
+                }
+                
                 foreach (var point in path.Values)
                 {
-                    RenderServices.DrawRectangle(
-                        render.DebugBatch, new Rectangle(point.FromCellToPointPosition() + offset, rectSize),
-                        (Game.Profile.Theme.Faded * 0.65f).ToXnaColor());
+                    if (_loopCheck.Contains(point))
+                    {
+                        RenderServices.DrawRectangleOutline(
+                            render.DebugBatch, new Rectangle(point.FromCellToPointPosition() + offset, rectSize),
+                            Game.Profile.Theme.HighAccent * 0.5f);
+                    }
+                    else
+                    {
+                        RenderServices.DrawRectangle(
+                            render.DebugBatch, new Rectangle(point.FromCellToPointPosition() + offset, rectSize),
+                            Game.Profile.Theme.HighAccent * 0.5f);
+                    }
                 }
+
             }
 
             Map map = context.World.GetUniqueMap().Map;
@@ -48,6 +86,24 @@ namespace Murder.Editor.Systems
             if (hook.DrawQuadTree == EditorHook.ShowQuadTree.Pathfind)
             {
                 DrawQuadtree(render, context, map, minX, maxX, minY, maxY);
+            }
+        }
+
+        private void DrawPoint(RenderContext render, ImmutableDictionary<Point, Point> path, Point point, HashSet<Point> loopCheck)
+        {
+            if (path.TryGetValue(point, out Point next))
+            {
+                if (!loopCheck.Add(point))
+                {
+                    return;
+                }
+
+                Point center = point.FromCellToPointPosition() + Grid.HalfCellDimensions;
+                Point nextCenter = next.FromCellToPointPosition() + Grid.HalfCellDimensions;
+
+                RenderServices.DrawLine(render.DebugBatch, center, nextCenter, Game.Profile.Theme.Accent, 2, 0.8f);
+
+                DrawPoint(render, path, next, loopCheck);
             }
         }
 

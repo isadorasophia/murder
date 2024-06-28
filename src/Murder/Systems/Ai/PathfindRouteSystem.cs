@@ -48,16 +48,15 @@ namespace Murder.Systems
                     if (!route.Nodes.ContainsKey(cell))
                     {
                         // for some reason, we went off-route. so just improvise and go somewhere else.
-                        // TODO: do something clever than this?
-                        PathfindComponent pathfind = pathfindComponent;
-
-                        e.SetPathfind(pathfind);
-                        e.RemoveRoute();
-
-                        continue;
+                        // First we look for the closest node to our current position.
+                        Point closest = route.Nodes.Keys.OrderBy(x => (x - cell).LengthSquared()).First();
+                        TargetEntityTo(e, route.Nodes[cell]);
+                    }
+                    else
+                    {
+                        TargetEntityTo(e, route.Nodes[cell]);
                     }
 
-                    TargetEntityTo(e, route.Nodes[cell]);
                 }
             }
         }
