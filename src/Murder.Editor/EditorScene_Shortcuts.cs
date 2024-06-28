@@ -27,6 +27,7 @@ public partial class EditorScene
     private readonly Dictionary<string, Shortcut> _shortcutSearchValues;
 
     private bool _commandPaletteIsVisible;
+    private readonly Lazy<Dictionary<string, Shortcut>> _shortcutSearchValuesCache;
 
     private ImmutableDictionary<ShortcutGroup, List<Shortcut>> CreateShortcutList() =>
         new Dictionary<ShortcutGroup, List<Shortcut>>
@@ -217,14 +218,12 @@ public partial class EditorScene
             ImGui.SetWindowSize(_commandPaletteWindowSize);
             ImGui.SetWindowFocus();
 
-            var lazy = new Lazy<Dictionary<string, Shortcut>>(() => _shortcutSearchValues);
-
             SearchBoxSettings<Shortcut> settings = new(initialText: "Type a command");
 
             if (SearchBox.Search(
                 $"command_palette", 
                 settings,
-                values: lazy,
+                values: _shortcutSearchValuesCache,
                 flags: SearchBoxFlags.Unfolded,
                 sizeConfiguration: _commandPaletteSizeConfiguration, 
                 out Shortcut? shortcut))

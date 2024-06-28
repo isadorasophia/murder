@@ -46,6 +46,19 @@ namespace Murder.Editor
             _shortcutSearchValues = _shortcuts
                 .Keys.SelectMany(group => _shortcuts[group].Select(shortcut => (group, shortcut)))
                 .ToDictionary(tuple => $"{tuple.group} > {tuple.shortcut.Name}", tuple => tuple.shortcut);
+
+            _shortcutSearchValuesCache = new Lazy<Dictionary<string, Shortcut>>(() =>
+            {
+                Dictionary<string, Shortcut> all = new();
+
+                // Add _shortcutSearchValues to the dictionary
+                foreach (var (key, value) in _shortcutSearchValues)
+                {
+                    all[key] = value;
+                }
+
+                return all;
+            });
         }
 
         /// <summary>
