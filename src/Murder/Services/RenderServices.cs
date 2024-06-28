@@ -896,18 +896,19 @@ namespace Murder.Services
             RenderedSpriteCacheComponent? previousCache = e.TryGetRenderedSpriteCache();
             int previousFrame = previousCache?.LastFrameIndex ?? -1;
 
+            // Make sure we didn't change animations
+            if (previousCache is not RenderedSpriteCacheComponent cache ||
+                cache.RenderedSprite != currentAnimationGuid ||
+                !string.Equals(cache.AnimInfo.Name, animationInfo.Name, StringComparison.InvariantCulture))
+            {
+                // We changed animations, so we need to reset to -1 so we can trigger the first frame event
+                previousFrame = frameInfo.InternalFrame - 1;
+            }
+
             // Quickly check if we even changed frames, if not, don't bother with events
             if (frameInfo.InternalFrame != previousFrame)
             {
-                // Make sure we didn't change animations
-                if (previousCache is not RenderedSpriteCacheComponent cache ||
-                    cache.RenderedSprite != currentAnimationGuid ||
-                    !string.Equals(cache.AnimInfo.Name, animationInfo.Name, StringComparison.InvariantCulture))
-                {
-                    // We changed animations, so we need to reset to -1 so we can trigger the first frame event
-                    previousFrame = frameInfo.InternalFrame - 1;
-                }
-
+                
                 Animation currentAnimation = frameInfo.Animation;
 
                 if (currentAnimation.Events == null || currentAnimation.Events.Count == 0)
