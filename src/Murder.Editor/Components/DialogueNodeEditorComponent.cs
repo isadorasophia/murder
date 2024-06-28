@@ -1,4 +1,5 @@
 ﻿using Bang.Components;
+using Murder.Attributes;
 using Murder.Core.Dialogs;
 using Murder.Utilities;
 using System.Numerics;
@@ -6,6 +7,7 @@ using System.Numerics;
 namespace Murder.Editor.Components
 {
     [Unique]
+    [DoNotPersistOnSave]
     readonly struct DialogueNodeEditorComponent : IComponent
     {
         public readonly Situation Situation;
