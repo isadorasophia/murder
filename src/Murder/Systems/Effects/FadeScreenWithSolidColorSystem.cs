@@ -49,13 +49,13 @@ namespace Murder.Systems
                 switch (f.FadeType)
                 {
                     case FadeType.In:
-                        GameLogger.Log("Received fade in.");
+                        // GameLogger.Log("Received fade in.");
 
                         _fadeInTime = Game.NowUnscaled;
                         break;
 
                     case FadeType.Out:
-                        GameLogger.Log("Received fade out.");
+                        // GameLogger.Log("Received fade out.");
 
                         _fadeOutTime = Game.NowUnscaled;
                         break;
