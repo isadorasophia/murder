@@ -511,11 +511,16 @@ namespace Murder.Services
 
         private static readonly ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)>.Builder _filterBuilder =
             ImmutableArray.CreateBuilder<(int id, ColliderComponent collider, IMurderTransformComponent position)>();
-        public static ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)> FilterPositionAndColliderEntities(IEnumerable<NodeInfo<Entity>> entities, int layerMask)
+        public static ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)> FilterPositionAndColliderEntities(List<NodeInfo<Entity>> entities, HashSet<int> ignore, int layerMask)
         {
             _filterBuilder.Clear();
-            foreach (var e in entities)
+            for (int i = 0; i < entities.Count; i++)
             {
+                var e = entities[i];
+
+                if (ignore.Contains(e.EntityInfo.EntityId))
+                    continue;
+
                 if (e.EntityInfo.IsDestroyed || !e.EntityInfo.HasCollider())
                     continue;
 
@@ -674,7 +679,6 @@ namespace Murder.Services
         /// </summary>
         public static bool GetFirstMtvAt(
             in Map map,
-            HashSet<int> ignoreIds,
             ColliderComponent collider,
             Vector2 position,
             ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)> others,
@@ -707,8 +711,6 @@ namespace Murder.Services
 
                 foreach (var other in others)
                 {
-                    if (ignoreIds.Contains(other.id)) continue; // Skip ignored IDs
-
                     foreach (var otherShape in other.collider.Shapes)
                     {
                         var polyB = otherShape.GetPolygon();

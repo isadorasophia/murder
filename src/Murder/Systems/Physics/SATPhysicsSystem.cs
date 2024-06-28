@@ -97,7 +97,7 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                     _hitCounter.Clear();
 
                     qt.GetCollisionEntitiesAt(collider!.Value.GetBoundingBox(startPosition + velocity), _entityList);
-                    var collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(_entityList, mask);
+                    var collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(_entityList, _ignore, mask);
 
                     int exhaustCounter = ExhaustLimit;
 
@@ -107,7 +107,7 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                     Vector2 moveToPosition = startPosition + velocity;
                     Vector2 pushout;
 
-                    while (PhysicsServices.GetFirstMtvAt(map, _ignore, collider.Value, moveToPosition, collisionEntities, mask, out int id, out int layer, out pushout)
+                    while (PhysicsServices.GetFirstMtvAt(map, collider.Value, moveToPosition, collisionEntities, mask, out int id, out int layer, out pushout)
                         && exhaustCounter-- > 0)
                     {
                         moveToPosition = moveToPosition - pushout;
