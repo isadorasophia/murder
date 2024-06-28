@@ -12,6 +12,7 @@ using Murder.Editor.Components;
 using Murder.Services;
 using Murder.Systems;
 using Murder.Utilities;
+using System.Diagnostics;
 
 namespace Murder.Editor.Systems
 {
@@ -52,9 +53,6 @@ namespace Murder.Editor.Systems
 
                 for (int x = minX; x < maxX; x++)
                 {
-                    Rectangle tileRectangle = XnaExtensions.ToRectangle(
-                        x * Grid.CellSize - Grid.HalfCellSize, y * Grid.CellSize - Grid.HalfCellSize, Grid.CellSize, Grid.CellSize);
-
                     Rectangle cellRectangle = new Rectangle(x * Grid.CellSize, y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
 
                     int mask = map.GetCollision(x, y);
@@ -62,23 +60,11 @@ namespace Murder.Editor.Systems
                     int collisionMask = map.GetGridMap(x, y).CollisionType;
                     bool hasTileCollision = IsSolid(collisionMask);
 
-                    DrawTileCollisions(mask, render, new Point(x, y) * Grid.CellSize);
-
-                    Color color = ColorForTileMask(collisionMask);
-                    if (!hasTileCollision)
-                    {
-                        DrawCarveCollision(mask, render, cellRectangle, color);
-                    }
-
                     int weight = map.WeightAt(x, y);
                     if (pathfindMap is not null)
                     {
                         int collisionMaskForPathfind = pathfindMap.GetCollision(x, y);
-                        Color solidPathfindColor = ColorForPathfindTileMask(collisionMaskForPathfind);
-
-                        int pathfind = pathfindMap.GetCollision(x, y);
-                        DrawCarveCollision(pathfind, render, cellRectangle, solidPathfindColor);
-
+                        mask |= pathfindMap.GetCollision(x, y);
                         weight += pathfindMap.WeightAt(x, y);
 
                         hasTileCollision |= IsSolid(collisionMaskForPathfind);
@@ -96,6 +82,8 @@ namespace Murder.Editor.Systems
                                 Color = numberColor,
                             });
                     }
+
+                    DrawTileCollisions(mask, render, cellRectangle);
                 }
             }
 
@@ -124,71 +112,43 @@ namespace Murder.Editor.Systems
             return Color.CreateFrom256(255, 159, 255);
         }
 
-        private Color ColorForTileMask(int mask)
-        {
-            if (IsSolid(mask))
-            {
-                return new Color(.1f, .9f, .9f) * .4f;
-            }
-
-            if (IsBlockingLineOfSight(mask))
-            {
-                return new Color(.9f, .2f, .8f) * .4f;
-            }
-
-            return new Color(.2f, .2f, .2f) * .1f;
-        }
-
-        private Color ColorForPathfindTileMask(int mask)
-        {
-            if (IsSolid(mask))
-            {
-                return new Color(.2f, 1, .7f) * .7f;
-            }
-
-            if (IsBlockingLineOfSight(mask))
-            {
-                return new Color(.2f, 1, .7f) * .3f;
-            }
-
-            return new Color(.2f, 1, .7f) * .1f;
-        }
-
         private bool IsSolid(int mask) =>
             (mask & CollisionLayersBase.SOLID) != 0;
         private bool IsHole(int mask) =>
                     (mask & CollisionLayersBase.HOLE) != 0;
 
         private bool IsBlockingLineOfSight(int mask) =>
-            (mask & CalculatePathfindSystem.LineOfSightCollisionMask) != 0;
+            (mask & CollisionLayersBase.BLOCK_VISION) != 0;
 
-        private void DrawTileCollisions(int mask, RenderContext render, Point position)
+        private void DrawTileCollisions(int mask, RenderContext render, Rectangle rectangle)
         {
             float sorting = 1;
             Color solidGridColor = new Color(.1f, .9f, .9f) * .4f;
+            Color carveGridColor = new Color(.1f, .9f, .3f) * .2f;
             Color holeGridColor = new Color(.9f, .5f, .1f) * .4f;
-
 
             if (IsSolid(mask))
             {
-                render.DebugBatch.DrawRectangle(new Rectangle(position.X, position.Y, Grid.CellSize, Grid.CellSize), solidGridColor, sorting);
+                render.DebugBatch.DrawRectangle(rectangle, solidGridColor, sorting);
+            }
+            else if ((mask & CollisionLayersBase.CARVE) != 0)
+            {
+                render.DebugBatch.DrawRectangle(rectangle, carveGridColor, sorting);
+            }
+            else
+            {
+                if (IsBlockingLineOfSight(mask))
+                {
+                    float padding = Grid.CellSize * 0.1f;
+                    render.DebugBatch.DrawRectangleOutline(rectangle.Expand(-padding), carveGridColor, 1, sorting);
+                }
             }
 
             if (IsHole(mask))
             {
-                render.DebugBatch.DrawRectangle(new Rectangle(position.X, position.Y, Grid.CellSize, Grid.CellSize), holeGridColor, sorting);
+                render.DebugBatch.DrawRectangle(rectangle, holeGridColor, sorting);
             }
-        }
 
-        private void DrawCarveCollision(int cell, RenderContext render, Rectangle rectangle, Color color)
-        {
-            float sorting = 1;
-            int mask = CollisionLayersBase.CARVE;
-
-            if ((cell & mask) != 0)
-            {
-                render.DebugBatch.DrawRectangle(rectangle, color, sorting);
-            }
         }
     }
 }

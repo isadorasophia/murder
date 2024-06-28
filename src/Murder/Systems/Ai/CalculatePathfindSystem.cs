@@ -93,22 +93,28 @@ namespace Murder.Systems
             {
                 collisionMask = LineOfSightCollisionMask;
             }
+            // Carve and block vision are always added, no matter what.
+            collisionMask |= CollisionLayersBase.CARVE | CollisionLayersBase.BLOCK_VISION;
+
+            PathfindStatusFlags statusFlags = PathfindStatusFlags.None;
 
             var path = map.FindPath(
                 world,
                 initial: initialCell,
                 target: targetCell,
                 pathfind.Algorithm,
-                collisionMask);
+                collisionMask, out statusFlags);
 
             if (path.IsEmpty)
             {
                 e.SendMessage(new PathNotPossibleMessage());
+                e.SetPathfindStatus(statusFlags | PathfindStatusFlags.PathNotFound);
                 e.RemovePathfind();
 
                 return;
             }
 
+            e.SetPathfindStatus(statusFlags);
             e.SetRoute(new RouteComponent(path, initialCell, targetCell));
         }
     }

@@ -40,10 +40,30 @@ namespace Murder.Editor.Systems
                 Point gridPosition = position.ToGrid();
 
 
-                if (e.TryGetPathfind() is PathfindComponent pathfindComponent)
+                if (e.TryGetPathfindStatus() is PathfindStatusComponent pathfindStatusComponent)
+                {
+
+                    if (e.TryGetPathfind() is PathfindComponent pathfindComponent)
+                    {
+                        RenderServices.DrawText(render.DebugBatch, MurderFonts.PixelFont,
+                            $"Entity {e.EntityId}\n\n{pathfindComponent.Algorithm}\n\n{pathfindStatusComponent.Flags}", position, new DrawInfo(Game.Profile.Theme.Accent, 0)
+                            {
+                                Outline = Game.Profile.Theme.Bg,
+                            });
+                    }
+                }
+                else if (e.TryGetPathfind() is PathfindComponent pathfindComponent)
                 {
                     RenderServices.DrawText(render.DebugBatch, MurderFonts.PixelFont,
                         $"Entity {e.EntityId}\n\n{pathfindComponent.Algorithm}", position, new DrawInfo(Game.Profile.Theme.Accent, 0)
+                        {
+                            Outline = Game.Profile.Theme.Bg,
+                        });
+                }
+                else
+                {
+                    RenderServices.DrawText(render.DebugBatch, MurderFonts.PixelFont,
+                        $"Entity {e.EntityId} [NO PATHFIND COMPONENT!]", position, new DrawInfo(Game.Profile.Theme.Accent, 0)
                         {
                             Outline = Game.Profile.Theme.Bg,
                         });

@@ -19,7 +19,7 @@ internal partial class WorldAssetEditor
             return false;
         }
 
-        stage.EditorHook.DrawPathfind = true; 
+        ShowGrid = stage.EditorHook.DrawPathfind = true; 
 
         bool modified = false;
 

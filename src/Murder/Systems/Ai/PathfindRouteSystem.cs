@@ -37,6 +37,7 @@ namespace Murder.Systems
 
                         // We have reached our goal, snap to it!
                         e.RemovePathfind();
+                        e.SetPathfindStatus(PathfindStatusFlags.PathComplete);
                         e.RemoveRoute();
 
                         continue;

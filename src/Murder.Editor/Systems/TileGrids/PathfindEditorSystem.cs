@@ -2,6 +2,7 @@
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
+using ImGuiNET;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
@@ -14,6 +15,7 @@ using Murder.Editor.Utilities;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Editor.Systems;
 
@@ -139,6 +141,64 @@ public class PathfindEditorSystem : IStartupSystem, IUpdateSystem, IGuiSystem, I
 
     public void DrawGui(RenderContext render, Context context)
     {
+        Map pathMap = context.World.GetUnique<PathfindMapComponent>().Map;
+        Map? map = context.World.TryGetUniqueMap()?.Map;
+
+        Point cursor = _cachedRectangle.TopLeft;
+        int mask = pathMap.GetCollision(cursor.X, cursor.Y);
+        int mapMask = map?.GetCollision(cursor.X, cursor.Y) ?? 0;
+
+        if (ImGui.BeginTooltip())
+        {
+            ImGui.Text($"Point: {cursor}");
+            ImGui.Separator();
+
+            Vector4 pathColor = Game.Profile.Theme.Green;
+            Vector4 mapColor = Game.Profile.Theme.Accent;
+
+            if ((mask & CollisionLayersBase.SOLID) != 0)
+            {
+                ImGui.TextColored(pathColor, "Solid");
+            }
+
+            if ((mask & CollisionLayersBase.HOLE) != 0)
+            {
+                ImGui.TextColored(pathColor, "Hole");
+            }
+
+            if ((mask & CollisionLayersBase.BLOCK_VISION) != 0)
+            {
+                ImGui.TextColored(pathColor, "Block Vision");
+            }
+
+            if ((mask & CollisionLayersBase.CARVE) != 0)
+            {
+                ImGui.TextColored(pathColor, "Carve");
+            }
+
+
+            if ((mapMask & CollisionLayersBase.SOLID) != 0)
+            {
+                ImGui.TextColored(mapColor, "Solid");
+            }
+
+            if ((mapMask & CollisionLayersBase.HOLE) != 0)
+            {
+                ImGui.TextColored(mapColor, "Hole");
+            }
+
+            if ((mapMask & CollisionLayersBase.BLOCK_VISION) != 0)
+            {
+                ImGui.TextColored(mapColor, "Block Vision");
+            }
+
+            if ((mapMask & CollisionLayersBase.CARVE) != 0)
+            {
+                ImGui.TextColored(mapColor, "Carve");
+            }
+
+            ImGui.EndTooltip();
+        }
     }
 
     public void Draw(RenderContext render, Context context)
