@@ -147,6 +147,8 @@ namespace Murder.Core.Dialogs
                 if (dialog.IsChoice)
                 {
                     // We will continue to be in a choice until DoChoice gets kicked off.
+                    DoLineEvents(target, dialog.Lines[_activeLine]);
+
                     return new(FormatChoice(dialog));
                 }
 
