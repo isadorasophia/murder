@@ -149,9 +149,10 @@ namespace Murder.Core.Graphics
         /// <summary>
         /// Create a texture on the fly. Be careful, as the texture needs to be manually *disposed*!
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="texture"></param>
-        /// <returns></returns>
+        /// <param name="id">Texture identifier.</param>
+        /// <param name="texture">Resultin texture.</param>
+        /// <param name="scale">Scale of the texture.</param>
+        /// <returns>Whether it succeeded fetching the texture.</returns>
         public bool TryCreateTexture(string id, [NotNullWhen(true)] out Texture2D? texture, float scale)
         {
             if (!string.IsNullOrWhiteSpace(id))
