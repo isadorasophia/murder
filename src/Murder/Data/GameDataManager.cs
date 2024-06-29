@@ -884,6 +884,10 @@ namespace Murder.Data
 
         public virtual void OnAssetRenamedOrAddedOrDeleted() { }
 
+        public virtual void TrackOnHotReloadSprite(Action action) { }
+
+        public virtual void UntrackOnHotReloadSprite(Action action) { }
+
         public Texture2D FetchTexture(string path)
         {
             if (CachedUniqueTextures.TryGetValue(path, out Texture2D? value))

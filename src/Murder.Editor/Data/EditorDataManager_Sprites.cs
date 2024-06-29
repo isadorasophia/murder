@@ -12,6 +12,18 @@ namespace Murder.Editor.Data;
 
 public partial class EditorDataManager
 {
+    private Action? _onHotReloadSprites = null;
+
+    public override void TrackOnHotReloadSprite(Action action)
+    {
+        _onHotReloadSprites += action;
+    }
+
+    public override void UntrackOnHotReloadSprite(Action action)
+    {
+        _onHotReloadSprites -= action;
+    }
+
     public ValueTask ReloadSprites()
     {
         if (LoadContentProgress is not null && !LoadContentProgress.IsCompleted)
@@ -20,8 +32,14 @@ public partial class EditorDataManager
             return default;
         }
 
-        FetchResourcesForImporters(reload: true, skipIfNoChangesFound: true);
+        bool changed = FetchResourcesForImporters(reload: true, skipIfNoChangesFound: true);
+        if (!changed)
+        {
+            return default;
+        }
+
         LoadResourceImporters(reload: true, skipIfNoChangesFound: true);
+        _onHotReloadSprites?.Invoke();
 
         return default;
     }
@@ -154,13 +172,13 @@ public partial class EditorDataManager
     /// <summary>
     /// Initialize all resources tracked by the importers, if they changed since last import.
     /// </summary>
-    private void FetchResourcesForImporters(bool reload, bool skipIfNoChangesFound)
+    private bool FetchResourcesForImporters(bool reload, bool skipIfNoChangesFound)
     {
         // Making sure we have an input directory
         if (!Directory.Exists(FileHelper.GetPath(EditorSettings.GameSourcePath)))
         {
             GameLogger.Warning($"Please specify a valid \"Game Source Path\" in \"Editor Settings\". Unable to find the resources to build the atlas from.");
-            return;
+            return false;
         }
 
         List<(ResourceImporter importer, ImporterSettingsAttribute filter)> importersWithFilters = new();
@@ -187,7 +205,7 @@ public partial class EditorDataManager
 
         if (importersWithFilters.Count == 0)
         {
-            return;
+            return false;
         }
 
         bool foundChanges = false;
@@ -254,7 +272,7 @@ public partial class EditorDataManager
 
         if (!foundChanges)
         {
-            return;
+            return false;
         }
 
         EditorSettings.LastHotReloadImport = DateTime.Now;
@@ -266,6 +284,7 @@ public partial class EditorDataManager
         }
 
         SaveAsset(Architect.EditorSettings);
+        return true;
     }
 
     private SpriteEventDataManagerAsset? _instance = null;

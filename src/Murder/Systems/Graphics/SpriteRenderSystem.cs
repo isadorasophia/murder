@@ -17,15 +17,10 @@ namespace Murder.Systems.Graphics
 {
     [Filter(ContextAccessorFilter.AllOf, typeof(SpriteComponent), typeof(ITransformComponent), typeof(InCameraComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(InvisibleComponent), typeof(ThreeSliceComponent))]
-    public class SpriteRenderSystem : IMurderRenderSystem
+    public class SpriteRenderSystem : IStartupSystem, IExitSystem, IMurderRenderSystem
     {
-        private readonly Dictionary<Guid, SpriteAsset> _spriteAssetCache = new Dictionary<Guid, SpriteAsset>();
+        private readonly Dictionary<Guid, SpriteAsset> _spriteAssetCache = [];
         
-        public void ClearCache()
-        {
-            _spriteAssetCache.Clear();
-        }
-
         public void Draw(RenderContext render, Context context)
         {
             bool issueSlowdownWarning = false;
@@ -225,6 +220,25 @@ namespace Murder.Systems.Graphics
             }
 
             return alpha * (entity.TryGetAlpha()?.Alpha ?? 1.0f);
+        }
+
+        public void ClearCache()
+        {
+            _spriteAssetCache.Clear();
+        }
+
+        public void Start(Context context)
+        {
+#if DEBUG
+            Game.Data.TrackOnHotReloadSprite(ClearCache);
+#endif
+        }
+
+        public void Exit(Context context)
+        {
+#if DEBUG
+            Game.Data.UntrackOnHotReloadSprite(ClearCache);
+#endif
         }
     }
 }
