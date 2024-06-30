@@ -349,6 +349,7 @@ namespace Murder.Data
                     return;
                 }
 
+                GameLogger.LogDebug($"Tracking font: {font.Index}");
                 _fonts = _fonts.Add(font.Index, font);
             }
         }

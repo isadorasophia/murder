@@ -57,9 +57,8 @@ namespace Murder.Data
         /// <summary>
         /// Stores all the save assets tied to the current <see cref="ActiveSaveData"/>.
         /// </summary>
-        private readonly ConcurrentDictionary<Guid, GameAsset> _currentSaveAssets = new();
-
-        private SaveData? _activeSaveData;
+        protected readonly ConcurrentDictionary<Guid, GameAsset> _currentSaveAssets = new();
+        protected SaveData? _activeSaveData;
 
         private GamePreferences? _preferences;
         public ImmutableArray<Color> CurrentPalette;
@@ -319,8 +318,14 @@ namespace Murder.Data
             PendingSave = SerializeSaveAsync();
         }
 
-        public async ValueTask<bool> SerializeSaveAsync()
+        protected async ValueTask<bool> SerializeSaveAsync()
         {
+            if (PendingSave is not null && !PendingSave.Value.IsCompleted)
+            {
+                // Save is already in progress.
+                return false;
+            }
+
             if (_activeSaveData is null)
             {
                 return false;
@@ -444,7 +449,7 @@ namespace Murder.Data
             return true;
         }
 
-        private bool UnloadCurrentSave()
+        protected bool UnloadCurrentSave()
         {
             if (_activeSaveData is null)
             {

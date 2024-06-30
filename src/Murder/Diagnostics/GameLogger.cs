@@ -111,6 +111,13 @@ public class GameLogger
     public static void LogPerf(string v, Vector4? color = null) =>
         GetOrCreateInstance().LogPerfImpl(v, color ?? new Vector4(1, 1, 1, 1) /* white */);
 
+    public static void LogDebug(string v)
+    {
+#if DEBUG
+        GetOrCreateInstance().LogDebugImpl(v);
+#endif
+    }
+
     public static void Log(string v, Microsoft.Xna.Framework.Color? color = null)
         => GetOrCreateInstance().LogImpl(v, (color ?? Microsoft.Xna.Framework.Color.White).ToSysVector4());
 
@@ -195,6 +202,18 @@ public class GameLogger
         Debug.WriteLine(message);
 
         OutputToLog($"\uf201 {rawMessage}", color);
+        _scrollToBottom = 2;
+    }
+
+    private void LogDebugImpl(string rawMessage)
+    {
+        if (CheckRepeat(rawMessage))
+            return;
+
+        string message = $"[DEBUG] {rawMessage}";
+        Debug.WriteLine(message);
+
+        OutputToLog($"\uf188 {rawMessage}", new Vector4(1, 1, 1, 0.5f));
         _scrollToBottom = 2;
     }
 

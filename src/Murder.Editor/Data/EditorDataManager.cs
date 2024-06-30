@@ -25,6 +25,7 @@ using Murder.Assets.Graphics;
 using Murder.Assets.Save;
 using Bang.Diagnostics;
 using Murder.Utilities;
+using System.Collections.Generic;
 
 namespace Murder.Editor.Data
 {
@@ -310,13 +311,8 @@ namespace Murder.Editor.Data
                 return;
             }
 
-            SaveDataTracker? tracker = FileManager.UnpackContent<SaveDataTracker>(trackerPath);
-            if (tracker is null)
-            {
-                return;
-            }
-
-            foreach ((int slot, SaveDataInfo save) in tracker.Value.Info)
+            SaveDataTracker tracker = FileManager.UnpackContent<SaveDataTracker>(trackerPath);
+            foreach ((int slot, SaveDataInfo save) in tracker.Info)
             {
                 string saveDataPath = save.GetFullPackedSavePath(slot);
                 string saveDataAssetsPath = save.GetFullPackedAssetsSavePath(slot);
@@ -346,6 +342,95 @@ namespace Murder.Editor.Data
             _saveAssetsForEditor.Clear();
 
             base.DeleteAllSaves();
+        }
+
+        /// <summary>
+        /// This is somewhat of an odd method. This mocks packaging the save file in order to save
+        /// an asset that has been edited through the editor.
+        /// </summary>
+        /// <param name="asset">Target asset to be saved (or deleted).</param>
+        public async ValueTask SerializeSaveForAssetAsync(GameAsset asset)
+        {
+            if (PendingSave is not null && !PendingSave.Value.IsCompleted)
+            {
+                // Save is already in progress.
+                return;
+            }
+
+            string trackerPath = Path.Join(SaveBasePath, SaveDataTracker.Name);
+            if (!File.Exists(trackerPath))
+            {
+                return;
+            }
+
+            SaveDataTracker tracker = FileManager.UnpackContent<SaveDataTracker>(trackerPath);
+            foreach ((int slot, SaveDataInfo save) in tracker.Info)
+            {
+                string saveDataPath = save.GetFullPackedSavePath(slot);
+                string saveDataAssetsPath = save.GetFullPackedAssetsSavePath(slot);
+                if (!File.Exists(saveDataPath) || !File.Exists(saveDataAssetsPath))
+                {
+                    continue;
+                }
+
+                PackedSaveData? packedData = FileManager.UnpackContent<PackedSaveData>(saveDataPath);
+                PackedSaveAssetsData? packedAssetsData = FileManager.UnpackContent<PackedSaveAssetsData>(saveDataAssetsPath);
+                if (packedData is null || packedAssetsData is null)
+                {
+                    continue;
+                }
+
+                bool match = false;
+                if (asset.Guid == packedData.Data.Guid)
+                {
+                    match = true;
+
+                    if (asset.TaggedForDeletion)
+                    {
+                        GameLogger.Warning("Unable to delete the root save data. At least, this was not implemented yet.");
+                    }
+                }
+
+                // Override the save slot, which came from the editor data.
+                _allSavedData[slot] = save;
+
+                if (!_saveAssetsForEditor.TryGetValue(packedData.Data.Guid, out GameAsset? packedSaveData))
+                {
+                    GameLogger.Error($"Why has save slot {slot} not loaded in the editor?");
+                    continue;
+                }
+
+                _activeSaveData = (SaveData)packedSaveData;
+                _currentSaveAssets.Clear();
+
+                foreach (GameAsset packedAsset in packedAssetsData.Assets)
+                {
+                    if (packedAsset.Guid == asset.Guid)
+                    {
+                        match = true;
+                    }
+
+                    if (asset.TaggedForDeletion)
+                    {
+                        _saveAssetsForEditor.Remove(asset.Guid);
+                        continue;
+                    }
+
+                    _currentSaveAssets.TryAdd(packedAsset.Guid, _saveAssetsForEditor[packedAsset.Guid]);
+                }
+
+                if (match)
+                {
+                    PendingSave = SerializeSaveAsync();
+                    await PendingSave.Value;
+
+                    asset.FileChanged = false;
+                    break;
+                }
+            }
+
+            _activeSaveData = null;
+            _currentSaveAssets.Clear();
         }
 
         private void LoadEditorSettings()
@@ -408,8 +493,9 @@ namespace Murder.Editor.Data
             }
             else if (_saveAssetsForEditor.TryGetValue(assetGuid, out GameAsset? saveAsset))
             {
-                FileManager.DeleteFileIfExists(saveAsset.FilePath);
-                _saveAssetsForEditor.Remove(assetGuid);
+                saveAsset.TaggedForDeletion = true;
+
+                SaveAsset(saveAsset);
             }
 
             _cachedFilteredAssetsWithImplementation.Clear();
@@ -466,6 +552,14 @@ namespace Murder.Editor.Data
         /// </summary>
         public void SaveAsset<T>(T asset) where T : GameAsset
         {
+            if (asset.IsStoredInSaveData)
+            {
+                // Asset is actually stored in the save data. In that case, save it through a different path.
+                _ = SerializeSaveForAssetAsync(asset);
+
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(asset.FilePath))
             {
                 // File has just been created and we need to name it.

@@ -133,7 +133,6 @@ namespace Murder.Editor.Systems
                     ImGui.Text("Select a save to start playing with.");
                     ImGui.Separator();
 
-
                     foreach (var save in allSaves.Keys)
                     {
                         if (ImGui.MenuItem($"Slot {save}"))
