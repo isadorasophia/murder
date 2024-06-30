@@ -51,7 +51,7 @@ namespace Murder.Systems
                         // for some reason, we went off-route. so just improvise and go somewhere else.
                         // First we look for the closest node to our current position.
                         Point closest = route.Nodes.Keys.OrderBy(x => (x - cell).LengthSquared()).First();
-                        TargetEntityTo(e, route.Nodes[cell]);
+                        TargetEntityTo(e, route.Nodes[closest]);
                     }
                     else
                     {
