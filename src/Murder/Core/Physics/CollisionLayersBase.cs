@@ -12,7 +12,6 @@
         public const int BLOCK_VISION = 1 << 6;
         public const int RAYIGNORE = 1 << 7;
         public const int PATHFIND = 1 << 8;
-        public const int RESERVED = 1 << 9;
 
         /// <summary>
         /// This class should never be instanced

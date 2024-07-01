@@ -156,45 +156,17 @@ public class PathfindEditorSystem : IStartupSystem, IUpdateSystem, IGuiSystem, I
             Vector4 pathColor = Game.Profile.Theme.Green;
             Vector4 mapColor = Game.Profile.Theme.Accent;
 
-            if ((mask & CollisionLayersBase.SOLID) != 0)
+            foreach ((string name, int id) in AssetsFilter.CollisionLayers)
             {
-                ImGui.TextColored(pathColor, "Solid");
-            }
+                if ((mask & id) != 0)
+                {
+                    ImGui.TextColored(mapColor, name);
+                }
 
-            if ((mask & CollisionLayersBase.HOLE) != 0)
-            {
-                ImGui.TextColored(pathColor, "Hole");
-            }
-
-            if ((mask & CollisionLayersBase.BLOCK_VISION) != 0)
-            {
-                ImGui.TextColored(pathColor, "Block Vision");
-            }
-
-            if ((mask & CollisionLayersBase.CARVE) != 0)
-            {
-                ImGui.TextColored(pathColor, "Carve");
-            }
-
-
-            if ((mapMask & CollisionLayersBase.SOLID) != 0)
-            {
-                ImGui.TextColored(mapColor, "Solid");
-            }
-
-            if ((mapMask & CollisionLayersBase.HOLE) != 0)
-            {
-                ImGui.TextColored(mapColor, "Hole");
-            }
-
-            if ((mapMask & CollisionLayersBase.BLOCK_VISION) != 0)
-            {
-                ImGui.TextColored(mapColor, "Block Vision");
-            }
-
-            if ((mapMask & CollisionLayersBase.CARVE) != 0)
-            {
-                ImGui.TextColored(mapColor, "Carve");
+                if ((mapMask & id) != 0)
+                {
+                    ImGui.TextColored(mapColor, name);
+                }
             }
 
             ImGui.EndTooltip();

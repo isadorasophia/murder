@@ -125,6 +125,7 @@ namespace Murder.Editor.Systems
             float sorting = 1;
             Color solidGridColor = new Color(.1f, .9f, .9f) * .4f;
             Color carveGridColor = new Color(.1f, .9f, .3f) * .2f;
+            Color otherGridColor = new Color(.1f, .1f, .9f) * .2f;
             Color holeGridColor = new Color(.9f, .5f, .1f) * .4f;
 
             if (IsSolid(mask))
@@ -135,13 +136,15 @@ namespace Murder.Editor.Systems
             {
                 render.DebugBatch.DrawRectangle(rectangle, carveGridColor, sorting);
             }
-            else
+            else if (IsBlockingLineOfSight(mask))
             {
-                if (IsBlockingLineOfSight(mask))
-                {
-                    float padding = Grid.CellSize * 0.1f;
-                    render.DebugBatch.DrawRectangleOutline(rectangle.Expand(-padding), carveGridColor, 1, sorting);
-                }
+                float padding = Grid.CellSize * 0.1f;
+                render.DebugBatch.DrawRectangleOutline(rectangle.Expand(-padding), carveGridColor, 1, sorting);
+            }
+            else if (mask >= (1 << 9))
+            {
+                // Any masks that are not defined in murder.
+                render.DebugBatch.DrawRectangle(rectangle, otherGridColor, sorting);
             }
 
             if (IsHole(mask))
