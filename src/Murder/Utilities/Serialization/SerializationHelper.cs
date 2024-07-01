@@ -102,6 +102,9 @@ public static class SerializationHelper
             }
         }
 
+        // Keep track of added properties, so we don't add it twice between parent types.
+        HashSet<string>? allExtraProperties = null;
+
         while (t is not null && t.Assembly.FullName is string name && !name.StartsWith("System"))
         {
             if (_types.TryGetValue(t, out var extraFieldsInParentType))
@@ -170,11 +173,24 @@ public static class SerializationHelper
                     // We may need to manually format names for private fields.
                     if (fieldName.StartsWith('_'))
                     {
-                        fieldName = fieldName[1..];
+                        string nameWithoutUnderscore = fieldName[1..];
+
+                        if (allExtraProperties is not null && allExtraProperties.Contains(nameWithoutUnderscore))
+                        {
+                            // This means that another derived type already added this field.
+                            continue;
+                        }
+
+                        if (!existingProperties.Contains(nameWithoutUnderscore))
+                        {
+                            // Only modify the name if there is no conflicting existing field.
+                            fieldName = nameWithoutUnderscore;
+                        }
                     }
 
                     if (existingProperties.Contains(fieldName))
                     {
+                        // This means that another derived type already added this field.
                         continue;
                     }
 
@@ -187,6 +203,9 @@ public static class SerializationHelper
 
                     extraPrivateProperties ??= [];
                     extraPrivateProperties.Add(jsonPropertyInfo);
+
+                    allExtraProperties ??= [];
+                    allExtraProperties.Add(fieldName);
 
                     existingProperties.Add(jsonPropertyInfo.Name);
                 }
