@@ -354,7 +354,7 @@ namespace Murder.Editor
             {
                 _isForeground = true;
 
-                ImGui.SetNextWindowBgAlpha(0f);
+                ImGui.SetNextWindowBgAlpha(0.01f);
                 ImGui.Begin("Editor is not focused!", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize);
                 ImGui.BeginDisabled();
                 ImGui.PushStyleColor(ImGuiCol.Button, Profile.Theme.Faded);
