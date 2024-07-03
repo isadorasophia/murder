@@ -17,21 +17,21 @@ namespace Murder.Systems.Graphics
         {
             foreach (var e in entities)
             {
-                var ase = e.GetSprite();
+                var sprite = e.GetSprite();
                 var randomizer = e.GetRandomizeSprite();
 
                 if (randomizer.RandomizeAnimation || randomizer.RandomRotate)
                 {
                     e.SetSprite(
                         new SpriteComponent(
-                            ase.AnimationGuid,
-                            ase.Offset,
-                            randomizer.RandomizeAnimation ? GetRandomAnimationId(ase.AnimationGuid) : ase.NextAnimations,
-                            ase.YSortOffset,
-                            randomizer.RandomRotate ? true : ase.RotateWithFacing,
-                            ase.FlipWithFacing,
-                            ase.HighlightStyle,
-                            ase.TargetSpriteBatch
+                            sprite.AnimationGuid,
+                            sprite.Offset,
+                            randomizer.RandomizeAnimation ? GetRandomAnimationId(sprite.AnimationGuid) : sprite.NextAnimations,
+                            sprite.YSortOffset,
+                            randomizer.RandomRotate ? true : sprite.RotateWithFacing,
+                            randomizer.RandomFlip ? true : sprite.FlipWithFacing,
+                            sprite.HighlightStyle,
+                            sprite.TargetSpriteBatch
                         ));
                 }
 
@@ -40,7 +40,7 @@ namespace Murder.Systems.Graphics
                     e.SetAnimationStarted(Game.Random.NextFloat(1f, 32f));
                 }
 
-                if (randomizer.RandomRotate)
+                if (randomizer.RandomRotate || randomizer.RandomFlip)
                 {
                     e.SetFacing(DirectionHelper.RandomCardinal());
                 }

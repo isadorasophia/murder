@@ -9,5 +9,7 @@ namespace Murder.Components
         public readonly bool RandomizeAnimationStart;
         [Tooltip("In 90 deg increments")]
         public readonly bool RandomRotate;
+        public readonly bool RandomFlip;
+
     }
 }
