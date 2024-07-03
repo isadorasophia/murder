@@ -19,6 +19,7 @@ namespace Murder.Assets
         public override bool StoreInDatabase => false;
 
         public override bool IsStoredInSaveData => true;
+        public override bool IsSavePacked => true;
 
         /// <summary>
         /// This maps

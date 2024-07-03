@@ -143,13 +143,17 @@ namespace Murder.Assets
         /// </summary>
         public virtual bool CanBeSaved => true;
 
-
         public virtual string SaveLocation => Path.Join(Game.Profile.GenericAssetsPath, FileHelper.Clean(EditorFolder));
 
         /// <summary>
         /// Whether this file is saved relative do the save path.
         /// </summary>
         public virtual bool IsStoredInSaveData => false;
+
+        /// <summary>
+        /// Whether this file will be packed in the save, if <see cref="IsStoredInSaveData"/> is true.
+        /// </summary>
+        public virtual bool IsSavePacked => false;
 
         /// <summary>
         /// Whether this file should be stored following a database hierarchy of the files.

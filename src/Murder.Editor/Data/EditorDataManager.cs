@@ -552,7 +552,7 @@ namespace Murder.Editor.Data
         /// </summary>
         public void SaveAsset<T>(T asset) where T : GameAsset
         {
-            if (asset.IsStoredInSaveData)
+            if (asset.IsSavePacked)
             {
                 // Asset is actually stored in the save data. In that case, save it through a different path.
                 _ = SerializeSaveForAssetAsync(asset);

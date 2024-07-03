@@ -16,6 +16,7 @@ namespace Murder.Assets
         public Guid WorldGuid => Guid.Empty;
 
         public override bool IsStoredInSaveData => true;
+        public override bool IsSavePacked => true;
 
         [Bang.Serialize]
         private readonly ImmutableDictionary<Guid, EntityInstance> _instances;
