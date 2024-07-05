@@ -4,6 +4,7 @@ using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.ImGuiExtended;
+using Murder.Utilities;
 using System.Collections.Immutable;
 
 namespace Murder.Editor.CustomEditors
@@ -12,6 +13,7 @@ namespace Murder.Editor.CustomEditors
     internal class FeatureAssetEditor : CustomEditor
     {
         private FeatureAsset _featureAsset = null!;
+        private static string _searchSystemText = "";
 
         public override object Target => _featureAsset;
 
@@ -28,6 +30,11 @@ namespace Murder.Editor.CustomEditors
                 _featureAsset.IsDiagnostics = !isDiagnostic;
                 _featureAsset.FileChanged = true;
             }
+
+            ImGui.PushItemWidth(-1);
+            ImGui.SameLine();
+            ImGui.InputTextWithHint("##search_systems", "Search...", ref _searchSystemText, 256);
+            ImGui.PopItemWidth();
 
             ImGuiHelpers.HelpTooltip("Enable this feature while running on editor.");
 
@@ -114,6 +121,12 @@ namespace Murder.Editor.CustomEditors
                     ImGui.PushStyleColor(ImGuiCol.Text, Architect.Profile.Theme.Faded);
                     foreach (var system in asset.FetchAllSystems(true))
                     {
+
+                        if (!string.IsNullOrEmpty(_searchSystemText) && !StringHelper.FuzzyMatch(_searchSystemText, system.systemType.Name))
+                        {
+                            continue;
+                        }
+
                         ImGui.Text($"> {system.systemType.Name}");
                     }
                     ImGui.PopStyleColor();
