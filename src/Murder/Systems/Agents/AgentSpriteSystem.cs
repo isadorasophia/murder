@@ -134,6 +134,12 @@ namespace Murder.Systems
                 {
                     color = Color.White;
                 }
+                
+                // Handle tint
+                if (e.TryGetTint() is TintComponent tint)
+                {
+                    color *= tint.TintColor;
+                }
 
                 // Handle scaling
                 Vector2 scale = Vector2.One;
