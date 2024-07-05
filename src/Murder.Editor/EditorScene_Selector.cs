@@ -305,6 +305,14 @@ namespace Murder.Editor
             var selectedColor = CurrentAsset == asset ? Game.Profile.Theme.Faded : Game.Profile.Theme.BgFaded;
             ImGui.PushStyleColor(ImGuiCol.Header, selectedColor);
 
+            bool isFavourite = Architect.EditorSettings.FavoriteAssets.Contains(asset.Guid);
+            if (isFavourite)
+            {
+                ImGui.SetCursorPosX(ImGui.GetCursorPosX()- 22);
+                ImGui.TextColored(Game.Profile.Theme.Yellow, "\uf005");
+                ImGui.SameLine();
+            }
+
             if (ImGuiHelpers.SelectableWithIconColor($"{name}{(asset.FileChanged ? "*" : "")}", asset.Icon, color, color * 0.8f, _selectedAssets.ContainsKey(asset.Guid)))
             {
                 _openAsset = asset.Guid;
@@ -372,6 +380,7 @@ namespace Murder.Editor
             }
 
             ImGui.PopID();
+
         }
 
         private void CreateAssetButton(Type type)

@@ -401,6 +401,25 @@ namespace Murder.Editor
                 ImGui.SameLine();
                 
                 ImGui.BeginGroup();
+                if (Architect.EditorSettings.FavoriteAssets.Any())
+                {
+                    ImGui.BeginGroup();
+
+                    ImGui.TextColored(Architect.Profile.Theme.Yellow, "\uf005");
+                    ImGui.SameLine();
+                    if (ImGui.TreeNode("Favourites"))
+                    {
+                        foreach (var asset in Architect.EditorSettings.CachedFavoriteAssets)
+                        {
+                            DrawAssetInList(asset, Architect.Profile.Theme.Yellow, asset.Name);
+                        }
+                    ImGui.TreePop();    
+                    }
+                    ImGui.EndGroup();
+
+                    ImGui.Separator();
+                }
+
                 DrawAssetFolder("#\uf07b", Architect.Profile.Theme.White, typeof(GameAsset), assets, !string.IsNullOrWhiteSpace(_searchAssetText));
 
                 DrawAssetInList(Architect.EditorData.EditorSettings, Game.Profile.Theme.White, Architect.EditorData.EditorSettings.Name);

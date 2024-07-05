@@ -10,6 +10,7 @@ using Murder.Editor.Utilities;
 using Murder.Serialization;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Editor
 {
@@ -122,6 +123,31 @@ namespace Murder.Editor
             // Draw the editor header
             if (ImGui.BeginChild("Asset Editor", new System.Numerics.Vector2(-1, -1), ImGuiChildFlags.None))
             {
+                bool isFavorite = Architect.EditorSettings.FavoriteAssets.Contains(asset.Guid);
+                ImGui.PushStyleColor(ImGuiCol.Button, Vector4.Zero);
+                ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Vector4.Zero);
+                ImGui.PushStyleColor(ImGuiCol.ButtonActive, Vector4.Zero);
+
+                if (isFavorite)
+                {
+                    ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Yellow);
+                    if (ImGui.Button("\uf005###favouriteStar"))
+                    {
+                        Architect.EditorSettings.UnfavoriteAsset(asset.Guid);
+                    }
+                }
+                else
+                {
+                    ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
+                    if (ImGui.Button("\uf005###favouriteStar"))
+                    {
+                        Architect.EditorSettings.FavoriteAsset(asset.Guid);
+                    }
+                }
+                ImGui.PopStyleColor(4);
+                ImGuiHelpers.HelpTooltip("Favourite asset");
+                ImGui.SameLine();
+
                 if (asset.FileChanged)
                 {
                     ImGuiHelpers.ColorIcon('\uf0c7', Game.Profile.Theme.Red);

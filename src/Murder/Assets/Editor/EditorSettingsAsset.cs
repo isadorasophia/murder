@@ -137,9 +137,41 @@ public class EditorSettingsAsset : GameAsset
 
     [Serialize, HideInEditor]
     public readonly Dictionary<Guid, PersistStageInfo> CameraPositions = new();
-    
+
     [Serialize, HideInEditor]
     public readonly Dictionary<Guid, PersistWorldStageInfo> WorldAssetInfo = new();
+
+    [Serialize, HideInEditor]
+    private readonly HashSet<Guid> _favoriteAssets = new();
+
+    private readonly List<GameAsset> _cachedFavoriteAssets = new();
+    public ImmutableHashSet<Guid> FavoriteAssets => _favoriteAssets.ToImmutableHashSet();
+    public List<GameAsset> CachedFavoriteAssets
+    {
+        get
+        {
+            if (_cachedFavoriteAssets.Count != FavoriteAssets.Count)
+            {
+                _cachedFavoriteAssets.Clear();
+                foreach (Guid guid in FavoriteAssets)
+                {
+                    GameAsset? asset = Game.Data.TryGetAsset(guid);
+                    if (asset is not null)
+                    {
+                        _cachedFavoriteAssets.Add(asset);
+                    }
+                    else
+                    {
+                        //Invalid asset, remove from favorites
+                        FavoriteAssets.Remove(guid);
+                    }
+                }
+            }
+
+            return _cachedFavoriteAssets;
+        }
+    }
+
 
     [Tooltip("Whether an asset should be overriden (by a save) after an error loading it")]
     [Serialize]
@@ -203,5 +235,16 @@ public class EditorSettingsAsset : GameAsset
         {
             GameLogger.Warning("\uf0ad Fixed an issue found in editor profile! It shouldn't happen again.");
         }
+    }
+
+    public void FavoriteAsset(Guid guid)
+    {
+        _favoriteAssets.Add(guid);
+        _cachedFavoriteAssets.Clear();
+    }
+    public void UnfavoriteAsset(Guid guid)
+    {
+        _favoriteAssets.Remove(guid);
+        _cachedFavoriteAssets.Clear();
     }
 }
