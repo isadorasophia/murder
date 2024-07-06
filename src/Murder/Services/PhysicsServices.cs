@@ -819,6 +819,7 @@ namespace Murder.Services
             Vector2 accumulatedMtv = Vector2.Zero;
             layer = CollisionLayersBase.NONE;
             float distance = (toPosition - fromPosition).Length();
+            int collisionCount = 0;
 
             for (int i = 0; i < collider.Shapes.Length; i++)
             {
@@ -830,17 +831,20 @@ namespace Murder.Services
 
                 foreach (var tileCollisionInfo in map.GetCollisionInfosWith(boundingBox.X, boundingBox.Y, boundingBox.Width, boundingBox.Height, mask))
                 {
-                    var tilePolygon = Polygon.FromRectangle((tileCollisionInfo.Rectangle * Grid.CellSize));
+                    IntRectangle adjustedRect = (tileCollisionInfo.Rectangle * Grid.CellSize);
+                    adjustedRect.Height += 1;
+                    var tilePolygon = Polygon.FromRectangle(adjustedRect);
                     
                     if (polygon.Polygon.Intersects(tilePolygon, toPosition, Vector2.Zero) is Vector2 mtv && mtv.HasValue())
                     {
+                        collisionCount++;
                         accumulatedMtv += mtv;
                         layer |= tileCollisionInfo.Layer;
                     }
                 }
             }
 
-            return accumulatedMtv.ClampLength(distance);
+            return (accumulatedMtv / Math.Max(1, collisionCount)).ClampLength(distance);
         }
 
         private static Vector2 GetFirstMtvAtTile(Map map, ColliderComponent collider, Vector2 position, int mask, out int layer)

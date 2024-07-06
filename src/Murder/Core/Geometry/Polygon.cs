@@ -273,7 +273,6 @@ namespace Murder.Core.Geometry
 
             return intersects;
         }
-
         /// <summary>
         /// Check if a polygon is inside another, if they do, return the minimum translation vector to move the polygon out of the other.
         /// </summary>
@@ -283,7 +282,6 @@ namespace Murder.Core.Geometry
         /// <returns></returns>
         public Vector2? Intersects(Polygon other, Vector2 positionA, Vector2 positionB)
         {
-
             void CheckOverlap(ref float minOverlap, ref Vector2? mtvAxis, Vector2 axis, (float Min, float Max) projectionA, (float Min, float Max) projectionB)
             {
                 float overlapA = projectionA.Max - projectionB.Min;
@@ -301,7 +299,9 @@ namespace Murder.Core.Geometry
 
             float minOverlap = float.MaxValue;
             Vector2? mtvAxis = null;
+            const float epsilon = 1e-6f;
 
+            // Check axes of this polygon
             for (int i = 0; i < Normals.Length; i++)
             {
                 var axis = Normals[i];
@@ -309,7 +309,7 @@ namespace Murder.Core.Geometry
                 (float Min, float Max) projectionA = ProjectOntoAxis(axis, positionA);
                 (float Min, float Max) projectionB = other.ProjectOntoAxis(axis, positionB);
 
-                if (!GeometryServices.CheckOverlap(projectionA, projectionB))
+                if (!GeometryServices.CheckOverlap(projectionA, projectionB, epsilon))
                 {
                     return null; // No overlap, no collision
                 }
@@ -318,6 +318,8 @@ namespace Murder.Core.Geometry
                     CheckOverlap(ref minOverlap, ref mtvAxis, axis, projectionA, projectionB);
                 }
             }
+
+            // Check axes of the other polygon
             for (int i = 0; i < other.Normals.Length; i++)
             {
                 var axis = other.Normals[i];
@@ -325,7 +327,7 @@ namespace Murder.Core.Geometry
                 (float Min, float Max) projectionA = ProjectOntoAxis(axis, positionA);
                 (float Min, float Max) projectionB = other.ProjectOntoAxis(axis, positionB);
 
-                if (!GeometryServices.CheckOverlap(projectionA, projectionB))
+                if (!GeometryServices.CheckOverlap(projectionA, projectionB, epsilon))
                 {
                     return null; // No overlap, no collision
                 }
@@ -337,6 +339,7 @@ namespace Murder.Core.Geometry
 
             return mtvAxis * minOverlap;
         }
+
 
 
         internal bool CheckOverlap(Polygon polygon)
