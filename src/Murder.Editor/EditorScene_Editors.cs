@@ -345,7 +345,8 @@ namespace Murder.Editor
             GameLogger.Verify(RenderContext is not null);
 
             _selectedAssets[asset.Guid] = asset;
-            _tabToSelect = _tabToSelect == asset.Guid ? Guid.Empty : asset.Guid;
+            _openAsset = _tabToSelect = _tabToSelect == asset.Guid ? Guid.Empty : asset.Guid;
+            OpenOnTreeView(asset, true);
 
             if (GetOrCreateAssetEditor(asset) is CustomEditorInstance editor)
             {

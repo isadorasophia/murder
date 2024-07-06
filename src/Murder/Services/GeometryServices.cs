@@ -127,6 +127,13 @@ namespace Murder.Services
             return minA <= maxB && minB <= maxA;
         }
 
+
+        // Example of CheckOverlap method modification to accept epsilon
+        public static bool CheckOverlap((float Min, float Max) projectionA, (float Min, float Max) projectionB, float epsilon)
+        {
+            return projectionA.Max >= projectionB.Min - epsilon && projectionB.Max >= projectionA.Min - epsilon;
+        }
+
         /// <summary>
         /// Check if two ranges overlap at any point.
         /// </summary>

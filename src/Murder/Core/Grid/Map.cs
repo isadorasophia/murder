@@ -8,7 +8,7 @@ namespace Murder.Core
 {
     public class Map
     {
-        public record TileCollisionInfo(Point Position, int Layer);
+        public record TileCollisionInfo(IntRectangle Rectangle, int Layer);
 
         private readonly object _lock = new();
 
@@ -366,7 +366,6 @@ namespace Murder.Core
             }
             return _floorMap[(p.Y * Width) + p.X];
         }
-
         internal IEnumerable<TileCollisionInfo> GetCollisionInfosWith(int x, int y, int width, int height, int mask)
         {
             for (int cy = Math.Max(-1, y); cy < y + height; cy++)
@@ -377,38 +376,38 @@ namespace Murder.Core
                     {
                         if (cy < 0)
                         {
-                            yield return new(new(-1, -1), CollisionLayersBase.NONE);
+                            yield return new(new(-1, -1, 1, 1), CollisionLayersBase.NONE);
                         }
                         else
                         {
-                            yield return new(new(-1, cy), CollisionLayersBase.NONE);
+                            yield return new(new(-1, cy, 1, 1), CollisionLayersBase.NONE);
                         }
                     }
                     else if (cy < 0)
                     {
-                        yield return new(new(cx, -1), CollisionLayersBase.NONE);
+                        yield return new(new(cx, -1, 1, 1), CollisionLayersBase.NONE);
                     }
                     else if (cx >= Width)
                     {
                         if (cy >= Height)
                         {
-                            yield return new(new(Width, Height), CollisionLayersBase.NONE);
+                            yield return new(new(Width, Height, 1, 1), CollisionLayersBase.NONE);
                         }
                         else
                         {
-                            yield return new(new(Width, cy), CollisionLayersBase.NONE);
+                            yield return new(new(Width, cy, 1, 1), CollisionLayersBase.NONE);
                         }
                     }
                     else if (cy >= Height)
                     {
-                        yield return new(new(cx, Height), CollisionLayersBase.NONE);
+                        yield return new(new(cx, Height, 1, 1), CollisionLayersBase.NONE);
                     }
                     else
                     {
                         var at = At(cx, cy);
                         if (at.HasFlag(mask))
                         {
-                            yield return new(new(cx, cy), at);
+                            yield return new(new(cx, cy, 1, 1), at);
                         }
                     }
                 }

@@ -76,6 +76,12 @@ namespace Murder.Utilities
         public static Vector2 Mirror(this Vector2 vector, Vector2 center) =>
             new(center.X - (vector.X - center.X), vector.Y);
 
+
+        public static Vector2 ClampLength(this Vector2 vector, float length)
+        {
+            return vector.LengthSquared() > length * length ? vector.Normalized() * length : vector;
+        }
+
         public static Vector2 PerpendicularClockwise(this Vector2 vector)
         {
             return new Vector2(vector.Y, -vector.X);
