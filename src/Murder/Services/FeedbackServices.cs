@@ -69,7 +69,7 @@ public static class FeedbackServices
         catch (Exception ex)
         {
             // Handle exceptions
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            GameLogger.Error($"An error occurred: {ex.Message}");
             return null;
         }
     }
@@ -100,7 +100,7 @@ public static class FeedbackServices
         catch (Exception ex)
         {
             // Handle exceptions
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            GameLogger.Error($"An error occurred: {ex.Message}");
             return null;
         }
     }
@@ -130,7 +130,7 @@ public static class FeedbackServices
         catch (Exception ex)
         {
             // Handle exceptions
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            GameLogger.Error($"An error occurred: {ex.Message}");
             return null;
         }
     }
