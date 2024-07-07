@@ -130,12 +130,13 @@ public static class FeedbackServices
             return; // Do not send feedback if the URL is not set.
         }
 
-        Feedback feedback = new(message, Game.Profile.FeedbackKey, true);
+        Feedback feedback = new Feedback(message, Game.Profile.FeedbackKey, true);
 
-        using (MultipartFormDataContent content = new())
+        using (HttpClient _client = new HttpClient())
+        using (MultipartFormDataContent content = new MultipartFormDataContent())
         {
-            content.Add(new StringContent(string.Empty, Encoding.UTF8, "application/json"), "feedback");
-            
+            content.Add(new StringContent("MurderEngineFeedback", Encoding.UTF8), "feedback");
+
             content.Add(new StringContent(feedback.Message, Encoding.UTF8), "Message");
             content.Add(new StringContent(feedback.Time.ToString("o"), Encoding.UTF8), "Time");  // Assuming ISO 8601 format
             content.Add(new StringContent(feedback.Version.ToString(CultureInfo.InvariantCulture), Encoding.UTF8), "Version");
@@ -144,7 +145,9 @@ public static class FeedbackServices
 
             foreach (FileWrapper f in files)
             {
-                content.Add(new ByteArrayContent(f.Bytes, 0, f.Bytes.Length), "file", f.Name);
+                var byteArrayContent = new ByteArrayContent(f.Bytes);
+                byteArrayContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+                content.Add(byteArrayContent, "file", f.Name);
             }
 
             try
