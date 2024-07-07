@@ -1,13 +1,9 @@
-﻿using Murder.Assets;
+﻿using Microsoft.Xna.Framework.Graphics;
+using Murder.Assets;
 using Murder.Diagnostics;
-using Murder.Serialization;
 using Murder.Utilities;
-using System;
-using System.Globalization;
 using System.IO.Compression;
-using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json.Serialization;
 
 namespace Murder.Services;
 
@@ -27,116 +23,7 @@ public static class FeedbackServices
         }
     }
 
-    public static async Task<FileWrapper?> TryZipScreenshotAsync()
-    {
-        string saveName = Game.Data.TryGetActiveSaveData()?.Name ?? "Unknown";
-        try
-        {
-            // Step 1: Capture the screenshot
-            var screenshotTexture = RenderServices.CreateGameplayScreenShot();
-            if (screenshotTexture is null)
-            {
-                return null;
-            }
-
-            // Convert the screenshot texture to byte array (PNG)
-            byte[] imageBytes;
-            using (var memoryStream = new MemoryStream())
-            {
-                screenshotTexture.SaveAsPng(memoryStream, screenshotTexture.Width, screenshotTexture.Height);
-                imageBytes = memoryStream.ToArray();
-            }
-
-            // Step 2: Create a ZIP file containing the PNG image
-            byte[] zipBytes;
-            using (var zipMemoryStream = new MemoryStream())
-            {
-                using (var archive = new ZipArchive(zipMemoryStream, ZipArchiveMode.Create, true))
-                {
-                    var screenshotEntry = archive.CreateEntry($"{saveName}_gameplay_screenshot.png");
-                    using (var entryStream = screenshotEntry.Open())
-                    {
-                        await entryStream.WriteAsync(imageBytes, 0, imageBytes.Length);
-                    }
-                }
-
-                zipBytes = zipMemoryStream.ToArray();
-            }
-
-            // Step 3: Return the FileWrapper containing the ZIP file data
-            return new FileWrapper(zipBytes, $"{saveName}_screenshots.zip");
-        }
-        catch (Exception ex)
-        {
-            // Handle exceptions
-            GameLogger.Error($"An error occurred: {ex.Message}");
-            return null;
-        }
-    }
-
-    public static async Task<FileWrapper?> TryGetGameplayScreenshotAsync()
-    {
-        string saveName = Game.Data.TryGetActiveSaveData()?.Name ?? "Unknown";
-        try
-        {
-            // Step 1: Capture the screenshot
-            using var screenshotTexture = RenderServices.CreateGameplayScreenShot();
-            if (screenshotTexture is null)
-            {
-                return null;
-            }
-
-            // Convert the screenshot texture to byte array (PNG)
-            byte[] imageBytes;
-            using (var memoryStream = new MemoryStream())
-            {
-                screenshotTexture.SaveAsPng(memoryStream, screenshotTexture.Width, screenshotTexture.Height);
-                imageBytes = memoryStream.ToArray();
-            }
-
-            // Step 2: Return the FileWrapper containing the PNG file data
-            return new FileWrapper(imageBytes, $"{saveName}_gameplay_screenshot.png");
-        }
-        catch (Exception ex)
-        {
-            // Handle exceptions
-            GameLogger.Error($"An error occurred: {ex.Message}");
-            return null;
-        }
-    }
-    public static async Task<FileWrapper?> TryGetScreenshotAsync()
-    {
-        string saveName = Game.Data.TryGetActiveSaveData()?.Name ?? "Unknown";
-        try
-        {
-            // Step 1: Capture the screenshot
-            using var screenshotTexture = RenderServices.CreateScreenShot();
-            if (screenshotTexture is null)
-            {
-                return null;
-            }
-
-            // Convert the screenshot texture to byte array (PNG)
-            byte[] imageBytes;
-            using (var memoryStream = new MemoryStream())
-            {
-                screenshotTexture.SaveAsPng(memoryStream, screenshotTexture.Width, screenshotTexture.Height);
-                imageBytes = memoryStream.ToArray();
-            }
-
-            // Step 2: Return the FileWrapper containing the PNG file data
-            return new FileWrapper(imageBytes, $"{saveName}_screenshot.png");
-        }
-        catch (Exception ex)
-        {
-            // Handle exceptions
-            GameLogger.Error($"An error occurred: {ex.Message}");
-            return null;
-        }
-    }
-
-
-    public static async Task<FileWrapper?> TryZipActiveSaveAsync()
+    private static async Task<FileWrapper?> TryZipActiveSaveAsync()
     {
         SaveData? save = Game.Data.TryGetActiveSaveData();
         if (save is null || Path.GetDirectoryName(save.GetGameAssetPath()) is not string savepath ||
@@ -162,41 +49,41 @@ public static class FeedbackServices
         return new FileWrapper(buffer, $"{save.Name}_save.zip");
     }
 
-    public static async Task<bool> SendSaveDataFeedbackAsync(string title, string description)
+    public static async Task<bool> SendSaveDataFeedbackAsync(string name, string description)
     {
-        var files = new List<(string name, FileWrapper file)>();
+        List<(string name, FileWrapper file)> files = new();
+
         FileWrapper? zippedSaveData = await TryZipActiveSaveAsync();
         if (zippedSaveData is not null)
         {
             files.Add(("save", zippedSaveData.Value));
         }
 
-        FileWrapper? gameplayScreenshot = await TryGetGameplayScreenshotAsync();
+        FileWrapper? gameplayScreenshot = TryGetGameplayScreenshot(name);
         if (gameplayScreenshot is not null)
         {
             files.Add(("g_screenshot", gameplayScreenshot.Value));
         }
 
-        FileWrapper? screenshot = await TryGetScreenshotAsync();
+        FileWrapper? screenshot = TryGetScreenshot(name);
         if (screenshot is not null)
         {
             files.Add(("screenshot", screenshot.Value));
         }
 
-        await SendFeedbackAsync(Game.Profile.FeedbackUrl, title, description, files.ToArray());
+        await SendFeedbackAsync(Game.Profile.FeedbackUrl, $"Report: {name}", description, files);
         return true;
     }
 
-    public static async Task SendFeedbackAsync(string url, string title, string description, params (string name, FileWrapper file)[] files)
+    public static async Task SendFeedbackAsync(string url, string title, string description, IEnumerable<(string name, FileWrapper file)> files)
     {
         if (string.IsNullOrWhiteSpace(url))
         {
             return; // Do not send feedback if the URL is not set.
         }
 
-
-        using (HttpClient _client = new HttpClient())
-        using (MultipartFormDataContent content = new MultipartFormDataContent())
+        using (HttpClient _client = new())
+        using (MultipartFormDataContent content = new())
         {
             content.Add(new StringContent("MurderEngineFeedback", Encoding.UTF8), "feedback");
 
@@ -215,6 +102,7 @@ public static class FeedbackServices
             {
                 HttpResponseMessage response = await _client.PostAsync(url, content);
                 response.EnsureSuccessStatusCode();
+
                 string responseBody = await response.Content.ReadAsStringAsync();
                 GameLogger.Log($"Feedback sent: {responseBody}");
             }
@@ -222,6 +110,53 @@ public static class FeedbackServices
             {
                 GameLogger.Warning($"Sending feedback failed: {e.Message}");
             }
+        }
+    }
+
+    private static FileWrapper? TryGetGameplayScreenshot(string name)
+    {
+        // Step 1: Capture the screenshot
+        using Texture2D? screenshotTexture = RenderServices.CreateGameplayScreenshot();
+        if (screenshotTexture is null)
+        {
+            return null;
+        }
+
+        return TryGetScreenshotFromTexture(screenshotTexture, $"{name}_gameplay_screenshot");
+    }
+
+    private static FileWrapper? TryGetScreenshot(string name)
+    {
+        // Step 1: Capture the screenshot
+        using Texture2D? screenshotTexture = RenderServices.CreateScreenshot();
+        if (screenshotTexture is null)
+        {
+            return null;
+        }
+
+        return TryGetScreenshotFromTexture(screenshotTexture, $"{name}_screenshot");
+    }
+
+    private static FileWrapper? TryGetScreenshotFromTexture(Texture2D texture, string name)
+    {
+        try
+        {
+            // Convert the screenshot texture to byte array (PNG)
+            byte[] imageBytes;
+            using (var memoryStream = new MemoryStream())
+            {
+                texture.SaveAsPng(memoryStream, texture.Width, texture.Height);
+                imageBytes = memoryStream.ToArray();
+            }
+
+            // Step 2: Return the FileWrapper containing the PNG file data
+            return new FileWrapper(imageBytes, $"{name}.png");
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions
+            GameLogger.Error($"An error occurred while getting the sccreenshot: {ex.Message}");
+            return null;
         }
     }
 }
