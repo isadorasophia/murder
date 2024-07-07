@@ -2,6 +2,7 @@
 using Murder.Diagnostics;
 using Murder.Serialization;
 using Murder.Utilities;
+using System;
 using System.Globalization;
 using System.IO.Compression;
 using System.Security.Cryptography;
@@ -13,39 +14,6 @@ namespace Murder.Services;
 public static class FeedbackServices
 {
     private static readonly HttpClient _client = new HttpClient();
-
-    [Serializable]
-    public readonly struct Feedback
-    {
-        public readonly DateTime Time;
-        public readonly float Version;
-        public readonly string Signature;
-
-        public readonly string Message;
-        public readonly string Log;
-
-        [JsonConstructor]
-        public Feedback(string message, string secretKey, bool saveLog)
-        {
-            Time = DateTime.Now;
-            Version = (Game.Instance as IMurderGame)?.Version ?? -1;
-            Log = saveLog ? GameLogger.GetCurrentLog() : string.Empty;
-
-            Message = message;
-            Signature = GenerateSignature(message, Time, secretKey);
-        }
-
-        private static string GenerateSignature(string message, DateTime time, string secretKey)
-        {
-            var encoding = new UTF8Encoding();
-            string payload = $"{message}{time.ToUniversalTime():yyyyMMddHHmm}";
-            using (var hmac = new HMACSHA256(encoding.GetBytes(secretKey)))
-            {
-                byte[] signatureBytes = hmac.ComputeHash(encoding.GetBytes(payload));
-                return Convert.ToBase64String(signatureBytes);
-            }
-        }
-    }
 
     public readonly struct FileWrapper
     {
@@ -59,30 +27,114 @@ public static class FeedbackServices
         }
     }
 
-    public static async Task SendFeedbackAsync(string message, bool sendLog)
+    public static async Task<FileWrapper?> TryZipScreenshotAsync()
     {
-        if (string.IsNullOrWhiteSpace(Game.Profile.FeedbackUrl))
-        {
-            // Do not send feedback if the URL is not set.
-            return;
-        }
-
-        var feedback = new Feedback(message, Game.Profile.FeedbackKey, sendLog);
-        string json = FileManager.SerializeToJson(feedback);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
-
+        string saveName = Game.Data.TryGetActiveSaveData()?.Name ?? "Unknown";
         try
         {
-            HttpResponseMessage response = await _client.PostAsync(Game.Profile.FeedbackUrl, content);
-            response.EnsureSuccessStatusCode();
-            string responseBody = await response.Content.ReadAsStringAsync();
-            GameLogger.Log($"Feedback sent: {responseBody}");
+            // Step 1: Capture the screenshot
+            var screenshotTexture = RenderServices.CreateGameplayScreenShot();
+            if (screenshotTexture is null)
+            {
+                return null;
+            }
+
+            // Convert the screenshot texture to byte array (PNG)
+            byte[] imageBytes;
+            using (var memoryStream = new MemoryStream())
+            {
+                screenshotTexture.SaveAsPng(memoryStream, screenshotTexture.Width, screenshotTexture.Height);
+                imageBytes = memoryStream.ToArray();
+            }
+
+            // Step 2: Create a ZIP file containing the PNG image
+            byte[] zipBytes;
+            using (var zipMemoryStream = new MemoryStream())
+            {
+                using (var archive = new ZipArchive(zipMemoryStream, ZipArchiveMode.Create, true))
+                {
+                    var screenshotEntry = archive.CreateEntry($"{saveName}_gameplay_screenshot.png");
+                    using (var entryStream = screenshotEntry.Open())
+                    {
+                        await entryStream.WriteAsync(imageBytes, 0, imageBytes.Length);
+                    }
+                }
+
+                zipBytes = zipMemoryStream.ToArray();
+            }
+
+            // Step 3: Return the FileWrapper containing the ZIP file data
+            return new FileWrapper(zipBytes, $"{saveName}_screenshots.zip");
         }
-        catch (HttpRequestException e)
+        catch (Exception ex)
         {
-            GameLogger.Warning($"Sending feedback failed: {e.Message}");
+            // Handle exceptions
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            return null;
         }
     }
+
+    public static async Task<FileWrapper?> TryGetGameplayScreenshotAsync()
+    {
+        string saveName = Game.Data.TryGetActiveSaveData()?.Name ?? "Unknown";
+        try
+        {
+            // Step 1: Capture the screenshot
+            using var screenshotTexture = RenderServices.CreateGameplayScreenShot();
+            if (screenshotTexture is null)
+            {
+                return null;
+            }
+
+            // Convert the screenshot texture to byte array (PNG)
+            byte[] imageBytes;
+            using (var memoryStream = new MemoryStream())
+            {
+                screenshotTexture.SaveAsPng(memoryStream, screenshotTexture.Width, screenshotTexture.Height);
+                imageBytes = memoryStream.ToArray();
+            }
+
+            // Step 2: Return the FileWrapper containing the PNG file data
+            return new FileWrapper(imageBytes, $"{saveName}_gameplay_screenshot.png");
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            return null;
+        }
+    }
+    public static async Task<FileWrapper?> TryGetScreenshotAsync()
+    {
+        string saveName = Game.Data.TryGetActiveSaveData()?.Name ?? "Unknown";
+        try
+        {
+            // Step 1: Capture the screenshot
+            using var screenshotTexture = RenderServices.CreateScreenShot();
+            if (screenshotTexture is null)
+            {
+                return null;
+            }
+
+            // Convert the screenshot texture to byte array (PNG)
+            byte[] imageBytes;
+            using (var memoryStream = new MemoryStream())
+            {
+                screenshotTexture.SaveAsPng(memoryStream, screenshotTexture.Width, screenshotTexture.Height);
+                imageBytes = memoryStream.ToArray();
+            }
+
+            // Step 2: Return the FileWrapper containing the PNG file data
+            return new FileWrapper(imageBytes, $"{saveName}_screenshot.png");
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            return null;
+        }
+    }
+
 
     public static async Task<FileWrapper?> TryZipActiveSaveAsync()
     {
@@ -110,44 +162,53 @@ public static class FeedbackServices
         return new FileWrapper(buffer, $"{save.Name}_save.zip");
     }
 
-    public static async Task<bool> SendSaveDataFeedbackAsync(string message)
+    public static async Task<bool> SendSaveDataFeedbackAsync(string title, string description)
     {
+        var files = new List<(string name, FileWrapper file)>();
         FileWrapper? zippedSaveData = await TryZipActiveSaveAsync();
-        if (zippedSaveData is null)
+        if (zippedSaveData is not null)
         {
-            await SendFeedbackAsync(Game.Profile.FeedbackUrl, message);
-            return false;
+            files.Add(("save", zippedSaveData.Value));
         }
 
-        await SendFeedbackAsync(Game.Profile.FeedbackUrl, message, zippedSaveData.Value);
+        FileWrapper? gameplayScreenshot = await TryGetGameplayScreenshotAsync();
+        if (gameplayScreenshot is not null)
+        {
+            files.Add(("g_screenshot", gameplayScreenshot.Value));
+        }
+
+        FileWrapper? screenshot = await TryGetScreenshotAsync();
+        if (screenshot is not null)
+        {
+            files.Add(("screenshot", screenshot.Value));
+        }
+
+        await SendFeedbackAsync(Game.Profile.FeedbackUrl, title, description, files.ToArray());
         return true;
     }
 
-    public static async Task SendFeedbackAsync(string url, string message, params FileWrapper[] files)
+    public static async Task SendFeedbackAsync(string url, string title, string description, params (string name, FileWrapper file)[] files)
     {
         if (string.IsNullOrWhiteSpace(url))
         {
             return; // Do not send feedback if the URL is not set.
         }
 
-        Feedback feedback = new Feedback(message, Game.Profile.FeedbackKey, true);
 
         using (HttpClient _client = new HttpClient())
         using (MultipartFormDataContent content = new MultipartFormDataContent())
         {
             content.Add(new StringContent("MurderEngineFeedback", Encoding.UTF8), "feedback");
 
-            content.Add(new StringContent(feedback.Message, Encoding.UTF8), "Message");
-            content.Add(new StringContent(feedback.Time.ToString("o"), Encoding.UTF8), "Time");  // Assuming ISO 8601 format
-            content.Add(new StringContent(feedback.Version.ToString(CultureInfo.InvariantCulture), Encoding.UTF8), "Version");
-            content.Add(new StringContent(feedback.Signature, Encoding.UTF8), "Signature");
-            content.Add(new StringContent(feedback.Log, Encoding.UTF8), "Log");
+            content.Add(new StringContent(title, Encoding.UTF8), "Title");
+            content.Add(new StringContent(description, Encoding.UTF8), "Description");
+            content.Add(new StringContent(GameLogger.GetCurrentLog(), Encoding.UTF8), "Log");
 
-            foreach (FileWrapper f in files)
+            foreach (var f in files)
             {
-                var byteArrayContent = new ByteArrayContent(f.Bytes);
+                var byteArrayContent = new ByteArrayContent(f.file.Bytes);
                 byteArrayContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
-                content.Add(byteArrayContent, "file", f.Name);
+                content.Add(byteArrayContent, f.name, f.file.Name);
             }
 
             try
