@@ -9,6 +9,7 @@ using Murder.Editor.CustomFields;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
 using Murder.Services;
+using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics;
 
@@ -129,6 +130,7 @@ namespace Murder.Editor.CustomEditors
             DrawGoTo(info, dialog);
             DrawActions(info, dialog);
             DrawAmount(dialog);
+            DrawChance(dialog);
 
             ImGui.TreePop();
             ImGui.EndChild();
@@ -526,6 +528,17 @@ namespace Murder.Editor.CustomEditors
             {
                 ImGuiHelpers.DisabledButton($" {dialog.PlayUntil} ");
                 ImGuiHelpers.HelpTooltip($"Plays {dialog.PlayUntil} time(s)");
+            }
+
+            ImGui.SameLine();
+        }
+
+        private void DrawChance(Dialog dialog)
+        {
+            if (dialog.Chance != 1)
+            {
+                ImGuiHelpers.DisabledButton($" \uf522 {Calculator.RoundToInt(dialog.Chance * 100)}% ");
+                ImGuiHelpers.HelpTooltip($"Chance of playing");
             }
         }
     }

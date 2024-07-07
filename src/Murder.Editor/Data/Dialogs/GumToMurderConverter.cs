@@ -203,7 +203,7 @@ namespace Murder.Editor.Data
                 actions = actionBuilder.Count > 0 ? actionBuilder.ToImmutable() : null;
             }
 
-            return new(block.Id, block.PlayUntil, requirementsBuilder.ToImmutable(), lineBuilder.ToImmutable(), actions, block.GoTo, block.IsChoice);
+            return new(block.Id, block.PlayUntil, block.Chance, requirementsBuilder.ToImmutable(), lineBuilder.ToImmutable(), actions, block.GoTo, block.IsChoice);
         }
 
         #endregion
@@ -303,7 +303,6 @@ namespace Murder.Editor.Data
                         portrait = null;
                     }
                 }
-
             }
 
             return new(speaker, portrait, TryGetLocalizedString(gumLine.Text), gumLine.Delay, @event);

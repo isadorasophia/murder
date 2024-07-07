@@ -148,31 +148,40 @@ namespace Murder.Core.Dialogs
                 {
                     // We will continue to be in a choice until DoChoice gets kicked off.
                     DoLineEvents(target, dialog.Lines[_activeLine]);
-
                     return new(FormatChoice(dialog));
                 }
 
-                if (_activeLine < dialog.Lines.Length)
+                bool play = true;
+                if (dialog.Chance < 1)
                 {
-                    TrackInteracted();
-                    DoLineEvents(target, dialog.Lines[_activeLine]);
-
-                    return new(FormatLine(dialog.Lines[_activeLine++]));
+                    play = RandomExtensions.TryWithChanceOf(Game.Random, dialog.Chance);
                 }
-                else
+
+                if (play)
                 {
+                    if (_activeLine < dialog.Lines.Length)
+                    {
+                        Line line = dialog.Lines[_activeLine];
+                        _activeLine++;
+
+                        TrackInteracted();
+                        DoLineEvents(target, line);
+
+                        return new(FormatLine(line));
+                    }
+
                     // These dialog lines are *done*, so move on to the next thing.
 
                     // First, do all the actions for this dialog.
                     DoActionsForActiveDialog(world, target);
-
-                    if (!TryMatchNextDialog(world, track: true, target))
-                    {
-                        return null;
-                    }
-
-                    dialog = ActiveSituation.Dialogs[_currentDialog.Value];
                 }
+                
+                if (!TryMatchNextDialog(world, track: true, target))
+                {
+                    return null;
+                }
+
+                dialog = ActiveSituation.Dialogs[_currentDialog.Value];
             }
         }
 

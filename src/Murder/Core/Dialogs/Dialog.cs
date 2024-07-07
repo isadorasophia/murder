@@ -13,6 +13,11 @@ namespace Murder.Core.Dialogs
         /// </summary>
         public readonly int PlayUntil = -1;
 
+        /// <summary>
+        /// Chance of this line actually appearing.
+        /// </summary>
+        public readonly float Chance = 1;
+
         public readonly int Id = 0;
 
         public readonly ImmutableArray<CriterionNode> Requirements = ImmutableArray<CriterionNode>.Empty;
@@ -33,6 +38,7 @@ namespace Murder.Core.Dialogs
         public Dialog(
             int id,
             int playUntil,
+            float chance,
             ImmutableArray<CriterionNode> requirements,
             ImmutableArray<Line> lines,
             ImmutableArray<DialogAction>? actions,
@@ -41,6 +47,7 @@ namespace Murder.Core.Dialogs
         {
             Id = id;
             PlayUntil = playUntil;
+            Chance = chance;
             Requirements = requirements;
             Lines = lines;
             Actions = actions;
@@ -48,9 +55,9 @@ namespace Murder.Core.Dialogs
             IsChoice = isChoice;
         }
 
-        public Dialog WithActions(ImmutableArray<DialogAction>? actions) => new(Id, PlayUntil, Requirements, Lines, actions, GoTo, IsChoice);
+        public Dialog WithActions(ImmutableArray<DialogAction>? actions) => new(Id, PlayUntil, Chance, Requirements, Lines, actions, GoTo, IsChoice);
 
-        public Dialog WithLineAt(int index, Line line) => new(Id, PlayUntil, Requirements, Lines.SetItem(index, line), Actions, GoTo, IsChoice);
+        public Dialog WithLineAt(int index, Line line) => new(Id, PlayUntil, Chance, Requirements, Lines.SetItem(index, line), Actions, GoTo, IsChoice);
 
         public string DebuggerDisplay()
         {
