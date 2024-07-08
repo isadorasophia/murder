@@ -50,7 +50,7 @@ public static class FeedbackServices
         return new FileWrapper(buffer, $"{save.Name}_save.zip");
     }
 
-    public static async Task<bool> SendSaveDataFeedbackAsync(string name, string description)
+    public static async Task<bool> SendSaveDataFeedbackAsync(string name, string description, int machineId)
     {
         List<(string name, FileWrapper file)> files = new();
 
@@ -72,22 +72,8 @@ public static class FeedbackServices
             files.Add(("g_screenshot", gameplayScreenshot.Value));
         }
 
-        string computerName = "";
-        NetworkInterface? firstNic = NetworkInterface.GetAllNetworkInterfaces()
-                .FirstOrDefault(nic => nic.OperationalStatus == OperationalStatus.Up);
-        if (firstNic != null)
-        {
-            PhysicalAddress address = firstNic.GetPhysicalAddress();
-            byte[] bytes = address.GetAddressBytes();
-
-            // Convert the MAC address bytes to an integer
-            int macAsInt = BitConverter.ToInt32(bytes, 0);
-            computerName = GenerateFunnyName(macAsInt);
-        }
-        else
-        {
-            computerName = "Unknown Machine";
-        }
+        string computerName = GenerateFunnyName(machineId);
+        
 
         await SendFeedbackAsync(Game.Profile.FeedbackUrl, $"{StringHelper.CapitalizeFirstLetter(computerName)}: {name}", description, files);
         return true;
