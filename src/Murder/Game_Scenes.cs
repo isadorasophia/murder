@@ -9,8 +9,9 @@ namespace Murder
         protected Guid? _pendingWorldTransition = default;
 
         protected MonoWorld? _pendingWorld = default;
-        protected bool _disposePendingWorld = true;
 
+        protected bool _pendingResetSave = false;
+        protected bool _disposePendingWorld = true;
         protected bool _pendingExit = false;
 
         public bool QueueWorldTransition(Guid world)
@@ -22,6 +23,18 @@ namespace Murder
             }
 
             _pendingWorldTransition = world;
+            return true;
+        }
+
+        public bool QueueWorldTransition(Guid world, bool resetSave)
+        {
+            bool result = QueueWorldTransition(world);
+            if (!result)
+            {
+                return false;
+            }
+
+            _pendingResetSave = resetSave;
             return true;
         }
 
@@ -60,6 +73,12 @@ namespace Murder
                 return;
             }
 
+            if (_pendingResetSave)
+            {
+                // Unload any pending save so we don't "leak".
+                Data.ResetActiveSave();
+            }
+
             // TODO: Cross fade? Review this flag here!
             // SoundPlayer.Stop(fadeOut: true);
 
@@ -72,6 +91,7 @@ namespace Murder
 
             _sceneLoader.SwitchScene(_pendingWorldTransition.Value);
             _pendingWorldTransition = default;
+            _pendingResetSave = false;
 
             // TODO: Fancier loading bar.
             LoadSceneAsync(waitForAllContent: true).Wait();
@@ -94,7 +114,6 @@ namespace Murder
             }
 
             ExitGame();
-
             _pendingExit = false;
         }
     }

@@ -126,20 +126,10 @@ namespace Murder.Data
                 return false;
             }
 
-            int slot = _activeSaveData.SaveSlot;
-            string? path = _activeSaveData.GetGameAssetPath();
-
             UnloadCurrentSave();
-
-            // Load the save from its directory.
-            path = Path.GetDirectoryName(path);
-            if (path is null || !Directory.Exists(path))
-            {
-                return false;
-            }
-
             LoadAllSaves();
-            return LoadSaveAsCurrentSave(slot);
+
+            return true;
         }
 
         /// <summary>
