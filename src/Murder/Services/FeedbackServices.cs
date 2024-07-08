@@ -3,6 +3,7 @@ using Murder.Assets;
 using Murder.Diagnostics;
 using Murder.Utilities;
 using System.IO.Compression;
+using System.Net.NetworkInformation;
 using System.Text;
 
 namespace Murder.Services;
@@ -71,8 +72,53 @@ public static class FeedbackServices
             files.Add(("g_screenshot", gameplayScreenshot.Value));
         }
 
-        await SendFeedbackAsync(Game.Profile.FeedbackUrl, $"Report: {name}", description, files);
+        string computerName = "";
+        NetworkInterface? firstNic = NetworkInterface.GetAllNetworkInterfaces()
+                .FirstOrDefault(nic => nic.OperationalStatus == OperationalStatus.Up);
+        if (firstNic != null)
+        {
+            PhysicalAddress address = firstNic.GetPhysicalAddress();
+            byte[] bytes = address.GetAddressBytes();
+
+            // Convert the MAC address bytes to an integer
+            int macAsInt = BitConverter.ToInt32(bytes, 0);
+            computerName = GenerateFunnyName(macAsInt);
+        }
+        else
+        {
+            computerName = "Unknown Machine";
+        }
+
+        await SendFeedbackAsync(Game.Profile.FeedbackUrl, $"{StringHelper.CapitalizeFirstLetter(computerName)}: {name}", description, files);
         return true;
+    }
+
+    static string GenerateFunnyName(int seed)
+    {
+        string[] consonants = { "b", "c", "d", "f", "g", "h", "j", "ck", "k", "lh", "l", "m", "n", "p", "qu", "r", "s", "t", "v", "w", "x", "z", "bh", "cz", "th" };
+        string[] vowels = { "a", "e", "i", "o", "u", "y", "aa", "oo" };
+
+        Random random = new Random(seed);
+        StringBuilder name = new StringBuilder();
+
+        // Generate a name of a random length between 3 and 8
+        int nameLength = random.Next(3, 9);
+
+        for (int i = 0; i < nameLength; i++)
+        {
+            if (i % 2 == 0)
+            {
+                // Add a consonant
+                name.Append(consonants[random.Next(consonants.Length)]);
+            }
+            else
+            {
+                // Add a vowel
+                name.Append(vowels[random.Next(vowels.Length)]);
+            }
+        }
+
+        return name.ToString();
     }
 
     public static async Task SendFeedbackAsync(string url, string title, string description, IEnumerable<(string name, FileWrapper file)> files)
