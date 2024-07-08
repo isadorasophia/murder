@@ -118,12 +118,12 @@ namespace Murder.Data
         /// <summary>
         /// This resets the active save data.
         /// </summary>
-        public SaveData? ResetActiveSave()
+        public bool ResetActiveSave()
         {
             if (_activeSaveData is null)
             {
                 // No active save data, just dismiss.
-                return null;
+                return false;
             }
 
             int slot = _activeSaveData.SaveSlot;
@@ -133,15 +133,13 @@ namespace Murder.Data
 
             // Load the save from its directory.
             path = Path.GetDirectoryName(path);
-
             if (path is null || !Directory.Exists(path))
             {
-                return null;
+                return false;
             }
 
-            LoadSaveAsCurrentSave(slot);
-
-            return _activeSaveData;
+            LoadAllSaves();
+            return LoadSaveAsCurrentSave(slot);
         }
 
         /// <summary>

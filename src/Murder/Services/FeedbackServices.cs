@@ -59,16 +59,16 @@ public static class FeedbackServices
             files.Add(("save", zippedSaveData.Value));
         }
 
-        FileWrapper? gameplayScreenshot = TryGetGameplayScreenshot(name);
-        if (gameplayScreenshot is not null)
-        {
-            files.Add(("g_screenshot", gameplayScreenshot.Value));
-        }
-
         FileWrapper? screenshot = TryGetScreenshot(name);
         if (screenshot is not null)
         {
             files.Add(("screenshot", screenshot.Value));
+        }
+
+        FileWrapper? gameplayScreenshot = TryGetGameplayScreenshot(name);
+        if (gameplayScreenshot is not null)
+        {
+            files.Add(("g_screenshot", gameplayScreenshot.Value));
         }
 
         await SendFeedbackAsync(Game.Profile.FeedbackUrl, $"Report: {name}", description, files);
