@@ -74,37 +74,8 @@ public static class FeedbackServices
 
         string computerName = GenerateFunnyName(machineId);
         
-
         await SendFeedbackAsync(Game.Profile.FeedbackUrl, $"{StringHelper.CapitalizeFirstLetter(computerName)}: {name}", description, files);
         return true;
-    }
-
-    static string GenerateFunnyName(int seed)
-    {
-        string[] consonants = { "b", "c", "d", "f", "g", "h", "j", "ck", "k", "lh", "l", "m", "n", "p", "qu", "r", "s", "t", "v", "w", "x", "z", "bh", "cz", "th" };
-        string[] vowels = { "a", "e", "i", "o", "u", "y", "aa", "oo" };
-
-        Random random = new Random(seed);
-        StringBuilder name = new StringBuilder();
-
-        // Generate a name of a random length between 3 and 8
-        int nameLength = random.Next(3, 9);
-
-        for (int i = 0; i < nameLength; i++)
-        {
-            if (i % 2 == 0)
-            {
-                // Add a consonant
-                name.Append(consonants[random.Next(consonants.Length)]);
-            }
-            else
-            {
-                // Add a vowel
-                name.Append(vowels[random.Next(vowels.Length)]);
-            }
-        }
-
-        return name.ToString();
     }
 
     public static async Task SendFeedbackAsync(string url, string title, string description, IEnumerable<(string name, FileWrapper file)> files)
@@ -190,5 +161,33 @@ public static class FeedbackServices
             GameLogger.Error($"An error occurred while getting the sccreenshot: {ex.Message}");
             return null;
         }
+    }
+
+    private static string GenerateFunnyName(int seed)
+    {
+        string[] consonants = { "b", "c", "d", "f", "g", "h", "j", "ck", "k", "lh", "l", "m", "n", "p", "qu", "r", "s", "t", "v", "w", "x", "z", "bh", "cz", "th" };
+        string[] vowels = { "a", "e", "i", "o", "u", "y", "aa", "oo" };
+
+        Random random = new(seed);
+        StringBuilder name = new();
+
+        // Generate a name of a random length between 3 and 8
+        int nameLength = random.Next(3, 9);
+
+        for (int i = 0; i < nameLength; i++)
+        {
+            if (i % 2 == 0)
+            {
+                // Add a consonant
+                name.Append(consonants[random.Next(consonants.Length)]);
+            }
+            else
+            {
+                // Add a vowel
+                name.Append(vowels[random.Next(vowels.Length)]);
+            }
+        }
+
+        return name.ToString();
     }
 }
