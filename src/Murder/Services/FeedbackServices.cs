@@ -72,53 +72,10 @@ public static class FeedbackServices
             files.Add(("g_screenshot", gameplayScreenshot.Value));
         }
 
-        string computerName = "";
-        NetworkInterface? firstNic = NetworkInterface.GetAllNetworkInterfaces()
-                .FirstOrDefault(nic => nic.OperationalStatus == OperationalStatus.Up);
-        if (firstNic != null)
-        {
-            PhysicalAddress address = firstNic.GetPhysicalAddress();
-            byte[] bytes = address.GetAddressBytes();
-
-            // Convert the MAC address bytes to an integer
-            int macAsInt = BitConverter.ToInt32(bytes, 0);
-            computerName = GenerateFunnyName(macAsInt);
-        }
-        else
-        {
-            computerName = "Unknown Machine";
-        }
+        string computerName = GeneratePseudoRandomComputerName();
 
         await SendFeedbackAsync(Game.Profile.FeedbackUrl, $"{StringHelper.CapitalizeFirstLetter(computerName)}: {name}", description, files);
         return true;
-    }
-
-    static string GenerateFunnyName(int seed)
-    {
-        string[] consonants = { "b", "c", "d", "f", "g", "h", "j", "ck", "k", "lh", "l", "m", "n", "p", "qu", "r", "s", "t", "v", "w", "x", "z", "bh", "cz", "th" };
-        string[] vowels = { "a", "e", "i", "o", "u", "y", "aa", "oo" };
-
-        Random random = new Random(seed);
-        StringBuilder name = new StringBuilder();
-
-        // Generate a name of a random length between 3 and 8
-        int nameLength = random.Next(3, 9);
-
-        for (int i = 0; i < nameLength; i++)
-        {
-            if (i % 2 == 0)
-            {
-                // Add a consonant
-                name.Append(consonants[random.Next(consonants.Length)]);
-            }
-            else
-            {
-                // Add a vowel
-                name.Append(vowels[random.Next(vowels.Length)]);
-            }
-        }
-
-        return name.ToString();
     }
 
     public static async Task SendFeedbackAsync(string url, string title, string description, IEnumerable<(string name, FileWrapper file)> files)
@@ -204,5 +161,56 @@ public static class FeedbackServices
             GameLogger.Error($"An error occurred while getting the sccreenshot: {ex.Message}");
             return null;
         }
+    }
+
+    private static string GeneratePseudoRandomComputerName()
+    {
+        try
+        {
+            NetworkInterface? firstNic = NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault(nic => nic.OperationalStatus == OperationalStatus.Up);
+            if (firstNic != null)
+            {
+                PhysicalAddress address = firstNic.GetPhysicalAddress();
+                byte[] bytes = address.GetAddressBytes();
+
+                // Convert the MAC address bytes to an integer
+                int macAsInt = BitConverter.ToInt32(bytes, 0);
+                return GenerateFunnyName(macAsInt);
+            }
+        }
+        catch
+        {
+            // Failed to get the mac address information, which is fine.
+        }
+
+        return "Unknown Machine";
+    }
+
+    private static string GenerateFunnyName(int seed)
+    {
+        string[] consonants = { "b", "c", "d", "f", "g", "h", "j", "ck", "k", "lh", "l", "m", "n", "p", "qu", "r", "s", "t", "v", "w", "x", "z", "bh", "cz", "th" };
+        string[] vowels = { "a", "e", "i", "o", "u", "y", "aa", "oo" };
+
+        Random random = new(seed);
+        StringBuilder name = new();
+
+        // Generate a name of a random length between 3 and 8
+        int nameLength = random.Next(3, 9);
+
+        for (int i = 0; i < nameLength; i++)
+        {
+            if (i % 2 == 0)
+            {
+                // Add a consonant
+                name.Append(consonants[random.Next(consonants.Length)]);
+            }
+            else
+            {
+                // Add a vowel
+                name.Append(vowels[random.Next(vowels.Length)]);
+            }
+        }
+
+        return name.ToString();
     }
 }
