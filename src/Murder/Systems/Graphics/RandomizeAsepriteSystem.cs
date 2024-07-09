@@ -20,7 +20,7 @@ namespace Murder.Systems.Graphics
                 var sprite = e.GetSprite();
                 var randomizer = e.GetRandomizeSprite();
 
-                if (randomizer.RandomizeAnimation || randomizer.RandomRotate)
+                if (randomizer.RandomizeAnimation || randomizer.RandomRotate || randomizer.RandomFlip)
                 {
                     e.SetSprite(
                         new SpriteComponent(

@@ -50,7 +50,7 @@ public static class FeedbackServices
         return new FileWrapper(buffer, $"{save.Name}_save.zip");
     }
 
-    public static async Task<bool> SendSaveDataFeedbackAsync(string name, string description, int machineId)
+    public static async Task<bool> SendSaveDataFeedbackAsync(string name, string description, int machineId, params (string id, string text)[] extraText)
     {
         List<(string name, FileWrapper file)> files = new();
 
@@ -74,11 +74,11 @@ public static class FeedbackServices
 
         string computerName = GenerateFunnyName(machineId);
         
-        await SendFeedbackAsync(Game.Profile.FeedbackUrl, $"{StringHelper.CapitalizeFirstLetter(computerName)}: {name}", description, files);
+        await SendFeedbackAsync(Game.Profile.FeedbackUrl, $"{StringHelper.CapitalizeFirstLetter(computerName)}: {name}", description, files, extraText);
         return true;
     }
 
-    public static async Task SendFeedbackAsync(string url, string title, string description, IEnumerable<(string name, FileWrapper file)> files)
+    public static async Task SendFeedbackAsync(string url, string title, string description, IEnumerable<(string name, FileWrapper file)> files, (string id, string text)[] extraText)
     {
         if (string.IsNullOrWhiteSpace(url))
         {
@@ -93,6 +93,11 @@ public static class FeedbackServices
             content.Add(new StringContent(title, Encoding.UTF8), "Title");
             content.Add(new StringContent(description, Encoding.UTF8), "Description");
             content.Add(new StringContent(GameLogger.GetCurrentLog(), Encoding.UTF8), "Log");
+
+            foreach (var text in extraText)
+            {
+                content.Add(new StringContent(text.text, Encoding.UTF8), text.id);
+            }
 
             foreach (var f in files)
             {
