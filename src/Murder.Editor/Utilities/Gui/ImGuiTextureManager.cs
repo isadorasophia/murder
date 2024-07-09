@@ -97,7 +97,21 @@ namespace Murder.Editor.ImGuiExtended
             }
 
             texture.Name = path;
-            
+
+            return CacheTexture(id, texture);
+        }
+
+        /// <summary>
+        /// Get the pointer for an editor image. If no pointer if found, try to load it.
+        /// </summary>
+        public nint? GetImage(Texture2D texture, string id)
+        {
+            if (_images.TryGetValue(id, out IntPtr textureId))
+            {
+                // There we go! Return it right away.
+                return textureId;
+            }
+
             return CacheTexture(id, texture);
         }
 

@@ -29,7 +29,7 @@ namespace Murder.Core.Graphics
         private Texture2D[]? _textures = null!;
         private GraphicsDevice? _graphicsDevice;
 
-        internal Texture2D[] Textures
+        public Texture2D[] Textures
         {
             get
             {

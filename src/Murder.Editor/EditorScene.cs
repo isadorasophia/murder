@@ -313,6 +313,8 @@ namespace Murder.Editor
             ImGui.EndChild();
         }
 
+        private int _selectedAtlasIndex = -1;
+        private AtlasId? _inspectingAtlas;
         private void DrawAtlasImageList(AtlasId atlasId)
         {
             TextureAtlas? atlas = Architect.Data.TryFetchAtlas(atlasId);
@@ -323,6 +325,13 @@ namespace Murder.Editor
 
             if (ImGui.TreeNode(atlasId.GetDescription()))
             {
+                ImGui.PushStyleColor(ImGuiCol.Text, Architect.Profile.Theme.HighAccent);
+                if (ImGui.Selectable($"Inspect {atlas.Name}"))
+                {
+                    _inspectingAtlas = atlasId;
+                }
+                ImGui.PopStyleColor();
+
                 foreach (var item in atlas.GetAllEntries().Where(t => t.Name.Contains(_atlasSearchBoxTmp)))
                 {
                     ImGui.Selectable(item.Name);
@@ -336,7 +345,63 @@ namespace Murder.Editor
                 ImGui.Separator();
                 ImGui.TreePop();
             }
+
+            if (_inspectingAtlas == atlasId)
+            {
+                bool open = true;
+                if (ImGui.Begin($"InspectAtlas", ref open))
+                {
+                    using (var table = new ImGuiExtended.TableTwoColumns("AtlasInfo"))
+                    {
+                        ImGui.TableNextRow();
+                        ImGui.TableNextColumn();
+
+                        ImGui.Text(atlas.Name);
+                        ImGui.Separator();
+                        ImGui.Text($"TextureCount: {atlas.Textures.Length}");
+
+                        if (atlas.Textures.FirstOrDefault() is Microsoft.Xna.Framework.Graphics.Texture2D texture)
+                        {
+                            ImGui.Text($"Size: {texture.Bounds.Size()}");
+                        }
+                        ImGui.Separator();
+                        for (int i = 0; i < atlas.Textures.Length; i++)
+                        {
+                            if (ImGui.Selectable($"Index: {i}", _selectedAtlasIndex == i))
+                            {
+                                _selectedAtlasIndex = i;
+                            }
+                        }
+
+                        ImGui.TableNextColumn();
+                        if (_selectedAtlasIndex >= 0 && _selectedAtlasIndex < atlas.Textures.Length)
+                        {
+                            var selectedAtlas = atlas.Textures[_selectedAtlasIndex];
+                            if (Architect.ImGuiTextureManager.GetImage(selectedAtlas, $"atlas-{atlasId}-{_selectedAtlasIndex}") is nint imagePointer)
+                            {
+                                Vector2 availableSpace = ImGui.GetContentRegionAvail();
+                                float aspect = selectedAtlas.Bounds.Width / (float)selectedAtlas.Bounds.Height;
+                                if (aspect > 1)
+                                {
+                                    ImGui.Image(imagePointer, new Vector2(availableSpace.X, availableSpace.X / aspect));
+                                }
+                                else
+                                {
+                                    ImGui.Image(imagePointer, new Vector2(availableSpace.Y * aspect, availableSpace.Y));
+                                }
+                            }
+                        }
+                    }
+                    ImGui.End();
+
+                    if (!open)
+                    {
+                        _inspectingAtlas = null;
+                    }
+                }
+            }
         }
+
 
         int _selectedAssetToCreate = 0;
 
