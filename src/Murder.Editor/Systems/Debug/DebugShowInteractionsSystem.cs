@@ -14,6 +14,7 @@ using Murder.Utilities;
 namespace Murder.Editor.Systems
 {
     [OnlyShowOnDebugView]
+    [Filter(typeof(PositionComponent))]
     [Filter(ContextAccessorFilter.AnyOf, typeof(IdTargetComponent), typeof(GuidToIdTargetComponent))]
     public class DebugShowInteractionsSystem : IMurderRenderSystem
     {
