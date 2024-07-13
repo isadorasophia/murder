@@ -68,6 +68,7 @@ namespace Murder.Editor.CustomEditors
 
             // Clear cache.
             _entitiesPerGroup.Clear();
+            _previousActiveTab = WorldTab.None;
         }
 
         protected override void InitializeStage(Stage stage, Guid guid)
@@ -103,8 +104,6 @@ namespace Murder.Editor.CustomEditors
             {
                 _worldStageInfo[guid] = new();
             }
-
-            _previousActiveTab = WorldTab.None;
         }
 
         private IEntity? _openedEntity = null;
