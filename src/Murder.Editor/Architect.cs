@@ -17,6 +17,7 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Systems.Debug;
 using Murder.Editor.Utilities;
 using Murder.Utilities;
+using SDL2;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -405,10 +406,10 @@ namespace Murder.Editor
             ImGui.PushStyleColor(ImGuiCol.HeaderActive, theme.Accent);
             ImGui.PushStyleColor(ImGuiCol.HeaderHovered, theme.Accent);
 
-            ImGui.PushStyleColor(ImGuiCol.TabActive, theme.Accent);
+            ImGui.PushStyleColor(ImGuiCol.Tab, theme.Accent);
             ImGui.PushStyleColor(ImGuiCol.TabHovered, theme.HighAccent);
-            ImGui.PushStyleColor(ImGuiCol.TabUnfocused, theme.BgFaded);
-            ImGui.PushStyleColor(ImGuiCol.TabUnfocusedActive, theme.HighAccent);
+            ImGui.PushStyleColor(ImGuiCol.TabDimmed, theme.BgFaded);
+            ImGui.PushStyleColor(ImGuiCol.TabDimmedSelected, theme.HighAccent);
             ImGui.PushStyleColor(ImGuiCol.Tab, theme.BgFaded);
             ImGui.PushStyleColor(ImGuiCol.DockingEmptyBg, theme.BgFaded);
             ImGui.PushStyleColor(ImGuiCol.DockingPreview, theme.Faded);
@@ -556,6 +557,7 @@ namespace Murder.Editor
             Input.MouseConsumed = ImGui.GetIO().WantCaptureMouse && _isPlayingGame;
             Input.KeyboardConsumed = ImGui.GetIO().WantCaptureKeyboard;
 
+
             base.Update(gameTime);
 
             if (EditorData.ShadersNeedReloading)
@@ -564,6 +566,7 @@ namespace Murder.Editor
                 EditorData.ReloadShaders();
             }
             
+            SDL.SDL_EventState(SDL.SDL_EventType.SDL_DROPFILE, SDL.SDL_ENABLE);
             UpdateCursor();
         }
 

@@ -577,10 +577,10 @@ namespace Murder.Editor.ImGuiExtended
             dark.Colors[(int)ImGuiCol.Header] = theme.Faded;
             dark.Colors[(int)ImGuiCol.HeaderActive] = theme.Accent;
             dark.Colors[(int)ImGuiCol.HeaderHovered] = theme.Accent;
-            dark.Colors[(int)ImGuiCol.TabActive] = theme.Accent;
+            dark.Colors[(int)ImGuiCol.Tab] = theme.Accent;
             dark.Colors[(int)ImGuiCol.TabHovered] = theme.HighAccent;
-            dark.Colors[(int)ImGuiCol.TabUnfocused] = theme.BgFaded;
-            dark.Colors[(int)ImGuiCol.TabUnfocusedActive] = theme.HighAccent;
+            dark.Colors[(int)ImGuiCol.TabDimmed] = theme.BgFaded;
+            dark.Colors[(int)ImGuiCol.TabDimmedSelected] = theme.HighAccent;
             dark.Colors[(int)ImGuiCol.Tab] = theme.BgFaded;
             dark.Colors[(int)ImGuiCol.DockingEmptyBg] = theme.BgFaded;
             dark.Colors[(int)ImGuiCol.DockingPreview] = theme.Faded;

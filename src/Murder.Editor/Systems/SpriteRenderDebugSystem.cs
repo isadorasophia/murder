@@ -349,22 +349,45 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
                 }
             }
 
-            if (hook.ShowReflection && e.TryGetReflection() is ReflectionComponent reflection && !reflection.BlockReflection)
+            if (hook.ShowReflection)
             {
-                RenderServices.DrawSprite(
-                    render.FloorBatch,
-                    asset.Guid,
-                    renderPosition + reflection.Offset,
-                    new DrawInfo()
-                    {
-                        Origin = offset,
-                        ImageFlip = flip,
-                        Rotation = rotation,
-                        Sort = 0,
-                        Color = baseColor * reflection.Alpha,
-                        Scale = scale * new Vector2(1, -1),
-                    },
-                    new AnimationInfo(animationId, start) with { OverrideCurrentTime = overrideCurrentTime });
+                if (e.TryGetReflection() is ReflectionComponent reflection && !reflection.BlockReflection)
+                {
+                    RenderServices.DrawSprite(
+                        render.FloorBatch,
+                        asset.Guid,
+                        renderPosition + reflection.Offset,
+                        new DrawInfo()
+                        {
+                            Origin = offset,
+                            ImageFlip = flip,
+                            Rotation = rotation,
+                            Sort = 0,
+                            Color = baseColor * reflection.Alpha,
+                            Scale = scale * new Vector2(1, -1),
+                        },
+                        new AnimationInfo(animationId, start) with { OverrideCurrentTime = overrideCurrentTime });
+                }
+
+                // Hardcoded for now, but we could make this more flexible in the future.
+                if (sprite?.TargetSpriteBatch == 4)
+                {
+                    RenderServices.DrawSprite(
+                        render.FloorBatch,
+                        asset.Guid,
+                        renderPosition,
+                        new DrawInfo()
+                        {
+                            Origin = offset,
+                            ImageFlip = flip,
+                            Rotation = rotation,
+                            Sort = 0,
+                            Color = Color.White,
+                            BlendMode = BlendStyle.Wash,
+                            Scale = scale * new Vector2(1, -1),
+                        },
+                        new AnimationInfo(animationId, start) with { OverrideCurrentTime = overrideCurrentTime });
+                }
             }
         }
 

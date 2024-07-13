@@ -1,6 +1,7 @@
 ﻿using Bang.Components;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.src.Input;
 using Murder.Assets;
 using Murder.Core;
 using Murder.Core.Geometry;
@@ -13,8 +14,10 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
 using Murder.Serialization;
 using Murder.Utilities;
+using SDL2;
 using System.Collections.Immutable;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace Murder.Editor
 {
@@ -32,7 +35,7 @@ namespace Murder.Editor
 
         private bool _isLoadingContent = true;
         int _changingScenesLock = 3;
-        
+
         public EditorScene()
         {
             _explorerPages = CreateExplorerPages();
@@ -59,6 +62,13 @@ namespace Murder.Editor
 
                 return all;
             });
+
+            FileDropEXT.DropFile = FileDropped;
+        }
+
+        private void FileDropped(string path)
+        {
+            GameLogger.Log($"Dropped file: {path}");
         }
 
         /// <summary>
@@ -129,8 +139,8 @@ namespace Murder.Editor
 
         public override void Update()
         {
-            base.Update(); 
-            
+            base.Update();
+
             UpdateSelectedEditor();
             UpdateShortcuts();
         }
@@ -155,111 +165,112 @@ namespace Murder.Editor
                 ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoNav;
 
             ImGui.Begin("Workspace", staticWindowFlags);
-            
-            DrawMainMenuBar();
-            
-            if (_showStyleEditor)
             {
-                ImGui.Begin("Style Editor", ref _showStyleEditor, ImGuiWindowFlags.AlwaysAutoResize);
-                if (ImGui.InputFloat("Dpi Scale", ref Architect.EditorSettings.DpiScale, 0.25f, 1f))
+                DrawMainMenuBar();
+
+                if (_showStyleEditor)
                 {
-
-                }
-
-                var io = ImGui.GetIO();
-                float fontScale = io.FontGlobalScale;
-                if (ImGui.InputFloat("Font Scale", ref fontScale, 0.25f, 1f))
-                {
-                    io.FontGlobalScale = fontScale;
-                }
-
-                ImGui.End();
-            }
-            
-            if (_showingImguiDemoWindow)
-                ImGui.ShowDemoWindow(ref _showingImguiDemoWindow);
-            
-            
-            if (_showingMetricsWindow)
-                ImGui.ShowMetricsWindow(ref _showingMetricsWindow);
-
-            ImGui.SetWindowPos(new Vector2(0, 10 * ImGui.GetIO().FontGlobalScale));
-            ImGui.SetWindowSize(new Vector2(screenSize.X, screenSize.Y));
-            
-            ImGui.BeginChild("Workspace", new Vector2(-1, -1), ImGuiChildFlags.None);
-
-            bool shouldDrawExplorerColumn = _selectedExplorerWindow is not null;
-            
-            if (ImGui.BeginTable("Workspace", 3, ImGuiTableFlags.Resizable | ImGuiTableFlags.SizingFixedFit))
-            {
-                float explorerColumnWidth = shouldDrawExplorerColumn ? ExplorerDefaultWidth : 0;
-                float editorSize = ImGui.GetContentRegionAvail().X - ExplorerIconsColumnWidth - explorerColumnWidth;
-                ImGuiTableColumnFlags explorerColumnFlags = ImGuiTableColumnFlags.WidthStretch | (shouldDrawExplorerColumn
-                    ? ImGuiTableColumnFlags.NoSort
-                    : ImGuiTableColumnFlags.Disabled);
-                
-                ImGui.TableSetupColumn("Tab List", ImGuiTableColumnFlags.NoResize, ExplorerIconsColumnWidth);
-                ImGui.TableSetupColumn("Explorer", explorerColumnFlags, -1);
-                ImGui.TableSetupColumn("Editor", ImGuiTableColumnFlags.WidthStretch, editorSize);
-
-                ImGui.TableNextRow();
-                ImGui.TableNextColumn();
-                {
-                    DrawExplorerIcons();
-                }
-
-                DrawExplorerIfNeeded();
-
-                ImGui.TableNextColumn();
-
-                if (_isLoadingContent)
-                {
-                    ImGui.Text("\uf256 Getting everything ready...");
-                }
-
-                ImDrawListPtr draw;
-                ImGui.BeginChild("docker_child", ImGui.GetContentRegionAvail() - new Vector2(0, ImGui.GetStyle().FramePadding.Y));
-                {
-                    if (_selectedAssets.Count > 0)
+                    ImGui.Begin("Style Editor", ref _showStyleEditor, ImGuiWindowFlags.AlwaysAutoResize);
+                    if (ImGui.InputFloat("Dpi Scale", ref Architect.EditorSettings.DpiScale, 0.25f, 1f))
                     {
-                        ImGui.DockSpace(EDITOR_DOCK_ID, new Vector2(-1, -1), ImGuiDockNodeFlags.None);
-                    }
-                    draw = ImGui.GetWindowDrawList();
 
-                    // Draw asset editors
-                    // This is where the World, Prefabs and other assets are edited
-                    DrawAssetEditors();
+                    }
+
+                    var io = ImGui.GetIO();
+                    float fontScale = io.FontGlobalScale;
+                    if (ImGui.InputFloat("Font Scale", ref fontScale, 0.25f, 1f))
+                    {
+                        io.FontGlobalScale = fontScale;
+                    }
+
+                    ImGui.End();
+                }
+
+                if (_showingImguiDemoWindow)
+                    ImGui.ShowDemoWindow(ref _showingImguiDemoWindow);
+
+
+                if (_showingMetricsWindow)
+                    ImGui.ShowMetricsWindow(ref _showingMetricsWindow);
+
+                ImGui.SetWindowPos(new Vector2(0, 10 * ImGui.GetIO().FontGlobalScale));
+                ImGui.SetWindowSize(new Vector2(screenSize.X, screenSize.Y));
+
+                ImGui.BeginChild("Workspace", new Vector2(-1, -1), ImGuiChildFlags.None);
+
+                bool shouldDrawExplorerColumn = _selectedExplorerWindow is not null;
+
+                if (ImGui.BeginTable("Workspace", 3, ImGuiTableFlags.Resizable | ImGuiTableFlags.SizingFixedFit))
+                {
+                    float explorerColumnWidth = shouldDrawExplorerColumn ? ExplorerDefaultWidth : 0;
+                    float editorSize = ImGui.GetContentRegionAvail().X - ExplorerIconsColumnWidth - explorerColumnWidth;
+                    ImGuiTableColumnFlags explorerColumnFlags = ImGuiTableColumnFlags.WidthStretch | (shouldDrawExplorerColumn
+                        ? ImGuiTableColumnFlags.NoSort
+                        : ImGuiTableColumnFlags.Disabled);
+
+                    ImGui.TableSetupColumn("Tab List", ImGuiTableColumnFlags.NoResize, ExplorerIconsColumnWidth);
+                    ImGui.TableSetupColumn("Explorer", explorerColumnFlags, -1);
+                    ImGui.TableSetupColumn("Editor", ImGuiTableColumnFlags.WidthStretch, editorSize);
+
+                    ImGui.TableNextRow();
+                    ImGui.TableNextColumn();
+                    {
+                        DrawExplorerIcons();
+                    }
+
+                    DrawExplorerIfNeeded();
+
+                    ImGui.TableNextColumn();
+
+                    if (_isLoadingContent)
+                    {
+                        ImGui.Text("\uf256 Getting everything ready...");
+                    }
+
+                    ImDrawListPtr draw;
+                    ImGui.BeginChild("docker_child", ImGui.GetContentRegionAvail() - new Vector2(0, ImGui.GetStyle().FramePadding.Y));
+                    {
+                        if (_selectedAssets.Count > 0)
+                        {
+                            ImGui.DockSpace(EDITOR_DOCK_ID, new Vector2(-1, -1), ImGuiDockNodeFlags.None);
+                        }
+                        draw = ImGui.GetWindowDrawList();
+
+                        // Draw asset editors
+                        // This is where the World, Prefabs and other assets are edited
+                        DrawAssetEditors();
+                    }
+                    ImGui.EndChild();
+
+                    Vector2 min = ImGui.GetItemRectMin();
+                    Vector2 size = ImGui.GetContentRegionMax() - min;
+                    Vector2 pixelSize = new Vector2(96, 80);
+                    float ratio = Math.Clamp(Math.Min((size.X / pixelSize.X), (size.Y / pixelSize.Y)), 1, 2);
+                    Vector2 finalSize = pixelSize * ratio;
+                    Rectangle rectangle = Rectangle.CenterRectangle(min + (size) / 2f, finalSize.X, finalSize.Y);
+
+                    if (!_isLoadingContent)
+                    {
+                        if (Architect.EditorData.ImGuiTextureManager.GetEditorImage("crow_0000", "empty_canvas", Architect.EditorSettings.DpiScale > 1 ? 2 : 1) is nint emptyImage)
+                        {
+                            draw.AddImage(emptyImage, rectangle.TopLeft, rectangle.BottomRight, Vector2.Zero, Vector2.One, Color.ToUint(new Vector4(1, 1, 1, .8f)));
+                        }
+                    }
+                    else
+                    {
+                        int frame = _randomCrow * 2 + ((Game.NowUnscaled % 0.5f) > 0.25f ? 1 : 2);
+                        string frameName = $"crow_{frame:0000}";
+                        if (Architect.EditorData.ImGuiTextureManager.GetEditorImage(frameName, $"loading_{frame}", Architect.EditorSettings.DpiScale > 1 ? 2 : 1) is nint emptyImage)
+                        {
+                            draw.AddImage(emptyImage, rectangle.TopLeft, rectangle.BottomRight, Vector2.Zero, Vector2.One, Color.ToUint(new Vector4(1, 1, 1, 1f)));
+                        }
+                    }
+                    ImGui.EndTable();
                 }
                 ImGui.EndChild();
-
-                Vector2 min = ImGui.GetItemRectMin();
-                Vector2 size = ImGui.GetContentRegionMax() - min;
-                Vector2 pixelSize = new Vector2(96, 80);
-                float ratio = Math.Clamp(Math.Min((size.X / pixelSize.X), (size.Y / pixelSize.Y)), 1, 2);
-                Vector2 finalSize = pixelSize * ratio;
-                Rectangle rectangle = Rectangle.CenterRectangle(min + (size) / 2f, finalSize.X, finalSize.Y);
-
-                if (!_isLoadingContent)
-                {
-                    if (Architect.EditorData.ImGuiTextureManager.GetEditorImage("crow_0000", "empty_canvas", Architect.EditorSettings.DpiScale > 1 ? 2 : 1) is nint emptyImage)
-                    {
-                        draw.AddImage(emptyImage, rectangle.TopLeft, rectangle.BottomRight, Vector2.Zero, Vector2.One, Color.ToUint(new Vector4(1, 1, 1, .8f)));
-                    }
-                }
-                else
-                {
-                    int frame = _randomCrow * 2 + ((Game.NowUnscaled % 0.5f) > 0.25f ? 1 : 2);
-                    string frameName = $"crow_{frame:0000}";
-                    if (Architect.EditorData.ImGuiTextureManager.GetEditorImage(frameName, $"loading_{frame}", Architect.EditorSettings.DpiScale > 1 ? 2 : 1) is nint emptyImage) 
-                    {
-                        draw.AddImage(emptyImage, rectangle.TopLeft, rectangle.BottomRight, Vector2.Zero, Vector2.One, Color.ToUint(new Vector4(1, 1, 1, 1f)));
-                    }
-                }
-                ImGui.EndTable();
             }
-            ImGui.EndChild();
+            ImGui.End(); // Worspace
 
-            ImGui.End();
         }
 
         private void CloseTab(GameAsset asset)
