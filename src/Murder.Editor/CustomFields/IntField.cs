@@ -43,7 +43,7 @@ namespace Murder.Editor.CustomFields
             return (modified, number);
         }
 
-        private static void DrawSlider(EditorMember member, ref bool modified, ref int number, SliderAttribute slider)
+        private static void DrawSlider(EditorMember _, ref bool modified, ref int number, SliderAttribute slider)
         {
             modified |= ImGui.SliderInt("", ref number, Calculator.RoundToInt(slider.Minimum), Calculator.RoundToInt(slider.Maximum));
         }

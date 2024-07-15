@@ -12,10 +12,6 @@
     <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Murder.FNA" Version="24.6" />
-  </ItemGroup>
-
   <!-- When running the editor, copy everything! -->
   <ItemGroup Condition="'$(Configuration)' == 'Debug' Or '$(EDITOR)' == 'true'">
     <Content Include="resources\**" CopyToOutputDirectory="PreserveNewest" LinkBase="resources" />
@@ -40,6 +36,10 @@
   <ItemGroup>
     <EmbeddedResource Include="resources\Icon.ico" LogicalName="Icon.ico" />
     <EmbeddedResource Include="resources\Icon.bmp" LogicalName="Icon.bmp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Murder.FNA" Version="24.6.2" />
   </ItemGroup>
 
   <ItemGroup>

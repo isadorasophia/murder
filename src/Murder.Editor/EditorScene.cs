@@ -1,7 +1,5 @@
-﻿using Bang.Components;
-using ImGuiNET;
+﻿using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.src.Input;
 using Murder.Assets;
 using Murder.Core;
 using Murder.Core.Geometry;
@@ -14,10 +12,8 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
 using Murder.Serialization;
 using Murder.Utilities;
-using SDL2;
 using System.Collections.Immutable;
 using System.Numerics;
-using System.Runtime.InteropServices;
 
 namespace Murder.Editor
 {
@@ -63,7 +59,7 @@ namespace Murder.Editor
                 return all;
             });
 
-            FileDropEXT.DropFile = FileDropped;
+            FileDropEXT.DropFile += FileDropped;
         }
 
         private void FileDropped(string path)
