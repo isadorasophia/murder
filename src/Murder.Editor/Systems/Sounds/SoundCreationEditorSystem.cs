@@ -84,7 +84,7 @@ namespace Murder.Editor.Systems.Sounds
                         shape: new BoxShape(Vector2.Zero, Point.Zero, width: Grid.CellSize * 2, height: Grid.CellSize * 2),
                         layer: CollisionLayersBase.TRIGGER,
                         color: new Color(104 / 255f, 234 / 255f, 137 / 255f)),
-                    new InteractiveComponent<SetSoundOnInteraction>(new SetSoundOnInteraction())
+                    new InteractiveComponent<SetSoundParameterOnInteraction>(new SetSoundParameterOnInteraction())
                 },
                 /* group */ "Sounds",
                 /* name */ "Sound Trigger Area");
@@ -102,7 +102,7 @@ namespace Murder.Editor.Systems.Sounds
                         shape: new BoxShape(Vector2.Zero, Point.Zero, width: Grid.CellSize * 2, height: Grid.CellSize * 2),
                         layer: CollisionLayersBase.TRIGGER,
                         color: new Color(104 / 255f, 234 / 255f, 137 / 255f)),
-                    new InteractiveComponent<PlayMusicInteraction>(new PlayMusicInteraction())
+                    new InteractiveComponent<PlayEventInteraction>(new PlayEventInteraction())
                 },
                 /* group */ "Sounds",
                 /* name */ "Event Trigger Area");
@@ -120,7 +120,7 @@ namespace Murder.Editor.Systems.Sounds
                         shape: new BoxShape(Vector2.Zero, Point.Zero, width: Grid.CellSize * 2, height: Grid.CellSize * 2),
                         layer: CollisionLayersBase.TRIGGER,
                         color: new Color(104 / 255f, 234 / 255f, 137 / 255f)),
-                    new InteractiveComponent<StopMusicInteraction>(new StopMusicInteraction())
+                    new InteractiveComponent<StopEventInteraction>(new StopEventInteraction())
                 },
                 /* group */ "Sounds",
                 /* name */ "Event Trigger Area");
@@ -139,8 +139,8 @@ namespace Murder.Editor.Systems.Sounds
                         layer: CollisionLayersBase.TRIGGER,
                         color: new Color(104 / 255f, 234 / 255f, 137 / 255f)),
                     new OnEnterOnExitComponent(
-                        new InteractiveComponent<SetSoundOnInteraction>(new SetSoundOnInteraction()),
-                        new InteractiveComponent<SetSoundOnInteraction>(new SetSoundOnInteraction()))
+                        new InteractiveComponent<SetSoundParameterOnInteraction>(new SetSoundParameterOnInteraction()),
+                        new InteractiveComponent<SetSoundParameterOnInteraction>(new SetSoundParameterOnInteraction()))
                 },
                 /* group */ "Sounds",
                 /* name */ "Event Trigger Area");
@@ -159,8 +159,8 @@ namespace Murder.Editor.Systems.Sounds
                         layer: CollisionLayersBase.TRIGGER,
                         color: new Color(104 / 255f, 234 / 255f, 137 / 255f)),
                     new OnEnterOnExitComponent(
-                        new InteractiveComponent<PlayMusicInteraction>(new PlayMusicInteraction()),
-                        new InteractiveComponent<StopMusicInteraction>(new StopMusicInteraction()))
+                        new InteractiveComponent<PlayEventInteraction>(new PlayEventInteraction()),
+                        new InteractiveComponent<StopEventInteraction>(new StopEventInteraction()))
                 },
                 /* group */ "Sounds",
                 /* name */ "Event Trigger Area");

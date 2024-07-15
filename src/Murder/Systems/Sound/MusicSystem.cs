@@ -28,7 +28,7 @@ namespace Murder.Systems
         {
             foreach (Entity e in entities)
             {
-                _ = SoundServices.Play(e.GetMusic().Id, SoundProperties.Persist | SoundProperties.SkipIfAlreadyPlaying | SoundProperties.StopOtherMusic);
+                _ = SoundServices.Play(e.GetMusic().Id, SoundLayer.Music, SoundProperties.Persist | SoundProperties.SkipIfAlreadyPlaying | SoundProperties.StopOtherEventsInLayer);
             }
         }
     }

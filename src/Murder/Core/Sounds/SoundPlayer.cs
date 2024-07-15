@@ -16,7 +16,7 @@ namespace Murder.Core.Sounds
 
         public void Update() { }
 
-        public ValueTask PlayEvent(SoundEventId _, SoundProperties __, SoundSpatialAttributes? attributes)
+        public ValueTask PlayEvent(SoundEventId _, PlayEventInfo properties)
         {
             GameLogger.Error("Default sound player has been deprecated. If we get back here, actually implement something?");
             return default;
@@ -31,11 +31,11 @@ namespace Murder.Core.Sounds
 
         public bool Stop(SoundEventId? id, bool fadeOut) => false;
 
-        public bool Stop(bool fadeOut, out SoundEventId[] stoppedEvents)
-        {
-            stoppedEvents = [];
-            return false;
-        }
+        public bool Stop(SoundLayer layer, bool fadeOut) => false;
+
+        public bool Resume(SoundLayer layer) => false;
+
+        public bool Pause(SoundLayer layer) => false;
 
         public void SetParameter(SoundEventId instance, ParameterId parameter, float value)
         {

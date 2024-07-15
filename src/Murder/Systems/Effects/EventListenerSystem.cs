@@ -35,7 +35,18 @@ namespace Murder.Systems.Effects
                 // Start doing event actions.
                 if (info.Sound is SoundEventId sound)
                 {
-                    _ = SoundServices.Play(sound, entity, info.Persist ? SoundProperties.Persist : SoundProperties.None);
+                    SoundProperties properties = SoundProperties.None;
+                    SoundLayer layer = SoundLayer.Sfx;
+
+                    // For now, infer that any sound event id fired from a sprite that persists
+                    // is actually an ambience sound.
+                    if (info.Persist)
+                    {
+                        properties |= SoundProperties.Persist;
+                        layer = SoundLayer.Ambience;
+                    }
+
+                    _ = SoundServices.Play(sound, entity, layer, properties);
                 }
             }
         }

@@ -9,7 +9,21 @@ namespace Murder.Core.Sounds
         None = 0,
         Persist = 0b1,
         SkipIfAlreadyPlaying = 0b10,
-        StopOtherMusic = 0b100
+        StopOtherEventsInLayer = 0b100
+    }
+
+    public struct PlayEventInfo
+    {
+        public SoundProperties Properties { get; init; } = SoundProperties.None;
+
+        /// <summary>
+        /// Event layer, only persisted if <see cref="Properties"/> has <see cref="SoundProperties.Persist"/> set.
+        /// </summary>
+        public SoundLayer Layer { get; init; } = SoundLayer.Any;
+
+        public SoundSpatialAttributes? Attributes { get; init; } = null;
+
+        public PlayEventInfo() { }
     }
 
     public interface ISoundPlayer
@@ -39,7 +53,7 @@ namespace Murder.Core.Sounds
         /// <summary>
         /// Update spatial attributes for a specific event instance.
         /// </summary>
-        /// <param name="id">Sound event instance id.</param>
+        /// <param name="id">Event event instance id.</param>
         /// <param name="attributes">Attributes of the origin of this sound.</param>
         /// <returns>
         /// False if no event instance is found in the world, or something failed.
@@ -50,15 +64,26 @@ namespace Murder.Core.Sounds
 
         /// <summary>
         /// Play a sound/event with the id of <paramref name="id"/>.
-        /// If <paramref name="properties"/> of the sound.
         /// </summary>
-        public ValueTask PlayEvent(SoundEventId id, SoundProperties properties, SoundSpatialAttributes? attributes);
+        public ValueTask PlayEvent(SoundEventId id, PlayEventInfo info);
 
         public void SetParameter(SoundEventId instance, ParameterId parameter, float value);
 
         public void SetGlobalParameter(ParameterId parameter, float value);
 
         public float GetGlobalParameter(ParameterId parameter);
+
+        public bool Resume(SoundLayer layer);
+
+        public bool Pause(SoundLayer layer);
+
+        /// <summary>
+        /// Stop all sounds tied to <paramref name="layer"/>.
+        /// </summary>
+        /// <param name="layer">The target sound layer.</param>
+        /// <param name="fadeOut">Whether it should stop with a fade out.</param>
+        /// <returns>Whether it successfully stopped.</returns>
+        public bool Stop(SoundLayer layer, bool fadeOut);
 
         /// <summary>
         /// Stop a specific sound event id.
@@ -67,18 +92,6 @@ namespace Murder.Core.Sounds
         /// <param name="id">Whether it should stop all events or only a specific one.</param>
         /// <param name="fadeOut">Apply fadeout on stop.</param>
         public bool Stop(SoundEventId? id, bool fadeOut);
-
-        /// <summary>
-        /// Stop all active streaming events.
-        /// If <paramref name="fadeOut"/> is set, this will stop with a fadeout.
-        /// </summary>
-        public bool Stop(bool fadeOut, out SoundEventId[] stoppedEvents);
-
-        public bool Stop(bool fadeOut, HashSet<SoundEventId> exceptForSoundsList, out SoundEventId[] stoppedEvents)
-        {
-            stoppedEvents = [];
-            return false;
-        }
 
         /// <summary>
         /// Change volume.

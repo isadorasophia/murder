@@ -9,7 +9,7 @@ namespace Murder.Services;
 
 public static class SoundServices
 {
-    public static ValueTask Play(SoundEventId id, Entity? target, SoundProperties properties = SoundProperties.None)
+    public static ValueTask Play(SoundEventId id, Entity? target, SoundLayer layer = SoundLayer.Any, SoundProperties properties = SoundProperties.None)
     {
         if (id.IsGuidEmpty || Game.Instance.IsSkippingDeltaTimeOnUpdate)
         {
@@ -17,10 +17,14 @@ public static class SoundServices
         }
 
         SoundSpatialAttributes? attributes = GetSpatialAttributes(target);
-        return Game.Sound.PlayEvent(id, properties, attributes);
+        return Play(id, layer, properties, attributes);
     }
 
-    public static async ValueTask Play(SoundEventId id, SoundProperties properties = SoundProperties.None, SoundSpatialAttributes? attributes = null)
+    public static async ValueTask Play(
+        SoundEventId id, 
+        SoundLayer layer = SoundLayer.Any, 
+        SoundProperties properties = SoundProperties.None, 
+        SoundSpatialAttributes? attributes = null)
     {
         if (Game.Instance.IsSkippingDeltaTimeOnUpdate)
         {
@@ -30,13 +34,13 @@ public static class SoundServices
 
         if (!id.IsGuidEmpty)
         {
-            await Game.Sound.PlayEvent(id, properties, attributes);
+            await Game.Sound.PlayEvent(id, new PlayEventInfo { Layer = layer, Properties = properties, Attributes = attributes });
         }
     }
 
     public static async ValueTask PlayMusic(SoundEventId id)
     {
-        await Game.Sound.PlayEvent(id, SoundProperties.Persist, attributes: null);
+        await Game.Sound.PlayEvent(id, new PlayEventInfo { Layer = SoundLayer.Music, Properties = SoundProperties.Persist });
     }
 
     public static float GetGlobalParameter(ParameterId id)
@@ -61,23 +65,28 @@ public static class SoundServices
         Game.Sound.Stop(id, fadeOut);
     }
 
-    public static SoundEventId[] StopAll(bool fadeOut, HashSet<SoundEventId> exceptFor)
-    {
-        Game.Sound.Stop(fadeOut, exceptFor, out SoundEventId[] stoppedEvents);
-
-        return stoppedEvents;
-    }
-
     /// <summary>
     /// Stop all the ongoing events.
     /// </summary>
     /// <param name="fadeOut">Whether it should fade out in fmod.</param>
-    /// <returns>List of all the events which were stopped.</returns>
-    public static SoundEventId[] StopAll(bool fadeOut)
+    public static void StopAll(bool fadeOut)
     {
-        Game.Sound.Stop(fadeOut, out SoundEventId[] stoppedEvents);
+        Stop(SoundLayer.Any, fadeOut);
+    }
 
-        return stoppedEvents;
+    public static void Stop(SoundLayer layer, bool fadeOut)
+    {
+        Game.Sound.Stop(layer, fadeOut);
+    }
+
+    public static void Resume(SoundLayer layer)
+    {
+        Game.Sound.Resume(layer);
+    }
+
+    public static void Pause(SoundLayer layer)
+    {
+        Game.Sound.Pause(layer);
     }
 
     public static void TrackEventSourcePosition(SoundEventId eventId, Entity e)

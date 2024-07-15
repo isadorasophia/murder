@@ -13,9 +13,9 @@ using System.Collections.Immutable;
 
 namespace Murder.Interactions
 {
-    [CustomName("\uf2a2 Set Sound On Interaction")]
+    [CustomName("\uf2a2 Set Parameter On Interaction")]
     [Requires(typeof(SoundParameterComponent))]
-    public readonly struct SetSoundOnInteraction : IInteraction
+    public readonly struct SetSoundParameterOnInteraction : IInteraction
     {
         [Tooltip("Blackboard variables")]
         public readonly ImmutableArray<SoundRuleAction> Triggers = ImmutableArray<SoundRuleAction>.Empty;
@@ -23,7 +23,7 @@ namespace Murder.Interactions
         [Tooltip("Global parameters")]
         public readonly ImmutableArray<ParameterRuleAction> Parameters = ImmutableArray<ParameterRuleAction>.Empty;
 
-        public SetSoundOnInteraction() { }
+        public SetSoundParameterOnInteraction() { }
 
         public void Interact(World world, Entity interactor, Entity? interacted)
         {

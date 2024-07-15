@@ -18,6 +18,6 @@ public class EditorSoundServices
 
         /* Hardcode the position to the same as the listener (we are debugging, excuse me) */
         Game.Sound.UpdateListener(new SoundSpatialAttributes());
-        _ = SoundServices.Play(sound, SoundProperties.Persist, attributes: new SoundSpatialAttributes());
+        _ = SoundServices.Play(sound, SoundLayer.Any, SoundProperties.Persist, attributes: new SoundSpatialAttributes());
     }
 }

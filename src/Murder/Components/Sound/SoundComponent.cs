@@ -7,7 +7,7 @@ using Murder.Utilities.Attributes;
 namespace Murder.Components
 {
     /// <summary>
-    /// Sound component which will be immediately played and destroyed.
+    /// Event component which will be immediately played and destroyed.
     /// </summary>
     [Sound]
     public readonly struct SoundComponent : IComponent
