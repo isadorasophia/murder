@@ -134,7 +134,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
             bool showHandles = !previewMode &&
                 (hook.EditorMode == EditorHook.EditorModes.EditMode && hook.IsEntitySelectedOrParent(e));
 
-            if (showHandles && !hook.UsingGui && hook.CursorWorldPosition is Point cursorPosition)
+            if (showHandles && hook.CursorWorldPosition is Point cursorPosition)
             {
                 Color color;
                 if (_draggingY==e.EntityId)
@@ -151,7 +151,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
                         e.SetAgentSprite(agentSprite.Value with { YSortOffset = newYSortOffset });
                     }
 
-                    if (!Game.Input.Down(MurderInputButtons.LeftClick))
+                    if (!hook.UsingGui && !Game.Input.Down(MurderInputButtons.LeftClick))
                     {
                         hook.CursorIsBusy.Remove(typeof(SpriteRenderDebugSystem));
                         _draggingY = -1;
