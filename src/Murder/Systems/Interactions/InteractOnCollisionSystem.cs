@@ -3,7 +3,6 @@ using Bang.Components;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
-using Murder.Messages;
 using Murder.Messages.Physics;
 using Murder.Utilities;
 
@@ -21,11 +20,12 @@ public class InteractOnCollisionSystem : IMessagerSystem
         OnCollisionMessage msg = (OnCollisionMessage)message;
 
         if (world.TryGetEntity(msg.EntityId) is not Entity interactorEntity)
+        {
             return;
+        }
 
         if (interactorEntity.IsDestroyed ||
-            (!interactorEntity.HasAgent() &&
-            (!interactorEntity.TryFetchParent()?.HasAgent() ?? true)) ||
+            (!interactorEntity.HasAgent() && (!interactorEntity.TryFetchParent()?.HasAgent() ?? true)) ||
             interactorEntity.HasIgnoreUntil())
         {
             return;
@@ -42,7 +42,8 @@ public class InteractOnCollisionSystem : IMessagerSystem
         {
             return;
         }
-        else if (msg.Movement == CollisionDirection.Exit)
+
+        if (msg.Movement == CollisionDirection.Exit)
         {
             foreach (var interaction in interactOnCollision.CustomExitMessages)
             {
@@ -63,7 +64,7 @@ public class InteractOnCollisionSystem : IMessagerSystem
         // After all these checks, I thinks it's ok to send that message!            
         // Trigger right away!
 
-        interactiveEntity.SendMessage(new InteractMessage(interactorEntity));
+        interactiveEntity.SendInteractMessage(interactorEntity);
 
         if (interactOnCollision.OnlyOnce)
         {

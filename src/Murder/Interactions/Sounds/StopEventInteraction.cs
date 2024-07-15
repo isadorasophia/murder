@@ -15,6 +15,8 @@ namespace Murder.Interactions
 
         [Default("Stop specific...")]
         public readonly SoundEventId? Event = null;
+
+        [Tooltip("Only used if event is not specified and it should be applied to the layer instead")]
         public readonly SoundLayer TargetLayer = SoundLayer.Any;
 
         public StopEventInteraction() { }

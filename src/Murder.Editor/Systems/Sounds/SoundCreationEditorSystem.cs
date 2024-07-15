@@ -34,22 +34,16 @@ namespace Murder.Editor.Systems.Sounds
 
             if (ImGui.BeginPopupContextItem())
             {
-                if (ImGui.Selectable("\uf2a2 Add sound trigger"))
+                if (ImGui.Selectable("\uf2a2 Set ambience on area"))
+                {
+                    Point cursorWorldPosition = hook.LastCursorWorldPosition;
+                    CreateAmbienceArea(hook, cursorWorldPosition);
+                }
+
+                if (ImGui.Selectable("\uf2a2 Change parameter on area"))
                 {
                     Point cursorWorldPosition = hook.LastCursorWorldPosition;
                     CreateNewSoundTriggerArea(hook, cursorWorldPosition);
-                }
-
-                if (ImGui.Selectable("\uf04b Add start event"))
-                {
-                    Point cursorWorldPosition = hook.LastCursorWorldPosition;
-                    CreateNewStartEventArea(hook, cursorWorldPosition);
-                }
-
-                if (ImGui.Selectable("\uf04d Add stop event"))
-                {
-                    Point cursorWorldPosition = hook.LastCursorWorldPosition;
-                    CreateNewStopEventArea(hook, cursorWorldPosition);
                 }
 
                 if (ImGui.Selectable("\uf70c On enter/exit"))
@@ -58,7 +52,7 @@ namespace Murder.Editor.Systems.Sounds
                     CreateNewOnEnterOnExitEventArea(hook, cursorWorldPosition);
                 }
 
-                if (ImGui.Selectable("\uf70c Add play/stop"))
+                if (ImGui.Selectable("\uf70c Play/stop"))
                 {
                     Point cursorWorldPosition = hook.LastCursorWorldPosition;
                     CreateNewOnEnterOnExitPlayEventArea(hook, cursorWorldPosition);
@@ -87,7 +81,7 @@ namespace Murder.Editor.Systems.Sounds
                     new InteractiveComponent<SetSoundParameterOnInteraction>(new SetSoundParameterOnInteraction())
                 },
                 /* group */ "Sounds",
-                /* name */ "Sound Trigger Area");
+                /* name */ "Set parameter trigger area");
         }
 
         private void CreateNewStartEventArea(EditorHook hook, Vector2 position)
@@ -105,7 +99,7 @@ namespace Murder.Editor.Systems.Sounds
                     new InteractiveComponent<PlayEventInteraction>(new PlayEventInteraction())
                 },
                 /* group */ "Sounds",
-                /* name */ "Event Trigger Area");
+                /* name */ "Play event Area");
         }
 
         private void CreateNewStopEventArea(EditorHook hook, Vector2 position)
@@ -123,7 +117,7 @@ namespace Murder.Editor.Systems.Sounds
                     new InteractiveComponent<StopEventInteraction>(new StopEventInteraction())
                 },
                 /* group */ "Sounds",
-                /* name */ "Event Trigger Area");
+                /* name */ "Stop event Area");
         }
 
         private void CreateNewOnEnterOnExitEventArea(EditorHook hook, Vector2 position)
@@ -143,7 +137,7 @@ namespace Murder.Editor.Systems.Sounds
                         new InteractiveComponent<SetSoundParameterOnInteraction>(new SetSoundParameterOnInteraction()))
                 },
                 /* group */ "Sounds",
-                /* name */ "Event Trigger Area");
+                /* name */ "On enter/exit area");
         }
 
         private void CreateNewOnEnterOnExitPlayEventArea(EditorHook hook, Vector2 position)
@@ -163,7 +157,25 @@ namespace Murder.Editor.Systems.Sounds
                         new InteractiveComponent<StopEventInteraction>(new StopEventInteraction()))
                 },
                 /* group */ "Sounds",
-                /* name */ "Event Trigger Area");
+                /* name */ "Play/stop on enter/exit");
+        }
+
+
+        private void CreateAmbienceArea(EditorHook hook, Vector2 position)
+        {
+            hook.AddEntityWithStage?.Invoke(
+                new IComponent[]
+                {
+                    new PositionComponent(position),
+                    new SoundParameterComponent(),
+                    new AmbienceComponent(),
+                    new ColliderComponent(
+                        shape: new BoxShape(Vector2.Zero, Point.Zero, width: Grid.CellSize * 2, height: Grid.CellSize * 2),
+                        layer: CollisionLayersBase.TRIGGER,
+                        color: new Color(104 / 255f, 234 / 255f, 137 / 255f))
+                },
+                /* group */ "Sounds",
+                /* name */ "Ambience Area");
         }
     }
 }
