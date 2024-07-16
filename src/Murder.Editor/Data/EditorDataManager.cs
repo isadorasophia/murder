@@ -314,8 +314,8 @@ namespace Murder.Editor.Data
             SaveDataTracker tracker = FileManager.UnpackContent<SaveDataTracker>(trackerPath);
             foreach ((int slot, SaveDataInfo save) in tracker.Info)
             {
-                string saveDataPath = save.GetFullPackedSavePath(slot);
-                string saveDataAssetsPath = save.GetFullPackedAssetsSavePath(slot);
+                string saveDataPath = SaveDataInfo.GetFullPackedSavePath(slot);
+                string saveDataAssetsPath = SaveDataInfo.GetFullPackedAssetsSavePath(slot);
                 if (!File.Exists(saveDataPath) || !File.Exists(saveDataAssetsPath))
                 {
                     continue;
@@ -366,8 +366,8 @@ namespace Murder.Editor.Data
             SaveDataTracker tracker = FileManager.UnpackContent<SaveDataTracker>(trackerPath);
             foreach ((int slot, SaveDataInfo save) in tracker.Info)
             {
-                string saveDataPath = save.GetFullPackedSavePath(slot);
-                string saveDataAssetsPath = save.GetFullPackedAssetsSavePath(slot);
+                string saveDataPath = SaveDataInfo.GetFullPackedSavePath(slot);
+                string saveDataAssetsPath = SaveDataInfo.GetFullPackedAssetsSavePath(slot);
                 if (!File.Exists(saveDataPath) || !File.Exists(saveDataAssetsPath))
                 {
                     continue;

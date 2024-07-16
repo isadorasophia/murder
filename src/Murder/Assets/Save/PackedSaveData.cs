@@ -13,13 +13,13 @@ public class SaveDataInfo
         Name = name;
     }
 
-    public string GetFullPackedSavePath(int slot) => 
+    public static string GetFullPackedSavePath(int slot) => 
         Path.Join(Game.Data.SaveBasePath, slot.ToString(), PackedSaveData.Name);
 
-    public string GetFullPackedAssetsSavePath(int slot) =>
+    public static string GetFullPackedAssetsSavePath(int slot) =>
         Path.Join(Game.Data.SaveBasePath, slot.ToString(), PackedSaveAssetsData.Name);
 
-    public string GetFullPackedSaveDirectory(int slot) =>
+    public static string GetFullPackedSaveDirectory(int slot) =>
         Path.Join(Game.Data.SaveBasePath, slot.ToString());
 }
 

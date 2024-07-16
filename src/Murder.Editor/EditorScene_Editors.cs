@@ -346,7 +346,7 @@ namespace Murder.Editor
 
             _selectedAssets[asset.Guid] = asset;
             _openAsset = _tabToSelect = _tabToSelect == asset.Guid ? Guid.Empty : asset.Guid;
-            OpenOnTreeView(asset, true);
+            OpenOnTreeView(asset, false);
 
             if (GetOrCreateAssetEditor(asset) is CustomEditorInstance editor)
             {

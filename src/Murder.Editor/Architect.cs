@@ -35,6 +35,8 @@ namespace Murder.Editor
 
         internal static EditorGraphLogger EditorGraphLogger => (EditorGraphLogger)Instance.GraphLogger;
 
+        internal static IMurderArchitect? Game => Instance._game as IMurderArchitect;
+
         public static UndoTracker Undo => Instance._undo;
 
         /// <summary>

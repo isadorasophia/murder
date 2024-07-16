@@ -287,7 +287,7 @@ namespace Murder
         /// <summary>
         /// This is the underlying implementation of the game. This listens to the murder game events.
         /// </summary>
-        private readonly IMurderGame? _game;
+        protected readonly IMurderGame? _game;
 
         /// <summary>
         /// Single logger of the game.

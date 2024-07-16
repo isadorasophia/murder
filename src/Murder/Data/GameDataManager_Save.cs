@@ -138,6 +138,27 @@ namespace Murder.Data
         public Dictionary<int, SaveDataInfo> GetAllSaves() => _allSavedData;
 
         /// <summary>
+        /// Find the next available save slot.
+        /// This is slighly expensive as it takes O(n) to complete, but you're only calling this once
+        /// so you're fine.
+        /// </summary>
+        public int GetNextAvailableSlot()
+        {
+            int i = 0;
+
+            while (true)
+            {
+                if (!_allSavedData.ContainsKey(i))
+                {
+                    // free!
+                    return i;
+                }
+
+                i++;
+            }
+        }
+
+        /// <summary>
         /// Create a new save data based on a name.
         /// </summary>
         public virtual SaveData CreateSave(int slot = -1)
@@ -148,11 +169,11 @@ namespace Murder.Data
             if (slot == -1)
             {
                 // No slot was specified, so just get the latest one.
-                slot = _allSavedData.Count;
+                slot = GetNextAvailableSlot();
             }
 
             SaveData data = CreateSaveDataWithVersion(slot);
-            TrackSaveAsset(data);
+            TrackSaveAssetAsActiveSave(data);
 
             return data;
         }
@@ -183,8 +204,8 @@ namespace Murder.Data
                 return false;
             }
 
-            string saveDataPath = data.GetFullPackedSavePath(slot);
-            string saveDataAssetsPath = data.GetFullPackedAssetsSavePath(slot);
+            string saveDataPath = SaveDataInfo.GetFullPackedSavePath(slot);
+            string saveDataAssetsPath = SaveDataInfo.GetFullPackedAssetsSavePath(slot);
             if (!File.Exists(saveDataPath) || !File.Exists(saveDataAssetsPath))
             {
                 return false;
@@ -256,7 +277,7 @@ namespace Murder.Data
         /// <returns>
         /// Whether the save succeeded.
         /// </returns>
-        private bool TrackSaveAsset(SaveData asset)
+        private bool TrackSaveAssetAsActiveSave(SaveData asset)
         {
             if (_allSavedData.ContainsKey(asset.SaveSlot))
             {
@@ -348,8 +369,8 @@ namespace Murder.Data
             PackedSaveAssetsData packedAssetsData = new([.. _currentSaveAssets.Values]);
             string packedAssetsDataJson = FileManager.SerializeToJson(packedAssetsData);
 
-            string packedSavePath = Path.Join(info.GetFullPackedSavePath(slot));
-            string packedSaveAssetsPath = Path.Join(info.GetFullPackedAssetsSavePath(slot));
+            string packedSavePath = Path.Join(SaveDataInfo.GetFullPackedSavePath(slot));
+            string packedSaveAssetsPath = Path.Join(SaveDataInfo.GetFullPackedAssetsSavePath(slot));
 
             FileManager.CreateDirectoryPathIfNotExists(packedSavePath);
 
@@ -413,7 +434,7 @@ namespace Murder.Data
                     continue;
                 }
 
-                string saveDataPath = save.GetFullPackedSavePath(slot);
+                string saveDataPath = SaveDataInfo.GetFullPackedSavePath(slot);
                 if (!File.Exists(saveDataPath))
                 {
                     continue;
@@ -500,7 +521,7 @@ namespace Murder.Data
                 return false;
             }
 
-            string path = data.GetFullPackedSaveDirectory(slot);
+            string path = SaveDataInfo.GetFullPackedSaveDirectory(slot);
             if (string.IsNullOrEmpty(path))
             {
                 FileManager.DeleteContent(SaveBasePath, deleteRootFiles: false);

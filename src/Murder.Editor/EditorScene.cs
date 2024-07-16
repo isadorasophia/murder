@@ -62,9 +62,9 @@ namespace Murder.Editor
             FileDropEXT.DropFile += FileDropped;
         }
 
-        private void FileDropped(string path)
+        protected void FileDropped(string path)
         {
-            GameLogger.Log($"Dropped file: {path}");
+            Architect.EditorData.OnFileDrop(path);
         }
 
         /// <summary>
