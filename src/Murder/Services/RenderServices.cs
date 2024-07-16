@@ -631,14 +631,15 @@ namespace Murder.Services
                 null);
         }
 
-        static readonly VertexInfo[] _cachedVertices = new VertexInfo[4];
-        static readonly short[] _cachedIndices = new short[6];
+        private static Vector2[] _cachedPieChartVertices = Array.Empty<Vector2>();
+        static readonly VertexInfo[] _cachedRectVertices = new VertexInfo[4];
+        static readonly short[] _cachedRectIndices = new short[6];
 
         static RenderServices()
         {
             for (int i = 0; i < 4; i++)
             {
-                _cachedVertices[i] = new VertexInfo();
+                _cachedRectVertices[i] = new VertexInfo();
             }
         }
 
@@ -650,35 +651,35 @@ namespace Murder.Services
             // |  \|
             // 3---2
 
-            _cachedVertices[0].Position = p1.ToVector3();
-            _cachedVertices[0].Color = color;
-            _cachedVertices[0].TextureCoordinate = new Microsoft.Xna.Framework.Vector2(0, 0);
-            _cachedVertices[0].BlendType = BlendType;
+            _cachedRectVertices[0].Position = p1.ToVector3();
+            _cachedRectVertices[0].Color = color;
+            _cachedRectVertices[0].TextureCoordinate = new Microsoft.Xna.Framework.Vector2(0, 0);
+            _cachedRectVertices[0].BlendType = BlendType;
 
-            _cachedVertices[1].Position = p2.ToVector3();
-            _cachedVertices[1].Color = color;
-            _cachedVertices[1].TextureCoordinate = new Microsoft.Xna.Framework.Vector2(1, 0);
-            _cachedVertices[1].BlendType = BlendType;
+            _cachedRectVertices[1].Position = p2.ToVector3();
+            _cachedRectVertices[1].Color = color;
+            _cachedRectVertices[1].TextureCoordinate = new Microsoft.Xna.Framework.Vector2(1, 0);
+            _cachedRectVertices[1].BlendType = BlendType;
 
-            _cachedVertices[2].Position = p3.ToVector3();
-            _cachedVertices[2].Color = color;
-            _cachedVertices[2].TextureCoordinate = new Microsoft.Xna.Framework.Vector2(1, 1);
-            _cachedVertices[2].BlendType = BlendType;
+            _cachedRectVertices[2].Position = p3.ToVector3();
+            _cachedRectVertices[2].Color = color;
+            _cachedRectVertices[2].TextureCoordinate = new Microsoft.Xna.Framework.Vector2(1, 1);
+            _cachedRectVertices[2].BlendType = BlendType;
 
-            _cachedVertices[3].Position = p4.ToVector3();
-            _cachedVertices[3].Color = color;
-            _cachedVertices[3].TextureCoordinate = new Microsoft.Xna.Framework.Vector2(0, 1);
-            _cachedVertices[3].BlendType = BlendType;
+            _cachedRectVertices[3].Position = p4.ToVector3();
+            _cachedRectVertices[3].Color = color;
+            _cachedRectVertices[3].TextureCoordinate = new Microsoft.Xna.Framework.Vector2(0, 1);
+            _cachedRectVertices[3].BlendType = BlendType;
 
-            _cachedIndices[0] = 0;
-            _cachedIndices[1] = 1;
-            _cachedIndices[2] = 2;
-            _cachedIndices[3] = 0;
-            _cachedIndices[4] = 2;
-            _cachedIndices[5] = 3;
+            _cachedRectIndices[0] = 0;
+            _cachedRectIndices[1] = 1;
+            _cachedRectIndices[2] = 2;
+            _cachedRectIndices[3] = 0;
+            _cachedRectIndices[4] = 2;
+            _cachedRectIndices[5] = 3;
 
 
-            return (_cachedVertices, _cachedIndices);
+            return (_cachedRectVertices, _cachedRectIndices);
         }
 
         private static (VertexInfo[] vertices, short[] indices) MakeRegularQuad(Rectangle rect, Color color, Vector3 BlendType)
@@ -689,35 +690,35 @@ namespace Murder.Services
             // |  \|
             // 3---2
 
-            _cachedVertices[0].Position = rect.TopLeft.ToVector3();
-            _cachedVertices[0].Color = color;
-            _cachedVertices[0].TextureCoordinate = new Microsoft.Xna.Framework.Vector2(0, 0);
-            _cachedVertices[0].BlendType = BlendType;
+            _cachedRectVertices[0].Position = rect.TopLeft.ToVector3();
+            _cachedRectVertices[0].Color = color;
+            _cachedRectVertices[0].TextureCoordinate = new Microsoft.Xna.Framework.Vector2(0, 0);
+            _cachedRectVertices[0].BlendType = BlendType;
 
-            _cachedVertices[1].Position = rect.TopRight.ToVector3();
-            _cachedVertices[1].Color = color;
-            _cachedVertices[1].TextureCoordinate = new Microsoft.Xna.Framework.Vector2(1, 0);
-            _cachedVertices[1].BlendType = BlendType;
+            _cachedRectVertices[1].Position = rect.TopRight.ToVector3();
+            _cachedRectVertices[1].Color = color;
+            _cachedRectVertices[1].TextureCoordinate = new Microsoft.Xna.Framework.Vector2(1, 0);
+            _cachedRectVertices[1].BlendType = BlendType;
 
-            _cachedVertices[2].Position = rect.BottomRight.ToVector3();
-            _cachedVertices[2].Color = color;
-            _cachedVertices[2].TextureCoordinate = new Microsoft.Xna.Framework.Vector2(1, 1);
-            _cachedVertices[2].BlendType = BlendType;
+            _cachedRectVertices[2].Position = rect.BottomRight.ToVector3();
+            _cachedRectVertices[2].Color = color;
+            _cachedRectVertices[2].TextureCoordinate = new Microsoft.Xna.Framework.Vector2(1, 1);
+            _cachedRectVertices[2].BlendType = BlendType;
 
-            _cachedVertices[3].Position = rect.BottomLeft.ToVector3();
-            _cachedVertices[3].Color = color;
-            _cachedVertices[3].TextureCoordinate = new Microsoft.Xna.Framework.Vector2(0, 1);
-            _cachedVertices[3].BlendType = BlendType;
+            _cachedRectVertices[3].Position = rect.BottomLeft.ToVector3();
+            _cachedRectVertices[3].Color = color;
+            _cachedRectVertices[3].TextureCoordinate = new Microsoft.Xna.Framework.Vector2(0, 1);
+            _cachedRectVertices[3].BlendType = BlendType;
 
-            _cachedIndices[0] = 0;
-            _cachedIndices[1] = 1;
-            _cachedIndices[2] = 2;
-            _cachedIndices[3] = 0;
-            _cachedIndices[4] = 2;
-            _cachedIndices[5] = 3;
+            _cachedRectIndices[0] = 0;
+            _cachedRectIndices[1] = 1;
+            _cachedRectIndices[2] = 2;
+            _cachedRectIndices[3] = 0;
+            _cachedRectIndices[4] = 2;
+            _cachedRectIndices[5] = 3;
 
 
-            return (_cachedVertices, _cachedIndices);
+            return (_cachedRectVertices, _cachedRectIndices);
         }
 
         private static (VertexInfo[] vertices, short[] indices) MakeTexturedQuad(Rectangle destination, Rectangle source, Vector2 sourceSize, Color color, Vector3 BlendType)
@@ -733,35 +734,35 @@ namespace Murder.Services
             Microsoft.Xna.Framework.Vector2 uvBottomRight = new((source.X + source.Width) / sourceSize.X, (source.Y + source.Height) / sourceSize.Y);
             Microsoft.Xna.Framework.Vector2 uvBottomLeft = new(source.X / sourceSize.X, (source.Y + source.Height) / sourceSize.Y);
 
-            _cachedVertices[0].Position = destination.TopLeft.ToVector3();
-            _cachedVertices[0].Color = color;
-            _cachedVertices[0].TextureCoordinate = uvTopLeft;
-            _cachedVertices[0].BlendType = BlendType;
+            _cachedRectVertices[0].Position = destination.TopLeft.ToVector3();
+            _cachedRectVertices[0].Color = color;
+            _cachedRectVertices[0].TextureCoordinate = uvTopLeft;
+            _cachedRectVertices[0].BlendType = BlendType;
 
-            _cachedVertices[1].Position = destination.TopRight.ToVector3();
-            _cachedVertices[1].Color = color;
-            _cachedVertices[1].TextureCoordinate = uvTopRight;
-            _cachedVertices[1].BlendType = BlendType;
+            _cachedRectVertices[1].Position = destination.TopRight.ToVector3();
+            _cachedRectVertices[1].Color = color;
+            _cachedRectVertices[1].TextureCoordinate = uvTopRight;
+            _cachedRectVertices[1].BlendType = BlendType;
 
-            _cachedVertices[2].Position = destination.BottomRight.ToVector3();
-            _cachedVertices[2].Color = color;
-            _cachedVertices[2].TextureCoordinate = uvBottomRight;
-            _cachedVertices[2].BlendType = BlendType;
+            _cachedRectVertices[2].Position = destination.BottomRight.ToVector3();
+            _cachedRectVertices[2].Color = color;
+            _cachedRectVertices[2].TextureCoordinate = uvBottomRight;
+            _cachedRectVertices[2].BlendType = BlendType;
 
-            _cachedVertices[3].Position = destination.BottomLeft.ToVector3();
-            _cachedVertices[3].Color = color;
-            _cachedVertices[3].TextureCoordinate = uvBottomLeft;
-            _cachedVertices[3].BlendType = BlendType;
+            _cachedRectVertices[3].Position = destination.BottomLeft.ToVector3();
+            _cachedRectVertices[3].Color = color;
+            _cachedRectVertices[3].TextureCoordinate = uvBottomLeft;
+            _cachedRectVertices[3].BlendType = BlendType;
 
-            _cachedIndices[0] = 0;
-            _cachedIndices[1] = 1;
-            _cachedIndices[2] = 2;
-            _cachedIndices[3] = 0;
-            _cachedIndices[4] = 2;
-            _cachedIndices[5] = 3;
+            _cachedRectIndices[0] = 0;
+            _cachedRectIndices[1] = 1;
+            _cachedRectIndices[2] = 2;
+            _cachedRectIndices[3] = 0;
+            _cachedRectIndices[4] = 2;
+            _cachedRectIndices[5] = 3;
 
 
-            return (_cachedVertices, _cachedIndices);
+            return (_cachedRectVertices, _cachedRectIndices);
         }
 
         public static void DrawIndexedVertices<T>(Matrix matrix, GraphicsDevice graphicsDevice, T[] vertices, int vertexCount, short[] indices, int primitiveCount, Effect? effect, BlendState? blendState = null, Texture2D? texture = null, bool smoothing = false) where T : struct, IVertexType
@@ -830,6 +831,39 @@ namespace Murder.Services
 
             // Scale and translate the vertices
             batch.DrawPolygon(SharedResources.GetOrCreatePixel(), circleVertices, drawInfo.WithScale(circleRect.Size).WithOffset(circleRect.Center));
+        }
+        public static void DrawPieChart(this Batch2D batch, Vector2 center, float radius, float startAngle, float endAngle, int steps, DrawInfo? drawInfo = default)
+        {
+            // Ensure the cached vertices array is large enough
+            if (_cachedPieChartVertices.Length < steps + 3) // +2 to accommodate the center point and ensure enough space
+            {
+                _cachedPieChartVertices = new Vector2[steps + 3];
+            }
+
+            Vector2[] circleVertices = GeometryServices.CreateOrGetFlattenedCircle(1f, 1f, steps);
+
+            // Scale and translate the vertices
+            for (int i = 0; i <= steps; i++)
+            {
+                _cachedPieChartVertices[i + 1] = new Vector2(circleVertices[i].X * radius + center.X, circleVertices[i].Y * radius + center.Y);
+            }
+
+            // Calculate the angle between each step
+            float angleStep = (MathF.PI * 2) / steps;
+
+            // Calculate the start and end index
+            int startIndex = (int)(startAngle / angleStep);
+            float startFraction = startAngle % angleStep;
+
+            int endIndex = (int)((endAngle / angleStep) + 2);
+            float endFraction = endAngle % angleStep;
+
+            // Insert the center point at the beginning
+            _cachedPieChartVertices[endIndex] = Point.Lerp(_cachedPieChartVertices[endIndex - 1], _cachedPieChartVertices[endIndex], endFraction);
+            _cachedPieChartVertices[startIndex] = center;
+            
+            // Draw the pie chart
+            batch.DrawPolygon(SharedResources.GetOrCreatePixel(), _cachedPieChartVertices[startIndex..(endIndex + 1)], drawInfo ?? DrawInfo.Default);
         }
 
         public static Point DrawText(this Batch2D uiBatch, int font, string text, Vector2 position, DrawInfo? drawInfo = default)

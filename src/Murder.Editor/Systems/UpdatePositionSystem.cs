@@ -38,5 +38,9 @@ public class UpdatePositionSystem : IMessagerSystem
         {
             hook.OnComponentModified?.Invoke(entity.EntityId, entity.GetCollider());
         }
+        else if (type == typeof(SoundShapeComponent))
+        {
+            hook.OnComponentModified?.Invoke(entity.EntityId, entity.GetSoundShape());
+        }
     }
 }

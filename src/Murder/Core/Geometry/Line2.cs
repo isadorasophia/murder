@@ -392,6 +392,27 @@ namespace Murder.Core.Geometry
             return true;
         }
 
+        public Vector2 GetClosestPoint(Vector2 point)
+        {
+            Vector2 lineDir = (End - Start).Normalized();
+            Vector2 pointDir = point - Start;
+
+            float t = Vector2.Dot(pointDir, lineDir);
+            Vector2 closest;
+            if (t < 0)
+            {
+                return Start;
+            }
+            else if (t > Vector2.Distance(Start, End))
+            {
+                return End;
+            }
+            else
+            {
+                return Start + lineDir * t;
+            }
+        }
+
         #endregion
     }
 }

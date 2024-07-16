@@ -34,6 +34,12 @@ namespace Murder.Editor.Systems.Sounds
 
             if (ImGui.BeginPopupContextItem())
             {
+                if (ImGui.Selectable("\uf2a2 Create sound shape"))
+                {
+                    Point cursorWorldPosition = hook.LastCursorWorldPosition;
+                    CreateSoundShape(hook, cursorWorldPosition);
+                }
+
                 if (ImGui.Selectable("\uf2a2 Set ambience on area"))
                 {
                     Point cursorWorldPosition = hook.LastCursorWorldPosition;
@@ -174,6 +180,19 @@ namespace Murder.Editor.Systems.Sounds
                         layer: CollisionLayersBase.TRIGGER,
                         color: new Color(104 / 255f, 234 / 255f, 137 / 255f))
                 },
+                /* group */ "Sounds",
+                /* name */ "Ambience Area");
+        }
+
+        private void CreateSoundShape(EditorHook hook, Vector2 position)
+        {
+            hook.AddEntityWithStage?.Invoke(
+                [
+                    new PositionComponent(position),
+                    new SoundParameterComponent(),
+                    new AmbienceComponent(),
+                    new SoundShapeComponent([new Point(0, 0)]),
+                ],
                 /* group */ "Sounds",
                 /* name */ "Ambience Area");
         }

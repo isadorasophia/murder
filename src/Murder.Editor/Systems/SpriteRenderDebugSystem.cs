@@ -31,6 +31,9 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
     private int _draggingY = -1;
     private int _hoverY = -1;
 
+    private const int _segments = 5;
+    private static readonly Vector2[] _verticesList = new Vector2[_segments + 2];
+
     public void Draw(RenderContext render, Context context)
     {
         bool issueSlowdownWarning = false;

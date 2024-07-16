@@ -1,0 +1,185 @@
+﻿using Bang.Contexts;
+using Bang.Systems;
+using Murder.Components;
+using Murder.Core.Graphics;
+using Bang.Entities;
+using System.Numerics;
+using Murder.Utilities;
+using Murder.Services;
+using Murder.Core.Geometry;
+using Murder.Editor.Utilities;
+using Murder.Editor.Components;
+using Murder.Core.Input;
+using Murder.Editor.Attributes;
+using Murder.Editor.Messages;
+using ImGuiNET;
+
+
+namespace Murder.Editor.Systems;
+[SoundEditor]
+
+[Filter(typeof(SoundShapeComponent))]
+public class SoundShapeEditorSystem : IMurderRenderSystem, IGuiSystem
+{
+    // Tuple to store the ID and index of the point being dragged
+    private (int id, int index)? _dragging;
+    private bool _hasAnySelected;
+    public SoundShapeEditorSystem()
+    {
+
+    }
+
+    public void Draw(RenderContext render, Context context)
+    {
+        _hasAnySelected = false;
+        EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
+        if (hook.CursorWorldPosition is not Point cursorPosition)
+        {
+            return;
+        }
+
+        foreach (var e in context.Entities)
+        {
+            SoundShapeComponent soundShape = e.GetSoundShape();
+            Point position = e.GetGlobalTransform().Point;
+
+            SoundPosition soundPosition = soundShape.GetSoundPosition(cursorPosition - position);
+            Vector2 closestPoint = soundPosition.ClosestPoint + position;
+
+            // Loop through the points of the sound shape
+            for (int i = 0; i < soundShape.Points.Length; i++)
+            {
+                Vector2 point = soundShape.Points[i];
+                // Calculate the distance from the cursor to the current point
+                float distance = (cursorPosition - (position + point)).LengthSquared();
+
+                // Draw a rectangle at each point
+                RenderServices.DrawRectangle(render.DebugBatch, IntRectangle.CenterRectangle(position + point, 4, 4), Color.White, 0);
+
+                // Draw lines between points if the shape style is OpenLines
+                if (soundShape.ShapeStyle != ShapeStyle.Points)
+                {
+                    if (i > 0)
+                    {
+                        RenderServices.DrawLine(render.DebugBatch, position + soundShape.Points[i - 1], position + soundShape.Points[i], Color.White, 0.5f);
+                    }
+
+                    if ((soundShape.ShapeStyle == ShapeStyle.ClosedLines || soundShape.ShapeStyle == ShapeStyle.ClosedShape) && i == soundShape.Points.Length - 1)
+                    {
+                        RenderServices.DrawLine(render.DebugBatch, position + soundShape.Points[i], position + soundShape.Points[0], Color.White, 0.5f);
+                    }
+                }
+            }
+
+            // Check if we are in edit mode and if the entity is selected
+            if (hook.EditorMode == EditorHook.EditorModes.EditMode && hook.AllSelectedEntities.ContainsKey(e.EntityId))
+            {
+                _hasAnySelected = true;
+                Vector2 snapPoint;
+                if (soundShape.Points.Length == 0 || soundPosition.ClosestIndex < 0)
+                {
+                    snapPoint = position;
+                }
+                else
+                {
+                    snapPoint = soundShape.Points[soundPosition.ClosestIndex] + position;
+                }
+                float distanceToSnappedPoint = (cursorPosition - snapPoint).Length();
+
+                // If a closest point is found
+                if (distanceToSnappedPoint > 8)
+                {
+                    // If left shift is held down, we can add points
+                    if (Game.Input.Down(Microsoft.Xna.Framework.Input.Keys.LeftShift))
+                    {
+                        RenderServices.DrawRectangleOutline(render.DebugBatch, IntRectangle.CenterRectangle(cursorPosition, 8, 8), Color.Green);
+
+                        RenderServices.DrawLine(render.DebugBatch, cursorPosition, position + soundShape.Points.LastOrDefault(), Color.Gray, 0.5f);
+
+                        if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+                        {
+                            e.SetSoundShape(soundShape with { Points = soundShape.Points.Add(cursorPosition - position) });
+                            e.SendMessage(new AssetUpdatedMessage(typeof(SoundShapeComponent)));
+                        }
+                    }
+                    else if (!hook.UsingGui)
+                    {
+                        // This is the main preview line
+                        RenderServices.DrawLine(render.DebugBatch, cursorPosition, closestPoint, Color.Gray, 0.5f);
+
+                        // Draw a circle, filled with the current volume.
+                        RenderServices.DrawCircleOutline(render.DebugBatch, cursorPosition + new Point(16), 8, 24, Color.White, 0.5f);
+
+                        float ratio = soundPosition.EasedDistance;
+
+                        RenderServices.DrawPieChart(render.DebugBatch, cursorPosition + new Point(16), 8, 0, MathF.PI * 2 * ratio, 24, new DrawInfo(Color.White * ratio, 0.5f));
+                    }
+                }
+                else
+                {
+                    // If left shift is held down and we are close enough, we can delete points
+                    if (Game.Input.Down(Microsoft.Xna.Framework.Input.Keys.LeftShift))
+                    {
+                        RenderServices.DrawRectangleOutline(render.DebugBatch, IntRectangle.CenterRectangle(closestPoint, 10, 10), Color.Red);
+
+                        if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+                        {
+                            e.SetSoundShape(soundShape with { Points = soundShape.Points.RemoveAt(Math.Min(soundShape.Points.Length - 1, soundPosition.ClosestIndex)) });
+                            e.SendMessage(new AssetUpdatedMessage(typeof(SoundShapeComponent)));
+                        }
+                    }
+                    else
+                    {
+                        // Otherwise, we can drag points
+                        RenderServices.DrawRectangleOutline(render.DebugBatch, IntRectangle.CenterRectangle(snapPoint, 8, 8), Color.Yellow);
+
+                        // Start dragging if the left click is pressed
+                        if (_dragging is null && Game.Input.Pressed(MurderInputButtons.LeftClick))
+                        {
+                            _dragging = (id: e.EntityId, index: soundPosition.ClosestIndex);
+                        }
+                    }
+                }
+            }
+
+            // If a point is being dragged
+            if (_dragging is not null && _dragging.Value.id == e.EntityId)
+            {
+                // Stop dragging if the left click is released
+                if (!Game.Input.Down(MurderInputButtons.LeftClick))
+                {
+                    _dragging = null;
+                }
+                else
+                {
+                    // Update the position of the dragged point
+                    e.SetSoundShape(soundShape with { Points = soundShape.Points.SetItem(_dragging.Value.index, cursorPosition - position) });
+                    e.SendMessage(new AssetUpdatedMessage(typeof(SoundShapeComponent)));
+                }
+            }
+        }
+    }
+
+    public void DrawGui(RenderContext render, Context context)
+    {
+        // Check if we are in edit mode and if the entity is selected
+        if (_hasAnySelected)
+        {
+            Vector2 topLeft = new Vector2(ImGui.GetItemRectMax().X - 300, ImGui.GetItemRectMin().Y);
+
+            ImGui.SetNextWindowPos(topLeft);
+            ImGui.SetNextWindowBgAlpha(0.85f);
+            if (ImGui.Begin("Sound editor help",
+                ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoCollapse |
+                ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoNav |
+                ImGuiWindowFlags.NoDecoration))
+            {
+                ImGui.Text("Shift + Left Click: Add or remove points");
+                ImGui.Text("Left Click: Drag points");
+
+
+                ImGui.End();
+            }
+        }
+    }
+}

@@ -243,5 +243,14 @@ namespace Murder.Core.Geometry
         internal Point Clamp(int minX, int minY, int maxX, int maxY) => new(Math.Clamp(X, minX, maxX), Math.Clamp(Y, minY, maxY));
         public Point Max(Point other) => new(Math.Max(X, other.X), Math.Max(Y, other.Y));
         public Point Min(Point other) => new(Math.Min(X, other.X), Math.Min(Y, other.Y));
+
+        public static Point Lerp(Point point1, Point point2, float endFraction)
+        {
+            return new Point(Calculator.Lerp(point1.X, point2.X, endFraction), Calculator.Lerp(point1.Y, point2.Y, endFraction));
+        }
+        public static Point Lerp(Vector2 point1, Vector2 point2, float endFraction)
+        {
+            return new Point(Calculator.Lerp(point1.X, point2.X, endFraction), Calculator.Lerp(point1.Y, point2.Y, endFraction));
+        }
     }
 }
