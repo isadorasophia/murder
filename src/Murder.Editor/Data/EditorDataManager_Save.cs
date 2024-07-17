@@ -103,4 +103,9 @@ public partial class EditorDataManager
 
         return true;
     }
+
+    /// <summary>
+    /// List of save states (tracked by Guid) that can be loaded on a new game.
+    /// </summary>
+    public (Guid Guid, string Name)[] GetAllAvailableStartGameFrom() => Architect.Game?.GetAllAvailableStartGameFrom() ?? [];
 }

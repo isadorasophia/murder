@@ -262,6 +262,8 @@ namespace Murder.Editor
                 _isPlayingGame = false;
             }
 
+            Game?.OnBeforePlayGame(info);
+
             _playerInput.Consume(MurderInputButtons.PlayGame);
 
             _playerInput.Bind(MurderInputButtons.PlayGame, (input) =>

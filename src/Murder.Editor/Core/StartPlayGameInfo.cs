@@ -8,5 +8,7 @@ public readonly struct StartPlayGameInfo
 
     public readonly int? SaveSlot { get; init; } = null;
 
+    public readonly Guid? LoadStateFrom { get; init; } = null;
+
     public StartPlayGameInfo() { }
 }
