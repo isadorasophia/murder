@@ -206,28 +206,6 @@ internal static class StageHelpers
         return systems;
     }
 
-    /// <summary>
-    /// Cache a dictionary that maps attributes -> components that have that attribute.
-    /// This is used by <see cref="FetchComponentsWithAttribute"/>.
-    /// </summary>
-    private static readonly Dictionary<Type, Type[]> _componentsWithStoryCache = new();
-
-    public static Type[] FetchComponentsWithAttribute<T>(bool cache = true) where T : Attribute
-    {
-        if (_componentsWithStoryCache.TryGetValue(typeof(T), out Type[]? result))
-        {
-            return result;
-        }
-
-        result = ReflectionHelper.GetAllTypesWithAttributeDefinedOfType<T>(typeof(IComponent)).ToArray();
-        if (cache)
-        {
-            _componentsWithStoryCache[typeof(T)] = result;
-        }
-
-        return result;
-    }
-
     public static HashSet<string>? GetChildNamesForSelectedEntity()
     {
         if (Architect.Instance.ActiveScene is EditorScene editor &&

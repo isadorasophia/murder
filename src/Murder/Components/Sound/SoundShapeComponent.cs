@@ -1,6 +1,7 @@
 ﻿using Bang.Components;
 using Murder.Core.Geometry;
 using Murder.Utilities;
+using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 using System.Numerics;
 
@@ -46,6 +47,7 @@ public readonly struct SoundPosition
     }
 }
 
+[Sound]
 public readonly struct SoundShapeComponent : IComponent
 {
     public readonly ImmutableArray<Vector2> Points { get; init; } = [];

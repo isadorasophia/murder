@@ -14,7 +14,6 @@ using Murder.Editor.CustomDiagnostics;
 using Murder.Editor.CustomFields;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Stages;
-using Murder.Editor.Utilities;
 using Murder.Prefabs;
 using Murder.Utilities;
 using System.Collections.Immutable;
@@ -63,12 +62,18 @@ namespace Murder.Editor.CustomEditors
                 GameLogger.Verify(stage is null ||
                     stage.AssetReference != _world, "Why are we replacing the asset reference? Call isa to debug this! <3");
 
-                InitializeStage(new(imGuiRenderer, renderContext, _world), _world.Guid);
+                stage = new(imGuiRenderer, renderContext, _world);
+                InitializeStage(stage, _world.Guid);
             }
 
             // Clear cache.
             _entitiesPerGroup.Clear();
+
+            // Assign this so we can update the cache
+            WorldTab previousTab = _previousActiveTab;
             _previousActiveTab = WorldTab.None;
+
+            DeactivateAndActivateSystemsForTab(stage, previousTab);
         }
 
         protected override void InitializeStage(Stage stage, Guid guid)
@@ -753,7 +758,7 @@ namespace Murder.Editor.CustomEditors
             Settings = 7
         }
 
-        private WorldTab _previousActiveTab = WorldTab.None;
+        private WorldTab _previousActiveTab = WorldTab.World;
 
         private readonly static Dictionary<WorldTab, Type> _tabToAttributeToDeactivate = new()
         {

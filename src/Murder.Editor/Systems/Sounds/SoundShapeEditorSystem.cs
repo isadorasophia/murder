@@ -14,10 +14,9 @@ using Murder.Editor.Attributes;
 using Murder.Editor.Messages;
 using ImGuiNET;
 
-
 namespace Murder.Editor.Systems;
-[SoundEditor]
 
+[SoundEditor]
 [Filter(typeof(SoundShapeComponent))]
 public class SoundShapeEditorSystem : IMurderRenderSystem, IGuiSystem
 {

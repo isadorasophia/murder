@@ -21,7 +21,7 @@ namespace Murder.Editor.Stages
         {
             List<IEntity> result = new();
 
-            Type[] components = StageHelpers.FetchComponentsWithAttribute<T>();
+            Type[] components = ReflectionHelper.FetchComponentsWithAttribute<T>();
 
             ImmutableArray<Entity> entities = _world.GetEntitiesWith(ContextAccessorFilter.AnyOf, components);
             foreach (Entity e in entities)
@@ -106,14 +106,14 @@ namespace Murder.Editor.Stages
             {
                 foreach (Type s in systems)
                 {
-                    _world.ActivateSystem(s);
+                    _world.ActivateSystem(s, immediately: true);
                 }
             }
             else
             {
                 foreach (Type s in systems)
                 {
-                    _world.DeactivateSystem(s);
+                    _world.DeactivateSystem(s, immediately: true);
                 }
             }
 

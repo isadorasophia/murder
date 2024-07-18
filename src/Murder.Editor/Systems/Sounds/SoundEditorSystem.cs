@@ -29,7 +29,7 @@ namespace Murder.Editor.Systems.Sounds
 
         public void Start(Context context)
         {
-            _filter = StageHelpers.FetchComponentsWithAttribute<SoundPlayerAttribute>();
+            _filter = ReflectionHelper.FetchComponentsWithAttribute<SoundPlayerAttribute>();
         }
 
         public void Update(Context context)

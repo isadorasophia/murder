@@ -30,6 +30,7 @@ namespace Murder.Editor.Systems
     {
         private readonly static int _hash = typeof(DebugColliderRenderSystem).GetHashCode();
         private bool _wasClicking = false;
+
         public void Draw(RenderContext render, Context context)
         {
             DrawImpl(render, context, allowEditingByDefault: false, ref _wasClicking);
@@ -58,6 +59,11 @@ namespace Murder.Editor.Systems
             
             foreach (Entity e in context.Entities)
             {
+                if (!e.HasCollider() || !e.HasTransform())
+                {
+                    continue;
+                }
+
                 ColliderComponent collider = e.GetCollider();
                 IMurderTransformComponent globalPosition = e.GetGlobalTransform();
 

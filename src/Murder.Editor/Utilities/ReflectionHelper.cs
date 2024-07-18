@@ -1,4 +1,5 @@
 ﻿using Bang;
+using Bang.Components;
 using Bang.StateMachines;
 using Murder.Attributes;
 using Murder.Editor.Reflection;
@@ -207,10 +208,34 @@ namespace Murder.Editor.Utilities
             return _allTypesInAllAssemblies;
         }
 
+        /// <summary>
+        /// Cache a dictionary that maps attributes -> components that have that attribute.
+        /// This is used by <see cref="FetchComponentsWithAttribute"/>.
+        /// </summary>
+        private static readonly Dictionary<Type, Type[]> _componentsWithAttributeCache = [];
+
+        public static Type[] FetchComponentsWithAttribute<T>(bool cache = true) where T : Attribute
+        {
+            if (_componentsWithAttributeCache.TryGetValue(typeof(T), out Type[]? result))
+            {
+                return result;
+            }
+
+            result = ReflectionHelper.GetAllTypesWithAttributeDefinedOfType<T>(typeof(IComponent)).ToArray();
+            if (cache)
+            {
+                _componentsWithAttributeCache[typeof(T)] = result;
+            }
+
+            return result;
+        }
+
         public static void ClearCache()
         {
             _allTypesInAllAssemblies = null;
+
             _cachedTypesWithAttributes.Clear();
+            _componentsWithAttributeCache.Clear();
         }
     }
 }
