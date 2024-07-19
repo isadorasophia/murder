@@ -51,15 +51,12 @@ public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSy
         }
 
         // Pretend the mouse is the player...
-        if (_isPlaying)
-        {
-            SoundSpatialAttributes attributes = SoundServices.GetSpatialAttributes(cursorPosition);
-            Game.Sound.UpdateListener(attributes);
+        SoundSpatialAttributes attributes = SoundServices.GetSpatialAttributes(cursorPosition);
+        Game.Sound.UpdateListener(attributes);
 
-            foreach (Entity e in context.Entities)
-            {
-                SoundShapeTrackerSystem.UpdateEmitterPosition(e, cursorPosition);
-            }
+        foreach (Entity e in context.Entities)
+        {
+            SoundShapeTrackerSystem.UpdateEmitterPosition(e, cursorPosition);
         }
     }
 
