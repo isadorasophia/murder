@@ -14,6 +14,7 @@ using Murder.Editor.Attributes;
 using Murder.Editor.Messages;
 using ImGuiNET;
 using Murder.Core.Sounds;
+using Murder.Systems.Sound;
 
 namespace Murder.Editor.Systems;
 
@@ -54,6 +55,11 @@ public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSy
         {
             SoundSpatialAttributes attributes = SoundServices.GetSpatialAttributes(cursorPosition);
             Game.Sound.UpdateListener(attributes);
+
+            foreach (Entity e in context.Entities)
+            {
+                SoundShapeTrackerSystem.UpdateEmitterPosition(e, cursorPosition);
+            }
         }
     }
 

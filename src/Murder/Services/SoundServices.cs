@@ -102,6 +102,12 @@ public static class SoundServices
         Game.Sound.UpdateEvent(eventId, attributes.Value);
     }
 
+    public static void TrackEventSourcePosition(SoundEventId eventId, Vector2 position)
+    {
+        SoundSpatialAttributes attributes = GetSpatialAttributes(position);
+        Game.Sound.UpdateEvent(eventId, attributes);
+    }
+
     /// <summary>
     /// Return the spatial attributes for playing a sound from <paramref name="target"/>.
     /// </summary>
