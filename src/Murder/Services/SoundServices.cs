@@ -4,6 +4,7 @@ using Murder.Core.Sounds;
 using Murder.Diagnostics;
 using Murder.Helpers;
 using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Services;
 
@@ -122,6 +123,21 @@ public static class SoundServices
         {
             attributes.Direction = direction;
         }
+
+        return attributes;
+    }
+
+    /// <summary>
+    /// Return the spatial attributes for playing a sound from <paramref name="position"/>.
+    /// </summary>
+    /// <param name="position">Position for listener.</param>
+    public static SoundSpatialAttributes GetSpatialAttributes(Vector2 position)
+    {
+        SoundSpatialAttributes attributes = new()
+        {
+            Position = position,
+            Direction = Direction.Up
+        };
 
         return attributes;
     }

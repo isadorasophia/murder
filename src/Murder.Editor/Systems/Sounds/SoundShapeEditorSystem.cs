@@ -1,8 +1,8 @@
 ﻿using Bang.Contexts;
+using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Core.Graphics;
-using Bang.Entities;
 using System.Numerics;
 using Murder.Utilities;
 using Murder.Services;
@@ -13,19 +13,73 @@ using Murder.Core.Input;
 using Murder.Editor.Attributes;
 using Murder.Editor.Messages;
 using ImGuiNET;
+using Murder.Core.Sounds;
 
 namespace Murder.Editor.Systems;
 
 [SoundEditor]
 [Filter(typeof(SoundShapeComponent))]
-public class SoundShapeEditorSystem : IMurderRenderSystem, IGuiSystem
+public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem
 {
     // Tuple to store the ID and index of the point being dragged
     private (int id, int index)? _dragging;
     private bool _hasAnySelected;
+
+    private bool _isPlaying = true;
+
     public SoundShapeEditorSystem()
     {
+    }
 
+    public void Update(Context context)
+    {
+        EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
+        if (hook.CursorWorldPosition is not Point cursorPosition)
+        {
+            return;
+        }
+
+        if (hook.EditorMode != EditorHook.EditorModes.EditMode)
+        {
+            return;
+        }
+
+        if (Game.Input.PressedAndConsume(MurderInputButtons.Submit))
+        {
+            TogglePlayEvents(hook);
+        }
+
+        // Pretend the mouse is the player...
+        if (_isPlaying)
+        {
+            SoundSpatialAttributes attributes = SoundServices.GetSpatialAttributes(cursorPosition);
+            Game.Sound.UpdateListener(attributes);
+        }
+    }
+
+    private void TogglePlayEvents(EditorHook hook)
+    {
+        if (_isPlaying)
+        {
+            SoundServices.StopAll(fadeOut: false);
+
+            _isPlaying = false;
+        }
+        else
+        {
+            foreach ((_, Entity e) in hook.AllSelectedEntities)
+            {
+                if (e.TryGetAmbience() is AmbienceComponent ambience)
+                {
+                    foreach (SoundEventIdInfo info in ambience.Events)
+                    {
+                        SoundServices.Play(info.Id, e, info.Layer, properties: SoundProperties.Persist);
+                    }
+                }
+            }
+
+            _isPlaying = true;
+        }
     }
 
     public void Draw(RenderContext render, Context context)
@@ -37,7 +91,7 @@ public class SoundShapeEditorSystem : IMurderRenderSystem, IGuiSystem
             return;
         }
 
-        foreach (var e in context.Entities)
+        foreach (Entity e in context.Entities)
         {
             SoundShapeComponent soundShape = e.GetSoundShape();
             Point position = e.GetGlobalTransform().Point;
@@ -175,7 +229,7 @@ public class SoundShapeEditorSystem : IMurderRenderSystem, IGuiSystem
             {
                 ImGui.Text("Shift + Left Click: Add or remove points");
                 ImGui.Text("Left Click: Drag points");
-
+                ImGui.Text(_isPlaying ? "Enter: Stop playing events" : "Enter: Start playing events");
 
                 ImGui.End();
             }

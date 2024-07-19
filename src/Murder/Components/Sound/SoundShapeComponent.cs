@@ -52,8 +52,8 @@ public readonly struct SoundShapeComponent : IComponent
 {
     public readonly ImmutableArray<Vector2> Points { get; init; } = [];
     public readonly ShapeStyle ShapeStyle = ShapeStyle.Points;
-    public readonly float MinRange = 100;
-    public readonly float MaxRange = 300;
+    public readonly float MinRange = 10;
+    public readonly float MaxRange = 200;
     public readonly EaseKind EaseKind = EaseKind.Linear;
 
     public SoundShapeComponent()

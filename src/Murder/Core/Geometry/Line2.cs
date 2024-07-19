@@ -398,7 +398,7 @@ namespace Murder.Core.Geometry
             Vector2 pointDir = point - Start;
 
             float t = Vector2.Dot(pointDir, lineDir);
-            Vector2 closest;
+
             if (t < 0)
             {
                 return Start;
