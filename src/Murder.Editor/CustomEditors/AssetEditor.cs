@@ -1025,7 +1025,7 @@ namespace Murder.Editor.CustomEditors
             if (stage.FindInstance(entityId) is IEntity entity)
             {
                 IComponent componentBefore = entity.GetComponent(c.GetType());
-                if (!componentBefore.Equals(c))
+                if (!IComponent.Equals(componentBefore, c))
                 {
                     ActWithUndo(
                         @do: () =>
@@ -1042,7 +1042,7 @@ namespace Murder.Editor.CustomEditors
             else if (stage.FindChildInstance(entityId) is (IEntity parent, Guid child))
             {
                 if (parent.TryGetComponentForChild(child, c.GetType()) is IComponent childComponent &&
-                    !childComponent.Equals(c))
+                    !IComponent.Equals(childComponent, c))
                 {
                     ActWithUndo(
                         @do: () =>

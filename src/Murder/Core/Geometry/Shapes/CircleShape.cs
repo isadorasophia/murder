@@ -4,7 +4,7 @@ using Murder.Utilities;
 
 namespace Murder.Core.Geometry
 {
-    public struct CircleShape : IShape
+    public record struct CircleShape : IShape
     {
         public readonly float Radius;
 

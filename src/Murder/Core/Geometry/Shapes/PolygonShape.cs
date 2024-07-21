@@ -2,7 +2,7 @@
 
 namespace Murder.Core.Geometry
 {
-    public struct PolygonShape : IShape
+    public record struct PolygonShape : IShape
     {
         public readonly Polygon Polygon = Polygon.DIAMOND;
 

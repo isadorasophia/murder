@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace Murder.Core.Geometry
 {
-    public struct LazyShape : IShape
+    public record struct LazyShape : IShape
     {
         public readonly float Radius;
         public readonly Point Offset;

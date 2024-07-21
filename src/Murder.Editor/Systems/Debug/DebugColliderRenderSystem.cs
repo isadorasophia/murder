@@ -8,6 +8,7 @@ using Murder.Components.Cutscenes;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Core.Input;
 using Murder.Core.Physics;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
@@ -49,7 +50,7 @@ namespace Murder.Editor.Systems
                 return;
             }
 
-            if (Game.Input.Down(InputHelpers.OSActionModifier))
+            if (Game.Input.Down(MurderInputButtons.Space))
             {
                 return;
             }
@@ -122,6 +123,11 @@ namespace Murder.Editor.Systems
                 if (!newShapes.IsDefaultOrEmpty)
                 {
                     e.SetCollider(new ColliderComponent(newShapes, collider.Layer, collider.DebugColor));
+
+                    if (!Game.Input.Down(MurderInputButtons.LeftClick))
+                    {
+                        e.SendMessage(new AssetUpdatedMessage(typeof(ColliderComponent)));
+                    }
                 }
             }
 

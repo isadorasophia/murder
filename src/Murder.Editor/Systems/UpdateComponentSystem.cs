@@ -12,7 +12,7 @@ namespace Murder.Editor.Systems;
 
 [EditorSystem]
 [Messager(typeof(AssetUpdatedMessage))]
-public class UpdatePositionSystem : IMessagerSystem
+public class UpdateComponentSystem : IMessagerSystem
 {
     public void OnMessage(World world, Entity entity, IMessage message)
     {

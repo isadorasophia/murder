@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace Murder.Core.Geometry
 {
-    public readonly struct Polygon
+    public readonly record struct Polygon
     {
         public static readonly Polygon EMPTY = new();
         public static readonly Polygon DIAMOND = new([new(-10, 0), new(0, -10), new(10, 0), new(0, 10)]);

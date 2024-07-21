@@ -2,7 +2,7 @@
 
 namespace Murder.Core.Geometry
 {
-    public struct PointShape : IShape
+    public record struct PointShape : IShape
     {
         public readonly Point Point = Point.Zero;
 
