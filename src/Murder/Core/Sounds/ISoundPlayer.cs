@@ -23,6 +23,11 @@ namespace Murder.Core.Sounds
 
         public SoundSpatialAttributes? Attributes { get; init; } = null;
 
+        /// <summary>
+        /// Entity id that is tied to this event.
+        /// </summary>
+        public int EntityId { get; init; } = -1;
+
         public PlayEventInfo() { }
     }
 
@@ -54,11 +59,12 @@ namespace Murder.Core.Sounds
         /// Update spatial attributes for a specific event instance.
         /// </summary>
         /// <param name="id">Event event instance id.</param>
+        /// <param name="entityId">Entity id associated with this event.</param>
         /// <param name="attributes">Attributes of the origin of this sound.</param>
         /// <returns>
         /// False if no event instance is found in the world, or something failed.
         /// </returns>
-        public bool UpdateEvent(SoundEventId id, SoundSpatialAttributes attributes);
+        public bool UpdateEvent(SoundEventId id, int entityId, SoundSpatialAttributes attributes);
 
         public void Update();
 
@@ -89,9 +95,10 @@ namespace Murder.Core.Sounds
         /// Stop a specific sound event id.
         /// If <paramref name="fadeOut"/> is set, this will stop with a fadeout.
         /// </summary>
-        /// <param name="id">Whether it should stop all events or only a specific one.</param>
+        /// <param name="id">Event event instance id.</param>
+        /// <param name="entityId">Entity id associated with this event.</param>
         /// <param name="fadeOut">Apply fadeout on stop.</param>
-        public bool Stop(SoundEventId? id, bool fadeOut);
+        public bool Stop(SoundEventId? id, int entityId, bool fadeOut);
 
         /// <summary>
         /// Change volume.

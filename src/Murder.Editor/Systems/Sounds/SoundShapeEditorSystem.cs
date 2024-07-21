@@ -23,7 +23,8 @@ public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSy
     // Tuple to store the ID and index of the point being dragged
     private (int id, int index)? _dragging;
 
-    private bool _isPlaying = true;
+    private bool _isEditMode = false;
+    private bool _isPlaying = false;
 
     public SoundShapeEditorSystem()
     {
@@ -44,8 +45,17 @@ public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSy
 
         if (hook.EditorMode != EditorHook.EditorModes.EditMode)
         {
-            UpdateNoEditMode();
+            if (_isEditMode)
+            {
+                OnToggledMode(false);
+            }
+
             return;
+        }
+
+        if (!_isEditMode)
+        {
+            OnToggledMode(true);
         }
 
         if (Game.Input.PressedAndConsume(MurderInputButtons.Submit))
@@ -257,7 +267,16 @@ public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSy
 
     protected virtual IEnumerable<Entity> GetEligibleEntities(Context context, EditorHook hook) => context.Entities;
 
-    protected virtual void UpdateNoEditMode() { }
+    protected virtual void OnToggledMode(bool mode) 
+    {
+        _isEditMode = mode;
+
+        if (!_isEditMode)
+        {
+            SoundServices.StopAll(fadeOut: false);
+            _isPlaying = false;
+        }
+    }
 
     protected virtual bool IsSelected(EditorHook hook, Entity e) => true;
 

@@ -22,14 +22,14 @@ namespace Murder.Core.Sounds
             return default;
         }
 
-        public bool UpdateEvent(SoundEventId id, SoundSpatialAttributes attributes) => false;
+        public bool UpdateEvent(SoundEventId id, int entityId, SoundSpatialAttributes attributes) => false;
 
         /// <summary>
         /// Change volume.
         /// </summary>
         public void SetVolume(SoundEventId? _, float volume) { }
 
-        public bool Stop(SoundEventId? id, bool fadeOut) => false;
+        public bool Stop(SoundEventId? _, int __, bool ___) => false;
 
         public bool Stop(SoundLayer layer, bool fadeOut) => false;
 

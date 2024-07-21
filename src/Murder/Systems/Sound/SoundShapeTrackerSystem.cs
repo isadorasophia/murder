@@ -93,7 +93,7 @@ public abstract class SoundShapeTrackerSystem : IFixedUpdateSystem, IReactiveSys
 
         foreach (SoundEventIdInfo info in ambience.Events)
         {
-            SoundServices.TrackEventSourcePosition(info.Id, closestPoint);
+            SoundServices.TrackEventSourcePosition(info.Id, e.EntityId, closestPoint);
         }
     }
 

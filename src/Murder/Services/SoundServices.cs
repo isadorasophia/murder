@@ -10,7 +10,11 @@ namespace Murder.Services;
 
 public static class SoundServices
 {
-    public static ValueTask Play(SoundEventId id, Entity? target, SoundLayer layer = SoundLayer.Any, SoundProperties properties = SoundProperties.None)
+    public static ValueTask Play(
+        SoundEventId id, 
+        Entity? target, 
+        SoundLayer layer = SoundLayer.Any, 
+        SoundProperties properties = SoundProperties.None)
     {
         if (id.IsGuidEmpty || Game.Instance.IsSkippingDeltaTimeOnUpdate)
         {
@@ -18,14 +22,15 @@ public static class SoundServices
         }
 
         SoundSpatialAttributes? attributes = GetSpatialAttributes(target);
-        return Play(id, layer, properties, attributes);
+        return Play(id, layer, properties, attributes, target?.EntityId ?? -1);
     }
 
     public static async ValueTask Play(
         SoundEventId id, 
         SoundLayer layer = SoundLayer.Any, 
         SoundProperties properties = SoundProperties.None, 
-        SoundSpatialAttributes? attributes = null)
+        SoundSpatialAttributes? attributes = null,
+        int entityId = -1)
     {
         if (Game.Instance.IsSkippingDeltaTimeOnUpdate)
         {
@@ -35,7 +40,7 @@ public static class SoundServices
 
         if (!id.IsGuidEmpty)
         {
-            await Game.Sound.PlayEvent(id, new PlayEventInfo { Layer = layer, Properties = properties, Attributes = attributes });
+            await Game.Sound.PlayEvent(id, new PlayEventInfo { Layer = layer, Properties = properties, Attributes = attributes, EntityId = entityId });
         }
     }
 
@@ -61,9 +66,9 @@ public static class SoundServices
         }
     }
 
-    public static void Stop(SoundEventId? id, bool fadeOut)
+    public static void Stop(SoundEventId? id, bool fadeOut, int entityId = -1)
     {
-        Game.Sound.Stop(id, fadeOut);
+        Game.Sound.Stop(id, entityId, fadeOut);
     }
 
     /// <summary>
@@ -99,13 +104,13 @@ public static class SoundServices
             return;
         }
 
-        Game.Sound.UpdateEvent(eventId, attributes.Value);
+        Game.Sound.UpdateEvent(eventId, e.EntityId, attributes.Value);
     }
 
-    public static void TrackEventSourcePosition(SoundEventId eventId, Vector2 position)
+    public static void TrackEventSourcePosition(SoundEventId eventId, int entityId, Vector2 position)
     {
         SoundSpatialAttributes attributes = GetSpatialAttributes(position);
-        Game.Sound.UpdateEvent(eventId, attributes);
+        Game.Sound.UpdateEvent(eventId, entityId, attributes);
     }
 
     /// <summary>

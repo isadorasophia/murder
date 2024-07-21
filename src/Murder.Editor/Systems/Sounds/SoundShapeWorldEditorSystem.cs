@@ -21,8 +21,10 @@ public class SoundShapeWorldEditorSystem : SoundShapeEditorSystem
 
     protected override IEnumerable<Entity> GetEligibleEntities(Context context, EditorHook hook) => hook.AllSelectedEntities.Values;
 
-    protected override void UpdateNoEditMode()
+    protected override void OnToggledMode(bool mode)
     {
+        base.OnToggledMode(mode);
+
         _hasAnySelected = false;
     }
 

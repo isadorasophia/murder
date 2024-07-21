@@ -44,14 +44,14 @@ public class AmbienceTrackerSystem : IMessagerSystem
         {
             foreach (SoundEventIdInfo info in ambience.Events)
             {
-                _ = SoundServices.Play(info.Id, info.Layer, SoundProperties.Persist);
+                _ = SoundServices.Play(info.Id, info.Layer, SoundProperties.Persist, entityId: interactedEntity.EntityId);
             }
         }
         else if (message.Movement == CollisionDirection.Exit)
         {
             foreach (SoundEventIdInfo info in ambience.Events)
             {
-                SoundServices.Stop(info.Id, fadeOut: true);
+                SoundServices.Stop(info.Id, fadeOut: true, entityId: interactedEntity.EntityId);
             }
         }
     }
