@@ -1,5 +1,6 @@
 ﻿using Bang.Components;
 using Murder.Core;
+using Murder.Core.Geometry;
 using Murder.Utilities.Attributes;
 
 namespace Murder.Components
@@ -18,9 +19,14 @@ namespace Murder.Components
 
         public readonly int Height => Map.Height;
 
+        public MapComponent(Point origin, int width, int height)
+        {
+            Map = new(origin, width, height);
+        }
+
         public MapComponent(int width, int height)
         {
-            Map = new(width, height);
+            Map = new(Point.Zero, width, height);
         }
 
         public void Subscribe(Action notification)

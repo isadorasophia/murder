@@ -19,6 +19,8 @@ namespace Murder.Systems
         {
             Entity? mapEntity;
 
+            Point origin = new(int.MaxValue, int.MaxValue);
+
             int width = 25;
             int height = 25;
 
@@ -28,12 +30,22 @@ namespace Murder.Systems
             {
                 TileGrid grid = gridEntities[i].GetTileGrid().Grid;
 
+                if (grid.Origin.X < origin.X)
+                {
+                    origin = new(grid.Origin.X, origin.Y);
+                }
+
+                if (grid.Origin.Y < origin.Y)
+                {
+                    origin = new(origin.X, grid.Origin.Y);
+                }
+
                 width = Math.Max(width, grid.Width + grid.Origin.X);
                 height = Math.Max(height, grid.Height + grid.Origin.Y);
             }
 
             mapEntity = context.World.AddEntity();
-            mapEntity.SetMap(width, height);
+            mapEntity.SetMap(origin, width, height);
 
             if (context.World.TryGetUniqueTileset()?.Tilesets is not ImmutableArray<Guid> tilesets)
             {

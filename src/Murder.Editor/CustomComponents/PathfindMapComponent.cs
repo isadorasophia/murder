@@ -1,5 +1,6 @@
 ﻿using Bang.Components;
 using Murder.Core;
+using Murder.Core.Geometry;
 using Murder.Utilities.Attributes;
 
 namespace Murder.Editor.Components;
@@ -20,7 +21,7 @@ public readonly struct PathfindMapComponent : IModifiableComponent
 
     public PathfindMapComponent(int width, int height)
     {
-        Map = new(width, height);
+        Map = new(Point.Zero, width, height);
     }
 
     public void Subscribe(Action notification)

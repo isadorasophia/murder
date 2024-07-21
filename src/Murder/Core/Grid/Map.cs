@@ -36,13 +36,20 @@ namespace Murder.Core
 
         private ref MapTile GetGridMapRef(int x, int y) => ref _gridMap[(y * Width) + x];
 
+        /// <summary>
+        /// This should not be added to <see cref="Width"/> and <see cref="Height"/>.
+        /// This only tracks the origin bounds of the map for purposes of visualization.
+        /// </summary>
+        public readonly Point Origin;
+
         public readonly int Width;
         public readonly int Height;
 
         [JsonConstructor]
-        public Map(int width, int height)
+        public Map(Point origin, int width, int height)
         {
             (Width, Height) = (width, height);
+            Origin = origin;
 
             _gridMap = new MapTile[width * height];
             _floorMap = new int[width * height];
