@@ -553,6 +553,8 @@ namespace Murder.Core.Geometry
 
             while (remainingPolygon.Count > 2)
             {
+                bool clippedEar = false; // Track progress in this iteration
+
                 for (int i = 0; i < remainingPolygon.Count; i++)
                 {
                     Vector2 a = remainingPolygon[(i - 1 + remainingPolygon.Count) % remainingPolygon.Count];
@@ -603,8 +605,15 @@ namespace Murder.Core.Geometry
 
                         remainingPolygon.RemoveAt(i);
                         reflexVertices = FindConcaveVertices(remainingPolygon.ToImmutableArray());
+                        clippedEar = true; // An ear was clipped, progress was made
                         break;
                     }
+                }
+
+                if (!clippedEar)
+                {
+                    // If no ear was clipped, we are stuck and should break to avoid infinite loop
+                    break;
                 }
             }
 
