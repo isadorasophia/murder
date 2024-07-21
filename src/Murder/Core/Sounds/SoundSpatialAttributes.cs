@@ -11,7 +11,7 @@ namespace Murder.Core.Sounds
         /// <summary>
         /// Position in 2D space. Used for panning and attenuation.
         /// </summary>
-        public Vector2 Position;
+        public Vector3 Position;
 
         /// <summary>
         /// Forwards orientation, must be of unit length (1.0) and perpendicular to up.

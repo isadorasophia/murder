@@ -127,7 +127,7 @@ public static class SoundServices
         Entity root = EntityServices.FindRootEntity(target);
         if (root.TryGetTransform() is IMurderTransformComponent transform)
         {
-            attributes.Position = transform.Vector2;
+            attributes.Position = new Vector3(transform.Vector2.X, transform.Vector2.Y, z: 0);
         }
 
         if (target.TryGetFacing()?.Direction is Direction direction)
@@ -142,11 +142,25 @@ public static class SoundServices
     /// Return the spatial attributes for playing a sound from <paramref name="position"/>.
     /// </summary>
     /// <param name="position">Position for listener.</param>
-    public static SoundSpatialAttributes GetSpatialAttributes(Vector2 position)
+    public static SoundSpatialAttributes GetSpatialAttributes(Vector3 position)
     {
         SoundSpatialAttributes attributes = new()
         {
             Position = position,
+            Direction = Direction.Up
+        };
+
+        return attributes;
+    }
+    /// <summary>
+    /// Return the spatial attributes for playing a sound from <paramref name="position"/>.
+    /// </summary>
+    /// <param name="position">Position for listener.</param>
+    public static SoundSpatialAttributes GetSpatialAttributes(Vector2 position)
+    {
+        SoundSpatialAttributes attributes = new()
+        {
+            Position = new(position.X, position.Y, 0),
             Direction = Direction.Up
         };
 
