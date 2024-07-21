@@ -4,10 +4,12 @@ using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Core.Particles;
+using Murder.Editor.Attributes;
 using System.Collections.Immutable;
 
 namespace Murder.Systems
 {
+    [EditorSystem]
     [Requires(typeof(ParticleRendererSystem))]
     [Filter(typeof(DisableParticleSystemComponent))]
     [Watch(typeof(DisableParticleSystemComponent))]

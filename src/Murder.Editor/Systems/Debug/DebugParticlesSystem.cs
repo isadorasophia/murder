@@ -12,6 +12,7 @@ using System.Numerics;
 
 namespace Murder.Systems
 {
+    [EditorSystem]
     [ParticleEditor]
     [WorldEditor(startActive: true)]
     [Filter(typeof(ParticleSystemWorldTrackerComponent))]

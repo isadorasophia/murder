@@ -3,12 +3,14 @@ using Bang.Components;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
+using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.Messages;
 using Murder.Editor.Utilities;
 
 namespace Murder.Editor.Systems;
 
+[EditorSystem]
 [Messager(typeof(AssetUpdatedMessage))]
 public class UpdatePositionSystem : IMessagerSystem
 {

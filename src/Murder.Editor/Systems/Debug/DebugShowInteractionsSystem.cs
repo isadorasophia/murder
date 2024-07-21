@@ -13,6 +13,7 @@ using Murder.Utilities;
 
 namespace Murder.Editor.Systems
 {
+    [EditorSystem]
     [OnlyShowOnDebugView]
     [Filter(typeof(PositionComponent))]
     [Filter(ContextAccessorFilter.AnyOf, typeof(IdTargetComponent), typeof(GuidToIdTargetComponent))]

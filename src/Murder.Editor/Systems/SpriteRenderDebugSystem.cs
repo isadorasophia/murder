@@ -10,6 +10,7 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
+using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.Messages;
 using Murder.Editor.Utilities;
@@ -21,6 +22,7 @@ using System.Numerics;
 
 namespace Murder.Editor.Systems;
 
+[EditorSystem]
 [Filter(typeof(ITransformComponent))]
 [Filter(filter: ContextAccessorFilter.AnyOf, typeof(SpriteComponent), typeof(AgentSpriteComponent))]
 [Filter(ContextAccessorFilter.NoneOf, typeof(ThreeSliceComponent))]

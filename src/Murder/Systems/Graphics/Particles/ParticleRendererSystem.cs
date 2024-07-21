@@ -7,6 +7,7 @@ using Murder.Components;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Particles;
+using Murder.Editor.Attributes;
 using Murder.Services;
 using Murder.Utilities;
 using System.Diagnostics;
@@ -14,6 +15,7 @@ using System.Numerics;
 
 namespace Murder.Systems
 {
+    [EditorSystem]
     [Filter(typeof(ParticleSystemWorldTrackerComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(InvisibleComponent))]
     public class ParticleRendererSystem : IStartupSystem, IMurderRenderSystem, IUpdateSystem

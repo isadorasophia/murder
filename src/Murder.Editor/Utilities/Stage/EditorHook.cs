@@ -4,6 +4,7 @@ using Bang.Entities;
 using Murder.Attributes;
 using Murder.Core.Geometry;
 using Murder.Core.Physics;
+using Murder.Editor.Assets;
 using Murder.Editor.Core;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
@@ -22,18 +23,21 @@ namespace Murder.Editor.Utilities
             Pathfind
         }
 
-        public bool UsingGui = false;
-        public readonly HashSet<Type> CursorIsBusy = new();
-        public bool IsPopupOpen = false;
-
-        public EditorModes EditorMode = EditorModes.ObjectMode;
-        public bool CanSwitchModes = true;
         public enum EditorModes
         {
             ObjectMode = 0,
             EditMode = 1,
             PlayMode = 2
         }
+
+        public bool CanSwitchModes = true;
+
+        public EditorModes EditorMode = EditorModes.ObjectMode;
+        public StageSetting StageSettings = StageSetting.None;
+
+        public bool UsingGui = false;
+        public readonly HashSet<Type> CursorIsBusy = new();
+        public bool IsPopupOpen = false;
 
         /// <summary>
         /// Last available position from the cursor. 

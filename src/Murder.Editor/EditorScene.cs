@@ -36,6 +36,8 @@ namespace Murder.Editor
         {
             _explorerPages = CreateExplorerPages();
 
+            _lastTimeSavedEditorSettings = Game.UnscaledDeltaTime;
+
             _hoverColor = Game.Profile.Theme.HighAccent;
             _selectedColor = Game.Profile.Theme.Accent;
             _normalColor = Game.Profile.Theme.BgFaded;
@@ -282,9 +284,11 @@ namespace Murder.Editor
             {
                 Architect.EditorSettings.OpenedTabs[i++] = asset.Guid;
             }
-            Architect.EditorSettings.LastOpenedAsset = CurrentAsset?.Guid;
 
-            ((EditorDataManager)Architect.Data!).SaveAsset(Architect.EditorSettings);
+            Architect.EditorSettings.LastOpenedAsset = CurrentAsset?.Guid;
+            Architect.EditorData.SaveAsset(Architect.EditorSettings);
+
+            _lastTimeSavedEditorSettings = Game.NowUnscaled;
         }
 
         private string _atlasSearchBoxTmp = string.Empty;

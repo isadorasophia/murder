@@ -101,14 +101,6 @@ public class EditorSettingsAsset : GameAsset
 
     public string IgnoredTexturePackingExtensions = ".clip,.psd,.gitkeep";
 
-    [Bang.Serialize]
-    private ImmutableArray<(Type systemType, bool isActive)> _editorSystems = ImmutableArray<(Type systemType, bool isActive)>.Empty;
-
-    /// <summary>
-    /// These are all the systems the editor currently supports.
-    /// </summary>
-    public ImmutableArray<(Type systemType, bool isActive)> EditorSystems => _editorSystems;
-
     /// <summary>
     /// The default floor tiles to use when creating a new room.
     /// </summary>
@@ -136,7 +128,7 @@ public class EditorSettingsAsset : GameAsset
     public string? FxcPath = null;
 
     [Serialize, HideInEditor]
-    public readonly Dictionary<Guid, PersistStageInfo> CameraPositions = new();
+    public readonly Dictionary<Guid, PersistStageInfo> StageInfo = new();
 
     [Serialize, HideInEditor]
     public readonly Dictionary<Guid, PersistWorldStageInfo> WorldAssetInfo = new();
@@ -144,8 +136,10 @@ public class EditorSettingsAsset : GameAsset
     [Serialize, HideInEditor]
     private readonly HashSet<Guid> _favoriteAssets = new();
 
+    public ImmutableHashSet<Guid> FavoriteAssets => [.. _favoriteAssets];
+
     private readonly List<GameAsset> _cachedFavoriteAssets = new();
-    public ImmutableHashSet<Guid> FavoriteAssets => _favoriteAssets.ToImmutableHashSet();
+
     public List<GameAsset> CachedFavoriteAssets
     {
         get
@@ -172,7 +166,6 @@ public class EditorSettingsAsset : GameAsset
         }
     }
 
-
     [Tooltip("Whether an asset should be overriden (by a save) after an error loading it")]
     [Serialize]
     public bool SaveDeserializedAssetOnError = false;
@@ -183,16 +176,13 @@ public class EditorSettingsAsset : GameAsset
     [Tooltip("Whether we will automatically apply any chances made to dialogues")]
     public bool EnableDialogueHotReload = false;
 
-    public void UpdateSystems(ImmutableArray<(Type systemType, bool isActive)> systems) => _editorSystems = systems;
-
     [JsonConstructor]
-    public EditorSettingsAsset(string name, string gameSourcePath, ImmutableArray<(Type systemType, bool isActive)> editorSystems)
+    public EditorSettingsAsset(string name, string gameSourcePath)
     {
         Name = name;
         FilePath = name;
 
         GameSourcePath = gameSourcePath;
-        _editorSystems = editorSystems;
     }
 
     // ===========================================
@@ -216,32 +206,13 @@ public class EditorSettingsAsset : GameAsset
     public (Guid Entity, IStateMachineComponent? Component)? TestStartWithEntityAndComponent;
 
     public float DpiScale = 1f;
-    public override void AfterDeserialized()
-    {
-        bool changed = false;
-        for (int i = 0; i < _editorSystems.Length; ++i)
-        {
-            if (_editorSystems[i].systemType is null)
-            {
-                // Remove the problematic system from the editor.
-                _editorSystems = _editorSystems.RemoveAt(i);
-                i--;
-
-                changed = true;
-            }
-        }
-
-        if (changed)
-        {
-            GameLogger.Warning("\uf0ad Fixed an issue found in editor profile! It shouldn't happen again.");
-        }
-    }
 
     public void FavoriteAsset(Guid guid)
     {
         _favoriteAssets.Add(guid);
         _cachedFavoriteAssets.Clear();
     }
+
     public void UnfavoriteAsset(Guid guid)
     {
         _favoriteAssets.Remove(guid);

@@ -8,6 +8,7 @@ using Murder.Editor.Utilities;
 
 namespace Murder.Systems
 {
+    [EditorSystem]
     [OnlyShowOnDebugView]
     [Filter(ContextAccessorFilter.None)]
     public class CursorSystem : IMurderRenderSystem

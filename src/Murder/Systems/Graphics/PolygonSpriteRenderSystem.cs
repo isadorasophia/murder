@@ -5,11 +5,13 @@ using Bang.Systems;
 using Murder.Components;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Editor.Attributes;
 using Murder.Services;
 using Murder.Utilities;
 
 namespace Murder.Systems;
 
+[EditorSystem]
 [Filter(ContextAccessorFilter.AllOf, typeof(PolygonSpriteComponent), typeof(ITransformComponent))]
 public class PolygonSpriteRenderSystem : IMurderRenderSystem
 {

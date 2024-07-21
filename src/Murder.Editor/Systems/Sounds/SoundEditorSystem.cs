@@ -17,6 +17,7 @@ using System.Numerics;
 namespace Murder.Editor.Systems.Sounds
 {
     [SoundEditor]
+    [PrefabEditor]
     [Filter(ContextAccessorFilter.AnyOf, typeof(SoundComponent), typeof(MusicComponent), typeof(SoundParameterComponent))]
     internal class SoundEditorSystem : GenericSelectorSystem, IStartupSystem, IUpdateSystem, IMurderRenderSystem, IGuiSystem
     {
@@ -35,7 +36,7 @@ namespace Murder.Editor.Systems.Sounds
         public void Update(Context context)
         {
             ImmutableArray<Entity> allEntities = context.Entities.AddRange(FetchEntities(context.World));
-            Update(context.World, allEntities, clearOnlyWhenSelectedNewEntity: false, ignoreCursorOnCollidersSelected: false);
+            Update(context.World, allEntities, clearOnlyWhenSelectedNewEntity: false);
         }
 
         public void Draw(RenderContext render, Context context)

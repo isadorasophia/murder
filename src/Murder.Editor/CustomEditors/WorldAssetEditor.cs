@@ -14,6 +14,7 @@ using Murder.Editor.CustomDiagnostics;
 using Murder.Editor.CustomFields;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Stages;
+using Murder.Editor.Utilities;
 using Murder.Prefabs;
 using Murder.Utilities;
 using System.Collections.Immutable;
@@ -62,7 +63,7 @@ namespace Murder.Editor.CustomEditors
                 GameLogger.Verify(stage is null ||
                     stage.AssetReference != _world, "Why are we replacing the asset reference? Call isa to debug this! <3");
 
-                stage = new(imGuiRenderer, renderContext, _world);
+                stage = new(imGuiRenderer, renderContext, Stage.StageType.PlayMode, _world);
                 InitializeStage(stage, _world.Guid);
             }
 
@@ -323,6 +324,7 @@ namespace Murder.Editor.CustomEditors
                 ImGui.TableNextColumn();
 
                 currentStage.Draw();
+                currentStage.PersistInfo(_asset.Guid);
 
                 ImGui.EndTable();
 

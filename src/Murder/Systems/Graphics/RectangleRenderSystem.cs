@@ -6,12 +6,14 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Editor.Attributes;
 using Murder.Services;
 using Murder.Utilities;
 using System.Numerics;
 
 namespace Murder.Systems.Graphics
 {
+    [EditorSystem]
     [Filter(typeof(ITransformComponent), typeof(DrawRectangleComponent))]
     public class RectangleRenderSystem : IMurderRenderSystem
     {

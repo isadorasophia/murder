@@ -25,7 +25,7 @@ namespace Murder.Editor.CustomEditors
 
             if (forceInit || !Stages.ContainsKey(_savedWorld.Guid))
             {
-                InitializeStage(new(imGuiRenderer, renderContext, _savedWorld), _asset!.Guid);
+                InitializeStage(new(imGuiRenderer, renderContext, Stage.StageType.None, _savedWorld), _asset!.Guid);
             }
         }
 

@@ -47,10 +47,11 @@ public readonly struct SoundPosition
     }
 }
 
+[Requires(typeof(PositionComponent))]
 [Sound]
 public readonly struct SoundShapeComponent : IComponent
 {
-    public readonly ImmutableArray<Vector2> Points { get; init; } = [];
+    public readonly ImmutableArray<Vector2> Points { get; init; } = [Vector2.Zero];
     public readonly ShapeStyle ShapeStyle = ShapeStyle.Points;
     public readonly float MinRange = 10;
     public readonly float MaxRange = 200;

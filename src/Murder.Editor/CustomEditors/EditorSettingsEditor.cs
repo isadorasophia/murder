@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using Murder.Core.Graphics;
+using Murder.Diagnostics;
 using Murder.Editor.Assets;
 using Murder.Editor.Attributes;
 using Murder.Editor.CustomComponents;
@@ -68,9 +69,9 @@ namespace Murder.Editor.CustomEditors
 
         private bool DrawStageTab()
         {
-            if (FeatureAssetEditor.DrawSystemsEditor(_target.EditorSystems, out var updatedSystems))
+            if (FeatureAssetEditor.DrawSystemsEditor(StageHelpers.FetchEditorTypeSystems(), out var updatedSystems))
             {
-                _target.UpdateSystems(updatedSystems);
+                GameLogger.Warning("We didn't implement tweaking default systems settings... yet.");
                 return true;
             }
 

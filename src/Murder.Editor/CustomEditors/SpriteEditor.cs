@@ -50,7 +50,7 @@ namespace Murder.Editor.CustomEditors
 
             if (!ActiveEditors.ContainsKey(_sprite.Guid))
             {
-                Stage stage = new(imGuiRenderer, renderContext, hook: new TimelineEditorHook());
+                Stage stage = new(imGuiRenderer, renderContext, hook: new TimelineEditorHook(), Stage.StageType.None);
 
                 SpriteInformation info = new(stage);
                 ActiveEditors[_sprite.Guid] = info;

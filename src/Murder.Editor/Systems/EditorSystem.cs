@@ -13,13 +13,12 @@ using Murder.Editor.Core;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
 using Murder.Services;
-using Murder.Systems;
 using Murder.Utilities;
-using System;
 using System.Numerics;
 
 namespace Murder.Editor.Systems;
 
+[EditorSystem]
 [DoNotPause]
 [OnlyShowOnDebugView]
 [Filter(ContextAccessorFilter.None)]

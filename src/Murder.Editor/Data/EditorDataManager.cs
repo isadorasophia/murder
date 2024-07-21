@@ -925,38 +925,7 @@ namespace Murder.Editor.Data
         {
             return new EditorSettingsAsset(
                 name: EditorSettingsFileName,
-                gameSourcePath: $"../../../../{Game.Data.GameDirectory}",
-                editorSystems: [
-                (typeof(EditorStartOnCursorSystem), true),
-                (typeof(EditorSystem), true),
-                (typeof(TileEditorSystem), false),
-                (typeof(EditorCameraControllerSystem), true),
-                (typeof(SpriteRenderDebugSystem), true),
-                (typeof(DebugColliderRenderSystem), true),
-                (typeof(CursorSystem), true),
-                (typeof(TilemapAndFloorRenderSystem), true),
-                (typeof(RectangleRenderSystem), true),
-                (typeof(RectPositionDebugRenderer), true),
-                (typeof(UpdatePositionSystem), true),
-                (typeof(UpdateColliderSystem), true),
-                (typeof(StateMachineSystem), false),
-                (typeof(CustomDrawRenderSystem), true),
-                (typeof(UpdateTileGridSystem), false),
-                (typeof(EntitiesPlacerSystem), true),
-                (typeof(DebugShowInteractionsSystem), true),
-                (typeof(DebugShowCameraBoundsSystem), true),
-                (typeof(CutsceneEditorSystem), false),
-                (typeof(UpdateAnchorSystem), false),
-                (typeof(EditorFloorRenderSystem), true),
-                (typeof(ParticleRendererSystem), true),
-                (typeof(DebugParticlesSystem), true),
-                (typeof(ParticleDisableTrackerSystem), true),
-                (typeof(ParticleTrackerSystem), true),
-                (typeof(SpriteThreeSliceRenderSystem), true),
-                (typeof(DialogueNodeSystem), false),
-                (typeof(StoryEditorSystem), false),
-                (typeof(PolygonSpriteRenderSystem), true)
-                ]);
+                gameSourcePath: $"../../../../{Game.Data.GameDirectory}");
         }
 
         private static void PopulateEditorSettings(EditorSettingsAsset settings)

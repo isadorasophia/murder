@@ -110,7 +110,7 @@ namespace Murder.Editor.CustomEditors
                 }
             }
 
-            if (Architect.EditorSettings.CameraPositions.TryGetValue(targetGuid, out PersistStageInfo info))
+            if (Architect.EditorSettings.StageInfo.TryGetValue(targetGuid, out PersistStageInfo info))
             {
                 renderContext.Camera.Position = info.Position;
                 renderContext.RefreshWindow(Architect.GraphicsDevice, info.Size, info.Size, new ViewportResizeStyle(ViewportResizeMode.None));
@@ -281,12 +281,15 @@ namespace Murder.Editor.CustomEditors
                 }
 
                 // Do not modify the name for entity assets, only instances.
-                if (entityInstance is not PrefabAsset && ImGuiHelpers.IconButton('\uf304', $"rename_{entityInstance.Guid}"))
+                if (entityInstance is not PrefabAsset)
                 {
-                    ImGui.OpenPopup($"Rename#{entityInstance.Guid}");
-                }
+                    if (ImGuiHelpers.IconButton('\uf304', $"rename_{entityInstance.Guid}"))
+                    {
+                        ImGui.OpenPopup($"Rename#{entityInstance.Guid}");
+                    }
 
-                ImGuiHelpers.HelpTooltip("Rename");
+                    ImGuiHelpers.HelpTooltip("Rename");
+                }
 
                 if (instance is not null && parent is null && entityInstance is not PrefabEntityInstance)
                 {
@@ -421,7 +424,7 @@ namespace Murder.Editor.CustomEditors
 
             ImGui.Separator();
 
-            if (!(entityInstance.HasComponent(typeof(ITransformComponent))))
+            if (!entityInstance.HasComponent(typeof(ITransformComponent)))
             {
                 if (ImGui.Button("+\uf0b2"))
                 {
@@ -430,7 +433,8 @@ namespace Murder.Editor.CustomEditors
                 ImGuiHelpers.HelpTooltip("Add PositionComponent");
                 ImGui.SameLine();
             }
-            if (!(entityInstance.HasComponent(typeof(SpriteComponent))))
+
+            if (!entityInstance.HasComponent(typeof(SpriteComponent)))
             {
                 if (ImGui.Button("+\uf03e"))
                 {
@@ -440,13 +444,26 @@ namespace Murder.Editor.CustomEditors
                 ImGui.SameLine();
             }
 
-            if (!(entityInstance.HasComponent(typeof(ColliderComponent))))
+            if (!entityInstance.HasComponent(typeof(ColliderComponent)))
             {
                 if (ImGui.Button("+\uf0c8"))
                 {
+                    AddComponent(parent, entityInstance, typeof(PositionComponent));
                     AddComponent(parent, entityInstance, typeof(ColliderComponent));
                 }
                 ImGuiHelpers.HelpTooltip("Add ColliderComponent");
+                ImGui.SameLine();
+            }
+
+            if (entityInstance.Components.Length <= 1)
+            {
+                if (ImGui.Button("+\uf001"))
+                {
+                    AddComponent(parent, entityInstance, typeof(SoundShapeComponent));
+                    AddComponent(parent, entityInstance, typeof(AmbienceComponent));
+                }
+
+                ImGuiHelpers.HelpTooltip("Add sound events on area...");
                 ImGui.SameLine();
             }
 

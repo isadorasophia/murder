@@ -11,6 +11,7 @@ using Murder.Editor.Services;
 namespace Murder.Editor.Systems.Sounds
 {
     [SoundEditor]
+    [PrefabEditor]
     [OnlyShowOnDebugView]
     [Filter(typeof(ColliderComponent), typeof(ITransformComponent))]
     [Filter(ContextAccessorFilter.AnyOf, typeof(SoundComponent), typeof(MusicComponent), typeof(SoundParameterComponent))]

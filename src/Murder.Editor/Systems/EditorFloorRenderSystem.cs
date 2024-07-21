@@ -4,6 +4,7 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Editor.Attributes;
 using Murder.Services;
 using Murder.Utilities;
 
@@ -12,6 +13,7 @@ namespace Murder.Editor.Systems
     /// <summary>
     /// This is the system used to render the background in the editor system.
     /// </summary>
+    [EditorSystem]
     [Filter(filter: ContextAccessorFilter.AnyOf, kind: ContextAccessorKind.Read, typeof(MapComponent))]
     public class EditorFloorRenderSystem : IMurderRenderSystem
     {

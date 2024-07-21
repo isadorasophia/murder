@@ -8,6 +8,7 @@ using Murder.Editor.Attributes;
 using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
+using Murder.Editor.Stages;
 using Murder.Editor.Utilities;
 using Murder.Prefabs;
 
@@ -25,7 +26,7 @@ namespace Murder.Editor.CustomEditors
 
             if (forceInit || !Stages.ContainsKey(_asset.Guid))
             {
-                var stage = new Stages.Stage(imGuiRenderer, renderContext, false);
+                Stage stage = new(imGuiRenderer, renderContext, Stage.StageType.EnableSelectChildren, _asset.Guid);
 
                 int entity = stage.AddEntity((PrefabAsset)_asset);
                 stage.SelectEntity(entity, true);
@@ -33,6 +34,8 @@ namespace Murder.Editor.CustomEditors
                 stage.EditorHook.CanSwitchModes = false;
 
                 InitializeStage(stage, _asset.Guid);
+
+                stage.ActivateSystemsWith(enable: true, typeof(PrefabEditorAttribute));
             }
 
             _lastOpenedEntity = _asset as IEntity;
@@ -77,7 +80,9 @@ namespace Murder.Editor.CustomEditors
                     if (Stages.ContainsKey(_asset.Guid))
                     {
                         Stages[_asset.Guid].EditorHook.DrawSelection = false;
+
                         Stages[_asset.Guid].Draw();
+                        Stages[_asset.Guid].PersistInfo(_asset.Guid);
                     }
                 }
 
@@ -99,7 +104,7 @@ namespace Murder.Editor.CustomEditors
                     prefab.FileChanged = true;
                 }
 
-                ImGuiHelpers.HelpTooltip("Show this entity on the world entity picker.");
+                ImGuiHelpers.HelpTooltip("Show this entity on the world entity picker");
             }
         }
 

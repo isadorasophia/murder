@@ -79,13 +79,18 @@ public abstract class SoundShapeTrackerSystem : IFixedUpdateSystem, IReactiveSys
 
     public static void UpdateEmitterPosition(Entity e, Vector2 listenerPosition)
     {
+        if (e.TryGetAmbience() is not AmbienceComponent ambience)
+        {
+            // This might be called from another filter, so double-check.
+            return;
+        }
+
         SoundShapeComponent soundShape = e.GetSoundShape();
         Point position = e.GetGlobalTransform().Point;
 
         SoundPosition soundPosition = soundShape.GetSoundPosition(listenerPosition - position);
         Vector2 closestPoint = soundPosition.ClosestPoint + position;
 
-        AmbienceComponent ambience = e.GetAmbience();
         foreach (SoundEventIdInfo info in ambience.Events)
         {
             SoundServices.TrackEventSourcePosition(info.Id, closestPoint);

@@ -232,7 +232,7 @@ namespace Murder.Editor.Systems
         /// the user selects an empty state and supports selecting multiple entities.
         /// Otherwise, it will only allow selecting one entity at a time.
         /// </param>
-        public void Update(World world, ImmutableArray<Entity> entities, bool clearOnlyWhenSelectedNewEntity = false, bool ignoreCursorOnCollidersSelected = true)
+        public void Update(World world, ImmutableArray<Entity> entities, bool clearOnlyWhenSelectedNewEntity = false)
         {
             EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
 

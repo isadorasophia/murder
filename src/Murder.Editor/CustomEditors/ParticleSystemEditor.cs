@@ -29,7 +29,7 @@ namespace Murder.Editor.CustomEditors
 
             if (!Stages.ContainsKey(_particleAsset.Guid))
             {
-                Stage stage = new(imGuiRenderer, renderContext, false);
+                Stage stage = new(imGuiRenderer, renderContext, Stage.StageType.None);
                 int entityId = stage.AddEntityWithoutAsset(
                     _particleAsset.GetTrackerComponent(), new PositionComponent(0, 0));
 

@@ -1,4 +1,5 @@
-﻿using Bang.Contexts;
+﻿using Bang.Components;
+using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using ImGuiNET;
@@ -7,12 +8,16 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Input;
+using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.Core;
+using Murder.Systems;
 using System.Numerics;
 
 namespace Murder.Editor.Systems
 {
+    [EditorSystem]
+    [Requires(typeof(CursorSystem), typeof(EditorSystem))]
     [Filter(ContextAccessorFilter.None)]
     public class EditorCameraControllerSystem : IUpdateSystem
     {

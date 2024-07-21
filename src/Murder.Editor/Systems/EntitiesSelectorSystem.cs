@@ -8,6 +8,7 @@ using Murder.Core.Graphics;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
+using Murder.Systems;
 using System.Numerics;
 
 namespace Murder.Editor.Systems
@@ -17,6 +18,7 @@ namespace Murder.Editor.Systems
     /// </summary>
     [DoNotPause]
     [OnlyShowOnDebugView]
+    [Requires(typeof(CursorSystem), typeof(EditorSystem))]
     [WorldEditor(startActive: true)]
     [Filter(ContextAccessorFilter.AllOf, ContextAccessorKind.Read, typeof(ITransformComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(CutsceneAnchorsComponent), typeof(SoundParameterComponent), typeof(SkipComponent))] // Skip cutscene and sounds.
@@ -24,6 +26,7 @@ namespace Murder.Editor.Systems
     {
         private Vector2 _previousCursorPosition;
         private float _lastMove;
+
         public void Start(Context context)
         {
             StartImpl(context.World);

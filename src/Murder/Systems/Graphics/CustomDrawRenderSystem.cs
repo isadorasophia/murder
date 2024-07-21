@@ -3,9 +3,11 @@ using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Core.Graphics;
+using Murder.Editor.Attributes;
 
 namespace Murder.Systems.Graphics
 {
+    [EditorSystem]
     [Filter(typeof(CustomDrawComponent))]
     public class CustomDrawRenderSystem : IMurderRenderSystem
     {

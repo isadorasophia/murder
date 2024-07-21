@@ -10,7 +10,6 @@ using Murder.Core.Geometry;
 using Murder.Editor.Utilities;
 using Murder.Editor.Components;
 using Murder.Core.Input;
-using Murder.Editor.Attributes;
 using Murder.Editor.Messages;
 using ImGuiNET;
 using Murder.Core.Sounds;
@@ -18,13 +17,11 @@ using Murder.Systems.Sound;
 
 namespace Murder.Editor.Systems;
 
-[SoundEditor]
 [Filter(typeof(SoundShapeComponent))]
 public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem
 {
     // Tuple to store the ID and index of the point being dragged
     private (int id, int index)? _dragging;
-    private bool _hasAnySelected;
 
     private bool _isPlaying = true;
 
@@ -35,6 +32,11 @@ public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSy
     public void Update(Context context)
     {
         EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
+        if (!IsEnabled(context, hook))
+        {
+            return;
+        }
+
         if (hook.CursorWorldPosition is not Point cursorPosition)
         {
             return;
@@ -42,12 +44,13 @@ public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSy
 
         if (hook.EditorMode != EditorHook.EditorModes.EditMode)
         {
+            UpdateNoEditMode();
             return;
         }
 
         if (Game.Input.PressedAndConsume(MurderInputButtons.Submit))
         {
-            TogglePlayEvents(hook);
+            TogglePlayEvents(context, hook);
         }
 
         // Pretend the mouse is the player...
@@ -60,7 +63,7 @@ public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSy
         }
     }
 
-    private void TogglePlayEvents(EditorHook hook)
+    private void TogglePlayEvents(Context context, EditorHook hook)
     {
         if (_isPlaying)
         {
@@ -70,7 +73,7 @@ public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSy
         }
         else
         {
-            foreach ((_, Entity e) in hook.AllSelectedEntities)
+            foreach (Entity e in GetEligibleEntities(context, hook))
             {
                 if (e.TryGetAmbience() is AmbienceComponent ambience)
                 {
@@ -87,8 +90,12 @@ public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSy
 
     public void Draw(RenderContext render, Context context)
     {
-        _hasAnySelected = false;
         EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
+        if (!IsEnabled(context, hook))
+        {
+            return;
+        }
+
         if (hook.CursorWorldPosition is not Point cursorPosition)
         {
             return;
@@ -127,10 +134,11 @@ public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSy
                 }
             }
 
+            ProcessEntity(hook, e);
+
             // Check if we are in edit mode and if the entity is selected
-            if (hook.EditorMode == EditorHook.EditorModes.EditMode && hook.AllSelectedEntities.ContainsKey(e.EntityId))
+            if (hook.EditorMode == EditorHook.EditorModes.EditMode && IsSelected(hook, e))
             {
-                _hasAnySelected = true;
                 Vector2 snapPoint;
                 if (soundShape.Points.Length == 0 || soundPosition.ClosestIndex < 0)
                 {
@@ -218,8 +226,14 @@ public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSy
 
     public void DrawGui(RenderContext render, Context context)
     {
+        EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
+        if (!IsEnabled(context, hook))
+        {
+            return;
+        }
+
         // Check if we are in edit mode and if the entity is selected
-        if (_hasAnySelected)
+        if (IsAnySelected)
         {
             Vector2 topLeft = new Vector2(ImGui.GetItemRectMax().X - 300, ImGui.GetItemRectMin().Y);
 
@@ -238,4 +252,17 @@ public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSy
             }
         }
     }
+
+    protected virtual void ProcessEntity(EditorHook hook, Entity e) { }
+
+    protected virtual IEnumerable<Entity> GetEligibleEntities(Context context, EditorHook hook) => context.Entities;
+
+    protected virtual void UpdateNoEditMode() { }
+
+    protected virtual bool IsSelected(EditorHook hook, Entity e) => true;
+
+    protected virtual bool IsAnySelected => true;
+
+    protected virtual bool IsEnabled(Context context, EditorHook hook) => 
+        context.HasAnyEntity && hook.StageSettings.HasFlag(Assets.StageSetting.ShowSound);
 }

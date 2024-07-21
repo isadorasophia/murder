@@ -51,6 +51,8 @@ namespace Murder.Editor
 
         private CustomEditorInstance? _lastActiveEditorInstance = null;
 
+        private float _lastTimeSavedEditorSettings;
+
         private void UpdateSelectedEditor()
         {
             if (_lastActiveEditorInstance is null)
@@ -258,14 +260,9 @@ namespace Murder.Editor
                     }
 
                     ImGui.SameLine();
-                    bool showPuzzles = worldEditor.ShowPuzzles;
-                    ImGui.Checkbox("Show Puzzles", ref showPuzzles);
-
-                    ImGui.SameLine();
                     bool showCamera = worldEditor.ShowCameraBounds;
                     ImGui.Checkbox("Show Camera Bounds", ref showCamera);
 
-                    worldEditor.ShowPuzzles = showPuzzles;
                     worldEditor.ShowCameraBounds = showCamera;
 
                     if (worldEditor.ShowCameraBounds)
@@ -283,6 +280,11 @@ namespace Murder.Editor
                     customEditor.Editor.OpenEditor(Architect.Instance.ImGuiRenderer, customEditor.SharedRenderContext, asset, false);
                 }
 
+                if (Game.NowUnscaled > _lastTimeSavedEditorSettings + 5)
+                {
+                    SaveEditorState();
+                }
+                
                 customEditor.Editor.DrawEditor();
             }
             else

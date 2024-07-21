@@ -8,12 +8,14 @@ using Murder.Components.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
+using Murder.Editor.Attributes;
 using Murder.Services;
 using Murder.Utilities;
 using System.Numerics;
 
 namespace Murder.Systems.Graphics
 {
+    [EditorSystem]
     [Filter(ContextAccessorFilter.AllOf, typeof(ThreeSliceComponent), typeof(ITransformComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(InvisibleComponent))]
     public class SpriteThreeSliceRenderSystem : IMurderRenderSystem

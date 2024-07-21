@@ -79,10 +79,13 @@ namespace Murder.Editor.Utilities
 
         public static IEnumerable<Type> GetAllTypesWithAttributeDefinedOfType<T>(Type ofType)
         {
-            var type = typeof(T);
+            return GetAllTypesWithAttributeDefinedOfType(typeof(T), ofType);
+        }
 
+        public static IEnumerable<Type> GetAllTypesWithAttributeDefinedOfType(Type attributeType, Type ofType)
+        {
             return SafeGetAllTypesInAllAssemblies()
-                .Where(p => Attribute.IsDefined(p, type) && ofType.IsAssignableFrom(p));
+                .Where(p => Attribute.IsDefined(p, attributeType) && ofType.IsAssignableFrom(p));
         }
 
         public static Type? TryFindType(string name)

@@ -3,6 +3,7 @@ using Bang.Systems;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
+using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.Core;
 using Murder.Editor.Utilities;
@@ -11,6 +12,7 @@ using System.Numerics;
 
 namespace Murder.Editor.Systems.Debug
 {
+    [EditorSystem]
     public class DebugShowCameraBoundsSystem : IMurderRenderSystem, IUpdateSystem
     {
         private readonly static int _hash = typeof(DebugShowCameraBoundsSystem).GetHashCode();

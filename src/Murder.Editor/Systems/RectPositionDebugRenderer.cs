@@ -1,14 +1,15 @@
 ﻿using Bang.Contexts;
 using Bang.Systems;
 using Murder.Components;
-using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Services;
 
 namespace Murder.Editor.Systems
 {
+    [EditorSystem]
     [Filter(typeof(RectPositionComponent), typeof(DebugColorComponent))]
     internal class RectPositionDebugRenderer : IMurderRenderSystem
     {

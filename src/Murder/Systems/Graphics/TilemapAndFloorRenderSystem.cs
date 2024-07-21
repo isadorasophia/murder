@@ -8,10 +8,10 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Editor.Attributes;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Numerics;
 
 namespace Murder.Systems.Graphics;
 
@@ -19,6 +19,7 @@ namespace Murder.Systems.Graphics;
 /// <summary>
 /// Generic and all-around tilemap rendering system. Draws all tilesmaps and floor tiles that are visible to the camera.
 /// </summary>
+[EditorSystem]
 [Filter(filter: ContextAccessorFilter.AnyOf, kind: ContextAccessorKind.Read, typeof(TileGridComponent))]
 public class TilemapAndFloorRenderSystem : IMurderRenderSystem
 {

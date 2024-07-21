@@ -39,17 +39,25 @@ namespace Murder.Editor.Stages
         public bool ShowInfo { get; set; } = true;
         public string? FocusOnGroup = null;
 
-        private readonly HashSet<int> _hiddenIds = new HashSet<int>();
+        private readonly HashSet<int> _hiddenIds = [];
 
-        public Stage(ImGuiRenderer imGuiRenderer, RenderContext renderContext, bool playMode, Guid? worldGuid = null) :
-            this(imGuiRenderer, renderContext, hook: new(playMode), worldGuid) { }
+        [Flags]
+        public enum StageType
+        {
+            None = 0,
+            EnableSelectChildren = 1,
+            PlayMode = 1
+        }
 
-        public Stage(ImGuiRenderer imGuiRenderer, RenderContext renderContext, EditorHook hook, Guid? worldGuid = null)
+        public Stage(ImGuiRenderer imGuiRenderer, RenderContext renderContext, StageType type, Guid? guid = null) :
+            this(imGuiRenderer, renderContext, hook: new(type.HasFlag(StageType.PlayMode)), type, guid) { }
+
+        public Stage(ImGuiRenderer imGuiRenderer, RenderContext renderContext, EditorHook hook, StageType type, Guid? guid = null)
         {
             _imGuiRenderer = imGuiRenderer;
             _renderContext = renderContext;
 
-            _world = new MonoWorld(StageHelpers.FetchEditorSystems(), _renderContext.Camera, worldGuid ?? Guid.Empty);
+            _world = new MonoWorld(StageHelpers.FetchEditorSystems(), _renderContext.Camera, guid ?? Guid.Empty);
 
             EditorComponent editorComponent = new(hook);
 
@@ -58,17 +66,18 @@ namespace Murder.Editor.Stages
             EditorHook.ShowDebug = true;
             EditorHook.GetEntityIdForGuid = GetEntityIdForGuid;
             EditorHook.GetNameForEntityId = GetNameForEntityId;
-            EditorHook.EnableSelectChildren = worldGuid is null;
+            EditorHook.EnableSelectChildren = type.HasFlag(StageType.EnableSelectChildren);
 
-            if (worldGuid is not null &&
-                Architect.EditorSettings.CameraPositions.TryGetValue(worldGuid.Value, out PersistStageInfo info))
+            if (guid is not null &&
+                Architect.EditorSettings.StageInfo.TryGetValue(guid.Value, out PersistStageInfo info))
             {
                 EditorHook.CurrentZoomLevel = info.Zoom;
+                EditorHook.StageSettings = info.Settings;
             }
 
             _world.AddEntity(editorComponent);
         }
-        
+
         private void InitializeDrawAndWorld()
         {
             _calledStart = true;
@@ -205,6 +214,24 @@ namespace Murder.Editor.Stages
                         else
                         {
                             ImGui.TextColored(Game.Profile.Theme.HighAccent, "Edit Mode");
+                            ImGui.Separator();
+
+                            bool isActive = EditorHook.StageSettings.HasFlag(StageSetting.ShowSound);
+                            if (ImGuiHelpers.ColoredIconButton('\uf028', "##modify_sound_editor_enabled", isActive))
+                            {
+                                if (isActive)
+                                {
+                                    EditorHook.StageSettings &= ~StageSetting.ShowSound;
+                                    isActive = false;
+                                }
+                                else
+                                {
+                                    EditorHook.StageSettings |= StageSetting.ShowSound;
+                                    isActive = true;
+                                }
+                            }
+
+                            ImGuiHelpers.HelpTooltip(isActive ? "Hide Sound Editor" : "Show Sound Editor");
                         }
                         ImGui.Separator();
                         foreach (var entity in EditorHook.AllSelectedEntities)
@@ -237,15 +264,16 @@ namespace Murder.Editor.Stages
                     ImGui.End();
                 }
             }
+        }
 
-            if (_world.Guid() != Guid.Empty)
-            {
-                // Persist the last position.
-                Architect.EditorSettings.CameraPositions[_world.Guid()] = new(
-                    _renderContext.Camera.Position.Point(),
-                    _renderContext.Camera.Size,
-                    EditorHook.CurrentZoomLevel);
-            }
+        public void PersistInfo(Guid guid)
+        {
+            // Persist the last position.
+            Architect.EditorSettings.StageInfo[guid] = new(
+                _renderContext.Camera.Position.Point(),
+                _renderContext.Camera.Size,
+                EditorHook.CurrentZoomLevel,
+                EditorHook.StageSettings);
         }
 
         private void DrawCheckboxes(World world, int id, string name)
