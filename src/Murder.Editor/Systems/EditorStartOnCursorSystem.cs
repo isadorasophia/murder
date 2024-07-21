@@ -1,4 +1,5 @@
 ﻿using Bang;
+using Bang.Components;
 using Bang.Contexts;
 using Bang.Systems;
 using ImGuiNET;
@@ -16,7 +17,7 @@ using Murder.Utilities;
 
 namespace Murder.Editor.Systems
 {
-    [EditorSystem]
+    [WorldEditor(startActive: false)]
     [OnlyShowOnDebugView]
     [DoNotPause]
     [Filter(ContextAccessorFilter.None)]

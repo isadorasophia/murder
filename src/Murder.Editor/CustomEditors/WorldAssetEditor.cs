@@ -63,7 +63,7 @@ namespace Murder.Editor.CustomEditors
                 GameLogger.Verify(stage is null ||
                     stage.AssetReference != _world, "Why are we replacing the asset reference? Call isa to debug this! <3");
 
-                stage = new(imGuiRenderer, renderContext, Stage.StageType.PlayMode, _world);
+                stage = new(imGuiRenderer, renderContext, Stage.StageType.None, _world);
                 InitializeStage(stage, _world.Guid);
             }
 

@@ -1,8 +1,6 @@
 ﻿using Bang;
 using Bang.Systems;
 using Murder.Core.Graphics;
-using System.Collections.Immutable;
-using System.Diagnostics;
 
 namespace Murder.Core
 {
