@@ -16,7 +16,7 @@ public readonly struct ColliderComponent : IComponent, IEquatable<IComponent>
     [CollisionLayer]
     public readonly int Layer = 0;
 
-    public readonly ImmutableArray<IShape> Shapes = ImmutableArray<IShape>.Empty;
+    public readonly ImmutableArray<IShape> Shapes { get; init; } = ImmutableArray<IShape>.Empty;
 
     public readonly Color DebugColor = Game.Profile.Theme.HighAccent;
 

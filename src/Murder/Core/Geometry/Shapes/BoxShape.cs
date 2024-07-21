@@ -11,7 +11,7 @@ namespace Murder.Core.Geometry
 
         [Slider]
         public readonly Vector2 Origin = Vector2.Zero;
-        public readonly Point Offset = Point.One * 16;
+        public readonly Point Offset { get; init; } = Point.Zero;
 
         public Point Size => new(Width, Height);
 

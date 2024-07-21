@@ -12,7 +12,9 @@ using Murder.Editor.CustomEditors;
 using Murder.Editor.Utilities.Attributes;
 using Murder.Interactions;
 using Murder.Prefabs;
+using Murder.Utilities;
 using Murder.Utilities.Attributes;
+using System.Numerics;
 using System.Reflection;
 
 namespace Murder.Editor.Utilities;
@@ -233,6 +235,15 @@ internal static class StageHelpers
         return null;
     }
 
+    public static Vector2? GetSelectedEntityPosition()
+    {
+        if(GetSelectedEntity() is IEntity entity && entity.HasComponent(typeof(PositionComponent)))
+        {
+            return entity.GetComponent<PositionComponent>().ToVector2();
+        }
+
+        return null;
+    }
     public static IEntity? GetSelectedEntity()
     {
         if (Architect.Instance.ActiveScene is EditorScene editor && editor.EditorShown is AssetEditor assetEditor)

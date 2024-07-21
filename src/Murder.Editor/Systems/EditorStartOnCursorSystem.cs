@@ -103,6 +103,10 @@ namespace Murder.Editor.Systems
         private bool DrawStartHere(World world)
         {
             EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
+            if (hook.EditorMode == EditorHook.EditorModes.EditMode)
+            {
+                return false;
+            }
 
             if (ImGui.BeginPopupContextItem("GameplayContextMenu", ImGuiPopupFlags.MouseButtonRight | ImGuiPopupFlags.NoReopen))
             {

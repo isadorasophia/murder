@@ -1,10 +1,17 @@
-﻿using ImGuiNET;
+﻿using Bang;
+using ImGuiNET;
 using Murder.Core.Geometry;
+using Murder.Core.Graphics;
+using Murder.Editor.Components;
 using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
+using Murder.Editor.Utilities;
+using Murder.Prefabs;
+using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 
 namespace Murder.Editor.CustomFields
 {
@@ -22,6 +29,7 @@ namespace Murder.Editor.CustomFields
             if (Add(out IShape? element))
             {
                 shapes = shapes.Add(element);
+
                 modified = true;
             }
 

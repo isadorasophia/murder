@@ -448,7 +448,10 @@ namespace Murder.Editor.CustomEditors
             {
                 if (ImGui.Button("+\uf0c8"))
                 {
-                    AddComponent(parent, entityInstance, typeof(PositionComponent));
+                    if (!entityInstance.HasComponent(typeof(PositionComponent)))
+                    {
+                        AddComponent(parent, entityInstance, typeof(PositionComponent));
+                    }
                     AddComponent(parent, entityInstance, typeof(ColliderComponent));
                 }
                 ImGuiHelpers.HelpTooltip("Add ColliderComponent");

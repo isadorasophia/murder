@@ -111,10 +111,15 @@ namespace Murder.Editor.Systems
         /// </summary>
         private bool DrawCreateEmptyEntity(World world, EditorHook hook)
         {
+            if (hook.EditorMode == EditorHook.EditorModes.EditMode)
+            {
+                return false;
+            }
+
             if (ImGui.BeginPopupContextItem("GameplayContextMenu", ImGuiPopupFlags.MouseButtonRight | ImGuiPopupFlags.NoReopen))
             {
                 Point screenPosition = ImGui.GetMousePosOnOpeningCurrentPopup().Point();
-
+                ImGui.Separator();
                 if (ImGui.Selectable("Add empty entity"))
                 {
                     Point cursorWorldPosition = hook.LastCursorWorldPosition;
