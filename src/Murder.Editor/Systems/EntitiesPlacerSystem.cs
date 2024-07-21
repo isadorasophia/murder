@@ -4,6 +4,7 @@ using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using ImGuiNET;
+using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
@@ -11,6 +12,7 @@ using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
+using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using Murder.Utilities;
@@ -126,7 +128,8 @@ namespace Murder.Editor.Systems
                         /* name */ null);
                 }
 
-                if (ImGui.Selectable("Add unique prop"))
+                Guid spriteGuid = Guid.Empty;
+                if (SearchBox.SearchAsset(ref spriteGuid, typeof(SpriteAsset), SearchBoxFlags.None, null, "Add Unique Prop"))
                 {
                     Point cursorWorldPosition = hook.LastCursorWorldPosition;
                     string? targetGroup = EditorTileServices.FindTargetGroup(world, hook, cursorWorldPosition);
@@ -134,10 +137,12 @@ namespace Murder.Editor.Systems
                     hook.AddEntityWithStage?.Invoke(
                         [
                             new PositionComponent(cursorWorldPosition),
-                            new SpriteComponent(),
+                            new SpriteComponent(spriteGuid),
                         ],
                         targetGroup,
                         /* name */ null);
+
+                    ImGui.CloseCurrentPopup();
                 }
 
                 ImGui.EndPopup();

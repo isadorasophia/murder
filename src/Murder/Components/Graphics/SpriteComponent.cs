@@ -62,6 +62,9 @@ namespace Murder.Components
 
         public SpriteComponent() { }
 
+        public SpriteComponent(Guid guid) :
+            this(guid, Vector2.Zero, [], 0, false, false, OutlineStyle.Full, Batches2D.GameplayBatchId)
+        { }
         public SpriteComponent(Portrait portrait, int batchId) :
             this(portrait.Sprite, Vector2.Zero, [portrait.AnimationId], 0, false, false, OutlineStyle.Full, batchId)
         { }

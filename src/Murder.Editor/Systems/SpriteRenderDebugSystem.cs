@@ -181,7 +181,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
                         cursorPosition.Y < transform.Y + (ySortOffset + 3) )
                     {
                         color = Color.White;
-                        if (Game.Input.Pressed(MurderInputButtons.LeftClick) && !hook.CursorIsBusy.Any())
+                        if (!hook.UsingGui && Game.Input.Pressed(MurderInputButtons.LeftClick) && !hook.CursorIsBusy.Any())
                         {
                             hook.CursorIsBusy.Add(typeof(SpriteRenderDebugSystem));
                             _draggingY = e.EntityId;

@@ -21,7 +21,8 @@ namespace Murder.Editor.ImGuiExtended
     public enum SearchBoxFlags
     {
         None = 0,
-        Unfolded = 1 << 1
+        Unfolded = 1 << 1,
+        IconOnly = 1 << 2
     }
 
     public static class SearchBox
@@ -513,7 +514,14 @@ namespace Murder.Editor.ImGuiExtended
 
                 const int padding = 6;
                 Vector2 size = new(_searchBoxWidth != -1 ? _searchBoxWidth : ImGui.GetContentRegionAvail().X - padding, ImGui.CalcTextSize(selectedName).Y);
-                if (ImGui.Selectable(selectedName, true, ImGuiSelectableFlags.None, size) || clicked)
+                if (!flags.HasFlag(SearchBoxFlags.IconOnly))
+                {
+                    if (ImGui.Selectable(selectedName, true, ImGuiSelectableFlags.DontClosePopups, size))
+                    {
+                        clicked = true;
+                    }
+                }
+                if (clicked)
                 {
                     ImGui.OpenPopup(id + "_search");
                     _tempSearchText = string.Empty;

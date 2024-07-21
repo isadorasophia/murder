@@ -248,6 +248,21 @@ namespace Murder.Editor.Stages
                             {
                                 EditorHook.EditorMode = EditorHook.EditorModes.EditMode;
                             }
+
+                            if (EditorHook.AllSelectedEntities.Count == 1 &&
+                                EditorHook.AllSelectedEntities.First().Value is Entity selected)
+                            {
+                                if (selected.HasCollider())
+                                {
+                                    var boxSize = selected.GetColliderBoundingBox();
+                                    ImGui.TextColored(Game.Profile.Theme.Faded, $"{boxSize.Width}x{boxSize.Height}px");
+                                }
+                                else if (selected.TryGetSprite() is SpriteComponent sprite && Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid) is SpriteAsset spriteAsset)
+                                {
+                                    ImGui.TextColored(Game.Profile.Theme.Faded, $"{spriteAsset.Size.X}x{spriteAsset.Size.Y}px");
+                                }
+                            }
+
                             ImGui.TextColored(Game.Profile.Theme.Faded, $"{EditorHook.AllSelectedEntities.Count} selected");
                         }
                         else
