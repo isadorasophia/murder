@@ -78,6 +78,7 @@ internal static class StageHelpers
 
         Type[] targetAttributesForDisabledByDefault = [
             typeof(StoryEditorAttribute),
+            typeof(DialogueEditorAttribute),
             typeof(TileEditorAttribute),
             typeof(PathfindEditorAttribute),
             typeof(SoundEditorAttribute),
