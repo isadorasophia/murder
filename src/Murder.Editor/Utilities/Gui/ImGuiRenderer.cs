@@ -182,7 +182,7 @@ namespace Murder.Editor.ImGuiExtended
             {
                 oldTexture.Dispose();
             }
-
+            
             _loadedTextures[id] = texture;
 
             return id;
@@ -196,6 +196,7 @@ namespace Murder.Editor.ImGuiExtended
         public virtual void UnbindTexture(IntPtr textureId)
         {
             _loadedTextures[textureId].Dispose();
+            _loadedTextures.Remove(textureId);
         }
 
         /// <summary>

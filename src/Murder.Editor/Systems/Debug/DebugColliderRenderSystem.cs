@@ -253,11 +253,14 @@ namespace Murder.Editor.Systems
                     {
                         if (context.World.TryGetEntity(child.Key) is Entity childEntity)
                         {
-                            ImGui.Text(child.Value ?? $"Child {child.Key}");
-                            ImGui.SameLine();
-                            if (DrawCreateShapeMenu(childEntity, hook))
+                            if (childEntity.HasCollider())
                             {
-                                ImGui.CloseCurrentPopup();
+                                ImGui.TextColored(Game.Profile.Theme.Faded, child.Value ?? $"Child {child.Key}");
+                                ImGui.SameLine();
+                                if (DrawCreateShapeMenu(childEntity, hook))
+                                {
+                                    ImGui.CloseCurrentPopup();
+                                }
                             }
                         }
                     }

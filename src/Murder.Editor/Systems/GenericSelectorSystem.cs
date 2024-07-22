@@ -729,7 +729,7 @@ namespace Murder.Editor.Systems
                 return;
             }
 
-            if (Game.Input.Down(InputHelpers.OSActionModifier))
+            if (Game.Input.Down(Keys.Space))
             {
                 return;
             }

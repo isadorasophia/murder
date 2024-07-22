@@ -3,6 +3,7 @@ using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using ImGuiNET;
+using Microsoft.Xna.Framework.Input;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Components.Graphics;
@@ -50,7 +51,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
             overrideCurrentTime = timeline.Time;
         }
 
-        bool previewMode = Game.Input.Down(InputHelpers.OSActionModifier);
+        bool previewMode = Game.Input.Down(Keys.Space);
 
         foreach (var e in context.Entities)
         {
