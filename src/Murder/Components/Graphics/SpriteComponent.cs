@@ -6,11 +6,10 @@ using Murder.Core.Graphics;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 using System.Numerics;
-using System.Text.Json.Serialization;
 
 namespace Murder.Components
 {
-    [Requires(typeof(ITransformComponent))]
+    [Requires(typeof(PositionComponent))]
     [CustomName(" Sprite Component")]
     public readonly struct SpriteComponent : IComponent
     {
