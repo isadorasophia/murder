@@ -203,6 +203,9 @@ namespace Murder.Assets
         [GameAssetId(typeof(LocalizationAsset))]
         public ImmutableDictionary<LanguageId, Guid> LocalizationResources = ImmutableDictionary<LanguageId, Guid>.Empty;
 
+        [Tooltip("Aditional collision checks will be done if an entity moves more than X pixels per frame")]
+        public int MinimumVelocityForSweep = 6;
+
         public GameProfile() =>
             FilePath = GameDataManager.GameProfileFileName;
     }

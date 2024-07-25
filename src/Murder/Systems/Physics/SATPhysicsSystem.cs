@@ -11,6 +11,7 @@ using Murder.Diagnostics;
 using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace Murder.Systems.Physics;
@@ -30,6 +31,7 @@ public class SATPhysicsSystem : IFixedUpdateSystem
     {
         Map map = context.World.GetUniqueMap().Map;
         Quadtree qt = Quadtree.GetOrCreateUnique(context.World);
+        int minStepSize = Game.Profile.MinimumVelocityForSweep;
 
         _entityList.Clear();
 
@@ -107,40 +109,74 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                     bool collided = false;
                     int hitId = -1;
                     int hitLayer = -1;
-                    Vector2 moveToPosition = startPosition + velocity;
-                    Vector2 pushout;
 
-                    while (PhysicsServices.GetFirstMtvAt(map, collider.Value, startPosition, moveToPosition, collisionEntities, mask, out int id, out int layer, out pushout)
-                        && exhaustCounter-- > 0)
+                    Vector2 pushout;
+                    bool Step(Vector2 moveToPosition)
                     {
-                        moveToPosition = moveToPosition - pushout;
-                        _hitCounter.Add(id);
-                        hitLayer = layer;
-                        hitId = id;
-                        collided = true;
+                        // If the velocity is low, we can just check the full velocity.
+                        while (PhysicsServices.GetFirstMtvAt(map, collider.Value, startPosition, moveToPosition, collisionEntities, mask, out int id, out int layer, out pushout)
+                            && exhaustCounter-- > 0)
+                        {
+                            moveToPosition = moveToPosition - pushout;
+                            _hitCounter.Add(id);
+                            hitLayer = layer;
+                            hitId = id;
+                            collided = true;
+                        }
+
+                        var endPosition = (moveToPosition - pushout);
+                        if (exhaustCounter <= 0 && _hitCounter.Count >= 2)
+                        {
+                            // Is stuck between 2 (or more!) objects, don't move at all.
+                        }
+                        else
+                        {
+                            e.SetGlobalPosition(endPosition);
+                        }
+
+                        // Some collision was found!
+                        if (collided)
+                        {
+                            e.SendMessage(new CollidedWithMessage(hitId, hitLayer));
+
+                            // Slide the speed accordingly
+                            Vector2 translationVector = startPosition + velocity - moveToPosition;
+                            Vector2 edgePerpendicularToMTV = new Vector2(-translationVector.Y, translationVector.X);
+                            Vector2 normalizedEdge = edgePerpendicularToMTV.Normalized();
+                            float dotProduct = Vector2.Dot(currentVelocity, normalizedEdge);
+                            currentVelocity = normalizedEdge * dotProduct;
+                        }
+
+                        return collided;
                     }
 
-                    var endPosition = (moveToPosition - pushout);
-                    if (exhaustCounter <= 0 && _hitCounter.Count >= 2)
+                    if (velocity.Length() > minStepSize)
                     {
-                        // Is stuck between 2 (or more!) objects, don't move at all.
+                        // If the velocity is too high, we need to split it up into smaller steps.
+                        bool fail = false;
+                        for (int i = 0; i < velocity.Length(); i += minStepSize)
+                        {
+                            Vector2 step = velocity.Normalized() * minStepSize;
+                            Vector2 targetPosition = startPosition + step;
+
+                            if (Step(targetPosition))
+                            {
+                                fail = true;
+                                break;
+                            }
+                        }
+
+                        if (!fail)
+                        {
+                            Vector2 targetPosition = startPosition + velocity;
+                            Step(targetPosition);
+                        }
                     }
                     else
                     {
-                        e.SetGlobalPosition(endPosition);   
-                    }
+                        Vector2 targetPosition = startPosition + velocity;
 
-                    // Some collision was found!
-                    if (collided)
-                    {
-                        e.SendMessage(new CollidedWithMessage(hitId, hitLayer));
-
-                        // Slide the speed accordingly
-                        Vector2 translationVector = startPosition + velocity - moveToPosition;
-                        Vector2 edgePerpendicularToMTV = new Vector2(-translationVector.Y, translationVector.X);
-                        Vector2 normalizedEdge = edgePerpendicularToMTV.Normalized();
-                        float dotProduct = Vector2.Dot(currentVelocity, normalizedEdge);
-                        currentVelocity = normalizedEdge * dotProduct;
+                        Step(targetPosition);
                     }
 
                 }
@@ -155,6 +191,19 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                     e.RemoveVelocity();
                 }
             }
+        }
+    }
+
+    private void NewMethod(Map map, ColliderComponent? collider, int mask, Vector2 startPosition, System.Collections.Immutable.ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)> collisionEntities, ref int exhaustCounter, ref bool collided, ref int hitId, ref int hitLayer, ref Vector2 moveToPosition)
+    {
+        while (PhysicsServices.GetFirstMtvAt(map, collider.Value, startPosition, moveToPosition, collisionEntities, mask, out int id, out int layer, out Vector2 pushout)
+                                    && exhaustCounter-- > 0)
+        {
+            moveToPosition = moveToPosition - pushout;
+            _hitCounter.Add(id);
+            hitLayer = layer;
+            hitId = id;
+            collided = true;
         }
     }
 }
