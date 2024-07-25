@@ -17,7 +17,9 @@ namespace Murder.Systems
             foreach (var e in context.Entities)
             {
                 var agent = e.GetAgent();
-                var hasImpulse = e.TryGetAgentImpulse()?.Impulse.HasValue() ?? false;
+
+                AgentImpulseComponent? impulse = e.TryGetAgentImpulse();
+                bool hasImpulse = impulse?.Impulse.HasValue() ?? false;
 
                 if (!hasImpulse) // Cleanup the impulse
                 {
@@ -25,7 +27,10 @@ namespace Murder.Systems
                     e.SetFriction(agent.Friction);
                 }
 
-                e.RemoveAgentImpulse();
+                if (impulse is not null && impulse.Value.Clear)
+                {
+                    e.RemoveAgentImpulse();
+                }
             }
         }
     }
