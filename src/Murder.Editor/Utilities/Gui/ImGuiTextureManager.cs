@@ -30,7 +30,7 @@ namespace Murder.Editor.ImGuiExtended
             }
 
             IntPtr textureId = GetNextTextureId();
-            Architect.Instance.ImGuiRenderer.BindTexture(textureId, texture, false);
+            Architect.Instance.ImGuiRenderer.BindTexture(textureId, texture, true);
             _images[id] = textureId;
 
             return textureId;
