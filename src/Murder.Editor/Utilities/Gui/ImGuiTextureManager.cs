@@ -13,7 +13,7 @@ namespace Murder.Editor.ImGuiExtended
     /// </summary>
     public class ImGuiTextureManager : IDisposable
     {
-        private readonly CacheDictionary<string, IntPtr> _images = new(512);
+        private readonly CacheDictionary<string, TextureReference> _images = new(512);
 
         private IntPtr GetNextTextureId() => Architect.Instance.ImGuiRenderer.GetNextIntPtr();
 
@@ -24,14 +24,15 @@ namespace Murder.Editor.ImGuiExtended
         /// </summary>
         public IntPtr CacheTexture(string id, Texture2D texture)
         {
-            if (_images.TryGetValue(id, out IntPtr pointer))
+            if (_images.TryGetValue(id, out TextureReference? pointer))
             {
-                return pointer;
+                return pointer.Value;
             }
 
             IntPtr textureId = GetNextTextureId();
             Architect.Instance.ImGuiRenderer.BindTexture(textureId, texture, true);
-            _images[id] = textureId;
+
+            _images[id] = new(textureId);
 
             return textureId;
         }
@@ -42,9 +43,9 @@ namespace Murder.Editor.ImGuiExtended
         /// <param name="id">Identifier used to the texture.</param>
         public IntPtr? FetchTexture(string id)
         {
-            bool fetched = _images.TryGetValue(id, out IntPtr result);
+            bool fetched = _images.TryGetValue(id, out TextureReference? result);
 
-            return fetched ? result : null;
+            return result?.Value;
         }
 
         /// <summary>
@@ -78,10 +79,10 @@ namespace Murder.Editor.ImGuiExtended
         /// </summary>
         public nint? GetEditorImage(string path, string id, float scale)
         {
-            if (_images.TryGetValue(id, out IntPtr textureId))
+            if (_images.TryGetValue(id, out TextureReference? textureId))
             {
                 // There we go! Return it right away.
-                return textureId;
+                return textureId.Value;
             }
 
             if (Game.Data.TryFetchAtlas(AtlasId.Editor) is not TextureAtlas atlas)
@@ -106,10 +107,10 @@ namespace Murder.Editor.ImGuiExtended
         /// </summary>
         public nint? GetImage(Texture2D texture, string id)
         {
-            if (_images.TryGetValue(id, out IntPtr textureId))
+            if (_images.TryGetValue(id, out TextureReference? textureId))
             {
                 // There we go! Return it right away.
-                return textureId;
+                return textureId.Value;
             }
 
             return CacheTexture(id, texture);
@@ -119,24 +120,29 @@ namespace Murder.Editor.ImGuiExtended
         {
             string id = $"preview_{atlasFrameId}";
 
-            if (_images.TryGetValue(id, out IntPtr textureId) &&
-                Architect.Instance.ImGuiRenderer.GetLoadedTexture(textureId) is Texture2D texture)
+            if (_images.TryGetValue(id, out TextureReference? textureId) &&
+                Architect.Instance.ImGuiRenderer.GetLoadedTexture(textureId.Value) is Texture2D texture)
             {
                 // Image is already cached, so draw it right away.
-                DrawImage(textureId, texture, maxSize, scale);
+                DrawImage(textureId.Value, texture, maxSize, scale);
 
                 return true;
             }
 
             if (atlas is null)
             {
-                // Fetch the texture directly from data in the lack of an atlas.
-                Texture2D t = Game.Data.FetchTexture(atlasFrameId);
+                if (textureId is not null)
+                {
+                    // Fetch the texture directly from data in the lack of an atlas.
+                    Texture2D t = Game.Data.FetchTexture(atlasFrameId);
 
-                CacheTexture(atlasFrameId, t);
-                DrawImage(textureId, t, maxSize, scale);
+                    CacheTexture(atlasFrameId, t);
+                    DrawImage(textureId.Value, t, maxSize, scale);
 
-                return true;
+                    return true;
+                }
+
+                return false;
             }
 
             nint? AtlasCoordinatesId = CreateTexture(atlas, atlasFrameId, id, 1f);
@@ -161,6 +167,18 @@ namespace Murder.Editor.ImGuiExtended
         public void Dispose()
         {
             // Dispose textures? Already handled in ImGuiRenderer?
+        }
+
+        private class TextureReference : IDisposable
+        {
+            public IntPtr Value { get; init; }
+
+            public TextureReference(IntPtr value) => Value = value;
+
+            public void Dispose()
+            {
+                Architect.Instance.ImGuiRenderer.UnbindTexture(Value);
+            }
         }
     }
 }
