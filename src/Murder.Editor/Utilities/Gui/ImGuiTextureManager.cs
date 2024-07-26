@@ -13,7 +13,7 @@ namespace Murder.Editor.ImGuiExtended
     /// </summary>
     public class ImGuiTextureManager : IDisposable
     {
-        private readonly CacheDictionary<string, TextureReference> _images = new(512);
+        private readonly CacheDictionary<string, TextureReference> _images = new(1024);
 
         private IntPtr GetNextTextureId() => Architect.Instance.ImGuiRenderer.GetNextIntPtr();
 

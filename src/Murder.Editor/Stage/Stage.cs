@@ -368,6 +368,7 @@ namespace Murder.Editor.Stages
         public void Dispose()
         {
             _world.Dispose();
+            _imGuiRenderer.UnbindTexture(_imGuiRenderTexturePtr);
         }
 
         internal void ResetCamera()

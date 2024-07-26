@@ -36,6 +36,7 @@ namespace Murder.Editor.ImGuiExtended
 
         // Textures
         private readonly Dictionary<IntPtr, Texture2D> _loadedTextures = new();
+        private readonly HashSet<string> _loadedTextureDebugIdentifiers = new();
 
         private int _textureId;
         private IntPtr? _fontTextureId;
@@ -152,16 +153,9 @@ namespace Murder.Editor.ImGuiExtended
                 GameLogger.Error($"{nameof(ImGuiRenderer)}: You have loaded {_loadedTextures.Count} textures. This may cause performance issues. Consider unloading unused textures.");
             }
 
-            _loadedTextures.Add(id, texture);
-
-            texture.Disposing += (o, e) =>
-            {
-                _loadedTextures.Remove(id);
-            };
-
+            AddTexture(id, texture);
             return id;
         }
-
 
         public Texture2D? GetLoadedTexture(IntPtr id)
         {
@@ -182,10 +176,35 @@ namespace Murder.Editor.ImGuiExtended
             {
                 oldTexture.Dispose();
             }
-            
+
+            AddTexture(id, texture);
+            return id;
+        }
+
+        private void AddTexture(IntPtr id, Texture2D texture)
+        {
             _loadedTextures[id] = texture;
 
-            return id;
+            texture.Disposing += (o, e) =>
+            {
+                _loadedTextures.Remove(id);
+
+                if (!string.IsNullOrEmpty(texture.Name))
+                {
+                    _loadedTextureDebugIdentifiers.Remove(texture.Name);
+                }
+            };
+
+            // Debug!
+            if (!string.IsNullOrEmpty(texture.Name))
+            {
+                if (_loadedTextureDebugIdentifiers.Contains(texture.Name))
+                {
+                    GameLogger.Error($"Why are we adding: {texture.Name} twice!?");
+                }
+
+                _loadedTextureDebugIdentifiers.Add(texture.Name);
+            }
         }
 
         public IntPtr GetNextIntPtr() => new IntPtr(_textureId++);
