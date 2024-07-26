@@ -52,7 +52,7 @@ public abstract class SoundShapeTrackerSystem : IFixedUpdateSystem, IReactiveSys
             {
                 foreach (SoundEventIdInfo info in ambience.Events)
                 {
-                    SoundServices.Stop(info.Id, fadeOut: true);
+                    SoundServices.Stop(info.Id, fadeOut: true, e.EntityId);
                 }
             }
         }

@@ -1,4 +1,5 @@
 ﻿using Bang;
+using Bang.Contexts;
 using Bang.Entities;
 using Murder.Components;
 using Murder.Core;
@@ -24,7 +25,6 @@ namespace Murder.Services
                 parent.AddChild(e.EntityId, $"quick_sprite_{_quickSpriteCount++}");
             }
         }
-
 
         /// <summary>
         /// Add an entity which will apply a "fade-in" effect. Darkening the screen to black.

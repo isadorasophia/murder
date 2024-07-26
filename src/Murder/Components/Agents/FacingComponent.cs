@@ -5,6 +5,7 @@ using Murder.Utilities;
 
 namespace Murder.Components;
 
+[KeepOnReplace]
 public readonly struct FacingComponent : IComponent
 {
     /// <summary>
