@@ -300,6 +300,8 @@ namespace Murder.Editor
 
         private void DrawAssetInList(GameAsset asset, Vector4 color, string name)
         {
+            ImGui.PushID($"TabIconList {asset.Guid}");
+
             var selectedColor = CurrentAsset == asset ? Game.Profile.Theme.Faded : Game.Profile.Theme.BgFaded;
             ImGui.PushStyleColor(ImGuiCol.Header, selectedColor);
 
@@ -376,6 +378,8 @@ namespace Murder.Editor
 
                 ImGui.EndPopup();
             }
+
+            ImGui.PopID();
         }
 
         private void CreateAssetButton(Type type)
