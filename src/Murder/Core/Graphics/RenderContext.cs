@@ -153,15 +153,13 @@ public class RenderContext : IDisposable
 
     public virtual Texture2D GetRenderTargetFromEnum(RenderTargets inspectingRenderTarget)
     {
-        Texture2D? target = inspectingRenderTarget switch
+        return inspectingRenderTarget switch
         {
             RenderTargets.MainBufferTarget => _mainTarget,
             RenderTargets.FinalTarget => _finalTarget,
             RenderTargets.UiTarget => _uiTarget,
             _ => default
-        };
-
-        return target ?? throw new ArgumentException($"Unable to find a render target for {inspectingRenderTarget}.");
+        } ?? throw new ArgumentException($"Unable to find a render target for {inspectingRenderTarget}.");
     }
 
     public virtual void Initialize()
