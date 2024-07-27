@@ -354,15 +354,34 @@ namespace Murder.Editor.CustomEditors
                         ImGui.PushStyleColor(ImGuiCol.HeaderActive, Architect.Profile.Theme.RedFaded);
                         ImGui.PushStyleColor(ImGuiCol.Header, Architect.Profile.Theme.RedFaded);
                     }
+                    else
+                    {
+                        ImGui.PushStyleColor(ImGuiCol.HeaderHovered, Architect.Profile.Theme.Accent);
+                        ImGui.PushStyleColor(ImGuiCol.HeaderActive, Architect.Profile.Theme.HighAccent);
+                        ImGui.PushStyleColor(ImGuiCol.Header, Architect.Profile.Theme.BgFaded);
+                    }
+
                     // Draw the component
-                    if (ImGui.TreeNodeEx(componentName, ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.SpanAvailWidth))
+
+                    ImGui.BeginChild(componentName, new Vector2(ImGui.GetContentRegionAvail().X - 20, 19));
+                    bool open = ImGui.TreeNodeEx(componentName, ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.SpanAvailWidth);
+                    if (open)
                     {
                         ImGui.TreePop();
-                        if (ImGuiHelpers.DeleteButton($"Delete_{t}"))
-                        {   
-                            RemoveComponent(parent, entityInstance, t);
-                        }
-                        else if (canRevert && ImGuiHelpers.IconButton('\uf1da', $"revert_{t}", sameLine: true, tooltip: "Revert"))
+                    }
+                    ImGui.EndChild();
+
+                    ImGui.SameLine();
+                    ImGui.SetCursorPosX(ImGui.GetContentRegionMax().X - 20);
+                    if (ImGuiHelpers.DeleteButton($"Delete_{t}"))
+                    {
+                        RemoveComponent(parent, entityInstance, t);
+                        open = false;
+                    }
+
+                    if (open)
+                    {
+                        if (canRevert && ImGuiHelpers.IconButton('\uf1da', $"revert_{t}", sameLine: true, tooltip: "Revert"))
                         {
                             RevertComponent(parent, entityInstance, t);
                         }
@@ -370,7 +389,6 @@ namespace Murder.Editor.CustomEditors
                         {
                             // TODO: This is modifying the memory of all readonly structs.
                             IComponent copy = SerializationHelper.DeepCopy(c);
-                            
                             if (CustomComponent.ShowEditorOf(ref copy))
                             {
                                 ActWithUndo(
@@ -380,12 +398,11 @@ namespace Murder.Editor.CustomEditors
 
                             isOpen = true;
                         }
+                        ImGui.Spacing();
+                        ImGui.Spacing();
+                    }
 
-                    }
-                    if (canRevert)
-                    {
-                        ImGui.PopStyleColor(3);
-                    }
+                    ImGui.PopStyleColor(3);
 
                     if (!Stages.ContainsKey(_asset.Guid))
                     {
