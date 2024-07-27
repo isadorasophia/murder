@@ -242,6 +242,7 @@ public static class ImGuiHelpers
     {
         ImGui.PushStyleColor(ImGuiCol.Text, selected ? selectedColor : unselectedColor);
         var clicked = ImGui.Selectable(icon.ToString());
+        ImGui.PopStyleColor();
         return clicked;
     }
 
@@ -261,8 +262,9 @@ public static class ImGuiHelpers
     {
         var clicked = ShowIcon(icon, selectedColor, unselectedColor, selected);
         ImGui.SameLine();
+        ImGui.PushStyleColor(ImGuiCol.Text, selected ? selectedColor : unselectedColor);
         clicked = ImGui.Selectable(text, selected) || clicked;
-
+        ImGui.PopStyleColor();
         return clicked;
     }
 
