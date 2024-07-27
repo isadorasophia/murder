@@ -183,6 +183,11 @@ namespace Murder.Editor.ImGuiExtended
 
         private void AddTexture(IntPtr id, Texture2D texture)
         {
+            if (_loadedTextures.ContainsKey(id))
+            {
+                return;
+            }
+
             _loadedTextures[id] = texture;
 
             texture.Disposing += (o, e) =>
