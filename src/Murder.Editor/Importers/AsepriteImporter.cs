@@ -69,6 +69,8 @@ namespace Murder.Editor.Importers
             }
 
             SerializeAtlas(Atlas, _pendingPacker, SerializeAtlasFlags.EnableLogging | SerializeAtlasFlags.DeleteTemporaryAtlas);
+
+            _pendingPacker = null;
         }
 
         [Flags]
