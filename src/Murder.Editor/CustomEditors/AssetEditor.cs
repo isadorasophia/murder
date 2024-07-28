@@ -363,21 +363,20 @@ namespace Murder.Editor.CustomEditors
 
                     // Draw the component
 
-                    ImGui.BeginChild(componentName, new Vector2(ImGui.GetContentRegionAvail().X - 20, 19));
+                    ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 10);
+                    if (ImGuiHelpers.DeleteButton($"Delete_{t}"))
+                    {
+                        RemoveComponent(parent, entityInstance, t);
+                    }
+                    ImGui.PopStyleVar();
+
+                    ImGui.SameLine();
                     bool open = ImGui.TreeNodeEx(componentName, ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.SpanAvailWidth);
                     if (open)
                     {
                         ImGui.TreePop();
                     }
-                    ImGui.EndChild();
 
-                    ImGui.SameLine();
-                    ImGui.SetCursorPosX(ImGui.GetContentRegionMax().X - 20);
-                    if (ImGuiHelpers.DeleteButton($"Delete_{t}"))
-                    {
-                        RemoveComponent(parent, entityInstance, t);
-                        open = false;
-                    }
 
                     if (open)
                     {
@@ -398,8 +397,8 @@ namespace Murder.Editor.CustomEditors
 
                             isOpen = true;
                         }
-                        ImGui.Spacing();
-                        ImGui.Spacing();
+
+                        ImGui.Dummy(new Vector2(8, 8));
                     }
 
                     ImGui.PopStyleColor(3);
