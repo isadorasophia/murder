@@ -4,6 +4,7 @@ using Bang.Entities;
 using Murder.Assets;
 using Murder.Assets.Graphics;
 using Murder.Components;
+using Murder.Components.Graphics;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Physics;
@@ -202,6 +203,11 @@ namespace Murder.Services
 
             GameLogger.Error($"Entity {entity.EntityId} doesn's have an Sprite component ({entity.Components.Count()} components, trying to play '{string.Join(',', nextAnimations)}')");
             return null;
+        }
+
+        public static void RestartSpriteAnimation(this Entity entity)
+        {
+            entity.SetAnimationStarted(Game.Now);
         }
 
         public static bool AnimationAvailable(this Entity entity, string id)
