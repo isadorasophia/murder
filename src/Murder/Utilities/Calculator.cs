@@ -317,20 +317,31 @@ namespace Murder.Utilities
         }
 
         /// <summary>
-        /// Remap the 0..1 interval into 0..1, such that the corners are mapped to 0 and the center to 1. You can then rise the parabolar to a power k to control its shape.
+        /// Maps a value within the range [0, 1] to a parabolic shape, where the corners are mapped to 0 and the center is mapped to 1.
+        /// The shape of the parabola can be controlled by the shape parameter.
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="k"></param>
-        /// <returns></returns>
-        public static float Parabola(float x, float k)
+        /// <param name="x">The input value within the range [0, 1].</param>
+        /// <param name="shape">The power to which the parabolic function is raised, controlling the sharpness of the curve.</param>
+        /// <returns>A float value representing the parabolic mapping of the input value.</returns>
+        public static float Parabola(float x, float shape)
         {
-            return MathF.Pow(4.0f * x * (1.0f - x), k);
+            return MathF.Pow(4.0f * x * (1.0f - x), shape);
         }
+
+        /// <summary>
+        /// Maps a value within the range [0, 1] to a power curve shape, where the corners are mapped to 0.
+        /// The shape of the curve can be controlled independently on either side of the curve using the parameters a and b.
+        /// </summary>
+        /// <param name="x">The input value within the range [0, 1].</param>
+        /// <param name="a">The power controlling the shape of the curve near the left corner (x = 0).</param>
+        /// <param name="b">The power controlling the shape of the curve near the right corner (x = 1).</param>
+        /// <returns>A float value representing the power curve mapping of the input value.</returns>
         public static float PowerCurve(float x, float a, float b)
         {
             float k = MathF.Pow(a + b, a + b) / (MathF.Pow(a, a) * MathF.Pow(b, b));
             return k * MathF.Pow(x, a) * MathF.Pow(1.0f - x, b);
         }
+
 
         public static float Approach(float from, float target, float amount)
         {
