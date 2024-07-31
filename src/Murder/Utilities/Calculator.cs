@@ -316,6 +316,22 @@ namespace Murder.Utilities
             return Ease.Evaluate(ClampTime(elapsed, maxTime), ease);
         }
 
+        /// <summary>
+        /// Remap the 0..1 interval into 0..1, such that the corners are mapped to 0 and the center to 1. You can then rise the parabolar to a power k to control its shape.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static float Parabola(float x, float k)
+        {
+            return MathF.Pow(4.0f * x * (1.0f - x), k);
+        }
+        public static float PowerCurve(float x, float a, float b)
+        {
+            float k = MathF.Pow(a + b, a + b) / (MathF.Pow(a, a) * MathF.Pow(b, b));
+            return k * MathF.Pow(x, a) * MathF.Pow(1.0f - x, b);
+        }
+
         public static float Approach(float from, float target, float amount)
         {
             if (from > target)
