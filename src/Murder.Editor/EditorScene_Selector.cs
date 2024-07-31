@@ -337,30 +337,36 @@ namespace Murder.Editor
                     Architect.EditorData.SaveAsset(asset);
                     ImGui.CloseCurrentPopup();
                 }
+
                 if (asset is PrefabAsset prefab && ImGui.MenuItem("Create instance"))
                 {
-                    string instanceName = Architect.EditorData.GetNextName(typeof(PrefabAsset), $"{prefab.Name} Instance", Architect.EditorSettings.AssetNamePattern);
+                    string instanceName = Architect.EditorData.GetNextName(
+                        typeof(PrefabAsset), $"{prefab.Name} Instance", Architect.EditorSettings.AssetNamePattern);
 
                     GameAsset instance = prefab.ToInstanceAsAsset(instanceName);
                     Architect.Data.AddAsset(instance);
 
                     ImGui.CloseCurrentPopup();
                 }
+
                 if (ImGui.MenuItem("Duplicate"))
                 {
-                    string duplicateName = Architect.EditorData.GetNextName(asset.GetType(), asset.Name, Architect.EditorSettings.AssetNamePattern);
+                    string duplicateName = Architect.EditorData.GetNextName(
+                        asset.GetType(), asset.Name, Architect.EditorSettings.AssetNamePattern);
 
                     GameAsset copy = asset.Duplicate(duplicateName);
-                    Architect.Data.AddAsset(copy);
+                    Game.Data.AddAsset(copy);
 
                     OpenAssetEditor(copy, true);
                     ImGui.CloseCurrentPopup();
                 }
+
                 if (asset.CanBeRenamed && ImGui.Selectable("Rename", false, ImGuiSelectableFlags.DontClosePopups))
                 {
                     _newAssetName = asset.Name;
                     ImGui.OpenPopup("Asset Name");
                 }
+
                 if (asset.CanBeDeleted && ImGui.Selectable("Delete", false, ImGuiSelectableFlags.DontClosePopups))
                 {
                     ImGui.OpenPopup("Delete?");

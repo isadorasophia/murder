@@ -271,6 +271,8 @@ namespace Murder.Editor.Stages
             {
                 UntrackEntity(child);
             }
+
+            EditorHook.UnselectEntity(e);
         }
 
         public virtual bool AddComponentForInstance(Guid? parentGuid, Guid entityGuid, IComponent c)

@@ -29,7 +29,7 @@ namespace Murder.Editor.CustomEditors
                 Stage stage = new(imGuiRenderer, renderContext, Stage.StageType.EnableSelectChildren, _asset.Guid);
 
                 int entity = stage.AddEntity((PrefabAsset)_asset);
-                stage.SelectEntity(entity, true);
+                stage.SelectEntity(entity, true, clear: true);
                 stage.EditorHook.EditorMode = EditorHook.EditorModes.EditMode;
                 stage.EditorHook.CanSwitchModes = false;
 

@@ -14,21 +14,43 @@ namespace Murder.Editor.Utilities
 {
     public class EditorHook
     {
-        public enum ShowQuadTree
-        {
-            None,
-            Collision,
-            PushAway,
-            Render,
-            Pathfind
-        }
+        /// <summary>
+        /// Set when a node id is selected in the editor.
+        /// This is used when there is a graph representing a dialog system, for example.
+        /// </summary>
+        public Action<int>? OnNodeSelected;
 
-        public enum EditorModes
-        {
-            ObjectMode = 0,
-            EditMode = 1,
-            PlayMode = 2
-        }
+        public Action<Entity>? OnHoverEntity;
+
+        /// <summary>
+        /// Called whenever an entity is selected (or unselected!).
+        /// </summary>
+        public event Action<Entity, bool>? OnEntitySelected;
+
+        /// <summary>
+        /// Called whenever an entity is opened (or unopened!).
+        /// </summary>
+        public event Action<Entity, bool>? OnEntityOpened;
+
+        public Action<Guid, IComponent[], string?>? AddPrefabWithStage;
+        public Action<IComponent[], string?, string?>? AddEntityWithStage;
+
+        public Action<int>? RemoveEntityWithStage;
+        public Action<int, IComponent>? OnComponentModified;
+
+        /// <summary>
+        /// Duplicate a group of entities from a certain position.
+        /// </summary>
+        public Action<int[], Vector2>? DuplicateEntitiesAt;
+
+        // == Helper fields for the WorldAsset ==
+        public Action<string, IEnumerable<int>>? MoveEntitiesToFolder;
+        public Func<IEnumerable<string>>? GetAvailableFolders;
+
+        public Func<World, Entity, bool>? DrawEntityInspector;
+
+        public Func<Guid, int>? GetEntityIdForGuid;
+        public Func<int, string?>? GetNameForEntityId;
 
         public bool CanSwitchModes = true;
 
@@ -57,14 +79,13 @@ namespace Murder.Editor.Utilities
         public CursorStyle Cursor = CursorStyle.Normal;
 
         private readonly HashSet<int> _hovering = new();
-
         private ImmutableArray<int>? _hoveringCache = default;
 
-        public bool EnableSelectChildren = false;
+        public ImmutableArray<int> Hovering => _hoveringCache ??= _hovering.ToImmutableArray();
 
         public bool IsEntityHovered(int id) => _hovering.Contains(id);
 
-        public ImmutableArray<int> Hovering => _hoveringCache ??= _hovering.ToImmutableArray();
+        public bool EnableSelectChildren = false;
 
         public void HoverEntity(Entity e, bool clear = false)
         {
@@ -85,18 +106,10 @@ namespace Murder.Editor.Utilities
             _hoveringCache = null;
         }
 
-        public Action<Entity>? OnHoverEntity;
-
         private readonly Dictionary<int, Entity> _select = new();
 
         private ImmutableDictionary<int, Entity>? _selectCache = default;
         public ImmutableDictionary<int, Entity> AllSelectedEntities => _selectCache ??= _select.ToImmutableDictionary();
-
-        /// <summary>
-        /// Set when a node id is selected in the editor.
-        /// This is used when there is a graph representing a dialog system, for example.
-        /// </summary>
-        public Action<int>? OnNodeSelected;
 
         public void SelectNode(int id) => OnNodeSelected?.Invoke(id);
 
@@ -151,11 +164,6 @@ namespace Murder.Editor.Utilities
             OnEntitySelected?.Invoke(e, false);
         }
 
-        /// <summary>
-        /// Called whenever an entity is selected (or unselected!).
-        /// </summary>
-        public event Action<Entity, bool>? OnEntitySelected;
-
         private readonly HashSet<int> _openedEntities = new();
 
         private ImmutableArray<int>? _openedEntitiesCache = default;
@@ -182,11 +190,6 @@ namespace Murder.Editor.Utilities
             UnselectEntity(e);
         }
 
-        /// <summary>
-        /// Called whenever an entity is opened (or unopened!).
-        /// </summary>
-        public event Action<Entity, bool>? OnEntityOpened;
-
         private Guid? _entityToBePlaced = null;
 
         /// <summary>
@@ -211,20 +214,6 @@ namespace Murder.Editor.Utilities
 
         public bool DrawSelection = true;
 
-        public Func<World, Entity, bool>? DrawEntityInspector;
-
-        public Action<Guid, IComponent[], string?>? AddPrefabWithStage;
-        public Action<IComponent[], string?, string?>? AddEntityWithStage;
-
-        public Action<int>? RemoveEntityWithStage;
-        public Action<int, IComponent>? OnComponentModified;
-
-        public Func<Guid, int>? GetEntityIdForGuid;
-        public Func<int, string?>? GetNameForEntityId;
-
-        // == Helper fields for the WorldAsset ==
-        public Action<string, IEnumerable<int>>? MoveEntitiesToFolder;
-        public Func<IEnumerable<string>>? GetAvailableFolders;
         public string? FocusGroup = null;
 
         public Point Offset;
@@ -341,5 +330,22 @@ namespace Murder.Editor.Utilities
         {
             EditorMode = playMode ? EditorModes.PlayMode : EditorModes.ObjectMode;
         }
+
+        public enum ShowQuadTree
+        {
+            None,
+            Collision,
+            PushAway,
+            Render,
+            Pathfind
+        }
+
+        public enum EditorModes
+        {
+            ObjectMode = 0,
+            EditMode = 1,
+            PlayMode = 2
+        }
+
     }
 }

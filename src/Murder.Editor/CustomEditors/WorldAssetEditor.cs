@@ -1,4 +1,5 @@
 ﻿using Bang.Components;
+using Bang.Entities;
 using ImGuiNET;
 using Murder.Assets;
 using Murder.Attributes;
@@ -6,6 +7,7 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Core.Input;
 using Murder.Diagnostics;
 using Murder.Editor.Assets;
 using Murder.Editor.Attributes;
@@ -87,6 +89,8 @@ namespace Murder.Editor.CustomEditors
 
             Stages[guid].EditorHook.MoveEntitiesToFolder += MoveEntitiesToGroup;
             Stages[guid].EditorHook.GetAvailableFolders = GetAvailableGroups;
+
+            Stages[guid].EditorHook.DuplicateEntitiesAt += DuplicateAndSelectEntitiesAt;
 
             if (Architect.EditorSettings.WorldAssetInfo.TryGetValue(guid, out PersistWorldStageInfo info))
             {
@@ -365,7 +369,7 @@ namespace Murder.Editor.CustomEditors
 
             if (!inspectingWindowOpen)
             {
-                stage.SelectEntity(selected, select: false);
+                stage.SelectEntity(selected, select: false, clear: true);
             }
         }
 
@@ -379,15 +383,17 @@ namespace Murder.Editor.CustomEditors
             AddInstance(copy);
         }
 
-        protected virtual void AddInstance(EntityInstance instance)
+        protected virtual int AddInstance(EntityInstance instance)
         {
             GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
             GameLogger.Verify(_world is not null);
 
             _world.AddInstance(instance);
-            Stages[_asset.Guid].AddEntity(instance);
+            int entityId = Stages[_asset.Guid].AddEntity(instance);
 
             _world.FileChanged = true;
+
+            return entityId;
         }
 
         protected override void DeleteInstance(IEntity? parent, Guid instanceGuid)
@@ -491,6 +497,54 @@ namespace Murder.Editor.CustomEditors
             empty.SetName(name);
         }
 
+        protected void DuplicateAndSelectEntitiesAt(int[] entities, Vector2 offset)
+        {
+            GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
+
+            List<Guid> createdEntities = new();
+
+            ActWithUndo(
+                @do: () =>
+                {
+                    Stage stage = Stages[_asset.Guid];
+                    stage.EditorHook.UnselectAll();
+
+                    foreach (int entityId in entities)
+                    {
+                        if (stage.FindInstance(entityId) is not EntityInstance instance)
+                        {
+                            GameLogger.Error($"Unable to copy entity {entityId}.");
+                            continue;
+                        }
+
+                        EntityInstance copy = SerializationHelper.DeepCopy(instance);
+                        if (copy.HasComponent(typeof(PositionComponent)))
+                        {
+                            PositionComponent transform =
+                                (PositionComponent)copy.GetComponent(typeof(PositionComponent));
+
+                            copy.AddOrReplaceComponent(transform.Add(offset));
+                        }
+
+                        copy.UpdateGuid(Guid.NewGuid());
+
+                        createdEntities.Add(copy.Guid);
+
+                        int result = AddInstance(copy);
+                        stage.SelectEntity(result, select: true, clear: false);
+                    }
+
+                    _asset.FileChanged = true;
+                },
+                @undo: () =>
+                {
+                    foreach (Guid createdInstance in createdEntities)
+                    {
+                        DeleteInstance(parent: null, createdInstance);
+                    }
+                });
+        }
+
         protected virtual void DeleteEntityFromWorld(int id)
         {
             GameLogger.Verify(_world is not null && _asset is not null && Stages.ContainsKey(_asset.Guid));
@@ -529,8 +583,9 @@ namespace Murder.Editor.CustomEditors
                     // Only move entities if the room belongs to an actual group.
                     if (groupForTilegrid is not null)
                     {
-                        MoveGroupOfEntities(
-                            entity.Guid, from: previousTileGrid.Origin, to: tileGrid.Origin, groupForTilegrid);
+                        // It's actually been nice to not move entities with the room, but let's see...
+                        // MoveGroupOfEntities(
+                        //    entity.Guid, from: previousTileGrid.Origin, to: tileGrid.Origin, groupForTilegrid);
                     }
                 }
                 else
@@ -575,8 +630,8 @@ namespace Murder.Editor.CustomEditors
                     continue;
                 }
 
-                IMurderTransformComponent? transform =
-                    (IMurderTransformComponent)entity.GetComponent(typeof(IMurderTransformComponent));
+                PositionComponent transform =
+                    (PositionComponent)entity.GetComponent(typeof(PositionComponent));
 
                 ReplaceComponent(parent: null, entity, transform.Add(worldDelta));
             }

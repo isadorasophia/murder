@@ -264,7 +264,7 @@ namespace Murder.Editor.CustomEditors
 
                 if (ImGui.Selectable(name, isSelected))
                 {
-                    _selecting = stage.SelectEntity(entity.Guid, select: true);
+                    _selecting = stage.SelectEntity(entity.Guid, select: true, clear: true);
                     if (_selecting is -1)
                     {
                         // Unable to find the entity. This probably means that it has been deactivated.

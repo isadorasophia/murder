@@ -10,17 +10,17 @@ namespace Murder.Editor.Stages
 {
     public partial class Stage
     {
-        public int SelectEntity(Guid entityGuid, bool select)
+        public int SelectEntity(Guid entityGuid, bool select, bool clear)
         {
             if (_instanceToWorld.TryGetValue(entityGuid, out int id))
             {
-                return SelectEntity(id, select);
+                return SelectEntity(id, select, clear);
             }
 
             return -1;
         }
 
-        public int SelectEntity(int id, bool select)
+        public int SelectEntity(int id, bool select, bool clear)
         {
             if (_world.TryGetEntity(id) is Entity e)
             {
@@ -32,7 +32,7 @@ namespace Murder.Editor.Stages
 
                 if (select)
                 {
-                    EditorHook.SelectEntity(e, clear: true);
+                    EditorHook.SelectEntity(e, clear);
                 }
                 else
                 {
