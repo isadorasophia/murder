@@ -193,17 +193,4 @@ public class SATPhysicsSystem : IFixedUpdateSystem
             }
         }
     }
-
-    private void NewMethod(Map map, ColliderComponent? collider, int mask, Vector2 startPosition, System.Collections.Immutable.ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)> collisionEntities, ref int exhaustCounter, ref bool collided, ref int hitId, ref int hitLayer, ref Vector2 moveToPosition)
-    {
-        while (PhysicsServices.GetFirstMtvAt(map, collider.Value, startPosition, moveToPosition, collisionEntities, mask, out int id, out int layer, out Vector2 pushout)
-                                    && exhaustCounter-- > 0)
-        {
-            moveToPosition = moveToPosition - pushout;
-            _hitCounter.Add(id);
-            hitLayer = layer;
-            hitId = id;
-            collided = true;
-        }
-    }
 }
