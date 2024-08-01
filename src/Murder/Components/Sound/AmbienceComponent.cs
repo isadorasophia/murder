@@ -18,7 +18,7 @@ public readonly struct SoundEventIdInfo
 }
 
 /// <summary>
-/// Component that will listen to interaction areas for starting and stopping
+/// Component that will listen to interaction Areas for starting and stopping
 /// ambience sounds.
 /// </summary>
 [CustomName("\uf186 Ambience component")]

@@ -700,7 +700,7 @@ namespace Murder.Editor.Data.Graphics
         }
 
         /// <summary>
-        /// Calculates the sum of the areas of all the given <see cref="PackingRectangle"/>-s.
+        /// Calculates the sum of the Areas of all the given <see cref="PackingRectangle"/>-s.
         /// </summary>
         public static uint CalculateTotalArea(ReadOnlySpan<PackingRectangle> rectangles)
         {

@@ -88,7 +88,7 @@ namespace Murder.Systems
             {
                 var normalized = impulse.Impulse.Normalized();
                 
-                if (areaList.GetLatest() is InsideMovementModAreaComponent.AreaInfo insideArea)
+                if (areaList.GetLatest() is AreaInfo insideArea)
                 {
                     float influence = OrientationHelper.GetOrientationAmount(normalized, insideArea.Orientation);
 

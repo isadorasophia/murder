@@ -3,7 +3,6 @@ using Murder.Attributes;
 using Murder.Core;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
-using System.Numerics;
 
 namespace Murder.Components;
 
@@ -25,53 +24,70 @@ public readonly struct MovementModAreaComponent : IComponent
     }
 }
 
+public struct AreaInfo
+{
+    public readonly float SpeedMultiplier = 0f;
+    public readonly Orientation Orientation;
+    public readonly float Slide;
+
+    public AreaInfo(MovementModAreaComponent area)
+    {
+        SpeedMultiplier = area.SpeedMultiplier;
+        Orientation = area.Orientation;
+        Slide = area.Slide;
+    }
+
+    public AreaInfo(float multiplier)
+    {
+        SpeedMultiplier = multiplier;
+
+        Orientation = Orientation.Any;
+        Slide = 0;
+    }
+}
+
 [RuntimeOnly]
 [DoNotPersistOnSave]
 public readonly struct InsideMovementModAreaComponent : IComponent
 {
-    public readonly ImmutableArray<AreaInfo> areas;
-    public struct AreaInfo
-    {
-        public readonly float SpeedMultiplier = 0f;
-        public readonly Orientation Orientation;
-        public readonly float Slide;
+    public readonly ImmutableArray<AreaInfo> Areas;
 
-        public AreaInfo(MovementModAreaComponent area)
-        {
-            SpeedMultiplier = area.SpeedMultiplier;
-            Orientation = area.Orientation;
-            Slide = area.Slide;
-        }
-    }
-    public InsideMovementModAreaComponent(MovementModAreaComponent area)
-    {
-        areas = ImmutableArray.Create(new AreaInfo(area));
-    }
+    public InsideMovementModAreaComponent(MovementModAreaComponent area) : this(new AreaInfo(area)) { }
+
+    public InsideMovementModAreaComponent(AreaInfo info) : this([info]) { }
 
     public InsideMovementModAreaComponent(ImmutableArray<AreaInfo> areas)
     {
-        this.areas = areas;
+        Areas = areas;
     }
 
-    public InsideMovementModAreaComponent AddArea(MovementModAreaComponent area)
+    public InsideMovementModAreaComponent AddArea(AreaInfo info)
     {
-        return new InsideMovementModAreaComponent(areas.Add(new AreaInfo(area)));
+        return new InsideMovementModAreaComponent(Areas.Add(info));
     }
 
-    internal InsideMovementModAreaComponent? RemoveArea(MovementModAreaComponent area)
+    public InsideMovementModAreaComponent? RemoveArea(AreaInfo info)
     {
-        var index = areas.IndexOf(new AreaInfo(area));
+        var index = Areas.IndexOf(info);
         if (index < 0)
+        {
             return null;
+        }
 
-        return new InsideMovementModAreaComponent(areas.RemoveAt(index));
+        return new InsideMovementModAreaComponent(Areas.RemoveAt(index));
     }
 
-    internal AreaInfo? GetLatest()
-    {
-        if (areas.IsEmpty)
-            return null;
+    public InsideMovementModAreaComponent AddArea(MovementModAreaComponent area) => AddArea(new AreaInfo(area));
 
-        return areas[areas.Length - 1];
+    public InsideMovementModAreaComponent? RemoveArea(MovementModAreaComponent area) => RemoveArea(new AreaInfo(area));
+
+    public AreaInfo? GetLatest()
+    {
+        if (Areas.IsEmpty)
+        {
+            return null;
+        }
+
+        return Areas[Areas.Length - 1];
     }
 }

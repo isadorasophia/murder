@@ -20,37 +20,22 @@ namespace Murder.Components
         public readonly string IdlePrefix = "idle";
         public readonly string WalkPrefix = "walk";
 
-        /// <summary>
-        /// LEGACY for keeping serialization, do no use
-        /// use <see cref="SpriteFacingComponent"/> to configure this instead.
-        /// </summary>
-        public string Suffix { set { } }
-
-        /// <summary>
-        /// LEGACY for keeping serialization, do no use
-        /// use <see cref="SpriteFacingComponent"/> to configure this instead.
-        /// </summary>
-        public readonly float AngleSuffixOffset { set { } }
-
-        /// <summary>
-        /// LEGACY for keeping serialization, do no use
-        /// use <see cref="SpriteFacingComponent"/> to configure this instead.
-        /// </summary>
-        public readonly bool FlipWest { set { } }
-
         public AgentSpriteComponent()
         {
         }
 
-        private AgentSpriteComponent(Guid guid, int batch, int ySort, string idlePrefix, string walkPrefix, bool flipWest)
+        private AgentSpriteComponent(Guid animationGuid, int targetSpriteBatch, int ySortOffset, string idlePrefix, string walkPrefix)
         {
-            AnimationGuid = guid;
-            TargetSpriteBatch = batch;
+            AnimationGuid = animationGuid;
+            TargetSpriteBatch = targetSpriteBatch;
 
-            YSortOffset = ySort;
+            YSortOffset = ySortOffset;
 
             IdlePrefix = idlePrefix;
             WalkPrefix = walkPrefix;
         }
+
+        public AgentSpriteComponent WithIdleAndWalkPrefix(string idle, string walk) =>
+            new AgentSpriteComponent(AnimationGuid, TargetSpriteBatch, YSortOffset, idle, walk);
     }
 }
