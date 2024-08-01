@@ -368,6 +368,16 @@ namespace Murder.Editor.CustomEditors
                     {
                         RemoveComponent(parent, entityInstance, t);
                     }
+
+                    if (canRevert)
+                    {
+                        ImGui.SameLine();
+                        if (ImGuiHelpers.IconButton('\uf1da', $"revert_{t}", sameLine: true, tooltip: "Revert"))
+                        {
+                            RevertComponent(parent, entityInstance, t);
+                        }
+                    }
+
                     ImGui.PopStyleVar();
 
                     ImGui.SameLine();
@@ -380,25 +390,17 @@ namespace Murder.Editor.CustomEditors
 
                     if (open)
                     {
-                        if (canRevert && ImGuiHelpers.IconButton('\uf1da', $"revert_{t}", sameLine: true, tooltip: "Revert"))
-                        {
-                            RevertComponent(parent, entityInstance, t);
-                        }
-                        else
-                        {
-                            // TODO: This is modifying the memory of all readonly structs.
-                            IComponent copy = SerializationHelper.DeepCopy(c);
-                            if (CustomComponent.ShowEditorOf(ref copy))
-                            {
-                                ActWithUndo(
-                                    @do: () => ReplaceComponent(parent, entityInstance, copy),
-                                    undo: () => ReplaceComponent(parent, entityInstance, c));
-                            }
 
-                            isOpen = true;
+                        // TODO: This is modifying the memory of all readonly structs.
+                        IComponent copy = SerializationHelper.DeepCopy(c);
+                        if (CustomComponent.ShowEditorOf(ref copy))
+                        {
+                            ActWithUndo(
+                                @do: () => ReplaceComponent(parent, entityInstance, copy),
+                                undo: () => ReplaceComponent(parent, entityInstance, c));
                         }
 
-                        ImGui.Dummy(new Vector2(8, 8));
+                        isOpen = true;
                     }
 
                     ImGui.PopStyleColor(3);
