@@ -8,6 +8,7 @@ using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using Murder.Editor.Utilities.Serialization;
 using System.Numerics;
+using static Murder.Assets.Localization.LocalizationAsset;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -42,29 +43,43 @@ namespace Murder.Editor.CustomEditors
             LocalizationAsset? asset = _referenceResource is not null ?
                 Game.Data.TryGetAsset<LocalizationAsset>(_referenceResource.Value) : null;
 
-            bool fixButtonSelected = _referenceResource is null || isDefaultResource ?
-                ImGuiHelpers.SelectedIconButton('\uf0f1') :
-                ImGuiHelpers.IconButton('\uf0f1', $"fix_{_localization.Guid}");
+            bool fixButtonSelected = ImGuiHelpers.IconButton('\uf0f1', $"fix_{_localization.Guid}");
 
-            if (fixButtonSelected && !isDefaultResource && _referenceResource is not null)
+            if (fixButtonSelected)
             {
-                if (asset is not null)
+                if (!isDefaultResource && _referenceResource is not null)
                 {
-                    foreach (LocalizedStringData data in _localization.Resources)
+                    if (asset is not null)
                     {
-                        // Localized data is not here, so let's add it.
-                        if (!asset.HasResource(data.Guid))
+                        foreach (LocalizedStringData data in _localization.Resources)
                         {
-                            _localization.RemoveResource(data.Guid, force: true);
+                            // Localized data is not here, so let's add it.
+                            if (!asset.HasResource(data.Guid))
+                            {
+                                _localization.RemoveResource(data.Guid, force: true);
+                                _localization.FileChanged = true;
+                            }
+                        }
+                    }
+
+                    AddMissingResourcesFromAsset(asset);
+                }
+                else if (isDefaultResource)
+                {
+                    // Remove all resources that are no longer used.
+                    foreach (ResourceDataForAsset data in _localization.DialogueResources)
+                    {
+                        if (Game.Data.TryGetAsset(data.DialogueResourceGuid) is null)
+                        {
+                            _localization.RemoveResourceForDialogue(data.DialogueResourceGuid);
+                            _localization.FileChanged = true;
                         }
                     }
                 }
-
-                AddMissingResourcesFromAsset(asset);
             }
-
-            ImGuiHelpers.HelpTooltip(_referenceResource != _localization.Guid ? 
-                "Fix references from the default resource" : "Default resource");
+            
+            ImGuiHelpers.HelpTooltip(!isDefaultResource ? 
+                "Fix references from the default resource" : "Fix strings not referenced");
 
             ImGui.SameLine();
             

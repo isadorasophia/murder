@@ -19,7 +19,7 @@ internal static class LocalizationExporter
 
         StringBuilder builder = new();
 
-        builder.AppendLine("Guid,Original,Translated,Notes");
+        builder.AppendLine("Guid,Speaker,Original,Translated,Notes");
 
         HashSet<Guid> dialogueResources = new();
         foreach (LocalizationAsset.ResourceDataForAsset data in asset.DialogueResources)
@@ -39,7 +39,7 @@ internal static class LocalizationExporter
             }
 
             LocalizedStringData? referenceData = reference.TryGetResource(data.Guid);
-            builder.AppendLine($"{data.Guid},\"{referenceData?.String}\",\"{data.String}\",\"{data.Notes}\"");
+            builder.AppendLine($"{data.Guid},\"No speaker\",\"{referenceData?.String}\",\"{data.String}\",\"{data.Notes}\"");
         }
 
         // Now, put all these right at the end of the document.

@@ -148,6 +148,29 @@ public class LocalizationAsset : GameAsset
 
     public bool HasResource(Guid id) => GuidToResourceIndex.ContainsKey(id);
 
+    public void RemoveResourceForDialogue(Guid dialogueAssetId)
+    {
+        var builder = ImmutableArray.CreateBuilder<ResourceDataForAsset>();
+        builder.AddRange(_dialogueResources);
+
+        for (int i = 0; i < builder.Count; ++i)
+        {
+            ResourceDataForAsset data = builder[i];
+            if (data.DialogueResourceGuid == dialogueAssetId)
+            {
+                foreach (Guid r in data.Resources)
+                {
+                    RemoveResource(r);
+                }
+
+                builder.RemoveAt(i);
+                i--;
+            }
+        }
+
+        _dialogueResources = builder.ToImmutable();
+    }
+
     public void SetResourcesForDialogue(Guid guid, ImmutableArray<Guid> resources)
     {
         for (int i = 0; i < _dialogueResources.Length; ++i)
