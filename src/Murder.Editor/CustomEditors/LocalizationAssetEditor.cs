@@ -233,7 +233,7 @@ namespace Murder.Editor.CustomEditors
             if (ImGui.BeginPopup($"notes_{g}"))
             {
                 string text = localizedStringData.Notes ?? string.Empty;
-                if (ImGui.InputText("##notes_name", ref text, 128, ImGuiInputTextFlags.AutoSelectAll))
+                if (ImGui.InputText("##notes_name", ref text, 1024, ImGuiInputTextFlags.AutoSelectAll))
                 {
                     _localization.SetResource(localizedStringData with { Notes = text });
                 }

@@ -14,6 +14,8 @@ internal static class LocalizationExporter
         Game.Profile.LocalizationPath,
          $"{name}.csv");
 
+    private static string Escape(string? text) => text is null ? string.Empty : text.Replace("\"", "\"\"");
+
     public static bool ExportToCsv(LocalizationAsset asset)
     {
         LocalizationAsset reference = Architect.EditorData.GetDefaultLocalization();
@@ -40,7 +42,7 @@ internal static class LocalizationExporter
             }
 
             LocalizedStringData? referenceData = reference.TryGetResource(data.Guid);
-            builder.AppendLine($"{data.Guid},\"No speaker\",\"{referenceData?.String}\",\"{data.String}\",\"{data.Notes}\"");
+            builder.AppendLine($"{data.Guid},\"No speaker\",\"{Escape(referenceData?.String)}\",\"{Escape(data.String)}\",\"{data.Notes}\"");
         }
 
         // Now, put all these right at the end of the document.
@@ -60,7 +62,7 @@ internal static class LocalizationExporter
                 string speakerName = Game.Data.TryGetAsset<SpeakerAsset>(localizedDialogueData.Speaker)?.SpeakerName ?? "No speaker";
 
                 builder.AppendLine(
-                    $"{data.Value.Guid},\"{speakerName}\",\"{referenceData?.String}\",\"{data.Value.String}\",\"{data.Value.Notes}\"");
+                    $"{data.Value.Guid},\"{speakerName}\",\"{Escape(referenceData?.String)}\",\"{Escape(data.Value.String)}\",\"{data.Value.Notes}\"");
             }
         }
 
