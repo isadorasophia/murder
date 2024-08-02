@@ -158,9 +158,9 @@ public class LocalizationAsset : GameAsset
             ResourceDataForAsset data = builder[i];
             if (data.DialogueResourceGuid == dialogueAssetId)
             {
-                foreach (Guid r in data.Resources)
+                foreach (LocalizedDialogueData r in data.DataResources)
                 {
-                    RemoveResource(r);
+                    RemoveResource(r.Guid);
                 }
 
                 builder.RemoveAt(i);
@@ -171,47 +171,47 @@ public class LocalizationAsset : GameAsset
         _dialogueResources = builder.ToImmutable();
     }
 
-    public void SetResourcesForDialogue(Guid guid, ImmutableArray<Guid> resources)
+    public void SetResourcesForDialogue(Guid guid, ImmutableArray<LocalizedDialogueData> resources)
     {
         for (int i = 0; i < _dialogueResources.Length; ++i)
         {
             ResourceDataForAsset data = _dialogueResources[i];
             if (data.DialogueResourceGuid == guid)
             {
-                HashSet<Guid> newResources = resources.ToHashSet();
-                foreach (Guid previousResource in data.Resources)
+                HashSet<LocalizedDialogueData> newResources = resources.ToHashSet();
+                foreach (LocalizedDialogueData previousResource in data.DataResources)
                 {
                     if (newResources.Contains(previousResource))
                     {
                         continue;
                     }
 
-                    RemoveResource(previousResource);
+                    RemoveResource(previousResource.Guid);
                 }
 
-                _dialogueResources = _dialogueResources.SetItem(i, data with { Resources = resources });
+                _dialogueResources = _dialogueResources.SetItem(i, data with { DataResources = resources });
                 return;
             }
         }
 
         _dialogueResources = _dialogueResources.Add(
-            new ResourceDataForAsset() with { DialogueResourceGuid = guid, Resources = resources });
+            new ResourceDataForAsset() with { DialogueResourceGuid = guid, DataResources = resources });
     }
 
     /// <summary>
     /// Expose all resources tied to a particular dialogue.
     /// </summary>
-    public ImmutableArray<Guid> FetchResourcesForDialogue(Guid guid)
+    public ImmutableArray<LocalizedDialogueData> FetchResourcesForDialogue(Guid guid)
     {
         foreach (ResourceDataForAsset data in _dialogueResources)
         {
             if (data.DialogueResourceGuid == guid)
             {
-                return data.Resources;
+                return data.DataResources;
             }
         }
 
-        return ImmutableArray<Guid>.Empty;
+        return [];
     }
 
     public readonly struct ResourceDataForAsset
@@ -219,8 +219,25 @@ public class LocalizationAsset : GameAsset
         /// <summary>
         /// Which asset originated this resource and its respective strings.
         /// </summary>
-        public readonly Guid DialogueResourceGuid { get; init; }
+        public readonly Guid DialogueResourceGuid { get; init; } = Guid.Empty;
 
-        public readonly ImmutableArray<Guid> Resources { get; init; }
+        public readonly ImmutableArray<LocalizedDialogueData> DataResources { get; init; } = [];
+
+        public ResourceDataForAsset() { }
     }
+}
+
+public readonly record struct LocalizedDialogueData
+{
+    /// <summary>
+    /// Guid for the string itself.
+    /// </summary>
+    public readonly Guid Guid;
+
+    /// <summary>
+    /// Guid for the speaker.
+    /// </summary>
+    public readonly Guid Speaker;
+
+    public LocalizedDialogueData(Guid speaker, Guid guid) => (Guid, Speaker) = (guid, speaker);
 }

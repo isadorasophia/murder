@@ -38,7 +38,7 @@ namespace Murder.Editor.Data
         /// <summary>
         /// These are the localized strings produced during this dialogue.
         /// </summary>
-        private ImmutableArray<Guid>.Builder _localizedStrings = ImmutableArray.CreateBuilder<Guid>();
+        private ImmutableArray<LocalizedDialogueData>.Builder _localizedStrings = ImmutableArray.CreateBuilder<LocalizedDialogueData>();
 
         /// <summary>
         /// These are all the previous localized strings that existed in the .gum file.
@@ -64,7 +64,7 @@ namespace Murder.Editor.Data
             _matchedComponents = new();
             _matchedPortraits = new();
 
-            _localizedStrings = ImmutableArray.CreateBuilder<Guid>();
+            _localizedStrings = ImmutableArray.CreateBuilder<LocalizedDialogueData>();
 
             LocalizationAsset localizationAsset = Game.Data.GetDefaultLocalization();
             _previousStringsInScript = FetchResourcesForAsset(localizationAsset, asset.Guid);
@@ -87,12 +87,12 @@ namespace Murder.Editor.Data
 
         private Dictionary<string, LocalizedString> FetchResourcesForAsset(LocalizationAsset localizationAsset, Guid characterGuid)
         {
-            ImmutableArray<Guid> resources = localizationAsset.FetchResourcesForDialogue(characterGuid);
+            ImmutableArray<LocalizedDialogueData> resources = localizationAsset.FetchResourcesForDialogue(characterGuid);
 
             Dictionary<string, LocalizedString> result = new();
-            foreach (Guid resource in resources)
+            foreach (LocalizedDialogueData resource in resources)
             {
-                LocalizedStringData? data = localizationAsset.TryGetResource(resource);
+                LocalizedStringData? data = localizationAsset.TryGetResource(resource.Guid);
                 if (data is null)
                 {
                     continue;
@@ -104,7 +104,7 @@ namespace Murder.Editor.Data
             return result;
         }
 
-        private LocalizedString? TryGetLocalizedString(string? text)
+        private LocalizedString? TryGetLocalizedString(Guid speaker, string? text)
         {
             if (text is null)
             {
@@ -117,7 +117,7 @@ namespace Murder.Editor.Data
                 data = localizationAsset.AddResource(text, isGenerated: true);
             }
 
-            _localizedStrings.Add(data.Id);
+            _localizedStrings.Add(new(speaker, data.Id));
             return data;
         }
 
@@ -276,7 +276,7 @@ namespace Murder.Editor.Data
                 // If this matches, it means that the user previously set the portrait with a custom value.
                 // We override whatever was set in the dialog.
                 _matchedPortraits.Add(id);
-                return new(portraitInfo.Speaker, portraitInfo.Portrait, TryGetLocalizedString(gumLine.Text), gumLine.Delay, @event);
+                return new(portraitInfo.Speaker, portraitInfo.Portrait, TryGetLocalizedString(portraitInfo.Speaker, gumLine.Text), gumLine.Delay, @event);
             }
 
             string? gumSpeaker = gumLine.Speaker;
@@ -305,7 +305,7 @@ namespace Murder.Editor.Data
                 }
             }
 
-            return new(speaker, portrait, TryGetLocalizedString(gumLine.Text), gumLine.Delay, @event);
+            return new(speaker, portrait, TryGetLocalizedString(speaker ?? _speakerOwner, gumLine.Text), gumLine.Delay, @event);
         }
 
         private Guid? FindSpeaker(string name)

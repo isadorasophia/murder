@@ -3,6 +3,7 @@ using Microsoft.VisualBasic.FileIO;
 using Murder.Diagnostics;
 using System.Text;
 using Murder.Serialization;
+using Murder.Assets;
 
 namespace Murder.Editor.Utilities.Serialization;
 
@@ -24,9 +25,9 @@ internal static class LocalizationExporter
         HashSet<Guid> dialogueResources = new();
         foreach (LocalizationAsset.ResourceDataForAsset data in asset.DialogueResources)
         {
-            foreach (Guid g in data.Resources)
+            foreach (LocalizedDialogueData g in data.DataResources)
             {
-                dialogueResources.Add(g);
+                dialogueResources.Add(g.Guid);
             }
         }
 
@@ -46,18 +47,20 @@ internal static class LocalizationExporter
         // Why, do you ask? Absolutely no reason. It just seemed reasonable that generated strings came later.
         foreach (LocalizationAsset.ResourceDataForAsset dialogueData in asset.DialogueResources)
         {
-            foreach (Guid g in dialogueData.Resources)
+            foreach (LocalizedDialogueData localizedDialogueData in dialogueData.DataResources)
             {
-                LocalizedStringData? data = asset.TryGetResource(g);
+                LocalizedStringData? data = asset.TryGetResource(localizedDialogueData.Guid);
                 if (data is null)
                 {
                     continue;
                 }
 
-                LocalizedStringData? referenceData = reference.TryGetResource(g);
+                LocalizedStringData? referenceData = reference.TryGetResource(data.Value.Guid);
+
+                string speakerName = Game.Data.TryGetAsset<SpeakerAsset>(localizedDialogueData.Speaker)?.SpeakerName ?? "No speaker";
 
                 builder.AppendLine(
-                    $"{data.Value.Guid},\"{referenceData?.String}\",\"{data.Value.String}\",\"{data.Value.Notes}\"");
+                    $"{data.Value.Guid},\"{speakerName}\",\"{referenceData?.String}\",\"{data.Value.String}\",\"{data.Value.Notes}\"");
             }
         }
 
