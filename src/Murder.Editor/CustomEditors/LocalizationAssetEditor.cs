@@ -1,6 +1,7 @@
 ﻿using ImGuiNET;
 using Murder.Assets.Localization;
 using Murder.Core.Graphics;
+using Murder.Core.Input;
 using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.ImGuiExtended;
@@ -236,6 +237,11 @@ namespace Murder.Editor.CustomEditors
                 if (ImGui.InputText("##notes_name", ref text, 1024, ImGuiInputTextFlags.AutoSelectAll))
                 {
                     _localization.SetResource(localizedStringData with { Notes = text });
+                }
+
+                if (ImGui.Button("Ok!") || Game.Input.Pressed(MurderInputButtons.Submit))
+                {
+                    ImGui.CloseCurrentPopup();
                 }
 
                 ImGui.EndPopup();

@@ -31,6 +31,11 @@ namespace Murder.Assets
         public readonly string? Portrait = null;
 
         /// <summary>
+        /// Notes regarding this script. This will give context when localizing it.
+        /// </summary>
+        public readonly string? LocalizationNotes = null;
+
+        /// <summary>
         /// List of tasks or events that the <see cref="Situations"/> may do.
         /// </summary>
         [Serialize]

@@ -4,6 +4,7 @@ using Murder.Diagnostics;
 using System.Text;
 using Murder.Serialization;
 using Murder.Assets;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Murder.Editor.Utilities.Serialization;
 
@@ -49,6 +50,18 @@ internal static class LocalizationExporter
         // Why, do you ask? Absolutely no reason. It just seemed reasonable that generated strings came later.
         foreach (LocalizationAsset.ResourceDataForAsset dialogueData in asset.DialogueResources)
         {
+            if (Game.Data.TryGetAsset<CharacterAsset>(dialogueData.DialogueResourceGuid) is CharacterAsset characterAsset)
+            {
+                if (characterAsset.LocalizationNotes is null)
+                {
+                    builder.AppendLine($"## {characterAsset.GetSimplifiedName()} ##");
+                }
+                else
+                {
+                    builder.AppendLine($"## {characterAsset.GetSimplifiedName()} ##,\"{characterAsset.LocalizationNotes}\"");
+                }
+            }
+
             foreach (LocalizedDialogueData localizedDialogueData in dialogueData.DataResources)
             {
                 LocalizedStringData? data = asset.TryGetResource(localizedDialogueData.Guid);

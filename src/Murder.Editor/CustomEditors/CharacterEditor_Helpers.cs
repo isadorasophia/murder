@@ -38,6 +38,9 @@ namespace Murder.Editor.CustomEditors
         protected static readonly Lazy<EditorMember?> MemberForPortrait = new(() =>
             typeof(CharacterAsset).TryGetFieldForEditor(nameof(CharacterAsset.Portrait)));
 
+        protected static readonly Lazy<EditorMember?> MemberForNotes = new(() =>
+            typeof(CharacterAsset).TryGetFieldForEditor(nameof(CharacterAsset.LocalizationNotes)));
+
         protected static readonly Lazy<ImmutableArray<(string, EditorMember)>> MembersForCharacter = new(() =>
         {
             Dictionary<string, EditorMember> members =

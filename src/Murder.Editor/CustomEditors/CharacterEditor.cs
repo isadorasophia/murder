@@ -1,7 +1,9 @@
 ﻿using ImGuiNET;
 using Murder.Assets;
+using Murder.Assets.Localization;
 using Murder.Core.Dialogs;
 using Murder.Core.Graphics;
+using Murder.Core.Input;
 using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
@@ -103,6 +105,7 @@ namespace Murder.Editor.CustomEditors
                 float totalHeight = ImGui.GetWindowContentRegionMax().Y - 100;
 
                 DrawSpeaker();
+                DrawNotes();
                 DrawSituations(info, 150);
                 DrawCurrentDialog(info, totalHeight - 200);
 
@@ -161,6 +164,49 @@ namespace Murder.Editor.CustomEditors
             }
 
             ImGui.Spacing();
+        }
+
+        private void DrawNotes()
+        {
+            GameLogger.Verify(_script is not null);
+
+            // == Notes ==
+            if (ImGuiHelpers.BlueIcon('\uf10d', "notes_toggle"))
+            {
+                ImGui.OpenPopup("notes_description");
+            }
+
+            string? notes = _script.LocalizationNotes;
+            ImGuiHelpers.HelpTooltip("Update description");
+
+            if (!string.IsNullOrEmpty(notes))
+            {
+                ImGui.SameLine();
+                ImGui.TextWrapped(notes);
+            }
+
+            ImGui.Dummy(new System.Numerics.Vector2(0, 10));
+
+            if (ImGui.BeginPopup("notes_description"))
+            {
+                string text = notes ?? string.Empty;
+
+                if (ImGui.InputText("##notes_name", ref text, 1024, ImGuiInputTextFlags.AutoSelectAll))
+                {
+                    if (MemberForNotes.Value is EditorMember notesMember)
+                    {
+                        notesMember.SetValue(_script, text);
+                        _script.FileChanged = true;
+                    }
+                }
+
+                if (ImGui.Button("Ok!") || Game.Input.Pressed(MurderInputButtons.Submit))
+                {
+                    ImGui.CloseCurrentPopup();
+                }
+
+                ImGui.EndPopup();
+            }
         }
 
         private void DrawSituations(ScriptInformation info, float height)
