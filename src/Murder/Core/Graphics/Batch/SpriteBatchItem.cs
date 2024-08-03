@@ -1,8 +1,10 @@
 ﻿// Based on https://github.com/lucas-miranda/Raccoon
 
 using Microsoft.Xna.Framework.Graphics;
+using Murder.Core.Extensions;
 using Murder.Core.Geometry;
 using Murder.Utilities;
+using System.Runtime.CompilerServices;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 
@@ -151,12 +153,12 @@ public class SpriteBatchItem
 
             // Apply offset and flipping
             transformedVertex += drawInfo.Offset.ToXnaVector2();
-            if (drawInfo.ImageFlip.HasFlag(ImageFlip.Horizontal))
+            if (drawInfo.ImageFlip.NonAllocatingHasFlag(ImageFlip.Horizontal))
             {
                 transformedVertex.X = -transformedVertex.X;
             }
             
-            if (drawInfo.ImageFlip.HasFlag(ImageFlip.Vertical))
+            if (drawInfo.ImageFlip.NonAllocatingHasFlag(ImageFlip.Vertical))
             {
                 transformedVertex.Y = -transformedVertex.Y;
             }
@@ -177,6 +179,4 @@ public class SpriteBatchItem
             IndexData[i * 3 + 2] = i + 2;
         }
     }
-
-
 }
