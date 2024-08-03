@@ -4,7 +4,6 @@ using Murder.Diagnostics;
 using System.Text;
 using Murder.Serialization;
 using Murder.Assets;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Murder.Editor.Utilities.Serialization;
 
@@ -106,7 +105,7 @@ internal static class LocalizationExporter
 
             // Read tokens for this row
             string[]? tokens = parser.ReadFields();
-            if (tokens is null || tokens[0].StartsWith("Guid"))
+            if (tokens is null || tokens[0].StartsWith("Guid") || tokens[0].StartsWith('#'))
             {
                 continue;
             }
@@ -130,8 +129,8 @@ internal static class LocalizationExporter
             /* not really used? */
             /* string original = tokens[1]; */
 
-            string translated = tokens.Length > 2 ? tokens[2] : string.Empty;
-            string? notes = tokens.Length > 3 ? tokens[3] : null;
+            string translated = tokens.Length > 3 ? tokens[3] : string.Empty;
+            string? notes = tokens.Length > 4 ? tokens[4] : null;
 
             asset.UpdateOrSetResource(guid, translated, notes);
         }
