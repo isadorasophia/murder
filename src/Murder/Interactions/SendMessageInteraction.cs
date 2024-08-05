@@ -15,6 +15,9 @@ public readonly struct SendMessageInteraction : IInteraction
 
     public SendMessageInteraction() { }
 
+    public SendMessageInteraction(IMessage? message, TargetEntity target) =>
+        (Message, Target) = (message, target);
+
     public void Interact(World world, Entity interactor, Entity? interacted)
     {
         if (interacted is null || Message is null)
