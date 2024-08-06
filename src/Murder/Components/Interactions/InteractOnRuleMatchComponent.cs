@@ -30,7 +30,12 @@ namespace Murder.Components
         /// <summary>
         /// Always interact whenever the rule gets triggered (added or modified).
         /// </summary>
-        Always
+        Always,
+
+        /// <summary>
+        /// Remove InteractOnRuleMatchComponent after this is triggered.
+        /// </summary>
+        RemoveComponent
     }
 
     [Story]
@@ -40,7 +45,7 @@ namespace Murder.Components
         public readonly InteractOn InteractOn = InteractOn.AddedOrModified;
 
         [Tooltip("Expected behavior once the rule is met.")]
-        public readonly AfterInteractRule AfterInteraction = AfterInteractRule.InteractOnlyOnce;
+        public readonly AfterInteractRule AfterInteraction = AfterInteractRule.RemoveComponent;
 
         /// <summary>
         /// This will only be triggered once the component has been interacted with.
