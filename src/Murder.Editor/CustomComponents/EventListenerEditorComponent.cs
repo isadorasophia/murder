@@ -61,7 +61,6 @@ namespace Murder.Editor.CustomComponents
             // ======
             // Add new event.
             // ======
-            ImGui.SameLine();
             string addEventPopupId = "popup_add_event_sprite";
             if (ImGuiHelpers.IconButton('\uf055', "add_events"))
             {
