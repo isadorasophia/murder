@@ -190,9 +190,7 @@ namespace Murder.Editor.CustomEditors
                 {
                     ImGui.TextColored(Game.Profile.Theme.Faded, $"Instance of");
                     ImGui.SameLine();
-                    ImGui.TextColored(Game.Profile.Theme.White, $"{name}");
-                    ImGui.SameLine();
-                    if (ImGui.SmallButton(""))
+                    if (ImGui.TextLink($"{name}"))
                     {
                         if (prefabEntityInstance.PrefabRef.CanFetch && prefabEntityInstance.PrefabRef.Fetch() is PrefabAsset asset)
                         {
