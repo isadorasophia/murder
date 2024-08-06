@@ -57,7 +57,7 @@ namespace Murder.Systems.Physics
 
                 // Actors and Hitboxes interact with triggers.
                 // Triggers don't touch other triggers, and so on.
-                bool thisIsAnActor = (collider.Layer & (CollisionLayersBase.TRIGGER)) == 0;
+                bool thisIsAnActor = (collider.Layer & (CollisionLayersBase.ACTOR)) != 0;
 
                 _others.Clear();
                 qt.Collision.Retrieve(collider.GetBoundingBox(e.GetGlobalTransform().Point), _others);
