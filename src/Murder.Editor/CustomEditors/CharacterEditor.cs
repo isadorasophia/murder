@@ -102,7 +102,7 @@ namespace Murder.Editor.CustomEditors
 
                 ImGui.TableNextColumn();
 
-                float totalHeight = ImGui.GetWindowContentRegionMax().Y - 100;
+                float totalHeight = ImGui.GetContentRegionAvail().Y - 100;
 
                 DrawSpeaker();
                 DrawNotes();

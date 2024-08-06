@@ -40,7 +40,7 @@ namespace Murder.Editor.CustomEditors
             bool showOpenedEntities = stage.EditorHook.AllOpenedEntities.Length > 0;
             if (showOpenedEntities)
             {
-                float height = ImGui.GetContentRegionMax().Y - 10;
+                float height = ImGui.GetCursorPosY() + ImGui.GetContentRegionAvail().Y - 5;
                 float dockOpenedEntitiesSize = height - dockShowEntitiesSize;
 
                 uint dockId = 555;

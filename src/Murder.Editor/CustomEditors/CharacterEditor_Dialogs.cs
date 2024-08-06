@@ -277,7 +277,7 @@ namespace Murder.Editor.CustomEditors
                     string value = LocalizationServices.GetLocalizedString(line.Text.Value);
 
                     float textHeight = (ImGui.GetItemRectSize().Y * .45f -
-                        ImGui.CalcTextSize(value, wrapWidth: ImGui.GetWindowContentRegionMax().X - ImGui.GetCursorPosX()).Y) / 2f;
+                        ImGui.CalcTextSize(value, wrapWidth: ImGui.GetContentRegionAvail().X).Y) / 2f;
 
                     ImGui.SetCursorPosY(ImGui.GetCursorPosY() + textHeight);
 

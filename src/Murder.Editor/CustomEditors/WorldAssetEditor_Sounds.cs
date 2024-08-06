@@ -25,7 +25,7 @@ namespace Murder.Editor.CustomEditors
             bool modified = false;
 
             if (_dockShowEntitiesSize <= 0)
-                _dockShowEntitiesSize = Calculator.RoundToInt(ImGui.GetContentRegionMax().Y / 2f);
+                _dockShowEntitiesSize = Calculator.RoundToInt(ImGui.GetContentRegionAvail().Y / 2f);
 
             ImGuiHelpers.DrawSplitter("##splitter_sound_tab_1", true, 8, ref _dockShowEntitiesSize, 100);
 
@@ -39,7 +39,7 @@ namespace Murder.Editor.CustomEditors
             bool showOpenedEntities = stage.EditorHook.AllOpenedEntities.Length > 0;
             if (showOpenedEntities)
             {
-                float height = ImGui.GetContentRegionMax().Y - 10;
+                float height = ImGui.GetCursorPosY() + ImGui.GetContentRegionAvail().Y - 20;
                 float dockOpenedEntitiesSize = height - _dockShowEntitiesSize;
 
                 uint dockId = 555;

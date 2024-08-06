@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ImGui.NET" Version="1.90.9.1" />
+    <PackageReference Include="ImGui.NET" Version="1.91.0.1" />
     <PackageReference Include="SkiaSharp" Version="2.88.8" />
   </ItemGroup>
 

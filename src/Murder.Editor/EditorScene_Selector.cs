@@ -361,13 +361,13 @@ namespace Murder.Editor
                     ImGui.CloseCurrentPopup();
                 }
 
-                if (asset.CanBeRenamed && ImGui.Selectable("Rename", false, ImGuiSelectableFlags.DontClosePopups))
+                if (asset.CanBeRenamed && ImGui.Selectable("Rename", false, ImGuiSelectableFlags.NoAutoClosePopups))
                 {
                     _newAssetName = asset.Name;
                     ImGui.OpenPopup("Asset Name");
                 }
 
-                if (asset.CanBeDeleted && ImGui.Selectable("Delete", false, ImGuiSelectableFlags.DontClosePopups))
+                if (asset.CanBeDeleted && ImGui.Selectable("Delete", false, ImGuiSelectableFlags.NoAutoClosePopups))
                 {
                     ImGui.OpenPopup("Delete?");
                 }

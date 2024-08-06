@@ -25,7 +25,7 @@ internal partial class WorldAssetEditor
         bool modified = false;
 
         using TableMultipleColumns table = new("editor_pathfind_settings", ["\uf1de", "Tile Settings"], flags: ImGuiTableFlags.BordersInnerH,
-            (ImGuiTableColumnFlags.WidthFixed, -1), (ImGuiTableColumnFlags.WidthFixed, (int)ImGui.GetWindowContentRegionMax().X));
+            (ImGuiTableColumnFlags.WidthFixed, -1), (ImGuiTableColumnFlags.WidthFixed, (int)ImGui.GetContentRegionAvail().X));
 
         // Do this so we can have a padding space between tables. There is probably a fancier api for this.
         ImGui.TableSetupColumn("Table");

@@ -78,7 +78,7 @@ namespace Murder.Editor.CustomEditors
 
                 ImGui.TableNextColumn();
 
-                float height = ImGui.GetWindowContentRegionMax().Y - 60;
+                float height = ImGui.GetContentRegionAvail().Y - 60;
                 ImGui.BeginChild("particles_table", new System.Numerics.Vector2(-1, height));
 
                 if (TreeEntityGroupNode("Emitter", Game.Profile.Theme.White, icon: '\uf0c2'))

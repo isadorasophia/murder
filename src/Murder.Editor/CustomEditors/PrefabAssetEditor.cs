@@ -118,10 +118,6 @@ namespace Murder.Editor.CustomEditors
 
             ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Accent);
 
-            int availableWidth = (int)ImGui.GetWindowContentRegionMax().X;
-
-            ImGui.PushItemWidth(availableWidth * .24f);
-
             PrefabAsset prefab = (PrefabAsset)_asset;
             if (ImGui.TreeNodeEx("Dimensions"))
             {
@@ -139,8 +135,6 @@ namespace Murder.Editor.CustomEditors
             {
                 Stages[_asset.Guid].ClearDimension(prefab.Guid);
             }
-
-            ImGui.PopItemWidth();
 
             ImGui.PopStyleColor();
         }

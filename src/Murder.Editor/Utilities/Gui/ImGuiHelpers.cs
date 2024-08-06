@@ -564,7 +564,7 @@ public static class ImGuiHelpers
                     bool changed = false;
                     changed |= ImGui.Checkbox($"##{id}-{i}-layer", ref isChecked);
                     ImGui.SameLine();
-                    if (ImGui.Selectable(prettyNames[i], isChecked, ImGuiSelectableFlags.DontClosePopups))
+                    if (ImGui.Selectable(prettyNames[i], isChecked, ImGuiSelectableFlags.NoAutoClosePopups))
                     {
                         changed = true;
                         isChecked = !isChecked;

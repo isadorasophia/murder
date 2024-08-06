@@ -356,7 +356,7 @@ namespace Murder.Editor.CustomEditors
                         position = ImGui.GetItemRectMin();
                         float mouseX = ImGui.GetMousePos().X - position.X - 10 /* cursor offset...? */;
 
-                        Vector2 area = ImGui.GetContentRegionMax();
+                        Vector2 area = ImGui.GetContentRegionAvail();
                         float padding = 6;
 
                         var drawList = ImGui.GetWindowDrawList();
@@ -374,8 +374,19 @@ namespace Murder.Editor.CustomEditors
 
                         for (int i = 0; i < selectedAnimation.FrameCount; i++)
                         {
-                            float frameDuration = selectedAnimation.FramesDuration[i];
-                            float framePercent = frameDuration / (selectedAnimation.AnimationDuration * 1000);
+                            float framePercent;
+                            float frameDuration;
+                            if (selectedAnimation.AnimationDuration == 0 && selectedAnimation.FramesDuration[i] == 0)
+                            {
+                                framePercent = 1;
+                                frameDuration = 1;
+                            }
+                            else
+                            {
+                                frameDuration = selectedAnimation.FramesDuration[i];
+                                framePercent = frameDuration / (MathF.Max(0.0001f, selectedAnimation.AnimationDuration) * 1000);
+                            }
+
                             float width = framePercent * (area.X - padding * 2);
 
                             Vector2 framePosition = position + new Vector2(currentPosition, padding);

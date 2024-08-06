@@ -505,10 +505,11 @@ namespace Murder.Editor.ImGuiExtended
                 {
                     clicked = ImGuiHelpers.IconButton('\uf055', $"search_{id}");
                     ImGui.SameLine();
-                    ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
+                    ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Accent);
                 }
 
-                ImGui.PushStyleColor(ImGuiCol.Header, Game.Profile.Theme.BgFaded);
+                ImGui.PushStyleColor(ImGuiCol.Header, Game.Profile.Theme.Bg);
+                ImGui.PushStyleColor(ImGuiCol.HeaderHovered, Game.Profile.Theme.Faded);
 
                 string selectedName = settings.InitialText;
 
@@ -516,7 +517,7 @@ namespace Murder.Editor.ImGuiExtended
                 Vector2 size = new(_searchBoxWidth != -1 ? _searchBoxWidth : ImGui.GetContentRegionAvail().X - padding, ImGui.CalcTextSize(selectedName).Y);
                 if (!flags.HasFlag(SearchBoxFlags.IconOnly))
                 {
-                    if (ImGui.Selectable(selectedName, true, ImGuiSelectableFlags.DontClosePopups, size))
+                    if (ImGui.Selectable(selectedName, true, ImGuiSelectableFlags.NoAutoClosePopups, size))
                     {
                         clicked = true;
                     }
@@ -527,7 +528,7 @@ namespace Murder.Editor.ImGuiExtended
                     _tempSearchText = string.Empty;
                     _searchBoxSelection = 0;
                 }
-                ImGui.PopStyleColor(2);
+                ImGui.PopStyleColor(3);
 
                 if (ImGui.IsItemHovered() && settings.HasInitialValue)
                 {
