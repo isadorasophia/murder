@@ -2,6 +2,7 @@
 using Bang.Components;
 using Murder.Helpers;
 using Murder.Utilities;
+using System.Diagnostics;
 
 namespace Murder.Components;
 
@@ -35,5 +36,7 @@ public readonly struct FacingComponent : IComponent
     {
         Angle = (angle % (2 * MathF.PI) + 2 * MathF.PI) % (2 * MathF.PI);
         _direction = DirectionHelper.FromAngle(angle);
+
+        Debug.WriteLine(_direction);
     }
 }

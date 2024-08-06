@@ -27,7 +27,7 @@ namespace Murder.Systems
                     e.SetFriction(agent.Friction);
                 }
 
-                if (impulse is not null && impulse.Value.Clear)
+                if (impulse is not null && !impulse.Value.Flags.HasFlag(AgentImpulseFlags.DoNotClear))
                 {
                     e.RemoveAgentImpulse();
                 }
