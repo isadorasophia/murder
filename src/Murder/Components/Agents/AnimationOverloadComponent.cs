@@ -70,6 +70,9 @@ namespace Murder.Components
         public AnimationOverloadComponent(string animationId, bool loop, bool ignoreFacing) : this(animationId, -1, loop, ignoreFacing)
         { }
 
+        public AnimationOverloadComponent(ImmutableArray<string> animationId, bool loop, bool ignoreFacing) : this(animationId, -1, loop, ignoreFacing, Game.Now)
+        { }
+
         public AnimationOverloadComponent(string animationId, bool loop, bool ignoreFacing, float startTime) : this(animationId, -1, loop, ignoreFacing, startTime)
         { }
 
@@ -92,6 +95,16 @@ namespace Murder.Components
             this(animations, duration, loop, ignoreFacing, current, sortOffset, customSprite, Game.Now)
         { }
 
+        public AnimationOverloadComponent(ImmutableArray<string> animationId, float duration, bool loop, bool ignoreFacing, float startTime)
+        {
+            _animationId = animationId;
+            Duration = duration;
+            Loop = loop;
+            IgnoreFacing = ignoreFacing;
+
+            Start = startTime;
+            _customSprite = Guid.Empty;
+        }
         public AnimationOverloadComponent(string animationId, float duration, bool loop, bool ignoreFacing, float startTime)
         {
             _animationId = [animationId];
