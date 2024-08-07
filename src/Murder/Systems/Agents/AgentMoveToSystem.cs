@@ -37,7 +37,11 @@ namespace Murder.Systems.Agents
                         // Start slowing down
                         var distance = MathF.Sqrt(distanceSq);
                         var ratio = Calculator.Remap(distance, move.MinDistance, move.SlowDownDistance, 0.5f, 1);
-                        e.SetAgentImpulse(delta.Normalized() * ratio, AgentImpulseFlags.IgnoreFacing);
+
+                        AgentImpulseFlags flags = distanceSq < (MathF.Pow(move.SlowDownDistance, 2) / 4f) ?
+                            AgentImpulseFlags.IgnoreFacing : AgentImpulseFlags.None;
+
+                        e.SetAgentImpulse(delta.Normalized() * ratio, flags);
                     }
                     else
                     {
