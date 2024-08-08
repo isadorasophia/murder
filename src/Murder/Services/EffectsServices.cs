@@ -80,8 +80,14 @@ namespace Murder.Services
             }
             else
             {
-                e.SetHighlightSprite(highlight);
-                e.TryFetchParent()?.SetHighlightSprite(highlight);
+                if (!e.HasSprite())
+                {
+                    e.TryFetchParent()?.SetHighlightSprite(highlight);
+                }
+                else
+                {
+                    e.SetHighlightSprite(highlight);
+                }
             }
         }
 
