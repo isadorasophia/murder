@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Murder.Utilities
 {
-    public static class StringHelper
+    public static partial class StringHelper
     {
         public static bool FuzzyMatch(string searchTerm, string target)
         {
@@ -105,9 +105,8 @@ namespace Murder.Utilities
         /// <returns></returns>
         public static string Cleanup(this string input)
         {
-
             // Replace the found characters with an empty string
-            string output = Regex.Replace(input, "(?<!\n)\n(?!\n)", " ");
+            string output = CleanupReturnsCharacters().Replace(input, " ");
 
             // Replace the found characters with a single '\n' character
             // output = Regex.Replace(output, "\n(?!\n)|\n\n", "\n");
@@ -180,5 +179,8 @@ namespace Murder.Utilities
 
             return $"{char.ToUpper(input[0])}{input[1..]}";
         }
+
+        [GeneratedRegex("(?<!\n)\n(?!\n)")]
+        private static partial Regex CleanupReturnsCharacters();
     }
 }

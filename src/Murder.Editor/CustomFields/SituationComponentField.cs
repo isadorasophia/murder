@@ -1,10 +1,12 @@
 ﻿using ImGuiNET;
 using Murder.Assets;
+using Murder.Attributes;
 using Murder.Components;
 using Murder.Core.Dialogs;
 using Murder.Editor.CustomEditors;
 using Murder.Editor.Reflection;
 using Murder.Interactions;
+using Murder.Services;
 using System.Collections.Immutable;
 
 namespace Murder.Editor.CustomFields
@@ -17,7 +19,9 @@ namespace Murder.Editor.CustomFields
             bool modified = false;
             SituationComponent situation = (SituationComponent)fieldValue!;
 
-            if (DrawSituationField(situation.Character, situation.Situation, out int result))
+            bool showFirstLinePreview = AttributeExtensions.IsDefined(member, typeof(ShowFirstLineAttribute));
+
+            if (DrawSituationField(situation.Character, situation.Situation, showFirstLinePreview, out int result))
             {
                 situation = situation.WithSituation(result);
                 modified = true;
@@ -28,7 +32,7 @@ namespace Murder.Editor.CustomFields
             return (modified, situation);
         }
 
-        public static bool DrawSituationField(Guid character, int situation, out int result)
+        public static bool DrawSituationField(Guid character, int situation, bool showFirstLinePreview, out int result)
         {
             result = 0;
 
@@ -36,6 +40,12 @@ namespace Murder.Editor.CustomFields
             {
                 ImGui.TextColored(Game.Profile.Theme.Warning, "Choose a valid character first!");
                 return false;
+            }
+
+            if (showFirstLinePreview)
+            {
+                string line = DialogueServices.FetchFirstLine(world: null, target: null, new(character, situation));
+                ImGui.Text(line);
             }
 
             ImmutableArray<(string name, int id)> situations = CharacterEditor.FetchAllSituations(asset);
@@ -84,7 +94,7 @@ namespace Murder.Editor.CustomFields
             ImGui.TableNextColumn();
             ImGui.PushItemWidth(-1);
 
-            bool modified = DrawSituationField(character, situation, out result);
+            bool modified = DrawSituationField(character, situation, showFirstLinePreview: false, out result);
 
             ImGui.PopItemWidth();
             return modified;

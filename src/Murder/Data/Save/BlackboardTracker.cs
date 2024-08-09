@@ -576,7 +576,7 @@ namespace Murder.Save
         /// <param name="world">World.</param>
         /// <param name="entityId">Entity which will be used to check for components requirements.</param>
         /// <param name="weight">The weight of this match. Zero if there is a no match.</param>
-        public bool Matches(Criterion criterion, Guid? character, World world, int? entityId, out int weight)
+        public bool Matches(Criterion criterion, Guid? character, World? world, int? entityId, out int weight)
         {
             weight = 1;
 
@@ -673,6 +673,7 @@ namespace Murder.Save
                 case FactKind.Component:
                     if (criterion.Fact.ComponentType is Type componentTarget &&
                         entityId is not null &&
+                        world is not null &&
                         world.TryGetEntity(entityId.Value) is Entity target)
                     {
                         bool hasComponent = target.HasComponent(componentTarget);

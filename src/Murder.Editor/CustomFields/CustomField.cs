@@ -66,7 +66,7 @@ public abstract class CustomField
 
         if (value is not null)
         {
-            if (Nullable.GetUnderlyingType(member.Type) != null || member.Type.IsInterface)
+            if (Nullable.GetUnderlyingType(member.Type) != null || member.Type.IsInterface || member.Type == typeof(string))
             {
                 bool delete = ImGuiHelpers.IconButton('', $"##{member.Name}_delete", Game.Profile.Theme.White, Game.Profile.Theme.BgFaded);
                 ImGuiHelpers.HelpTooltip("Restore default value");

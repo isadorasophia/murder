@@ -79,7 +79,7 @@ namespace Murder.Core.Dialogs
         /// Returns whether the active dialog state for this dialogue is valid or not.
         /// </summary>
         [MemberNotNullWhen(true, nameof(_currentDialog))]
-        public bool HasNext(World world, Entity? target, bool track = false)
+        public bool HasNext(World? world, Entity? target, bool track = false)
         {
             // Are we in the initial state? If so, calculate the next outcome.
             if (_currentDialog == 0)
@@ -134,7 +134,7 @@ namespace Murder.Core.Dialogs
             return d.Lines.Length > 0;
         }
 
-        public DialogLine? NextLine(World world, Entity? target = null)
+        public DialogLine? NextLine(World? world, Entity? target = null)
         {
             if (!HasNext(world, target, track: true))
             {
@@ -201,7 +201,7 @@ namespace Murder.Core.Dialogs
         /// This looks for the next dialog most eligible to be triggered.
         /// </summary>
         [MemberNotNullWhen(true, nameof(_currentDialog))]
-        private bool TryMatchNextDialog(World world, bool track, Entity? target = null)
+        private bool TryMatchNextDialog(World? world, bool track, Entity? target = null)
         {
             if (_currentDialog is null)
             {
@@ -295,7 +295,7 @@ namespace Murder.Core.Dialogs
         /// <summary>
         /// Returns the dialog with the highest score in <paramref name="candidates"/>.
         /// </summary>
-        private int? ChooseBestScoreDialog(World world, Entity? target, IList<int> candidates)
+        private int? ChooseBestScoreDialog(World? world, Entity? target, IList<int> candidates)
         {
             BlackboardTracker tracker = Game.Data.ActiveSaveData.BlackboardTracker;
 
@@ -331,7 +331,7 @@ namespace Murder.Core.Dialogs
         /// <summary>
         /// Returns the first dialog that matches in <paramref name="candidates"/>.
         /// </summary>
-        private int? ChooseNextDialog(World world, Entity? target, IList<int> candidates)
+        private int? ChooseNextDialog(World? world, Entity? target, IList<int> candidates)
         {
             foreach (int dialogIndex in candidates)
             {
@@ -354,10 +354,10 @@ namespace Murder.Core.Dialogs
             return RandomExtensions.AnyOf(Game.Random, candidates);
         }
 
-        public bool CheckRequirements(World world, ImmutableArray<CriterionNode> requirements, out int score) =>
+        public bool CheckRequirements(World? world, ImmutableArray<CriterionNode> requirements, out int score) =>
             CheckRequirements(world, target: null, requirements, out score);
 
-        private bool CheckRequirements(World world, Entity? target, ImmutableArray<CriterionNode> requirements, out int score)
+        private bool CheckRequirements(World? world, Entity? target, ImmutableArray<CriterionNode> requirements, out int score)
         {
             bool valid = true;
             score = 1;
@@ -431,7 +431,7 @@ namespace Murder.Core.Dialogs
             return valid;
         }
 
-        public void DoChoice(int choice, World world, Entity? target = null)
+        public void DoChoice(int choice, World? world, Entity? target = null)
         {
             Debug.Assert(_currentDialog is not null);
 
@@ -450,7 +450,7 @@ namespace Murder.Core.Dialogs
             }
         }
 
-        private bool DoActionsForActiveDialog(World world, Entity? target)
+        private bool DoActionsForActiveDialog(World? world, Entity? target)
         {
             // First, do all the actions for this dialog.
             if (_currentDialog != null && ActiveDialog.Actions is ImmutableArray<DialogAction> actions)
@@ -460,7 +460,7 @@ namespace Murder.Core.Dialogs
                 BlackboardTracker tracker = Game.Data.ActiveSaveData.BlackboardTracker;
                 foreach (DialogAction action in actions)
                 {
-                    if (action.ComponentValue is not null)
+                    if (world is not null && action.ComponentValue is not null)
                     {
                         actionEntity ??= CreateEntityForAction(world, target);
 

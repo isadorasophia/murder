@@ -4,6 +4,7 @@ using Murder.Assets;
 using Murder.Components;
 using Murder.Core.Dialogs;
 using Murder.Diagnostics;
+using System.Text;
 
 namespace Murder.Services
 {
@@ -27,7 +28,7 @@ namespace Murder.Services
             return new(line, Game.NowUnscaled);
         }
 
-        public static Line[] FetchAllLines(World world, Entity target, SituationComponent situation)
+        public static Line[] FetchAllLines(World? world, Entity? target, SituationComponent situation)
         {
             CharacterRuntime? character = CreateCharacterFrom(situation.Character, situation.Situation);
             if (character is null)
@@ -54,7 +55,32 @@ namespace Murder.Services
             return lines?.ToArray() ?? Array.Empty<Line>();
         }
 
-        public static string FetchFirstLine(World world, Entity? target, SituationComponent situation)
+        public static string FetchAllLinesSeparatedBy(World? world, Entity? target, SituationComponent situation, string separator)
+        {
+            bool first = true;
+
+            StringBuilder builder = new();
+            foreach (Line line in FetchAllLines(world, target, situation))
+            {
+                if (line.IsText && line.Text is LocalizedString localizedString)
+                {
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        builder.Append(separator);
+                    }
+
+                    builder.Append(LocalizationServices.GetLocalizedString(localizedString));
+                }
+            }
+
+            return builder.ToString();
+        }
+
+        public static string FetchFirstLine(World? world, Entity? target, SituationComponent situation)
         {
             CharacterRuntime? character = CreateCharacterFrom(situation.Character, situation.Situation);
             if (character is null)

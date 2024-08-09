@@ -18,17 +18,22 @@ namespace Murder.Editor.CustomFields
 
             if (text is null)
             {
-                string buttonText = "Create Default";
+                string buttonText = "";
                 if (AttributeExtensions.TryGetAttribute(member, out DefaultAttribute? defaultAttribute))
                 {
                     buttonText = defaultAttribute.Text;
                 }
+
+                ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.BgFaded);
 
                 if (ImGui.Button(buttonText))
                 {
                     modified = true;
                     text = string.Empty;
                 }
+
+                ImGui.PopStyleColor();
+                ImGui.SetItemTooltip("Create with default value");
 
                 return (modified, text);
             }
