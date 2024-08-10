@@ -530,7 +530,7 @@ public static partial class TextDataServices
     [GeneratedRegex("(?<!\n)\n(?!\n)")]
     private static partial Regex ReplaceSingleNewLine();
 
-    [GeneratedRegex("\n\n")]
+    [GeneratedRegex("\n\n|<nl>")]
     private static partial Regex ReplaceTwoNewLines();
 
     [GeneratedRegex(" {2,}")]
