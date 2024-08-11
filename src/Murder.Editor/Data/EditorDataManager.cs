@@ -439,7 +439,7 @@ namespace Murder.Editor.Data
 
             if (FileManager.Exists(editorSettingsPath))
             {
-                EditorSettings = FileManager.DeserializeAsset<EditorSettingsAsset>(editorSettingsPath)!;
+                EditorSettings = (EditorSettingsAsset)FileManager.DeserializeAsset<GameAsset>(editorSettingsPath)!;
             }
 
             // TODO: Is there a better way to verify if the settings match?
