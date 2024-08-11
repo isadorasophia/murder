@@ -442,11 +442,13 @@ namespace Murder.Editor.Data
                 EditorSettings = FileManager.DeserializeAsset<EditorSettingsAsset>(editorSettingsPath)!;
             }
 
-            if (EditorSettings is null)
+            // TODO: Is there a better way to verify if the settings match?
+            EditorSettingsAsset settings = CreateEditorSettings();
+            if (EditorSettings is null || EditorSettings.GetType() != settings.GetType())
             {
                 GameLogger.Warning($"Didn't find {EditorSettingsFileName} file. Creating one.");
 
-                EditorSettings = CreateEditorSettings();
+                EditorSettings = settings;
                 EditorSettings.MakeGuid();
                 SaveAsset(EditorSettings);
             }
@@ -923,9 +925,11 @@ namespace Murder.Editor.Data
 
         private static EditorSettingsAsset CreateEditorSettings()
         {
-            return new EditorSettingsAsset(
-                name: EditorSettingsFileName,
-                gameSourcePath: $"../../../../{Game.Data.GameDirectory}");
+            string name = EditorSettingsFileName;
+            string gameSourcePath = $"../../../../{Game.Data.GameDirectory}";
+
+            return Architect.Game?.CreateEditorSettings(name, gameSourcePath) ??
+                    new EditorSettingsAsset(name, gameSourcePath);
         }
 
         private static void PopulateEditorSettings(EditorSettingsAsset settings)

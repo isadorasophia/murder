@@ -1,4 +1,5 @@
-﻿using Murder.Editor.Core;
+﻿using Murder.Editor.Assets;
+using Murder.Editor.Core;
 
 namespace Murder.Editor;
 
@@ -18,4 +19,6 @@ public interface IMurderArchitect : IMurderGame
     /// or can be created.
     /// </summary>
     public void OnBeforePlayGame(StartPlayGameInfo state) { }
+
+    public EditorSettingsAsset CreateEditorSettings(string name, string sourcePath) => new(name, sourcePath);
 }
