@@ -23,8 +23,40 @@ public enum Direction
     UpRight
 }
 
+[Flags]
+public enum DirectionFlags
+{
+    Right = 0x1,
+    Down = 0x10,
+    Left = 0x100,
+    Up = 0x1000
+}
+
 public static class DirectionHelper
 {
+    public static DirectionFlags ToDirectionFlag(this Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.UpRight:
+            case Direction.UpLeft:
+            case Direction.Up: 
+                return DirectionFlags.Up;
+
+            case Direction.Down: 
+            case Direction.DownLeft:
+            case Direction.DownRight: 
+                return DirectionFlags.Down;
+
+            case Direction.Left: 
+                return DirectionFlags.Left;
+
+            case Direction.Right:
+            default:
+                return DirectionFlags.Right;
+        }
+    }
+
     public static Direction RoundTo4Directions(this Direction direction, Orientation bias)
     {
         if (bias == Orientation.Horizontal)
