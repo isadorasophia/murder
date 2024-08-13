@@ -440,8 +440,8 @@ public class PixelFontSize
         {
             bool alreadyHasLineBreak = false;
 
-            int nextSpaceIndex = text.Slice(cursor).IndexOf(' ');
-            int nextLineBreak = text.Slice(cursor).IndexOf('\n');
+            int nextSpaceIndex = text[cursor..].IndexOf(' ');
+            int nextLineBreak = text[cursor..].IndexOf('\n');
 
             if (nextLineBreak >= 0 && nextLineBreak < nextSpaceIndex)
             {
@@ -463,7 +463,11 @@ public class PixelFontSize
             if (overflow)
             {
                 // Has overflow, word is going down.
-                wrappedText.Append('\n');
+                if (wrappedText.Length != 0)
+                {
+                    wrappedText.Append('\n');
+                }
+
                 offset.X = wordWidth;
             }
             else
