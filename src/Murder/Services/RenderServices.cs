@@ -496,6 +496,16 @@ namespace Murder.Services
 
             DrawLine(spriteBatch, point1, distance, angle, color, thickness, sort);
         }
+        public static void DrawLineShort(this Batch2D spriteBatch, Vector2 point1, Vector2 point2, Color color, float thickness, float sort = 1f)
+        {
+            // calculate the distance between the two vectors
+            float distance = Vector2.Distance(point1, point2);
+
+            // calculate the angle between the two vectors
+            float angle = (float)Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
+
+            DrawLineShort(spriteBatch, point1, distance, angle, color, thickness, sort);
+        }
 
         public static void DrawLine(this Batch2D spriteBatch, Vector2 point, float length, float angle, Color color, float sort = 1f) =>
             DrawLine(spriteBatch, point, length, angle, color, 1f, sort);
@@ -511,7 +521,25 @@ namespace Murder.Services
                              default,
                              sort,
                              angle,
-                             new Microsoft.Xna.Framework.Vector2(length + 1, thickness),
+                             new Microsoft.Xna.Framework.Vector2(length + 0.75f, thickness),
+                             ImageFlip.None,
+                             color,
+                             new Microsoft.Xna.Framework.Vector2(0, 0.5f),
+                             BLEND_NORMAL
+                             );
+        }
+        
+        public static void DrawLineShort(this Batch2D spriteBatch, Vector2 point, float length, float angle, Color color, float thickness, float sort = 1f)
+        {
+            var halfPixel = new Vector2(thickness / 2f, 0);
+            // stretch the pixel between the two vectors
+            spriteBatch.Draw(SharedResources.GetOrCreatePixel(),
+                             (point - halfPixel.Rotate(angle)).ToXnaVector2(),
+                             Microsoft.Xna.Framework.Vector2.One,
+                             default,
+                             sort,
+                             angle,
+                             new Microsoft.Xna.Framework.Vector2(length, thickness),
                              ImageFlip.None,
                              color,
                              new Microsoft.Xna.Framework.Vector2(0, 0.5f),
@@ -521,7 +549,7 @@ namespace Murder.Services
 
         public static void DrawArrow(this Batch2D spriteBatch, Vector2 point1, Vector2 point2, Color color, float thickness, float headSize, float sort = 1f)
         {
-            DrawLine(spriteBatch, point1, point2, color, thickness, sort);
+            DrawLineShort(spriteBatch, point1, point2, color, thickness, sort);
 
             Vector2 direction = Vector2.Normalize(point2 - point1);
             Vector2 perpendicular = new Vector2(-direction.Y, direction.X);
