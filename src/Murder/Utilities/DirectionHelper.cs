@@ -57,6 +57,18 @@ public static class DirectionHelper
         }
     }
 
+    public static bool IsDiagonal(this Direction direction)
+    {
+        return direction switch
+        {
+            Direction.UpRight => true,
+            Direction.UpLeft => true,
+            Direction.DownRight => true,
+            Direction.DownLeft => true,
+            _ => false,
+        };
+    }
+
     public static Direction RoundTo4Directions(this Direction direction, Orientation bias)
     {
         if (bias == Orientation.Horizontal)
