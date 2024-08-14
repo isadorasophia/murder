@@ -19,6 +19,14 @@ namespace Murder.Core
         public RequirementsCollection() { }
     }
 
+    [Flags]
+    public enum TriggerEventsProperty
+    {
+        None = 0,
+        OnlyInteractOnce = 0x1,
+        OnlyOnStart = 0x10
+    }
+
     public readonly struct TriggerEventOn
     {
         public readonly string Name = string.Empty;
@@ -33,8 +41,7 @@ namespace Murder.Core
         [Default("Only on world...")]
         public readonly Guid? World = null;
 
-        [Tooltip("This will only place once (if the map loads again after saving, it won't play)")]
-        public readonly bool OnlyOnce = false;
+        public readonly TriggerEventsProperty Properties = TriggerEventsProperty.None;
 
         public TriggerEventOn() { }
 
@@ -54,7 +61,8 @@ namespace Murder.Core
                 {
                     builder.Add(new InteractOnRuleMatchComponent(
                         InteractOn.AddedOrModified,
-                        OnlyOnce ? AfterInteractRule.RemoveEntity : AfterInteractRule.Always,
+                        Properties.HasFlag(TriggerEventsProperty.OnlyInteractOnce) ? 
+                            AfterInteractRule.RemoveComponent : AfterInteractRule.Always,
                         r.Requirements));
                 }
 

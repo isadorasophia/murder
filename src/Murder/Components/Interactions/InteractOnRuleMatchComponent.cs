@@ -15,27 +15,17 @@ namespace Murder.Components
 
     public enum AfterInteractRule
     {
-        InteractOnlyOnce,
-
-        /// <summary>
-        /// Instead of removing this component once triggered, this will only disable it.
-        /// </summary>
-        InteractOnReload,
-
-        /// <summary>
-        /// Instead of removing this component once triggered, this will remove the entity.
-        /// </summary>
-        RemoveEntity,
+        InteractOnlyOnce = 0,
 
         /// <summary>
         /// Always interact whenever the rule gets triggered (added or modified).
         /// </summary>
-        Always,
+        Always = 3,
 
         /// <summary>
         /// Remove InteractOnRuleMatchComponent after this is triggered.
         /// </summary>
-        RemoveComponent
+        RemoveComponent = 4
     }
 
     [Story]
@@ -48,13 +38,6 @@ namespace Murder.Components
         public readonly AfterInteractRule AfterInteraction = AfterInteractRule.RemoveComponent;
 
         /// <summary>
-        /// This will only be triggered once the component has been interacted with.
-        /// Used if <see cref="AfterInteractRule.InteractOnReload"/> is set.
-        /// </summary>
-        [System.Text.Json.Serialization.JsonIgnore]
-        public readonly bool Triggered = false;
-
-        /// <summary>
         /// List of requirements which will trigger the interactive component within the same entity.
         /// </summary>
         public readonly ImmutableArray<CriterionNode> Requirements = ImmutableArray<CriterionNode>.Empty;
@@ -64,11 +47,9 @@ namespace Murder.Components
         public InteractOnRuleMatchComponent(InteractOn interactOn, AfterInteractRule after, ImmutableArray<CriterionNode> requirements) =>
             (InteractOn, AfterInteraction, Requirements) = (interactOn, after, requirements);
 
-        public InteractOnRuleMatchComponent(AfterInteractRule after, bool triggered, ImmutableArray<CriterionNode> requirements) =>
-            (AfterInteraction, Triggered, Requirements) = (after, triggered, requirements);
+        public InteractOnRuleMatchComponent(AfterInteractRule after, ImmutableArray<CriterionNode> requirements) =>
+            (AfterInteraction, Requirements) = (after, requirements);
 
         public InteractOnRuleMatchComponent(params CriterionNode[] criteria) => Requirements = criteria.ToImmutableArray();
-
-        public InteractOnRuleMatchComponent Disable() => new(AfterInteraction, triggered: true, Requirements);
     }
 }

@@ -17,7 +17,7 @@ namespace Murder.Interactions
         public readonly SoundEventId? Event = null;
 
         [Tooltip("Only used if event is not specified and it should be applied to the layer instead")]
-        public readonly SoundLayer TargetLayer = SoundLayer.Any;
+        public readonly SoundLayer? TargetLayer = null;
 
         public StopEventInteraction() { }
 
@@ -25,11 +25,11 @@ namespace Murder.Interactions
         {
             if (Event is not null)
             {
-                SoundServices.Stop(Event, FadeOut);
+                SoundServices.Stop(Event, FadeOut, interactor.EntityId);
             }
-            else
+            else if (TargetLayer is not null)
             {
-                SoundServices.Stop(TargetLayer, FadeOut);
+                SoundServices.Stop(TargetLayer.Value, FadeOut);
             }
         }
     }

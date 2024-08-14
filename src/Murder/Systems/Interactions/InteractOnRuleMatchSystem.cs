@@ -56,9 +56,23 @@ namespace Murder.Systems
                 bool matched = CheckEntity(world, tracker, ruleComponent, modified);
                 bool triggered = false;
 
+                if (e.HasRuleMatched())
+                {
+                    if (!matched)
+                    {
+                        e.RemoveRuleMatched();
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+
                 if (matched)
                 {
-                    e.SendMessage(new InteractMessage(e));
+                    e.SendInteractMessage(e);
+                    e.SetRuleMatched();
+
                     triggered = true;
                 }
 
@@ -67,7 +81,7 @@ namespace Murder.Systems
                     Guid target = matched ? pickEntityOnStart.OnMatchPrefab : pickEntityOnStart.OnNotMatchPrefab;
 
                     e.SetInteractive(new InteractiveComponent<AddEntityOnInteraction>(new(target)));
-                    e.SendMessage(new InteractMessage(e));
+                    e.SendInteractMessage(e);
 
                     triggered = true;
                 }
@@ -102,9 +116,22 @@ namespace Murder.Systems
                     }
                 }
 
+                if (e.HasRuleMatched())
+                {
+                    if (!matched)
+                    {
+                        e.RemoveRuleMatched();
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+
                 if (matched)
                 {
-                    e.SendMessage(new InteractMessage(e));
+                    e.SendInteractMessage(e);
+                    e.SetRuleMatched();
                 }
 
                 if (triggeredRequirements.Count == 0)
@@ -117,14 +144,6 @@ namespace Murder.Systems
                     InteractOnRuleMatchComponent rule = requirements[next];
                     switch (rule.AfterInteraction)
                     {
-                        case AfterInteractRule.InteractOnReload:
-                            requirements = requirements.SetItem(next, rule.Disable());
-                            break;
-
-                        case AfterInteractRule.RemoveEntity:
-                            e.Destroy();
-                            break;
-
                         case AfterInteractRule.InteractOnlyOnce:
                             requirements = requirements.RemoveAt(next);
 
@@ -153,13 +172,6 @@ namespace Murder.Systems
 
         private bool CheckEntity(World world, BlackboardTracker tracker, InteractOnRuleMatchComponent ruleComponent, bool wasRuleModified)
         {
-            if (ruleComponent.Triggered)
-            {
-                // Skip components that have already been triggered and are persist because *reasons* (probably
-                // so the save is consistent).
-                return false;
-            }
-
             if (ruleComponent.InteractOn == InteractOn.Modified && !wasRuleModified)
             {
                 // Do not trigger when rule watcher has been added (probably due to a map load).
@@ -173,14 +185,6 @@ namespace Murder.Systems
         {
             switch (rule.AfterInteraction)
             {
-                case AfterInteractRule.InteractOnReload:
-                    e.SetInteractOnRuleMatch(rule.Disable());
-                    break;
-
-                case AfterInteractRule.RemoveEntity:
-                    e.Destroy();
-                    break;
-
                 case AfterInteractRule.InteractOnlyOnce:
                     e.RecordAndMaybeDestroy(world, destroy: false);
                     e.RemoveInteractOnRuleMatch();
