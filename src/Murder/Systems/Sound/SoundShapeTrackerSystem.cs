@@ -8,6 +8,7 @@ using Murder.Core.Sounds;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace Murder.Systems.Sound;
@@ -18,7 +19,8 @@ public abstract class SoundShapeTrackerSystem : IFixedUpdateSystem, IReactiveSys
 {
     public void OnAdded(World world, ImmutableArray<Entity> entities)
     {
-        if (GetListenerPosition(world) is not Vector2 listenerPosition)
+        if (GetListenerPosition(world, ListenerKind.Camera) is not Vector2 cameraPosition ||
+            GetListenerPosition(world, ListenerKind.Player) is not Vector2 playerPosition)
         {
             return;
         }
@@ -32,7 +34,17 @@ public abstract class SoundShapeTrackerSystem : IFixedUpdateSystem, IReactiveSys
                 foreach (SoundEventIdInfo info in ambience.Events)
                 {
                     SoundServices.Play(info.Id, e, info.Layer, properties: SoundProperties.Persist);
-                    UpdateEmitterPosition(e, listenerPosition);
+
+                    if (ambience.Listener == ListenerKind.Player)
+                    {
+                        // If the listener is actually the player, we'll have to be creative so fmod can use the relative position
+                        // of the player instead of the camera.
+                        UpdateEmitterPosition(e, playerPosition, cameraPosition);
+                    }
+                    else
+                    {
+                        UpdateEmitterPosition(e, cameraPosition);
+                    }
                 }
             }
         }
@@ -60,24 +72,50 @@ public abstract class SoundShapeTrackerSystem : IFixedUpdateSystem, IReactiveSys
 
     public void FixedUpdate(Context context)
     {
-        if (GetListenerPosition(context.World) is not Vector2 listenerPosition)
+        if (GetListenerPosition(context.World, ListenerKind.Camera) is not Vector2 cameraPosition ||
+            GetListenerPosition(context.World, ListenerKind.Player) is not Vector2 playerPosition)
         {
             return;
         }
 
         foreach (Entity e in context.Entities)
         {
+            AmbienceComponent ambience = e.GetAmbience();
             SoundShapeComponent soundShape = e.GetSoundShape();
-            if (soundShape.ShapeStyle == ShapeStyle.Points && soundShape.Points.Length <= 1)
+
+            // If the shape doesn't change and the listener is already the default one (camera), move on.
+            if (soundShape.ShapeStyle == ShapeStyle.Points && soundShape.Points.Length <= 1 &&
+                ambience.Listener == ListenerKind.Camera)
             {
                 continue;
             }
 
-            UpdateEmitterPosition(e, listenerPosition);
+            if (ambience.Listener == ListenerKind.Player)
+            {
+                // If the listener is actually the player, we'll have to be creative so fmod can use the relative position
+                // of the player instead of the camera.
+                UpdateEmitterPosition(e, playerPosition, cameraPosition);
+            }
+            else
+            {
+                UpdateEmitterPosition(e, cameraPosition);
+            }
         }
     }
 
-    public static void UpdateEmitterPosition(Entity e, Vector2 listenerPosition)
+    /// <summary>
+    /// Update emitter position at <paramref name="e"/>.
+    /// </summary>
+    /// <param name="e">The entity that is emitting the sound.</param>
+    /// <param name="listenerPosition">The listener position.</param>
+    /// <param name="relativeToGlobalListenerAt">
+    /// If <paramref name="listenerPosition"/> is different than the global listener,
+    /// this will have the location of the global listener, so we can apply the distance when passing that through the emitter.
+    /// </param>
+    /// <remarks>
+    /// It doesn't seem like we can update two listeners position simultaneously.
+    /// </remarks>
+    public static void UpdateEmitterPosition(Entity e, Vector2 listenerPosition, Vector2? relativeToGlobalListenerAt = null)
     {
         if (e.TryGetAmbience() is not AmbienceComponent ambience)
         {
@@ -86,16 +124,28 @@ public abstract class SoundShapeTrackerSystem : IFixedUpdateSystem, IReactiveSys
         }
 
         SoundShapeComponent soundShape = e.GetSoundShape();
-        Point position = e.GetGlobalTransform().Point;
+        Vector2 position = e.GetGlobalTransform().Vector2;
 
-        SoundPosition soundPosition = soundShape.GetSoundPosition(listenerPosition - position);
-        Vector2 closestPoint = soundPosition.ClosestPoint + position;
+        Vector2 soundOrigin = position;
+
+        // Only calculate the closest point when the shape is not a single point.
+        if (soundShape.ShapeStyle != ShapeStyle.Points || soundShape.Points.Length > 1)
+        {
+            SoundPosition soundPosition = soundShape.GetSoundPosition(listenerPosition - position);
+            soundOrigin = soundPosition.ClosestPoint + position;
+        }
+
+        if (relativeToGlobalListenerAt is not null)
+        {
+            // Let's fake the actual closest point so it looks closer than it is.
+            soundOrigin = soundOrigin - listenerPosition + relativeToGlobalListenerAt.Value;
+        }
 
         foreach (SoundEventIdInfo info in ambience.Events)
         {
-            SoundServices.TrackEventSourcePosition(info.Id, e.EntityId, closestPoint);
+            SoundServices.TrackEventSourcePosition(info.Id, e.EntityId, soundOrigin);
         }
     }
 
-    public abstract Vector2? GetListenerPosition(World world);
+    public abstract Vector2? GetListenerPosition(World world, ListenerKind listener);
 }

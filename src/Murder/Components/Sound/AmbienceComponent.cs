@@ -17,6 +17,12 @@ public readonly struct SoundEventIdInfo
     public SoundEventIdInfo() { }
 }
 
+public enum ListenerKind
+{
+    Camera = 0, // Default
+    Player = 1
+}
+
 /// <summary>
 /// Component that will listen to interaction Areas for starting and stopping
 /// ambience sounds.
@@ -24,6 +30,7 @@ public readonly struct SoundEventIdInfo
 [CustomName("\uf186 Ambience component")]
 public readonly struct AmbienceComponent : IComponent
 {
+    public readonly ListenerKind Listener = ListenerKind.Camera;
     public readonly ImmutableArray<SoundEventIdInfo> Events = [];
 
     public AmbienceComponent() { }
