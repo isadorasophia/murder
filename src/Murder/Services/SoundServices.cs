@@ -205,9 +205,14 @@ public static class SoundServices
         return builder.ToImmutable();
     }
 
+    public static Vector3 ToListenerVector3(Vector2 position)
+    {
+        return new(position.X, position.Y, 1);
+    }
+
     public static void UpdateListenerPosition(Vector2 position)
     {
-        Vector3 position3d = new(position.X, position.Y, 1);
+        Vector3 position3d = ToListenerVector3(position);
         SoundSpatialAttributes attributes = GetSpatialAttributes(position3d);
 
         Game.Sound.UpdateListener(attributes);
