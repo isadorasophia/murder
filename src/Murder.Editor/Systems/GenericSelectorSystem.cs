@@ -411,7 +411,7 @@ public class GenericSelectorSystem
                 }
             }
 
-            if (_dragging == null && _dragStart != null && _startedDragging!=null && down)
+            if (_dragging == null && _dragStart != null && _startedDragging!=null && down && _startedDragging.HasTransform())
             {
                 float distance = (cursorPosition - _dragStart.Value).Length();
                 if (distance > 4)
