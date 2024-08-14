@@ -1298,9 +1298,9 @@
       },
       "AtlasId": 2
     },
-    "vertical": {
+    "editor_ear": {
       "AtlasIndex": 0,
-      "Name": "vertical",
+      "Name": "editor_ear",
       "Size": {
         "X": 16,
         "Y": 16
@@ -1308,19 +1308,19 @@
       "SourceRectangle": {
         "X": 303,
         "Y": 97,
-        "Width": 11,
+        "Width": 12,
         "Height": 16
       },
       "UV": {
         "X": 0.5917969,
         "Y": 0.18945312,
-        "Width": 0.021484375,
+        "Width": 0.0234375,
         "Height": 0.03125
       },
       "TrimArea": {
-        "X": 2,
+        "X": 3,
         "Y": 0,
-        "Width": 11,
+        "Width": 12,
         "Height": 16
       },
       "AtlasId": 2
@@ -1433,9 +1433,9 @@
       },
       "AtlasId": 2
     },
-    "dialogue_rewind": {
+    "vertical": {
       "AtlasIndex": 0,
-      "Name": "dialogue_rewind",
+      "Name": "vertical",
       "Size": {
         "X": 16,
         "Y": 16
@@ -1443,20 +1443,20 @@
       "SourceRectangle": {
         "X": 148,
         "Y": 179,
-        "Width": 12,
-        "Height": 12
+        "Width": 11,
+        "Height": 16
       },
       "UV": {
         "X": 0.2890625,
         "Y": 0.34960938,
-        "Width": 0.0234375,
-        "Height": 0.0234375
+        "Width": 0.021484375,
+        "Height": 0.03125
       },
       "TrimArea": {
-        "X": 1,
-        "Y": 2,
-        "Width": 12,
-        "Height": 12
+        "X": 2,
+        "Y": 0,
+        "Width": 11,
+        "Height": 16
       },
       "AtlasId": 2
     },
@@ -1568,9 +1568,9 @@
       },
       "AtlasId": 2
     },
-    "dialogue-button_play_0000": {
+    "dialogue_rewind": {
       "AtlasIndex": 0,
-      "Name": "dialogue-button_play_0000",
+      "Name": "dialogue_rewind",
       "Size": {
         "X": 16,
         "Y": 16
@@ -1578,26 +1578,26 @@
       "SourceRectangle": {
         "X": 50,
         "Y": 260,
-        "Width": 11,
+        "Width": 12,
         "Height": 12
       },
       "UV": {
         "X": 0.09765625,
         "Y": 0.5078125,
-        "Width": 0.021484375,
+        "Width": 0.0234375,
         "Height": 0.0234375
       },
       "TrimArea": {
-        "X": 3,
+        "X": 1,
         "Y": 2,
-        "Width": 11,
+        "Width": 12,
         "Height": 12
       },
       "AtlasId": 2
     },
-    "dialogue-button_play_0001": {
+    "dialogue-button_play_0000": {
       "AtlasIndex": 0,
-      "Name": "dialogue-button_play_0001",
+      "Name": "dialogue-button_play_0000",
       "Size": {
         "X": 16,
         "Y": 16
@@ -1622,9 +1622,9 @@
       },
       "AtlasId": 2
     },
-    "dialogue-button_play_0002": {
+    "dialogue-button_play_0001": {
       "AtlasIndex": 0,
-      "Name": "dialogue-button_play_0002",
+      "Name": "dialogue-button_play_0001",
       "Size": {
         "X": 16,
         "Y": 16
@@ -1649,9 +1649,9 @@
       },
       "AtlasId": 2
     },
-    "dialogue-button_play_0003": {
+    "dialogue-button_play_0002": {
       "AtlasIndex": 0,
-      "Name": "dialogue-button_play_0003",
+      "Name": "dialogue-button_play_0002",
       "Size": {
         "X": 16,
         "Y": 16
@@ -1676,9 +1676,9 @@
       },
       "AtlasId": 2
     },
-    "dialogue_play": {
+    "dialogue-button_play_0003": {
       "AtlasIndex": 0,
-      "Name": "dialogue_play",
+      "Name": "dialogue-button_play_0003",
       "Size": {
         "X": 16,
         "Y": 16
@@ -1703,6 +1703,33 @@
       },
       "AtlasId": 2
     },
+    "dialogue_play": {
+      "AtlasIndex": 0,
+      "Name": "dialogue_play",
+      "Size": {
+        "X": 16,
+        "Y": 16
+      },
+      "SourceRectangle": {
+        "X": 438,
+        "Y": 14,
+        "Width": 11,
+        "Height": 12
+      },
+      "UV": {
+        "X": 0.85546875,
+        "Y": 0.02734375,
+        "Width": 0.021484375,
+        "Height": 0.0234375
+      },
+      "TrimArea": {
+        "X": 3,
+        "Y": 2,
+        "Width": 11,
+        "Height": 12
+      },
+      "AtlasId": 2
+    },
     "dialogue_edge-choice": {
       "AtlasIndex": 0,
       "Name": "dialogue_edge-choice",
@@ -1711,14 +1738,14 @@
         "Y": 16
       },
       "SourceRectangle": {
-        "X": 438,
-        "Y": 14,
+        "X": 422,
+        "Y": 34,
         "Width": 13,
         "Height": 10
       },
       "UV": {
-        "X": 0.85546875,
-        "Y": 0.02734375,
+        "X": 0.82421875,
+        "Y": 0.06640625,
         "Width": 0.025390625,
         "Height": 0.01953125
       },
@@ -1738,14 +1765,14 @@
         "Y": 16
       },
       "SourceRectangle": {
-        "X": 422,
-        "Y": 34,
+        "X": 405,
+        "Y": 48,
         "Width": 13,
         "Height": 10
       },
       "UV": {
-        "X": 0.82421875,
-        "Y": 0.06640625,
+        "X": 0.7910156,
+        "Y": 0.09375,
         "Width": 0.025390625,
         "Height": 0.01953125
       },
@@ -1765,14 +1792,14 @@
         "Y": 16
       },
       "SourceRectangle": {
-        "X": 405,
-        "Y": 48,
+        "X": 388,
+        "Y": 64,
         "Width": 9,
         "Height": 11
       },
       "UV": {
-        "X": 0.7910156,
-        "Y": 0.09375,
+        "X": 0.7578125,
+        "Y": 0.125,
         "Width": 0.017578125,
         "Height": 0.021484375
       },

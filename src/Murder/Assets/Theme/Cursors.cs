@@ -71,5 +71,8 @@ namespace Murder.Assets
 
         [GameAssetId<SpriteAsset>]
         public readonly Guid MusicImage = new("2a98ce49-1e0a-9109-026f-3392d992e44d");
+
+        [GameAssetId<SpriteAsset>]
+        public readonly Guid ListenerImage = new("2a98ce49-1e0a-9109-026f-3392d992e44d");
     }
 }

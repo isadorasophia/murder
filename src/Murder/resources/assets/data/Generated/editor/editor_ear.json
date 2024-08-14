@@ -16,35 +16,35 @@
   "Frames": [
     {
       "AtlasIndex": 0,
-      "Name": "vertical",
+      "Name": "editor_ear",
       "Size": {
         "X": 16,
         "Y": 16
       },
       "SourceRectangle": {
-        "X": 148,
-        "Y": 179,
-        "Width": 11,
+        "X": 303,
+        "Y": 97,
+        "Width": 12,
         "Height": 16
       },
       "UV": {
-        "X": 0.2890625,
-        "Y": 0.34960938,
-        "Width": 0.021484375,
+        "X": 0.5917969,
+        "Y": 0.18945312,
+        "Width": 0.0234375,
         "Height": 0.03125
       },
       "TrimArea": {
-        "X": 2,
+        "X": 3,
         "Y": 0,
-        "Width": 11,
+        "Width": 12,
         "Height": 16
       },
       "AtlasId": 2
     }
   ],
   "Origin": {
-    "X": 8,
-    "Y": 8
+    "X": 0,
+    "Y": 0
   },
   "Size": {
     "X": 16,
@@ -56,7 +56,7 @@
     "Width": 0,
     "Height": 0
   },
-  "Name": "vertical",
-  "Guid": "9877f9d4-4d8f-48ac-9a79-3faea580f9b0",
+  "Name": "editor_ear",
+  "Guid": "05b3d9cf-a92c-bed5-e704-4c729ec9890e",
   "editorPath": "#\uF085Generated\\editor"
 }

@@ -1,39 +1,9 @@
 {
   "$type": "Murder.Assets.Graphics.SpriteAsset",
   "Animations": {
-    "disabled": {
-      "Frames": [
-        3
-      ],
-      "FramesDuration": [
-        100
-      ],
-      "Events": {},
-      "AnimationDuration": 0.1
-    },
-    "normal": {
-      "Frames": [
-        0
-      ],
-      "FramesDuration": [
-        100
-      ],
-      "Events": {},
-      "AnimationDuration": 0.1
-    },
     "down": {
       "Frames": [
         2
-      ],
-      "FramesDuration": [
-        100
-      ],
-      "Events": {},
-      "AnimationDuration": 0.1
-    },
-    "hover": {
-      "Frames": [
-        1
       ],
       "FramesDuration": [
         100
@@ -56,6 +26,36 @@
       ],
       "Events": {},
       "AnimationDuration": 0.4
+    },
+    "normal": {
+      "Frames": [
+        0
+      ],
+      "FramesDuration": [
+        100
+      ],
+      "Events": {},
+      "AnimationDuration": 0.1
+    },
+    "hover": {
+      "Frames": [
+        1
+      ],
+      "FramesDuration": [
+        100
+      ],
+      "Events": {},
+      "AnimationDuration": 0.1
+    },
+    "disabled": {
+      "Frames": [
+        3
+      ],
+      "FramesDuration": [
+        100
+      ],
+      "Events": {},
+      "AnimationDuration": 0.1
     }
   },
   "Atlas": 2,
@@ -63,33 +63,6 @@
     {
       "AtlasIndex": 0,
       "Name": "dialogue-button_play_0000",
-      "Size": {
-        "X": 16,
-        "Y": 16
-      },
-      "SourceRectangle": {
-        "X": 50,
-        "Y": 260,
-        "Width": 11,
-        "Height": 12
-      },
-      "UV": {
-        "X": 0.09765625,
-        "Y": 0.5078125,
-        "Width": 0.021484375,
-        "Height": 0.0234375
-      },
-      "TrimArea": {
-        "X": 3,
-        "Y": 2,
-        "Width": 11,
-        "Height": 12
-      },
-      "AtlasId": 2
-    },
-    {
-      "AtlasIndex": 0,
-      "Name": "dialogue-button_play_0001",
       "Size": {
         "X": 16,
         "Y": 16
@@ -116,7 +89,7 @@
     },
     {
       "AtlasIndex": 0,
-      "Name": "dialogue-button_play_0002",
+      "Name": "dialogue-button_play_0001",
       "Size": {
         "X": 16,
         "Y": 16
@@ -143,7 +116,7 @@
     },
     {
       "AtlasIndex": 0,
-      "Name": "dialogue-button_play_0003",
+      "Name": "dialogue-button_play_0002",
       "Size": {
         "X": 16,
         "Y": 16
@@ -157,6 +130,33 @@
       "UV": {
         "X": 0,
         "Y": 0.5996094,
+        "Width": 0.021484375,
+        "Height": 0.0234375
+      },
+      "TrimArea": {
+        "X": 3,
+        "Y": 2,
+        "Width": 11,
+        "Height": 12
+      },
+      "AtlasId": 2
+    },
+    {
+      "AtlasIndex": 0,
+      "Name": "dialogue-button_play_0003",
+      "Size": {
+        "X": 16,
+        "Y": 16
+      },
+      "SourceRectangle": {
+        "X": 455,
+        "Y": 0,
+        "Width": 11,
+        "Height": 12
+      },
+      "UV": {
+        "X": 0.8886719,
+        "Y": 0,
         "Width": 0.021484375,
         "Height": 0.0234375
       },
