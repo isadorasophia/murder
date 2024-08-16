@@ -1,6 +1,7 @@
 ﻿using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Utilities;
+using System.Net.Http.Headers;
 using System.Numerics;
 
 namespace Murder.Core;
@@ -18,6 +19,11 @@ public readonly struct Viewport
     public readonly Point NativeResolution;
 
     /// <summary>
+    /// The scale resuling in viewportSize/nativeResolution without any snapping.
+    /// </summary>
+    public readonly Vector2 OriginalScale;
+
+    /// <summary>
     /// The scale that is applied to the native resolution before rendering
     /// </summary>
     public readonly Vector2 Scale;
@@ -33,6 +39,7 @@ public readonly struct Viewport
     {
         Size = viewportSize;
         NativeResolution = nativeResolution;
+        OriginalScale = viewportSize.ToVector2() / nativeResolution.ToVector2();
 
         switch (resizeStyle.ResizeMode)
         {
@@ -45,7 +52,6 @@ public readonly struct Viewport
             case ViewportResizeMode.Stretch:
                 // Stretch everything, ignoring aspect ratio.
                 Scale = new Vector2(viewportSize.X / (float)nativeResolution.X, viewportSize.Y / (float)nativeResolution.Y);
-
                 Scale = new(SnapToInt(Scale.X, resizeStyle.SnapToInteger, resizeStyle.RoundingMode), SnapToInt(Scale.Y, resizeStyle.SnapToInteger, resizeStyle.RoundingMode));
 
                 OutputRectangle = new IntRectangle(0, 0, viewportSize.X, viewportSize.Y);
@@ -98,17 +104,19 @@ public readonly struct Viewport
                     //Scale the game to fit the window, keeping aspect ratio.
                     Vector2 stretchScale = new Vector2(viewportSize.X / (float)adjustedNativeResolution.X, viewportSize.Y / (float)adjustedNativeResolution.Y);
                     float minScale = Math.Min(stretchScale.X, stretchScale.Y);
+                    float snappedScale = SnapToInt(minScale, resizeStyle.SnapToInteger, resizeStyle.RoundingMode);
+                    float ceilingScale = Calculator.CeilToInt(minScale);
 
                     Vector2 originalScale = new Vector2(minScale, minScale);
                     // Set the output rectangle to center the game in the window with the calculated scale to keep aspect ratio
                     OutputRectangle = CenterOutput(adjustedNativeResolution * originalScale, viewportSize);
-
-                    Vector2 snappedScale = new(SnapToInt(originalScale.X, resizeStyle.SnapToInteger, resizeStyle.RoundingMode), SnapToInt(originalScale.Y, resizeStyle.SnapToInteger, resizeStyle.RoundingMode));
-                    Scale = snappedScale;
+                    Scale = new Vector2(snappedScale);
 
                     // Now change trim the native resolution to account for the possible scale ceiling to integer
-                    NativeResolution = new Point(Math.Min(adjustedNativeResolution.X, Calculator.RoundToInt(OutputRectangle.Width / snappedScale.X)),
-                                           Math.Min(adjustedNativeResolution.Y, Calculator.RoundToInt(OutputRectangle.Height / snappedScale.Y)));
+                    NativeResolution = new Point(
+                        Calculator.CeilToInt(OutputRectangle.Width / snappedScale),
+                        Calculator.CeilToInt(OutputRectangle.Height / snappedScale)
+                        );
                 }
                 break;
 
