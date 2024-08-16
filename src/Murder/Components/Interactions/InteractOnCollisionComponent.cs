@@ -17,7 +17,6 @@ namespace Murder.Components
         [Tooltip("Whether this will send a message every frame while colliding.")]
         public readonly bool SendMessageOnStay = false;
 
-
         [Tooltip("Interactions that will be triggered in addition to interactions in this entity.")]
         public readonly ImmutableArray<IInteractiveComponent> CustomEnterMessages = ImmutableArray<IInteractiveComponent>.Empty;
 

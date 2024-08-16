@@ -68,7 +68,14 @@ public class InteractOnCollisionSystem : IMessagerSystem
 
         if (interactOnCollision.OnlyOnce)
         {
-            interactiveEntity.RemoveInteractOnCollision();
+            if (interactiveEntity.HasDeactivateAfterInteracted())
+            {
+                interactiveEntity.Deactivate();
+            }
+            else
+            {
+                interactiveEntity.RemoveInteractOnCollision();
+            }
         }
     }
 

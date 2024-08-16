@@ -396,4 +396,42 @@ public static class EntityServices
 
         return null;
     }
+
+    /// <summary>
+    /// Return target of entity with <paramref name="name"/>.
+    /// This will first check for a target id. If none, it will check for a target
+    /// collection with <paramref name="name"/>.
+    /// </summary>
+    public static int? FindTarget(this Entity e, string name)
+    {
+        if (!string.IsNullOrEmpty(name) &&
+            (e.TryGetIdTargetCollection()?.Targets?.TryGetValue(name, out int id) ?? false))
+        {
+            return id;
+        }
+
+        if (e.TryGetIdTarget()?.Target is int targetId)
+        {
+            return targetId;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Return target of entity with <paramref name="name"/>.
+    /// This will first check for a target id. If none, it will check for a target
+    /// collection with <paramref name="name"/>.
+    /// Returns the entity in the world.
+    /// </summary>
+    public static Entity? FetchTarget(this Entity e, World world, string name)
+    {
+        int? id = FindTarget(e, name);
+        if (id is null)
+        {
+            return null;
+        }
+
+        return world.TryGetEntity(id.Value);
+    }
 }
