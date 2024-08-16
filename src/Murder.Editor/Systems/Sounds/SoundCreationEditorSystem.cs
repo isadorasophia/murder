@@ -170,8 +170,7 @@ namespace Murder.Editor.Systems.Sounds
         private void CreateAmbienceArea(EditorHook hook, Vector2 position)
         {
             hook.AddEntityWithStage?.Invoke(
-                new IComponent[]
-                {
+                [
                     new PositionComponent(position),
                     new SoundParameterComponent(),
                     new AmbienceComponent(),
@@ -179,7 +178,7 @@ namespace Murder.Editor.Systems.Sounds
                         shape: new BoxShape(Vector2.Zero, Point.Zero, width: Grid.CellSize * 2, height: Grid.CellSize * 2),
                         layer: CollisionLayersBase.TRIGGER,
                         color: new Color(104 / 255f, 234 / 255f, 137 / 255f))
-                },
+                ],
                 /* group */ "Sounds",
                 /* name */ "Ambience Area");
         }
