@@ -7,6 +7,7 @@ namespace Murder.Components;
 /// Useful for tagging an entity for some systems until X time
 /// </summary>
 [DoNotPersistOnSave]
+[KeepOnReplace]
 public readonly struct IgnoreUntilComponent : IComponent
 {
     /// <summary>
