@@ -29,8 +29,9 @@ namespace Murder.Systems.Effects
 
             // Were we actually listening to this particular event?
             ImmutableDictionary<string, SpriteEventInfo> events = entity.GetEventListener().Events;
-            if ((entity.HasUi() || entity.IsInCamera(world)) && 
-                events.TryGetValue(animationEvent.Event, out SpriteEventInfo info))
+            bool canPlay = entity.HasPlayEvenOffScreen() || entity.HasUi() || entity.IsInCamera(world);
+
+            if (canPlay && events.TryGetValue(animationEvent.Event, out SpriteEventInfo info))
             {
                 // Start doing event actions.
                 if (info.Sound is SoundEventId sound)

@@ -15,8 +15,20 @@ namespace Murder.Systems
     /// Simple system for moving agents to another position. Looks for 'MoveTo' components and adds agent inpulses to it.
     /// </summary>
     [Filter(typeof(ITransformComponent), typeof(MoveToPerfectComponent))]
-    public class MoveToPerfectSystem : IFixedUpdateSystem
+    public class MoveToPerfectSystem : IFixedUpdateSystem, IStartupSystem
     {
+        public void Start(Context context)
+        {
+            foreach (Entity e in context.Entities)
+            {
+                MoveToPerfectComponent moveToPerfect = e.GetMoveToPerfect();
+
+                // Do not persist MoveToPerfect. Snap to position immediately.
+                e.SetGlobalPosition(moveToPerfect.Target);
+                e.RemoveMoveToPerfect();
+            }
+        }
+
         public void FixedUpdate(Context context)
         {
             bool anyActorAvoidant = false;

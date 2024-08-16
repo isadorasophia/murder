@@ -11,7 +11,7 @@ namespace Murder.Components
     /// that matches perfectly the target.
     /// </summary>
     [RuntimeOnly]
-    [DoNotPersistOnSave]
+    [PersistOnSave]
     public readonly struct MoveToPerfectComponent : IComponent
     {
         public readonly Vector2 Target;
