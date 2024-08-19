@@ -268,17 +268,19 @@ public class CustomComponent
         bool unfolded = true;
         if (AttributeExtensions.IsDefined(member, typeof(FolderAttribute)))
         {
-            unfolded = _unfoldedFolders.Contains(memberName);
+            string id = $"{memberName}_{target.GetHashCode()}";
+
+            unfolded = _unfoldedFolders.Contains(id);
             ImGui.PushStyleColor(ImGuiCol.Text, unfolded ? Game.Profile.Theme.White: Game.Profile.Theme.Faded);
             if (ImGui.Selectable($"{(unfolded ? "\uf07c" : "\uf07b")} {Prettify.FormatName(memberName)}{(unfolded ? ":" : "[...]")}", unfolded)) 
             {
                 if (unfolded)
                 {
-                    _unfoldedFolders.Remove(memberName);
+                    _unfoldedFolders.Remove(id);
                 }
                 else
                 {
-                    _unfoldedFolders.Add(memberName);
+                    _unfoldedFolders.Add(id);
                 }
             }
 
