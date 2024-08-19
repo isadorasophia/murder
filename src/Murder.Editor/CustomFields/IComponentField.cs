@@ -1,10 +1,10 @@
 ﻿using Bang.Components;
 using Bang.Interactions;
 using Bang.StateMachines;
+using Murder.Attributes;
 using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
-using static Bang.Generator.Metadata.TypeMetadata;
 
 namespace Murder.Editor.CustomFields
 {
@@ -22,7 +22,13 @@ namespace Murder.Editor.CustomFields
 
                 if (member.Type == typeof(IStateMachineComponent))
                 {
-                    SearchBox.SearchStateMachines(initialValue: null, out result);
+                    Type? subtypeOf = null;
+                    if (AttributeExtensions.TryGetAttribute(member.Member, out TypeOfAttribute? attribute))
+                    {
+                        subtypeOf = attribute.Type;
+                    }
+
+                    SearchBox.SearchStateMachines(initialValue: null, out result, subtypeOf);
                 }
                 else if (member.Type == typeof(IInteractiveComponent))
                 {

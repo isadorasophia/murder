@@ -121,7 +121,7 @@ namespace Murder.Editor.ImGuiExtended
 
                 Dictionary<string, Type> result = CollectionHelper.ToStringDictionary(types, t => t.Name, t => t);
 
-                AssetsFilter.FetchStateMachines(result, excludeComponents);
+                AssetsFilter.FetchStateMachines(result, subtypeOf: null, excludeComponents);
                 AssetsFilter.FetchInteractions(result, excludeComponents);
 
                 return result;
@@ -160,7 +160,7 @@ namespace Murder.Editor.ImGuiExtended
             return default;
         }
 
-        public static bool SearchStateMachines(Type? initialValue, out Type? chosen)
+        public static bool SearchStateMachines(Type? initialValue, out Type? chosen, Type? subtypeOf = null)
         {
             SearchBoxSettings<Type> settings = new(initialText: "Select a state machine");
 
@@ -173,7 +173,7 @@ namespace Murder.Editor.ImGuiExtended
             Lazy<Dictionary<string, Type>> candidates = new(() =>
             {
                 Dictionary<string, Type> result = new();
-                AssetsFilter.FetchStateMachines(result, excludeComponents: null);
+                AssetsFilter.FetchStateMachines(result, subtypeOf, excludeComponents: null);
 
                 return result;
             });

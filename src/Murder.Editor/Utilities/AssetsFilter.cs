@@ -352,8 +352,12 @@ namespace Murder.Editor.Utilities
         /// <summary>
         /// Add types for the state machine components (generic).
         /// </summary>
+        /// <param name="candidates">List of candidates returned.</param>
+        /// <param name="inheritFrom">Optional state machine subtype.</param>
+        /// <param name="candidates">Exclude components of these types.</param>
         public static void FetchStateMachines(
             Dictionary<string, Type> candidates,
+            Type? subtypeOf = null,
             IEnumerable<IComponent>? excludeComponents = default)
         {
             if (excludeComponents?.FirstOrDefault(t => t is IStateMachineComponent) is not null)
@@ -363,6 +367,22 @@ namespace Murder.Editor.Utilities
             }
 
             Type tStateMachine = typeof(StateMachineComponent<>);
+
+            if (subtypeOf is not null)
+            {
+                IEnumerable<Type> subStateMachines = ReflectionHelper.GetAllImplementationsOf(subtypeOf)
+                    .Where(t => t != subtypeOf &&
+                                !Attribute.IsDefined(t, typeof(RuntimeOnlyAttribute)) && 
+                                !Attribute.IsDefined(t, typeof(HideInEditorAttribute)));
+
+                foreach (var t in subStateMachines)
+                {
+                    candidates[t.Name] = tStateMachine.MakeGenericType(t);
+                }
+
+                return;
+            }
+
             foreach (var t in GetAllStateMachines())
             {
                 candidates[t.Name] = tStateMachine.MakeGenericType(t);
