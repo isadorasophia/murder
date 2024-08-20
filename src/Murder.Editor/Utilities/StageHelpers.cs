@@ -1,6 +1,7 @@
 ﻿using Bang.Components;
 using Bang.Interactions;
 using Bang.Systems;
+using Murder.Assets;
 using Murder.Assets.Graphics;
 using Murder.Attributes;
 using Murder.Components;
@@ -133,10 +134,10 @@ internal static class StageHelpers
     {
         const string cutsceneName = "cutscene";
 
-        if (Architect.Instance.ActiveScene is EditorScene editor &&
-            editor.EditorShown is AssetEditor assetEditor)
+        if (Architect.Instance.ActiveScene is EditorScene editorScene &&
+            editorScene.EditorShown is CustomEditor editor)
         {
-            if (assetEditor.SelectedEntity is not IEntity selectedEntity)
+            if (editor.SelectedEntity is not IEntity selectedEntity)
             {
                 return null;
             }
@@ -146,7 +147,7 @@ internal static class StageHelpers
             {
                 cutscene = selectedEntity.GetComponent<CutsceneAnchorsEditorComponent>();
             }
-            else if (assetEditor is WorldAssetEditor world)
+            else if (Game.Data.TryGetAsset(editor.WorldReference) is WorldAsset world)
             {
                 Guid? target = null;
                 if (selectedEntity.HasComponent(typeof(GuidToIdTargetComponent)))
@@ -163,7 +164,7 @@ internal static class StageHelpers
 
                 if (target is not null)
                 {
-                    EntityInstance? instance = world.TryFindInstance(target.Value);
+                    EntityInstance? instance = world.TryGetInstance(target.Value);
                     if (instance?.HasComponent(typeof(CutsceneAnchorsEditorComponent)) ?? false)
                     {
                         cutscene = (CutsceneAnchorsEditorComponent)instance.GetComponent(typeof(CutsceneAnchorsEditorComponent));
@@ -186,10 +187,10 @@ internal static class StageHelpers
     {
         const string cutsceneName = "cutscene";
 
-        if (Architect.Instance.ActiveScene is EditorScene editor &&
-            editor.EditorShown is WorldAssetEditor worldEditor)
+        if (Architect.Instance.ActiveScene is EditorScene editorScene &&
+            editorScene.EditorShown is CustomEditor editor)
         {
-            if (worldEditor.SelectedEntity is not IEntity selectedEntity)
+            if (editor.SelectedEntity is not IEntity selectedEntity)
             {
                 return null;
             }
@@ -209,9 +210,11 @@ internal static class StageHelpers
                 }
             }
 
+            WorldAsset? world = Game.Data.TryGetAsset(editor.WorldReference) as WorldAsset;
+
             if (target is not null)
             {
-                EntityInstance? instance = worldEditor.TryFindInstance(target.Value);
+                EntityInstance? instance = world?.TryGetInstance(target.Value);
                 if (instance?.HasComponent(typeof(GuidToIdTargetCollectionComponent)) ?? false)
                 {
                     guidToIdCollection = (GuidToIdTargetCollectionComponent)instance.GetComponent(typeof(GuidToIdTargetCollectionComponent));

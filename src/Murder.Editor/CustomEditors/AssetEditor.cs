@@ -85,10 +85,12 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
+        public override IEntity? SelectedEntity => SelectedEntityImpl;
+
         /// <summary>
         /// Exposes the entity currently selected in this editor.
         /// </summary>
-        public abstract IEntity? SelectedEntity { get; }
+        protected abstract IEntity? SelectedEntityImpl { get; }
 
         private bool _showReflection = true;
         private bool _showColliders = true;

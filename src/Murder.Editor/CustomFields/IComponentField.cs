@@ -28,7 +28,7 @@ namespace Murder.Editor.CustomFields
                         subtypeOf = attribute.Type;
                     }
 
-                    SearchBox.SearchStateMachines(initialValue: null, out result, subtypeOf);
+                    SearchBox.SearchStateMachines(initialValue: component?.GetType(), out result, subtypeOf);
                 }
                 else if (member.Type == typeof(IInteractiveComponent))
                 {

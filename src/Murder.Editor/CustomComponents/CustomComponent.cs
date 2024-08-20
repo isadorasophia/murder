@@ -272,7 +272,7 @@ public class CustomComponent
 
             unfolded = _unfoldedFolders.Contains(id);
             ImGui.PushStyleColor(ImGuiCol.Text, unfolded ? Game.Profile.Theme.White: Game.Profile.Theme.Faded);
-            if (ImGui.Selectable($"{(unfolded ? "\uf07c" : "\uf07b")} {Prettify.FormatName(memberName)}{(unfolded ? ":" : "[...]")}", unfolded)) 
+            if (ImGui.Selectable($"{(unfolded ? "\uf07c" : "\uf07b")} {Prettify.FormatName(memberName)}{(unfolded ? ":" : "")}", unfolded)) 
             {
                 if (unfolded)
                 {

@@ -12,7 +12,7 @@ namespace Murder.Editor.CustomFields
         {
             element = default!;
 
-            if (ImGui.Button("Add Item"))
+            if (ImGui.Button("Add item"))
             {
                 element = new();
                 return true;

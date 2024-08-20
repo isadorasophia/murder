@@ -118,7 +118,9 @@ namespace Murder.Editor.CustomEditors
 
         private IEntity? _openedEntity = null;
 
-        public override IEntity? SelectedEntity => _world is null ? null : _openedEntity;
+        public override Guid WorldReference => _world?.WorldGuid ?? Guid.Empty;
+
+        protected override IEntity? SelectedEntityImpl => _world is null ? null : _openedEntity;
 
         float _entitiesEditorSize = 300;
         float _entitiesPickerSize = 200;

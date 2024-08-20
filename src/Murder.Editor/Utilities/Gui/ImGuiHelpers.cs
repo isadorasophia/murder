@@ -596,10 +596,10 @@ public static class ImGuiHelpers
 
         return modified;
     }
-    public static bool DrawEnumFieldAsFlags(string id, Type enumType, ref int intValue)
+    public static bool DrawEnumFieldAsFlags(string id, Type enumType, ref int intValue, int width = -1)
     {
         using TableMultipleColumns table = new($"##{id}-col-table",
-            flags: ImGuiTableFlags.SizingFixedFit, -1, -1, -1);
+            flags: ImGuiTableFlags.SizingFixedFit, width, width, width);
 
         ImGui.TableNextRow();
         ImGui.TableNextColumn();

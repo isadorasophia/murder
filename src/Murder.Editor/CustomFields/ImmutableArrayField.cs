@@ -1,8 +1,6 @@
 ﻿using ImGuiNET;
-using Murder.Diagnostics;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
-using Murder.Prefabs;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 

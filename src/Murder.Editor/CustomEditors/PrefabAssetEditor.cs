@@ -43,7 +43,7 @@ namespace Murder.Editor.CustomEditors
 
         private IEntity? _lastOpenedEntity = null;
 
-        public override IEntity? SelectedEntity => _lastOpenedEntity;
+        protected override IEntity? SelectedEntityImpl => _lastOpenedEntity;
 
         public override void UpdateEditor()
         {
