@@ -4,6 +4,7 @@ using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
+using Murder.Components.Physics;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Physics;
@@ -42,6 +43,20 @@ public class SATPhysicsSystem : IFixedUpdateSystem
             var collider = e.TryGetCollider();
             _ignore.Clear();
             _ignore.Add(e.EntityId);
+            if (e.TryGetIgnoreCollisionsWith() is IgnoreCollisionsWithComponent ignoreCollisionsWith)
+            {
+                foreach (var id in ignoreCollisionsWith.Ids)
+                {
+                    _ignore.Add(id);
+                    if (context.World.TryGetEntity(id) is Entity entity)
+                    {
+                        foreach (var child in entity.Children)
+                        {
+                            _ignore.Add(child);
+                        }
+                    }
+                } 
+            }
 
             if (e.Parent is not null)
                 _ignore.Add(e.Parent.Value);
