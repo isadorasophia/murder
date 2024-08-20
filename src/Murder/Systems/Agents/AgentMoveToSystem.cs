@@ -3,6 +3,7 @@ using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
+using Murder.Components.Physics;
 using Murder.Utilities;
 using System.Numerics;
 
@@ -19,6 +20,13 @@ namespace Murder.Systems.Agents
         {
             foreach (Entity e in context.Entities)
             {
+                if (e.TryGetMoveToMaxTime() is MoveToMaxTimeComponent moveToMaxTime &&
+                    Game.Now > moveToMaxTime.RemoveAt)
+                {
+                    e.RemoveMoveTo();
+                    e.RemoveMoveToTarget();
+                }
+
                 IMurderTransformComponent position = e.GetGlobalTransform();
                 
                 if (e.TryGetMoveTo() is MoveToComponent move)

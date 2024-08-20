@@ -1,8 +1,10 @@
 ﻿using Bang.Components;
+using Murder.Attributes;
 using System.Numerics;
 
 namespace Murder.Components;
 
+[DoNotPersistOnSave]
 public readonly struct MoveToTargetComponent : IComponent
 {
     public readonly int Target;

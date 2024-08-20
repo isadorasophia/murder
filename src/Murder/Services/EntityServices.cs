@@ -17,6 +17,16 @@ namespace Murder.Services;
 
 public static class EntityServices
 {
+    public static Vector2? GetGlobalPositionIfValid(this Entity? entity)
+    {
+        if (entity is null || !entity.IsActive || entity.IsDestroyed || !entity.HasTransform())
+        {
+            return null;
+        }
+        
+        return entity.GetGlobalTransform().Vector2;
+    }
+
     public static void SubscribeToAnimationEvents(this Entity listener, Entity broadcaster)
     {
         if (broadcaster.TryGetAnimationEventBroadcaster() is not AnimationEventBroadcasterComponent broadcasterComponent)
