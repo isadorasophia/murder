@@ -209,6 +209,39 @@ namespace Murder.Editor.Stages
                             {
                                 EditorHook.EditorMode = EditorHook.EditorModes.ObjectMode;
                             }
+
+                            ImGui.SameLine();
+                            bool isActive = EditorHook.StageSettings.HasFlag(StageSetting.ShowSprite);
+                            if (ImGuiHelpers.ColoredIconButton('\uf03e', "##modify_sprite_editor_enabled", isActive))
+                            {
+                                if (isActive)
+                                {
+                                    EditorHook.StageSettings &= ~StageSetting.ShowSprite;
+                                    isActive = false;
+                                }
+                                else
+                                {
+                                    EditorHook.StageSettings |= StageSetting.ShowSprite;
+                                    isActive = true;
+                                }
+                            }
+
+                            ImGui.SameLine();
+                            isActive = EditorHook.StageSettings.HasFlag(StageSetting.ShowCollider);
+                            if (ImGuiHelpers.ColoredIconButton('\uf0c8', "##modify_collider_editor_enabled", isActive))
+                            {
+                                if (isActive)
+                                {
+                                    EditorHook.StageSettings &= ~StageSetting.ShowCollider;
+                                    isActive = false;
+                                }
+                                else
+                                {
+                                    EditorHook.StageSettings |= StageSetting.ShowCollider;
+                                    isActive = true;
+                                }
+                            }
+
                             ImGui.TextColored(Game.Profile.Theme.Faded, "[Press TAB to exit]");
                         }
                         else
@@ -227,6 +260,38 @@ namespace Murder.Editor.Stages
                                 else
                                 {
                                     EditorHook.StageSettings |= StageSetting.ShowSound;
+                                    isActive = true;
+                                }
+                            }
+                            
+                            ImGui.SameLine();
+                            isActive = EditorHook.StageSettings.HasFlag(StageSetting.ShowSprite);
+                            if (ImGuiHelpers.ColoredIconButton('\uf03e', "##modify_sprite_editor_enabled", isActive))
+                            {
+                                if (isActive)
+                                {
+                                    EditorHook.StageSettings &= ~StageSetting.ShowSprite;
+                                    isActive = false;
+                                }
+                                else
+                                {
+                                    EditorHook.StageSettings |= StageSetting.ShowSprite;
+                                    isActive = true;
+                                }
+                            }
+
+                            ImGui.SameLine();
+                            isActive = EditorHook.StageSettings.HasFlag(StageSetting.ShowCollider);
+                            if (ImGuiHelpers.ColoredIconButton('\uf0c8', "##modify_collider_editor_enabled", isActive))
+                            {
+                                if (isActive)
+                                {
+                                    EditorHook.StageSettings &= ~StageSetting.ShowCollider;
+                                    isActive = false;
+                                }
+                                else
+                                {
+                                    EditorHook.StageSettings |= StageSetting.ShowCollider;
                                     isActive = true;
                                 }
                             }

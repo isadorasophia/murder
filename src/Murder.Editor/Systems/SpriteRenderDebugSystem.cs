@@ -138,7 +138,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
 
 
             bool showHandles = !previewMode &&
-                (hook.EditorMode == EditorHook.EditorModes.EditMode && hook.IsEntitySelectedOrParent(e));
+                (hook.EditorMode == EditorHook.EditorModes.EditMode && hook.IsEntitySelectedOrParent(e) && hook.StageSettings.HasFlag(Assets.StageSetting.ShowSprite));
 
             if (showHandles && hook.CursorWorldPosition is Point cursorPosition)
             {

@@ -80,6 +80,7 @@ namespace Murder.Editor.Systems
                 bool showHandles = allowEditingByDefault ? true :
                     (!hook.HideEditIds.Contains(e.EntityId)) &&
                     (hook.EditorMode == EditorHook.EditorModes.EditMode && (!hook.CanSwitchModes || hook.IsEntitySelectedOrParent(e))) &&
+                    hook.StageSettings.HasFlag(Assets.StageSetting.ShowCollider) &&
                     (hook.CursorIsBusy.Count==1 && hook.CursorIsBusy.Contains(typeof(DebugColliderRenderSystem)) || !hook.CursorIsBusy.Any());
 
                 bool isSolid = collider.Layer.HasFlag(CollisionLayersBase.SOLID);

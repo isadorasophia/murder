@@ -138,6 +138,7 @@ namespace Murder.Editor.Systems
                 {
                     Point cursorWorldPosition = hook.LastCursorWorldPosition;
                     string? targetGroup = EditorTileServices.FindTargetGroup(world, hook, cursorWorldPosition);
+                    SpriteAsset? sprite = Game.Data.TryGetAsset<SpriteAsset>(spriteGuid);
 
                     hook.AddEntityWithStage?.Invoke(
                         [
@@ -145,7 +146,7 @@ namespace Murder.Editor.Systems
                             new SpriteComponent(spriteGuid),
                         ],
                         targetGroup,
-                        /* name */ null);
+                        sprite?.Name);
 
                     ImGui.CloseCurrentPopup();
                 }
