@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Murder.Editor.Utilities
 {
-    internal static class Prettify
+    public static class Prettify
     {
         public static string FormatVariableName(string name)
         {
