@@ -32,6 +32,8 @@ namespace Murder.Editor
         private bool _isLoadingContent = true;
         int _changingScenesLock = 3;
 
+        public Guid CurrentSelectedAsset => _selectedTab;
+
         public EditorScene()
         {
             _explorerPages = CreateExplorerPages();
