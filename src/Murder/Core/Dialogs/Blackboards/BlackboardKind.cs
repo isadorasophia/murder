@@ -6,6 +6,7 @@
         Character,
         Sound,
         State,
+        Story,
         All
     }
 }

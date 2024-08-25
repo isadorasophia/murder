@@ -196,6 +196,7 @@ namespace Murder.Editor.Utilities
         private static Dictionary<string /* fact name */, Type /* type */>? _factsToType = null;
 
         private static Dictionary<string, SoundFact>? _soundBlackboards = null;
+        private static Dictionary<BlackboardKind, Dictionary<string, Fact>>? _kindToBlackboards = null;
 
         public static void RefreshCache()
         {
@@ -245,11 +246,21 @@ namespace Murder.Editor.Utilities
             return facts.ToDictionary(f => f.Name, f => f, StringComparer.OrdinalIgnoreCase);
         }
 
-        public static Dictionary<string, Fact> GetAllFactsFromBlackboards()
+        public static Dictionary<string, Fact> GetAllFactsFromBlackboards(BlackboardKind kind = BlackboardKind.All)
         {
-            if (_blackboards is null)
+            if (_blackboards is null || _kindToBlackboards is null)
             {
                 InitializeFactsFromBlackboards();
+            }
+
+            if (kind != BlackboardKind.All)
+            {
+                if (!_kindToBlackboards.TryGetValue(kind, out Dictionary<string, Fact>? result))
+                {
+                    return [];
+                }
+
+                return result;
             }
 
             return _blackboards;
@@ -273,6 +284,7 @@ namespace Murder.Editor.Utilities
 
         [MemberNotNull(nameof(_blackboards))]
         [MemberNotNull(nameof(_factsToType))]
+        [MemberNotNull(nameof(_kindToBlackboards))]
         private static void InitializeFactsFromBlackboards()
         {
             IEnumerable<Type> blackboardTypes = AppDomain.CurrentDomain.GetAssemblies()
@@ -281,10 +293,21 @@ namespace Murder.Editor.Utilities
 
             Dictionary<string, Type> factNameToType = new(StringComparer.OrdinalIgnoreCase);
             Dictionary<string, Fact> factNameToFact = new(StringComparer.OrdinalIgnoreCase);
+            Dictionary<BlackboardKind, Dictionary<string, Fact>> kindToBlackboards = new();
 
             foreach (Type t in blackboardTypes)
             {
                 BlackboardAttribute blackboard = (BlackboardAttribute)Attribute.GetCustomAttribute(t, typeof(BlackboardAttribute))!;
+
+                Dictionary<string, Fact>? factNameToFactForKind = null;
+                if (Activator.CreateInstance(t) is IBlackboard blackboardInstance)
+                {
+                    if (!kindToBlackboards.TryGetValue(blackboardInstance.Kind, out factNameToFactForKind))
+                    {
+                        factNameToFactForKind = new(StringComparer.OrdinalIgnoreCase);
+                        kindToBlackboards[blackboardInstance.Kind] = factNameToFactForKind;
+                    }
+                }
 
                 foreach (FieldInfo field in t.GetFields(BindingFlags.Instance | BindingFlags.Public))
                 {
@@ -320,11 +343,17 @@ namespace Murder.Editor.Utilities
 
                     factNameToFact[fact.EditorName] = fact;
                     factNameToType[fact.EditorName] = fieldType;
+
+                    if (factNameToFactForKind is not null)
+                    {
+                        factNameToFactForKind[fact.EditorName] = fact;
+                    }
                 }
             }
 
             _blackboards = factNameToFact;
             _factsToType = factNameToType;
+            _kindToBlackboards = kindToBlackboards;
         }
 
         private static readonly Lazy<ImmutableDictionary<string, Type>> _allComponentsByName = new(() =>

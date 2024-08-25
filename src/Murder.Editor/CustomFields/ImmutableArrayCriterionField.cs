@@ -59,8 +59,14 @@ namespace Murder.Editor.CustomFields
 
             Criterion criterion = node.Criterion;
 
+            BlackboardKind kind = BlackboardKind.All;
+            if (AttributeExtensions.TryGetAttribute(member, out BlackboardFieldAttribute? blackboardFieldAttribute))
+            {
+                kind = blackboardFieldAttribute.Kind;
+            }
+
             // -- Facts across all blackboards --
-            if (SearchBox.SearchFacts($"{member.Name}_fact_search", criterion.Fact) is Fact newFact)
+            if (SearchBox.SearchFacts($"{member.Name}_fact_search", criterion.Fact, kind) is Fact newFact)
             {
                 if (AssetsFilter.FetchTypeForFact(newFact.EditorName) is Type target)
                 {

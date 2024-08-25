@@ -273,7 +273,7 @@ namespace Murder.Editor.ImGuiExtended
             return default;
         }
 
-        public static Fact? SearchFacts(string id, Fact? current)
+        public static Fact? SearchFacts(string id, Fact? current, BlackboardKind kind = BlackboardKind.All)
         {
             SearchBoxSettings<Fact> settings = new(initialText: "Select fact");
 
@@ -282,7 +282,7 @@ namespace Murder.Editor.ImGuiExtended
                 settings.InitialSelected = new(current.Value.EditorName, current.Value);
             }
 
-            Lazy<Dictionary<string, Fact>> candidates = new(AssetsFilter.GetAllFactsFromBlackboards);
+            Lazy<Dictionary<string, Fact>> candidates = new(() => AssetsFilter.GetAllFactsFromBlackboards(kind));
 
             if (Search(id: $"{id}_s_", settings, values: candidates, SearchBoxFlags.None, out Fact chosen))
             {
