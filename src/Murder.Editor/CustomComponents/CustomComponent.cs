@@ -15,7 +15,6 @@ namespace Murder.Editor.CustomComponents;
 public enum CustomComponentsFlags
 {
     None = 0,
-    SkipSameLineForFilterField = 1 << 0, // The Filter Field on common components starts with ImGui.SameLine. This skips that
 }
 
 
@@ -35,7 +34,7 @@ public class CustomComponent
         if (CustomEditorsHelper.TryGetCustomComponent(target.GetType(), out var customFieldEditor))
         {
             object? boxed = target!;
-            if (customFieldEditor.DrawAllMembersWithTable(ref boxed, !flags.HasFlag(CustomComponentsFlags.SkipSameLineForFilterField)))
+            if (customFieldEditor.DrawAllMembersWithTable(ref boxed))
             {
                 target = (T)boxed!;
                 return true;
@@ -60,7 +59,7 @@ public class CustomComponent
 
         if (CustomEditorsHelper.TryGetCustomComponent(target.GetType(), out var customFieldEditor))
         {
-            return customFieldEditor.DrawAllMembersWithTable(ref target, true);
+            return customFieldEditor.DrawAllMembersWithTable(ref target);
         }
 
         GameLogger.Error(
@@ -76,7 +75,7 @@ public class CustomComponent
     /// <param name="target">The target object</param>
     /// <param name="sameLineFilter">Will draw the filter field on the same line, if available.</param>
     /// <returns></returns>
-    protected virtual bool DrawAllMembersWithTable(ref object target, bool sameLineFilter)
+    protected virtual bool DrawAllMembersWithTable(ref object target)
     {
         Type type = target.GetType();
         string name = type.Name;
@@ -104,11 +103,6 @@ public class CustomComponent
 
         if (!flags.HasFlag(EditorFieldFlags.NoFilter) && members.Count > 5) 
         {
-            if (sameLineFilter)
-            {
-                ImGui.SameLine();
-            }
-
             ImGui.BeginGroup();
 
 
@@ -117,11 +111,6 @@ public class CustomComponent
             {
                 ImGui.PushStyleColor(ImGuiCol.FrameBg, Game.Profile.Theme.Bg);
                 popColors++;
-            }
-
-            if (!sameLineFilter) // Why do we need this? I feel I am misunderstanding something from ImGui
-            {
-                ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 4);
             }
 
             ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Bg);
@@ -137,11 +126,6 @@ public class CustomComponent
 
             // Draw the search field
             ImGui.PushItemWidth(-1);
-
-            if (!sameLineFilter) // Return the cursor bacck up
-            {
-                ImGui.SetCursorPosY(ImGui.GetCursorPosY() - 4);
-            }
 
             if (ImGui.InputTextWithHint($"##search_field_{name}", "Filter...", ref filter, 256))
             {

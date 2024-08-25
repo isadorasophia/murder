@@ -17,7 +17,7 @@ namespace Murder.Editor.CustomEditors
     [CustomComponentOf(typeof(TileGridComponent))]
     internal class TileGridComponentEditor : CustomComponent
     {
-        protected override bool DrawAllMembersWithTable(ref object target, bool _)
+        protected override bool DrawAllMembersWithTable(ref object target)
         {
             bool fileChanged = false;
             ImGui.SameLine();

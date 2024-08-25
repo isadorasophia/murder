@@ -12,7 +12,7 @@ namespace Murder.Editor.CustomComponents;
 public class FacingComponentEditor : CustomComponent
 {
     bool _dragging = false;
-    protected override bool DrawAllMembersWithTable(ref object target, bool _)
+    protected override bool DrawAllMembersWithTable(ref object target)
     {
         var facing = (FacingComponent)target;
         bool fileChanged = false;

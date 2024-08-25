@@ -12,7 +12,7 @@ namespace Murder.Editor.CustomComponents
         private EditorMember GetInteractionField(Type t) =>
             ReflectionHelper.TryGetFieldForEditor(t, "_interaction")!;
 
-        protected override bool DrawAllMembersWithTable(ref object target, bool _)
+        protected override bool DrawAllMembersWithTable(ref object target)
         {
             EditorMember interactionMember = GetInteractionField(target.GetType());
 

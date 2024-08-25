@@ -11,7 +11,7 @@ namespace Murder.Editor.CustomComponents
     [CustomComponentOf(typeof(IStateMachineComponent))]
     public class StateMachineComponent : CustomComponent
     {
-        protected override bool DrawAllMembersWithTable(ref object target, bool _)
+        protected override bool DrawAllMembersWithTable(ref object target)
         {
             bool modified = false;
 

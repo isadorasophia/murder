@@ -15,7 +15,7 @@ public class SpriteFacingComponentEditor : CustomComponent
     private int _selectedSlice = 1;
     private int _lastSize = 0;
     private int _makeAuto = 0;
-    protected override bool DrawAllMembersWithTable(ref object target, bool sameLineFilter)
+    protected override bool DrawAllMembersWithTable(ref object target)
     {
         bool fileChanged = false;
         SpriteFacingComponent sprite = (SpriteFacingComponent)target;

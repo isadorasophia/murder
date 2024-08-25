@@ -12,7 +12,7 @@ namespace Murder.Editor.CustomComponents
     [CustomComponentOf(typeof(SituationComponent))]
     public class EditorSituationComponent : CustomComponent
     {
-        protected override bool DrawAllMembersWithTable(ref object target, bool _)
+        protected override bool DrawAllMembersWithTable(ref object target)
         {
             if (target is not SituationComponent situation)
             {

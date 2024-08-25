@@ -18,7 +18,7 @@ namespace Murder.Editor.CustomComponents
     [CustomComponentOf(typeof(SoundRuleAction))]
     public class SoundRuleActionComponent : CustomComponent
     {
-        protected override bool DrawAllMembersWithTable(ref object target, bool _)
+        protected override bool DrawAllMembersWithTable(ref object target)
         {
             bool modified = false;
 
