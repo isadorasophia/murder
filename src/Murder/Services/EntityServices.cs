@@ -444,4 +444,36 @@ public static class EntityServices
 
         return world.TryGetEntity(id.Value);
     }
+
+    public static void PauseAgent(Entity e)
+    {
+        if (e.TryGetAgentPause() is AgentPauseComponent agentPause)
+        {
+            agentPause = agentPause.Add();
+        }
+        else
+        {
+            agentPause = new();
+        }
+
+        e.SetAgentPause(agentPause);
+    }
+
+    public static void UnpauseAgent(Entity e)
+    {
+        if (e.TryGetAgentPause() is not AgentPauseComponent agentPause)
+        {
+            return;
+        }
+
+        agentPause = agentPause.Remove();
+        if (agentPause.Count == 0)
+        {
+            e.RemoveAgentPause();
+        }
+        else
+        {
+            e.SetAgentPause(agentPause);
+        }
+    }
 }
