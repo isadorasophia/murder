@@ -66,6 +66,11 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                 _ignore.Add(child);
             }
 
+            if (e.HasAgentPause())
+            {
+                continue;
+            }
+
             int mask = CollisionLayersBase.SOLID | CollisionLayersBase.HOLE;
             if (e.TryGetCustomCollisionMask() is CustomCollisionMask agent)
                 mask = agent.CollisionMask;
