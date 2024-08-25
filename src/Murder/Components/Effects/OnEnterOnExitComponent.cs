@@ -6,6 +6,13 @@ using Murder.Utilities.Attributes;
 
 namespace Murder.Components.Effects;
 
+[Flags]
+public enum OnEnterOnExitKind
+{
+    Player = 1,
+    Actors = 0x10
+}
+
 [CustomName("\uf70c On enter/exit interaction")]
 public readonly struct OnEnterOnExitComponent : IComponent
 {
@@ -16,6 +23,8 @@ public readonly struct OnEnterOnExitComponent : IComponent
 
     [Default("Add interaction on exit")]
     public readonly IInteractiveComponent? OnExit = null;
+
+    public readonly OnEnterOnExitKind Kind = OnEnterOnExitKind.Player;
 
     public OnEnterOnExitComponent() { }
 
