@@ -5,7 +5,7 @@ using System.Collections.Immutable;
 
 namespace Murder.Components
 {
-    [DoNotPersistOnSave]
+    [DoNotPersistOnSave(exceptIfComponentIsPresent: typeof(PersistPathfindComponent))]
     [Requires(typeof(PathfindComponent))]
     public readonly struct RouteComponent : IComponent
     {
