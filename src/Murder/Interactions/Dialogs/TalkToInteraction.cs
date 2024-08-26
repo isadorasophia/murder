@@ -24,7 +24,10 @@ namespace Murder.Interactions
                 return;
             }
 
-            if (interacted.TryGetSituation() is not SituationComponent situation)
+            SituationComponent? situation = interacted.TryGetOverrideSituation()?.Situation ??
+                interacted.TryGetSituation();
+
+            if (situation is null)
             {
                 GameLogger.Error("Interacted without a situation.");
                 return;
@@ -46,7 +49,7 @@ namespace Murder.Interactions
                 dialogEntity.SetAutomaticNextDialogue();
             }
 
-            dialogEntity.SetSituation(situation);
+            dialogEntity.SetSituation(situation.Value);
             dialogEntity.SetStateMachine(new StateMachineComponent<DialogStateMachine>());
 
             if (interacted is not null)
@@ -64,7 +67,7 @@ namespace Murder.Interactions
                 return null;
             }
 
-            if (!interacted.HasSituation())
+            if (!interacted.HasSituation() && !interacted.HasOverrideSituation())
             {
                 GameLogger.Error("Interacted without a situation.");
                 return null;
