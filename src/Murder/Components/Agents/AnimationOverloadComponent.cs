@@ -52,7 +52,7 @@ namespace Murder.Components
         public readonly int AnimationCount => _animationId.Length;
         public bool AtLast => Current == _animationId.Length - 1;
 
-        public readonly float SortOffset = 0f;
+        public readonly float SortOffset { get; init; } = 0f;
 
         public SpriteAsset? CustomSprite
         {
@@ -77,7 +77,7 @@ namespace Murder.Components
         { }
 
         public AnimationOverloadComponent(string animationId, float duration, bool loop, bool ignoreFacing, int current, float sortOffset, Guid customSprite) :
-            this(ImmutableArray.Create(animationId), duration, loop, ignoreFacing, current, sortOffset, customSprite)
+            this([animationId], duration, loop, ignoreFacing, current, sortOffset, customSprite)
         { }
 
         public AnimationOverloadComponent(ImmutableArray<string> animations, float duration, bool loop, bool ignoreFacing, int current, float sortOffset, Guid customSprite, float start)

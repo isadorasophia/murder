@@ -119,6 +119,17 @@ internal static class StageHelpers
         return result;
     }
 
+    public static Vector2? GetPositionForSelectedEntity()
+    {
+        if (Architect.Instance.ActiveScene is EditorScene editor &&
+            editor.EditorShown is AssetEditor assetEditor)
+        {
+            return assetEditor.SelectedEntity?.GetComponent<PositionComponent>().ToVector2();
+        }
+
+        return null;
+    }
+
     public static HashSet<string>? GetChildNamesForSelectedEntity()
     {
         if (Architect.Instance.ActiveScene is EditorScene editor &&
