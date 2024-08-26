@@ -197,6 +197,9 @@ public class EditorSettingsAsset : GameAsset
     public Point? TestWorldPosition;
 
     [Serialize, HideInEditor]
+    public int? TestStartDay;
+
+    [Serialize, HideInEditor]
     public float? TestStartTime;
 
     [JsonIgnore, HideInEditor]

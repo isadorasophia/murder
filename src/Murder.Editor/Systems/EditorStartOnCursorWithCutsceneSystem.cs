@@ -61,6 +61,7 @@ namespace Murder.Editor.Systems
 
         private Vector2 _selectedPosition = new();
 
+        private int _day = 0;
         private float _time = 0;
         private Guid _cutsceneGuid = Guid.Empty;
         private IStateMachineComponent? _stateMachine = null;
@@ -106,9 +107,12 @@ namespace Murder.Editor.Systems
 
             bool start = ImGuiHelpers.PrettySelectableWithIcon(label: "Play from here!", true);
 
+            ImGui.PushItemWidth(-1);
+            ImGui.Text("\uf017 Day");
+
+            _ = ImGui.SliderInt("day", ref _day, 0, 10);
             ImGui.Text("\uf017 Time");
 
-            ImGui.PushItemWidth(-1);
             _ = ImGui.SliderFloat("", ref _time, 0, 1);
             ImGui.PopItemWidth();
 
@@ -133,6 +137,7 @@ namespace Murder.Editor.Systems
             {
                 // start playing!
                 Architect.EditorSettings.TestWorldPosition = _selectedPosition.Point();
+                Architect.EditorSettings.TestStartDay = _day;
                 Architect.EditorSettings.TestStartTime = _time;
                 Architect.EditorSettings.TestStartWithEntityAndComponent = (_cutsceneGuid, _stateMachine);
 
