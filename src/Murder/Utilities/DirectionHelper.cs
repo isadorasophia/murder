@@ -255,6 +255,32 @@ public static class DirectionHelper
         return (Direction)quadra;
     }
 
+    public static Direction FromVectorWithHorizontal(Vector2 vector)
+    {
+        // Check if the vector is pointing more to the left or right
+        if (vector.X < 0)
+        {
+            return Direction.Left;
+        }
+        else
+        {
+            return Direction.Right;
+        }
+    }
+
+    public static Direction FromVectorWithVertical(Vector2 vector)
+    { 
+        // Check if the vector is pointing more upward or downward
+        if (vector.Y < 0)
+        {
+            return Direction.Up;
+        }
+        else
+        {
+            return Direction.Down;
+        }
+    }
+
     public static Vector2 ToVector(this Direction direction)
     {
         switch (direction)
