@@ -1,6 +1,7 @@
 ﻿using Bang.Components;
 using Bang.Interactions;
 using Murder.Attributes;
+using Murder.Core.Physics;
 using Murder.Utilities;
 using Murder.Utilities.Attributes;
 
@@ -25,6 +26,10 @@ public readonly struct OnEnterOnExitComponent : IComponent
     public readonly IInteractiveComponent? OnExit = null;
 
     public readonly OnEnterOnExitKind Kind = OnEnterOnExitKind.Player;
+
+    [CollisionLayer]
+    [Tooltip("Only applicable if entities other than player trigger this")]
+    public readonly int? TriggerOnLayer = null;
 
     public OnEnterOnExitComponent() { }
 
