@@ -127,6 +127,8 @@ public class RenderContext : IDisposable
     protected readonly bool _useDebugBatches;
 
     private Rectangle? _takeScreenShot;
+    protected bool _takeGameplayScreenShot;
+
     private bool _initialized = false;
     public enum RenderTargets
     {
@@ -456,6 +458,12 @@ public class RenderContext : IDisposable
         // =======================================================>
         _graphicsDevice.SetRenderTarget(null);
 
+        if (_takeGameplayScreenShot)
+        {
+            _takeGameplayScreenShot = false;
+            SaveScreenshot(_mainTarget, _mainTarget.Bounds.Size());
+        }
+
         if (RenderToScreen)
         {
             _graphicsDevice.Clear(Game.Profile.BackColor);
@@ -492,38 +500,43 @@ public class RenderContext : IDisposable
             _graphicsDevice.SetRenderTarget(screenshot);
 
             RenderServices.DrawTextureQuad(target, new Rectangle(position, size * Camera.Zoom), new Rectangle(Vector2.Zero, size), Matrix.Identity, Color.White, BlendState.Opaque);
-
-            string fileName = $"screenshot-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.png";
-            string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), fileName); // or any other directory you want to save in
-
-            using var stream = File.OpenWrite(filePath);
-            screenshot.SaveAsPng(stream, size.X, size.Y);
-
-            // Open the directory in the file explorer
-            if (OperatingSystem.IsWindows())
-            {
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = "explorer.exe",
-                    Arguments = $"/select,\"{filePath}\"",
-                    UseShellExecute = true
-                });
-            }
-            else if (OperatingSystem.IsMacOS())
-            {
-                Process.Start("open", $"-R \"{filePath}\"");
-            }
-            else if (OperatingSystem.IsLinux())
-            {
-                Process.Start("xdg-open", Path.GetDirectoryName(filePath)!);
-            }
-            else
-            {
-                Console.WriteLine($"File saved at {filePath}. Open manually as the OS is not recognized.");
-            }
+            SaveScreenshot(screenshot, screenshotArea.Size.Point());
             _takeScreenShot = null;
 
         }
+    }
+
+    protected static void SaveScreenshot(RenderTarget2D screenshot, Point size)
+    {
+        string fileName = $"screenshot-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.png";
+        string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), fileName); // or any other directory you want to save in
+        var stream = File.OpenWrite(filePath);
+        screenshot.SaveAsPng(stream, size.X, size.Y);
+
+        // Open the directory in the file explorer
+        if (OperatingSystem.IsWindows())
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "explorer.exe",
+                Arguments = $"/select,\"{filePath}\"",
+                UseShellExecute = true
+            }); 
+        }
+        else if (OperatingSystem.IsMacOS())
+        {
+            Process.Start("open", $"-R \"{filePath}\"");
+        }
+        else if (OperatingSystem.IsLinux())
+        {
+            Process.Start("xdg-open", Path.GetDirectoryName(filePath)!);
+        }
+        else
+        {
+            Console.WriteLine($"File saved at {filePath}. Open manually as the OS is not recognized.");
+        }
+
+        stream.Close();
     }
 
     [MemberNotNull(
@@ -610,8 +623,13 @@ public class RenderContext : IDisposable
     /// Saves a screenshot of the specified camera area.
     /// </summary>
     /// <param name="cameraRect">Area of the camera to capture.</param>
-    public void SaveScreenShot(Rectangle cameraRect)
+    public void SaveScreenShotArea(Rectangle cameraRect)
     {
         _takeScreenShot = cameraRect;
+    }
+
+    public void SaveGameplayScreenshot()
+    {
+        _takeGameplayScreenShot = true;
     }
 }

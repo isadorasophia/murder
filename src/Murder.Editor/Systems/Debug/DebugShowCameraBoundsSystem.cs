@@ -65,7 +65,7 @@ namespace Murder.Editor.Systems.Debug
             if (_takeScreenshot)
             {
                 _takeScreenshot = false;
-                render.SaveScreenShot(cameraRect);
+                render.SaveScreenShotArea(cameraRect);
             }
         }
 
