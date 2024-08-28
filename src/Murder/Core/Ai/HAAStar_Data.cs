@@ -1,4 +1,5 @@
 ﻿using Murder.Core.Geometry;
+using Murder.Serialization;
 using Murder.Utilities;
 using System.Collections.Immutable;
 
@@ -68,9 +69,9 @@ namespace Murder.Core.Ai
             public readonly Dictionary<Point, double> Neighbours = new();
 
             private readonly HashSet<Point> _neighboursCache = new();
-            private readonly Dictionary<Point, ImmutableDictionary<Point, Point>> _paths = new();
+            private readonly Dictionary<Point, ComplexDictionary<Point, Point>> _paths = new();
 
-            public void AddEdge(Point p, ImmutableDictionary<Point, Point> path, double cost)
+            public void AddEdge(Point p, ComplexDictionary<Point, Point> path, double cost)
             {
                 Neighbours.Add(p, cost);
 
@@ -91,7 +92,7 @@ namespace Murder.Core.Ai
                 return _neighboursCache.Contains(p);
             }
 
-            public ImmutableDictionary<Point, Point> PathTo(Point p)
+            public ComplexDictionary<Point, Point> PathTo(Point p)
             {
                 return _paths[p];
             }
@@ -99,14 +100,14 @@ namespace Murder.Core.Ai
 
         private void AddEdge(Node n1, Node n2)
         {
-            n1.AddEdge(n2.P, new Dictionary<Point, Point> { { n1.P, n2.P } }.ToImmutableDictionary(), n2.Weight);
-            n2.AddEdge(n1.P, new Dictionary<Point, Point> { { n2.P, n1.P } }.ToImmutableDictionary(), n1.Weight);
+            n1.AddEdge(n2.P, new ComplexDictionary<Point, Point> { { n1.P, n2.P } }, n2.Weight);
+            n2.AddEdge(n1.P, new ComplexDictionary<Point, Point> { { n2.P, n1.P } }, n1.Weight);
         }
 
-        private void AddEdge(Node n1, Node n2, ImmutableDictionary<Point, Point> path, double cost, bool directed = false)
+        private void AddEdge(Node n1, Node n2, ComplexDictionary<Point, Point> path, double cost, bool directed = false)
         {
-            ImmutableDictionary<Point, Point> path1;
-            ImmutableDictionary<Point, Point> path2;
+            ComplexDictionary<Point, Point> path1;
+            ComplexDictionary<Point, Point> path2;
 
             if (path.ContainsKey(n1.P))
             {

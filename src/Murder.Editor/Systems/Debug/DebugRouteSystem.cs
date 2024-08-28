@@ -13,8 +13,7 @@ using Murder.Editor.Components;
 using Murder.Editor.Utilities;
 using Murder.Services;
 using Murder.Utilities;
-using System.Collections.Immutable;
-using Murder.Editor.Data.Graphics;
+using Murder.Serialization;
 
 namespace Murder.Editor.Systems
 {
@@ -34,15 +33,13 @@ namespace Murder.Editor.Systems
             var rectSize = Grid.CellDimensions - offset * 2;
             foreach (var e in context.Entities)
             {
-                ImmutableDictionary<Point, Point> path = e.GetRoute().Nodes;
+                ComplexDictionary<Point, Point> path = e.GetRoute().Nodes;
 
                 Point position = e.GetGlobalTransform().Point;
                 Point gridPosition = position.ToGrid();
 
-
                 if (e.TryGetPathfindStatus() is PathfindStatusComponent pathfindStatusComponent)
                 {
-
                     if (e.TryGetPathfind() is PathfindComponent pathfindComponent)
                     {
                         RenderServices.DrawText(render.DebugBatch, MurderFonts.PixelFont,
@@ -109,7 +106,7 @@ namespace Murder.Editor.Systems
             }
         }
 
-        private void DrawPoint(RenderContext render, ImmutableDictionary<Point, Point> path, Point point, HashSet<Point> loopCheck)
+        private void DrawPoint(RenderContext render, ComplexDictionary<Point, Point> path, Point point, HashSet<Point> loopCheck)
         {
             if (path.TryGetValue(point, out Point next))
             {

@@ -1,6 +1,7 @@
 ﻿using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
+using Murder.Serialization;
 using Murder.Services;
 using System.Collections.Immutable;
 using System.Numerics;
@@ -134,9 +135,9 @@ namespace Murder.Utilities
             }
         }
 
-        public static ImmutableDictionary<Point, Point> Reverse(this IDictionary<Point, Point> input, Point initial, Point target)
+        public static ComplexDictionary<Point, Point> Reverse(this IDictionary<Point, Point> input, Point initial, Point target)
         {
-            var reversePath = ImmutableDictionary.CreateBuilder<Point, Point>();
+            ComplexDictionary<Point, Point> reversePath = [];
 
             Point next = target;
             while (next != initial)
@@ -147,7 +148,7 @@ namespace Murder.Utilities
                 next = previous;
             }
 
-            return reversePath.ToImmutable();
+            return reversePath;
         }
 
         public static IntRectangle GetBoundingBox(this Rectangle rect)

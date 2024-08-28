@@ -3,6 +3,7 @@ using Murder.Components;
 using Murder.Core.Geometry;
 using Murder.Core.Physics;
 using Murder.Diagnostics;
+using Murder.Serialization;
 using Murder.Utilities;
 using System.Collections.Immutable;
 
@@ -13,7 +14,7 @@ namespace Murder.Core.Ai
         /// <summary>
         /// Find a path between <paramref name="initial"/> and <paramref name="target"/>.
         /// </summary>
-        public static ImmutableDictionary<Point, Point> FindPath(this Map? map, World world, Point initial, Point target, PathfindAlgorithmKind kind, int collisionMask, out PathfindStatusFlags statusFlags)
+        public static ComplexDictionary<Point, Point> FindPath(this Map? map, World world, Point initial, Point target, PathfindAlgorithmKind kind, int collisionMask, out PathfindStatusFlags statusFlags)
         {
             statusFlags = PathfindStatusFlags.None;
 
@@ -36,7 +37,7 @@ namespace Murder.Core.Ai
                     if (world.TryGetUniqueHAAStarPathfind()?.Data is not HAAStar haastar)
                     {
                         GameLogger.Error("Unable to find component for HAAStar. Pathfind will abort!");
-                        return ImmutableDictionary<Point, Point>.Empty;
+                        return [];
                     }
 
                     return haastar.Search(map, initial, target);
@@ -47,12 +48,12 @@ namespace Murder.Core.Ai
             }
         }
 
-        private static ImmutableDictionary<Point, Point> StraightLine(Point initial, Point target)
+        private static ComplexDictionary<Point, Point> StraightLine(Point initial, Point target)
         {
-            var builder = ImmutableDictionary.CreateBuilder<Point, Point>();
+            ComplexDictionary<Point, Point> builder = [];
             builder.Add(initial, target);
 
-            return builder.ToImmutable();
+            return builder;
         }
 
         /// <summary>

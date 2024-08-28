@@ -1,17 +1,17 @@
 ﻿using Murder.Core.Geometry;
-using System.Collections.Immutable;
+using Murder.Serialization;
 
 namespace Murder.Core.Ai
 {
     internal static class Astar
     {
-        public static ImmutableDictionary<Point, Point> FindPath(Map map, Point initial, Point target, bool strict)
+        public static ComplexDictionary<Point, Point> FindPath(Map map, Point initial, Point target, bool strict)
         {
             var (path, _) = FindPathWithCost(map, initial, target, strict);
             return path;
         }
 
-        internal static (ImmutableDictionary<Point, Point> Path, double Cost) FindPathWithCost(
+        internal static (ComplexDictionary<Point, Point> Path, double Cost) FindPathWithCost(
             Map map, Point initial, Point target, bool strict)
         {
             var from = new Dictionary<Point, Point>();
@@ -56,12 +56,12 @@ namespace Murder.Core.Ai
                 }
             }
 
-            var reversePath = ImmutableDictionary.CreateBuilder<Point, Point>();
+            ComplexDictionary<Point, Point> reversePath = [];
 
             if (!from.ContainsKey(target))
             {
                 // Path is actually unreachable.
-                return (ImmutableDictionary<Point, Point>.Empty, int.MaxValue);
+                return ([], int.MaxValue);
             }
 
             double totalCost = 0;
@@ -75,7 +75,7 @@ namespace Murder.Core.Ai
                 {
                     // Cycle might have been detected? Abort immediately.
                     // This has been found while doing an A* while a Preprocess has been taking place.
-                    return (ImmutableDictionary<Point, Point>.Empty, int.MaxValue);
+                    return ([], int.MaxValue);
                 }
 
                 reversePath[previous] = next;
@@ -84,7 +84,7 @@ namespace Murder.Core.Ai
                 totalCost += costForVisitedNode[previous];
             }
 
-            return (reversePath.ToImmutable(), totalCost);
+            return (reversePath, totalCost);
         }
 
         internal static double Heuristic(Point initial, Point target)

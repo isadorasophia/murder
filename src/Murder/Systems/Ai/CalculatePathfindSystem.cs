@@ -105,7 +105,7 @@ namespace Murder.Systems
                 pathfind.Algorithm,
                 collisionMask, out statusFlags);
 
-            if (path.IsEmpty)
+            if (path.Count == 0)
             {
                 e.SendMessage(new PathNotPossibleMessage());
                 e.SetPathfindStatus(statusFlags | PathfindStatusFlags.PathNotFound);

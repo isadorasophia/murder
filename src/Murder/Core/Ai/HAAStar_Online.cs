@@ -1,11 +1,12 @@
 ﻿using Murder.Core.Geometry;
+using Murder.Serialization;
 using System.Collections.Immutable;
 
 namespace Murder.Core.Ai
 {
     public partial class HAAStar
     {
-        public ImmutableDictionary<Point, Point> Search(Map map, Point initial, Point target)
+        public ComplexDictionary<Point, Point> Search(Map map, Point initial, Point target)
         {
             if (_pendingCalculate != null && !_pendingCalculate.IsCompleted)
             {
@@ -16,7 +17,7 @@ namespace Murder.Core.Ai
             (Node nInitial, bool discardInitial) = InsertNode(map, initial);
             (Node nTarget, bool discardTarget) = InsertNode(map, target);
 
-            ImmutableDictionary<Point, Point> path = SearchForPath(nInitial, nTarget);
+            ComplexDictionary<Point, Point> path = SearchForPath(nInitial, nTarget);
 
             if (discardInitial)
             {
@@ -69,7 +70,7 @@ namespace Murder.Core.Ai
             }
         }
 
-        private ImmutableDictionary<Point, Point> SearchForPath(Node initial, Node target)
+        private ComplexDictionary<Point, Point> SearchForPath(Node initial, Node target)
         {
             var from = new Dictionary<Node, Node>();
 
@@ -107,12 +108,12 @@ namespace Murder.Core.Ai
                 }
             }
 
-            var reversePath = ImmutableDictionary.CreateBuilder<Point, Point>();
+            ComplexDictionary<Point, Point> reversePath = [];
 
             if (!from.ContainsKey(target))
             {
                 // Path is actually unreachable.
-                return reversePath.ToImmutable();
+                return reversePath;
             }
 
             Node next = target;
@@ -123,7 +124,7 @@ namespace Murder.Core.Ai
                 if (reversePath.ContainsKey(previous.P))
                 {
                     // Cycle might have been detected? Abort immediately.
-                    return ImmutableDictionary<Point, Point>.Empty;
+                    return [];
                 }
 
                 foreach ((Point innerFrom, Point innerTo) in previous.PathTo(next.P))
@@ -136,7 +137,7 @@ namespace Murder.Core.Ai
                 next = previous;
             }
 
-            return reversePath.ToImmutable();
+            return reversePath;
         }
     }
 }
