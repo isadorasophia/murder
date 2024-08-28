@@ -67,8 +67,11 @@ namespace Murder.Editor.CustomFields
             ImGui.PushItemWidth(300);
 
             modifiedValue = value;
-            if (DrawValue(ref modifiedValue, nameof(Portrait.Sprite)))
+
+            Portrait portrait = modifiedValue.Portrait;
+            if (DrawValue(ref portrait, nameof(Portrait.Sprite)))
             {
+                modifiedValue = value with { Portrait = value.Portrait.WithSprite(portrait.Sprite) };
                 modified = true;
             }
 
@@ -81,11 +84,14 @@ namespace Murder.Editor.CustomFields
             }
             ImGui.PopItemWidth();
 
-            int flags = (int)value.Properties;
-            if (ImGuiHelpers.DrawEnumFieldAsFlags(id, typeof(PortraitProperties), ref flags))
+            if (portrait.Sprite != Guid.Empty)
             {
-                modifiedValue = value with { Properties = (PortraitProperties)flags };
-                modified = true;
+                int flags = (int)value.Properties;
+                if (ImGuiHelpers.DrawEnumFieldAsFlags(id, typeof(PortraitProperties), ref flags))
+                {
+                    modifiedValue = value with { Properties = (PortraitProperties)flags };
+                    modified = true;
+                }
             }
 
             return modified;

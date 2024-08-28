@@ -32,6 +32,8 @@ namespace Murder.Core
 
         public Portrait WithAnimationId(string animationId) => new(Sprite, animationId);
 
+        public Portrait WithSprite(Guid sprite) => new(sprite, AnimationId);
+
         public bool Equals(Portrait other)
         {
             return Sprite == other.Sprite && AnimationId == other.AnimationId;

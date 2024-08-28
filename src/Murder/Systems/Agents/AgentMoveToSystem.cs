@@ -4,7 +4,6 @@ using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Utilities;
-using System.Diagnostics;
 using System.Numerics;
 
 namespace Murder.Systems.Agents

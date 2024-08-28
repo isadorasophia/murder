@@ -347,7 +347,7 @@ public static class EditorAssetHelpers
         {
             if (ImGui.BeginCombo($"##AnimationID", animationId))
             {
-                foreach (string value in ase.Animations.Keys)
+                foreach (string value in ase.Animations.Keys.Order())
                 {
                     if (string.IsNullOrWhiteSpace(value))
                     {
