@@ -5,29 +5,44 @@ using Murder.Utilities;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 
-namespace Murder.Assets
+namespace Murder.Assets;
+
+[Flags]
+public enum PortraitProperties
 {
-    public class SpeakerAsset : GameAsset
-    {
-        public override char Icon => '\uf2c1';
-        public override string EditorFolder => "#\uf518Story\\#\uf2c1Speakers";
+    None = 0,
+    Loop = 1
+}
 
-        [Tooltip("Name used on scripts and to reference this speaker")]
-        public readonly string SpeakerName = string.Empty;
+public readonly struct PortraitInfo
+{
+    public readonly Portrait Portrait { get; init; } = new();
 
-        [Tooltip("Portrait that will be shown by default, if none is specified.")]
-        public readonly string? DefaultPortrait = "Idle";
+    public readonly PortraitProperties Properties { get; init; } = PortraitProperties.Loop; 
 
-        [Tooltip("Speaker events")]
-        public readonly AssetRef<SpeakerEventsAsset>? Events = null;
+    public PortraitInfo() { }
+}
 
-        public readonly Portrait? CustomBox;
+public class SpeakerAsset : GameAsset
+{
+    public override char Icon => '\uf2c1';
+    public override string EditorFolder => "#\uf518Story\\#\uf2c1Speakers";
 
-        public readonly float fade = 0.45f;
+    [Tooltip("Name used on scripts and to reference this speaker")]
+    public readonly string SpeakerName = string.Empty;
 
-        [Font]
-        public readonly int? CustomFont;
+    [Tooltip("Portrait that will be shown by default, if none is specified.")]
+    public readonly string? DefaultPortrait = "Idle";
 
-        public readonly ImmutableDictionary<string, Portrait> Portraits = ImmutableDictionary<string, Portrait>.Empty;
-    }
-}   
+    [Tooltip("Speaker events")]
+    public readonly AssetRef<SpeakerEventsAsset>? Events = null;
+
+    public readonly Portrait? CustomBox;
+
+    public readonly float fade = 0.45f;
+
+    [Font]
+    public readonly int? CustomFont;
+
+    public readonly ImmutableDictionary<string, PortraitInfo> Portraits = ImmutableDictionary<string, PortraitInfo>.Empty;
+}

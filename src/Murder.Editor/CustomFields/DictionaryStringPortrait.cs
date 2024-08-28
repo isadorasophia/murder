@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using Murder.Assets;
 using Murder.Assets.Graphics;
 using Murder.Core;
 using Murder.Editor.ImGuiExtended;
@@ -9,12 +10,12 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Murder.Editor.CustomFields
 {
-    [CustomFieldOf(typeof(ImmutableDictionary<string, Portrait>))]
-    internal class DictionaryStringPortrait : DictionaryField<string, Portrait>
+    [CustomFieldOf(typeof(ImmutableDictionary<string, PortraitInfo>))]
+    internal class DictionaryStringPortrait : DictionaryField<string, PortraitInfo>
     {
         private string _new = string.Empty;
 
-        protected override bool Add(IList<string> candidates, [NotNullWhen(true)] out (string Key, Portrait Value)? element)
+        protected override bool Add(IList<string> candidates, [NotNullWhen(true)] out (string Key, PortraitInfo Value)? element)
         {
             if (ImGui.Button("New Portrait"))
             {
@@ -29,7 +30,7 @@ namespace Murder.Editor.CustomFields
                 if (ImGui.Button("Create"))
                 {
                     ImGui.CloseCurrentPopup();
-                    element = (_new, new Portrait());
+                    element = (_new, new PortraitInfo());
 
                     ImGui.EndPopup();
                     return true;
@@ -42,23 +43,24 @@ namespace Murder.Editor.CustomFields
             return false;
         }
 
-        protected override List<string> GetCandidateKeys(EditorMember member, IDictionary<string, Portrait> fieldValue) =>
+        protected override List<string> GetCandidateKeys(EditorMember member, IDictionary<string, PortraitInfo> fieldValue) =>
             new() { default! };
 
         protected override bool CanModifyKeys() => true;
 
-        public override bool DrawElementValue(EditorMember member, Portrait value, out Portrait modifiedValue)
+        public override bool DrawElementValue(EditorMember member, PortraitInfo value, out PortraitInfo modifiedValue)
         {
             bool modified = false;
 
-            using TableMultipleColumns table = new($"action_{value.Sprite}_{value.AnimationId}", flags: ImGuiTableFlags.SizingFixedFit, 0, 0);
+            string id = $"action_{value.Portrait.Sprite}_{value.Portrait.AnimationId}";
+            using TableMultipleColumns table = new(id, flags: ImGuiTableFlags.SizingFixedFit, 0, 0);
 
             ImGui.TableNextRow();
             ImGui.TableNextColumn();
 
-            if (Game.Data.TryGetAsset<SpriteAsset>(value.Sprite) is SpriteAsset ase)
+            if (Game.Data.TryGetAsset<SpriteAsset>(value.Portrait.Sprite) is SpriteAsset ase)
             {
-                EditorAssetHelpers.DrawPreview(ase, maxSize: 256, value.AnimationId);
+                EditorAssetHelpers.DrawPreview(ase, maxSize: 256, value.Portrait.AnimationId);
                 ImGui.TableNextColumn();
             }
 
@@ -71,14 +73,20 @@ namespace Murder.Editor.CustomFields
             }
 
             // Draw combo box for the animation id
-            string animation = value.AnimationId;
-            if (EditorAssetHelpers.DrawComboBoxFor(value.Sprite, ref animation))
+            string animation = value.Portrait.AnimationId;
+            if (EditorAssetHelpers.DrawComboBoxFor(value.Portrait.Sprite, ref animation))
             {
-                modifiedValue = value.WithAnimationId(animation);
+                modifiedValue = value with { Portrait = value.Portrait.WithAnimationId(animation) };
                 modified = true;
             }
-
             ImGui.PopItemWidth();
+
+            int flags = (int)value.Properties;
+            if (ImGuiHelpers.DrawEnumFieldAsFlags(id, typeof(PortraitProperties), ref flags))
+            {
+                modifiedValue = value with { Properties = (PortraitProperties)flags };
+                modified = true;
+            }
 
             return modified;
         }

@@ -86,13 +86,13 @@ namespace Murder.Editor.CustomEditors
 
             string portraitName = line.Portrait is null ? _script.Portrait ?? speaker.DefaultPortrait ?? speaker.Portraits.Keys.First() : line.Portrait;
 
-            if (!speaker.Portraits.TryGetValue(portraitName, out Portrait portrait) ||
-                Game.Data.TryGetAsset<SpriteAsset>(portrait.Sprite) is not SpriteAsset aseprite)
+            if (!speaker.Portraits.TryGetValue(portraitName, out PortraitInfo portrait) ||
+                Game.Data.TryGetAsset<SpriteAsset>(portrait.Portrait.Sprite) is not SpriteAsset aseprite)
             {
                 return false;
             }
 
-            EditorAssetHelpers.DrawPreview(aseprite, maxSize: 100, portrait.AnimationId);
+            EditorAssetHelpers.DrawPreview(aseprite, maxSize: 100, portrait.Portrait.AnimationId);
             return true;
         }
 

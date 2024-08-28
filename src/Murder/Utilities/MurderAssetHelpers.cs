@@ -67,12 +67,12 @@ namespace Murder.Utilities
                     return null;
                 }
 
-                if (!asset.Portraits.TryGetValue(portrait, out Portrait result))
+                if (!asset.Portraits.TryGetValue(portrait, out PortraitInfo result))
                 {
                     return null;
                 }
 
-                return result;
+                return result.Portrait;
             }
 
             return null;
