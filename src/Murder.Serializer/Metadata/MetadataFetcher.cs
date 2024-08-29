@@ -529,11 +529,18 @@ public sealed class MetadataFetcher
 
             if (memberNamedType.IsGenericType)
             {
-                if (Mode is ScanMode.GenerateOptions &&
-                    memberNamedType.ConstructedFrom.Equals(murderSymbols.ComplexDictionaryClass, SymbolEqualityComparer.Default))
+                if (memberNamedType.ConstructedFrom.Equals(murderSymbols.ComplexDictionaryClass, SymbolEqualityComparer.Default))
                 {
-                    ComplexDictionaryArguments args = new() { Key = memberNamedType.TypeArguments[0], Value = memberNamedType.TypeArguments[1] };
-                    ComplexDictionaries.Add(args);
+                    if (Mode is ScanMode.GenerateOptions)
+                    {
+                        ComplexDictionaryArguments args = new() { Key = memberNamedType.TypeArguments[0], Value = memberNamedType.TypeArguments[1] };
+                        ComplexDictionaries.Add(args);
+                    }
+                    else
+                    {
+                        // We should explicitly add all ComplexDictionaries regardless of their accessibility option.
+                        TrackMetadataAndPrivateMembers(murderSymbols, memberType);
+                    }
                 }
 
                 TrackAllGenericArguments(murderSymbols, memberNamedType);

@@ -2,7 +2,6 @@
 using Murder.Attributes;
 using Murder.Core.Geometry;
 using Murder.Serialization;
-using System.Collections.Immutable;
 
 namespace Murder.Components
 {
