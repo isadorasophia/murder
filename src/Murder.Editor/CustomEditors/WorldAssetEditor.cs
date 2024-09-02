@@ -19,6 +19,7 @@ using Murder.Editor.Stages;
 using Murder.Editor.Utilities;
 using Murder.Prefabs;
 using Murder.Utilities;
+using System;
 using System.Collections.Immutable;
 using System.Numerics;
 
@@ -85,6 +86,8 @@ namespace Murder.Editor.CustomEditors
 
             Stages[guid].EditorHook.AddPrefabWithStage += AddEntityFromWorld;
             Stages[guid].EditorHook.AddEntityWithStage += AddEntityFromWorld;
+
+            Stages[guid].EditorHook.ToggleEntityWithStage += ToggleActivateEntityFromWorld;
             Stages[guid].EditorHook.RemoveEntityWithStage += DeleteEntityFromWorld;
 
             Stages[guid].EditorHook.MoveEntitiesToFolder += MoveEntitiesToGroup;
@@ -556,12 +559,30 @@ namespace Murder.Editor.CustomEditors
             IEntity? e = Stages[_asset.Guid]?.FindInstance(id);
             if (e is null)
             {
+                // TODO: Support removing children?
                 GameLogger.Error($"Unable to remove entity {id} from world.");
                 return;
             }
 
-            // TODO: Support removing children?
             DeleteInstance(parent: null, e.Guid);
+        }
+
+        protected virtual void ToggleActivateEntityFromWorld(int id, bool activate)
+        {
+            GameLogger.Verify(_world is not null && _asset is not null && Stages.ContainsKey(_asset.Guid));
+
+            _asset.FileChanged = true;
+
+            Stage stage = Stages[_asset.Guid];
+
+            if (stage.FindInstance(id) is not EntityInstance e)
+            {
+                // TODO: Support toggling children?
+                GameLogger.Error($"Unable to toggle entity {id} from world.");
+                return;
+            }
+
+            EnableEntity(parentGuid: null, e, activate);
         }
 
         protected override void OnEntityModified(int entityId, IComponent c)

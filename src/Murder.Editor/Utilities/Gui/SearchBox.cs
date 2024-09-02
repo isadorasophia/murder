@@ -104,9 +104,9 @@ namespace Murder.Editor.ImGuiExtended
         public static Type? SearchComponent(IEnumerable<IComponent>? excludeComponents = default, IComponent? initialValue = default) =>
             SearchComponentType(excludeComponents, initialValue?.GetType());
 
-        public static Type? SearchComponentType(IEnumerable<IComponent>? excludeComponents = default, Type? t = default)
+        public static Type? SearchComponentType(IEnumerable<IComponent>? excludeComponents = default, Type? t = default, string? initialText = null)
         {
-            SearchBoxSettings<Type> settings = new(initialText: "Select a component");
+            SearchBoxSettings<Type> settings = new(initialText: initialText ?? "Select a component");
 
             if (t is not null)
             {

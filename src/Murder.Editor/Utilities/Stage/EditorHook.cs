@@ -35,6 +35,7 @@ namespace Murder.Editor.Utilities
         public Action<Guid, IComponent[], string?>? AddPrefabWithStage;
         public Action<IComponent[], string?, string?>? AddEntityWithStage;
 
+        public Action<int, bool>? ToggleEntityWithStage;
         public Action<int>? RemoveEntityWithStage;
         public Action<int, IComponent>? OnComponentModified;
 

@@ -134,7 +134,7 @@ namespace Murder.Editor.Systems
                 }
 
                 Guid spriteGuid = Guid.Empty;
-                if (SearchBox.SearchAsset(ref spriteGuid, typeof(SpriteAsset), SearchBoxFlags.None, null, "Add Unique Prop"))
+                if (SearchBox.SearchAsset(ref spriteGuid, typeof(SpriteAsset), SearchBoxFlags.None, null, "Add unique prop"))
                 {
                     Point cursorWorldPosition = hook.LastCursorWorldPosition;
                     string? targetGroup = EditorTileServices.FindTargetGroup(world, hook, cursorWorldPosition);
@@ -150,6 +150,19 @@ namespace Murder.Editor.Systems
 
                     ImGui.CloseCurrentPopup();
                 }
+
+                ImGui.Separator();
+
+                if (SearchBox.SearchComponentType(initialText: "Toggle component") is Type tComponentToFilter)
+                {
+                    ImmutableArray<Entity> entities = world.GetActivatedAndDeactivatedEntitiesWith(tComponentToFilter);
+                    foreach (Entity e in entities)
+                    {
+                        hook.ToggleEntityWithStage?.Invoke(e.EntityId, !e.IsActive);
+                    }
+                }
+
+                ImGuiHelpers.HelpTooltip("Toggle activate or deactivate entities with this component");
 
                 ImGui.EndPopup();
             }
