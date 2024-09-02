@@ -50,7 +50,13 @@ namespace Murder.Editor.CustomComponents
                 // Initialize the field value, if it's null or a mismatch.
                 if (action.Value is null || action.Value.GetType() != targetType)
                 {
-                    valueField.SetValue(target, Activator.CreateInstance(targetType));
+                    object? v = Activator.CreateInstance(targetType);
+                    if (targetType.IsEnum)
+                    {
+                        v = Convert.ToInt32(v);
+                    }
+
+                    valueField.SetValue(target, v);
                 }
             }
 
@@ -66,6 +72,11 @@ namespace Murder.Editor.CustomComponents
 
             if (modifiedValue)
             {
+                if (targetType.IsEnum)
+                {
+                    value = Convert.ToInt32(value);
+                }
+
                 valueField.SetValue(target, value);
                 modified = true;
             }
