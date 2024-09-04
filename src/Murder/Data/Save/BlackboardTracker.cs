@@ -410,6 +410,16 @@ namespace Murder.Save
             return resultAsT;
         }
 
+        public T? GetValue<T>(string? name, string fieldName, Guid? character = null) where T : notnull
+        {
+            if (FindBlackboard(name, character) is not BlackboardInfo info)
+            {
+                return default;
+            }
+
+            return GetValue<T>(info, fieldName);
+        }
+
         public void SetValue<T>(string? name, string fieldName, T value, Guid? character = null) where T : notnull
         {
             if (FindBlackboard(name, character) is not BlackboardInfo info)

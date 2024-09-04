@@ -447,6 +447,7 @@ public static class ImGuiHelpers
 
     public static bool DrawEnumFieldAsFlagList(string id, string emptyText, Type enumType, ref int intValue)
         => DrawEnumFieldAsFlagList(id, emptyText, null, enumType, ref intValue);
+
     public static bool DrawEnumFieldAsFlagList(string id, string? emptyText, string? allText, Type enumType, ref int intValue)
     {
         bool modified = false;
@@ -489,8 +490,8 @@ public static class ImGuiHelpers
             Array values = Enum.GetValues(enumType);
             string[] prettyNames = Enum.GetNames(enumType);
 
-
             bool comboOpen = false;
+
             // Find the right index (tentatively).
             if (isSingleValue)
             {
@@ -500,7 +501,6 @@ public static class ImGuiHelpers
                 foreach (var value in values)
                 {
                     int v = Convert.ToInt32(value);
-
                     if (v == intValue)
                     {
                         result = index;
