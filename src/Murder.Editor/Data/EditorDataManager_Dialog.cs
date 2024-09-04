@@ -6,6 +6,7 @@ using Murder.Editor.Utilities;
 using Murder.Serialization;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Diagnostics;
 
 namespace Murder.Editor.Data
 {
@@ -90,7 +91,7 @@ namespace Murder.Editor.Data
                 else
                 {
                     asset = new();
-                    asset.Name = StringHelper.CapitalizeFirstLetter(script.Name);
+                    asset.Name = script.Name;
 
                     AddAsset(asset);
                 }
@@ -126,7 +127,8 @@ namespace Murder.Editor.Data
                 {
                     foreach (Guid g in assetGuids)
                     {
-                        builder[Path.GetFileNameWithoutExtension(_allAssets[g].Name)] = g;
+                        GameAsset asset = _allAssets[g];
+                        builder[asset.Name] = g;
                     }
                 }
             }
