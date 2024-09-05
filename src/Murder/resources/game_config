@@ -186,7 +186,8 @@
     "DialogueBtnStepBack": "acdd67d5-64da-333f-f96c-dfadf9857dce",
     "DialogueBtnStepForward": "bbbaf440-1261-2598-8af2-b8d0e9e6922e",
     "SoundImage": "1ad61775-94d2-0765-a254-f16d6c8a3d4d",
-    "MusicImage": "2a98ce49-1e0a-9109-026f-3392d992e44d"
+    "MusicImage": "2a98ce49-1e0a-9109-026f-3392d992e44d",
+    "ListenerImage": "2a98ce49-1e0a-9109-026f-3392d992e44d"
   },
   "BackColor": {
     "R": 0,
@@ -196,6 +197,7 @@
   },
   "MissingImage": "485a9a13-e62b-7215-dbc3-9e1df4bcba73",
   "LocalizationResources": {},
+  "MinimumVelocityForSweep": 6,
   "Name": "Game Profile",
   "Guid": "ba8af4fb-54f1-45d3-8635-454f07987014",
   "scalingFilter": false,

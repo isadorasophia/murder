@@ -45,6 +45,7 @@ namespace Murder.Core.Dialogs
             ImmutableArray<Line> lines,
             ImmutableArray<DialogAction>? actions,
             string? @goto,
+            bool isExit,
             bool isChoice) : this()
         {
             Id = id;
@@ -57,9 +58,9 @@ namespace Murder.Core.Dialogs
             IsChoice = isChoice;
         }
 
-        public Dialog WithActions(ImmutableArray<DialogAction>? actions) => new(Id, PlayUntil, Chance, Requirements, Lines, actions, GoTo, IsChoice);
+        public Dialog WithActions(ImmutableArray<DialogAction>? actions) => new(Id, PlayUntil, Chance, Requirements, Lines, actions, GoTo, IsExit, IsChoice);
 
-        public Dialog WithLineAt(int index, Line line) => new(Id, PlayUntil, Chance, Requirements, Lines.SetItem(index, line), Actions, GoTo, IsChoice);
+        public Dialog WithLineAt(int index, Line line) => new(Id, PlayUntil, Chance, Requirements, Lines.SetItem(index, line), Actions, GoTo, IsExit, IsChoice);
 
         public string DebuggerDisplay()
         {
