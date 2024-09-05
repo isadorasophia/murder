@@ -42,7 +42,7 @@ namespace Murder.Editor
                 ImGui.PushFont(Fonts.LargeIcons);
                 ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.HighAccent);
 
-                if (ImGui.Button($"{tab.Icon}", new Vector2(-6, 36)))
+                if (ImGui.Button($"{tab.Icon}", new Vector2(-4, 36)))
                 {
                     _selectedExplorerWindow = isSelected ? null : tab;
 

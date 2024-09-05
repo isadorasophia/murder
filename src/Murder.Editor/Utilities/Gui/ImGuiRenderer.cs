@@ -80,6 +80,9 @@ namespace Murder.Editor.ImGuiExtended
                 config->MergeMode = 1;
                 config->GlyphMinAdvanceX = 14;
 
+                // ImGuiFreeTypeBuilderFlags_LoadColor = 1 << 8
+                config->FontBuilderFlags |= 1 << 8;
+
                 io.Fonts.AddFontDefault(config);
                 var ranges = new ushort[] { Fonts.FontAwesomeIconRangeStart, Fonts.FontAwesomeIconRangeEnd, 0 };
 
@@ -97,10 +100,15 @@ namespace Murder.Editor.ImGuiExtended
                         return ImGui.GetIO().Fonts.AddFontFromFileTTF(path, size, fontConfigPtr, r);
                     }
                     
-                    AddFont("fa-regular-400.otf", 12, config,(IntPtr)rangesPtr);
-                    AddFont("fa-solid-400.otf", 12, config, (IntPtr)rangesPtr);
-                    Fonts.LargeIcons = AddFont("fa-solid-400.otf", 18, IntPtr.Zero, (IntPtr)rangesPtr)!.Value;
-                    Fonts.TitleFont = AddFont("fa-regular-400.otf", 14, IntPtr.Zero, io.Fonts.GetGlyphRangesDefault())!.Value;
+                    AddFont("UbuntuSansNerdFontPropo-Regular.ttf", 12, config,(IntPtr)rangesPtr);
+                    AddFont("UbuntuSansNerdFontPropo-Regular.ttf", 12, config, (IntPtr)rangesPtr);
+
+                    var configIcons = ImGuiNative.ImFontConfig_ImFontConfig();
+                    configIcons->GlyphMinAdvanceX = 14;
+                    configIcons->FontBuilderFlags |= 1 << 8;
+
+                    Fonts.LargeIcons = AddFont("UbuntuSansNerdFontPropo-Bold.ttf", 20, configIcons, (IntPtr)rangesPtr)!.Value;
+                    Fonts.TitleFont = AddFont("UbuntuSansNerdFontPropo-Bold.ttf", 18, IntPtr.Zero, io.Fonts.GetGlyphRangesDefault())!.Value;
                 }
 
                 ImGuiNative.ImFontConfig_destroy(config);
