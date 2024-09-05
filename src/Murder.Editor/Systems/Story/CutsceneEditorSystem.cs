@@ -13,6 +13,7 @@ using Murder.Core.Input;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.Core;
+using Murder.Editor.Messages;
 using Murder.Editor.Utilities;
 using Murder.Services;
 using Murder.Utilities;
@@ -151,6 +152,7 @@ namespace Murder.Editor.Systems
                         }
 
                         dragged.SetGlobalTransform(newTransform);
+                        dragged.SendMessage(new AssetUpdatedMessage(typeof(PositionComponent)));
                     }
                     else
                     {
