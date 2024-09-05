@@ -21,9 +21,10 @@ public enum CustomComponentsFlags
 [CustomComponentOf(typeof(object), priority: -1)]
 public class CustomComponent
 {
-    private readonly Dictionary<string, string> _searchField = new();
-    private static readonly HashSet<string> _unfoldedFolders = new();
-    public static bool ShowEditorOf<T>(ref T target, CustomComponentsFlags flags = CustomComponentsFlags.None)
+    private readonly Dictionary<string, string> _searchField = [];
+    private static readonly HashSet<string> _unfoldedFolders = [];
+
+    public static bool ShowEditorOf<T>(ref T target, CustomComponentsFlags _ = CustomComponentsFlags.None)
     {
         if (target is null)
         {
