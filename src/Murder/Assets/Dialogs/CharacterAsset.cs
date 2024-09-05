@@ -89,18 +89,24 @@ public class CharacterAsset : GameAsset
 
     public void SetCustomComponentAt(DialogueId id, IComponent c)
     {
+        InitializeDataAt(id);
+
         _data[id] = _data[id] with { Component = c };
         FileChanged = true;
     }
 
     public void SetCustomPortraitAt(DialogueId id, Guid speaker, string? portrait)
     {
+        InitializeDataAt(id);
+
         _data[id] = _data[id] with { Speaker = speaker, Portrait = portrait };
         FileChanged = true;
     }
 
     public void SetEventInfoAt(DialogueId id, string? @event)
     {
+        InitializeDataAt(id);
+
         _data[id] = _data[id] with { Event = @event };
         FileChanged = true;
     }
@@ -109,10 +115,20 @@ public class CharacterAsset : GameAsset
     {
         foreach (DialogueId id in unusedComponents)
         {
+            InitializeDataAt(id);
+
             _data[id] = _data[id] with { Component = null };
         }
 
         FileChanged = true;
+    }
+
+    private void InitializeDataAt(DialogueId id)
+    {
+        if (!_data.ContainsKey(id))
+        {
+            _data[id] = new();
+        }
     }
 
     public void PrunUnusedData()
@@ -132,6 +148,8 @@ public class CharacterAsset : GameAsset
     {
         foreach (DialogueId id in actionIds)
         {
+            InitializeDataAt(id);
+
             _data[id] = _data[id] with { Speaker = Guid.Empty, Portrait = null };
         }
 
