@@ -694,7 +694,7 @@ namespace Murder.Save
 
                 default:
                     object value = GetValue<object>(info, fieldName: criterion.Fact.Name);
-                    object? criterionValue = criterion.Value;
+                    object? criterionValue = criterion.IntValue;
 
                     if (value is Enum)
                     {

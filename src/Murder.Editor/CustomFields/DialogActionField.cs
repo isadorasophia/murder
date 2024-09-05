@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using Murder.Core.Dialogs;
+using Murder.Diagnostics;
 using Murder.Editor.CustomEditors;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
@@ -67,6 +68,7 @@ namespace Murder.Editor.CustomFields
         {
             switch (kind)
             {
+                case FactKind.Enum:
                 case FactKind.Int:
                     return nameof(Criterion.IntValue);
 
@@ -83,7 +85,8 @@ namespace Murder.Editor.CustomFields
                     return nameof(Criterion.BoolValue);
 
                 default:
-                    return nameof(Criterion.Value);
+                    GameLogger.Warning("Invalid fact?");
+                    return nameof(Criterion.IntValue);
             }
         }
 

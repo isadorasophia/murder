@@ -103,10 +103,10 @@ namespace Murder.Editor.CustomFields
                 string targetFieldName = DialogActionField.GetTargetFieldForFact(criterion.Fact.Kind);
 
                 bool modifiedField = false;
-                if (targetFieldName == nameof(Criterion.Value) &&
+                if (criterion.Fact.Kind == FactKind.Enum &&
                     AssetsFilter.FetchTypeForFact(criterion.Fact.EditorName) is Type valueType)
                 {
-                    FieldInfo valueField = typeof(Criterion).GetField(nameof(Criterion.Value))!;
+                    FieldInfo valueField = typeof(Criterion).GetField(nameof(Criterion.IntValue))!;
 
                     EditorMember fieldMember = EditorMember.Create(valueField);
                     fieldMember = fieldMember.CreateFrom(valueType, targetFieldName, isReadOnly: false);

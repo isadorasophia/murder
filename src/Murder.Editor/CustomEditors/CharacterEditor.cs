@@ -219,7 +219,7 @@ namespace Murder.Editor.CustomEditors
             ImGui.BeginChild("situations_table", new System.Numerics.Vector2(-1, height));
             ImGui.TreePush("##label");
 
-            foreach ((string id, Situation situation) in _script.Situations)
+            foreach ((string id, Situation situation) in _script.Situations.OrderBy(s => s.Value.Id))
             {
                 if (PrettySelectableWithIcon($"{situation.Name}", selectable: true, info.ActiveSituation == id))
                 {

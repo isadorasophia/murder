@@ -19,6 +19,7 @@ namespace Murder.Editor.Services
                     @bool ??= false;
                     break;
 
+                case FactKind.Enum:
                 case FactKind.Int:
                     @int ??= 0;
                     break;
@@ -36,12 +37,12 @@ namespace Murder.Editor.Services
                     break;
             }
 
-            return new(fact, @this.Kind, @bool, @int, @float, @string, value);
+            return new(fact, @this.Kind, @bool, @int, @float, @string);
         }
 
         public static Criterion WithKind(this Criterion @this, CriterionKind kind)
         {
-            return new(@this.Fact, kind, @this.BoolValue, @this.IntValue, @this.FloatValue, @this.StrValue, @this.Value);
+            return new(@this.Fact, kind, @this.BoolValue, @this.IntValue, @this.FloatValue, @this.StrValue);
         }
 
         /// <summary>

@@ -216,7 +216,7 @@ namespace Murder.Editor.Data
             CriterionKind kind = ToCriterionKind(gumCriterion.Kind);
             CriterionNodeKind nodeKind = ToCriterionNodeKind(gumNode.Kind);
 
-            Criterion criterion = new(fact.Value, kind, gumCriterion.BoolValue, gumCriterion.IntValue, gumCriterion.FloatValue, gumCriterion.StrValue, value: null);
+            Criterion criterion = new(fact.Value, kind, gumCriterion.BoolValue, gumCriterion.IntValue, gumCriterion.FloatValue, gumCriterion.StrValue);
             CriterionNode node = new(criterion, nodeKind);
 
             return node;
