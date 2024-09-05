@@ -238,19 +238,19 @@ namespace Murder.Editor
                     ImGui.SameLine();
                     bool showColliders = assetEditor.ShowColliders;
                     ImGui.Checkbox("\uf0c8", ref showColliders);
-                    ImGui.SetItemTooltip("Show Colliders");
+                    ImGui.SetItemTooltip("Show colliders");
                     assetEditor.ShowColliders = showColliders;
 
                     ImGui.SameLine();
                     bool showGrid = assetEditor.ShowGrid;
                     ImGui.Checkbox("\uf84c", ref showGrid);
-                    ImGui.SetItemTooltip("Show Grid");
+                    ImGui.SetItemTooltip("Show grid");
                     assetEditor.ShowGrid = showGrid;
 
                     ImGui.SameLine();
                     bool showReflection = assetEditor.ShowReflection;
                     ImGui.Checkbox("\ue571", ref showReflection);
-                    ImGui.SetItemTooltip($"{(showReflection ? "Showing" : "Hiding")} reflections");
+                    ImGui.SetItemTooltip($"{(showReflection ? "Show" : "Hide")} reflections");
                     assetEditor.ShowReflection = showReflection; 
                 }
 
@@ -262,7 +262,7 @@ namespace Murder.Editor
                     {
 
                     }
-                    ImGui.SetItemTooltip($"{(showDeactivated ? "Showing" : "Hiding")} deactivated entities");
+                    ImGui.SetItemTooltip($"{(showDeactivated ? "Show" : "Hide")} deactivated entities");
 
                     ImGui.SameLine();
                     if (ImGui.Button("\uf2a8 Reveal all"))
