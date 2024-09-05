@@ -23,7 +23,7 @@ namespace Murder.Assets.Graphics
     }
     public class FontAsset : GameAsset
     {
-        public override string EditorFolder => "#\ue659Fonts";
+        public override string EditorFolder => "#Fonts";
 
         public string TexturePath = string.Empty;
         public int LineHeight = 0;
