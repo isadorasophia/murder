@@ -237,22 +237,40 @@ namespace Murder.Editor
                 {
                     ImGui.SameLine();
                     bool showColliders = assetEditor.ShowColliders;
-                    ImGui.Checkbox("Show Colliders", ref showColliders);
+                    ImGui.Checkbox("\uf0c8", ref showColliders);
+                    ImGui.SetItemTooltip("Show Colliders");
                     assetEditor.ShowColliders = showColliders;
 
                     ImGui.SameLine();
                     bool showGrid = assetEditor.ShowGrid;
-                    ImGui.Checkbox("Show Grid", ref showGrid);
+                    ImGui.Checkbox("\uf84c", ref showGrid);
+                    ImGui.SetItemTooltip("Show Grid");
                     assetEditor.ShowGrid = showGrid;
 
                     ImGui.SameLine();
                     bool showReflection = assetEditor.ShowReflection;
-                    ImGui.Checkbox("Show Reflection", ref showReflection);
-                    assetEditor.ShowReflection = showReflection;
+                    ImGui.Checkbox("\ue571", ref showReflection);
+                    ImGui.SetItemTooltip($"{(showReflection ? "Showing" : "Hiding")} reflections");
+                    assetEditor.ShowReflection = showReflection; 
                 }
 
                 if (customEditor.Editor is WorldAssetEditor worldEditor)
                 {
+                    ImGui.SameLine();
+                    bool showDeactivated = false;
+                    if (ImGui.Checkbox($"\uf6e2", ref showDeactivated))
+                    {
+
+                    }
+                    ImGui.SetItemTooltip($"{(showDeactivated ? "Showing" : "Hiding")} deactivated entities");
+
+                    ImGui.SameLine();
+                    if (ImGui.Button("\uf2a8 Reveal all"))
+                    {
+                        // [TODO] Actually reveal objects
+                    }
+
+
                     ImGui.SameLine();
                     if (ImGui.Button("Reset Camera") || Game.Input.Shortcut(Keys.F12))
                     {

@@ -341,6 +341,7 @@ namespace Murder.Editor.Stages
                     {
                         ImGui.TextColored(Game.Profile.Theme.HighAccent, "Play Mode");
                     }
+
                     ImGui.End();
                 }
             }
