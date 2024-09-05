@@ -1,6 +1,7 @@
 ﻿using Bang.Components;
 using Murder.Assets;
 using Murder.Assets.Localization;
+using Murder.Core;
 using Murder.Core.Dialogs;
 using Murder.Diagnostics;
 using Murder.Editor.Utilities;
@@ -21,17 +22,11 @@ namespace Murder.Editor.Data
         /// </summary>
         private ImmutableDictionary<string, Guid>? _speakers = null;
 
-        private HashSet<DialogItemId> _matchedComponents = new();
-        private HashSet<DialogItemId> _matchedPortraits = new();
+        private HashSet<DialogueId> _matchedComponents = new();
+        private HashSet<DialogueId> _matchedPortraits = new();
 
-        private ImmutableDictionary<DialogItemId, IComponent> _components =
-            ImmutableDictionary<DialogItemId, IComponent>.Empty;
-
-        private ImmutableDictionary<DialogItemId, (Guid Speaker, string? Portrait)> _portraits =
-            ImmutableDictionary<DialogItemId, (Guid, string?)>.Empty;
-
-        private ImmutableDictionary<DialogItemId, LineInfo> _info =
-            ImmutableDictionary<DialogItemId, LineInfo>.Empty;
+        private ImmutableDictionary<DialogueId, LineInfo> _data =
+            ImmutableDictionary<DialogueId, LineInfo>.Empty;
 
         private Guid _speakerOwner = Guid.Empty;
 
@@ -55,10 +50,7 @@ namespace Murder.Editor.Data
         {
             _lastScriptFetched = script.Name;
 
-            _components = asset.Components;
-            _portraits = asset.Portraits;
-            _info = asset.Info;
-
+            _data = asset.Data;
             _speakerOwner = asset.Owner;
 
             _matchedComponents = new();
@@ -69,17 +61,18 @@ namespace Murder.Editor.Data
             LocalizationAsset localizationAsset = Game.Data.GetDefaultLocalization();
             _previousStringsInScript = FetchResourcesForAsset(localizationAsset, asset.Guid);
 
-            SortedList<int, Situation> situations = new();
+            var builder = ImmutableDictionary.CreateBuilder<string, Situation>();
             foreach (GumData.Situation gumSituation in script.FetchAllSituations())
             {
                 Situation situation = ConvertSituation(gumSituation);
-                situations.Add(situation.Id, situation);
+                builder[situation.Name] = situation;
             }
 
-            asset.SetSituations(situations);
+            asset.SetSituations(builder.ToImmutable());
 
             // Remove all the components that have not been used in the latest sync.
-            asset.RemoveCustomComponents(_components.Keys.Where(t => !_matchedComponents.Contains(t)));
+            asset.PrunUnusedComponents(_data.Keys.Where(t => !_matchedComponents.Contains(t)));
+            asset.PrunUnusedData();
 
             localizationAsset.SetResourcesForDialogue(asset.Guid, _localizedStrings.ToImmutable());
             Architect.EditorData.SaveAsset(localizationAsset);
@@ -128,7 +121,7 @@ namespace Murder.Editor.Data
             var dialogsBuilder = ImmutableArray.CreateBuilder<Dialog>();
             foreach (GumData.Block gumBlock in gumSituation.Blocks)
             {
-                dialogsBuilder.Add(ConvertBlockToDialog(gumSituation.Id, gumBlock));
+                dialogsBuilder.Add(ConvertBlockToDialog(gumSituation.Name, gumBlock));
             }
 
             var edges = ImmutableDictionary.CreateBuilder<int, DialogEdge>();
@@ -155,7 +148,7 @@ namespace Murder.Editor.Data
 
         #region ⭐ Dialog ⭐
 
-        private Dialog ConvertBlockToDialog(int situation, GumData.Block block)
+        private Dialog ConvertBlockToDialog(string situation, GumData.Block block)
         {
             ImmutableArray<CriterionNode>.Builder requirementsBuilder = ImmutableArray.CreateBuilder<CriterionNode>();
             foreach (GumData.CriterionNode gumCriterion in block.Requirements)
@@ -259,24 +252,24 @@ namespace Murder.Editor.Data
 
         #region ⭐ Line ⭐
 
-        public Line? ConvertLine(int situation, int dialog, GumData.Line gumLine, int lineIndex)
+        public Line? ConvertLine(string situation, int dialog, GumData.Line gumLine, int lineIndex)
         {
             Guid? speaker = null;
 
-            DialogItemId id = new(situation, dialog, lineIndex);
+            DialogueId id = new(situation, dialog, lineIndex);
 
             string? @event = null;
-            if (_info.TryGetValue(id, out var eventInfo))
+            if (_data.TryGetValue(id, out LineInfo eventInfo))
             {
                 @event = eventInfo.Event;
-            }
 
-            if (_portraits.TryGetValue(id, out var portraitInfo))
-            {
-                // If this matches, it means that the user previously set the portrait with a custom value.
-                // We override whatever was set in the dialog.
-                _matchedPortraits.Add(id);
-                return new(portraitInfo.Speaker, portraitInfo.Portrait, TryGetLocalizedString(portraitInfo.Speaker, gumLine.Text), gumLine.Delay, @event);
+                if (eventInfo.Speaker != Guid.Empty || eventInfo.Portrait != null)
+                {
+                    // If this matches, it means that the user previously set the portrait with a custom value.
+                    // We override whatever was set in the dialog.
+                    _matchedPortraits.Add(id);
+                    return new(eventInfo.Speaker, eventInfo.Portrait, TryGetLocalizedString(eventInfo.Speaker, gumLine.Text), gumLine.Delay, @event);
+                }
             }
 
             string? gumSpeaker = gumLine.Speaker;
@@ -324,7 +317,7 @@ namespace Murder.Editor.Data
 
         #region ⭐ Action ⭐
 
-        private DialogAction? ConvertDialogAction(int situation, int dialog, int actionIndex, GumData.DialogAction gumAction)
+        private DialogAction? ConvertDialogAction(string situation, int dialog, int actionIndex, GumData.DialogAction gumAction)
         {
             IComponent? c = null;
 
@@ -335,8 +328,12 @@ namespace Murder.Editor.Data
             }
             else if (fact.Value.ComponentType is Type t)
             {
-                DialogItemId id = new(situation, dialog, actionIndex);
-                if (!_components.TryGetValue(id, out c))
+                DialogueId id = new(situation, dialog, actionIndex);
+                if (_data.TryGetValue(id, out LineInfo info))
+                {
+                    c = info.Component;
+                }
+                else
                 {
                     c = Activator.CreateInstance(t) as IComponent;
                 }

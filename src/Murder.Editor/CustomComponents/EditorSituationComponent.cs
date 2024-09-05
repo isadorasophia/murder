@@ -22,7 +22,7 @@ namespace Murder.Editor.CustomComponents
             bool modified = false;
 
             if (SituationComponentField.DrawSituationField(
-                    situation.Character, situation.Situation, showFirstLinePreview: false, out int result))
+                    situation.Character, situation.Situation, showFirstLinePreview: false, out string result))
             {
                 EditorMember situationField = typeof(SituationComponent).
                     TryGetFieldForEditor(nameof(SituationComponent.Situation))!;

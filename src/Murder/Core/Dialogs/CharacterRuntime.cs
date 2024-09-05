@@ -29,7 +29,7 @@ namespace Murder.Core.Dialogs
         /// <summary>
         /// This is the current situation that the character is currently executing.
         /// </summary>
-        private int _currentSituation = 0;
+        private string _currentSituation = string.Empty;
 
         /// <summary>
         /// This is the dialog within the situation that is currently active.
@@ -51,14 +51,14 @@ namespace Murder.Core.Dialogs
 
         private Dialog DialogAt(int id) => ActiveSituation.Dialogs[id];
 
-        public CharacterRuntime(Character character, int situation)
+        public CharacterRuntime(Character character, string situation)
         {
             _character = character;
 
             StartAtSituation(situation);
         }
 
-        public void StartAtSituation(int situation)
+        public void StartAtSituation(string situation)
         {
             // Reset the state.
             _currentDialog = 0;
@@ -104,7 +104,7 @@ namespace Murder.Core.Dialogs
             }
 
             Dialog d = ActiveSituation.Dialogs[_currentDialog.Value];
-            if (d.Lines.Length == 0 && d.GoTo == -1)
+            if (d.Lines.Length == 0 && d.IsExit)
             {
                 return false;
             }
@@ -212,14 +212,14 @@ namespace Murder.Core.Dialogs
             Situation situation = ActiveSituation;
             Dialog activeDialog = ActiveDialog;
 
-            if (activeDialog.GoTo is int @goto)
+            if (activeDialog.IsExit)
             {
-                if (@goto == -1)
-                {
-                    // This is an exit leaf, end it right away.
-                    return false;
-                }
+                // This is an exit leaf, end it right away.
+                return false;
+            }
 
+            if (activeDialog.GoTo is string @goto)
+            {
                 StartAtSituation(@goto);
                 return true;
             }

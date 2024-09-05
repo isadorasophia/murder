@@ -32,7 +32,7 @@ namespace Murder.Save
         private readonly Dictionary<Guid, ImmutableDictionary<string, BlackboardInfo>> _characterBlackboards = [];
 
         [Serialize]
-        private readonly ComplexDictionary<(Guid Character, int SituationId, int DialogId), int> _dialogCounter = [];
+        private readonly ComplexDictionary<(Guid Character, string SituationId, int DialogId), int> _dialogCounter = [];
 
         private BlackboardInfo? DefaultBlackboard => _defaultBlackboard ??= _defaultBlackboardName is null ?
             null : _blackboards?.GetValueOrDefault(_defaultBlackboardName);
@@ -123,7 +123,7 @@ namespace Murder.Save
         /// <summary>
         /// Track that a particular dialog option has been played.
         /// </summary>
-        public virtual void Track(Guid character, int situationId, int dialogId)
+        public virtual void Track(Guid character, string situationId, int dialogId)
         {
             var index = (character, situationId, dialogId);
 
@@ -138,7 +138,7 @@ namespace Murder.Save
         /// <summary>
         /// Returns whether a particular dialog option has been played.
         /// </summary>
-        public bool HasPlayed(Guid guid, int situationId, int dialogId)
+        public bool HasPlayed(Guid guid, string situationId, int dialogId)
         {
             return _dialogCounter.ContainsKey((guid, situationId, dialogId));
         }
@@ -146,7 +146,7 @@ namespace Murder.Save
         /// <summary>
         /// Returns whether how many times a dialog has been executed.
         /// </summary>
-        public int PlayCount(Guid guid, int situationId, int dialogId)
+        public int PlayCount(Guid guid, string situationId, int dialogId)
         {
             if (_dialogCounter.TryGetValue((guid, situationId, dialogId), out int count))
             {

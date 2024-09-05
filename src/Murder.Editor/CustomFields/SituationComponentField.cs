@@ -21,7 +21,7 @@ namespace Murder.Editor.CustomFields
 
             bool showFirstLinePreview = AttributeExtensions.IsDefined(member, typeof(ShowFirstLineAttribute));
 
-            if (DrawSituationField(situation.Character, situation.Situation, showFirstLinePreview, out int result))
+            if (DrawSituationField(situation.Character, situation.Situation, showFirstLinePreview, out string result))
             {
                 situation = situation.WithSituation(result);
                 modified = true;
@@ -32,9 +32,9 @@ namespace Murder.Editor.CustomFields
             return (modified, situation);
         }
 
-        public static bool DrawSituationField(Guid character, int situation, bool showFirstLinePreview, out int result)
+        public static bool DrawSituationField(Guid character, string situation, bool showFirstLinePreview, out string result)
         {
-            result = 0;
+            result = string.Empty;
 
             if (Game.Data.TryGetAsset<CharacterAsset>(character) is not CharacterAsset asset)
             {
@@ -48,8 +48,8 @@ namespace Murder.Editor.CustomFields
                 ImGui.Text(line);
             }
 
-            ImmutableArray<(string name, int id)> situations = CharacterEditor.FetchAllSituations(asset);
-            string[] situationNames = situations.Select(s => s.name).ToArray();
+            ImmutableDictionary<string, Situation> situations = asset.Situations;
+            string[] situationNames = situations.Select(s => s.Key).ToArray();
 
             if (situationNames.Length == 0)
             {
@@ -60,19 +60,19 @@ namespace Murder.Editor.CustomFields
             int item = 0;
             if (asset.TryFetchSituation(situation) is Situation target)
             {
-                item = situations.IndexOf((target.Name, target.Id));
+                item = Array.IndexOf(situationNames, target.Name);
             }
             else
             {
                 // Set a initial value for this.
-                result = situations[item].id;
+                result = situations.First().Key;
 
                 return true;
             }
 
             if (ImGui.Combo($"##talto_situation", ref item, situationNames, situationNames.Length))
             {
-                result = situations[item].id;
+                result = situationNames[item];
                 return true;
             }
 
@@ -82,7 +82,7 @@ namespace Murder.Editor.CustomFields
         /// <summary>
         /// Draw field for <see cref="TalkToInteraction.Situation"/> in <see cref="TalkToInteraction"/>.
         /// </summary>
-        public static bool DrawSituationFieldWithTable(Guid character, int situation, out int result)
+        public static bool DrawSituationFieldWithTable(Guid character, string situation, out string result)
         {
             ImGui.TableNextRow();
             ImGui.TableNextRow();

@@ -29,9 +29,11 @@ namespace Murder.Core.Dialogs
         /// <summary>
         /// Go to another dialog with a specified id.
         /// </summary>
-        public readonly int? GoTo = null;
+        public readonly string? GoTo = null;
 
         public readonly bool IsChoice = false;
+
+        public readonly bool IsExit = false;
 
         public Dialog() { }
 
@@ -42,7 +44,7 @@ namespace Murder.Core.Dialogs
             ImmutableArray<CriterionNode> requirements,
             ImmutableArray<Line> lines,
             ImmutableArray<DialogAction>? actions,
-            int? @goto,
+            string? @goto,
             bool isChoice) : this()
         {
             Id = id;

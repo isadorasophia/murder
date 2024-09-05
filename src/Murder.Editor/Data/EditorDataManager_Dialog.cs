@@ -4,9 +4,7 @@ using Murder.Assets;
 using Murder.Diagnostics;
 using Murder.Editor.Utilities;
 using Murder.Serialization;
-using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Diagnostics;
 
 namespace Murder.Editor.Data
 {
@@ -116,7 +114,7 @@ namespace Murder.Editor.Data
         /// <summary>
         /// Find all the assets names for an asset type <paramref name="t"/>.
         /// </summary>
-        /// <param name="t">The type that inherist from <see cref="GameAsset"/>.</param>
+        /// <param name="t">The type that inherits from <see cref="GameAsset"/>.</param>
         public ImmutableDictionary<string, Guid> FindAllNamesForAssetWithGuid(Type t)
         {
             var builder = ImmutableDictionary.CreateBuilder<string, Guid>(StringComparer.OrdinalIgnoreCase);

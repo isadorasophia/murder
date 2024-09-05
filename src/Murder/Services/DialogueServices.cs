@@ -10,7 +10,7 @@ namespace Murder.Services
 {
     public static class DialogueServices
     {
-        public static CharacterRuntime? CreateCharacterFrom(Guid character, int situation)
+        public static CharacterRuntime? CreateCharacterFrom(Guid character, string situation)
         {
             Character? result = MurderSaveServices.CreateOrGetSave().BlackboardTracker
                 .FetchCharacterFor(character);

@@ -24,11 +24,11 @@ namespace Murder.Core.Dialogs
         /// <summary>
         /// All situations for the character.
         /// </summary>
-        public readonly ImmutableDictionary<int, Situation> Situations;
+        public readonly ImmutableDictionary<string, Situation> Situations;
 
-        public Character(Guid guid, Guid speaker, string? portrait, ImmutableArray<Situation> situations)
+        public Character(Guid guid, Guid speaker, string? portrait, ImmutableDictionary<string, Situation> situations)
         {
-            Situations = situations.ToDictionary(s => s.Id, s => s).ToImmutableDictionary();
+            Situations = situations;
 
             Speaker = speaker;
             Portrait = portrait;

@@ -51,12 +51,12 @@ namespace Murder.Editor.CustomEditors
             stage.ActivateSystemsWith(enable: true, typeof(DialogueEditorAttribute));
             stage.ToggleSystem(typeof(EntitiesSelectorSystem), false);
 
-            if (_script.Situations.Length != 0)
+            if (_script.Situations.Count != 0)
             {
                 info.HelperId = stage.AddEntityWithoutAsset();
-                info.ActiveSituation = 0;
+                info.ActiveSituation = _script.Situations.First().Key;
 
-                stage.AddOrReplaceComponentOnEntity(info.HelperId, new DialogueNodeEditorComponent(_script.Situations[0]));
+                stage.AddOrReplaceComponentOnEntity(info.HelperId, new DialogueNodeEditorComponent(_script.Situations.First().Value));
             }
 
             stage.ShowInfo = false;
@@ -219,10 +219,9 @@ namespace Murder.Editor.CustomEditors
             ImGui.BeginChild("situations_table", new System.Numerics.Vector2(-1, height));
             ImGui.TreePush("##label");
 
-            for (int i = 0; i < _script.Situations.Length; i++)
+            foreach ((string id, Situation situation) in _script.Situations)
             {
-                var situation = _script.Situations[i];
-                if (PrettySelectableWithIcon($"{situation.Name}", selectable: true, info.ActiveSituation == i))
+                if (PrettySelectableWithIcon($"{situation.Name}", selectable: true, info.ActiveSituation == id))
                 {
                     SwitchSituation(info, situation);
                 }
@@ -234,7 +233,7 @@ namespace Murder.Editor.CustomEditors
 
         private void SwitchSituation(ScriptInformation info, Situation situation)
         {
-            info.ActiveSituation = situation.Id;
+            info.ActiveSituation = situation.Name;
 
             info.Stage.AddOrReplaceComponentOnEntity(info.HelperId, new DialogueNodeEditorComponent(situation));
             info.Stage.EditorHook.SelectedNode = info.ActiveDialog;
@@ -246,9 +245,9 @@ namespace Murder.Editor.CustomEditors
             {
                 // we cannot guarantee or use any value of _script here;
                 CharacterAsset? asset = Game.Data.TryGetAsset<CharacterAsset>(guid);
-                if (asset is not null && info.ActiveSituation < asset.Situations.Length)
+                if (asset is not null && !asset.Situations.ContainsKey(info.ActiveSituation) && asset.Situations.Count > 0)
                 {
-                    SwitchSituation(info, asset.Situations[info.ActiveSituation]);
+                    SwitchSituation(info, asset.Situations.First().Value);
                 }
             }
         }

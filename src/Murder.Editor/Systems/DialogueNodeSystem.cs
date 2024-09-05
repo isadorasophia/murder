@@ -225,7 +225,7 @@ namespace Murder.Editor.Systems
                 _iconsCache.Add(Game.Profile.EditorAssets.DialogueIconAction);
             }
 
-            if (info.GoTo.HasValue)
+            if (!string.IsNullOrEmpty(info.GoTo) || info.IsExit)
             {
                 _iconsCache.Add(Game.Profile.EditorAssets.DialogueIconFlow);
             }

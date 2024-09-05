@@ -37,13 +37,13 @@ namespace Murder.Editor.CustomEditors
                 return null;
             }
 
-            DialogItemId id = new(info.ActiveSituation, info.ActiveDialog, lineIndex);
+            DialogueId id = new(info.ActiveSituation, info.ActiveDialog, lineIndex);
             Dialog dialog = situation.Value.Dialogs[id.DialogId];
 
             Line line = dialog.Lines[lineIndex].WithSpeaker(speaker).WithPortrait(portrait);
             dialog = dialog.WithLineAt(lineIndex, line);
 
-            _script.SetSituationAt(info.ActiveSituation, situation.Value.WithDialogAt(id.DialogId, dialog));
+            _script.SetSituation(situation.Value.WithDialogAt(id.DialogId, dialog));
             _script?.SetCustomPortraitAt(
                 id: id,
                 speaker, portrait);
@@ -58,13 +58,13 @@ namespace Murder.Editor.CustomEditors
                 return null;
             }
 
-            DialogItemId id = new(info.ActiveSituation, info.ActiveDialog, lineIndex);
+            DialogueId id = new(info.ActiveSituation, info.ActiveDialog, lineIndex);
             Dialog dialog = situation.Value.Dialogs[id.DialogId];
 
             Line line = dialog.Lines[lineIndex].WithEvent(@event);
             dialog = dialog.WithLineAt(lineIndex, line);
 
-            _script.SetSituationAt(info.ActiveSituation, situation.Value.WithDialogAt(id.DialogId, dialog));
+            _script.SetSituation(situation.Value.WithDialogAt(id.DialogId, dialog));
             _script?.SetEventInfoAt(
                 id: id,
                 @event);
@@ -79,7 +79,7 @@ namespace Murder.Editor.CustomEditors
                 return null;
             }
 
-            DialogItemId id = new(info.ActiveSituation, info.ActiveDialog, actionIndex);
+            DialogueId id = new(info.ActiveSituation, info.ActiveDialog, actionIndex);
             Dialog dialog = situation.Value.Dialogs[id.DialogId];
 
             if (dialog.Actions is null)
@@ -90,7 +90,7 @@ namespace Murder.Editor.CustomEditors
             DialogAction action = dialog.Actions!.Value[actionIndex];
             action = action.WithComponent(c);
 
-            _script.SetSituationAt(info.ActiveSituation, situation.Value.WithDialogAt(id.DialogId, dialog));
+            _script.SetSituation(situation.Value.WithDialogAt(id.DialogId, dialog));
             _script?.SetCustomComponentAt(
                 id: id,
                 c);
@@ -417,8 +417,8 @@ namespace Murder.Editor.CustomEditors
             ImGui.Text("Go to...");
             ImGui.SameLine();
 
-            ImmutableArray<(string name, int id)> situations = FetchAllSituations(_script);
-            string[] situationNames = situations.Select(s => s.name).ToArray();
+            ImmutableDictionary<string, Situation> situations = _script.Situations;
+            string[] situationNames = situations.Select(s => s.Key).ToArray();
 
             if (situationNames.Length == 0)
             {
@@ -426,14 +426,14 @@ namespace Murder.Editor.CustomEditors
                 return;
             }
 
-            if (_script.TryFetchSituation(dialog.GoTo.Value) is Situation target)
+            if (_script.TryFetchSituation(dialog.GoTo) is Situation target)
             {
                 if (ImGui.Button(target.Name))
                 {
                     SwitchSituation(info, target);
                 }
             }
-            else if (dialog.GoTo.Value == -1)
+            else if (dialog.IsExit)
             {
                 ImGui.TextColored(Game.Profile.Theme.Faded, "\uf52b");
                 ImGuiHelpers.HelpTooltip("Exit");

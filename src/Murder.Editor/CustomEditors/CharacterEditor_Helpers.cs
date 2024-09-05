@@ -1,5 +1,6 @@
 ﻿using Murder.Assets;
 using Murder.Assets.Graphics;
+using Murder.Components;
 using Murder.Core;
 using Murder.Core.Dialogs;
 using Murder.Editor.ImGuiExtended;
@@ -19,7 +20,7 @@ namespace Murder.Editor.CustomEditors
             /// <summary>
             /// Situation currently selected.
             /// </summary>
-            public int ActiveSituation = 0;
+            public string ActiveSituation = string.Empty;
 
             /// <summary>
             /// This is the entity id in the world.
@@ -29,7 +30,7 @@ namespace Murder.Editor.CustomEditors
             /// <summary>
             /// Cache the dialog selected for each situation.
             /// </summary>
-            public Dictionary<int, int> CachedDialogs = new();
+            public Dictionary<string, int> CachedDialogs = new();
 
             public int ActiveDialog => CachedDialogs.TryGetValue(ActiveSituation, out int dialogId) ?
                 dialogId : -1;
@@ -54,18 +55,6 @@ namespace Murder.Editor.CustomEditors
                 label: name,
                 selectable,
                 disabled);
-
-        public static ImmutableArray<(string, int)> FetchAllSituations(CharacterAsset asset)
-        {
-            var builder = ImmutableArray.CreateBuilder<(string, int)>();
-
-            for (int i = 0; i < asset.Situations.Length; ++i)
-            {
-                builder.Add((asset.Situations[i].Name, asset.Situations[i].Id));
-            }
-
-            return builder.ToImmutable();
-        }
 
         private bool TryDrawPortrait(Line line)
         {

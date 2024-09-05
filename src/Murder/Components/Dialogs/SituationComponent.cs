@@ -2,28 +2,27 @@
 using Murder.Assets;
 using Murder.Attributes;
 
-namespace Murder.Components
+namespace Murder.Components;
+
+public readonly struct SituationComponent : IComponent
 {
-    public readonly struct SituationComponent : IComponent
+    [GameAssetId(typeof(CharacterAsset)), ShowInEditor]
+    public readonly Guid Character = Guid.Empty;
+
+    /// <summary>
+    /// This is the starter situation for the interaction.
+    /// </summary>
+    public readonly string Situation = string.Empty;
+
+    public bool Empty => Character == Guid.Empty;
+
+    public SituationComponent() { }
+
+    public SituationComponent(Guid character, string situation)
     {
-        [GameAssetId(typeof(CharacterAsset)), ShowInEditor]
-        public readonly Guid Character = Guid.Empty;
-
-        /// <summary>
-        /// This is the starter situation for the interaction.
-        /// </summary>
-        public readonly int Situation = 0;
-
-        public bool Empty => Character == Guid.Empty;
-
-        public SituationComponent() { }
-
-        public SituationComponent(Guid character, int situation)
-        {
-            Character = character;
-            Situation = situation;
-        }
-
-        public SituationComponent WithSituation(int situation) => new(Character, situation);
+        Character = character;
+        Situation = situation;
     }
+
+    public SituationComponent WithSituation(string situation) => new(Character, situation);
 }
