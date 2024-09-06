@@ -476,4 +476,28 @@ public static class EntityServices
             e.SetAgentPause(agentPause);
         }
     }
+
+    public static void PlayAnimationOverload(
+        this Entity e, 
+        string animation, 
+        AnimationOverloadProperties properties = AnimationOverloadProperties.Loop | AnimationOverloadProperties.IgnoreFacing, 
+        int offset = 0)
+    {
+        AnimationOverloadComponent overload =
+                    new AnimationOverloadComponent(
+                        animation, 
+                        loop: properties.HasFlag(AnimationOverloadProperties.Loop), 
+                        ignoreFacing: properties.HasFlag(AnimationOverloadProperties.IgnoreFacing))
+                    with { SortOffset = offset };
+
+        e.SetAnimationOverload(overload);
+    }
+}
+
+[Flags]
+public enum AnimationOverloadProperties
+{
+    None = 0,
+    Loop = 0x1,
+    IgnoreFacing = 0x10
 }
