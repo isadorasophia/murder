@@ -24,7 +24,7 @@ namespace Murder.Interactions
                 return;
             }
 
-            SituationComponent? situation = interacted.TryGetOverrideSituation()?.Situation ??
+            SituationComponent? situation = interacted.TryGetOverrideSituation()?.Peek ??
                 interacted.TryGetSituation();
 
             if (situation is null)

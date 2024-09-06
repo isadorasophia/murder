@@ -4,130 +4,167 @@ using Murder.Assets;
 using Murder.Components;
 using Murder.Core.Dialogs;
 using Murder.Diagnostics;
+using System.Collections.Immutable;
 using System.Text;
 
-namespace Murder.Services
+namespace Murder.Services;
+
+public static class DialogueServices
 {
-    public static class DialogueServices
+    public static CharacterRuntime? CreateCharacterFrom(Guid character, string? situation)
     {
-        public static CharacterRuntime? CreateCharacterFrom(Guid character, string situation)
+        if (situation is null)
         {
-            Character? result = MurderSaveServices.CreateOrGetSave().BlackboardTracker
-                .FetchCharacterFor(character);
-
-            if (result is null)
-            {
-                return null;
-            }
-
-            return new CharacterRuntime(result.Value, situation);
+            return null;
         }
 
-        public static LineComponent CreateLine(Line line)
+        Character? result = MurderSaveServices.CreateOrGetSave().BlackboardTracker
+            .FetchCharacterFor(character);
+
+        if (result is null)
         {
-            return new(line, Game.NowUnscaled);
+            return null;
         }
 
-        public static Line[] FetchAllLines(World? world, Entity? target, SituationComponent situation)
+        return new CharacterRuntime(result.Value, situation);
+    }
+
+    public static LineComponent CreateLine(Line line)
+    {
+        return new(line, Game.NowUnscaled);
+    }
+
+    public static Line[] FetchAllLines(World? world, Entity? target, SituationComponent situation)
+    {
+        CharacterRuntime? character = CreateCharacterFrom(situation.Character, situation.Situation);
+        if (character is null)
         {
-            CharacterRuntime? character = CreateCharacterFrom(situation.Character, situation.Situation);
-            if (character is null)
-            {
-                return Array.Empty<Line>();
-            }
-
-            List<Line>? lines = null;
-
-            while (character.NextLine(world, target) is DialogLine dialogLine)
-            {
-                if (dialogLine.Line is Line line)
-                {
-                    lines ??= [];
-                    lines.Add(line);
-                }
-                else if (dialogLine.Choice is ChoiceLine)
-                {
-                    GameLogger.Warning("We did not implement choices for fetching all lines yet.");
-                    break;
-                }
-            }
-
-            return lines?.ToArray() ?? Array.Empty<Line>();
+            return Array.Empty<Line>();
         }
 
-        public static string FetchAllLinesSeparatedBy(World? world, Entity? target, SituationComponent situation, string separator)
+        List<Line>? lines = null;
+
+        while (character.NextLine(world, target) is DialogLine dialogLine)
         {
-            bool first = true;
-
-            StringBuilder builder = new();
-            foreach (Line line in FetchAllLines(world, target, situation))
+            if (dialogLine.Line is Line line)
             {
-                if (line.IsText && line.Text is LocalizedString localizedString)
-                {
-                    if (first)
-                    {
-                        first = false;
-                    }
-                    else
-                    {
-                        builder.Append(separator);
-                    }
-
-                    builder.Append(LocalizationServices.GetLocalizedString(localizedString));
-                }
+                lines ??= [];
+                lines.Add(line);
             }
-
-            return builder.ToString();
+            else if (dialogLine.Choice is ChoiceLine)
+            {
+                GameLogger.Warning("We did not implement choices for fetching all lines yet.");
+                break;
+            }
         }
 
-        public static string FetchFirstLine(World? world, Entity? target, SituationComponent situation)
+        return lines?.ToArray() ?? Array.Empty<Line>();
+    }
+
+    public static string FetchAllLinesSeparatedBy(World? world, Entity? target, SituationComponent situation, string separator)
+    {
+        bool first = true;
+
+        StringBuilder builder = new();
+        foreach (Line line in FetchAllLines(world, target, situation))
         {
-            CharacterRuntime? character = CreateCharacterFrom(situation.Character, situation.Situation);
-            if (character is null)
+            if (line.IsText && line.Text is LocalizedString localizedString)
             {
-                return string.Empty;
-            }
-
-            while (character.NextLine(world, target) is DialogLine dialogLine)
-            {
-                if (dialogLine.Line is Line line && line.IsText && line.Text is LocalizedString localizedString)
+                if (first)
                 {
-                    return LocalizationServices.GetLocalizedString(localizedString);
+                    first = false;
                 }
-                else if (dialogLine.Choice is ChoiceLine)
+                else
                 {
-                    break;
+                    builder.Append(separator);
                 }
-            }
 
+                builder.Append(LocalizationServices.GetLocalizedString(localizedString));
+            }
+        }
+
+        return builder.ToString();
+    }
+
+    public static string FetchFirstLine(World? world, Entity? target, SituationComponent situation)
+    {
+        CharacterRuntime? character = CreateCharacterFrom(situation.Character, situation.Situation);
+        if (character is null)
+        {
             return string.Empty;
         }
 
-        public static bool HasNewDialogue(World world, Entity? e, SituationComponent situation)
+        while (character.NextLine(world, target) is DialogLine dialogLine)
         {
-            CharacterRuntime? character = CreateCharacterFrom(situation.Character, situation.Situation);
-            if (character is null)
+            if (dialogLine.Line is Line line && line.IsText && line.Text is LocalizedString localizedString)
             {
-                return false;
+                return LocalizationServices.GetLocalizedString(localizedString);
             }
-
-            if (character.HasContentOnNextDialogueLine(world, e, checkForNewContentOnly: true))
+            else if (dialogLine.Choice is ChoiceLine)
             {
-                return true;
+                break;
             }
+        }
 
+        return string.Empty;
+    }
+
+    public static bool HasNewDialogue(World world, Entity? e, SituationComponent situation)
+    {
+        CharacterRuntime? character = CreateCharacterFrom(situation.Character, situation.Situation);
+        if (character is null)
+        {
             return false;
         }
 
-        public static bool HasDialogue(World world, Entity? e, SituationComponent situation)
+        if (character.HasContentOnNextDialogueLine(world, e, checkForNewContentOnly: true))
         {
-            CharacterRuntime? character = CreateCharacterFrom(situation.Character, situation.Situation);
-            if (character is null)
-            {
-                return false;
-            }
+            return true;
+        }
 
-            return character.HasContentOnNextDialogueLine(world, e, checkForNewContentOnly: false);
+        return false;
+    }
+
+    public static bool HasDialogue(World world, Entity? e, SituationComponent situation)
+    {
+        CharacterRuntime? character = CreateCharacterFrom(situation.Character, situation.Situation);
+        if (character is null)
+        {
+            return false;
+        }
+
+        return character.HasContentOnNextDialogueLine(world, e, checkForNewContentOnly: false);
+    }
+
+    public static void SetOverrideSituation(this Entity e, SituationOrigin origin, SituationComponent situation)
+    {
+        if (e.TryGetOverrideSituation() is not OverrideSituationComponent existingSituation)
+        {
+            var builder = ImmutableDictionary.CreateBuilder<SituationOrigin, SituationComponent>();
+            builder[origin] = situation;
+
+            e.SetOverrideSituation(builder.ToImmutable());
+            return;
+        }
+
+        e.SetOverrideSituation(existingSituation.WithSituation(origin, situation));
+    }
+
+    public static void RemoveOverrideSituation(this Entity e, SituationOrigin origin)
+    {
+        if (e.TryGetOverrideSituation() is not OverrideSituationComponent existingSituation)
+        {
+            return;
+        }
+
+        existingSituation = existingSituation.WithoutSituation(origin);
+        if (existingSituation.IsEmpty)
+        {
+            e.RemoveOverrideSituation();
+        }
+        else
+        {
+            e.SetOverrideSituation(existingSituation);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Murder.Editor.CustomFields
             return (modified, situation);
         }
 
-        public static bool DrawSituationField(Guid character, string situation, bool showFirstLinePreview, out string result)
+        public static bool DrawSituationField(Guid character, string? situation, bool showFirstLinePreview, out string result)
         {
             result = string.Empty;
 
@@ -42,7 +42,7 @@ namespace Murder.Editor.CustomFields
                 return false;
             }
 
-            if (showFirstLinePreview)
+            if (showFirstLinePreview && situation is not null)
             {
                 string line = DialogueServices.FetchFirstLine(world: null, target: null, new(character, situation));
                 ImGui.Text(line);
@@ -58,7 +58,7 @@ namespace Murder.Editor.CustomFields
             }
 
             int item = 0;
-            if (asset.TryFetchSituation(situation) is Situation target)
+            if (situation is not null && asset.TryFetchSituation(situation) is Situation target)
             {
                 item = Array.IndexOf(situationNames, target.Name);
             }

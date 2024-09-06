@@ -12,7 +12,7 @@ public readonly struct SituationComponent : IComponent
     /// <summary>
     /// This is the starter situation for the interaction.
     /// </summary>
-    public readonly string Situation = string.Empty;
+    public readonly string? Situation = string.Empty;
 
     public bool Empty => Character == Guid.Empty;
 
