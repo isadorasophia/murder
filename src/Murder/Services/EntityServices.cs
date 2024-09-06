@@ -481,13 +481,15 @@ public static class EntityServices
         this Entity e, 
         string animation, 
         AnimationOverloadProperties properties = AnimationOverloadProperties.Loop | AnimationOverloadProperties.IgnoreFacing, 
-        int offset = 0)
+        int offset = 0,
+        Guid? customSprite = null)
     {
         AnimationOverloadComponent overload =
                     new AnimationOverloadComponent(
                         animation, 
                         loop: properties.HasFlag(AnimationOverloadProperties.Loop), 
-                        ignoreFacing: properties.HasFlag(AnimationOverloadProperties.IgnoreFacing))
+                        ignoreFacing: properties.HasFlag(AnimationOverloadProperties.IgnoreFacing),
+                        customSprite: customSprite ?? Guid.Empty)
                     with { SortOffset = offset };
 
         e.SetAnimationOverload(overload);
