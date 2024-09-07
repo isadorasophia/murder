@@ -88,6 +88,11 @@ public static class DialogueServices
 
     public static string FetchFirstLine(World? world, Entity? target, SituationComponent situation)
     {
+        if (situation.Character == Guid.Empty)
+        {
+            return string.Empty;
+        }
+
         CharacterRuntime? character = CreateCharacterFrom(situation.Character, situation.Situation);
         if (character is null)
         {
@@ -111,6 +116,11 @@ public static class DialogueServices
 
     public static bool HasNewDialogue(World world, Entity? e, SituationComponent situation)
     {
+        if (situation.Character == Guid.Empty)
+        {
+            return false;
+        }
+
         CharacterRuntime? character = CreateCharacterFrom(situation.Character, situation.Situation);
         if (character is null)
         {
@@ -127,6 +137,11 @@ public static class DialogueServices
 
     public static bool HasDialogue(World world, Entity? e, SituationComponent situation)
     {
+        if (situation.Character == Guid.Empty)
+        {
+            return false;
+        }
+
         CharacterRuntime? character = CreateCharacterFrom(situation.Character, situation.Situation);
         if (character is null)
         {
