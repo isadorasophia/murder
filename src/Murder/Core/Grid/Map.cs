@@ -190,9 +190,16 @@ namespace Murder.Core
             return null;
         }
 
-        public void SetOccupiedAsStatic(int x, int y, int layer)
+        public void SetOccupiedAsStatic(int x, int y, int layer, bool @override = false)
         {
-            _gridMap[(y * Width) + x].CollisionType |= layer;
+            if (@override)
+            {
+                _gridMap[(y * Width) + x].CollisionType &= layer;
+            }
+            else
+            {
+                _gridMap[(y * Width) + x].CollisionType |= layer;
+            }
         }
 
         public void SetOccupied(Point p, int collisionMask, int weight) =>
