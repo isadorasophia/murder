@@ -134,7 +134,7 @@ namespace Murder.Core
 
         public virtual bool HasFlagAt(int x, int y, int value) => At(x, y).HasFlag(value);
 
-        public void SetGridPosition(Point p, int value) => Set(p - Origin, value);
+        public void SetGridPosition(Point p, int value, bool overridePreviousValues = false) => Set(p - Origin, value, overridePreviousValues);
 
         public void UnsetGridPosition(Point p, int value) => Unset(p - Origin, value);
 
