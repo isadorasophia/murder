@@ -329,7 +329,7 @@ namespace Murder.Editor.Data
             else if (fact.Value.ComponentType is Type t)
             {
                 DialogueId id = new(situation, dialog, actionIndex);
-                if (_data.TryGetValue(id, out LineInfo info) && info.Component != null)
+                if (_data.TryGetValue(id, out LineInfo info) && info.Component != null && info.Component.GetType() == t)
                 {
                     c = info.Component;
                 }
