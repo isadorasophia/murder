@@ -223,6 +223,7 @@ public class Batch2D : IDisposable
         }
 
         ref SpriteBatchItem batchItem = ref GetBatchItem(AutoHandleAlphaBlendedSprites && drawInfo.Color.A < byte.MaxValue);
+
         batchItem.SetPolygon(texture, vertices.AsSpan(), drawInfo);
 
         if (BatchMode == BatchMode.Immediate)

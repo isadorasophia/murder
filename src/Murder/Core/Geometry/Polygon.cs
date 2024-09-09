@@ -111,7 +111,7 @@ namespace Murder.Core.Geometry
         }
 
 
-        internal bool Intersect(Circle circle)
+        public bool Intersect(Circle circle)
         {
             // go through each of the vertices, plus
             // the next vertex in the list

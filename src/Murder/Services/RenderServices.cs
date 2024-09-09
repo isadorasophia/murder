@@ -403,6 +403,27 @@ namespace Murder.Services
         }
 
         /// <summary>
+        /// Draws a list of connecting points
+        /// </summary>
+        /// <param name="spriteBatch">The destination drawing surface</param>
+        /// <param name="position">Where to position the points</param>
+        /// <param name="points">The points to connect with lines</param>
+        /// <param name="color">The color to use</param>
+        /// <param name="thickness">The thickness of the lines</param>
+        public static void DrawPoints(this Batch2D spriteBatch, Vector2 position, ImmutableArray<Vector2> points, Color color, float thickness, float sort)
+        {
+            if (points.Length < 2)
+                return;
+
+            for (int i = 1; i < points.Length; i++)
+            {
+                DrawLine(spriteBatch, (points[i - 1] + position).Round(), (points[i] + position).Round(), color, thickness, sort);
+            }
+
+            DrawLine(spriteBatch, (points[points.Length - 1] + position).Round(), (points[0] + position).Round(), color, thickness, sort);
+        }
+
+        /// <summary>
 		/// Draws a list of connecting points
 		/// </summary>
 		/// <param name="spriteBatch">The destination drawing surface</param>

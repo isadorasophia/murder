@@ -24,6 +24,18 @@ namespace Murder.Utilities
             new((float)Calculator.LerpSnap(origin.X, target.X, factor, threshold),
                 (float)Calculator.LerpSnap(origin.Y, target.Y, factor, threshold));
 
+        public static Vector2 Project (Vector2 vector, Vector2 onNormal)
+        {
+            float dot = Vector2.Dot(vector, onNormal);
+            float sqr = onNormal.LengthSquared();
+            return onNormal * (dot / sqr);
+        }
+
+        public static Vector2 Rejection(Vector2 vector, Vector2 onNormal)
+        {
+            return vector - Project(vector, onNormal);
+        }
+
         public static Vector2 RoundTowards(Vector2 value, Vector2 towards)
         {
             float roundX = value.X < towards.X ? MathF.Ceiling(value.X) : MathF.Floor(value.X);

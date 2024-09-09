@@ -84,6 +84,71 @@ namespace Murder.Utilities
 
         #region Math
 
+
+        /// <summary>
+        /// Returns from 0 if vectors point in opposite directions to 1 if they point to the same direction.
+        /// </summary>
+        internal static float Vector2Similarity(Vector2 a, Vector2 b)
+        {
+            if (a == Vector2.Zero || b == Vector2.Zero)
+                return 0;
+            Vector2 aNormalized = a.NormalizedWithSanity();
+            Vector2 bNormalized = b.NormalizedWithSanity();
+
+            return Remap(Vector2.Dot(aNormalized, bNormalized), -1, 1, 0, 1);
+        }
+
+        public static Vector2 ClosestPointOnSegment(Vector2 point, Vector2 a, Vector2 b)
+        {
+            // Vector from point A to point B
+            Vector2 ab = b - a;
+
+            // Vector from point A to the circle center (X, Y)
+            Vector2 ac = point - a;
+
+            // Project ac onto ab, but limit the projection to be within the segment
+            float abLengthSquared = ab.LengthSquared();
+            float projection = Vector2.Dot(ac, ab) / abLengthSquared;
+
+            // Clamp the projection value between 0 and 1 to ensure the closest point is within the segment
+            projection = Math.Clamp(projection, 0, 1);
+
+            // The closest point is A + projection * AB
+            return a + projection * ab;
+        }
+
+        public static (Vector2 point, float delta) DetailedClosestPointOnSegment(Vector2 point, Vector2 a, Vector2 b)
+        {
+            // Vector from point A to point B
+            Vector2 ab = b - a;
+
+            // Vector from point A to the circle center (X, Y)
+            Vector2 ac = point - a;
+
+            // Project ac onto ab, but limit the projection to be within the segment
+            float abLengthSquared = ab.LengthSquared();
+            float projection = Vector2.Dot(ac, ab) / abLengthSquared;
+
+            // Clamp the projection value between 0 and 1 to ensure the closest point is within the segment
+            projection = Math.Clamp(projection, 0, 1);
+
+            // The closest point is A + projection * AB
+            return (a + projection * ab, projection);
+        }
+
+        public static float DistancePointToLine(Vector2 point, Vector2 lineStart, Vector2 lineEnd)
+        {
+            float lineLengthSquared = (lineEnd - lineStart).LengthSquared();
+            if (lineLengthSquared == 0.0) return Vector2.Distance(point, lineStart);
+
+            // Project point onto the line, clamping to the line segment
+            float t = Math.Clamp(Vector2.Dot(point - lineStart, lineEnd - lineStart) / lineLengthSquared, 0, 1);
+            Vector2 projection = lineStart + t * (lineEnd - lineStart);
+
+            // Return the distance from the point to the projection
+            return Vector2.Distance(point, projection);
+        }
+
         public static bool IsInteger(float value)
         {
             return value % 1 == 0;
@@ -719,20 +784,6 @@ namespace Murder.Utilities
             int v = a * b + 0x80;
             return (byte)((v >> 8) + v >> 8);
         }
-
-        /// <summary>
-        /// Returns from 0 if vectors point in opposite directions to 1 if they point to the same direction.
-        /// </summary>
-        internal static float Vector2Similarity(Vector2 a, Vector2 b)
-        {
-            if (a == Vector2.Zero || b == Vector2.Zero)
-                return 0;
-            Vector2 aNormalized = a.NormalizedWithSanity();
-            Vector2 bNormalized = b.NormalizedWithSanity();
-
-            return Remap(Vector2.Dot(aNormalized, bNormalized), -1, 1, 0, 1);
-        }
-
         #endregion
     }
 }

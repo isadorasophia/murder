@@ -122,27 +122,34 @@ namespace Murder.Editor.Utilities
             ImGui.SameLine();
 
 
-
-            var cameraMan = world.GetUniqueEntityCameraFollow();
-
-            if (cameraMan.HasIdTarget())
+            if (world.TryGetUniqueEntityCameraFollow() is not Entity cameraMan)
             {
-                ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Green);
-                if (ImGui.Button(""))
-                {
-                    cameraMan.RemoveIdTarget();
-                }
+                ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Faded);
+                ImGui.Button("");
+                ImGui.PopStyleColor();
+                ImGui.SameLine();
             }
             else
             {
-                ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Faded);
-                if (ImGui.Button(""))
+                if (cameraMan.HasIdTarget())
                 {
-                    cameraMan.SetIdTarget(entity.EntityId);
+                    ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Green);
+                    if (ImGui.Button(""))
+                    {
+                        cameraMan.RemoveIdTarget();
+                    }
                 }
+                else
+                {
+                    ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Faded);
+                    if (ImGui.Button(""))
+                    {
+                        cameraMan.SetIdTarget(entity.EntityId);
+                    }
+                }
+                ImGui.PopStyleColor();
+                ImGui.SameLine();
             }
-            ImGui.PopStyleColor();
-            ImGui.SameLine();
 
             if (pushTree)
             {

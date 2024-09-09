@@ -45,5 +45,6 @@ namespace Murder.Core.Geometry
         {
             return Math.Min(22, 6 + Calculator.FloorToInt(radius * 0.45f));
         }
+
     }
 }
