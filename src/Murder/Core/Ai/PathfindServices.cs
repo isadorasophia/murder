@@ -18,6 +18,11 @@ namespace Murder.Core.Ai
         {
             statusFlags = PathfindStatusFlags.None;
 
+            if (map is not null && kind == PathfindAlgorithmKind.AstarStrict)
+            {
+                return Astar.FindPath(map, initial, target, true);
+            }
+
             // If it already sees the target, just go in a straight line!
             if (map == null || map.HasLineOfSight(initial, target, excludeEdges: false, blocking: collisionMask))
             {
@@ -27,9 +32,6 @@ namespace Murder.Core.Ai
 
             switch (kind)
             {
-                case PathfindAlgorithmKind.AstarStrict:
-                    return Astar.FindPath(map, initial, target, true);
-
                 case PathfindAlgorithmKind.Astar:
                     return Astar.FindPath(map, initial, target, false);
 
