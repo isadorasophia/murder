@@ -5,16 +5,12 @@ namespace Murder.Components;
 
 public readonly struct SpriteFacingComponent : IComponent
 {
-
     public readonly float AngleStart { get; init; } = 0; 
     public readonly string DefaultSuffix { get; init; } = string.Empty;
     public bool DefaultFlip { get; init; } = false;
     public readonly ImmutableArray<FacingInfo> FacingInfo { get; init; } = ImmutableArray<FacingInfo>.Empty;
     
-    public SpriteFacingComponent()
-    {
-        
-    }
+    public SpriteFacingComponent() { }
     
     /// <summary>
     /// Returns a new <see cref="SpriteFacingComponent"/> with the <see cref="FacingInfo"/> resized.
