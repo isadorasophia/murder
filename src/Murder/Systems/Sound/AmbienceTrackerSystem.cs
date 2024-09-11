@@ -7,12 +7,14 @@ using Murder.Core.Sounds;
 using Murder.Messages.Physics;
 using Murder.Services;
 using Murder.Utilities;
+using System.Collections.Immutable;
 
 namespace Murder.Systems.Sound;
 
 [Filter(typeof(AmbienceComponent))]
 [Messager(typeof(OnCollisionMessage))]
-public class AmbienceTrackerSystem : IMessagerSystem
+[Watch(typeof(AmbienceComponent))]
+public class AmbienceTrackerSystem : IMessagerSystem, IReactiveSystem
 {
     public void OnMessage(World world, Entity interactedEntity, IMessage msg)
     {
@@ -59,5 +61,35 @@ public class AmbienceTrackerSystem : IMessagerSystem
     protected virtual bool IsInteractAllowed(Entity interactor)
     {
         return true;
+    }
+
+    public void OnAdded(World world, ImmutableArray<Entity> entities) { }
+
+    public void OnModified(World world, ImmutableArray<Entity> entities) { }
+
+    public void OnRemoved(World world, ImmutableArray<Entity> entities) { }
+
+    public void OnActivated(World world, ImmutableArray<Entity> entities)
+    {
+        foreach (Entity e in entities)
+        {
+            AmbienceComponent ambience = e.GetAmbience();
+            foreach (SoundEventIdInfo info in ambience.Events)
+            {
+                _ = SoundServices.Play(info.Id, info.Layer, SoundProperties.Persist, entityId: e.EntityId);
+            }
+        }
+    }
+
+    public void OnDeactivated(World world, ImmutableArray<Entity> entities)
+    {
+        foreach (Entity e in entities)
+        {
+            AmbienceComponent ambience = e.GetAmbience();
+            foreach (SoundEventIdInfo info in ambience.Events)
+            {
+                SoundServices.Stop(info.Id, fadeOut: true, entityId: e.EntityId);
+            }
+        }
     }
 }
