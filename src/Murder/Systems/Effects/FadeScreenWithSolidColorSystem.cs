@@ -77,7 +77,7 @@ namespace Murder.Systems
             {
                 if (_fadeInTime != -1)
                 {
-                    _currentAlpha = Math.Min(Game.NowUnscaled - _fadeInTime, _duration) / _duration;
+                    _currentAlpha = _duration == 0 ? 1 : Math.Min(Game.NowUnscaled - _fadeInTime, _duration) / _duration;
 
                     if (_currentAlpha == 1)
                     {
@@ -87,7 +87,7 @@ namespace Murder.Systems
 
                 if (_fadeOutTime != -1)
                 {
-                    _currentAlpha = 1 - Math.Min(Game.NowUnscaled - _fadeOutTime, _duration) / _duration;
+                    _currentAlpha = _duration == 0 ? 0 : 1 - Math.Min(Game.NowUnscaled - _fadeOutTime, _duration) / _duration;
 
                     if (_currentAlpha == 0)
                     {
