@@ -40,11 +40,6 @@ namespace Murder.Components
         /// </summary>
         public readonly string CurrentAnimation => NextAnimations.FirstOrDefault() ?? string.Empty;
 
-        /// <summary>
-        /// Legacy property for serialization. Do not use.
-        /// </summary>
-        public float AnimationStartedTime { set { } }
-
         public readonly ImmutableArray<string> NextAnimations { get; init; } = ImmutableArray<string>.Empty;
 
         public bool HasAnimation(string animationName)
