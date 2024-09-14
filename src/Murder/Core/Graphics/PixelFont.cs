@@ -227,6 +227,11 @@ public class PixelFontSize
             return Point.Zero;
         }
 
+        if (visibleCharacters == 0)
+        {
+            return Point.Zero;
+        }
+
         string text = textData.Text;
 
         position = position.Round();
