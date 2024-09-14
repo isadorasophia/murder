@@ -357,8 +357,14 @@ public static class DirectionHelper
     /// <summary>
     /// Get the suffix from a suffix list based on an angle
     /// </summary>
-    public static (string suffix, bool flip) GetSuffixFromAngle(Entity entity, AgentSpriteComponent _, float angle)
+    public static (string suffix, bool flip) GetSuffixFromAngle(Entity entity, string prefix, float angle)
     {
+        if (entity.TryGetOverrideSpriteFacing() is OverrideSpriteFacingComponent overrideSpriteFacing &&
+            overrideSpriteFacing.Faces.TryGetValue(prefix, out SpriteFacingComponent spriteFacing))
+        {
+            return spriteFacing.GetSuffixFromAngle(angle);
+        }
+
         if (entity.TryGetSpriteFacing() is SpriteFacingComponent spriteFacingComponent)
         {
             return spriteFacingComponent.GetSuffixFromAngle(angle);

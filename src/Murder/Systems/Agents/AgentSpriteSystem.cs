@@ -89,7 +89,7 @@ namespace Murder.Systems
 
                 float ySort = RenderServices.YSort(ySortOffsetRaw);
 
-                (string suffix, bool horizontalFlip) = DirectionHelper.GetSuffixFromAngle(e, sprite, facing.Angle);
+                (string suffix, bool horizontalFlip) = DirectionHelper.GetSuffixFromAngle(e, prefix, facing.Angle);
 
                 if (overload is not null && overload.Value.IgnoreFacing)
                     suffix = string.Empty;

@@ -137,6 +137,19 @@ namespace Murder.Prefabs
                     e.SetEventListener(speakerEvents.Events);
                 }
             }
+
+            if (e.TryGetOverrideSpriteFacingEditor() is OverrideSpriteFacingEditorComponent overrideFacing)
+            {
+                e.RemoveOverrideSpriteFacingEditor();
+
+                var builder = ImmutableDictionary.CreateBuilder<string, SpriteFacingComponent>();
+                foreach (var face in overrideFacing.SpriteFaces)
+                {
+                    builder[face.Id] = face.Info;
+                }
+
+                e.SetOverrideSpriteFacing(builder.ToImmutable());
+            }
         }
 
         private static IComponent[] CreateDeepCopyComponentsFromAsset(

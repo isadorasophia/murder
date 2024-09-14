@@ -24,13 +24,13 @@ public readonly struct OverrideSpriteFacingEditorComponent : IComponent
 [RuntimeOnly]
 [PersistOnSave]
 [HideInEditor]
-public readonly struct OverrideSpriteFacingComponent
+public readonly struct OverrideSpriteFacingComponent : IComponent
 {
-    public readonly ImmutableDictionary<string, SpriteFacingId> Faces = 
-        ImmutableDictionary<string, SpriteFacingId>.Empty;
+    public readonly ImmutableDictionary<string, SpriteFacingComponent> Faces = 
+        ImmutableDictionary<string, SpriteFacingComponent>.Empty;
 
     public OverrideSpriteFacingComponent() { }
 
-    public OverrideSpriteFacingComponent(ImmutableDictionary<string, SpriteFacingId> faces) =>
+    public OverrideSpriteFacingComponent(ImmutableDictionary<string, SpriteFacingComponent> faces) =>
         Faces = faces;
 }

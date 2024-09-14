@@ -220,7 +220,6 @@ public static class EntityServices
 
     public static bool AnimationAvailable(this Entity entity, string id)
     {
-
         if (entity.TryGetAgentSprite() is AgentSpriteComponent agentSprite)
         {
             var sprite = Game.Data.TryGetAsset<SpriteAsset>(agentSprite.AnimationGuid);
@@ -232,7 +231,7 @@ public static class EntityServices
                 }
                 else if (entity.TryGetFacing() is FacingComponent facing)
                 {
-                    (string suffix, bool flip) = DirectionHelper.GetSuffixFromAngle(entity, agentSprite, facing.Angle);
+                    (string suffix, bool flip) = DirectionHelper.GetSuffixFromAngle(entity, id, facing.Angle);
                     if (sprite.Animations.ContainsKey($"{id}_{suffix}"))
                         return true;
                 }
