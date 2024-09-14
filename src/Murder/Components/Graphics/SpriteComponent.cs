@@ -67,6 +67,10 @@ namespace Murder.Components
             this(portrait.Sprite, Vector2.Zero, [portrait.AnimationId], 0, false, false, OutlineStyle.Full, Batches2D.GameplayBatchId)
         { }
 
+        public SpriteComponent(Portrait portrait, int batchId, int yOffset) :
+            this(portrait.Sprite, Vector2.Zero, [portrait.AnimationId], yOffset, false, false, OutlineStyle.Full, batchId)
+        { }
+
         public SpriteComponent(Guid guid, Vector2 offset, ImmutableArray<string> id, int ySortOffset, bool rotate, bool flip, OutlineStyle highlightStyle, int targetSpriteBatch)
         {
             AnimationGuid = guid;
