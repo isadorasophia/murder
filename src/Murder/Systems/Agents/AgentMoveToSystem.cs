@@ -23,6 +23,7 @@ namespace Murder.Systems.Agents
                 if (e.TryGetMoveToMaxTime() is MoveToMaxTimeComponent moveToMaxTime &&
                     Game.Now > moveToMaxTime.RemoveAt)
                 {
+                    e.RemoveMoveToMaxTime();
                     e.RemoveMoveTo();
                     e.RemoveMoveToTarget();
                 }
@@ -39,6 +40,7 @@ namespace Murder.Systems.Agents
                     {
                         // No impulse, I'm too close
                         e.RemoveMoveTo();
+                        e.RemoveMoveToMaxTime();
                     }
                     else if (distanceSq < MathF.Pow(move.SlowDownDistance, 2))
                     {
@@ -88,6 +90,7 @@ namespace Murder.Systems.Agents
                     {
                         // Target is gone, remove component
                         e.RemoveMoveToTarget();
+                        e.RemoveMoveToMaxTime();
                     }
                 }
             }
