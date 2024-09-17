@@ -67,12 +67,6 @@ namespace Murder.Interactions
                 return null;
             }
 
-            if (!interacted.HasSituation() && !interacted.HasOverrideSituation())
-            {
-                GameLogger.Error("Interacted without a situation.");
-                return null;
-            }
-
             Entity? childDialogue = interacted?.TryFetchChild(DIALOGUE_CHILD);
             if (childDialogue is not null && childDialogue.HasStateMachine())
             {

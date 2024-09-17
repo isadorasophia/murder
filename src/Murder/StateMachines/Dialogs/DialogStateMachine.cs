@@ -51,6 +51,11 @@ namespace Murder.StateMachines
         {
             Debug.Assert(_character is not null);
 
+            if (Entity.HasAutomaticNextDialogue())
+            {
+                Entity.SetDoNotPause();
+            }
+
             while (true)
             {
                 if (_character.NextLine(World, Entity) is not DialogLine dialogLine)

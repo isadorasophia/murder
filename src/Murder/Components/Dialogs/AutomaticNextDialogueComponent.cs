@@ -1,10 +1,7 @@
 ﻿using Bang.Components;
-using Murder.Utilities.Attributes;
 
-namespace Murder.Components
+namespace Murder.Components;
+
+public readonly struct AutomaticNextDialogueComponent : IComponent
 {
-    [RuntimeOnly]
-    public readonly struct AutomaticNextDialogueComponent : IComponent
-    {
-    }
 }
