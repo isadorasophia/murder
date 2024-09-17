@@ -8,12 +8,12 @@ namespace Murder.Components;
 [RuntimeOnly,DoNotPersistOnSave]
 public readonly struct AgentSpeedMultiplierComponent : IComponent
 {
-    public static readonly ImmutableArray<float> _emptyTemplate = ImmutableArray.Create(1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f);
+    public static readonly ImmutableArray<float> _emptyTemplate = [1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f];
 
     /// <summary>
-    /// Array of speed multiplayers, Currentlty with 8 slots
+    /// Array of speed multiplayers, currently with 8 slots.
     /// </summary>
-    public readonly ImmutableArray<float> SpeedMultiplier { get; init; } = ImmutableArray.Create(1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f);
+    public readonly ImmutableArray<float> SpeedMultiplier { get; init; } = [1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f];
 
     public AgentSpeedMultiplierComponent(int slot, float speedMultiplier)
     {
