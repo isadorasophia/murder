@@ -178,7 +178,7 @@ public class LocalizationAsset : GameAsset
             ResourceDataForAsset data = _dialogueResources[i];
             if (data.DialogueResourceGuid == guid)
             {
-                HashSet<LocalizedDialogueData> newResources = resources.ToHashSet();
+                HashSet<LocalizedDialogueData> newResources = [.. resources];
                 foreach (LocalizedDialogueData previousResource in data.DataResources)
                 {
                     if (newResources.Contains(previousResource))
@@ -227,7 +227,7 @@ public class LocalizationAsset : GameAsset
     }
 }
 
-public readonly record struct LocalizedDialogueData
+public readonly struct LocalizedDialogueData
 {
     /// <summary>
     /// Guid for the string itself.
@@ -240,4 +240,19 @@ public readonly record struct LocalizedDialogueData
     public readonly Guid Speaker;
 
     public LocalizedDialogueData(Guid speaker, Guid guid) => (Guid, Speaker) = (guid, speaker);
+
+    public override int GetHashCode()
+    {
+        return Guid.GetHashCode();
+    }
+
+    public override bool Equals(object? d)
+    {
+        if (d is not LocalizedDialogueData data)
+        {
+            return false;
+        }
+
+        return Guid == data.Guid;
+    }
 }
