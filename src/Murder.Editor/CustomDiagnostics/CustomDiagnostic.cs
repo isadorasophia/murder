@@ -18,6 +18,20 @@ namespace Murder.Editor.CustomDiagnostics
                 return true;
             }
 
+            // Start by the target itself
+            if (CustomEditorsHelper.TryGetCustomDiagnostic(target.GetType(), out ICustomDiagnostic? targetDiagnostic))
+            {
+                Type t = target.GetType();
+
+                if (!targetDiagnostic.IsValid(identifier, target, outputResult))
+                {
+                    if (outputResult)
+                    {
+                        GameLogger.Warning($"\uf071 Found invalid component of type '{t.Name}' on '{identifier}'.");
+                    }
+                }
+            }
+
             IList<(string, EditorMember)> members = CustomComponent.GetMembersOf(target.GetType(), exceptForMembers: null);
             if (members.Count == 0)
             {
