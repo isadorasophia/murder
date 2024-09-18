@@ -875,10 +875,10 @@ namespace Murder.Editor.Data
         {
             ApplyEventManagerChangesIfNeeded();
 
-            ReloadDialogs();
             FlushResourceImporters();
 
             InitializeShaderFileSystemWather();
+            ReloadDialogs();
 
             _cachedFilteredAssetsWithImplementation.Clear();
             CallAfterLoadContent = false;
