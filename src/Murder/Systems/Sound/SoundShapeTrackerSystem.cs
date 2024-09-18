@@ -17,6 +17,16 @@ namespace Murder.Systems.Sound;
 [Watch(typeof(AmbienceComponent))]
 public abstract class SoundShapeTrackerSystem : IFixedUpdateSystem, IReactiveSystem
 {
+    public void OnActivated(World world, ImmutableArray<Entity> entities)
+    {
+        OnAdded(world, entities);
+    }
+
+    public void OnDeactivated(World world, ImmutableArray<Entity> entities)
+    {
+        OnRemoved(world, entities);
+    }
+
     public void OnAdded(World world, ImmutableArray<Entity> entities)
     {
         if (GetListenerPosition(world, ListenerKind.Camera) is not Vector2 cameraPosition ||
