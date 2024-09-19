@@ -107,7 +107,7 @@ namespace Murder.Systems.Graphics
                     ySortOffsetRaw += o.SortOffset;
                 }
 
-                float ySort = e.HasUiDisplay() ? e.GetUiDisplay().YSort : RenderServices.YSort(ySortOffsetRaw);
+                float ySort = e.HasUiDisplay() ? e.GetUiDisplay().YSort : RenderServices.YSort(ySortOffsetRaw + 0.01f * (e.EntityId % 20));
 
                 VerticalPositionComponent? verticalPosition = e.TryGetVerticalPosition();
                 if (verticalPosition is not null)
