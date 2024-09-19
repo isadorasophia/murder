@@ -10,6 +10,7 @@ using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.Core;
+using Murder.Editor.CustomEditors;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
 using Murder.Services;
@@ -261,10 +262,10 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
 
     private static void ResizeWindow(float scale, RenderContext render)
     {
-        Point windowSize = new(Game.Profile.GameWidth * scale, Game.Profile.GameHeight * scale);
+        Point windowSize = (new Vector2(render.Viewport.NativeResolution.X, render.Viewport.NativeResolution.Y) * scale).Point();
         Game.Instance.SetWindowSize(windowSize);
         Game.Instance.GraphicsDeviceManager.ApplyChanges();
-        render.RefreshWindow(Game.GraphicsDevice, windowSize, new Point(Game.Profile.GameWidth, Game.Profile.GameHeight), Game.Profile.ResizeStyle);
+        render.RefreshWindow(Game.GraphicsDevice, windowSize, new Point(render.Viewport.NativeResolution.X, render.Viewport.NativeResolution.Y), Game.Profile.ResizeStyle);
     }
 
     public void Update(Context context)
