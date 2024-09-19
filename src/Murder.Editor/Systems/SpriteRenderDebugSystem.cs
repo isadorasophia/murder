@@ -245,7 +245,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
                 }
             }
 
-            float ySort = RenderServices.YSort(ySortOffsetRaw);
+            float ySort = RenderServices.YSort(ySortOffsetRaw + 0.01f * (e.EntityId % 20));
 
             Color baseColor = e.TryGetTint()?.TintColor ?? Color.White;
             if (e.HasComponent<IsPlacingComponent>())
