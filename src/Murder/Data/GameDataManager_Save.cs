@@ -30,6 +30,8 @@ namespace Murder.Data
         /// </summary>
         public virtual string GameDirectory => _game?.Name ?? "Murder";
 
+        public virtual float CurrentGameVersion => _game?.Version ?? 1;
+
         private string? _saveBasePath = null;
 
         /// <summary>

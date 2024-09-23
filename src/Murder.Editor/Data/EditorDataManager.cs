@@ -321,6 +321,12 @@ namespace Murder.Editor.Data
                     continue;
                 }
 
+                if (save.Version < Game.Data.CurrentGameVersion)
+                {
+                    GameLogger.Warning($"Skipping loading save {save.Name} due to older version ({save.Version}).");
+                    continue;
+                }
+
                 PackedSaveData? packedData = FileManager.UnpackContent<PackedSaveData>(saveDataPath);
                 PackedSaveAssetsData? packedAssetsData = FileManager.UnpackContent<PackedSaveAssetsData>(saveDataAssetsPath);
                 if (packedData is null || packedAssetsData is null)
