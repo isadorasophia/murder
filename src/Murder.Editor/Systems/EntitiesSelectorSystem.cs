@@ -21,7 +21,7 @@ namespace Murder.Editor.Systems
     [Requires(typeof(CursorSystem), typeof(EditorSystem))]
     [WorldEditor(startActive: true)]
     [Filter(ContextAccessorFilter.AllOf, ContextAccessorKind.Read, typeof(ITransformComponent))]
-    [Filter(ContextAccessorFilter.NoneOf, typeof(CutsceneAnchorsComponent), typeof(SoundParameterComponent), typeof(SkipComponent))] // Skip cutscene and sounds.
+    [Filter(ContextAccessorFilter.NoneOf, typeof(SoundParameterComponent), typeof(SkipComponent))] // Skip cutscene and sounds.
     public class EntitiesSelectorSystem : GenericSelectorSystem, IStartupSystem, IUpdateSystem, IGuiSystem, IMurderRenderSystem
     {
         private Vector2 _previousCursorPosition;
