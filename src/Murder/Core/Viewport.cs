@@ -127,21 +127,21 @@ public readonly struct Viewport
 
             case ViewportResizeMode.Grow:
                 Vector2 stretchedScale = new Vector2(viewportSize.X / (float)nativeResolution.X, viewportSize.Y / (float)nativeResolution.Y);
-                float minFlooredScale;
-                minFlooredScale = MathF.Floor(stretchedScale.Y);
+                float ceiledYScale;
+                ceiledYScale = MathF.Ceiling(Math.Max(stretchedScale.Y, 1));
 
-                Vector2 outputSize = nativeResolution.ToVector2() * minFlooredScale;
+                Vector2 outputSize = nativeResolution.ToVector2() * ceiledYScale;
 
                 // Now we see how many pixels are missing from the viewport and adjust the native resolution to fill the gap
-                Vector2 missingPixels = (viewportSize.ToVector2() - outputSize) / minFlooredScale;
+                Vector2 missingPixels = (viewportSize.ToVector2() - outputSize) / ceiledYScale;
                 missingPixels.X = Math.Min(missingPixels.X, nativeResolution.X * 0.2f);
 
                 // This means we are streaching too much and we will need to add bars to the top and bottom
                 if (missingPixels.X < -nativeResolution.X * 0.4f)
                 {
-                    minFlooredScale = Math.Max(1, minFlooredScale - 1);
-                    outputSize = nativeResolution.ToVector2() * minFlooredScale;
-                    missingPixels = (viewportSize.ToVector2() - outputSize) / minFlooredScale;
+                    ceiledYScale = Math.Max(1, ceiledYScale - 1);
+                    outputSize = nativeResolution.ToVector2() * ceiledYScale;
+                    missingPixels = (viewportSize.ToVector2() - outputSize) / ceiledYScale;
                     missingPixels.X = Math.Min(missingPixels.X, nativeResolution.X * 0.2f);
                 }
 
@@ -153,8 +153,8 @@ public readonly struct Viewport
                     );
 
 
-                OutputRectangle = CenterOutput(NativeResolution * minFlooredScale, viewportSize);
-                Scale = new Vector2(minFlooredScale);
+                OutputRectangle = CenterOutput(NativeResolution * ceiledYScale, viewportSize);
+                Scale = new Vector2(ceiledYScale);
 
                 break;
             case ViewportResizeMode.Crop:

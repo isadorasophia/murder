@@ -389,10 +389,10 @@ namespace Murder
 
             base.Initialize(); // Content is loaded here
 
+            _game?.Initialize();
+
             // Setting window size
             RefreshWindow();
-
-            _game?.Initialize();
 
             // Propagate dianostics mode settings.
             World.DIAGNOSTICS_MODE = DIAGNOSTICS_MODE;
