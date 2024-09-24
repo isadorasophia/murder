@@ -249,7 +249,7 @@ namespace Murder.Editor
 
                     ImGui.SameLine();
                     bool showReflection = assetEditor.ShowReflection;
-                    ImGui.Checkbox("\ue571", ref showReflection);
+                    ImGui.Checkbox("\uf24d", ref showReflection);
                     ImGui.SetItemTooltip($"{(showReflection ? "Show" : "Hide")} reflections");
                     assetEditor.ShowReflection = showReflection; 
                 }
