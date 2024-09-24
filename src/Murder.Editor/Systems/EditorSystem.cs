@@ -220,6 +220,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                     ImGui.Text($"{Game.GraphicsDevice.Adapter.Description:0}:");
                     ImGui.Text($"Display: [{Game.GraphicsDevice.Adapter.CurrentDisplayMode.Width}px, {Game.GraphicsDevice.Adapter.CurrentDisplayMode.Height}px]");
 
+                    ImGui.Text($"Fullscreen? {Game.Instance.Fullscreen}");
                     ImGui.Text($"Original Scale: {render.Viewport.OriginalScale}");
                     ImGui.Text($"Snapped Scale: {render.Viewport.Scale}");
                     ImGui.Text($"Viewport: {render.Viewport.Size}");
