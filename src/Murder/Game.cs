@@ -410,7 +410,7 @@ namespace Murder
 
             _screenSize = new Point(Width, Height) * Data.GameProfile.GameScale;
 
-            SetWindowSize(_screenSize);
+            SetWindowSize(_screenSize, false);
             _graphics.ApplyChanges();
 
             if (!Fullscreen)
@@ -430,7 +430,7 @@ namespace Murder
         /// In windowed mode, uses either the saved window size or the provided screen size.
         /// Synchronizes with vertical retrace in debug mode.
         /// </remarks>
-        public virtual void SetWindowSize(Point screenSize)
+        public virtual void SetWindowSize(Point screenSize, bool remember)
         {
             _graphics.SynchronizeWithVerticalRetrace = true;
             if (Fullscreen)
@@ -448,7 +448,7 @@ namespace Murder
                 _graphics.IsFullScreen = false;
                 Window.IsBorderlessEXT = false;
 
-                if (_windowedSize.X > 0 && _windowedSize.Y > 0)
+                if (remember && _windowedSize.X > 0 && _windowedSize.Y > 0)
                 {
                     _graphics.PreferredBackBufferWidth = (int)(_windowedSize.X);
                     _graphics.PreferredBackBufferHeight = (int)(_windowedSize.Y);

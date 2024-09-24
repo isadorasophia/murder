@@ -132,11 +132,11 @@ namespace Murder.Editor
             }
         }
 
-        public override void SetWindowSize(Point screenSize)
+        public override void SetWindowSize(Point screenSize, bool remember)
         {
             if (_isPlayingGame)
             {
-                base.SetWindowSize(screenSize);
+                base.SetWindowSize(screenSize, true);
                 return;
             }
 

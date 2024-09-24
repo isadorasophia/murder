@@ -38,6 +38,9 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
 
 
     private float _hovered;
+    private int _windowWidth;
+    private int _windowHeight;
+    private string _windowSize = string.Empty;
 
     public void Start(Context context)
     {
@@ -222,6 +225,46 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                     ImGui.Text($"Viewport: {render.Viewport.Size}");
                     ImGui.Text($"NativeResolution: {render.Viewport.NativeResolution}");
 
+                    if (ImGui.IsWindowAppearing())
+                    {
+                        _windowWidth = Game.Instance.Window.ClientBounds.Width;
+                        _windowHeight = Game.Instance.Window.ClientBounds.Height;
+                        _windowSize = $"{_windowWidth}px, {_windowHeight}px";
+                    }
+
+                    ImGui.InputText("WindowSize##Window", ref _windowSize, 32);
+                    ImGui.SameLine();
+                    if (ImGui.Button("Resize Window")) // "Resize Window
+                    {
+                        // Parse the string to get the width and height
+                        // First we remove any letters and other symbols, like [ ]
+                        string clean = _windowSize.Replace("px", "").Replace("[", "").Replace("]", "");
+                        string[] parts = clean.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                        if (parts.Length == 2)
+                        {
+                            if (int.TryParse(parts[0], out int width) && int.TryParse(parts[1], out int height))
+                            {
+                                _windowWidth = width;
+                                _windowHeight = height;
+                            }
+                        }
+
+                        Game.Instance.Fullscreen = false;
+                        Point windowSize = new Point(_windowWidth, _windowHeight);
+                        Game.Instance.SetWindowSize(windowSize, false);
+                        Game.Instance.GraphicsDeviceManager.ApplyChanges();
+                        render.RefreshWindow(Game.GraphicsDevice, windowSize, new Point(render.Viewport.NativeResolution.X, render.Viewport.NativeResolution.Y), Game.Profile.ResizeStyle);
+                    }
+
+                    if (ImGui.Button("Refresh Resolution"))
+                    {
+                        _windowWidth = Game.Instance.Window.ClientBounds.Width;
+                        _windowHeight = Game.Instance.Window.ClientBounds.Height;
+                        Point windowSize = new Point(_windowWidth, _windowHeight);
+                        render.RefreshWindow(Game.GraphicsDevice, windowSize, new Point(render.Viewport.NativeResolution.X, render.Viewport.NativeResolution.Y), Game.Profile.ResizeStyle);
+                    }
+
                     ImGui.EndTabItem();
                 }
 
@@ -263,7 +306,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
     private static void ResizeWindow(float scale, RenderContext render)
     {
         Point windowSize = (new Vector2(render.Viewport.NativeResolution.X, render.Viewport.NativeResolution.Y) * scale).Point();
-        Game.Instance.SetWindowSize(windowSize);
+        Game.Instance.SetWindowSize(windowSize, false);
         Game.Instance.GraphicsDeviceManager.ApplyChanges();
         render.RefreshWindow(Game.GraphicsDevice, windowSize, new Point(render.Viewport.NativeResolution.X, render.Viewport.NativeResolution.Y), Game.Profile.ResizeStyle);
     }
