@@ -410,7 +410,14 @@ namespace Murder
 
             _screenSize = new Point(Width, Height) * Data.GameProfile.GameScale;
 
-            SetWindowSize(_screenSize, false);
+            if (Fullscreen)
+            {
+                SetWindowSize(new Point(Game.GraphicsDevice.Adapter.CurrentDisplayMode.Width, Game.GraphicsDevice.Adapter.CurrentDisplayMode.Height), false);
+            }
+            else
+            {
+                SetWindowSize(_screenSize, false);
+            }
             _graphics.ApplyChanges();
 
             if (!Fullscreen)
