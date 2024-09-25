@@ -433,6 +433,7 @@ namespace Murder
         /// Sets the window size for the game based on the specified screen size and full screen settings.
         /// </summary>
         /// <param name="screenSize">The desired screen size in pixels.</param>
+        /// <param name="remember">Whether we should persist this window size.</param>
         /// <remarks>
         /// In windowed mode, uses either the saved window size or the provided screen size.
         /// Synchronizes with vertical retrace in debug mode.
