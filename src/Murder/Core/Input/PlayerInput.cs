@@ -568,9 +568,7 @@ namespace Murder.Core.Input
             bool pressed = false;
             if (PressedAndConsume(MurderInputButtons.Submit))
             {
-                lastMoved = Game.NowUnscaled;
                 lastPressed = Game.NowUnscaled;
-
                 pressed = true;
             }
 
@@ -580,7 +578,7 @@ namespace Murder.Core.Input
                 canceled = true;
             }
 
-            currentInfo.Select(selectedOptionIndex, lastMoved);
+            currentInfo.Select(selectedOptionIndex, lastPressed);
 
             currentInfo.Canceled = canceled;
             currentInfo.Overflow = overflow;
