@@ -568,7 +568,9 @@ namespace Murder.Core.Input
             bool pressed = false;
             if (PressedAndConsume(MurderInputButtons.Submit))
             {
+                lastMoved = Game.NowUnscaled;
                 lastPressed = Game.NowUnscaled;
+
                 pressed = true;
             }
 

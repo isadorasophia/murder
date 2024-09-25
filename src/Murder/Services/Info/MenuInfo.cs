@@ -109,14 +109,19 @@ namespace Murder.Core.Input
         /// </summary>
         public int VisibleItems = 8;
 
+        /// <summary>
+        /// This is the allowed size in view, used to calculate size of elements in the screen.
+        /// </summary>
+        public int CapacityToShowUi = 8;
+
         public MenuSounds Sounds = new();
 
-        public MenuOption[] Options = new MenuOption[0];
+        public MenuOption[] Options = [];
 
         /// <summary>
         /// Optional icons to be displayed near the options.
         /// </summary>
-        public Portrait[] Icons = new Portrait[0];
+        public Portrait[] Icons = [];
 
         public bool HasOptions => Options != null && Options.Length > 0;
 
