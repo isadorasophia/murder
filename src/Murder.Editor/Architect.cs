@@ -136,7 +136,7 @@ namespace Murder.Editor
         {
             if (_isPlayingGame)
             {
-                base.SetWindowSize(screenSize, true);
+                base.SetWindowSize(screenSize, false);
                 return;
             }
 

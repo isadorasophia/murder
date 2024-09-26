@@ -307,6 +307,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
     private static void ResizeWindow(float scale, RenderContext render)
     {
         Point windowSize = (new Vector2(render.Viewport.NativeResolution.X, render.Viewport.NativeResolution.Y) * scale).Point();
+        Game.Instance.Fullscreen = false;
         Game.Instance.SetWindowSize(windowSize, false);
         Game.Instance.GraphicsDeviceManager.ApplyChanges();
         render.RefreshWindow(Game.GraphicsDevice, windowSize, new Point(render.Viewport.NativeResolution.X, render.Viewport.NativeResolution.Y), Game.Profile.ResizeStyle);
