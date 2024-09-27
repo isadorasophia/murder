@@ -24,7 +24,7 @@ namespace Murder.Components
         {
         }
 
-        private AgentSpriteComponent(Guid animationGuid, int targetSpriteBatch, int ySortOffset, string idlePrefix, string walkPrefix)
+        public AgentSpriteComponent(Guid animationGuid, int targetSpriteBatch, int ySortOffset, string idlePrefix, string walkPrefix)
         {
             AnimationGuid = animationGuid;
             TargetSpriteBatch = targetSpriteBatch;
