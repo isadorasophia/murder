@@ -3,6 +3,7 @@ using Bang.Entities;
 using Bang.Interactions;
 using Murder.Assets;
 using Murder.Components;
+using Murder.Core.Extensions;
 using Murder.Diagnostics;
 using Murder.Utilities;
 
@@ -42,7 +43,7 @@ namespace Murder.Interactions
             Entity child = _child.Asset.CreateAndFetch(world);
             interacted.AddChild(child.EntityId, _name);
 
-            if (_properties.HasFlag(AddChildProperties.SendEventComponentToParent) && 
+            if (_properties.NonAllocatingHasFlag(AddChildProperties.SendEventComponentToParent) && 
                 child.TryGetEventListener() is EventListenerComponent c)
             {
                 EventListenerComponent? previousEvent = interacted.TryGetEventListener();

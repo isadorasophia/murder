@@ -4,6 +4,7 @@ using Bang.Entities;
 using Murder.Assets;
 using Murder.Attributes;
 using Murder.Components;
+using Murder.Core.Extensions;
 using Murder.Core.Graphics;
 using Murder.Prefabs;
 using Murder.Utilities;
@@ -87,9 +88,9 @@ namespace Murder.Save
             //}
 
             InstancePersistKind kind = FilterComponents(ref instance, e);
-            if (!kind.HasFlag(InstancePersistKind.All))
+            if (!kind.NonAllocatingHasFlag(InstancePersistKind.All))
             {
-                if (kind.HasFlag(InstancePersistKind.NoChildren))
+                if (kind.NonAllocatingHasFlag(InstancePersistKind.NoChildren))
                 {
                     // Skip persisting any of its children.
                     foreach (int childId in e.Children)

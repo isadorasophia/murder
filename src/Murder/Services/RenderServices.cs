@@ -4,6 +4,7 @@ using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Components.Graphics;
 using Murder.Core;
+using Murder.Core.Extensions;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
@@ -345,22 +346,22 @@ namespace Murder.Services
 
             if (drawInfo.Outline.HasValue && drawInfo.OutlineStyle != OutlineStyle.None)
             {
-                if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Bottom))
+                if (drawInfo.OutlineStyle.NonAllocatingHasFlag(OutlineStyle.Bottom))
                 {
                     drawAt(position + new Vector2(0, 1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
                 }
 
-                if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Top))
+                if (drawInfo.OutlineStyle.NonAllocatingHasFlag(OutlineStyle.Top))
                 {
                     drawAt(position + new Vector2(0, -1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
                 }
 
-                if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Left))
+                if (drawInfo.OutlineStyle.NonAllocatingHasFlag(OutlineStyle.Left))
                 {
                     drawAt(position + new Vector2(-1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
                 }
 
-                if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Right))
+                if (drawInfo.OutlineStyle.NonAllocatingHasFlag(OutlineStyle.Right))
                 {
                     drawAt(position + new Vector2(1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
                 }
@@ -371,7 +372,7 @@ namespace Murder.Services
                 int shadowOffset = 1;
 
                 // Make sure the shadow shows up even if there is an outline.
-                if (drawInfo.Outline.HasValue && drawInfo.OutlineStyle.HasFlag(OutlineStyle.Bottom))
+                if (drawInfo.Outline.HasValue && drawInfo.OutlineStyle.NonAllocatingHasFlag(OutlineStyle.Bottom))
                 {
                     shadowOffset = 2;
                 }

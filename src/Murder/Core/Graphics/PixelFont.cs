@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets.Graphics;
+using Murder.Core.Extensions;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
 using Murder.Services;
@@ -263,7 +264,7 @@ public class PixelFontSize
             
 
             bool isPostAddedLineEnding = letter?.Properties is not RuntimeLetterPropertiesFlag properties || 
-                !properties.HasFlag(RuntimeLetterPropertiesFlag.DoNotSkipLineEnding);
+                !properties.NonAllocatingHasFlag(RuntimeLetterPropertiesFlag.DoNotSkipLineEnding);
 
             if (character == '\n')
             {
@@ -300,16 +301,16 @@ public class PixelFontSize
                     {
                         glitchAmount = letter.Value.Glitch;
                     }
-                    if (letter.Value.Properties.HasFlag(RuntimeLetterPropertiesFlag.ResetGlitch))
+                    if (letter.Value.Properties.NonAllocatingHasFlag(RuntimeLetterPropertiesFlag.ResetGlitch))
                     {
                         glitchAmount = 0;
                     }
 
-                    if (letter.Value.Properties.HasFlag(RuntimeLetterPropertiesFlag.Wave))
+                    if (letter.Value.Properties.NonAllocatingHasFlag(RuntimeLetterPropertiesFlag.Wave))
                     {
                         waveOffset = MathF.Sin(Game.NowUnscaled * 4f + i);
                     }
-                    if (letter.Value.Properties.HasFlag(RuntimeLetterPropertiesFlag.Fear))
+                    if (letter.Value.Properties.NonAllocatingHasFlag(RuntimeLetterPropertiesFlag.Fear))
                     {
                         float amplitude = .9f;
                         float smoothFactor = Math.Abs(MathF.Sin(Game.NowUnscaled * 16f + i * 2));
@@ -402,7 +403,7 @@ public class PixelFontSize
                     {
                         currentColor = newColor * color.A;
                     }
-                    else if (letter.Value.Properties.HasFlag(RuntimeLetterPropertiesFlag.ResetColor))
+                    else if (letter.Value.Properties.NonAllocatingHasFlag(RuntimeLetterPropertiesFlag.ResetColor))
                     {
                         currentColor = color;
                     }
