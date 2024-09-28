@@ -400,7 +400,7 @@ namespace Murder.Assets
 
         public void UpdateSystems(ImmutableArray<(Type systemType, bool isActive)> systems) => _systems = systems;
         public void UpdateFeatures(ImmutableArray<(Guid guid, bool isActive)> features) => _features = features;
-        public void UpdateRemovedSystems(ImmutableArray<Type> systems) => _systemsToRemove = systems;
+        public void UpdateSystemsToRemove(ImmutableArray<Type> systems) => _systemsToRemove = systems;
 
         /// <summary>
         /// Add a new folder to group entities.
