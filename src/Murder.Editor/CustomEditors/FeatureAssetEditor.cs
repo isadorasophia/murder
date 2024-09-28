@@ -173,6 +173,60 @@ namespace Murder.Editor.CustomEditors
             return DrawSystemsEditor(systems, currentSystemsList: systems, out updatedSystems);
         }
 
+        public static bool DrawSystemsToRemoveEditor(ImmutableArray<Type> systemsToRemove, out ImmutableArray<Type> updatedSystems)
+        {
+            ImGui.BeginTable("Systems to remove", 2, ImGuiTableFlags.BordersOuter | ImGuiTableFlags.SizingFixedFit);
+            ImGui.TableSetupColumn("Except for");
+            ImGui.TableSetupColumn("System List", ImGuiTableColumnFlags.WidthStretch | ImGuiTableColumnFlags.NoHeaderLabel);
+            ImGui.TableHeadersRow();
+            ImGui.TableNextColumn();
+
+            bool changed = false;
+            updatedSystems = systemsToRemove;
+
+            int row = 0;
+            foreach (Type s in systemsToRemove)
+            {
+                if (s is null)
+                {
+                    // The system was likely removed.
+                    updatedSystems = updatedSystems.RemoveAt(row);
+                    changed = true;
+
+                    continue;
+                }
+
+                string name = s.FullName!;
+
+                if (ImGuiHelpers.DeleteButton($"del_{name}"))
+                {
+                    updatedSystems = updatedSystems.RemoveAt(row);
+                    changed = true;
+                }
+
+                ImGui.TableNextColumn();
+
+                ImGui.Selectable(name.Split('.').Last());
+                ImGui.TableNextColumn();
+
+                row++;
+            }
+
+            ImGui.EndTable();
+
+            ImGui.PushID("remove_systems");
+            Type? newSystemToAdd = SearchBox.SearchSystems(systemsToRemove);
+            if (newSystemToAdd is not null)
+            {
+                updatedSystems = systemsToRemove.Add(newSystemToAdd);
+                changed = true;
+            }
+
+            ImGui.PopID();
+
+            return changed;
+        }
+
         public static bool DrawSystemsEditor(IList<(Type systemType, bool isActive)> systems, IList<(Type system, bool isActive)> currentSystemsList, out ImmutableArray<(Type systemType, bool isActive)> updatedSystems)
         {
             ImGui.BeginTable("Systems", 2, ImGuiTableFlags.BordersOuter | ImGuiTableFlags.SizingFixedFit);

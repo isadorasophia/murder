@@ -419,6 +419,12 @@ namespace Murder.Editor.CustomEditors
                 _world.UpdateSystems(updatedSystems);
             }
 
+            if (FeatureAssetEditor.DrawSystemsToRemoveEditor(_world.SystemsToRemove, out var updatedSystemsToRemove))
+            {
+                _world.UpdateSystemsToRemove(updatedSystemsToRemove);
+                _world.FileChanged = true;
+            }
+
             if (FeatureAssetEditor.DrawFeaturesEditor(_world.Features, out var updatedFeatures))
             {
                 _world.UpdateFeatures(updatedFeatures);

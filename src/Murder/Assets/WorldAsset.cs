@@ -1,6 +1,7 @@
 ﻿using Bang;
 using Bang.Entities;
 using Bang.Systems;
+using Murder.Attributes;
 using Murder.Components;
 using Murder.Components.Serialization;
 using Murder.Core;
@@ -39,9 +40,18 @@ namespace Murder.Assets
         /// Map of all the systems and whether they are active or not.
         /// </summary>
         [Serialize]
-        private ImmutableArray<(Type systemType, bool isActive)> _systems = ImmutableArray<(Type systemType, bool isActive)>.Empty;
+        private ImmutableArray<(Type systemType, bool isActive)> _systems = [];
+
         [Serialize]
-        private ImmutableArray<(Guid guid, bool isActive)> _features = ImmutableArray<(Guid guid, bool isActive)>.Empty;
+        private ImmutableArray<(Guid guid, bool isActive)> _features = [];
+
+        /// <summary>
+        /// Systems which are removed by default.
+        /// This is provided separetely since we don't have the power to modify systems that are inside a feature.
+        /// </summary>
+        [Serialize]
+        [TypeOf(typeof(ISystem))]
+        private ImmutableArray<Type> _systemsToRemove = [];
 
         /// <summary>
         /// These are the collection of entities grouped within a folder, distinguished by name.
@@ -61,6 +71,8 @@ namespace Murder.Assets
         private readonly Dictionary<Guid, EntityInstance> _entities = new();
 
         public ImmutableArray<(Type systemType, bool isActive)> Systems => _systems;
+
+        public ImmutableArray<Type> SystemsToRemove => _systemsToRemove;
 
         public ImmutableArray<(Guid guid, bool isActive)> Features => _features;
 
@@ -166,7 +178,7 @@ namespace Murder.Assets
 
         public ImmutableArray<(Type system, bool isActive)> FetchAllSystems()
         {
-            var systems = ImmutableArray.CreateBuilder<(Type, bool)>();
+            var systems = ImmutableArray.CreateBuilder<(Type System, bool Enabled)>();
 
             // First, let's add our own systems - easy!
             systems.AddRange(_systems);
@@ -176,6 +188,13 @@ namespace Murder.Assets
             {
                 FeatureAsset featureAsset = Game.Data.GetAsset<FeatureAsset>(feature.guid);
                 systems.AddRange(featureAsset.FetchAllSystems(feature.isActive));
+            }
+
+            if (_systemsToRemove.Length != 0)
+            {
+                // Remove all the systems that do not apply.
+                HashSet<Type> checkSystemsToBeRemoved = [.. _systemsToRemove];
+                systems.RemoveAll(s => checkSystemsToBeRemoved.Contains(s.System));
             }
 
             return systems.ToImmutable();
@@ -381,6 +400,7 @@ namespace Murder.Assets
 
         public void UpdateSystems(ImmutableArray<(Type systemType, bool isActive)> systems) => _systems = systems;
         public void UpdateFeatures(ImmutableArray<(Guid guid, bool isActive)> features) => _features = features;
+        public void UpdateRemovedSystems(ImmutableArray<Type> systems) => _systemsToRemove = systems;
 
         /// <summary>
         /// Add a new folder to group entities.

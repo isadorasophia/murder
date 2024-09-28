@@ -1,4 +1,5 @@
 ﻿using Bang.Components;
+using Bang.Systems;
 using ImGuiNET;
 using Murder.Attributes;
 using Murder.Editor.CustomComponents;
@@ -16,18 +17,30 @@ namespace Murder.Editor.CustomFields
         {
             element = default;
 
-            if (AttributeExtensions.TryGetAttribute(member.Member, out TypeOfAttribute? attribute) &&
-                attribute.Type != typeof(IComponent))
+            if (!AttributeExtensions.TryGetAttribute(member.Member, out TypeOfAttribute? attribute))
             {
-                ImGui.TextColored(Game.Profile.Theme.Red, $"Type {attribute.Type.Name} not supported yet.");
                 return false;
             }
 
-            if (SearchBox.SearchComponent() is Type t)
+            if (attribute.Type == typeof(IComponent))
             {
-                element = t;
-
-                return true;
+                if (SearchBox.SearchComponent() is Type t)
+                {
+                    element = t;
+                    return true;
+                }
+            }
+            else if (attribute.Type == typeof(ISystem))
+            {
+                if (SearchBox.SearchSystems() is Type t)
+                {
+                    element = t;
+                    return true;
+                }
+            }
+            else
+            {
+                ImGui.TextColored(Game.Profile.Theme.Red, $"Type {attribute.Type.Name} not supported yet.");
             }
 
             return false;
