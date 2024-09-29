@@ -172,7 +172,14 @@ public static class EntityServices
                 result = sprite.Play(nextAnimations);
 
             entity.SetSprite(result);
-            entity.SetAnimationStarted(Game.Now);
+
+            float startedTime = Game.Now;
+            if (entity.TryGetRandomizeSprite() is RandomizeSpriteComponent randomize && randomize.RandomizeAnimationStart)
+            {
+                startedTime = Game.Random.NextFloat(1f, 32f);
+            }
+
+            entity.SetAnimationStarted(startedTime);
             return result;
         }
 
