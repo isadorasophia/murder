@@ -19,8 +19,8 @@ internal class ScreenshotShortcutListener : IMurderRenderSystem, IUpdateSystem, 
 
     private bool _takeScreenshot;
 
-    private float _screenshotTaken = -100f;
-    private float _delay = 3f;
+    private float _screenshotTaken = -10f;
+    private float _delay = -1;
     private int _takeMultiple = 0;
 
     private readonly float _delayTime = 1f;

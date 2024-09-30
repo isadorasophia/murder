@@ -129,6 +129,7 @@ public class RenderContext : IDisposable
 
     private Rectangle? _takeScreenShot;
     protected bool _takeGameplayScreenShot;
+    public bool TakingScreenshot => _takeGameplayScreenShot;
 
     private bool _initialized = false;
     public enum RenderTargets
