@@ -128,8 +128,12 @@ public class RenderContext : IDisposable
     protected readonly bool _useDebugBatches;
 
     private Rectangle? _takeScreenShot;
-    protected bool _takeGameplayScreenShot;
-    public bool TakingScreenshot => _takeGameplayScreenShot;
+
+    /// <summary>
+    /// Countdown of frames until next screenshot.
+    /// </summary>
+    protected int _takeGameplayScreenShot = -1;
+    public bool TakingScreenshot => _takeGameplayScreenShot > 0;
 
     private bool _initialized = false;
     public enum RenderTargets
@@ -460,10 +464,13 @@ public class RenderContext : IDisposable
         // =======================================================>
         _graphicsDevice.SetRenderTarget(null);
 
-        if (_takeGameplayScreenShot)
+        if (_takeGameplayScreenShot > 0)
         {
-            _takeGameplayScreenShot = false;
-            SaveScreenshot(_mainTarget, _mainTarget.Bounds.Size());
+            _takeGameplayScreenShot--;
+            if (_takeGameplayScreenShot == 0)
+            {
+                SaveScreenshot(_mainTarget, _mainTarget.Bounds.Size());
+            }
         }
 
         if (RenderToScreen)
@@ -609,6 +616,6 @@ public class RenderContext : IDisposable
 
     public void SaveGameplayScreenshot()
     {
-        _takeGameplayScreenShot = true;
+        _takeGameplayScreenShot = 2;
     }
 }

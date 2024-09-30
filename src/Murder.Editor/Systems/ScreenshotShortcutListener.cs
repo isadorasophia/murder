@@ -26,11 +26,16 @@ internal class ScreenshotShortcutListener : IMurderRenderSystem, IUpdateSystem, 
     private readonly float _delayTime = 1f;
     public void Draw(RenderContext render, Context context)
     {
+        if (render.TakingScreenshot)
+        {
+            return;
+        }
+
         float showBorder = 1 - Calculator.ClampTime(_screenshotTaken, Game.NowUnscaled, 1);
 
         if (showBorder > 0f)
         {
-            if (showBorder > 0.8f && !_takeScreenshot)
+            if (showBorder > 0.8f)
             {
                 float flash = 1 - Calculator.ClampTime(_screenshotTaken, Game.NowUnscaled, 0.2f);
 
