@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace Murder.Serialization;
 
@@ -88,4 +89,36 @@ public static partial class FileHelper
 
         return SDL2.SDL.SDL_GetPrefPath(null, gameName);
     }
+
+    public static string GetScreenshotFolder()
+    {
+        return Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+    }
+
+    public static void OpenFolderOnOS(string filePath)
+    {
+        // Open the directory in the file explorer
+        if (OperatingSystem.IsWindows())
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "explorer.exe",
+                Arguments = $"/select,\"{filePath}\"",
+                UseShellExecute = true
+            });
+        }
+        else if (OperatingSystem.IsMacOS())
+        {
+            Process.Start("open", $"-R \"{filePath}\"");
+        }
+        else if (OperatingSystem.IsLinux())
+        {
+            Process.Start("xdg-open", Path.GetDirectoryName(filePath)!);
+        }
+        else
+        {
+            Console.WriteLine($"File saved at {filePath}. Open manually as the OS is not recognized.");
+        }
+    }
+
 }

@@ -445,7 +445,7 @@ namespace Murder
             {
                 _windowedSize = _graphics.GraphicsDevice.Viewport.Bounds.Size();
 
-                Window.IsBorderlessEXT = true;
+                Window.IsBorderlessEXT = true;  
                 _graphics.IsFullScreen = true;
 
                 _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
