@@ -133,7 +133,28 @@ public static class ImGuiHelpers
             ImGui.EndTooltip();
         }
     }
+    public static bool PressedButtton(string label, ref bool pressed, bool reverse = false)
+    {
+        bool wasPressed = (pressed && !reverse) || (!pressed && reverse);
+        if (wasPressed)
+        {
+            ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.BgFaded);
+        }
 
+        bool down = false;
+        if (ImGui.Button(label))
+        {
+            pressed = !pressed;
+            down = true;
+        }
+
+        if (wasPressed)
+        {
+            ImGui.PopStyleColor(1);
+        }
+
+        return down;
+    }
     public static bool SelectedButton(string label, Vector4? color = default)
     {
         color ??= Game.Profile.Theme.BgFaded;
