@@ -102,7 +102,7 @@ namespace Murder.Core.Input
         /// <summary>
         /// Number of options in this menu
         /// </summary>
-        public int Length => Options.Length;
+        public int Length => !HasOptions ? 0 : Options.Length;
 
         /// <summary>
         /// Number of visible options on the screen, 8 is the default.
