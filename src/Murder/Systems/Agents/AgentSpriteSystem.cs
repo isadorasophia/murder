@@ -233,7 +233,7 @@ namespace Murder.Systems
                     else if (!overload.Value.Loop)
                     {
                         e.RemoveAnimationOverload();
-                        e.SendAnimationCompleteMessage(AnimationCompleteStyle.Single);
+                        e.SendAnimationCompleteMessage(AnimationCompleteStyle.Sequence);
                         e.SetAnimationComplete();
                     }
                     else
