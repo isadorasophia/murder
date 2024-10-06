@@ -11,6 +11,7 @@ using Murder.Utilities;
 
 namespace Murder.Editor.Systems;
 
+[OnlyShowOnDebugView]
 [Filter(typeof(IStateMachineComponent))]
 internal class StateMachineDebugSystem : IMurderRenderSystem
 {
