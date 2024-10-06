@@ -12,6 +12,7 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Helpers;
+using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
 using System.Numerics;
@@ -232,7 +233,7 @@ namespace Murder.Systems
                     else if (!overload.Value.Loop)
                     {
                         e.RemoveAnimationOverload();
-                        e.SendAnimationCompleteMessage();
+                        e.SendAnimationCompleteMessage(AnimationCompleteStyle.Single);
                         e.SetAnimationComplete();
                     }
                     else

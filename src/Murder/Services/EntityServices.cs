@@ -307,6 +307,8 @@ public static class EntityServices
             entity.SetSprite(result);
 
             entity.SetDoNotLoop();
+
+            entity.RemoveAnimationCompleteMessage();
             entity.RemoveAnimationComplete();
             entity.RemoveAnimationStarted();
 

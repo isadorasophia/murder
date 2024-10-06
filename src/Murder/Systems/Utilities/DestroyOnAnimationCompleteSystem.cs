@@ -27,6 +27,7 @@ namespace Murder.Systems.Util
                     return;
                 }
             }
+
             if (entity.GetDestroyOnAnimationComplete().DeactivateOnComplete)
             {
                 entity.RemoveAnimationComplete();
