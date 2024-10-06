@@ -203,14 +203,19 @@ namespace Murder.Services
             return false;
         }
 
-        public static bool HasLineOfSight(World world, Vector2 from, Vector2 to)
+        public static bool HasLineOfSight(World world, Vector2 from, Vector2 to, int mask)
         {
-            if (Raycast(world, from, to, CollisionLayersBase.BLOCK_VISION, [], out RaycastHit hit))
+            if (Raycast(world, from, to, mask, [], out RaycastHit hit))
             {
                 return false;
             }
 
             return true;
+        }
+
+        public static bool HasLineOfSight(World world, Vector2 from, Vector2 to)
+        {
+            return HasLineOfSight(world, from, to, CollisionLayersBase.BLOCK_VISION);
         }
 
         /// <summary>
