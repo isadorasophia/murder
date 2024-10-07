@@ -159,7 +159,7 @@ namespace Murder.Save
         /// <summary>
         /// Set a field value for all character blackboards.
         /// </summary>
-        /// <param name="blackboardName">Name of the character blackboard.</param>
+        /// <param name="blackboardName">AtlasId of the character blackboard.</param>
         /// <param name="fieldName">Target field name.</param>
         /// <param name="value">Target value.</param>
         public bool SetValueForAllCharacterBlackboards<T>(string blackboardName, string fieldName, T value) where T : notnull

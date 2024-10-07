@@ -38,7 +38,7 @@
       "AnimationDuration": 1.12
     }
   },
-  "Atlas": 2,
+  "Atlas": "editor",
   "Frames": [
     {
       "AtlasIndex": 0,
@@ -65,7 +65,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     {
       "AtlasIndex": 0,
@@ -92,7 +92,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     {
       "AtlasIndex": 0,
@@ -119,7 +119,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     {
       "AtlasIndex": 0,
@@ -146,7 +146,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     {
       "AtlasIndex": 0,
@@ -173,7 +173,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     {
       "AtlasIndex": 0,
@@ -200,7 +200,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     {
       "AtlasIndex": 0,
@@ -227,7 +227,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     {
       "AtlasIndex": 0,
@@ -254,7 +254,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     {
       "AtlasIndex": 0,
@@ -281,7 +281,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     {
       "AtlasIndex": 0,
@@ -308,7 +308,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     {
       "AtlasIndex": 0,
@@ -335,7 +335,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     {
       "AtlasIndex": 0,
@@ -362,7 +362,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     {
       "AtlasIndex": 0,
@@ -389,7 +389,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     {
       "AtlasIndex": 0,
@@ -416,7 +416,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     }
   ],
   "Origin": {

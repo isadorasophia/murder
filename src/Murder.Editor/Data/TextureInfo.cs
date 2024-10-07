@@ -65,7 +65,7 @@ namespace Murder.Editor.Data
         internal bool HasLayers;
 
         /// <summary>
-        /// Name of the layer
+        /// AtlasId of the layer
         /// </summary>
         public string LayerName = String.Empty;
     }

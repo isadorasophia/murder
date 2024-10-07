@@ -85,9 +85,9 @@ namespace Murder.Editor.Importers
             string atlasName = AtlasId.GetDescription();
 
             string atlasDescriptorFullPath = GetSourcePackedAtlasDescriptorPath();
-            using TextureAtlas atlas = new(atlasName, AtlasId);
+            using TextureAtlas atlas = new(atlasName);
 
-            atlas.PopulateAtlas(GetCoordinatesForAtlas(packer, AtlasId, inputPath));
+            atlas.PopulateAtlas(GetCoordinatesForAtlas(packer, atlasName, inputPath));
 
             if (atlas.CountEntries == 0)
             {

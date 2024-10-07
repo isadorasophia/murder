@@ -709,7 +709,7 @@ public partial class Aseprite
 
     #endregion
 
-    internal IEnumerable<SpriteAsset> CreateAssets(AtlasId atlas)
+    internal IEnumerable<SpriteAsset> CreateAssets(string atlas)
     {
         if (SplitLayers)
             for (int i = 0; i < Layers.Count; i++)
@@ -723,7 +723,7 @@ public partial class Aseprite
                 yield return ase;
     }
 
-    internal IEnumerable<SpriteAsset> CreateAssetsFromSlices(int layer, AtlasId atlas)
+    internal IEnumerable<SpriteAsset> CreateAssetsFromSlices(int layer, string atlas)
     {
         for (int i = 0; i < Slices.Count; i++)
         {
@@ -737,7 +737,7 @@ public partial class Aseprite
     /// </summary>
     /// <param name="layer">The current layer to use, -1 means all layers.</param>
     /// <returns></returns>
-    private SpriteAsset CreateAsset(int layer, int sliceIndex, AtlasId atlas)
+    private SpriteAsset CreateAsset(int layer, int sliceIndex, string atlas)
     {
         var source = layer >= 0 ? $"{Source}_{Layers[layer].Name}" : Source;
         if (Slices.Count > 1)

@@ -26,6 +26,7 @@ using Murder.Assets.Save;
 using Bang.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Murder.Editor.Data
 {
@@ -130,6 +131,12 @@ namespace Murder.Editor.Data
 
             foreach (Type importerType in importerTypes)
             {
+                if (importerType.GetCustomAttribute<ImporterSettingsAttribute>() is ImporterSettingsAttribute attribute &&
+                    attribute.FilterType == FilterType.Ignore)
+                {
+                    continue;
+                }
+
                 ResourceImporter importer = (ResourceImporter)Activator.CreateInstance(importerType, args: EditorSettings)!;
                 importers.Add(importer);
             }
@@ -709,7 +716,7 @@ namespace Murder.Editor.Data
             Match m = r.Match(name);
             if (m.Success)
             {
-                // Name already had a number, start from its number then.
+                // AtlasId already had a number, start from its number then.
                 min = int.Parse(m.Groups[0].Value);
 
                 candidate = name;

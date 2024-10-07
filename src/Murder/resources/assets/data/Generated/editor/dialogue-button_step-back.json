@@ -1,19 +1,9 @@
 {
   "$type": "Murder.Assets.Graphics.SpriteAsset",
   "Animations": {
-    "down": {
+    "disabled": {
       "Frames": [
-        2
-      ],
-      "FramesDuration": [
-        100
-      ],
-      "Events": {},
-      "AnimationDuration": 0.1
-    },
-    "normal": {
-      "Frames": [
-        0
+        3
       ],
       "FramesDuration": [
         100
@@ -37,16 +27,6 @@
       "Events": {},
       "AnimationDuration": 0.4
     },
-    "disabled": {
-      "Frames": [
-        3
-      ],
-      "FramesDuration": [
-        100
-      ],
-      "Events": {},
-      "AnimationDuration": 0.1
-    },
     "hover": {
       "Frames": [
         1
@@ -56,9 +36,29 @@
       ],
       "Events": {},
       "AnimationDuration": 0.1
+    },
+    "normal": {
+      "Frames": [
+        0
+      ],
+      "FramesDuration": [
+        100
+      ],
+      "Events": {},
+      "AnimationDuration": 0.1
+    },
+    "down": {
+      "Frames": [
+        2
+      ],
+      "FramesDuration": [
+        100
+      ],
+      "Events": {},
+      "AnimationDuration": 0.1
     }
   },
-  "Atlas": 2,
+  "Atlas": "editor",
   "Frames": [
     {
       "AtlasIndex": 0,
@@ -85,7 +85,7 @@
         "Width": 16,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     {
       "AtlasIndex": 0,
@@ -112,7 +112,7 @@
         "Width": 16,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     {
       "AtlasIndex": 0,
@@ -139,7 +139,7 @@
         "Width": 16,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     {
       "AtlasIndex": 0,
@@ -166,7 +166,7 @@
         "Width": 16,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     }
   ],
   "Origin": {

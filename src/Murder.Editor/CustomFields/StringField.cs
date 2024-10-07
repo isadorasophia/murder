@@ -1,7 +1,6 @@
 ﻿using ImGuiNET;
 using Murder.Attributes;
 using Murder.Data;
-using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using Murder.Utilities.Attributes;
@@ -69,6 +68,11 @@ namespace Murder.Editor.CustomFields
                 return ProcessTargetNames(memberId, text);
             }
 
+            if (AttributeExtensions.IsDefined(member, typeof(AtlasNameAttribute)))
+            {
+                return ProcessAtlasNames(memberId, text);
+            }
+
             if (member.IsReadOnly)
             {
                 ImGui.Text(text);
@@ -106,7 +110,7 @@ namespace Murder.Editor.CustomFields
             }
 
             ImGui.SameLine();
-            Architect.ImGuiTextureManager.DrawPreviewImage(text, 256, Game.Data.FetchAtlas(AtlasId.Gameplay, warnOnError: false));
+            Architect.ImGuiTextureManager.DrawPreviewImage(text, 256, Game.Data.FetchAtlas(AtlasIdentifiers.Gameplay, warnOnError: false));
 
             return (modified, text);
         }
@@ -116,7 +120,7 @@ namespace Murder.Editor.CustomFields
 
             if (ImGui.BeginCombo("", text))
             {
-                foreach (var value in Game.Data.FetchAtlas(AtlasId.Gameplay).GetAllEntries())
+                foreach (var value in Game.Data.FetchAtlas(AtlasIdentifiers.Gameplay).GetAllEntries())
                 {
                     if (ImGui.MenuItem(value.Name))
                     {
@@ -128,7 +132,7 @@ namespace Murder.Editor.CustomFields
             }
 
             ImGui.SameLine();
-            Architect.ImGuiTextureManager.DrawPreviewImage(text, 256, Game.Data.FetchAtlas(AtlasId.Gameplay));
+            Architect.ImGuiTextureManager.DrawPreviewImage(text, 256, Game.Data.FetchAtlas(AtlasIdentifiers.Gameplay));
 
             return (modified, text);
         }
@@ -180,6 +184,24 @@ namespace Murder.Editor.CustomFields
             else if (names.Count() == 0)
             {
                 ImGui.TextColored(Game.Profile.Theme.Faded, "No children found :-(");
+                return (false, text);
+            }
+
+            bool modified = ProcessStringCombo(id, ref text, names);
+            return (modified, text);
+        }
+
+        private static (bool modified, string result) ProcessAtlasNames(string id, string text)
+        {
+            HashSet<string>? names = [.. Game.Data.LoadedAtlasses.Keys];
+            if (names is null)
+            {
+                ImGui.TextColored(Game.Profile.Theme.Faded, "Unable to find any guid target :-(");
+                return (false, text);
+            }
+            else if (names.Count() == 0)
+            {
+                ImGui.TextColored(Game.Profile.Theme.Faded, "No targets found :-(");
                 return (false, text);
             }
 

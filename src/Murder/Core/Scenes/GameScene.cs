@@ -1,4 +1,6 @@
-﻿using Murder.Diagnostics;
+﻿using Murder.Assets;
+using Murder.Data;
+using Murder.Diagnostics;
 
 namespace Murder.Core
 {
@@ -20,6 +22,15 @@ namespace Murder.Core
         public override void LoadContentImpl()
         {
             _world = CreateWorld();
+
+            if (Game.Data.TryGetAsset<WorldAsset>(_worldGuid) is WorldAsset world)
+            {
+                foreach (ReferencedAtlas atlas in world.ReferencedAtlas)
+                {
+                    _ = Game.Data.FetchAtlas(atlas.Id);
+                }
+            }
+
             GC.Collect(generation: 0, mode: GCCollectionMode.Forced, blocking: true);
         }
 
@@ -42,6 +53,19 @@ namespace Murder.Core
         {
             ValueTask<bool> result = Game.Data.PendingSave ?? new(true);
             await result;
+
+            if (Game.Data.TryGetAsset<WorldAsset>(_worldGuid) is WorldAsset world)
+            {
+                foreach (ReferencedAtlas atlas in world.ReferencedAtlas)
+                {
+                    if (!atlas.UnloadOnExit)
+                    {
+                        continue;
+                    }
+
+                    Game.Data.DisposeAtlas(atlas.Id);
+                }
+            }
 
             _world?.Dispose();
             _world = null;

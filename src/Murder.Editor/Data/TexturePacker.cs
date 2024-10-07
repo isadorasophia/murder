@@ -400,7 +400,7 @@ namespace Murder.Editor.Data
                 ti.CroppedBounds = CalculateCrop(ase.Frames[frame].Pixels, new(ase.Width, ase.Height), startingCrop);
             }
 
-            //Image '{fi.Name}' is completelly transparent! Let's ignore it?
+            //Image '{fi.AtlasId}' is completelly transparent! Let's ignore it?
             if (ti.CroppedBounds.Width <= 0 || ti.CroppedBounds.Height <= 0)
             {
                 ti.CroppedBounds = IntRectangle.Empty;

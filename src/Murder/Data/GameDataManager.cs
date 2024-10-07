@@ -45,7 +45,7 @@ namespace Murder.Data
 
         public ImmutableDictionary<int, PixelFont> _fonts = ImmutableDictionary<int, PixelFont>.Empty;
 
-        private readonly HashSet<AtlasId> _referencedAtlases = [];
+        private readonly HashSet<string> _referencedAtlases = [];
 
         /// <summary>
         /// The cheapest and simplest shader.
@@ -74,7 +74,7 @@ namespace Murder.Data
 
         public virtual Effect[] OtherEffects { get; } = Array.Empty<Effect>();
 
-        public readonly Dictionary<AtlasId, TextureAtlas> LoadedAtlasses = new();
+        public readonly Dictionary<string, TextureAtlas> LoadedAtlasses = new();
 
         public Texture2D DitherTexture = null!;
 
@@ -366,7 +366,7 @@ namespace Murder.Data
                 }
             }
 
-            foreach (AtlasId id in _referencedAtlases)
+            foreach (string id in _referencedAtlases)
             {
                 FetchAtlas(id).LoadTextures();
             }
@@ -910,16 +910,19 @@ namespace Murder.Data
             return texture;
         }
 
-        public TextureAtlas FetchAtlas(AtlasId atlas, bool warnOnError = true)
+        /// <summary>
+        /// See <see cref="AtlasIdentifiers"/> for possible atlas.
+        /// </summary>
+        public TextureAtlas FetchAtlas(string atlas, bool warnOnError = true)
         {
-            if (atlas == AtlasId.None)
+            if (string.IsNullOrEmpty(atlas))
             {
                 throw new ArgumentException("There's no atlas to fetch.");
             }
 
             if (!LoadedAtlasses.ContainsKey(atlas))
             {
-                string filepath = Path.Join(_packedBinDirectoryPath, GameProfile.AtlasFolderName, $"{atlas.GetDescription()}.json");
+                string filepath = Path.Join(_packedBinDirectoryPath, GameProfile.AtlasFolderName, $"{atlas}.json");
                 TextureAtlas? newAtlas = FileManager.DeserializeGeneric<TextureAtlas>(filepath, warnOnError);
 
                 if (newAtlas is not null)
@@ -935,16 +938,16 @@ namespace Murder.Data
             return LoadedAtlasses[atlas];
         }
 
-        public TextureAtlas? TryFetchAtlas(AtlasId atlas)
+        public TextureAtlas? TryFetchAtlas(string atlas)
         {
-            if (atlas == AtlasId.None)
+            if (string.IsNullOrEmpty(atlas))
             {
                 return null;
             }
 
             if (!LoadedAtlasses.TryGetValue(atlas, out TextureAtlas? texture))
             {
-                string path = Path.Join(_packedBinDirectoryPath, GameProfile.AtlasFolderName, $"{atlas.GetDescription()}.json");
+                string path = Path.Join(_packedBinDirectoryPath, GameProfile.AtlasFolderName, $"{atlas}.json");
                 if (!File.Exists(path))
                 {
                     return null;
@@ -965,24 +968,24 @@ namespace Murder.Data
             return texture;
         }
 
-        public void ReplaceAtlas(AtlasId atlasId, TextureAtlas newAtlas)
+        public void ReplaceAtlas(string atlas, TextureAtlas newAtlas)
         {
-            if (LoadedAtlasses.TryGetValue(atlasId, out var texture))
+            if (LoadedAtlasses.TryGetValue(atlas, out var texture))
             {
                 texture.Dispose();
             }
 
-            LoadedAtlasses[atlasId] = newAtlas;
+            LoadedAtlasses[atlas] = newAtlas;
         }
 
-        public void DisposeAtlas(AtlasId atlasId)
+        public void DisposeAtlas(string atlas)
         {
-            if (LoadedAtlasses.TryGetValue(atlasId, out var texture))
+            if (LoadedAtlasses.TryGetValue(atlas, out var texture))
             {
                 texture.Dispose();
             }
 
-            LoadedAtlasses.Remove(atlasId);
+            LoadedAtlasses.Remove(atlas);
         }
 
         public void DisposeAtlases()

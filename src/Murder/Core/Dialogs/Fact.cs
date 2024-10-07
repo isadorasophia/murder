@@ -37,7 +37,7 @@
         /// </summary>
         public readonly Type? ComponentType = null;
 
-        public readonly string EditorName => Name; //$"{Blackboard}.{Name}";
+        public readonly string EditorName => Name; //$"{Blackboard}.{AtlasId}";
 
         public Fact() { }
 

@@ -1,26 +1,49 @@
-﻿using System.ComponentModel;
+﻿using Murder.Utilities.Attributes;
+using System.ComponentModel;
 
-namespace Murder.Data
+namespace Murder.Data;
+
+// Description must be atlas file name
+public enum AtlasId
 {
-    // Description must be atlas file name
-    public enum AtlasId
-    {
-        None,
-        [Description("atlas")]
-        Gameplay,
-        [Description("editor")]
-        Editor,
-        [Description("static")]
-        Static,
-        [Description("temporary")]
-        Temporary,
-        [Description("preload")]
-        Preload,
-        [Description("cuscenes")]
-        Cutscenes,
-        //[Description("main_menu")]
-        //MainMenu,
-        //[Description("portraits")]
-        //Portraits,
-    }
+    None,
+    [Description(AtlasIdentifiers.Gameplay)]
+    Gameplay,
+    [Description(AtlasIdentifiers.Editor)]
+    Editor,
+    [Description(AtlasIdentifiers.Static)]
+    Static,
+    [Description(AtlasIdentifiers.Temporary)]
+    Temporary,
+    [Description(AtlasIdentifiers.Preload)]
+    Preload,
+    [Description(AtlasIdentifiers.Cutscenes)]
+    Cutscenes,
+    //[Description("main_menu")]
+    //MainMenu,
+    //[Description("portraits")]
+    //Portraits,
+}
+
+public static class AtlasIdentifiers
+{
+    public const string Gameplay = "atlas";
+    public const string Editor = "editor";
+    public const string Static = "static";
+    public const string Temporary = "temporary";
+    public const string Preload = "preload";
+    public const string Cutscenes = "cuscenes";
+}
+
+public readonly struct ReferencedAtlas
+{
+    [AtlasName]
+    public readonly string Id = string.Empty;
+
+    public readonly bool UnloadOnExit = false;
+
+    public ReferencedAtlas() { }
+
+    public ReferencedAtlas(string id, bool unloadOnExit) =>
+        (Id, UnloadOnExit) = (id, unloadOnExit);
 }

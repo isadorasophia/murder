@@ -149,7 +149,7 @@ namespace Murder.Editor.Importers
         /// <param name="packer">Packer information (previously initialized with the files).</param>
         /// <param name="atlasId">Atlas identifier.</param>
         /// <param name="sourcesPath">Root sources path. Used to build the relative path of each final file in the atlas.</param>
-        protected static IEnumerable<(string id, AtlasCoordinates coord)> GetCoordinatesForAtlas(Packer packer, AtlasId atlasId, string sourcesPath)
+        protected static IEnumerable<(string id, AtlasCoordinates coord)> GetCoordinatesForAtlas(Packer packer, string atlasId, string sourcesPath)
         {
             for (int i = 0; i < packer.Atlasses.Count; i++)
             {

@@ -1,6 +1,5 @@
 {
-  "Name": "editor",
-  "Id": 2,
+  "AtlasId": "editor",
   "entries": {
     "crow_0000": {
       "AtlasIndex": 0,
@@ -27,7 +26,7 @@
         "Width": 96,
         "Height": 80
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "crow_0001": {
       "AtlasIndex": 0,
@@ -54,7 +53,7 @@
         "Width": 96,
         "Height": 80
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "crow_0002": {
       "AtlasIndex": 0,
@@ -81,7 +80,7 @@
         "Width": 96,
         "Height": 80
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "crow_0003": {
       "AtlasIndex": 0,
@@ -108,7 +107,7 @@
         "Width": 96,
         "Height": 80
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "crow_0004": {
       "AtlasIndex": 0,
@@ -135,7 +134,7 @@
         "Width": 96,
         "Height": 80
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "crow_0005": {
       "AtlasIndex": 0,
@@ -162,7 +161,7 @@
         "Width": 96,
         "Height": 80
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "crow_0006": {
       "AtlasIndex": 0,
@@ -189,7 +188,7 @@
         "Width": 96,
         "Height": 80
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "crow_loading": {
       "AtlasIndex": 0,
@@ -216,7 +215,7 @@
         "Width": 74,
         "Height": 70
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue-button_step-back_0000": {
       "AtlasIndex": 0,
@@ -243,7 +242,7 @@
         "Width": 16,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue-button_step-back_0001": {
       "AtlasIndex": 0,
@@ -270,7 +269,7 @@
         "Width": 16,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue-button_step-back_0002": {
       "AtlasIndex": 0,
@@ -297,7 +296,7 @@
         "Width": 16,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue-button_step-back_0003": {
       "AtlasIndex": 0,
@@ -324,7 +323,7 @@
         "Width": 16,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue_edge-if": {
       "AtlasIndex": 0,
@@ -351,7 +350,7 @@
         "Width": 13,
         "Height": 9
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue-button_step-forward_0000": {
       "AtlasIndex": 0,
@@ -378,7 +377,7 @@
         "Width": 16,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue-button_step-forward_0001": {
       "AtlasIndex": 0,
@@ -405,7 +404,7 @@
         "Width": 16,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue-button_step-forward_0003": {
       "AtlasIndex": 0,
@@ -432,7 +431,7 @@
         "Width": 16,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue_bg": {
       "AtlasIndex": 0,
@@ -459,7 +458,7 @@
         "Width": 16,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue_step-forward": {
       "AtlasIndex": 0,
@@ -486,7 +485,7 @@
         "Width": 16,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue_flow": {
       "AtlasIndex": 0,
@@ -513,7 +512,7 @@
         "Width": 16,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue_step-back": {
       "AtlasIndex": 0,
@@ -540,7 +539,7 @@
         "Width": 16,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue_bg-hovered": {
       "AtlasIndex": 0,
@@ -567,7 +566,7 @@
         "Width": 16,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue_edge-next": {
       "AtlasIndex": 0,
@@ -594,7 +593,7 @@
         "Width": 8,
         "Height": 9
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue_bg-selected": {
       "AtlasIndex": 0,
@@ -621,7 +620,7 @@
         "Width": 16,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue_bg-gray": {
       "AtlasIndex": 0,
@@ -648,7 +647,7 @@
         "Width": 16,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "editor_Warning": {
       "AtlasIndex": 0,
@@ -675,7 +674,7 @@
         "Width": 16,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "editor_audio": {
       "AtlasIndex": 0,
@@ -702,7 +701,7 @@
         "Width": 16,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "camera": {
       "AtlasIndex": 0,
@@ -729,7 +728,7 @@
         "Width": 15,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue-button_step-forward_0002": {
       "AtlasIndex": 0,
@@ -756,7 +755,7 @@
         "Width": 16,
         "Height": 15
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue_bye": {
       "AtlasIndex": 0,
@@ -783,7 +782,7 @@
         "Width": 15,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "editor_music": {
       "AtlasIndex": 0,
@@ -810,7 +809,7 @@
         "Width": 15,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "Cursor": {
       "AtlasIndex": 0,
@@ -837,7 +836,7 @@
         "Width": 15,
         "Height": 15
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "cursor_pencil": {
       "AtlasIndex": 0,
@@ -864,7 +863,7 @@
         "Width": 15,
         "Height": 15
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "cursor_hand": {
       "AtlasIndex": 0,
@@ -891,7 +890,7 @@
         "Width": 14,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "cursor_point": {
       "AtlasIndex": 0,
@@ -918,7 +917,7 @@
         "Width": 14,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "missingImage": {
       "AtlasIndex": 0,
@@ -945,7 +944,7 @@
         "Width": 8,
         "Height": 8
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "cutscene": {
       "AtlasIndex": 0,
@@ -972,7 +971,7 @@
         "Width": 14,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue_exit": {
       "AtlasIndex": 0,
@@ -999,7 +998,7 @@
         "Width": 14,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue_dialogue-line": {
       "AtlasIndex": 0,
@@ -1026,7 +1025,7 @@
         "Width": 16,
         "Height": 14
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue_add-component": {
       "AtlasIndex": 0,
@@ -1053,7 +1052,7 @@
         "Width": 14,
         "Height": 15
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "cursor_cut": {
       "AtlasIndex": 0,
@@ -1080,7 +1079,7 @@
         "Width": 13,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "cursor_eye_0000": {
       "AtlasIndex": 0,
@@ -1107,7 +1106,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "cursor_eye_0001": {
       "AtlasIndex": 0,
@@ -1134,7 +1133,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "cursor_eye_0002": {
       "AtlasIndex": 0,
@@ -1161,7 +1160,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "cursor_eye_0003": {
       "AtlasIndex": 0,
@@ -1188,7 +1187,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue_action": {
       "AtlasIndex": 0,
@@ -1215,7 +1214,7 @@
         "Width": 13,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "cursor_eye_0004": {
       "AtlasIndex": 0,
@@ -1242,7 +1241,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "cursor_eye_0005": {
       "AtlasIndex": 0,
@@ -1269,7 +1268,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "cursor_eye_0006": {
       "AtlasIndex": 0,
@@ -1296,7 +1295,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "editor_ear": {
       "AtlasIndex": 0,
@@ -1323,7 +1322,7 @@
         "Width": 12,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "cursor_eye_0007": {
       "AtlasIndex": 0,
@@ -1350,7 +1349,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "cursor_eye_0008": {
       "AtlasIndex": 0,
@@ -1377,7 +1376,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dashed-line": {
       "AtlasIndex": 0,
@@ -1404,7 +1403,7 @@
         "Width": 4,
         "Height": 3
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "cursor_eye_0009": {
       "AtlasIndex": 0,
@@ -1431,7 +1430,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "vertical": {
       "AtlasIndex": 0,
@@ -1458,7 +1457,7 @@
         "Width": 11,
         "Height": 16
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "cursor_eye_0010": {
       "AtlasIndex": 0,
@@ -1485,7 +1484,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "cursor_eye_0011": {
       "AtlasIndex": 0,
@@ -1512,7 +1511,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "cursor_eye_0012": {
       "AtlasIndex": 0,
@@ -1539,7 +1538,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "cursor_eye_0013": {
       "AtlasIndex": 0,
@@ -1566,7 +1565,7 @@
         "Width": 16,
         "Height": 13
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue_rewind": {
       "AtlasIndex": 0,
@@ -1593,7 +1592,7 @@
         "Width": 12,
         "Height": 12
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue-button_play_0000": {
       "AtlasIndex": 0,
@@ -1620,7 +1619,7 @@
         "Width": 11,
         "Height": 12
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue-button_play_0001": {
       "AtlasIndex": 0,
@@ -1647,7 +1646,7 @@
         "Width": 11,
         "Height": 12
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue-button_play_0002": {
       "AtlasIndex": 0,
@@ -1674,7 +1673,7 @@
         "Width": 11,
         "Height": 12
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue-button_play_0003": {
       "AtlasIndex": 0,
@@ -1701,7 +1700,7 @@
         "Width": 11,
         "Height": 12
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue_play": {
       "AtlasIndex": 0,
@@ -1728,7 +1727,7 @@
         "Width": 11,
         "Height": 12
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue_edge-choice": {
       "AtlasIndex": 0,
@@ -1755,7 +1754,7 @@
         "Width": 13,
         "Height": 10
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue_edge-score": {
       "AtlasIndex": 0,
@@ -1782,7 +1781,7 @@
         "Width": 13,
         "Height": 10
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     },
     "dialogue_edge-random": {
       "AtlasIndex": 0,
@@ -1809,7 +1808,7 @@
         "Width": 9,
         "Height": 11
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     }
   },
   "atlasMaxIndex": 0

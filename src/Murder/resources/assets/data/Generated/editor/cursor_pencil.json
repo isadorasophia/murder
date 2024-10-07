@@ -12,7 +12,7 @@
       "AnimationDuration": 0.1
     }
   },
-  "Atlas": 2,
+  "Atlas": "editor",
   "Frames": [
     {
       "AtlasIndex": 0,
@@ -39,7 +39,7 @@
         "Width": 15,
         "Height": 15
       },
-      "AtlasId": 2
+      "AtlasId": "editor"
     }
   ],
   "Origin": {

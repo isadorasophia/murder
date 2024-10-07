@@ -10,6 +10,6 @@ namespace Murder.Assets
         /// <summary>
         /// Returns the preview id to show this image.
         /// </summary>
-        public (AtlasId, string) GetPreviewId();
+        public (string, string) GetPreviewId();
     }
 }

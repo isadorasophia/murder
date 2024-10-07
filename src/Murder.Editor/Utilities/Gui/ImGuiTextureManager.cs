@@ -85,7 +85,7 @@ namespace Murder.Editor.ImGuiExtended
                 return textureId.Value;
             }
 
-            if (Game.Data.TryFetchAtlas(AtlasId.Editor) is not TextureAtlas atlas)
+            if (Game.Data.TryFetchAtlas(AtlasIdentifiers.Editor) is not TextureAtlas atlas)
             {
                 GameLogger.Warning($"Unable to retrieve editor image {path}");
                 return null;

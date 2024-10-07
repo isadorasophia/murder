@@ -17,6 +17,12 @@ namespace Murder.Editor.Importers
     {
         protected abstract AtlasId Atlas { get; }
 
+        /// <summary>
+        /// Optional field when the atlas has subpaths. For example, cutscene atlas that are way too big to fit
+        /// the same one.
+        /// </summary>
+        public string? SubAtlasId { get; init; } = null;
+
         public override bool SupportsAsyncLoading => true;
 
         /// <summary>
@@ -68,7 +74,8 @@ namespace Murder.Editor.Importers
                 return;
             }
 
-            SerializeAtlas(Atlas, _pendingPacker, SerializeAtlasFlags.EnableLogging | SerializeAtlasFlags.DeleteTemporaryAtlas);
+            string targetAtlasName = GetAtlasName(Atlas, SubAtlasId);
+            SerializeAtlas(targetAtlasName, _pendingPacker, SerializeAtlasFlags.EnableLogging | SerializeAtlasFlags.DeleteTemporaryAtlas);
 
             _pendingPacker = null;
         }
@@ -86,8 +93,9 @@ namespace Murder.Editor.Importers
             using PerfTimeRecorder recorder = new("Reloading Changed Aseprites");
 
             AtlasId targetAtlasId = AtlasId.Temporary;
+            string targetAtlasName = GetAtlasName(targetAtlasId, subAtlas: null);
 
-            Packer? packer = CreateAtlasPacker(targetAtlasId, files: [.. _reloadedSprites]);
+            Packer? packer = CreateAtlasPacker(targetAtlasName, files: [.. _reloadedSprites]);
             if (packer is null)
             {
                 return;
@@ -98,7 +106,7 @@ namespace Murder.Editor.Importers
             {
                 Aseprite animation = packer.AsepriteFiles[i];
 
-                foreach (SpriteAsset asset in animation.CreateAssets(targetAtlasId))
+                foreach (SpriteAsset asset in animation.CreateAssets(targetAtlasName))
                 {
                     if (Game.Data.HasAsset<SpriteAsset>(asset.Guid))
                     {
@@ -113,7 +121,7 @@ namespace Murder.Editor.Importers
                 }
             }
 
-            SerializeAtlas(targetAtlasId, packer, SerializeAtlasFlags.None);
+            SerializeAtlas(targetAtlasName, packer, SerializeAtlasFlags.None);
         }
 
         private async Task ProcessAllFiles()
@@ -123,8 +131,9 @@ namespace Murder.Editor.Importers
             await Task.Yield();
 
             AtlasId targetAtlasId = Atlas;
+            string targetAtlasName = GetAtlasName(Atlas, SubAtlasId);
 
-            Packer? packer = CreateAtlasPacker(Atlas, AllFiles);
+            Packer? packer = CreateAtlasPacker(GetAtlasName(Atlas, SubAtlasId), AllFiles);
             if (packer is null)
             {
                 return;
@@ -139,7 +148,7 @@ namespace Murder.Editor.Importers
             {
                 var animation = packer.AsepriteFiles[i];
 
-                foreach (SpriteAsset asset in animation.CreateAssets(targetAtlasId))
+                foreach (SpriteAsset asset in animation.CreateAssets(targetAtlasName))
                 {
                     bool cleanDirectoryBeforeSaving = false;
                     if (!hasCleanedDirectory)
@@ -173,7 +182,7 @@ namespace Murder.Editor.Importers
             _pendingPacker = packer;
         }
 
-        private Packer? CreateAtlasPacker(AtlasId targetAtlasId, List<string> files)
+        private Packer? CreateAtlasPacker(string atlasId, List<string> files)
         {
             string sourcePackedPath = GetSourcePackedPath();   // Path where the atlas (.png/.json) will be saved in src.
             FileManager.GetOrCreateDirectory(sourcePackedPath); // Make sure it exists.
@@ -181,13 +190,11 @@ namespace Murder.Editor.Importers
             Packer packer = new();
             packer.Process(files, 4096, 1, false);
 
-            string atlasName = targetAtlasId.GetDescription();
-
             // Disposed by Game.Data
-            TextureAtlas atlas = new(atlasName, targetAtlasId);
+            TextureAtlas atlas = new(atlasId);
 
             string rawResourcesPath = GetRawResourcesPath(); // Path where the raw .aseprite files are.
-            atlas.PopulateAtlas(GetCoordinatesForAtlas(packer, targetAtlasId, rawResourcesPath));
+            atlas.PopulateAtlas(GetCoordinatesForAtlas(packer, atlasId, rawResourcesPath));
 
             if (atlas.CountEntries == 0)
             {
@@ -197,24 +204,23 @@ namespace Murder.Editor.Importers
                 return null;
             }
 
-            Game.Data.ReplaceAtlas(targetAtlasId, atlas);
+            Game.Data.ReplaceAtlas(atlasId, atlas);
 
             return packer;
         }
 
-        private void SerializeAtlas(AtlasId targetAtlasId, Packer packer, SerializeAtlasFlags flags)
+        private void SerializeAtlas(string atlasId, Packer packer, SerializeAtlasFlags flags)
         {
-            TextureAtlas atlas = Game.Data.FetchAtlas(targetAtlasId);
-            string atlasName = targetAtlasId.GetDescription();
+            TextureAtlas atlas = Game.Data.FetchAtlas(atlasId);
 
             // Delete any previous atlas in the source directory.
             string atlasSourceDirectoryPath = Path.Join(GetSourcePackedPath(), Game.Profile.AtlasFolderName);
-            foreach (string file in Directory.EnumerateFiles(atlasSourceDirectoryPath, $"{atlasName}*"))
+            foreach (string file in Directory.EnumerateFiles(atlasSourceDirectoryPath, $"{atlasId}*"))
             {
                 File.Delete(file);
             }
 
-            (int atlasCount, int maxWidth, int maxHeight) = packer.SaveAtlasses(Path.Join(atlasSourceDirectoryPath, atlasName));
+            (int atlasCount, int maxWidth, int maxHeight) = packer.SaveAtlasses(Path.Join(atlasSourceDirectoryPath, atlasId));
 
             // Make sure we also have the atlas save at the binaries path.
             string atlasBinDirectoryPath = Path.Join(FileHelper.GetPath(_editorSettings.BinResourcesPath), Game.Profile.AtlasFolderName);
@@ -235,14 +241,14 @@ namespace Murder.Editor.Importers
             }
 
             // Save atlas descriptor at the source and binaries directory.
-            string atlasDescriptorName = GetSourcePackedAtlasDescriptorPath(atlasName);
+            string atlasDescriptorName = GetSourcePackedAtlasDescriptorPath(atlasId);
 
             Game.Data.FileManager.SaveSerialized(atlas, atlasDescriptorName);
             EditorFileManager.DirectoryDeepCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath);
 
             if (flags.HasFlag(SerializeAtlasFlags.EnableLogging))
             {
-                GameLogger.LogPerf($"Pack '{atlasName}' ({atlasCount} images, {maxWidth}x{maxHeight}) completed with {atlas.CountEntries} entries", Game.Profile.Theme.Accent);
+                GameLogger.LogPerf($"Pack '{atlasId}' ({atlasCount} images, {maxWidth}x{maxHeight}) completed with {atlas.CountEntries} entries", Game.Profile.Theme.Accent);
             }
         }
 
@@ -278,6 +284,17 @@ namespace Murder.Editor.Importers
         {
             string atlasSourceDirectoryPath = Path.Join(GetSourcePackedPath(), Game.Profile.AtlasFolderName);
             return Path.Join(atlasSourceDirectoryPath, $"{atlasName}.json");
+        }
+
+        private static string GetAtlasName(AtlasId atlasId, string? subAtlas)
+        {
+            string atlasName = atlasId.GetDescription();
+            if (subAtlas is not null)
+            {
+                atlasName += $"_{subAtlas}";
+            }
+
+            return atlasName;
         }
     }
 }

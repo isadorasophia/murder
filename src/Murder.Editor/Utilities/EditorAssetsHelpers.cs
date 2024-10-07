@@ -66,12 +66,12 @@ public static class EditorAssetHelpers
 
     public static bool DrawPreview(IPreview preview)
     {
-        (AtlasId atlas, string id) = preview.GetPreviewId();
+        (string atlas, string id) = preview.GetPreviewId();
 
         // TODO: [Editor] Fix this logic when the atlas comes from somewhere else. Possibly refactor AtlasId? Save it in the asset?
         if (!DrawPreview(atlas, id))
         {
-            return DrawPreview(AtlasId.Editor, id);
+            return DrawPreview(AtlasIdentifiers.Editor, id);
         }
 
         return false;
@@ -79,7 +79,7 @@ public static class EditorAssetHelpers
 
     public static bool DrawPreview(SpriteAsset asset, int maxSize, string animationId)
     {
-        (AtlasId atlas, _) = asset.GetPreviewId();
+        (string atlas, _) = asset.GetPreviewId();
 
         // Override default id.
         animationId = animationId != null && asset.Animations.ContainsKey(animationId) ?
@@ -94,7 +94,7 @@ public static class EditorAssetHelpers
         // TODO: [Editor] Fix this logic when the atlas comes from somewhere else. Possibly refactor AtlasId? Save it in the asset?
         if (!DrawPreview(atlas, asset.Frames[frame].Name, maxSize))
         {
-            return DrawPreview(AtlasId.Editor, asset.Frames[frame].Name, maxSize);
+            return DrawPreview(AtlasIdentifiers.Editor, asset.Frames[frame].Name, maxSize);
         }
 
         return false;
@@ -106,7 +106,7 @@ public static class EditorAssetHelpers
     /// <returns>
     /// Whether the preview succeeded.
     /// </returns>
-    private static bool DrawPreview(AtlasId atlasId, string idToDraw, int maxSize = 256)
+    private static bool DrawPreview(string atlasId, string idToDraw, int maxSize = 256)
     {
         return Game.Data.TryFetchAtlas(atlasId) is TextureAtlas gameplayAtlas &&
             Architect.ImGuiTextureManager.DrawPreviewImage(idToDraw, maxSize, gameplayAtlas);

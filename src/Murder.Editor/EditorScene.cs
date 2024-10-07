@@ -298,10 +298,11 @@ namespace Murder.Editor
         {
             ImGui.SetNextItemWidth(-1);
             ImGui.InputText("##Search", ref _atlasSearchBoxTmp, 256);
-            ImGui.BeginChild(891237, new System.Numerics.Vector2(-1, -1));
-            foreach (var atlas in Enum.GetValues(typeof(AtlasId)))
+            ImGui.BeginChild(891237, new Vector2(-1, -1));
+
+            foreach (string atlasName in Game.Data.LoadedAtlasses.Keys)
             {
-                if ((AtlasId)atlas == AtlasId.None)
+                if (string.IsNullOrEmpty(atlasName))
                 {
                     if (ImGui.TreeNode("No Atlas"))
                     {
@@ -320,15 +321,16 @@ namespace Murder.Editor
                 }
                 else
                 {
-                    DrawAtlasImageList((AtlasId)atlas);
+                    DrawAtlasImageList(atlasId: atlasName);
                 }
             }
+
             ImGui.EndChild();
         }
 
         private int _selectedAtlasIndex = -1;
-        private AtlasId? _inspectingAtlas;
-        private void DrawAtlasImageList(AtlasId atlasId)
+        private string? _inspectingAtlas;
+        private void DrawAtlasImageList(string atlasId)
         {
             TextureAtlas? atlas = Architect.Data.TryFetchAtlas(atlasId);
             if (atlas is null)
@@ -336,10 +338,10 @@ namespace Murder.Editor
                 return;
             }
 
-            if (ImGui.TreeNode(atlasId.GetDescription()))
+            if (ImGui.TreeNode(atlasId))
             {
                 ImGui.PushStyleColor(ImGuiCol.Text, Architect.Profile.Theme.HighAccent);
-                if (ImGui.Selectable($"Inspect {atlas.Name}"))
+                if (ImGui.Selectable($"Inspect {atlas.AtlasId}"))
                 {
                     _inspectingAtlas = atlasId;
                 }
@@ -369,7 +371,7 @@ namespace Murder.Editor
                         ImGui.TableNextRow();
                         ImGui.TableNextColumn();
 
-                        ImGui.Text(atlas.Name);
+                        ImGui.Text(atlas.AtlasId);
                         ImGui.Separator();
                         ImGui.Text($"TextureCount: {atlas.Textures.Length}");
 

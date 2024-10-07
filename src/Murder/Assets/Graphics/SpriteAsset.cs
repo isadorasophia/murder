@@ -11,7 +11,7 @@ namespace Murder.Assets.Graphics;
 public class SpriteAsset : GameAsset, IPreview
 {
     [Serialize]
-    public readonly AtlasId Atlas;
+    public readonly string Atlas = string.Empty;
 
     [Serialize]
     public readonly ImmutableArray<AtlasCoordinates> Frames = ImmutableArray<AtlasCoordinates>.Empty;
@@ -50,7 +50,7 @@ public class SpriteAsset : GameAsset, IPreview
     {
         Guid = guid;
         Name = name;
-        Atlas = atlas.Id;
+        Atlas = atlas.AtlasId;
         Animations = animations;
         Origin = origin;
         NineSlice = nineSlice;
@@ -66,7 +66,7 @@ public class SpriteAsset : GameAsset, IPreview
         Frames = builder.ToImmutable();
     }
 
-    public SpriteAsset(Guid guid, AtlasId atlasId, string name, ImmutableArray<string> frames, ImmutableDictionary<string, Animation> animations, Point origin, Point size, Rectangle nineSlice)
+    public SpriteAsset(Guid guid, string atlasId, string name, ImmutableArray<string> frames, ImmutableDictionary<string, Animation> animations, Point origin, Point size, Rectangle nineSlice)
     {
         Guid = guid;
         Name = name;
@@ -87,7 +87,7 @@ public class SpriteAsset : GameAsset, IPreview
         Frames = builder.ToImmutable();
     }
 
-    public (AtlasId, string) GetPreviewId() => (Atlas, Frames[0].Name);
+    public (string, string) GetPreviewId() => (Atlas, Frames[0].Name);
 
     public AtlasCoordinates GetFrame(int frame)
     {

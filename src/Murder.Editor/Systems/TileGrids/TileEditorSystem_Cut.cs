@@ -5,6 +5,7 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
+using Murder.Data;
 using Murder.Editor.Components;
 using Murder.Services;
 using Murder.Utilities;
@@ -168,7 +169,7 @@ namespace Murder.Editor.Systems
         // Draw the gesture for switching tile mode.
         private bool DrawToolbox(RenderContext render, EditorComponent editor)
         {
-            var atlas = Game.Data.FetchAtlas(Murder.Data.AtlasId.Editor);
+            var atlas = Game.Data.FetchAtlas(AtlasIdentifiers.Editor);
             var icon = atlas.Get(_editorMode == EditorMode.Cut ? "cursor_cut" : "cursor_pencil");
 
             Rectangle buttonRect = Rectangle.CenterRectangle(new Vector2(render.Camera.HalfWidth, 30), 39, 39);

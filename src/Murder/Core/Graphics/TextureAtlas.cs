@@ -6,7 +6,6 @@ using Murder.Serialization;
 using Murder.Services;
 using Murder.Utilities;
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
 
 namespace Murder.Core.Graphics
 {
@@ -17,8 +16,7 @@ namespace Murder.Core.Graphics
     [Serializable]
     public class TextureAtlas : IDisposable
     {
-        public readonly string Name;
-        public readonly AtlasId Id;
+        public readonly string AtlasId;
 
         [Serialize]
         private readonly Dictionary<string, AtlasCoordinates> _entries = new(StringComparer.InvariantCultureIgnoreCase);
@@ -42,10 +40,9 @@ namespace Murder.Core.Graphics
             }
         }
 
-        public TextureAtlas(string name, AtlasId id)
+        public TextureAtlas(string atlasId)
         {
-            Name = name;
-            Id = id;
+            AtlasId = atlasId;
         }
 
         public int CountEntries => _entries.Count;
@@ -92,7 +89,7 @@ namespace Murder.Core.Graphics
             else
             {
                 GameLogger.Log($"Image '{id}' is missing from the atlas");
-                return Game.Data.FetchAtlas(AtlasId.Editor).Get("missingImage");
+                return Game.Data.FetchAtlas(AtlasIdentifiers.Editor).Get("missingImage");
             }
         }
 
@@ -179,20 +176,19 @@ namespace Murder.Core.Graphics
             string atlasPath = FileHelper.GetPath(Game.Data.PackedBinDirectoryPath, Game.Profile.AtlasFolderName);
             if (!Directory.Exists(atlasPath))
             {
-                throw new FileNotFoundException($"Atlas '{Id}' not found in '{atlasPath}'. No atlas directory exists!");
+                throw new FileNotFoundException($"Atlas '{AtlasId}' not found in '{atlasPath}'. No atlas directory exists!");
             }
 
             if (_atlasMaxIndex == -1)
             {
-                throw new FileNotFoundException($"Atlas '{Id}' not found in '{atlasPath}'");
+                throw new FileNotFoundException($"Atlas '{AtlasId}' not found in '{atlasPath}'");
             }
 
             _textures = new Texture2D[_atlasMaxIndex + 1];
 
-            string atlasIdName = Id.GetDescription();
             for (int i = 0; i < _textures.Length; ++i)
             {
-                string path = Path.Join(atlasPath, $"{atlasIdName}{i:000}{TextureServices.QOI_GZ_EXTENSION}");
+                string path = Path.Join(atlasPath, $"{AtlasId}{i:000}{TextureServices.QOI_GZ_EXTENSION}");
                 _textures[i] = TextureServices.FromFile(Game.GraphicsDevice, path);
 
                 GameLogger.Verify(Textures[i] is not null, $"Couldn't load atlas file at {path}");
