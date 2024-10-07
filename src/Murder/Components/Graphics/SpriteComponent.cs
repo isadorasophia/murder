@@ -29,7 +29,7 @@ namespace Murder.Components
         public readonly Vector2 Offset = Vector2.Zero;
 
         public readonly bool RotateWithFacing = false;
-        public readonly bool FlipWithFacing = false;
+        public readonly bool FlipWithFacing { get; init; } = false;
 
         public readonly OutlineStyle HighlightStyle { get; init; } = OutlineStyle.None;
 

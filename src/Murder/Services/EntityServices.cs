@@ -9,6 +9,7 @@ using Murder.Core.Geometry;
 using Murder.Core.Physics;
 using Murder.Diagnostics;
 using Murder.Helpers;
+using Murder.Prefabs;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Numerics;
@@ -512,6 +513,8 @@ public static class EntityServices
                     { SortOffset = offset };
 
         e.SetAnimationOverload(overload);
+        e.RemoveAnimationComplete();
+        e.RemoveAnimationCompleteMessage();
     }
 }
 
