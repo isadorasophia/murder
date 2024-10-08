@@ -157,7 +157,7 @@ namespace Murder.Assets
             List<(ISystem, bool)> systemInstances = new();
 
             // Actually instantiate and add each of our system types.
-            ImmutableArray<(Type system, bool isActive)> allSystemTypes = FetchAllSystems().AddRange(startingSystems);
+            ImmutableArray<(Type system, bool isActive)> allSystemTypes = startingSystems.AddRange(FetchAllSystems());
             foreach (var (type, isActive) in allSystemTypes)
             {
                 if (type is null)

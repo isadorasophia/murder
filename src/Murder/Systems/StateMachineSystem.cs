@@ -9,7 +9,7 @@ namespace Murder.Systems
 {
     [Filter(kind: ContextAccessorKind.Read, typeof(IStateMachineComponent))]
     [Watch(typeof(IStateMachineComponent))]
-    public class StateMachineSystem : IUpdateSystem, IReactiveSystem, IExitSystem
+    public class StateMachineSystem : IStartupSystem, IUpdateSystem, IReactiveSystem, IExitSystem
     {
         public void OnAdded(World world, ImmutableArray<Entity> entities) { }
 
@@ -23,6 +23,19 @@ namespace Murder.Systems
         public void Exit(Context context)
         {
             Clean(context.Entities, force: true);
+        }
+
+        public void Start(Context context)
+        {
+            foreach (Entity e in context.Entities)
+            {
+                if (e.TryGetStateMachine() is not IStateMachineComponent routine)
+                {
+                    continue;
+                }
+
+                routine.Start();
+            }
         }
 
         public void Update(Context context)

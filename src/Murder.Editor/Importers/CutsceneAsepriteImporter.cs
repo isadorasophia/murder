@@ -36,8 +36,20 @@ internal class CutsceneAsepriteImporter(EditorSettingsAsset editorSettings) : Re
             return;
         }
 
+        bool clear = true;
+
         foreach (AsepriteImporter importer in _importers.Values)
         {
+            if (clear)
+            {
+                clear = false;
+            }
+            else
+            {
+                // Make sure the next importers do not delete our previous hard work.
+                importer.ClearBeforeSaving = false;
+            }
+
             await importer.LoadStagedContentAsync(reload);
         }
 
@@ -74,9 +86,6 @@ internal class CutsceneAsepriteImporter(EditorSettingsAsset editorSettings) : Re
         {
             importer.Flush();
         }
-
-        AllFiles.Clear();
-        ChangedFiles.Clear();
     }
 
     private string GetSourcePackedAtlasDescriptorPath(string atlasName)

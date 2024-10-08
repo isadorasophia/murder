@@ -45,7 +45,7 @@ namespace Murder.Data
 
         public ImmutableDictionary<int, PixelFont> _fonts = ImmutableDictionary<int, PixelFont>.Empty;
 
-        private readonly HashSet<string> _referencedAtlases = [];
+        protected readonly HashSet<string> _referencedAtlases = [];
 
         /// <summary>
         /// The cheapest and simplest shader.
@@ -324,11 +324,6 @@ namespace Murder.Data
                 {
                     TrackFont(font);
                 }
-
-                if (asset is SpriteAsset sprite)
-                {
-                    _referencedAtlases.Add(sprite.Atlas);
-                }
             }
         }
 
@@ -366,10 +361,10 @@ namespace Murder.Data
                 }
             }
 
-            foreach (string id in _referencedAtlases)
-            {
-                FetchAtlas(id).LoadTextures();
-            }
+            //foreach (string id in _referencedAtlases)
+            //{
+            //    FetchAtlas(id).LoadTextures();
+            //}
         }
 
         /// <summary>
@@ -738,8 +733,14 @@ namespace Murder.Data
                 _allAssets[asset.Guid] = asset;
 
                 OnAssetRenamedOrAddedOrDeleted();
+
+                if (asset is SpriteAsset sprite)
+                {
+                    _referencedAtlases.Add(sprite.Atlas);
+                }
             }
         }
+
         public bool HasAsset<T>(Guid id) where T : GameAsset =>
             _database.TryGetValue(typeof(T), out HashSet<Guid>? assets) && assets.Contains(id);
 

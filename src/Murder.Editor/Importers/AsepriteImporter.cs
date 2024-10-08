@@ -32,6 +32,11 @@ namespace Murder.Editor.Importers
 
         private Packer? _pendingPacker = null;
 
+        /// <summary>
+        /// Whether it should clean up the generated sprites directory before saving any file.
+        /// </summary>
+        public bool ClearBeforeSaving = true;
+
         public override async ValueTask LoadStagedContentAsync(bool reload)
         {
             if (AllFiles.Count == 0)
@@ -154,7 +159,7 @@ namespace Murder.Editor.Importers
                     if (!hasCleanedDirectory)
                     {
                         // Make sure we clean the directory before saving this asset.
-                        cleanDirectoryBeforeSaving = true;
+                        cleanDirectoryBeforeSaving = ClearBeforeSaving;
                         hasCleanedDirectory = true;
                     }
 

@@ -43,6 +43,8 @@ namespace Murder.Editor.Data
 
         public ImmutableArray<string> AvailableUniqueTextures = [];
 
+        public HashSet<string>? AvailableAtlases = null;
+
         private readonly Dictionary<Guid, GameAsset> _saveAssetsForEditor = new();
         public ImmutableArray<GameAsset> GetAllSaveAssets() => _saveAssetsForEditor.Values.ToImmutableArray();
 
@@ -960,5 +962,7 @@ namespace Murder.Editor.Data
 
             _cachedFilteredAssetsWithImplementation.Clear();
         }
+
+        public HashSet<string> GetAllAtlases() => _referencedAtlases;
     }
 }

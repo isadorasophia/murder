@@ -32,7 +32,7 @@ public static class AtlasIdentifiers
     public const string Static = "static";
     public const string Temporary = "temporary";
     public const string Preload = "preload";
-    public const string Cutscenes = "cuscenes";
+    public const string Cutscenes = "cutscenes";
 }
 
 public readonly struct ReferencedAtlas

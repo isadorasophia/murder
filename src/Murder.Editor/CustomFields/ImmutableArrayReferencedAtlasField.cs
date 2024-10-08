@@ -26,21 +26,7 @@ internal class ImmutableArrayReferencedAtlasField : CustomField
 
         HashSet<int> missingNames = new();
 
-        HashSet<string>? names = [.. Game.Data.LoadedAtlasses.Keys];
-        if (names is not null)
-        {
-            for (int i = 0; i < current.Count(); i++)
-            {
-                string text = current[i].Id;
-
-                bool removed = names.Remove(text);
-                if (!removed)
-                {
-                    missingNames.Add(i);
-                }
-            }
-        }
-
+        HashSet<string> names = Architect.EditorData.GetAllAtlases();
         for (int i = 0; i < current.Count(); i++)
         {
             string text = current[i].Id;
@@ -63,35 +49,25 @@ internal class ImmutableArrayReferencedAtlasField : CustomField
 
             ImGui.SameLine();
 
-            if (names is null)
+            bool isMissing = !names.Contains(text);
+            if (isMissing)
             {
-                ImGui.Text(text);
-            }
-            else
-            {
-                bool isMissing = missingNames.Contains(i);
-                if (isMissing)
-                {
-                    ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Red);
-                }
-
-                if (StringField.ProcessStringCombo($"replace_target_{i}", ref text, names))
-                {
-                    modified = true;
-                    builder[i] = new(text, current[i].UnloadOnExit);
-                }
-
-                if (isMissing)
-                {
-                    ImGui.PopStyleColor();
-                }
+                ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Red);
             }
 
-            // Remove element that has been added.
-            names?.Remove(text);
+            if (StringField.ProcessStringCombo($"replace_target_{i}", ref text, names))
+            {
+                modified = true;
+                builder[i] = new(text, current[i].UnloadOnExit);
+            }
+
+            if (isMissing)
+            {
+                ImGui.PopStyleColor();
+            }
         }
 
-        if (names is not null && names.Any())
+        if (names.Count != 0)
         {
             string element = "Select an atlas";
             if (StringField.ProcessStringCombo("array_targetname_new", ref element, names))
