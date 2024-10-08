@@ -1,12 +1,6 @@
 ﻿using Bang;
 using Murder.Core;
-using Murder.Core.Geometry;
 using Murder.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Murder.Services;
 
