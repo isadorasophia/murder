@@ -9,7 +9,8 @@ public enum CameraStyle
 {
     DeadZone,
     Center,
-    Perfect
+    Perfect,
+    KeepPosition
 }
 
 /// <summary>
