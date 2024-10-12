@@ -98,17 +98,17 @@ namespace Murder.Assets.Graphics
 
             // Top Left Inside Corner
             if (topLeft && topRight && botLeft && !botRight)
-                DrawTile(batch, x, y, 1, 3, alpha, color, blend, -1);
+                DrawTile(batch, x, y, 1, 3, alpha, color, blend, 1);
 
             // Top Right Inside Corner
             if (topLeft && topRight && !botLeft && botRight)
-                DrawTile(batch, x, y, 2, 3, alpha, color, blend, -1);
+                DrawTile(batch, x, y, 2, 3, alpha, color, blend, 1);
 
-            // Top Left Inside Corner
+            // Bottom Left Inside Corner
             if (topLeft && !topRight && botLeft && botRight)
                 DrawTile(batch, x, y, 1, 4, alpha, color, blend, 1);
 
-            // Top Right Inside Corner
+            // Bottom Right Inside Corner
             if (!topLeft && topRight && botLeft && botRight)
                 DrawTile(batch, x, y, 2, 4, alpha, color, blend, 1);
 
