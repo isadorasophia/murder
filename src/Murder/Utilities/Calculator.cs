@@ -785,5 +785,34 @@ namespace Murder.Utilities
             return (byte)((v >> 8) + v >> 8);
         }
         #endregion
+
+        #region Strings
+
+        public static Point ParsePixelSize(string size)
+        {
+            // Remove any non-numeric characters except commas, spaces, and 'x'
+            string clean = new string(size
+                .Where(c => char.IsDigit(c) || c == ',' || c == ' ' || c == 'x')
+                .ToArray());
+
+            // Replace 'x' with a comma to standardize the format
+            clean = clean.Replace('x', ',').Replace(" ", ",");
+
+            // Split into width and height
+            string[] parts = clean.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (parts.Length == 2)
+            {
+                if (int.TryParse(parts[0], out int width) && int.TryParse(parts[1], out int height))
+                {
+                    return new Point(width, height);
+                }
+            }
+
+            // Return a default size in case of failure
+            return new Point(800, 600); // Or handle the error as needed
+        }
+
+        #endregion
     }
 }

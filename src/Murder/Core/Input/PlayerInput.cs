@@ -236,9 +236,9 @@ namespace Murder.Core.Input
             return _buttons[button].Released;
         }
 
-        public bool Pressed(Keys enter)
+        public bool Pressed(Keys key)
         {
-            return Keyboard.GetState().IsKeyDown(enter);
+            return Keyboard.GetState().IsKeyDown(key) && !_previousKeyboardState.IsKeyDown(key);
         }
 
         public bool PressedAndConsume(int button)
