@@ -385,10 +385,12 @@ namespace Murder.Save
                 return GetValue<T>(fieldName);
             }
 
-            GameLogger.Verify(f.FieldType == typeof(T) || typeof(T) == typeof(object),
+            object? value = f.GetValue(info.Blackboard);
+
+            GameLogger.Verify(f.FieldType.IsEnum || f.FieldType == typeof(T) || typeof(T) == typeof(object),
                 "Wrong type for dialog variable!");
 
-            return (T)f.GetValue(info.Blackboard)!;
+            return (T)value!;
         }
 
         /// <summary>
