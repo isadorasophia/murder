@@ -1,5 +1,6 @@
 ﻿using Bang;
 using Bang.StateMachines;
+using Murder.Core.Sounds;
 
 namespace Murder.Services
 {
@@ -23,6 +24,9 @@ namespace Murder.Services
         public static IEnumerator<Wait> SwitchSceneOnSecondsCoroutine(Guid nextWorldGuid, float seconds)
         {
             yield return Wait.ForSeconds(seconds);
+
+            SoundServices.Stop(SoundLayer.Ambience, fadeOut: true);
+            SoundServices.Stop(SoundLayer.Sfx, fadeOut: true);
 
             SwitchScene(nextWorldGuid);
         }
