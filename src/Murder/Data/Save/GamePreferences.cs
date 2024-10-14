@@ -1,7 +1,4 @@
-using Murder.Assets;
 using Murder.Assets.Localization;
-using Murder.Data;
-using Murder.Serialization;
 using System.Text.Json;
 
 namespace Murder.Save
@@ -31,6 +28,9 @@ namespace Murder.Save
         [Bang.Serialize]
         protected LanguageId _language = LanguageId.English;
 
+        [Bang.Serialize]
+        protected bool _fullscreen = true;
+
         protected void SaveSettings()
         {
             Game.Data.FileManager.SaveSerialized(this, _path);
@@ -52,6 +52,8 @@ namespace Murder.Save
                 return null;
             }
         }
+
+        public bool FullScreen => _fullscreen;
 
         public float SoundVolume => _soundVolume;
 
@@ -116,6 +118,14 @@ namespace Murder.Save
 
             _language = id;
             OnPreferencesChanged();
+        }
+
+        public bool SetFullScreen(bool value)
+        {
+            _fullscreen = value;
+            OnPreferencesChanged();
+
+            return _fullscreen;
         }
 
         public void OnPreferencesChanged()

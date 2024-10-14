@@ -230,10 +230,10 @@ namespace Murder
         /// </summary>
         public bool Fullscreen
         {
-            get => Profile.Fullscreen;
+            get => Preferences.FullScreen;
             set
             {
-                Profile.Fullscreen = value;
+                Preferences.SetFullScreen(value);
                 RefreshWindow();
             }
         }

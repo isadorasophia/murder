@@ -155,9 +155,6 @@ namespace Murder.Assets
         [Tooltip("Texture scaling smoothing")]
         public bool ScalingFilter => _scalingFilter;
 
-        [HideInEditor]
-        public bool Fullscreen = false;
-
         public readonly int TargetFps = 60;
         public readonly float FixedUpdateFactor = 2;
         public readonly bool IsVSyncEnabled = false;
