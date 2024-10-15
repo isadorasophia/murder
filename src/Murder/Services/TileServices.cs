@@ -76,11 +76,11 @@ namespace Murder.Services
 
             // Top Left Inside Corner
             if (topLeft && topRight && botLeft && !botRight)
-                return (Calculator.OneD(1, 3, 3), 1);
+                return (Calculator.OneD(1, 3, 3), 0);
 
             // Top Right Inside Corner
             if (topLeft && topRight && !botLeft && botRight)
-                return (Calculator.OneD(2, 3, 3), 1);
+                return (Calculator.OneD(2, 3, 3), 0);
 
             // Bottom Left Inside Corner
             if (topLeft && !topRight && botLeft && botRight)
