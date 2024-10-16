@@ -68,7 +68,7 @@ public class EditorSettingsAsset : GameAsset
     public int Monitor = 0;
 
     [HideInEditor]
-    public Guid[] OpenedTabs = new Guid[0];
+    public Guid[] OpenedTabs = [];
 
     /// <summary>
     /// The asset currently being shown in the editor scene.
