@@ -46,13 +46,6 @@ namespace Murder.Assets
 
         public Guid? CurrentWorld => _lastWorld;
 
-        /// <summary>
-        /// These are all the dynamic assets within the game session.
-        /// </summary>
-        [Serialize]
-        [ShowInEditor]
-        public Dictionary<Type, Guid> DynamicAssets { get; private set; } = new();
-
         [Serialize]
         public readonly BlackboardTracker BlackboardTracker = null!;
 
@@ -213,39 +206,6 @@ namespace Murder.Assets
             }
 
             SavedWorlds = ImmutableDictionary<Guid, Guid>.Empty;
-        }
-
-        public T? TryGetDynamicAsset<T>() where T : DynamicAsset
-        {
-            T? result = default;
-
-            if (DynamicAssets.TryGetValue(typeof(T), out Guid guid))
-            {
-                return Game.Data.TryGetAssetForCurrentSave(guid) as T;
-            }
-
-            return result;
-        }
-
-        protected virtual bool TryGetDynamicAssetImpl<T>(out T? value) where T : notnull
-        {
-            value = default;
-            return false;
-        }
-
-        public void SaveDynamicAsset<T>(Guid guid)
-        {
-            DynamicAssets[typeof(T)] = guid;
-        }
-
-        public void RemoveDynamicAsset(Type t)
-        {
-            if (DynamicAssets.TryGetValue(t, out Guid value))
-            {
-                DynamicAssets.Remove(t);
-
-                Game.Data.RemoveAssetForCurrentSave(value);
-            }
         }
 
         /// <summary>

@@ -232,31 +232,6 @@ namespace Murder.Data
             ActiveSaveData.SaveAsync(world);
         }
 
-        public bool TryGetDynamicAsset<T>([NotNullWhen(true)] out T? asset) where T : DynamicAsset
-        {
-            asset = _activeSaveData?.TryGetDynamicAsset<T>();
-
-            return asset != null;
-        }
-
-        /// <summary>
-        /// Retrieve a dynamic asset within the current save data.
-        /// If no dynamic asset is found, it creates a new one to the save data.
-        /// </summary>
-        public T GetDynamicAsset<T>() where T : DynamicAsset, new()
-        {
-            if (!TryGetDynamicAsset(out T? asset))
-            {
-                // Create the dynamic asset and add it to the save data.
-                asset = new();
-
-                AddAssetForCurrentSave(asset);
-                ActiveSaveData.SaveDynamicAsset<T>(asset.Guid);
-            }
-
-            return asset;
-        }
-
         /// <summary>
         /// Retrieve a dynamic asset within the current save data based on a guid.
         /// </summary>
@@ -391,14 +366,7 @@ namespace Murder.Data
                 return false;
             }
 
-            bool removed = _currentSaveAssets.TryRemove(asset.Guid, out _);
-
-            if (asset is DynamicAsset)
-            {
-                _activeSaveData?.RemoveDynamicAsset(asset.GetType());
-            }
-
-            return removed;
+            return _currentSaveAssets.TryRemove(asset.Guid, out _);
         }
 
         public bool LoadAllSaves()
