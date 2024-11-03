@@ -389,4 +389,10 @@ public static class DirectionHelper
                 throw new ArgumentException("Unsupported number of directions. Only 2, 4 or 8 are supported.");
         }
     }
+
+    public static void Face(Entity from, Entity to)
+    {
+        Direction direction = LookAtEntity(from, to);
+        from.SetFacing(direction);
+    }
 }
