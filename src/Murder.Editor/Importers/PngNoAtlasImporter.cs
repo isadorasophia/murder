@@ -4,7 +4,7 @@ using Murder.Serialization;
 
 namespace Murder.Editor.Importers
 {
-    [ImporterSettings(FilterType.OnlyTheseFolders, new[] { RelativeDirectory }, new[] { ".png" })]
+    [ImporterSettings(FilterType.OnlyTheseFolders, [RelativeDirectory], [".png"])]
     public class PngNoAtlasImporter : ResourceImporter
     {
         private const string RelativeDirectory = "no_atlas";
@@ -13,12 +13,15 @@ namespace Murder.Editor.Importers
         public override string RelativeOutputPath => "images";
         public override string RelativeDataOutputPath => string.Empty;
 
+        public override bool SupportsAsyncLoading => true;
+
         public PngNoAtlasImporter(EditorSettingsAsset editorSettings) : base(editorSettings) { }
 
         public override ValueTask LoadStagedContentAsync(bool reload)
         {
             string sourcePath = GetRawResourcesPath();
             string outputPath = GetSourcePackedPath();
+            string binPath = GetBinPackedPath();
 
             int skippedFiles = AllFiles.Count - ChangedFiles.Count;
 
@@ -39,6 +42,7 @@ namespace Murder.Editor.Importers
                 foreach (var image in ChangedFiles)
                 {
                     CopyImage(sourcePath, outputPath, image);
+                    CopyImage(sourcePath, binPath, image);
                 }
 
                 if (skippedFiles > 0)
@@ -50,6 +54,8 @@ namespace Murder.Editor.Importers
                 {
                     CopyOutputToBin = true;
                 }
+
+                Game.Data.ClearUniqueTextures();
             }
             else
             {

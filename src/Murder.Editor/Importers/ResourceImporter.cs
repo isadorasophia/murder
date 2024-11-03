@@ -97,7 +97,7 @@ namespace Murder.Editor.Importers
         /// </summary>
         public string GetSourceResourcesPath() => FileHelper.GetPath(_editorSettings.SourceResourcesPath, "assets", "data", "Generated", RelativeDataOutputPath);
 
-        public string GetBinPackedPath() => FileHelper.GetPath(_editorSettings.BinResourcesPath);
+        public string GetBinPackedPath() => FileHelper.GetPath(_editorSettings.BinResourcesPath, RelativeOutputPath);
 
         protected readonly EditorSettingsAsset _editorSettings;
 

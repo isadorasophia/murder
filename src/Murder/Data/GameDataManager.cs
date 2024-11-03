@@ -207,13 +207,19 @@ namespace Murder.Data
 
         public void ClearContent()
         {
+            ClearUniqueTextures();
+
+            _fonts = _fonts.Clear();
+        }
+
+        public void ClearUniqueTextures()
+        {
             foreach (var texture in CachedUniqueTextures)
             {
                 texture.Value.Dispose();
             }
 
             CachedUniqueTextures.Clear();
-            _fonts = _fonts.Clear();
         }
 
         public virtual void LoadContent()
