@@ -1,4 +1,5 @@
 ﻿using Murder.Diagnostics;
+using System;
 
 namespace Murder.Utilities
 {
@@ -473,6 +474,32 @@ namespace Murder.Utilities
         public static float JumpArc(float t)
         {
             return MathF.Sin(Calculator.Clamp01(t) * MathF.PI);
+        }
+        // Predefined curve representing the intensity of the flicker effect over time
+        private static readonly float[] flickerCurve = {
+        0.0f, 0.2f, 0.5f, 0.8f, 1.0f, 0.7f,  1.0f, 1.0f,0.4f, 0.3f, 0.6f, 0.9f, 0.6f, 0.3f, 0.1f, 0.0f
+    };
+
+        // Method to get the flicker intensity based on a 0-1 range input, with smooth interpolation
+        public static float FlickerRandom(float t)
+        {
+            // Clamp t to be within the 0-1 range
+            t = Math.Clamp(t, 0.0f, 1.0f);
+
+            // Map t to a fractional index in the flickerCurve array
+            float scaledIndex = t * (flickerCurve.Length - 1);
+            int lowerIndex = (int)Math.Floor(scaledIndex);
+            int upperIndex = Math.Min(lowerIndex + 1, flickerCurve.Length - 1);
+
+            // Get the two closest values from the curve
+            float lowerValue = flickerCurve[lowerIndex];
+            float upperValue = flickerCurve[upperIndex];
+
+            // Calculate the fractional part for interpolation
+            float fractionalPart = scaledIndex - lowerIndex;
+
+            // Interpolate between the two values
+            return Calculator.Lerp(lowerValue, upperValue, fractionalPart);
         }
     }
 }

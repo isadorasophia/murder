@@ -142,7 +142,7 @@ namespace Murder.Editor
 
             if (!IsMaximized() && EditorSettings.WindowStartPosition.X > 0 && EditorSettings.WindowStartPosition.Y > 0)
             {
-                Point size = EditorSettings.WindowStartPosition - new Point(-2, 0);
+                Point size = EditorSettings.WindowStartPosition;
                 SetWindowPosition(size);
             }
 
@@ -154,9 +154,9 @@ namespace Murder.Editor
 
             if (EditorSettings.StartMaximized && GetWindowPosition() is Point startPosition)
             {
-                int titleBar = 32;
+                int titleBar = 34;
 
-                SetWindowPosition(new Point(startPosition.X - 2, titleBar));
+                SetWindowPosition(new Point(startPosition.X, titleBar));
                 MaximizeWindow();
             }
         }
