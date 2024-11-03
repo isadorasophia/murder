@@ -13,6 +13,11 @@ namespace Murder.Systems.Graphics
     [Watch(typeof(RandomizeSpriteComponent))]
     public class RandomizeAsepriteSystem : IReactiveSystem
     {
+        public void OnActivated(World world, ImmutableArray<Entity> entities)
+        {
+            OnAdded(world, entities);
+        }
+
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
             foreach (var e in entities)
