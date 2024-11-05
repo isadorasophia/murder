@@ -191,6 +191,7 @@ namespace Murder.Editor.Stages
 
             drawList.PopClipRect();
 
+            Vector2 infoSize = Vector2.Zero;
 
             if (ShowInfo)
             {
@@ -341,7 +342,25 @@ namespace Murder.Editor.Stages
                     {
                         ImGui.TextColored(Game.Profile.Theme.HighAccent, "Play Mode");
                     }
+                    infoSize = ImGui.GetWindowSize();
+                    ImGui.End();
+                }
 
+                ImGui.SetNextWindowPos(new Vector2(topLeft.X + infoSize.X, topLeft.Y));
+                ImGui.SetNextWindowBgAlpha(0.75f);
+                if (ImGui.Begin("Cursor Info",
+                    ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoCollapse |
+                    ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoNav |
+                    ImGuiWindowFlags.NoDecoration))
+                {
+                    if (!EditorHook.SelectionBox.IsEmpty)
+                    {
+                        ImGui.TextColored(Game.Profile.Theme.White, $"({EditorHook.SelectionBox.X}, {EditorHook.SelectionBox.Y}) ({EditorHook.SelectionBox.Width}, {EditorHook.SelectionBox.Height})");
+                    }
+                    else
+                    {
+                        ImGui.TextColored(Game.Profile.Theme.Faded, $"{EditorHook.CursorWorldPosition}");
+                    }
                     ImGui.End();
                 }
             }

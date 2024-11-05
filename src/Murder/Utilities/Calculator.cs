@@ -260,6 +260,22 @@ namespace Murder.Utilities
             return (angle % (2 * MathF.PI) + 2 * MathF.PI) % (2 * MathF.PI);
         }
 
+        public static float ClampAngle(float angle, float center, float range)
+        {
+            // Normalize angle to be within -π to π range relative to center
+            float halfRange = range / 2.0f;
+
+            // Wrap angle to be within center ± π
+            angle = (angle - center + MathF.PI) % (2 * MathF.PI);
+            if (angle < 0)
+                angle += 2 * MathF.PI;
+
+            angle = angle - MathF.PI + center;
+
+            // Clamp to center ± half range
+            return MathF.Max(center - halfRange, MathF.Min(center + halfRange, angle));
+        }
+
         public static bool Blink(float speed, bool scaled)
         {
             if (speed == 0)
