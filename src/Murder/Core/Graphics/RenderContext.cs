@@ -135,7 +135,7 @@ public class RenderContext : IDisposable
     protected int _takeGameplayScreenShot = -1;
     public bool TakingScreenshot => _takeGameplayScreenShot > 0;
 
-    private bool _initialized = false;
+    protected bool _initialized = false;
     public enum RenderTargets
     {
         MainBufferTarget,
