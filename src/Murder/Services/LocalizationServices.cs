@@ -18,6 +18,11 @@ namespace Murder.Services
                 return localized.OverrideText;
             }
 
+            if (localized.Id == Guid.Empty)
+            {
+                return string.Empty;
+            }
+
             LocalizationAsset asset = Game.Data.Localization;
 
             LocalizedStringData? data = asset.TryGetResource(localized.Id) ??

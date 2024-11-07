@@ -154,7 +154,7 @@ public class SpriteFacingComponentEditor : CustomComponent
             {
                 AngleSize = angleSize,
                 Suffix = name, // Example suffix, you can customize this
-                Flip = flip // Default flip setting
+                Flip = flip // DefaultInitialization flip setting
             });
         }
 

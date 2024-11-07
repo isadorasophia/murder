@@ -12,14 +12,14 @@ internal static class EditorLocalizationServices
     {
         LocalizationAsset localization = LocalizationServices.GetCurrentLocalization();
 
-        SearchBoxSettings<Guid> settings = new(initialText: "Create localized string");
+        SearchBoxSettings<Guid> settings = new(initialText: "Create localized string") 
+        { 
+            DefaultInitialization  = ("New localized string", Guid.Empty) 
+        };
 
         Lazy<Dictionary<string, Guid>> candidates = new(() => 
         {
-            Dictionary<string, Guid> result = new()
-            {
-                ["New localized string"] = Guid.Empty
-            };
+            Dictionary<string, Guid> result = [];
 
             foreach (LocalizedStringData data in localization.Resources)
             {

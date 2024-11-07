@@ -394,7 +394,7 @@ namespace Murder.Editor.ImGuiExtended
             Lazy<Dictionary<string, T>> values,
             SearchBoxFlags flags,
             [NotNullWhen(true)] out T? result
-        ) => Search(id, settings, values, flags, SearchBoxSizeConfiguration.Default, out result);
+        ) => Search(id, settings, values, flags, SearchBoxConfiguration.Default, out result);
 
         public struct SearchBoxSettings<T>
         {
@@ -408,6 +408,11 @@ namespace Murder.Editor.ImGuiExtended
 
             [MemberNotNullWhen(true, nameof(InitialSelected))]
             public bool HasInitialValue => InitialSelected is not null;
+
+            /// <summary>
+            /// If applicable, provide a default value in the search box.
+            /// </summary>
+            public readonly (string, T)? DefaultInitialization { get; init; } = null;
 
             public SearchBoxSettings(string initialText) =>
                 _initialUnitializedText = initialText;
@@ -427,7 +432,7 @@ namespace Murder.Editor.ImGuiExtended
             SearchBoxSettings<T> settings,
             Lazy<Dictionary<string, T>> values,
             SearchBoxFlags flags,
-            SearchBoxSizeConfiguration sizeConfiguration,
+            SearchBoxConfiguration sizeConfiguration,
             [NotNullWhen(true)] out T? result)
         {
             result = default;
@@ -568,6 +573,15 @@ namespace Murder.Editor.ImGuiExtended
                 ImGui.SetNextItemWidth(-1);
                 bool enterPressed = ImGui.InputText("##ComboWithFilter_inputText", ref _tempSearchText, 256, ImGuiInputTextFlags.EnterReturnsTrue);
 
+                if (settings.DefaultInitialization is (string defaultValueName, T value) && ImGui.Button(defaultValueName))
+                {
+                    modified = true;
+                    result = value;
+
+                    _tempSearchText = string.Empty;
+                    ImGui.CloseCurrentPopup();
+                }
+
                 var orderedKeyAndValue = values.Value.OrderBy(n => n.Key);
 
                 int count = 0;
@@ -658,12 +672,12 @@ namespace Murder.Editor.ImGuiExtended
             return modified;
         }
 
-        public readonly record struct SearchBoxSizeConfiguration(
+        public readonly record struct SearchBoxConfiguration(
             Vector2 SearchFrameSize,
             Vector2 SearchBoxContainerSize
         )
         {
-            public static SearchBoxSizeConfiguration Default = new(
+            public static SearchBoxConfiguration Default = new(
                 SearchFrameSize: new Vector2(150, 200),
                 SearchBoxContainerSize: new Vector2(250, 400)
             );

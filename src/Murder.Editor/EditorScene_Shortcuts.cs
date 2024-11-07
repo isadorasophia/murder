@@ -18,7 +18,7 @@ public partial class EditorScene
     private static readonly Vector2 _commandPaletteWindowSize = new(400, 350);
     private static readonly Vector2 _commandPalettePadding = new(20, 0);
     private static readonly Vector2 _commandPaletteSearchBoxPadding = new (20, 20);
-    private static readonly SearchBox.SearchBoxSizeConfiguration _commandPaletteSizeConfiguration = new(
+    private static readonly SearchBox.SearchBoxConfiguration _commandPaletteSizeConfiguration = new(
         SearchFrameSize: _commandPaletteWindowSize - _commandPalettePadding,
         SearchBoxContainerSize: _commandPaletteWindowSize - _commandPaletteSearchBoxPadding
     );
