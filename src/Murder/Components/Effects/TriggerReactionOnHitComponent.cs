@@ -16,6 +16,8 @@ public readonly struct TriggerReactionOnHitComponent : IComponent
     [SpriteBatchReference]
     public readonly int? ChangeSpriteBatchOnComplete { get; init; } = null;
 
+    public readonly int? ChangeYSort { get; init; } = null;
+
     [GameAssetId<PrefabAsset>]
     public readonly Guid? ReplaceWithPrefab = null;
 

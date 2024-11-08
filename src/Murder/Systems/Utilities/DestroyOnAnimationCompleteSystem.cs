@@ -46,7 +46,6 @@ namespace Murder.Systems.Util
                     return;
 
                 case DestroyOnAnimationCompleteFlags.RemoveSolid:
-
                     EffectsServices.RemoveSolid(entity);
                     return;
 
