@@ -1,17 +1,30 @@
 ﻿using Bang.Components;
+using Murder.Core.Graphics;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Components
 {
+    public enum DestroyOnAnimationCompleteFlags
+    {
+        Destroy = 0,
+        Deactivate = 1,
+        RemoveSolid = 2,
+        None = 3
+    }
+
     public readonly struct DestroyOnAnimationCompleteComponent : IComponent
     {
-        /// <summary>
-        /// Whether it should deactivate instead of destroying.
-        /// </summary>
-        public readonly bool DeactivateOnComplete = false;
+        public readonly DestroyOnAnimationCompleteFlags Settings = DestroyOnAnimationCompleteFlags.Destroy;
+
+        [SpriteBatchReference]
+        public readonly int? ChangeSpriteBatchOnComplete { get; init; } = Batches2D.GameplayBatchId;
 
         public DestroyOnAnimationCompleteComponent() { }
 
-        public DestroyOnAnimationCompleteComponent(bool deactivateOnComplete) =>
-            DeactivateOnComplete = deactivateOnComplete;
+        public DestroyOnAnimationCompleteComponent(DestroyOnAnimationCompleteFlags settings) =>
+            Settings = settings;
+
+        public DestroyOnAnimationCompleteComponent(DestroyOnAnimationCompleteFlags settings, int? changeSpriteBatch) : this(settings) =>
+            ChangeSpriteBatchOnComplete = changeSpriteBatch;
     }
 }

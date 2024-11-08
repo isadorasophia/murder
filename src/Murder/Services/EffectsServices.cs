@@ -4,6 +4,7 @@ using Bang.Entities;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Graphics;
+using Murder.Core.Physics;
 using System.Numerics;
 
 namespace Murder.Services
@@ -114,6 +115,20 @@ namespace Murder.Services
                 new SpriteComponent(blastAnimation),
                 new DestroyOnAnimationCompleteComponent()
             );
+        }
+
+        public static void RemoveSolid(Entity e)
+        {
+            Entity? target = e.HasCollider() ? e : e.TryFetchChild("solid");
+            if (target is null)
+            {
+                return;
+            }
+
+            if (target.TryGetCollider() is ColliderComponent collider && (collider.Layer & CollisionLayersBase.SOLID) != 0)
+            {
+                target.SetCollider(collider.WithoutLayerFlag(CollisionLayersBase.SOLID));
+            }
         }
     }
 }

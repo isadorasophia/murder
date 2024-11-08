@@ -3,7 +3,10 @@ using Bang.Components;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
+using Murder.Core.Physics;
 using Murder.Messages;
+using Murder.Prefabs;
+using Murder.Services;
 
 namespace Murder.Systems.Util
 {
@@ -20,23 +23,39 @@ namespace Murder.Systems.Util
                 return;
             }
 
-            if (entity.TryGetSprite() is SpriteComponent sprite)
+            SpriteComponent? sprite = entity.TryGetSprite();
+            if (sprite is not null && sprite.Value.NextAnimations.Length > 1)
             {
-                if (sprite.NextAnimations.Length > 1)
-                {
-                    return;
-                }
+                return;
             }
 
-            if (entity.GetDestroyOnAnimationComplete().DeactivateOnComplete)
+            DestroyOnAnimationCompleteComponent destroyOnComplete = entity.GetDestroyOnAnimationComplete();
+
+            if (destroyOnComplete.ChangeSpriteBatchOnComplete is int batch && sprite is not null)
             {
-                entity.RemoveAnimationComplete();
-                entity.RemoveAnimationStarted();
-                entity.Deactivate();
+                entity.SetSprite(sprite.Value.SetBatch(batch));
             }
-            else
+
+            switch (destroyOnComplete.Settings)
             {
-                entity.Destroy();
+                case DestroyOnAnimationCompleteFlags.Deactivate:
+                    entity.RemoveAnimationComplete();
+                    entity.RemoveAnimationStarted();
+                    entity.Deactivate();
+
+                    return;
+
+                case DestroyOnAnimationCompleteFlags.RemoveSolid:
+
+                    EffectsServices.RemoveSolid(entity);
+                    return;
+
+                case DestroyOnAnimationCompleteFlags.Destroy:
+                    entity.Destroy();
+                    return;
+
+                case DestroyOnAnimationCompleteFlags.None:
+                    return;
             }
         }
     }
