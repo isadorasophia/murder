@@ -24,6 +24,7 @@ namespace Murder.Interactions
         {
             if (interacted is Entity target)
             {
+                target = target.TryFetchParent() ?? target;
                 foreach (var child in _child)
                 {
                     if (target.TryFetchChild(child) is Entity c)
