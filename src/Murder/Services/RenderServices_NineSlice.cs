@@ -169,12 +169,12 @@ namespace Murder.Services
             Draw9Slice(batch, texture, core, target, NineSliceStyle.Stretch, new DrawInfo() { Sort = sort });
 
         public static void Draw9Slice(
-        Batch2D batch,
-        AtlasCoordinates texture,
-        IntRectangle core,
-        IntRectangle target,
-        NineSliceStyle style,
-        DrawInfo info)
+            Batch2D batch,
+            AtlasCoordinates texture,
+            IntRectangle core,
+            IntRectangle target,
+            NineSliceStyle style,
+            DrawInfo info)
         {
             var fullSize = texture.Size;
             // The size of the bottom right rectangle of the 9slice. Cached here for speed
