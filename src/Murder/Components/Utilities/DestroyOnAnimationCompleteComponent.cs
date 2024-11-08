@@ -17,7 +17,7 @@ namespace Murder.Components
         public readonly DestroyOnAnimationCompleteFlags Settings = DestroyOnAnimationCompleteFlags.Destroy;
 
         [SpriteBatchReference]
-        public readonly int? ChangeSpriteBatchOnComplete { get; init; } = Batches2D.GameplayBatchId;
+        public readonly int? ChangeSpriteBatchOnComplete { get; init; } = null; // Batches2D.GameplayBatchId;
 
         public DestroyOnAnimationCompleteComponent() { }
 
