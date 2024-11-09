@@ -1014,7 +1014,6 @@ public static partial class RenderServices
         // Quickly check if we even changed frames, if not, don't bother with events
         if (frameInfo.InternalFrame != previousFrame)
         {
-            
             Animation currentAnimation = frameInfo.Animation;
 
             if (currentAnimation.Events == null || currentAnimation.Events.Count == 0)
