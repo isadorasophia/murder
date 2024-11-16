@@ -9,6 +9,8 @@
     <GenerateDocumentationFile Condition="'$(Configuration)' == 'Debug'">true</GenerateDocumentationFile>
 
     <PublishAot>true</PublishAot>
+    <IsAotCompatible>true</IsAotCompatible>
+
     <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
   </PropertyGroup>
 
