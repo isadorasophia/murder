@@ -1,5 +1,7 @@
 ﻿using ImGuiNET;
 using Murder.Attributes;
+using Murder.Components;
+using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
@@ -260,7 +262,58 @@ public abstract class CustomField
             return false;
         }
 
-        return ImGui.InputFloat("", ref number, 1);
+        bool changed = false;
+        ImGui.PushItemWidth(ImGui.GetContentRegionAvail().X - 49);
+        ImGui.BeginGroup();
+        changed = ImGui.InputFloat("", ref number);
+
+
+        ImGui.SameLine();
+        ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 6);
+
+        ImGui.SetNextItemWidth(14);
+        ImGui.PushStyleColor(ImGuiCol.Text, 0);
+        ImGui.PushStyleColor(ImGuiCol.FrameBg, 0);
+        ImGui.PushStyleColor(ImGuiCol.FrameBgActive, 0);
+        ImGui.PushStyleColor(ImGuiCol.FrameBgHovered, 0);
+        changed = ImGui.DragFloat("###Drag", ref number, 0.5f);
+        ImGui.PopStyleColor(4);
+        ImGuiHelpers.HelpTooltip("Drag to change value");
+
+        uint dragColor;
+        if (ImGui.IsItemHovered())
+        {
+            dragColor= Color.ToUint(Game.Profile.Theme.Accent);
+        }
+        else
+        {
+            dragColor = Color.ToUint(Game.Profile.Theme.Faded);
+        }
+
+            var dl = ImGui.GetForegroundDrawList();
+        dl.AddText(ImGui.GetFont(), ImGui.GetFontSize(), new Vector2(ImGui.GetItemRectMin().X, ImGui.GetItemRectMin().Y + 3), dragColor, "");
+
+
+        ImGui.SameLine();
+
+        ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 6);
+        if (ImGui.Button("+", new Vector2(14, 0)))
+        {
+            number++;
+            changed = true;
+        }
+        ImGui.SameLine();
+
+        ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 6);
+        if (ImGui.Button("-", new Vector2(14,0)))
+        {
+            number--;
+            changed = true;
+        }
+        ImGui.EndGroup();
+        ImGui.PopItemWidth();
+
+        return changed;
     }
 
     public static bool DrawPrimitiveAngle<T>(string id, ref T target, string fieldName)
