@@ -297,15 +297,7 @@ public abstract class CustomField
         ImGui.SameLine();
 
         ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 6);
-        if (ImGui.Button("+", new Vector2(14, 0)))
-        {
-            number++;
-            changed = true;
-        }
-        ImGui.SameLine();
-
-        ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 6);
-        if (ImGui.Button("-", new Vector2(14,0)))
+        if (ImGui.Button("-", new Vector2(14, 0)))
         {
             number--;
             changed = true;
@@ -313,6 +305,14 @@ public abstract class CustomField
         ImGui.EndGroup();
         ImGui.PopItemWidth();
 
+        ImGui.SameLine();
+
+        ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 6);
+        if (ImGui.Button("+", new Vector2(14, 0)))
+        {
+            number++;
+            changed = true;
+        }
         return changed;
     }
 
