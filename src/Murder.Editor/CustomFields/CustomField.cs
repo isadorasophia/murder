@@ -276,7 +276,7 @@ public abstract class CustomField
         ImGui.PushStyleColor(ImGuiCol.FrameBg, 0);
         ImGui.PushStyleColor(ImGuiCol.FrameBgActive, 0);
         ImGui.PushStyleColor(ImGuiCol.FrameBgHovered, 0);
-        changed |= ImGui.DragFloat("###Drag", ref number, 0.5f);
+        changed |= ImGui.DragFloat("###Drag", ref number, 1f);
         ImGui.PopStyleColor(4);
         ImGuiHelpers.HelpTooltip("Drag to change value");
 
