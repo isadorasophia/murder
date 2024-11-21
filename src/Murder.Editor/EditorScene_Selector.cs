@@ -313,13 +313,13 @@ namespace Murder.Editor
                 ImGui.SameLine();
             }
 
-            if (ImGuiHelpers.SelectableWithIconColor($"{name}{(asset.FileChanged ? "*" : "")}", asset.Icon, color, color * 0.8f, _selectedAssets.ContainsKey(asset.Guid)))
+            if (ImGuiHelpers.SelectableWithIconColor($"{name}{(asset.FileChanged ? "*" : "")}", asset.Icon, color, Game.Profile.Theme.Bg, color * 0.8f, _selectedAssets.ContainsKey(asset.Guid)))
             {
                 _openAsset = asset.Guid;
                 OpenAssetEditor(asset, false);
             }
 
-            ImGui.PopStyleColor();
+            ImGui.PopStyleColor(1);
 
             if (ImGui.BeginPopupContextItem())
             {

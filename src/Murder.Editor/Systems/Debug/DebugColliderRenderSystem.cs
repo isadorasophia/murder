@@ -38,6 +38,10 @@ namespace Murder.Editor.Systems
 
         private bool _wasClicking = false;
 
+        private static int _hoveringEntity = -1;
+        private static int _hoveringShape = -1;
+        private static bool _contextMenuOpened = false;
+
         public void Draw(RenderContext render, Context context)
         {
             DrawImpl(render, context, allowEditingByDefault: false, ref _wasClicking);
@@ -83,6 +87,12 @@ namespace Murder.Editor.Systems
                     hook.StageSettings.HasFlag(Assets.StageSetting.ShowCollider) &&
                     (hook.CursorIsBusy.Count==1 && hook.CursorIsBusy.Contains(typeof(DebugColliderRenderSystem)) || !hook.CursorIsBusy.Any());
 
+                if (!_contextMenuOpened)
+                {
+                    _hoveringEntity = -1;
+                    _hoveringShape = -1;
+                }
+
                 bool isSolid = collider.Layer.HasFlag(CollisionLayersBase.SOLID);
                 for (int shapeIndex = 0; shapeIndex < collider.Shapes.Length; shapeIndex++)
                 {
@@ -102,7 +112,7 @@ namespace Murder.Editor.Systems
                         editor.EditorHook,
                         showHandles,
                         color * (isSolid ? 1f : 0.5f),
-                        e.TryGetFacing() is FacingComponent facing && facing.Direction.Flipped(), out var newShapeResult))
+                        out bool isHoveringShape, out var newShapeResult))
                     {
                         newShape = newShapeResult;
                         usingCursor = true;
@@ -110,6 +120,12 @@ namespace Murder.Editor.Systems
                     else
                     {
                         newShape = null;
+                    }
+
+                    if (isHoveringShape && !_contextMenuOpened)
+                    {
+                        _hoveringEntity = e.EntityId;
+                        _hoveringShape = shapeIndex;
                     }
 
                     if (newShape is not null)
@@ -157,10 +173,11 @@ namespace Murder.Editor.Systems
             EditorHook hook,
             bool showHandles,
             Color color,
-            bool _,
+            out bool hovered,
             out IShape newShape)
         {
             newShape = shape;
+            hovered = false;
 
             if (hook.CursorWorldPosition is not Point cursorPosition)
                 return false;
@@ -178,7 +195,7 @@ namespace Murder.Editor.Systems
 
                     if (showHandles)
                     {
-                        if (EditorServices.PolyHandle(id, render, globalPosition.Vector2, cursorPosition, poly, Color.White, color, out var newPolygonResult))
+                        if (EditorServices.PolyHandle(id, render, globalPosition.Vector2, cursorPosition, poly, Color.White, color, out var newPolygonResult, out hovered))
                         {
 
                             if (!isReadonly)
@@ -203,7 +220,7 @@ namespace Murder.Editor.Systems
                     if (showHandles)
                     {
                         if (EditorServices.BoxHandle(id, render,
-                            cursorPosition, box.Rectangle + globalPosition.Point, color, out IntRectangle newRectangle, false))
+                            cursorPosition, box.Rectangle + globalPosition.Point, color, out IntRectangle newRectangle, false, out hovered))
                         {
                             if (!isReadonly)
                             {
@@ -241,7 +258,22 @@ namespace Murder.Editor.Systems
 
             if (ImGui.BeginPopupContextItem("GameplayContextMenu", ImGuiPopupFlags.MouseButtonRight | ImGuiPopupFlags.NoReopen))
             {
+                _contextMenuOpened = true;
                 ImGui.SeparatorText("Colliders");
+                
+                if (_hoveringEntity>0 && context.World.TryGetEntity(_hoveringEntity) is Entity entity)
+                {
+                    ImGui.TextColored(Game.Profile.Theme.Accent, $"Entity {entity.EntityId} Hovered");
+
+                    var shape = entity.GetCollider().Shapes[_hoveringShape];
+
+                    if (ImGui.Button($"Delete {shape.GetType().Name}"))
+                    {
+                        entity.SetCollider(entity.GetCollider() with { Shapes = entity.GetCollider().Shapes.RemoveAt(_hoveringShape) });
+                        ImGui.CloseCurrentPopup();
+                    }
+                }
+
                 if (DrawCreateShapeMenu(SelectedEntity, hook))
                 {
                     ImGui.CloseCurrentPopup();
@@ -271,6 +303,11 @@ namespace Murder.Editor.Systems
 
                 ImGui.EndPopup();
             }
+            else
+            {
+                _contextMenuOpened = false;
+            }
+        
         }
 
         private static Type DrawShapeButtons()

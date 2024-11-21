@@ -98,8 +98,10 @@ namespace Murder.Editor.Services
 
         public static DragStyle LastDragStyle => _draggingHandle == string.Empty ? DragStyle.None : _draggingStyle;
 
-        public static bool BoxHandle(string id, RenderContext render, Vector2 cursorPosition, IntRectangle rectangle, Color color, out IntRectangle newRectangle, bool glow)
+        public static bool BoxHandle(string id, RenderContext render, Vector2 cursorPosition, IntRectangle rectangle, Color color, out IntRectangle newRectangle, bool glow, out bool hover)
         {
+            hover = false;
+
             if (glow)
             {
                 RenderServices.DrawRectangle(render.DebugFxBatch, rectangle, color * (0.45f + 0.2f * MathF.Sin(Game.NowUnscaled * 5)));
@@ -267,7 +269,7 @@ namespace Murder.Editor.Services
             else if (rectangle.Contains(cursor))
             {
                 RenderServices.DrawRectangle(render.DebugFxBatch, rectangle, color * .25f);
-
+                hover = true;
                 if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                 {
                     _draggingHandle = id;
@@ -280,8 +282,9 @@ namespace Murder.Editor.Services
             return false;
         }
 
-        public static bool PolyHandle(string id, RenderContext render, Vector2 basePosition, Vector2 cursorPosition, Polygon polygon, Color outline, Color color, out Polygon newPolygon)
+        public static bool PolyHandle(string id, RenderContext render, Vector2 basePosition, Vector2 cursorPosition, Polygon polygon, Color outline, Color color, out Polygon newPolygon, out bool isShapeHovered)
         {
+            isShapeHovered = false;
             newPolygon = polygon;
             cursorPosition -= basePosition;
             var polygonWorld = polygon.AddPosition(basePosition.Point());
@@ -402,6 +405,8 @@ namespace Murder.Editor.Services
                     _draggingStyle = DragStyle.Move;
                     _dragOffset = polygon.Vertices[0] - cursorPosition;
                 }
+
+                isShapeHovered = true;
             }
 
             return false;

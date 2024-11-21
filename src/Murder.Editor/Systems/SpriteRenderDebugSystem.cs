@@ -13,6 +13,7 @@ using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
+using Murder.Editor.Data.Graphics;
 using Murder.Editor.Messages;
 using Murder.Editor.Utilities;
 using Murder.Helpers;
@@ -52,6 +53,16 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
         }
 
         bool previewMode = Game.Input.Down(Keys.Space);
+
+
+
+        bool showHandles = !previewMode &&
+            (hook.EditorMode == EditorHook.EditorModes.EditMode && hook.StageSettings.HasFlag(Assets.StageSetting.ShowSprite));
+
+        if (showHandles)
+        {
+            DrawYSortHorizontalLines(render, context, hook);
+        }
 
         foreach (var e in context.Entities)
         {
@@ -135,80 +146,6 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
                 render.GameplayBatch;
 
             int ySortOffset = sprite.HasValue ? sprite.Value.YSortOffset : agentSprite!.Value.YSortOffset;
-
-
-            bool showHandles = !previewMode &&
-                (hook.EditorMode == EditorHook.EditorModes.EditMode && hook.IsEntitySelectedOrParent(e) && hook.StageSettings.HasFlag(Assets.StageSetting.ShowSprite));
-
-            if (showHandles && hook.CursorWorldPosition is Point cursorPosition)
-            {
-                Color color;
-                if (_draggingY==e.EntityId)
-                {
-                    color = Architect.Profile.Theme.HighAccent;
-                    
-                    int newYSortOffset = (int)((cursorPosition.Y - transform.Vector2.Y) );
-                    if (sprite != null)
-                    {
-                        e.SetSprite(sprite.Value with { YSortOffset = newYSortOffset });
-                    }
-                    else if (agentSprite != null)
-                    {
-                        e.SetAgentSprite(agentSprite.Value with { YSortOffset = newYSortOffset });
-                    }
-
-                    if (!hook.UsingGui && !Game.Input.Down(MurderInputButtons.LeftClick))
-                    {
-                        hook.CursorIsBusy.Remove(typeof(SpriteRenderDebugSystem));
-                        _draggingY = -1;
-                        if (sprite != null)
-                        {
-                            e.SendMessage(new AssetUpdatedMessage(typeof(SpriteComponent)));
-                        }
-                        else if (agentSprite != null)
-                        {
-                            e.SendMessage(new AssetUpdatedMessage(typeof(AgentSpriteComponent)));
-                        }
-                    }
-                }
-                else
-                {
-                    if (hook.HideEditIds.Contains(e.EntityId))
-                    {
-                        color = Color.Red * 0.1f;
-                    }
-                    else if (
-                        cursorPosition.Y > transform.Y + (ySortOffset - 3) &&
-                        cursorPosition.Y < transform.Y + (ySortOffset + 3) )
-                    {
-                        color = Color.White;
-                        if (!hook.UsingGui && Game.Input.Pressed(MurderInputButtons.LeftClick) && !hook.CursorIsBusy.Any())
-                        {
-                            hook.CursorIsBusy.Add(typeof(SpriteRenderDebugSystem));
-                            _draggingY = e.EntityId;
-                            _hoverY = e.EntityId;
-                        }
-
-                        if (_draggingY < 0)
-                        {
-                            _hoverY = e.EntityId;
-                        }
-                    }
-                    else
-                    {
-                        color = Color.BrightGray;
-                    }
-                }
-
-                RenderServices.DrawHorizontalLine(
-                render.DebugBatch,
-                (int)render.Camera.Bounds.Left,
-                (int)(transform.Y + ySortOffset),
-                (int)render.Camera.Bounds.Width,
-                color,
-                0.2f);
-
-            }
 
             float rotation = transform.Angle;
 
@@ -305,6 +242,10 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
                 }
             }
 
+            if (_hoverY> 0 && _hoverY != e.EntityId)
+            {
+                baseColor *= 0.5f;
+            }
 
             AnimationInfo animationInfo = new AnimationInfo(animationId, start) with { OverrideCurrentTime = overrideCurrentTime };
             FrameInfo frameInfo = RenderServices.DrawSprite(
@@ -411,6 +352,103 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
         if (issueSlowdownWarning)
         {
             // Do nothing! But we could issue an warning somewhere.
+        }
+    }
+
+    private void DrawYSortHorizontalLines(RenderContext render, Context context, EditorHook hook)
+    {
+        foreach (var e in context.Entities)
+        {
+            if (!hook.IsEntitySelectedOrParent(e))
+            {
+                continue;
+            }
+
+            SpriteComponent? sprite = e.TryGetSprite();
+            AgentSpriteComponent? agentSprite = e.TryGetAgentSprite();
+            IMurderTransformComponent transform = e.GetGlobalTransform();
+            float ySortOffsetRaw;
+
+            if (sprite.HasValue)
+            {
+                ySortOffsetRaw = sprite.Value.YSortOffset;
+            }
+            else
+            {
+                ySortOffsetRaw = agentSprite is not null ? agentSprite.Value.YSortOffset : 0;
+            }
+
+            int ySortOffset = sprite.HasValue ? sprite.Value.YSortOffset : agentSprite!.Value.YSortOffset;
+
+            if (hook.CursorWorldPosition is Point cursorPosition)
+            {
+                Color color;
+                if (_draggingY == e.EntityId)
+                {
+                    color = Architect.Profile.Theme.HighAccent;
+
+                    int newYSortOffset = (int)((cursorPosition.Y - transform.Vector2.Y));
+                    if (sprite != null)
+                    {
+                        e.SetSprite(sprite.Value with { YSortOffset = newYSortOffset });
+                    }
+                    else if (agentSprite != null)
+                    {
+                        e.SetAgentSprite(agentSprite.Value with { YSortOffset = newYSortOffset });
+                    }
+
+                    if (!hook.UsingGui && !Game.Input.Down(MurderInputButtons.LeftClick))
+                    {
+                        hook.CursorIsBusy.Remove(typeof(SpriteRenderDebugSystem));
+                        _draggingY = -1;
+                        if (sprite != null)
+                        {
+                            e.SendMessage(new AssetUpdatedMessage(typeof(SpriteComponent)));
+                        }
+                        else if (agentSprite != null)
+                        {
+                            e.SendMessage(new AssetUpdatedMessage(typeof(AgentSpriteComponent)));
+                        }
+                    }
+                }
+                else
+                {
+                    if (hook.HideEditIds.Contains(e.EntityId))
+                    {
+                        color = Color.Red * 0.1f;
+                    }
+                    else if (
+                        cursorPosition.Y > transform.Y + (ySortOffset - 3) &&
+                        cursorPosition.Y < transform.Y + (ySortOffset + 3))
+                    {
+                        color = Color.White;
+                        if (!hook.UsingGui && Game.Input.Pressed(MurderInputButtons.LeftClick) && !hook.CursorIsBusy.Any())
+                        {
+                            hook.CursorIsBusy.Add(typeof(SpriteRenderDebugSystem));
+                            _draggingY = e.EntityId;
+                            _hoverY = e.EntityId;
+                        }
+
+                        if (_draggingY < 0)
+                        {
+                            _hoverY = e.EntityId;
+                        }
+                    }
+                    else
+                    {
+                        color = Color.BrightGray;
+                    }
+                }
+
+                RenderServices.DrawHorizontalLine(
+                render.DebugBatch,
+                (int)render.Camera.Bounds.Left,
+                (int)(transform.Y + ySortOffset),
+                (int)render.Camera.Bounds.Width,
+                color,
+                0.2f);
+
+            }
         }
     }
 

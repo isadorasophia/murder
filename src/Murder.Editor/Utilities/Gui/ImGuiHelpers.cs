@@ -277,11 +277,11 @@ public static class ImGuiHelpers
     }
 
     public static bool SelectableWithIcon(string text, char icon, bool selected) =>
-        SelectableWithIconColor(text, icon, Game.Profile.Theme.White, Game.Profile.Theme.Faded, selected);
+        SelectableWithIconColor(text, icon, Game.Profile.Theme.White, Game.Profile.Theme.White, Game.Profile.Theme.Faded, selected);
 
-    public static bool SelectableWithIconColor(string text, char icon, Vector4 selectedColor, Vector4 unselectedColor, bool selected)
+    public static bool SelectableWithIconColor(string text, char icon, Vector4 iconSelectedColor, Vector4 selectedColor, Vector4 unselectedColor, bool selected)
     {
-        var clicked = ShowIcon(icon, selectedColor, unselectedColor, selected);
+        var clicked = ShowIcon(icon, iconSelectedColor, unselectedColor, selected);
         ImGui.SameLine();
         ImGui.PushStyleColor(ImGuiCol.Text, selected ? selectedColor : unselectedColor);
         clicked = ImGui.Selectable(text, selected) || clicked;
