@@ -15,6 +15,7 @@ using Murder.Helpers;
 using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace Murder.Systems
@@ -93,7 +94,10 @@ namespace Murder.Systems
                 (string suffix, bool horizontalFlip) = DirectionHelper.GetSuffixFromAngle(e, prefix, facing.Angle);
 
                 if (overload is not null && overload.Value.IgnoreFacing)
+                {
                     suffix = string.Empty;
+                    horizontalFlip = false;
+                }
 
                 if (string.IsNullOrEmpty(suffix))
                     prefix = prefix.Trim('_');
