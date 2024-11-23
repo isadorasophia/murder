@@ -91,6 +91,7 @@ namespace Murder.Core.Input
     {
         public int PreviousSelection;
         public int Selection { get; private set; }
+        public float CreatedAt;
         public float LastMoved;
         public float LastPressed;
         public bool Canceled;
@@ -140,6 +141,7 @@ namespace Murder.Core.Input
 
         public MenuInfo()
         {
+            CreatedAt = Game.NowUnscaled;
             LastMoved = Game.NowUnscaled;
         }
 
