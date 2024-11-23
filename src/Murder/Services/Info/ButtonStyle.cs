@@ -12,20 +12,20 @@ namespace Murder.Services;
 
 public readonly struct ButtonStyle()
 {
-    public readonly Portrait Sprite = new();
+    public readonly Portrait Sprite { get; init; } = new();
     [PaletteColor]
-    public readonly Color? OutlineColor = null;
+    public readonly Color? OutlineColor { get; init; } = null;
 
     [Font]
     public readonly int Font;
     [Slider(0,1)]
-    public readonly float TextAlignment = 0;
+    public readonly float TextAlignment { get; init; } = 0;
     [PaletteColor]
-    public readonly Color TextColor = Color.White;
+    public readonly Color TextColor { get; init; } = Color.White;
     [PaletteColor]
-    public readonly Color? TextShadowColor = null;
+    public readonly Color? TextShadowColor { get; init; } = null;
     [PaletteColor]
-    public readonly Color? TextOutlineColor = null;
+    public readonly Color? TextOutlineColor { get; init; } = null;
 
     public readonly Point ExtraPaddingX { get; init; }
 }
