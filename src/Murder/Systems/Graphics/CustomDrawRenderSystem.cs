@@ -1,9 +1,9 @@
 ﻿using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
+using Murder.Attributes;
 using Murder.Components;
 using Murder.Core.Graphics;
-using Murder.Editor.Attributes;
 
 namespace Murder.Systems.Graphics
 {

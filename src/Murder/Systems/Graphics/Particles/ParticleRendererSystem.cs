@@ -7,7 +7,7 @@ using Murder.Components;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Particles;
-using Murder.Editor.Attributes;
+using Murder.Attributes;
 using Murder.Services;
 using Murder.Utilities;
 using System.Diagnostics;

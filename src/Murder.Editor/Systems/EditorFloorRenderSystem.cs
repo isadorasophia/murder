@@ -1,10 +1,10 @@
 ﻿using Bang.Contexts;
 using Bang.Systems;
+using Murder.Attributes;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
-using Murder.Editor.Attributes;
 using Murder.Services;
 using Murder.Utilities;
 

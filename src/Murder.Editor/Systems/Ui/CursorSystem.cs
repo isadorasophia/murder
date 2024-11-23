@@ -1,6 +1,7 @@
 using Bang.Contexts;
 using Bang.Systems;
 using Murder.Core.Graphics;
+using Murder.Attributes;
 using Murder.Editor;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;

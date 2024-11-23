@@ -1,4 +1,4 @@
-﻿namespace Murder.Editor.Attributes
+﻿namespace Murder.Attributes
 {
     /// <summary>
     /// Attribute for systems which will show up in the "Editor" mode.

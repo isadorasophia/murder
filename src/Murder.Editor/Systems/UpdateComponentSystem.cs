@@ -2,8 +2,8 @@
 using Bang.Components;
 using Bang.Entities;
 using Bang.Systems;
+using Murder.Attributes;
 using Murder.Components;
-using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.Messages;
 using Murder.Editor.Utilities;
