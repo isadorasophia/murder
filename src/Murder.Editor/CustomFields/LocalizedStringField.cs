@@ -20,14 +20,25 @@ internal class LocalizedStringField : CustomField
 
         if (localizedString is null || localizedString.Value.Id == Guid.Empty)
         {
-            if (EditorLocalizationServices.SearchLocalizedString() is LocalizedString localizedResult)
+            bool create = false;
+
+            ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.BgFaded);
+            if (ImGui.Button("\uf15e"))
             {
-                return (true, localizedResult);
+                create = true;
+            }
+
+            ImGuiHelpers.HelpTooltip("Create localized string");
+            ImGui.PopStyleColor();
+
+            if (create)
+            {
+                return (true, EditorLocalizationServices.AddNewResource());
             }
         }
         else
         {
-            if (ImGuiHelpers.IconButton('\uf2ea', $"localized_{member.Name}"))
+            if (ImGuiHelpers.DeleteButton($"localized_{member.Name}"))
             {
                 localization.RemoveResource(localizedString.Value.Id);
 
@@ -35,7 +46,15 @@ internal class LocalizedStringField : CustomField
                 modified = true;
             }
 
-            ImGuiHelpers.HelpTooltip("Remove localized string");
+            ImGui.SameLine();
+
+            if (ImGuiHelpers.IconButton('\uf2ea', $"localized_{member.Name}"))
+            {
+                localizedString = default;
+                modified = true;
+            }
+
+            ImGuiHelpers.HelpTooltip("Reset localized string");
             ImGui.SameLine();
         }
 
@@ -49,8 +68,11 @@ internal class LocalizedStringField : CustomField
             return (true, default);
         }
 
-        if (DrawValue(ref data, nameof(LocalizedStringData.String)))
+        string text = data.String;
+        if (ImGui.InputText($"##{data.Guid}", ref text, 2048))
         {
+            data = data with { String = text };
+
             localization.SetResource(data);
             modified = true;
 

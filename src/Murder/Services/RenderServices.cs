@@ -96,7 +96,7 @@ public static partial class RenderServices
                         batch,
                         sprite,
                         labelPosition - new Point(15 - bounceX, 0),
-                        new DrawInfo(sort: 0f),
+                        new DrawInfo(sort: 0.1f),
                         new AnimationInfo(animation));
                 }
             }

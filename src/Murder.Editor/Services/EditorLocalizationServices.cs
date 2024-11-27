@@ -64,7 +64,7 @@ internal static class EditorLocalizationServices
         return null;
     }
 
-    private static LocalizedString? AddNewResource()
+    public static LocalizedString? AddNewResource()
     {
         LocalizedString result = new(Guid.NewGuid());
 
