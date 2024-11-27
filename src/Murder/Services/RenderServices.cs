@@ -27,8 +27,9 @@ public static partial class RenderServices
         Batch2D batch,
         in Point position,
         in DrawMenuStyle style,
-        in MenuInfo menuInfo) =>
-        DrawVerticalMenu(batch, position, position, style, menuInfo);
+        in MenuInfo menuInfo,
+        float sort = .1f) =>
+        DrawVerticalMenu(batch, position, position, style, menuInfo, sort);
 
     /// <summary>
     /// TODO: Pass around a "style" for background color, sounds, etc.
@@ -38,7 +39,8 @@ public static partial class RenderServices
         in Point position,
         in Point textPosition,
         in DrawMenuStyle style,
-        in MenuInfo menuInfo)
+        in MenuInfo menuInfo,
+        float sort)
     {
         PixelFont font = Game.Data.GetFont(style.Font);
         int lineHeight = font.LineHeight + style.ExtraVerticalSpace;
@@ -70,7 +72,7 @@ public static partial class RenderServices
                 currentShadow = null;
             }
 
-            Point textSize = DrawText(batch, style.Font, label ?? string.Empty, labelPosition, new DrawInfo(0.1f)
+            Point textSize = DrawText(batch, style.Font, label ?? string.Empty, labelPosition, new DrawInfo(sort)
             {
                 Origin = style.Origin,
                 Color = currentColor,
@@ -96,7 +98,7 @@ public static partial class RenderServices
                         batch,
                         sprite,
                         labelPosition - new Point(15 - bounceX, 0),
-                        new DrawInfo(sort: 0.1f),
+                        new DrawInfo(sort: sort),
                         new AnimationInfo(animation));
                 }
             }
