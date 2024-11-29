@@ -596,6 +596,14 @@ namespace Murder.Core.Input
             {
                 int sign = Math.Sign(axis.Value.X) < 0 ? -1 : 1;
                 int newOption = currentInfo.NextAvailableOption(currentInfo.Selection, sign);
+
+                if (newOption == selectedOptionIndex)
+                {
+                    // in the very drastic scenario that all options are not enabled, just go to whatever
+                    // next visible item is.
+                    newOption = Calculator.WrapAround(newOption + 1, newOption, currentInfo.VisibleItems);
+                }
+
                 currentInfo.Select(newOption, Game.NowUnscaled);
             }
 
