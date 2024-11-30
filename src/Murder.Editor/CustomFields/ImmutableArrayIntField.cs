@@ -11,15 +11,8 @@ namespace Murder.Editor.CustomFields
         {
             ImmutableArray<int> current = (ImmutableArray<int>)fieldValue!;
 
-            if (current.IsDefaultOrEmpty)
+            if (current.IsDefault)
             {
-                return (false, current);
-            }
-
-            if (member.IsReadOnly)
-            {
-                // Read only, do not modify enum value.
-                ImGui.Text(String.Join(',', current));
                 return (false, current);
             }
 
