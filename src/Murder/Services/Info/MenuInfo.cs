@@ -300,7 +300,7 @@ namespace Murder.Core.Input
             LastMoved = now;
             LastPressed = now;
 
-            if (JustMoved)
+            if (JustMoved && (Selection >= Options.Length || Options[Selection].Enabled))
             {
                 _ = SoundServices.Play(Sounds.SelectionChange);
             }
