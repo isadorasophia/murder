@@ -83,6 +83,8 @@ namespace Murder.Utilities
 
         public static Point ToCellPoint(this IMurderTransformComponent position) => new(position.Cx, position.Cy);
 
+        public static Point ToCellPoint(this Vector2 v) => new((int)Math.Floor(v.X / Grid.CellSize), (int)Math.Floor(v.Y / Grid.CellSize));
+
         public static Vector2 ToVector2(this IMurderTransformComponent position) => new(position.X, position.Y);
 
         public static Vector2 AddToVector2(this IMurderTransformComponent position, Vector2 delta) => new(position.X + delta.X, position.Y + delta.Y);
