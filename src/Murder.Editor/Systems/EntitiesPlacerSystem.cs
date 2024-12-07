@@ -4,6 +4,7 @@ using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using ImGuiNET;
+using Murder.Assets;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Core;
@@ -132,8 +133,11 @@ namespace Murder.Editor.Systems
                         targetGroup,
                         /* name */ null);
                 }
+                
 
+                ImGui.Separator();
                 Guid spriteGuid = Guid.Empty;
+                ImGui.PushID("add prop");
                 if (SearchBox.SearchAsset(ref spriteGuid, typeof(SpriteAsset), SearchBoxFlags.None, null, "Add unique prop"))
                 {
                     Point cursorWorldPosition = hook.LastCursorWorldPosition;
@@ -150,6 +154,29 @@ namespace Murder.Editor.Systems
 
                     ImGui.CloseCurrentPopup();
                 }
+                ImGui.PopID();
+
+                ImGui.Separator();
+
+                Guid prefabGuid = Guid.Empty;
+                ImGui.PushID("add Prefab");
+                if (SearchBox.SearchAsset(ref prefabGuid, typeof(PrefabAsset), SearchBoxFlags.None, null, "Add a prefab"))
+                {
+                    Point cursorWorldPosition = hook.LastCursorWorldPosition;
+                    string? targetGroup = EditorTileServices.FindTargetGroup(world, hook, cursorWorldPosition);
+                    PrefabAsset? prefab= Game.Data.TryGetAsset<PrefabAsset>(prefabGuid);
+
+                    hook.AddPrefabWithStage?.Invoke(
+                        prefabGuid,
+                        [
+                            new PositionComponent(cursorWorldPosition),
+                        ], prefab?.Name ?? "Unknown Prefab");
+
+                    ImGui.CloseCurrentPopup();
+                }
+                ImGui.PopID();
+
+                ImGuiHelpers.HelpTooltip("Add a saved prefab from project");
 
                 ImGui.Separator();
 
