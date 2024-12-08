@@ -441,7 +441,18 @@ namespace Murder.Editor
                     ImGui.SetKeyboardFocusHere();
                 }
 
-                ImGui.InputTextWithHint("##search_assets", "Search...", ref _searchAssetText, 256);                
+                if (ImGui.InputTextWithHint("##search_assets", "Search...", ref _searchAssetText, 256))
+                {
+                    // if _searchAssetText is a GUID, we should select that asset.
+                    if (Guid.TryParse(_searchAssetText, out Guid guid))
+                    {
+                        if (Architect.EditorData.TryGetAsset(guid) is GameAsset asset)
+                        {
+                            OpenAssetEditor(asset, true);
+                            _searchAssetText = string.Empty;
+                        }
+                    }
+                }
                 ImGui.PopItemWidth();
 
                 if (!string.IsNullOrEmpty(_searchAssetText) || _folders?.Count == 1)
@@ -469,7 +480,7 @@ namespace Murder.Editor
                 {
                     _colapseAll = true;
                 }
-                ImGuiHelpers.HelpTooltip("Collaps all folders");
+                ImGuiHelpers.HelpTooltip("Collapse all folders");
 
                 ImGui.Separator();
 
