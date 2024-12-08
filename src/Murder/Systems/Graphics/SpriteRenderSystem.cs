@@ -29,6 +29,11 @@ namespace Murder.Systems.Graphics
             {
                 ImageFlip flip = ImageFlip.None;
 
+                if (e.TryGetFlipSprite() is FlipSpriteComponent flipSprite)
+                {
+                    flip = flipSprite.Orientation;
+                }
+
                 IMurderTransformComponent transform = e.GetGlobalTransform();
                 SpriteComponent s = e.GetSprite();
 

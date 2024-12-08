@@ -155,7 +155,7 @@ public class SpriteBatchItem
             {
                 transformedVertex.X = -transformedVertex.X;
             }
-            
+
             if (drawInfo.ImageFlip.HasFlag(ImageFlip.Vertical))
             {
                 transformedVertex.Y = -transformedVertex.Y;

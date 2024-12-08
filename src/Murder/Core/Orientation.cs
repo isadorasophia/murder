@@ -6,7 +6,7 @@ public enum Orientation
 {
     Horizontal,
     Vertical,
-    Any
+    Both
 }
 
 public static class OrientationHelper
@@ -21,7 +21,7 @@ public static class OrientationHelper
 
     public static float GetOrientationAmount(Vector2 vector, Orientation orientation)
     {
-        if (orientation == Orientation.Any)
+        if (orientation == Orientation.Both)
             return 1f;
 
         float absX = Math.Abs(vector.X);

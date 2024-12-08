@@ -41,7 +41,7 @@ public struct AreaInfo
     {
         SpeedMultiplier = multiplier;
 
-        Orientation = Orientation.Any;
+        Orientation = Orientation.Both;
         Slide = 0;
     }
 }

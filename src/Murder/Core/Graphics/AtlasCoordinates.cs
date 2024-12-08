@@ -51,7 +51,7 @@ namespace Murder.Core.Graphics
             
             Vector2 rotationOffsetAdjustment = (new Vector2(
                 flipH ? Size.X * scale.X : 0,
-                flipV ? -Size.Y * scale.Y : 0)).Rotate(rotation);
+                flipV ? Size.Y * scale.Y : 0)).Rotate(rotation);
 
             // Adjust position for rotation and flip offsets
             Vector2 adjustedPosition = position + rotationOffsetAdjustment;

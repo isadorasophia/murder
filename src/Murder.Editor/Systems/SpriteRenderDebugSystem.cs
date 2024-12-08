@@ -73,6 +73,10 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
             SpriteAsset? asset;
             float start;
             ImageFlip flip = ImageFlip.None;
+            if (e.TryGetFlipSprite() is FlipSpriteComponent flipSprite)
+            {
+                flip = flipSprite.Orientation;
+            }
 
             float ySortOffsetRaw;
 
@@ -241,7 +245,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
                 }
             }
 
-            if (_hoverY> 0 && _hoverY != e.EntityId)
+            if (_hoverY > 0 && _hoverY != e.EntityId)
             {
                 baseColor *= 0.5f;
             }
