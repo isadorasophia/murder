@@ -167,11 +167,6 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
                         rotation += facing.Angle;
                     }
 
-                    if (sprite.Value.FlipWithFacing)
-                    {
-                        flip = facing.Direction.GetFlippedHorizontal();
-                    }
-
                     if (spriteFacing is not null)
                     {
                         (animationId, var horizontalFlip) = spriteFacing.Value.GetSuffixFromAngle(facing.Angle);

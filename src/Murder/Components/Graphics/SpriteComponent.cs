@@ -29,8 +29,6 @@ namespace Murder.Components
         public readonly Vector2 Offset = Vector2.Zero;
 
         public readonly bool RotateWithFacing = false;
-        public readonly bool FlipWithFacing { get; init; } = false;
-
         public readonly OutlineStyle HighlightStyle { get; init; } = OutlineStyle.None;
 
         public readonly bool UseUnscaledTime = false;
@@ -57,21 +55,21 @@ namespace Murder.Components
         public SpriteComponent() { }
 
         public SpriteComponent(Guid guid) :
-            this(guid, Vector2.Zero, [], 0, false, false, OutlineStyle.Full, Batches2D.GameplayBatchId)
+            this(guid, Vector2.Zero, [], 0, false, OutlineStyle.Full, Batches2D.GameplayBatchId)
         { }
         public SpriteComponent(Portrait portrait, int batchId) :
-            this(portrait.Sprite, Vector2.Zero, [portrait.AnimationId], 0, false, false, OutlineStyle.Full, batchId)
+            this(portrait.Sprite, Vector2.Zero, [portrait.AnimationId], 0, false, OutlineStyle.Full, batchId)
         { }
 
         public SpriteComponent(Portrait portrait) :
-            this(portrait.Sprite, Vector2.Zero, [portrait.AnimationId], 0, false, false, OutlineStyle.Full, Batches2D.GameplayBatchId)
+            this(portrait.Sprite, Vector2.Zero, [portrait.AnimationId], 0, false, OutlineStyle.Full, Batches2D.GameplayBatchId)
         { }
 
         public SpriteComponent(Portrait portrait, int batchId, int yOffset) :
-            this(portrait.Sprite, Vector2.Zero, [portrait.AnimationId], yOffset, false, false, OutlineStyle.Full, batchId)
+            this(portrait.Sprite, Vector2.Zero, [portrait.AnimationId], yOffset, false, OutlineStyle.Full, batchId)
         { }
 
-        public SpriteComponent(Guid guid, Vector2 offset, ImmutableArray<string> id, int ySortOffset, bool rotate, bool flip, OutlineStyle highlightStyle, int targetSpriteBatch)
+        public SpriteComponent(Guid guid, Vector2 offset, ImmutableArray<string> id, int ySortOffset, bool rotate, OutlineStyle highlightStyle, int targetSpriteBatch)
         {
             AnimationGuid = guid;
             Offset = offset;
@@ -79,7 +77,6 @@ namespace Murder.Components
             NextAnimations = id;
             YSortOffset = ySortOffset;
             RotateWithFacing = rotate;
-            FlipWithFacing = flip;
             HighlightStyle = highlightStyle;
             TargetSpriteBatch = targetSpriteBatch;
         }
@@ -99,7 +96,6 @@ namespace Murder.Components
                     NextAnimations.Add(id),
                     YSortOffset,
                     RotateWithFacing,
-                    FlipWithFacing,
                     HighlightStyle,
                     TargetSpriteBatch);
             }
@@ -122,7 +118,6 @@ namespace Murder.Components
             NextAnimations,
             YSortOffset,
             RotateWithFacing,
-            FlipWithFacing,
             HighlightStyle,
             batch);
 

@@ -58,7 +58,6 @@ namespace Murder.Systems.Graphics
                 }
 
                 // Handle rotation
-                FacingComponent? facing = s.RotateWithFacing || s.FlipWithFacing ? e.TryGetFacing() : null;
                 float rotation = transform.Angle;
 
                 if (e.TryGetRotation() is RotationComponent RotationComponent)
@@ -66,11 +65,9 @@ namespace Murder.Systems.Graphics
                     rotation += RotationComponent.Rotation;
                 }
 
-                if (facing is not null)
+                if (s.RotateWithFacing && e.TryGetFacing() is FacingComponent facing)
                 {
-                    if (s.RotateWithFacing) rotation += facing.Value.Angle;
-                    // Currently we never flip sprites vertically with facing, so just assign the horizontal flip.
-                    if (s.FlipWithFacing && facing.Value.Direction.Flipped()) flip = ImageFlip.Horizontal;
+                    rotation += facing.Angle;
                 }
 
                 // Handle color

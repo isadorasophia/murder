@@ -15,7 +15,7 @@ namespace Murder.Services
         public static void CreateQuickSprite(World world, QuickSpriteInfo info, Entity? parent)
         {
             var e = world.AddEntity(
-                new SpriteComponent(info.Sprite, Vector2.Zero, info.Animations, info.YSortOffset, false, false, OutlineStyle.None, info.TargetSpriteBatch),
+                new SpriteComponent(info.Sprite, Vector2.Zero, info.Animations, info.YSortOffset, false, OutlineStyle.None, info.TargetSpriteBatch),
                 new DestroyOnAnimationCompleteComponent(),
                 new PositionComponent(info.Offset),
                 new DoNotPersistEntityOnSaveComponent()

@@ -34,7 +34,6 @@ namespace Murder.Systems.Graphics
                             randomizer.RandomizeAnimation ? GetRandomAnimationId(sprite.AnimationGuid) : sprite.NextAnimations,
                             sprite.YSortOffset,
                             randomizer.RandomRotate ? true : sprite.RotateWithFacing,
-                            randomizer.RandomFlip ? true : sprite.FlipWithFacing,
                             sprite.HighlightStyle,
                             sprite.TargetSpriteBatch
                         ));
@@ -45,9 +44,14 @@ namespace Murder.Systems.Graphics
                     e.SetAnimationStarted(Game.Random.NextFloat(1f, 32f));
                 }
 
-                if (randomizer.RandomRotate || randomizer.RandomFlip)
+                if (randomizer.RandomRotate)
                 {
                     e.SetFacing(DirectionHelper.RandomCardinal());
+                }
+
+                if (randomizer.RandomFlip && Game.Random.FlipACoin())
+                {
+                    e.SetFlipSprite(Core.Graphics.ImageFlip.Horizontal);
                 }
             }
         }
