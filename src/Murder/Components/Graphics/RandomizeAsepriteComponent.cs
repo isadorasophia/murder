@@ -1,8 +1,10 @@
 ﻿using Bang.Components;
 using Murder.Attributes;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Components
 {
+    [CustomName(" Randomize Sprite")]
     public readonly struct RandomizeSpriteComponent : IComponent
     {
         public readonly bool RandomizeAnimation;
