@@ -112,7 +112,7 @@ namespace Murder.Systems.Physics
                         continue;
                     }
 
-                    if (other.HasIgnoreTriggersUntil())
+                    if (other.HasIgnoreTriggersUntil() || !other.HasCollider())
                     {
                         continue;
                     }
