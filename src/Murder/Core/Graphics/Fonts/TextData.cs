@@ -4,8 +4,6 @@ using System.Text.RegularExpressions;
 using System.Numerics;
 using System.Globalization;
 using System.Text;
-using System;
-using System.Reflection;
 
 namespace Murder.Core.Graphics;
 
@@ -88,7 +86,8 @@ public readonly record struct RuntimeLetterProperties
             Pause = Pause != 0 ? Pause : other.Pause,
             Shake = Shake != 0 ? Shake : other.Shake,
             Glitch = Glitch != 0 ? Glitch : other.Glitch,
-            Color = Color ?? other.Color
+            Color = Color ?? other.Color,
+            Speed = Speed != 0 ? Speed : other.Speed
         };
     }
 }
@@ -153,6 +152,21 @@ public readonly struct TextSettings
 
 public static partial class TextDataServices
 {
+    private enum LetterSkipMetadataFlag
+    {
+        /// <summary>
+        /// None, letter won't be skipped.
+        /// </summary>
+        None = 0,
+        Pause = 1 << 1,
+        Shake = 1 << 2,
+        Glitch = 1 << 3,
+        Color = 1 << 4,
+        Wave = 1 << 5,
+        Fear = 1 << 6,
+        Speed = 1 << 7
+    }
+
     // [Perf] Cache the last strings parsed.
     private static readonly CacheDictionary<RuntimeTextDataKey, RuntimeTextData> _cache = new(64);
 
@@ -185,7 +199,7 @@ public static partial class TextDataServices
         // Look for shake characters: <shake/>
         MatchCollection matchesForShakes = ShakeTags().Matches(text);
 
-        // Look for shake characters: <shake/>
+        // Look for glitch characters: <glitch=.3/>
         MatchCollection matchesForGlitches = GlitchTags().Matches(text);
 
         // Look for colors: <c=#fff>text</c>
@@ -194,7 +208,7 @@ public static partial class TextDataServices
         // Look for pause characters: <wave>text</wave>
         MatchCollection matchesForWaves = WaveTags().Matches(text);
 
-        // Look for pause characters: <fear>text</fear>
+        // Look for fear characters: <fear>text</fear>
         MatchCollection matchesForFear = FearTags().Matches(text);
 
         // Look for speed characters: <speed=.3/>
@@ -211,7 +225,7 @@ public static partial class TextDataServices
         Span<RuntimeLetterProperties> lettersBuilder = stackalloc RuntimeLetterProperties[allocatedLengthForSpecialCharacters];
 
         // Tracks all the letters in rawText which were skipped.
-        Span<bool> skippedLetters = stackalloc bool[allocatedLengthForSpecialCharacters];
+        Span<LetterSkipMetadataFlag> skippedLetters = stackalloc LetterSkipMetadataFlag[allocatedLengthForSpecialCharacters];
 
         if (matchesForPauses.Count > 0)
         {
@@ -222,7 +236,7 @@ public static partial class TextDataServices
                 // Mark all the characters that matched that they will be skipped.
                 for (int j = 0; j < match.Length; ++j)
                 {
-                    skippedLetters[match.Index + j] = true;
+                    skippedLetters[match.Index + j] |= LetterSkipMetadataFlag.Pause;
                 }
 
                 // Track that there is a pause at this index.
@@ -240,7 +254,7 @@ public static partial class TextDataServices
                 // Mark all the characters that matched that they will be skipped.
                 for (int j = 0; j < match.Length; ++j)
                 {
-                    skippedLetters[match.Index + j] = true;
+                    skippedLetters[match.Index + j] |= LetterSkipMetadataFlag.Shake;
                 }
 
                 int index = Math.Min(lettersBuilder.Length - 1, match.Index + match.Length);
@@ -265,7 +279,7 @@ public static partial class TextDataServices
                 // Mark all the characters that matched that they will be skipped.
                 for (int j = 0; j < match.Length; ++j)
                 {
-                    skippedLetters[match.Index + j] = true;
+                    skippedLetters[match.Index + j] |= LetterSkipMetadataFlag.Glitch;
                 }
 
                 // TODO: I haven't tested this yet. This might be wrong.
@@ -284,7 +298,7 @@ public static partial class TextDataServices
                     Group textGroup = match.Groups[3];
                     for (int j = 0; j < textGroup.Length; ++j)
                     {
-                        skippedLetters[textGroup.Index + j] = false;
+                        skippedLetters[textGroup.Index + j] &= ~LetterSkipMetadataFlag.Glitch;
                     }
 
                     // Map the start of this current text as the speed switch.
@@ -307,7 +321,7 @@ public static partial class TextDataServices
                 // Mark all the characters that matched that they will be skipped.
                 for (int j = 0; j < match.Length; ++j)
                 {
-                    skippedLetters[match.Index + j] = true;
+                    skippedLetters[match.Index + j] |= LetterSkipMetadataFlag.Speed;
                 }
 
                 float speed = 1;
@@ -326,7 +340,7 @@ public static partial class TextDataServices
                     Group textGroup = match.Groups[3];
                     for (int j = 0; j < textGroup.Length; ++j)
                     {
-                        skippedLetters[textGroup.Index + j] = false;
+                        skippedLetters[textGroup.Index + j] &= ~LetterSkipMetadataFlag.Speed;
                     }
 
                     // Map the start of this current text as the speed switch.
@@ -358,7 +372,7 @@ public static partial class TextDataServices
                         continue;
                     }
 
-                    skippedLetters[index] = true;
+                    skippedLetters[index] |= LetterSkipMetadataFlag.Color;
                 }
 
                 // Map the start of this current text as the color switch.
@@ -378,7 +392,7 @@ public static partial class TextDataServices
 
                 for (int j = 0; j < match.Length; ++j)
                 {
-                    skippedLetters[match.Index + j] = true;
+                    skippedLetters[match.Index + j] |= LetterSkipMetadataFlag.Wave;
                 }
 
                 Group group = match.Groups[1];
@@ -386,7 +400,7 @@ public static partial class TextDataServices
                 for (int j = 0; j < group.Length; ++j)
                 {
                     int index = group.Index + j;
-                    skippedLetters[index] = false;
+                    skippedLetters[index] &= ~LetterSkipMetadataFlag.Wave;
 
                     RuntimeLetterProperties l = lettersBuilder[index];
                     lettersBuilder[index] = l with { Properties = l.Properties | RuntimeLetterPropertiesFlag.Wave };
@@ -402,7 +416,7 @@ public static partial class TextDataServices
 
                 for (int j = 0; j < match.Length; ++j)
                 {
-                    skippedLetters[match.Index + j] = true;
+                    skippedLetters[match.Index + j] |= LetterSkipMetadataFlag.Fear;
                 }
 
                 Group group = match.Groups[1];
@@ -410,7 +424,7 @@ public static partial class TextDataServices
                 for (int j = 0; j < group.Length; ++j)
                 {
                     int index = group.Index + j;
-                    skippedLetters[index] = false;
+                    skippedLetters[index] &= ~LetterSkipMetadataFlag.Fear;
 
                     RuntimeLetterProperties l = lettersBuilder[index];
                     lettersBuilder[index] = l with { Properties = l.Properties | RuntimeLetterPropertiesFlag.Fear };
@@ -439,7 +453,7 @@ public static partial class TextDataServices
             {
                 indices[currentIndex] = finalIndex;
 
-                if (skippedLetters[currentIndex])
+                if (skippedLetters[currentIndex] != LetterSkipMetadataFlag.None)
                 {
                     continue;
                 }
