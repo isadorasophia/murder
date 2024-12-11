@@ -10,6 +10,8 @@ public enum NineSliceStyle
 {
     Stretch,
     Tile,
+    TileHollow,
+    StrechHollow
 }
 
 public readonly struct NineSliceInfo

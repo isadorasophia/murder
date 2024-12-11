@@ -223,7 +223,7 @@ namespace Murder.Services
             // Top
             switch (style)
             {
-                case NineSliceStyle.Stretch:
+                case NineSliceStyle.Stretch or NineSliceStyle.StrechHollow:
                     texture.Draw(
                         batch,
                         clip: new IntRectangle(core.X, 0, core.Width, core.Y),
@@ -233,7 +233,7 @@ namespace Murder.Services
                         blend
                         );
                     break;
-                case NineSliceStyle.Tile:
+                case NineSliceStyle.Tile or NineSliceStyle.TileHollow:
                     float totalWidth = target.Width - (core.X + bottomRightSize.Width());
                     int tiles = Calculator.FloorToInt(totalWidth / core.Width);
                     int remainder = Calculator.CeilToInt(core.Width * ((totalWidth / core.Width) - tiles));
@@ -279,7 +279,7 @@ namespace Murder.Services
             // Left
             switch (style)
             {
-                case NineSliceStyle.Stretch:
+                case NineSliceStyle.Stretch or NineSliceStyle.StrechHollow:
                     texture.Draw(
                         batch,
                         clip: new IntRectangle(0, core.Y, core.X, core.Height),
@@ -289,7 +289,7 @@ namespace Murder.Services
                         blend
                         );
                     break;
-                case NineSliceStyle.Tile:
+                case NineSliceStyle.Tile or NineSliceStyle.TileHollow:
                     float totalHeight = target.Height - (fullTextureSize.Y - core.Height);
                     int tiles = Calculator.FloorToInt(totalHeight / core.Height);
                     int remainder = Calculator.RoundToInt(core.Height * ((totalHeight / core.Height) - tiles));
@@ -322,19 +322,22 @@ namespace Murder.Services
             }
 
             // Center
-            texture.Draw(
-                batch,
-                clip: new IntRectangle(core.X, core.Y, core.Width, core.Height),
-                target: new Rectangle(target.Left + core.X, target.Top + core.Y, target.Width - (fullTextureSize.X - core.Width), target.Height - (fullTextureSize.Y - core.Height)),
-                color,
-                sort,
-                blend
-                );
+            if (style != NineSliceStyle.TileHollow && style != NineSliceStyle.StrechHollow)
+            {
+                texture.Draw(
+                    batch,
+                    clip: new IntRectangle(core.X, core.Y, core.Width, core.Height),
+                    target: new Rectangle(target.Left + core.X, target.Top + core.Y, target.Width - (fullTextureSize.X - core.Width), target.Height - (fullTextureSize.Y - core.Height)),
+                    color,
+                    sort,
+                    blend
+                    );
+            }
 
             // Right
             switch (style)
             {
-                case NineSliceStyle.Stretch:
+                case NineSliceStyle.Stretch or NineSliceStyle.StrechHollow:
                     texture.Draw(
                         batch,
                         clip: new IntRectangle(core.X + core.Width, core.Y, bottomRightSize.Width(), core.Height),
@@ -344,7 +347,7 @@ namespace Murder.Services
                         blend
                         );
                     break;
-                case NineSliceStyle.Tile:
+                case NineSliceStyle.Tile or NineSliceStyle.TileHollow:
                     float totalHeight = target.Height - (fullTextureSize.Y - core.Height);
                     int tiles = Calculator.FloorToInt(totalHeight / core.Height);
                     int remainder = Calculator.RoundToInt(core.Height * ((totalHeight / core.Height) - tiles));
@@ -390,7 +393,7 @@ namespace Murder.Services
             // Bottom
             switch (style)
             {
-                case NineSliceStyle.Stretch:
+                case NineSliceStyle.Stretch or NineSliceStyle.StrechHollow:
                     texture.Draw(
                         batch,
                         clip: new IntRectangle(core.X, fullTextureSize.Y - bottomRightSize.Y, core.Width, bottomRightSize.Y),
@@ -401,7 +404,7 @@ namespace Murder.Services
                         );
                     break;
 
-                case NineSliceStyle.Tile:
+                case NineSliceStyle.Tile or NineSliceStyle.TileHollow:
                     float totalWidth = target.Width - (core.X + bottomRightSize.Width());
                     int tiles = Calculator.FloorToInt(totalWidth / core.Width);
                     int remainder = Calculator.CeilToInt(core.Width * ((totalWidth / core.Width) - tiles));
