@@ -55,6 +55,10 @@ namespace Murder.Systems.Util
 
                 case DestroyOnAnimationCompleteFlags.None:
                     return;
+
+                case DestroyOnAnimationCompleteFlags.RemoveDeactivateHighlight:
+                    entity.RemoveDeactivateHighlightSprite();
+                    return;
             }
         }
     }

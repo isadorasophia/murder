@@ -143,6 +143,9 @@ namespace Murder.Systems.Graphics
                     renderPosition += offset.Offset;
                 }
 
+                Color? outlineColor = e.HasDeactivateHighlightSprite() ? null : 
+                    e.TryGetHighlightSprite()?.Color;
+
                 var frameInfo = RenderServices.DrawSprite(
                     render.GetBatch(s.TargetSpriteBatch),
                     asset,
@@ -158,7 +161,7 @@ namespace Murder.Systems.Graphics
                         BlendMode = blend,
                         Sort = ySort,
                         OutlineStyle = s.HighlightStyle,
-                        Outline = e.TryGetHighlightSprite()?.Color ?? null,
+                        Outline = outlineColor,
                     }, animationInfo);
 
                 issueSlowdownWarning = RenderServices.TriggerEventsIfNeeded(e, s.AnimationGuid, animationInfo, frameInfo);
