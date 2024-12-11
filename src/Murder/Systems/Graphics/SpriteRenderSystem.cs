@@ -5,6 +5,7 @@ using Bang.Systems;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Components.Graphics;
+using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
@@ -126,7 +127,8 @@ namespace Murder.Systems.Graphics
                         s.NextAnimations.Length <= 1 &&             // if this is a sequence, don't loop
                         !e.HasDoNotLoop() &&                       // if this has the DoNotLoop component, don't loop
                         !e.HasDestroyOnAnimationComplete() &&     // if you want to destroy this, don't loop
-                        (overload == null || (overload.Value.AnimationCount == 1 && overload.Value.Loop))
+                        (overload == null || (overload.Value.AnimationCount == 1 && overload.Value.Loop)),
+                    ForceFrame = e.TryGetSpriteFrame()?.Frame
                 };
 
                 var scale = e.TryGetScale()?.Scale ?? Vector2.One;
@@ -142,27 +144,47 @@ namespace Murder.Systems.Graphics
                 {
                     renderPosition += offset.Offset;
                 }
-
-                Color? outlineColor = e.HasDeactivateHighlightSprite() ? null : 
+                Color? outlineColor = e.HasDeactivateHighlightSprite() ? null :
                     e.TryGetHighlightSprite()?.Color;
 
-                var frameInfo = RenderServices.DrawSprite(
-                    render.GetBatch(s.TargetSpriteBatch),
-                    asset,
-                    renderPosition,
-                    new DrawInfo(ySort)
-                    {
-                        Clip = clip,
-                        Origin = s.Offset,
-                        ImageFlip = flip,
-                        Rotation = rotation,
-                        Scale = scale,
-                        Color = color,
-                        BlendMode = blend,
-                        Sort = ySort,
-                        OutlineStyle = s.HighlightStyle,
-                        Outline = outlineColor,
-                    }, animationInfo);
+                FrameInfo frameInfo;
+                if (animationInfo.ForceFrame.HasValue)
+                {
+                    frameInfo = RenderServices.DrawSprite(
+                        render.GetBatch(s.TargetSpriteBatch),
+                        renderPosition,
+                        clip,
+                        animation,
+                        asset,
+                        animationInfo.ForceFrame.Value,
+                        s.Offset,
+                        flip,
+                        rotation,
+                        scale,
+                        color,
+                        blend.ToVector3(),
+                        ySort);
+                }
+                else
+                {
+                    frameInfo = RenderServices.DrawSprite(
+                        render.GetBatch(s.TargetSpriteBatch),
+                        asset,
+                        renderPosition,
+                        new DrawInfo(ySort)
+                        {
+                            Clip = clip,
+                            Origin = s.Offset,
+                            ImageFlip = flip,
+                            Rotation = rotation,
+                            Scale = scale,
+                            Color = color,
+                            BlendMode = blend,
+                            Sort = ySort,
+                            OutlineStyle = s.HighlightStyle,
+                            Outline = outlineColor,
+                        }, animationInfo);
+                }
 
                 issueSlowdownWarning = RenderServices.TriggerEventsIfNeeded(e, s.AnimationGuid, animationInfo, frameInfo);
 

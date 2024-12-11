@@ -210,6 +210,9 @@ public class EditorSettingsAsset : GameAsset
 
     public float DpiScale = 1f;
 
+    [Tooltip("Requires editor restart")]
+    public bool LockFramerate = false;
+
     public void FavoriteAsset(Guid guid)
     {
         _favoriteAssets.Add(guid);

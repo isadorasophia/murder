@@ -1,4 +1,5 @@
 ﻿using Murder.Core.Geometry;
+using Murder.Services;
 using System.Numerics;
 
 namespace Murder.Core.Graphics;
@@ -74,14 +75,7 @@ public readonly struct DrawInfo
 
     public Microsoft.Xna.Framework.Vector3 GetBlendMode()
     {
-        switch (BlendMode)
-        {
-            case BlendStyle.Normal: return new(1, 0, 0);
-            case BlendStyle.Wash: return new(0, 1, 0);
-            case BlendStyle.Color: return new(0, 0, 1);
-            default:
-                throw new Exception("Blend mode not supported!");
-        }
+        return RenderServices.ToVector3(BlendMode);
     }
 
     internal DrawInfo WithScale(Vector2 size)

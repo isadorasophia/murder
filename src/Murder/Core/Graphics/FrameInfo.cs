@@ -11,7 +11,7 @@ public readonly struct FrameInfo
     /// <summary>
     /// The index of the current frame
     /// </summary>
-    public readonly int Frame;
+    public readonly int Frame { get; init; }
 
     /// <summary>
     /// The index of the current frame inside the current animation

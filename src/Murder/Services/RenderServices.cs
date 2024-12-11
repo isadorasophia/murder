@@ -12,6 +12,8 @@ using Murder.Services.Info;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Numerics;
+using static System.Formats.Asn1.AsnWriter;
+using static System.Net.Mime.MediaTypeNames;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 
@@ -209,6 +211,53 @@ public static partial class RenderServices
 
         return frameInfo;
     }
+
+    public static FrameInfo DrawSprite(
+        Batch2D spriteBatch,
+        Vector2 pos,
+        Rectangle clip,
+        string animationId,
+        SpriteAsset asset,
+        int frame,
+        Vector2 origin,
+        ImageFlip imageFlip,
+        float rotation,
+        Vector2 scale,
+        Color color,
+        Vector3 blend,
+        float sort)
+    {
+        if (!asset.Animations.TryGetValue(animationId, out var animation))
+        {
+            GameLogger.Log($"Couldn't find animation {animationId}.");
+            return FrameInfo.Fail;
+        }
+
+        var frameInfo = new FrameInfo()
+        {
+            Animation = animation,
+            Frame = frame
+        };
+
+        var image = asset.GetFrame(animation.Frames[frameInfo.Frame]);
+        Vector2 offset = (asset.Origin + origin * image.Size).Round();
+        Vector2 position = pos.Round();
+
+        image.Draw(
+            spriteBatch: spriteBatch,
+            position: position,
+            clip: clip,
+            color: color,
+            offset: offset,
+            scale: scale,
+            rotation: rotation,
+            imageFlip: imageFlip,
+            blend: blend,
+            sort: sort);
+
+        return frameInfo;
+    }
+
 
     public static void DealWithCompleteAnimations(Entity e, SpriteComponent s)
     {
@@ -502,6 +551,18 @@ public static partial class RenderServices
     /// </summary>
     public static float CurrentTime(this AnimationInfo @this) => @this.OverrideCurrentTime != -1 ? @this.OverrideCurrentTime :
         @this.UseScaledTime ? Game.Now : Game.NowUnscaled;
+
+    public static Vector3 ToVector3(this BlendStyle blendStyle)
+    {
+        switch (blendStyle)
+        {
+            case BlendStyle.Normal: return new(1, 0, 0);
+            case BlendStyle.Wash: return new(0, 1, 0);
+            case BlendStyle.Color: return new(0, 0, 1);
+            default:
+                throw new Exception("Blend mode not supported!");
+        }
+    }
 
     #region Lines
     public static void DrawLine(this Batch2D spriteBatch, Point point1, Point point2, Color color, float sort = 1f) =>

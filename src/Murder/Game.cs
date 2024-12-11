@@ -361,8 +361,8 @@ namespace Murder
             // Register Input
 
             // Editor input
-            _playerInput.Register(MurderInputButtons.Debug, Keys.OemTilde, Keys.F1);
-            _playerInput.Register(MurderInputButtons.PlayGame, Keys.OemTilde, Keys.F5);
+            _playerInput.Register(MurderInputButtons.Debug, Keys.F1);
+            _playerInput.Register(MurderInputButtons.PlayGame, Keys.F5);
             _playerInput.Register(MurderInputButtons.LeftClick, MouseButtons.Left);
             _playerInput.Register(MurderInputButtons.RightClick, MouseButtons.Right);
             _playerInput.Register(MurderInputButtons.MiddleClick, MouseButtons.Middle);

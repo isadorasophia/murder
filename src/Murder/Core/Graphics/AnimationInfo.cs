@@ -7,12 +7,17 @@ public readonly struct AnimationInfo
     {
         UseScaledTime = true
     };
-
+    
     public float Start { get; init; } = 0f;
     public float Duration { get; init; } = -1f;
     public bool UseScaledTime { get; init; } = false;
     public bool Loop { get; init; } = true;
     public string Name { get; init; } = string.Empty;
+    /// <summary>
+    /// Ignores the current time and forces the rendering of this specific frame.
+    /// The frame is counted from the start of the animation.
+    /// </summary>
+    public int? ForceFrame { get; init; } = 0;
 
     /// <summary>
     /// If different than -1, it will ignore <see cref="UseScaledTime"/> and use the

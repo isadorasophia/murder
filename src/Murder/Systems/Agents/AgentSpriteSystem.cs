@@ -96,7 +96,8 @@ namespace Murder.Systems
                 if (overload is not null && overload.Value.IgnoreFacing)
                 {
                     suffix = string.Empty;
-                    horizontalFlip = false;
+                    // Ignore facing ignores the suffix for the animation, but still flips the sprite if facing left
+                    // horizontalFlip = false;
                 }
 
                 if (string.IsNullOrEmpty(suffix))

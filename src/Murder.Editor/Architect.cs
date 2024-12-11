@@ -537,8 +537,9 @@ namespace Murder.Editor
         protected override void ApplyGameSettingsImpl()
         {
             // This will allow us to run as many updates as possible in editor, for debugging.
-            _graphics.SynchronizeWithVerticalRetrace = false;
-            IsFixedTimeStep = false;
+            // keywords: Framerate, FPS, VSync
+            _graphics.SynchronizeWithVerticalRetrace = !Architect.EditorSettings.LockFramerate;
+            IsFixedTimeStep = !Architect.EditorSettings.LockFramerate;
         }
 
         protected override void Dispose(bool isDisposing)
