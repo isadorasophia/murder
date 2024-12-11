@@ -598,7 +598,7 @@ namespace Murder.Editor.CustomEditors
             EnableEntity(parentGuid: null, e, activate);
         }
 
-        protected override void OnEntityModified(int entityId, IComponent c)
+        protected override void OnEntityModified(int entityId, Type t, IComponent? c)
         {
             GameLogger.Verify(_asset is not null);
 
@@ -630,7 +630,7 @@ namespace Murder.Editor.CustomEditors
                 }
             }
 
-            base.OnEntityModified(entityId, c);
+            base.OnEntityModified(entityId, t, c);
         }
 
         /// <summary>

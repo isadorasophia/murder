@@ -4,6 +4,7 @@ using Bang.Systems;
 using Murder.Components.Serialization;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
+using Murder.Editor.Messages;
 using Murder.Editor.Utilities;
 using System.Collections.Immutable;
 
@@ -18,13 +19,9 @@ namespace Murder.Editor.Systems
 
         public void OnModified(World world, ImmutableArray<Entity> entities)
         {
-            if (world.TryGetUnique<EditorComponent>() is EditorComponent editor)
+            foreach (Entity e in entities)
             {
-                EditorHook hook = editor.EditorHook;
-                foreach (Entity e in entities)
-                {
-                    hook.OnComponentModified?.Invoke(e.EntityId, e.GetComponent<CutsceneAnchorsEditorComponent>());
-                }
+                e.SendMessage(new AssetUpdatedMessage(typeof(CutsceneAnchorsEditorComponent)));
             }
         }
 

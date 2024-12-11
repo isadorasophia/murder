@@ -1,4 +1,5 @@
 ﻿using Bang.Components;
+
 namespace Murder.Editor.Messages;
 
 public readonly struct AssetUpdatedMessage : IMessage

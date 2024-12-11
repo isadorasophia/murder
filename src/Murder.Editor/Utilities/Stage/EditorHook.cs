@@ -1,5 +1,6 @@
 ﻿using Bang;
 using Bang.Components;
+using Bang.Contexts;
 using Bang.Entities;
 using Murder.Attributes;
 using Murder.Core.Geometry;
@@ -37,7 +38,7 @@ namespace Murder.Editor.Utilities
 
         public Action<int, bool>? ToggleEntityWithStage;
         public Action<int>? RemoveEntityWithStage;
-        public Action<int, IComponent>? OnComponentModified;
+        public Action<int, Type, IComponent?>? OnComponentModified;
 
         /// <summary>
         /// Duplicate a group of entities from a certain position.

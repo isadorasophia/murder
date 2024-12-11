@@ -1,4 +1,5 @@
 ﻿using Bang.Components;
+using Bang.Contexts;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using Murder.Assets;
@@ -1032,7 +1033,10 @@ namespace Murder.Editor.CustomEditors
             return false;
         }
 
-        protected virtual void OnEntityModified(int entityId, IComponent c)
+        /// <summary>
+        /// Tracks that an entity has been modified from the world.
+        /// </summary>
+        protected virtual void OnEntityModified(int entityId, Type t, IComponent? c)
         {
             GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
 
@@ -1045,9 +1049,39 @@ namespace Murder.Editor.CustomEditors
             Stage stage = Stages[_asset.Guid];
             if (stage.FindInstance(entityId) is IEntity entity)
             {
-                IComponent componentBefore = entity.GetComponent(c.GetType());
-                if (!IComponent.Equals(componentBefore, c))
+                IComponent? componentBefore = entity.HasComponent(t) ? entity.GetComponent(t) : null;
+                if (componentBefore is not null && c is null)
                 {
+                    // remove component
+                    ActWithUndo(
+                        @do: () =>
+                        {
+                            entity.RemoveComponent(t);
+                            _asset.FileChanged = true;
+                        },
+                        @undo: () =>
+                        {
+                            ReplaceComponent(parent: null, entity, componentBefore);
+                        });
+                }
+                else if (componentBefore is null && c is not null)
+                {
+                    // add component
+                    ActWithUndo(
+                        @do: () =>
+                        {
+                            entity.AddOrReplaceComponent(c);
+                            _asset.FileChanged = true;
+                        },
+                        @undo: () =>
+                        {
+                            RemoveComponent(parent: null, entity, t);
+                        });
+                }
+                else if (componentBefore is not null && c is not null &&
+                    !IComponent.Equals(componentBefore, c))
+                {
+                    // modified component
                     ActWithUndo(
                         @do: () =>
                         {
@@ -1062,9 +1096,48 @@ namespace Murder.Editor.CustomEditors
             }
             else if (stage.FindChildInstance(entityId) is (IEntity parent, Guid child))
             {
-                if (parent.TryGetComponentForChild(child, c.GetType()) is IComponent childComponent &&
-                    !IComponent.Equals(childComponent, c))
+                IComponent? childComponent = parent.TryGetComponentForChild(child, t);
+                if (childComponent is not null && c is null)
                 {
+                    // remove component
+                    ActWithUndo(
+                        @do: () =>
+                        {
+                            parent.RemoveComponentForChild(child, t);
+                            _asset.FileChanged = true;
+                        },
+                        @undo: () =>
+                        {
+                            if (!parent.TryGetChild(child, out EntityInstance? instance))
+                            {
+                                return;
+                            }
+
+                            ReplaceComponent(parent, instance, childComponent);
+                        });
+                }
+                else if (childComponent is null && c is not null)
+                {
+                    // add component
+                    ActWithUndo(
+                        @do: () =>
+                        {
+                            parent.AddOrReplaceComponentForChild(child, c);
+                            _asset.FileChanged = true;
+                        },
+                        @undo: () =>
+                        {
+                            if (!parent.TryGetChild(child, out EntityInstance? instance))
+                            {
+                                return;
+                            }
+
+                            RemoveComponent(parent, instance, t);
+                        });
+                }
+                else if (childComponent is not null && c is not null && !IComponent.Equals(childComponent, c))
+                {
+                    // modify component
                     ActWithUndo(
                         @do: () =>
                         {
