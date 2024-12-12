@@ -110,7 +110,7 @@ namespace Murder.Editor.Systems
             ImGui.PushItemWidth(-1);
             ImGui.Text("\uf017 Day");
 
-            _ = ImGui.SliderInt("day", ref _day, 0, 10);
+            _ = ImGui.SliderInt("day", ref _day, 1, 10);
             ImGui.Text("\uf017 Time");
 
             _ = ImGui.SliderFloat("", ref _time, 0, 1);
