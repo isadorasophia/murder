@@ -17,6 +17,7 @@ namespace Murder.Core.Geometry
 
         // Quick Helpers
         public Point TopLeft => new Point(X, Y);
+        public Vector2 TopCenter => new(X + Calculator.RoundToInt(Width / 2f), Y);
         public Point TopRight => new Point(X + Width, Y);
         public Point BottomRight => new Point(X + Width, Y + Height);
         public Point BottomLeft => new Point(X, Y + Height);
@@ -81,6 +82,11 @@ namespace Murder.Core.Geometry
             Y = y;
             Width = width;
             Height = height;
+        }
+
+        public IntRectangle AddPadding(float left, float top, float right, float bottom)
+        {
+            return new Rectangle(X - left, Y - top, Width + left + right, Height + top + bottom);
         }
 
         public IntRectangle(Point p, int width, int height) : this(p.X, p.Y, width, height) { }
