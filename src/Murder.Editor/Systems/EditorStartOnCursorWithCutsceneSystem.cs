@@ -61,7 +61,7 @@ namespace Murder.Editor.Systems
 
         private Vector2 _selectedPosition = new();
 
-        private int _day = 0;
+        private int _day = 1;
         private float _time = 0;
         private Guid _cutsceneGuid = Guid.Empty;
         private IStateMachineComponent? _stateMachine = null;
