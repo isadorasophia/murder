@@ -152,7 +152,8 @@ public static class EntityServices
 
     public static SpriteComponent? TryPlaySpriteAnimation(this Entity entity, params string[] nextAnimations) =>
         TryPlaySpriteAnimation(entity, nextAnimations.ToImmutableArray());
-    public static SpriteComponent? TryPlaySpriteAnimation(this Entity entity, ImmutableArray<string> nextAnimations)
+
+    public static SpriteComponent? TryPlaySpriteAnimation(this Entity entity, ImmutableArray<string> nextAnimations, Guid? replaceSpriteGuid = null)
     {
         if (entity.TryGetSprite() is SpriteComponent sprite)
         {
@@ -168,9 +169,13 @@ public static class EntityServices
 
             SpriteComponent result;
             if (nextAnimations.Length == 0)
-                result = sprite.Play(sprite.NextAnimations);
+            {
+                result = sprite.Play(sprite.NextAnimations, replaceSpriteGuid);
+            }
             else
-                result = sprite.Play(nextAnimations);
+            {
+                result = sprite.Play(nextAnimations, replaceSpriteGuid);
+            }
 
             entity.SetSprite(result);
 
@@ -190,12 +195,9 @@ public static class EntityServices
     /// <summary>
     /// Plays an animation or animation sequence. Loops the last animation.
     /// </summary>
-    /// <param name="entity"></param>
-    /// <param name="animations"></param>
-    /// <returns></returns>
-    public static SpriteComponent? PlaySpriteAnimation(this Entity entity, ImmutableArray<string> animations)
+    public static SpriteComponent? PlaySpriteAnimation(this Entity entity, ImmutableArray<string> animations, Guid? replaceSpriteGuid = null)
     {
-        if (TryPlaySpriteAnimation(entity, animations) is SpriteComponent aseprite)
+        if (TryPlaySpriteAnimation(entity, animations, replaceSpriteGuid) is SpriteComponent aseprite)
         {
             return aseprite;
         }

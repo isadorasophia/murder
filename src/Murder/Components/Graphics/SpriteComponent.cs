@@ -112,6 +112,12 @@ namespace Murder.Components
             NextAnimations = HasAnimation(id[0]) ? id : [CurrentAnimation]
         };
 
+        public SpriteComponent Play(ImmutableArray<string> id, Guid? sprite = null) => this with
+        {
+            NextAnimations = sprite is not null || HasAnimation(id[0]) ? id : [CurrentAnimation],
+            AnimationGuid = sprite ?? AnimationGuid
+        };
+
         public SpriteComponent SetBatch(int batch) => new SpriteComponent(
             AnimationGuid,
             Offset,
