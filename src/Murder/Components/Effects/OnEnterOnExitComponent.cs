@@ -25,7 +25,7 @@ public readonly struct OnEnterOnExitComponent : IComponent
     [Default("Add interaction on exit")]
     public readonly IInteractiveComponent? OnExit = null;
 
-    public readonly OnEnterOnExitKind Kind = OnEnterOnExitKind.Player;
+    public readonly OnEnterOnExitKind Kind { get; init; } = OnEnterOnExitKind.Player;
 
     [CollisionLayer]
     [Tooltip("Only applicable if entities other than player trigger this")]
