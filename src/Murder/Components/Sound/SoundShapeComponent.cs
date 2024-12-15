@@ -15,7 +15,7 @@ public enum ShapeStyle
     ClosedShape,
 }
 
-public readonly struct SoundPosition
+public readonly struct ShapePosition
 {
     /// <summary>
     /// Closest point or line point if sound shape is a Line.
@@ -38,7 +38,7 @@ public readonly struct SoundPosition
     /// </summary>
     public readonly int ClosestIndex;
 
-    public SoundPosition(Vector2 closestPoint, float distance, float easedDistance, int closestIndex)
+    public ShapePosition(Vector2 closestPoint, float distance, float easedDistance, int closestIndex)
     {
         ClosestPoint = closestPoint;
         Distance = distance;
@@ -75,7 +75,7 @@ public readonly struct SoundShapeComponent : IComponent
         EaseKind = easeKind;
     }
 
-    public SoundPosition GetSoundPosition(Vector2 listenerPosition)
+    public ShapePosition GetSoundPosition(Vector2 listenerPosition)
     {
         float closestDistance = float.MaxValue;
         Vector2 closestPoint = listenerPosition;
@@ -84,7 +84,7 @@ public readonly struct SoundShapeComponent : IComponent
         // Check if the listener is inside a closed shape
         if (ShapeStyle == ShapeStyle.ClosedShape && new Polygon(Points).Contains(listenerPosition))
         {
-            return new SoundPosition(closestPoint, 0, 1, -1);
+            return new ShapePosition(closestPoint, 0, 1, -1);
         }
 
         // Loop through all points to find the closest one or the closest point on a line segment
@@ -146,8 +146,6 @@ public readonly struct SoundShapeComponent : IComponent
             ratio = Ease.Evaluate(1 - MathF.Min(1, normalizedDistance), EaseKind);
         }
 
-        return new SoundPosition(closestPoint, closestDistance, ratio, closestIndex);
+        return new ShapePosition(closestPoint, closestDistance, ratio, closestIndex);
     }
-
-
 }

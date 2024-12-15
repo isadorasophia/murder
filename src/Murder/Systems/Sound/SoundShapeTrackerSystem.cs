@@ -141,7 +141,7 @@ public abstract class SoundShapeTrackerSystem : IFixedUpdateSystem, IReactiveSys
         // Only calculate the closest point when the shape is not a single point.
         if (soundShape.ShapeStyle != ShapeStyle.Points || soundShape.Points.Length > 1)
         {
-            SoundPosition soundPosition = soundShape.GetSoundPosition(listenerPosition - position);
+            ShapePosition soundPosition = soundShape.GetSoundPosition(listenerPosition - position);
             soundOrigin = soundPosition.ClosestPoint + position;
         }
 

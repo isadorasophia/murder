@@ -115,7 +115,7 @@ public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSy
             SoundShapeComponent soundShape = e.GetSoundShape();
             Point position = e.GetGlobalTransform().Point;
 
-            SoundPosition soundPosition = soundShape.GetSoundPosition(cursorPosition - position);
+            ShapePosition soundPosition = soundShape.GetSoundPosition(cursorPosition - position);
             Vector2 closestPoint = soundPosition.ClosestPoint + position;
 
             // Loop through the points of the sound shape
