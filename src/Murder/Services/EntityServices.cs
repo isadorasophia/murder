@@ -6,6 +6,7 @@ using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
+using Murder.Core.Graphics;
 using Murder.Core.Physics;
 using Murder.Diagnostics;
 using Murder.Helpers;
@@ -512,7 +513,11 @@ public static class EntityServices
                         ignoreFacing: properties.HasFlag(AnimationOverloadProperties.IgnoreFacing),
                         customSprite: customSprite ?? Guid.Empty)
                     with
-                    { SortOffset = offset };
+                    { 
+                        SortOffset = offset,
+                        Flip = properties.HasFlag(AnimationOverloadProperties.FlipHorizontal) ? 
+                                ImageFlip.Horizontal : ImageFlip.None
+                    };
 
         e.SetAnimationOverload(overload);
         e.RemoveAnimationComplete();
@@ -525,5 +530,6 @@ public enum AnimationOverloadProperties
 {
     None = 0,
     Loop = 0x1,
-    IgnoreFacing = 0x10
+    IgnoreFacing = 0x10,
+    FlipHorizontal = 0x100
 }

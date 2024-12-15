@@ -92,12 +92,22 @@ namespace Murder.Systems
                 float ySort = RenderServices.YSort(ySortOffsetRaw);
 
                 (string suffix, bool horizontalFlip) = DirectionHelper.GetSuffixFromAngle(e, prefix, facing.Angle);
+                ImageFlip imageFlip = horizontalFlip ? ImageFlip.Horizontal : ImageFlip.None;
 
-                if (overload is not null && overload.Value.IgnoreFacing)
+                if (overload is not null)
                 {
-                    suffix = string.Empty;
-                    // Ignore facing ignores the suffix for the animation, but still flips the sprite if facing left
-                    // horizontalFlip = false;
+                    if (overload.Value.IgnoreFacing)
+                    {
+                        suffix = string.Empty;
+
+                        // Ignore facing ignores the suffix for the animation, but still flips the sprite if facing left
+                        // imageFlip = ImageFlip.None;
+                    }
+
+                    if (overload.Value.Flip != ImageFlip.None)
+                    {
+                        imageFlip = overload.Value.Flip;
+                    }
                 }
 
                 if (string.IsNullOrEmpty(suffix))
@@ -197,7 +207,7 @@ namespace Murder.Systems
                     new DrawInfo(ySort)
                     {
                         Clip = clip,
-                        ImageFlip = horizontalFlip ? ImageFlip.Horizontal : ImageFlip.None,
+                        ImageFlip = imageFlip,
                         Color = color,
                         Scale = scale,
                         BlendMode = blend,
@@ -212,7 +222,7 @@ namespace Murder.Systems
                     RenderedSprite = spriteAsset.Guid,
                     CurrentAnimation = frameInfo.Animation,
                     RenderPosition = renderPosition,
-                    ImageFlip = horizontalFlip ? ImageFlip.Horizontal : ImageFlip.None,
+                    ImageFlip = imageFlip,
                     Rotation = 0,
                     Scale = scale,
                     Color = color,

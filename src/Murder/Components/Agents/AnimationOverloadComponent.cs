@@ -2,6 +2,8 @@
 using Bang.Components;
 using Murder.Assets.Graphics;
 using Murder.Attributes;
+using Murder.Core;
+using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using System.Collections.Immutable;
 
@@ -47,6 +49,8 @@ namespace Murder.Components
         public readonly bool Loop;
 
         public readonly bool IgnoreFacing;
+
+        public readonly ImageFlip Flip { get; init; } = ImageFlip.None;
 
         public readonly int Current = 0;
         public readonly int AnimationCount => _animationId.Length;
