@@ -30,6 +30,7 @@ namespace Murder.Systems.Util
             }
 
             DestroyOnAnimationCompleteComponent destroyOnComplete = entity.GetDestroyOnAnimationComplete();
+            entity.RemoveDestroyOnAnimationComplete();
 
             if (destroyOnComplete.ChangeSpriteBatchOnComplete is int batch && sprite is not null)
             {
