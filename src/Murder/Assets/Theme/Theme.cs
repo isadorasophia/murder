@@ -18,5 +18,6 @@ namespace Murder.Assets
         public Vector4 White = "#f8f8f2".ToVector4Color();
         public Vector4 GenericAsset = new Vector4(1f, 0.4f, 0.6f, 1);
         public Vector4 Yellow = "#f1fa8c".ToVector4Color();
+        public Vector4 YellowFaded = "#615F3F".ToVector4Color();
     }
 }
