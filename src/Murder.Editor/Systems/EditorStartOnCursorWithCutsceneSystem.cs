@@ -37,13 +37,6 @@ namespace Murder.Editor.Systems
             {
                 _time = time;
             }
-
-            var testStartEntityAndComponent = Architect.EditorSettings.TestStartWithEntityAndComponent;
-            if (testStartEntityAndComponent is not null && testStartEntityAndComponent.Value.Component is IStateMachineComponent sm)
-            {
-                _cutsceneGuid = testStartEntityAndComponent.Value.Entity;
-                _stateMachine = sm;
-            }
         }
 
         public void Update(Context context)
@@ -63,8 +56,6 @@ namespace Murder.Editor.Systems
 
         private int _day = 1;
         private float _time = 0;
-        private Guid _cutsceneGuid = Guid.Empty;
-        private IStateMachineComponent? _stateMachine = null;
 
         /// <summary>
         /// This draws and create a new empty entity if the user prompts.
@@ -103,48 +94,33 @@ namespace Murder.Editor.Systems
         private bool DrawSelectCutscenePopup(World world)
         {
             ImGui.BeginChild("play_from_cutscene_popup",
-                size: new System.Numerics.Vector2(ImGui.GetFontSize() * 20, ImGui.GetFontSize() * (_stateMachine is null ? 11.5f : 30)), ImGuiChildFlags.None);
+                size: new Vector2(ImGui.GetFontSize() * 20, ImGui.GetFontSize() * 11.5f), ImGuiChildFlags.None);
 
             bool start = ImGuiHelpers.PrettySelectableWithIcon(label: "Play from here!", true);
 
             ImGui.PushItemWidth(-1);
             ImGui.Text("\uf017 Day");
 
-            _ = ImGui.SliderInt("day", ref _day, 1, 10);
+            bool modified = false;
+            modified |= ImGui.SliderInt("day", ref _day, 1, 10);
             ImGui.Text("\uf017 Time");
 
-            _ = ImGui.SliderFloat("", ref _time, 0, 1);
+            modified |= ImGui.SliderFloat("", ref _time, 0, 1);
             ImGui.PopItemWidth();
 
-            ImGui.Text("\uf57d Target");
-            SearchBox.SearchInstanceInWorld(ref _cutsceneGuid, EditorStoryServices.GetWorldAsset(world));
-
-            ImGui.Text("\uf03d Cutscene");
-
-            if (SearchBox.SearchStateMachines(initialValue: _stateMachine?.GetType(), out Type? sm))
-            {
-                _stateMachine = sm is null ? null : Activator.CreateInstance(sm) as IStateMachineComponent;
-            }
-
-            if (_stateMachine is not null)
-            {
-                CustomComponent.ShowEditorOf(_stateMachine);
-            }
-
             ImGui.EndChild();
+
+            if (modified)
+            {
+                Architect.EditorSettings.TestWorldPosition = _selectedPosition.Point();
+                Architect.EditorSettings.TestStartDay = _day;
+                Architect.EditorSettings.TestStartTime = _time;
+            }
 
             if (start)
             {
                 // start playing!
-                Architect.EditorSettings.TestWorldPosition = _selectedPosition.Point();
-                Architect.EditorSettings.TestStartDay = _day;
-                Architect.EditorSettings.TestStartTime = _time;
-                Architect.EditorSettings.TestStartWithEntityAndComponent = (_cutsceneGuid, _stateMachine);
-
-                Architect.EditorSettings.UseCustomCutscene = true;
-
                 Architect.Instance.QueueStartPlayingGame(quickplay: false, startingScene: world.Guid());
-
                 return true;
             }
 

@@ -202,12 +202,6 @@ public class EditorSettingsAsset : GameAsset
     [Serialize, HideInEditor]
     public float? TestStartTime;
 
-    [JsonIgnore, HideInEditor]
-    public bool UseCustomCutscene = false;
-
-    [Serialize, HideInEditor]
-    public (Guid Entity, IStateMachineComponent? Component)? TestStartWithEntityAndComponent;
-
     public float DpiScale = 1f;
 
     [Tooltip("Requires editor restart")]
