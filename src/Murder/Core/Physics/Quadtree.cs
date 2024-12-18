@@ -34,24 +34,34 @@ namespace Murder.Core.Physics
             StaticRender = new(0, mapBounds);
         }
 
+        public void AddToCollisionQuadTree(Entity entity)
+        {
+            IMurderTransformComponent pos = entity.GetGlobalTransform();
+            if (entity.TryGetCollider() is ColliderComponent collider)
+            {
+                Collision.Insert(entity.EntityId, entity, collider.GetBoundingBox(pos.Vector2));
+            }
+
+            if (entity.TryGetPushAway() is PushAwayComponent pushAway)
+            {
+                PushAway.Insert(entity.EntityId, (entity, pos, pushAway, entity.TryGetVelocity()?.Velocity ?? Vector2.Zero), entity.GetColliderBoundingBox());
+            }
+        }
+
         public void AddToCollisionQuadTree(IEnumerable<Entity> entities)
         {
             foreach (var e in entities)
             {
                 if (!e.IsActive)
                     continue;
-
-                IMurderTransformComponent pos = e.GetGlobalTransform();
-                if (e.TryGetCollider() is ColliderComponent collider)
-                {
-                    Collision.Insert(e.EntityId, e, collider.GetBoundingBox(pos.Vector2));
-                }
-
-                if (e.TryGetPushAway() is PushAwayComponent pushAway)
-                {
-                    PushAway.Insert(e.EntityId, (e, pos, pushAway, e.TryGetVelocity()?.Velocity ?? Vector2.Zero), e.GetColliderBoundingBox());
-                }
+                AddToCollisionQuadTree(e);
             }
+        }
+
+        public void RemoveFromCollisionQuadTree(int entityId)
+        {
+            Collision.Remove(entityId);
+            PushAway.Remove(entityId);
         }
 
         public void RemoveFromCollisionQuadTree(IEnumerable<Entity> entities)
