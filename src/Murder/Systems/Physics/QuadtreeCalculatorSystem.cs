@@ -68,7 +68,7 @@ public class QuadtreeCalculatorSystem : IReactiveSystem, IFixedUpdateSystem
         Quadtree qt = Quadtree.GetOrCreateUnique(context.World);
         foreach (int entityId in _entitiesOnWatch)
         {
-            if (context.World.TryGetEntity(entityId) is Entity entity)
+            if (context.World.TryGetEntity(entityId) is Entity entity && entity.IsActive)
             {
                 qt.RemoveFromCollisionQuadTree(entityId);
                 qt.AddToCollisionQuadTree(entity);
