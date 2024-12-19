@@ -28,7 +28,12 @@ namespace Murder.Systems.Physics
             for (int i = 0; i < entities.Length; i++)
             {
                 Entity entity = entities[i];
-                _entitiesOnWatch[entity.EntityId] = (entity.GetCollider().Layer & (CollisionLayersBase.TRIGGER)) == 0;
+                if (entity.TryGetCollider() is not ColliderComponent collider)
+                {
+                    // This entity no longer has a collider
+                    continue;
+                }
+                _entitiesOnWatch[entity.EntityId] = (collider.Layer & (CollisionLayersBase.TRIGGER)) == 0;
             }
         }
 
