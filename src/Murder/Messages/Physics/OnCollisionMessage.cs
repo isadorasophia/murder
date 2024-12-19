@@ -8,6 +8,9 @@ namespace Murder.Messages.Physics
     /// </summary>
     public readonly struct OnCollisionMessage : IMessage
     {
+        /// <summary>
+        /// The other colliding entity, please be aware that the entity may no longer exist or be active.
+        /// </summary>
         public readonly int EntityId;
         public readonly CollisionDirection Movement;
 
