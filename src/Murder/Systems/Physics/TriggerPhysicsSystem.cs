@@ -5,9 +5,6 @@ using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Core.Physics;
-using Murder.Diagnostics;
-using Murder.Helpers;
-using Murder.Prefabs;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
@@ -34,6 +31,7 @@ namespace Murder.Systems.Physics
                 _entitiesOnWatch[entity.EntityId] = (entity.GetCollider().Layer & (CollisionLayersBase.TRIGGER)) == 0;
             }
         }
+
         public void OnDeactivated(World world, ImmutableArray<Entity> entities)
         {
             WatchEntities(entities);
@@ -60,12 +58,12 @@ namespace Murder.Systems.Physics
 
         public void FixedUpdate(Context context)
         {
-            if (!_entitiesOnWatch.Any())
+            if (_entitiesOnWatch.Count == 0)
             {
                 return;
             }
 
-            var coissionCaches = context.World.GetEntitiesWith(typeof(CollisionCacheComponent));
+            ImmutableArray<Entity> collisionsCache = context.World.GetEntitiesWith(typeof(CollisionCacheComponent));
             Quadtree qt = Quadtree.GetOrCreateUnique(context.World);
 
             foreach ((int entityId, bool thisIsAnActor) in _entitiesOnWatch)
@@ -73,9 +71,9 @@ namespace Murder.Systems.Physics
                 Entity? entity = context.World.TryGetEntity(entityId);
 
                 // Remove deactivated or destroyed entities from the collision cache and send exit messages.
-                if (entity==null || !entity.IsActive || entity.IsDestroyed)
+                if (entity is null || !entity.IsActive || entity.IsDestroyed)
                 {
-                    foreach (var otherCached in coissionCaches)
+                    foreach (Entity otherCached in collisionsCache)
                     {
                         if (PhysicsServices.RemoveFromCollisionCache(otherCached, entityId))
                         {
@@ -89,7 +87,6 @@ namespace Murder.Systems.Physics
                     entity?.RemoveCollisionCache();
                     continue;
                 }
-
 
                 // Check for active entities.
                 CheckCollision(entity, qt, context.World);

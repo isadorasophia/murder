@@ -60,9 +60,13 @@ public class QuadtreeCalculatorSystem : IReactiveSystem, IFixedUpdateSystem
 
     public void FixedUpdate(Context context)
     {
-        var qt = Quadtree.GetOrCreateUnique(context.World);
+        if (_entitiesOnWatch.Count == 0)
+        {
+            return;
+        }
 
-        foreach (var entityId in _entitiesOnWatch)
+        Quadtree qt = Quadtree.GetOrCreateUnique(context.World);
+        foreach (int entityId in _entitiesOnWatch)
         {
             if (context.World.TryGetEntity(entityId) is Entity entity)
             {
