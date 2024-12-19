@@ -20,7 +20,10 @@ public class AgentMovementModifierSystem : IMessagerSystem
             return;
 
         if (world.TryGetEntity(msg.EntityId) is not Entity actor)
+        {
+            // The other entity was destroyed
             return;
+        }
 
         if (!area.AffectOnly.HasTags(actor.TryGetTags()))
         {
@@ -38,7 +41,7 @@ public class AgentMovementModifierSystem : IMessagerSystem
                 actor.SetInsideMovementModArea(area);
             }
         }
-        else
+        else // On exit
         {
             if (actor.TryGetInsideMovementModArea() is InsideMovementModAreaComponent currentArea)
             {

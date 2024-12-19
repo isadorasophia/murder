@@ -83,8 +83,10 @@ namespace Murder.Systems.Physics
                         if (PhysicsServices.RemoveFromCollisionCache(otherCached, entityId))
                         {
                             // Should we really send the ID of the deleted entity?
-                            otherCached.SendOnCollisionMessage(entityId, CollisionDirection.Exit);
-
+                            if (entity != null)
+                            {
+                                otherCached.SendOnCollisionMessage(entityId, CollisionDirection.Exit);
+                            }
                             // There's no need to send the message back, as the entity is already destroyed.
                         }
                     }
