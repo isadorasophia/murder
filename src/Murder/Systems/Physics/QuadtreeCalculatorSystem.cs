@@ -15,7 +15,7 @@ namespace Murder.Systems;
 
 [Filter(typeof(ColliderComponent), typeof(ITransformComponent))]
 [Watch(typeof(ITransformComponent), typeof(ColliderComponent))]
-public class QuadtreeCalculatorSystem : IReactiveSystem, IFixedUpdateSystem
+public class QuadtreeCalculatorSystem : IReactiveSystem, IFixedUpdateSystem, IStartupSystem
 {
     private readonly HashSet<int> _entitiesOnWatch = new(516);
 
@@ -81,5 +81,13 @@ public class QuadtreeCalculatorSystem : IReactiveSystem, IFixedUpdateSystem
         }
 
         _entitiesOnWatch.Clear();
+    }
+
+    public void Start(Context context)
+    {
+        for (int i = 0; i < context.Entities.Length; i++)
+        {
+            _entitiesOnWatch.Add(context.Entities[i].EntityId);
+        }
     }
 }
