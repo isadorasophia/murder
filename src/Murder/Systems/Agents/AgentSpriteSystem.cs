@@ -101,7 +101,7 @@ namespace Murder.Systems
                         suffix = string.Empty;
 
                         // Ignore facing ignores the suffix for the animation, but still flips the sprite if facing left
-                        // imageFlip = ImageFlip.None;
+                        imageFlip = ImageFlip.None;
                     }
 
                     if (overload.Value.Flip != ImageFlip.None)
