@@ -15,7 +15,7 @@ namespace Murder.Systems.Physics
     [Filter(ContextAccessorFilter.AllOf, typeof(ITransformComponent), typeof(ColliderComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(IgnoreTriggersUntilComponent))]
     [Watch(typeof(ITransformComponent))]
-    public class TriggerPhysicsSystem : IReactiveSystem, IFixedUpdateSystem
+    public class TriggerPhysicsSystem : IReactiveSystem
     {
         private readonly List<NodeInfo<Entity>> _others = new();
 
@@ -79,6 +79,7 @@ namespace Murder.Systems.Physics
         {
             WatchEntities(entities, world);
         }
+
         public void OnActivated(World world, ImmutableArray<Entity> entities)
         {
             WatchEntities(entities, world);
@@ -94,14 +95,14 @@ namespace Murder.Systems.Physics
             WatchEntities(entities, world);
         }
 
-        public void FixedUpdate(Context context)
+        public void OnAfterTrigger(World world)
         {
             if (_entitiesOnWatch.Count == 0)
             {
                 return;
             }
 
-            Quadtree qt = Quadtree.GetOrCreateUnique(context.World);
+            Quadtree qt = Quadtree.GetOrCreateUnique(world);
 
             foreach ((int entityId, (Entity entity, ImmutableHashSet<int> collidingWith, bool thisIsAnActor)) in _entitiesOnWatch)
             {
@@ -110,7 +111,7 @@ namespace Murder.Systems.Physics
                 {
                     foreach (int otherCachedId in collidingWith)
                     {
-                        Entity? otherCached = context.World.TryGetEntity(otherCachedId);
+                        Entity? otherCached = world.TryGetEntity(otherCachedId);
                         if (otherCached != null && PhysicsServices.RemoveFromCollisionCache(otherCached, entityId))
                         {
                             // Should we really send the ID of the deleted entity?
@@ -121,7 +122,7 @@ namespace Murder.Systems.Physics
                 }
 
                 // Check for active entities.
-                CheckCollision(entity, qt, context.World);
+                CheckCollision(entity, qt, world);
             }
 
             // Clear the list for the next frame.
