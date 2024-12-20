@@ -5,7 +5,6 @@ using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Core.Physics;
-using Murder.Helpers;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
@@ -120,9 +119,11 @@ namespace Murder.Systems.Physics
                         }
                     }
                 }
-
-                // Check for active entities.
-                CheckCollision(entity, qt, world);
+                else
+                {
+                    // Check for active entities.
+                    CheckCollision(entity, qt, world);
+                }
             }
 
             // Clear the list for the next frame.
