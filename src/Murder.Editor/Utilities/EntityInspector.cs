@@ -138,6 +138,7 @@ namespace Murder.Editor.Utilities
                     {
                         cameraMan.RemoveIdTarget();
                     }
+                    ImGuiHelpers.HelpTooltip("Recover camera");
                 }
                 else
                 {
@@ -146,9 +147,23 @@ namespace Murder.Editor.Utilities
                     {
                         cameraMan.SetIdTarget(entity.EntityId);
                     }
+                    ImGuiHelpers.HelpTooltip("Center camera on entity");
+
                 }
                 ImGui.PopStyleColor();
                 ImGui.SameLine();
+
+                if (entity.Parent == null)
+                {
+                    ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.Red);
+                    if (ImGui.Button(""))
+                    {
+                        entity.Destroy();
+                    }
+                    ImGui.PopStyleColor();
+
+                    ImGui.SameLine();
+                }
             }
 
             if (pushTree)

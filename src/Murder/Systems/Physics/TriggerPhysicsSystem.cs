@@ -5,6 +5,7 @@ using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Core.Physics;
+using Murder.Helpers;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
@@ -21,44 +22,76 @@ namespace Murder.Systems.Physics
         // Used for reclycing over the same collision cache.
         private readonly HashSet<int> _collisionVisitedEntities = new(516);
 
-        private readonly Dictionary<int, bool> _entitiesOnWatch = new(256);
+        private readonly Dictionary<int, (Entity, ImmutableHashSet<int>, bool)> _entitiesOnWatch = new(256);
 
-        private void WatchEntities(ImmutableArray<Entity> entities)
+        private void WatchEntities(ImmutableArray<Entity> entities, World world)
         {
             for (int i = 0; i < entities.Length; i++)
             {
                 Entity entity = entities[i];
-                if (entity.TryGetCollider() is not ColliderComponent collider)
+                if (_entitiesOnWatch.ContainsKey(entity.EntityId))
                 {
-                    // This entity no longer has a collider
                     continue;
                 }
-                _entitiesOnWatch[entity.EntityId] = (collider.Layer & (CollisionLayersBase.TRIGGER)) == 0;
+
+                bool isActor = false;
+                if (entity.TryGetCollider() is ColliderComponent collider)
+                {
+                    isActor = (collider.Layer & (CollisionLayersBase.TRIGGER)) == 0;
+                }
+
+                if (entity.IsDestroyed)
+                {
+                    // Destroyed entities are not added to the watch list.
+                    // But we message them immediately.
+
+                    if (entity.TryGetCollisionCache() is not CollisionCacheComponent destroyedCollisionCache)
+                    {
+                        continue;
+                    }
+
+                    foreach (var other in destroyedCollisionCache.GetCollidingEntities(world))
+                    {
+                        entity.SendOnCollisionMessage(other.EntityId, CollisionDirection.Exit);
+                        other.SendOnCollisionMessage(entity.EntityId, CollisionDirection.Exit);
+                    }
+
+                    continue;
+                }
+
+                if (entity.TryGetCollisionCache() is CollisionCacheComponent collisionCache)
+                {
+                    _entitiesOnWatch[entity.EntityId] = (entity, collisionCache.CollidingWith, isActor);
+                }
+                else
+                {
+                    _entitiesOnWatch[entity.EntityId] = (entity, [], isActor);
+                }
             }
         }
 
         public void OnDeactivated(World world, ImmutableArray<Entity> entities)
         {
-            WatchEntities(entities);
+            WatchEntities(entities, world);
         }
 
         public void OnRemoved(World world, ImmutableArray<Entity> entities)
         {
-            WatchEntities(entities);
+            WatchEntities(entities, world);
         }
         public void OnActivated(World world, ImmutableArray<Entity> entities)
         {
-            WatchEntities(entities);
+            WatchEntities(entities, world);
         }
 
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
-            WatchEntities(entities);
+            WatchEntities(entities, world);
         }
 
         public void OnModified(World world, ImmutableArray<Entity> entities)
         {
-            WatchEntities(entities);
+            WatchEntities(entities, world);
         }
 
         public void FixedUpdate(Context context)
@@ -68,31 +101,23 @@ namespace Murder.Systems.Physics
                 return;
             }
 
-            ImmutableArray<Entity> collisionsCache = context.World.GetEntitiesWith(typeof(CollisionCacheComponent));
             Quadtree qt = Quadtree.GetOrCreateUnique(context.World);
 
-            foreach ((int entityId, bool thisIsAnActor) in _entitiesOnWatch)
+            foreach ((int entityId, (Entity entity, ImmutableHashSet<int> collidingWith, bool thisIsAnActor)) in _entitiesOnWatch)
             {
-                Entity? entity = context.World.TryGetEntity(entityId);
-
                 // Remove deactivated or destroyed entities from the collision cache and send exit messages.
-                if (entity is null || !entity.IsActive || entity.IsDestroyed)
+                if (!entity.IsActive || entity.IsDestroyed)
                 {
-                    foreach (Entity otherCached in collisionsCache)
+                    foreach (int otherCachedId in collidingWith)
                     {
-                        if (PhysicsServices.RemoveFromCollisionCache(otherCached, entityId))
+                        Entity? otherCached = context.World.TryGetEntity(otherCachedId);
+                        if (otherCached != null && PhysicsServices.RemoveFromCollisionCache(otherCached, entityId))
                         {
                             // Should we really send the ID of the deleted entity?
-                            if (entity != null)
-                            {
-                                otherCached.SendOnCollisionMessage(entityId, CollisionDirection.Exit);
-                            }
-                            // There's no need to send the message back, as the entity is already destroyed.
+                            entity.SendOnCollisionMessage(otherCached.EntityId, CollisionDirection.Exit);
+                            otherCached.SendOnCollisionMessage(entityId, CollisionDirection.Exit);
                         }
                     }
-
-                    entity?.RemoveCollisionCache();
-                    continue;
                 }
 
                 // Check for active entities.
