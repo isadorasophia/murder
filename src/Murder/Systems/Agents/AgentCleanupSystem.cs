@@ -25,6 +25,7 @@ namespace Murder.Systems
                 {
                     // Set the friction if there is no impulse
                     e.SetFriction(agent.Friction);
+                    continue;
                 }
 
                 if (impulse is not null && !impulse.Value.Flags.HasFlag(AgentImpulseFlags.DoNotClear))
