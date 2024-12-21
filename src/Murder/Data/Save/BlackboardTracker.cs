@@ -51,8 +51,8 @@ namespace Murder.Save
         /// <summary>
         /// Triggered modified values that must be cleaned up.
         /// </summary>
-        [Serialize, HideInEditor]
-        private readonly List<(BlackboardInfo info, string fieldName, object value)> _pendingModifiedValues = new();
+        [HideInEditor] // TODO: why CANNOT persist objects!
+        private readonly List<(BlackboardInfo info, string fieldName, object value)> _pendingModifiedValue = new();
 
         public virtual ImmutableDictionary<string, BlackboardInfo> FetchBlackboards() =>
             _blackboards ??= InitializeBlackboards();
@@ -480,7 +480,7 @@ namespace Murder.Save
                 if (!value.Equals(default(T)))
                 {
                     // Only track if this is not assigning to the default value.
-                    _pendingModifiedValues.Add((info, fieldName, default(T)!));
+                    _pendingModifiedValue.Add((info, fieldName, default(T)!));
                 }
             }
 
@@ -566,17 +566,17 @@ namespace Murder.Save
         /// </summary>
         public void ResetPendingTriggers()
         {
-            if (_pendingModifiedValues.Count == 0)
+            if (_pendingModifiedValue.Count == 0)
             {
                 return;
             }
 
-            foreach ((BlackboardInfo info, string fieldName, object? value) in _pendingModifiedValues)
+            foreach ((BlackboardInfo info, string fieldName, object? value) in _pendingModifiedValue)
             {
                 SetValue(info, fieldName, value, isRevertingTrigger: true);
             }
 
-            _pendingModifiedValues.Clear();
+            _pendingModifiedValue.Clear();
         }
 
         /// <summary>
