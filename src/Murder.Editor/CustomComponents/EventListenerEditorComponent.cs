@@ -1,6 +1,7 @@
 ﻿using ImGuiNET;
 using Murder.Assets.Graphics;
 using Murder.Components;
+using Murder.Core.Sounds;
 using Murder.Editor.Attributes;
 using Murder.Editor.CustomFields;
 using Murder.Editor.ImGuiExtended;
@@ -143,16 +144,31 @@ namespace Murder.Editor.CustomComponents
 
                     ImGui.TableNextColumn();
 
-                    bool value = info.Persist;
-                    if (ImGui.Checkbox($"##dropdown_checkbox_{i}", ref value))
+                    SoundLayer? layer = info.Persisted;
+                    if (layer is null)
                     {
-                        events = events.SetItem(i, info.WithPersist(value));
-                        fileChanged = true;
+                        bool isPersist = false;
+                        if (ImGui.Checkbox($"##dropdown_checkbox_{i}", ref isPersist))
+                        {
+                            events = events.SetItem(i, info.WithPersist(SoundLayer.Ambience));
+                            fileChanged = true;
+                        }
+                    }
+                    else
+                    {
+                        ImGui.PushID($"##dropdown_layer_{i}");
+
+                        if (CustomField.DrawValue(ref info, fieldName: nameof(SpriteEventInfo.Persisted)))
+                        {
+                            events = events.SetItem(i, info);
+                            fileChanged = true;
+                        }
+
+                        ImGui.PopID();
                     }
 
                     ImGui.SameLine();
                     ImGuiHelpers.HelpTooltip("Whether this event should persist.");
-
                 }
             }
 

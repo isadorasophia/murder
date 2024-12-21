@@ -287,7 +287,7 @@ public partial class EditorScene
     {
         Architect.EditorSettings.AlwaysBuildAtlasOnStartup = value;
 
-        // Persist changes immediately.
+        // Persisted changes immediately.
         Architect.EditorData.SaveAsset(Architect.EditorSettings);
     }
 

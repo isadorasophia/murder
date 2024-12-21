@@ -1,6 +1,8 @@
 ﻿using Bang;
 using Bang.Systems;
 using Murder.Core.Graphics;
+using Murder.Core.Sounds;
+using Murder.Services;
 
 namespace Murder.Core
 {
@@ -22,12 +24,16 @@ namespace Murder.Core
         {
             base.Pause();
             Game.Instance.Pause();
+
+            SoundServices.Pause(SoundLayer.Sfx);
         }
 
         public override void Resume()
         {
             base.Resume();
             Game.Instance.Resume();
+
+            SoundServices.Resume(SoundLayer.Sfx);
         }
 
         public void PreDraw()
@@ -37,7 +43,6 @@ namespace Murder.Core
             {
                 if (system is IMonoPreRenderSystem preRenderSystem)
                 {
-
                     if (DIAGNOSTICS_MODE)
                     {
                         _stopwatch.Reset();

@@ -1,5 +1,6 @@
 ﻿using Bang;
 using Murder.Core;
+using Murder.Core.Sounds;
 using Murder.Diagnostics;
 
 namespace Murder
@@ -80,7 +81,7 @@ namespace Murder
             }
 
             // TODO: Cross fade? Review this flag here!
-            // SoundPlayer.Stop(fadeOut: true);
+            SoundPlayer.Stop(SoundLayer.Sfx, fadeOut: true);
 
             GameLogger.Verify(_sceneLoader is not null);
 

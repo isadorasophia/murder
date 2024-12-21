@@ -368,7 +368,7 @@ namespace Murder.Editor.Stages
 
         public void PersistInfo(Guid guid)
         {
-            // Persist the last position.
+            // Persisted the last position.
             Architect.EditorSettings.StageInfo[guid] = new(
                 _renderContext.Camera.Position.Point(),
                 _renderContext.Camera.Size,

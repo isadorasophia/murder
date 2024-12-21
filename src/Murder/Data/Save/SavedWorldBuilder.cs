@@ -121,7 +121,7 @@ namespace Murder.Save
                 instance.SetName($"{instance.Name} ({e.EntityId})");
             }
 
-            // Persist entity id.
+            // Persisted entity id.
             instance.Id = e.EntityId;
             instance.IsDeactivated = e.IsDeactivated;
             instance.ActivateWithParent = e.IsActivateWithParent();
