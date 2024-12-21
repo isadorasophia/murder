@@ -15,7 +15,7 @@ namespace Murder.Systems;
 
 [Filter(typeof(ColliderComponent), typeof(ITransformComponent))]
 [Watch(typeof(ITransformComponent), typeof(ColliderComponent))]
-public class QuadtreeCalculatorSystem : IReactiveSystem, IFixedUpdateSystem, IStartupSystem
+public class QuadtreeCalculatorSystem : IReactiveSystem, IStartupSystem
 {
     private readonly HashSet<int> _entitiesOnWatch = new(516);
 
@@ -58,17 +58,17 @@ public class QuadtreeCalculatorSystem : IReactiveSystem, IFixedUpdateSystem, ISt
         }
     }
 
-    public void FixedUpdate(Context context)
+    public void OnAfterTrigger(World world)
     {
         if (_entitiesOnWatch.Count == 0)
         {
             return;
         }
 
-        Quadtree qt = Quadtree.GetOrCreateUnique(context.World);
+        Quadtree qt = Quadtree.GetOrCreateUnique(world);
         foreach (int entityId in _entitiesOnWatch)
         {
-            if (context.World.TryGetEntity(entityId) is Entity entity && entity.IsActive)
+            if (world.TryGetEntity(entityId) is Entity entity && entity.IsActive)
             {
                 qt.RemoveFromCollisionQuadTree(entityId);
                 qt.AddToCollisionQuadTree(entity);

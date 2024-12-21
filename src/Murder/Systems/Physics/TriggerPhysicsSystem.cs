@@ -8,6 +8,7 @@ using Murder.Core.Physics;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Diagnostics;
 
 namespace Murder.Systems.Physics
 {
@@ -28,6 +29,7 @@ namespace Murder.Systems.Physics
             for (int i = 0; i < entities.Length; i++)
             {
                 Entity entity = entities[i];
+
                 if (_entitiesOnWatch.ContainsKey(entity.EntityId))
                 {
                     continue;
