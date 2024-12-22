@@ -16,6 +16,7 @@ namespace Murder.Save
     /// <summary>
     /// Track variables that contain the state of the world.
     /// </summary>
+    [Serializable]
     public class BlackboardTracker
     {
         [Serialize]
