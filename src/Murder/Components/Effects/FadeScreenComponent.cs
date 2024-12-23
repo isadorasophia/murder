@@ -29,6 +29,8 @@ namespace Murder.Components
 
         public readonly int BufferFrames { get; init; } = 0;
 
+        public readonly int? TargetBatch { get; init; } = null;
+
         /// <summary>
         /// Fades the screen using the FadeScreenSystem. Duration will be a minimum of 0.1
         /// </summary>
