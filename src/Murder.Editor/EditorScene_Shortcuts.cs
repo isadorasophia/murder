@@ -292,8 +292,8 @@ public partial class EditorScene
         }
         else
         {
-            var allAssetsOfType = Game.Data.FilterAllAssets(asset.GetType());
-            foreach ((Guid g, GameAsset otherAsset) in allAssetsOfType)
+            var allAssetsOfType = Game.Data.FilterAllAssets(asset.GetType()).Select(g => g.Value).OrderBy(g => g.FilePath);
+            foreach (GameAsset otherAsset in allAssetsOfType)
             {
                 CustomEditorInstance? instance = GetOrCreateAssetEditor(otherAsset);
                 if (instance?.Editor.RunDiagnostics() ?? true)
