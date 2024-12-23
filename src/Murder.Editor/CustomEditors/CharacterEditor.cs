@@ -294,6 +294,20 @@ namespace Murder.Editor.CustomEditors
                 }
             }
 
+            bool hasAllDataInformation = true;
+            foreach ((DialogueId d, LineInfo info) in _script.Data)
+            {
+                if (info.Portrait is null && info.Event is null && info.Component is null)
+                {
+                    hasAllDataInformation = false;
+                }
+            }
+
+            if (_script.Data.Count == 0 || !hasAllDataInformation)
+            {
+                GameLogger.Warning($"There are no metadata information for {_script.Name}. Is this expected?");
+            }
+
             return !foundIssue;
         }
     }
