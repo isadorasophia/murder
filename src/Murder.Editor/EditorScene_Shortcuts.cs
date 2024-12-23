@@ -85,7 +85,8 @@ public partial class EditorScene
             [ShortcutGroup.Tools] =
             [
                 new ActionShortcut("Refresh Window", Keys.F4, RefreshEditorWindow),
-                new ActionShortcut("Run Diagnostics", new Chord(Keys.D, InputHelpers.OSActionModifier, Keys.LeftShift),  RunDiagnostics),
+                new ActionShortcut("Run Diagnostics", new Chord(Keys.D, InputHelpers.OSActionModifier, Keys.LeftShift), RunDiagnostics),
+                new ActionShortcut("Run All Diagnostics", new Chord(Keys.S, InputHelpers.OSActionModifier, Keys.LeftShift), RunAllDiagnostics),
                 new ActionShortcut("Command Palette", new Chord(Keys.A, InputHelpers.OSActionModifier, Keys.LeftShift), ToggleCommandPalette)
             ],
             [ShortcutGroup.Publish] =
@@ -279,6 +280,30 @@ public partial class EditorScene
             else
             {
                 GameLogger.Log($"\uf00d Issue found while running diagnostics on {asset.Name}.");
+            }
+        }
+    }
+
+    private void RunAllDiagnostics()
+    {
+        if (_selectedTab == Guid.Empty || !_selectedAssets.TryGetValue(_selectedTab, out GameAsset? asset))
+        {
+            GameLogger.Warning("An asset must be opened in order to run all diagnostics.");
+        }
+        else
+        {
+            var allAssetsOfType = Game.Data.FilterAllAssets(asset.GetType());
+            foreach ((Guid g, GameAsset otherAsset) in allAssetsOfType)
+            {
+                CustomEditorInstance? instance = GetOrCreateAssetEditor(otherAsset);
+                if (instance?.Editor.RunDiagnostics() ?? true)
+                {
+                    GameLogger.Log($"\uf00c Successfully ran diagnostics on {otherAsset.Name}.");
+                }
+                else
+                {
+                    GameLogger.Log($"\uf00d Issue found while running diagnostics on {otherAsset.Name}.");
+                }
             }
         }
     }

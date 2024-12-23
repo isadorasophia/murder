@@ -1,4 +1,5 @@
-﻿using ImGuiNET;
+﻿using Bang.Components;
+using ImGuiNET;
 using Murder.Assets;
 using Murder.Assets.Localization;
 using Murder.Core.Dialogs;
@@ -260,6 +261,40 @@ namespace Murder.Editor.CustomEditors
             }
 
             ActiveEditors.Remove(target);
+        }
+
+        public override bool RunDiagnostics()
+        {
+            GameLogger.Verify(_script is not null);
+
+            bool foundIssue = false;
+
+            foreach ((string name, Situation situation) in _script.Situations)
+            {
+                foreach (Dialog d in situation.Dialogs)
+                {
+                    if (d.Actions is not null)
+                    {
+                        for (int i = 0; i < d.Actions.Value.Length; ++i)
+                        {
+                            DialogAction action = d.Actions.Value[i];
+                            if (action.ComponentValue is null)
+                            {
+                                continue;
+                            }
+
+                            DialogueId id = new(name, d.Id, i);
+                            if (!_script.Data.TryGetValue(id, out LineInfo info) || info.Component is null)
+                            {
+                                GameLogger.Error($"Found empty component at: {name}, {d.Id}.");
+                                foundIssue = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return !foundIssue;
         }
     }
 }
