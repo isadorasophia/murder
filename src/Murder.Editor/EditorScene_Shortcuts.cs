@@ -8,6 +8,7 @@ using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Numerics;
 using static Murder.Editor.ImGuiExtended.SearchBox;
 
@@ -273,7 +274,7 @@ public partial class EditorScene
         else
         {
             CustomEditorInstance? instance = GetOrCreateAssetEditor(asset);
-            if (instance?.Editor.RunDiagnostics() ?? true)
+            if (instance?.Editor.RunDiagnostics(asset.Guid) ?? true)
             {
                 GameLogger.Log($"\uf00c Successfully ran diagnostics on {asset.Name}.");
             }
@@ -296,7 +297,7 @@ public partial class EditorScene
             foreach (GameAsset otherAsset in allAssetsOfType)
             {
                 CustomEditorInstance? instance = GetOrCreateAssetEditor(otherAsset);
-                if (instance?.Editor.RunDiagnostics() ?? true)
+                if (instance?.Editor.RunDiagnostics(otherAsset.Guid) ?? true)
                 {
                     GameLogger.Log($"\uf00c Successfully ran diagnostics on {otherAsset.Name}.");
                 }

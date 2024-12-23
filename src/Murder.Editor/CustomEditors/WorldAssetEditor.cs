@@ -789,11 +789,18 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
-        public override bool RunDiagnostics()
+        public override bool RunDiagnostics(Guid worldGuid)
         {
+            WorldAsset? world = Game.Data.TryGetAsset<WorldAsset>(worldGuid);
+            if (world is null)
+            {
+                GameLogger.Warning($"Unable to retrieve asset {worldGuid}.");
+                return false;
+            }
+
             bool isValid = true;
 
-            ImmutableArray<Guid> instances = Instances;
+            ImmutableArray<Guid> instances = world.Instances;
             foreach (Guid g in instances)
             {
                 EntityInstance? e = TryFindInstance(g);

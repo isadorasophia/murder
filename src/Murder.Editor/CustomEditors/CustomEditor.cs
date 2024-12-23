@@ -28,7 +28,7 @@ public abstract class CustomEditor : IDisposable
     /// <summary>
     /// Run a diagnostics on all fields of this asset.
     /// </summary>
-    public virtual bool RunDiagnostics() => true;
+    public virtual bool RunDiagnostics(Guid guid) => true;
 
     public virtual void CloseEditor(Guid target) { }
 

@@ -9,11 +9,13 @@ using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.CustomComponents;
+using Murder.Editor.Data;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Stages;
 using Murder.Editor.Systems;
 using Murder.Editor.Utilities.Attributes;
+using System.Diagnostics;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -263,13 +265,18 @@ namespace Murder.Editor.CustomEditors
             ActiveEditors.Remove(target);
         }
 
-        public override bool RunDiagnostics()
+        public override bool RunDiagnostics(Guid g)
         {
-            GameLogger.Verify(_script is not null);
+            CharacterAsset? script = Game.Data.TryGetAsset<CharacterAsset>(g);
+            if (script is null)
+            {
+                GameLogger.Warning($"Unable to retrieve asset {g}.");
+                return false;
+            }
 
             bool foundIssue = false;
 
-            foreach ((string name, Situation situation) in _script.Situations)
+            foreach ((string name, Situation situation) in script.Situations)
             {
                 foreach (Dialog d in situation.Dialogs)
                 {
@@ -284,7 +291,7 @@ namespace Murder.Editor.CustomEditors
                             }
 
                             DialogueId id = new(name, d.Id, i);
-                            if (!_script.Data.TryGetValue(id, out LineInfo info) || info.Component is null)
+                            if (!script.Data.TryGetValue(id, out LineInfo info) || info.Component is null)
                             {
                                 GameLogger.Error($"Found empty component at: {name}, {d.Id}.");
                                 foundIssue = true;
@@ -295,7 +302,7 @@ namespace Murder.Editor.CustomEditors
             }
 
             bool hasAllDataInformation = true;
-            foreach ((DialogueId d, LineInfo info) in _script.Data)
+            foreach ((DialogueId d, LineInfo info) in script.Data)
             {
                 if (info.Portrait is null && info.Event is null && info.Component is null)
                 {
@@ -303,9 +310,9 @@ namespace Murder.Editor.CustomEditors
                 }
             }
 
-            if (_script.Data.Count == 0 || !hasAllDataInformation)
+            if (script.Data.Count == 0 || !hasAllDataInformation)
             {
-                GameLogger.Warning($"There are no metadata information for {_script.Name}. Is this expected?");
+                GameLogger.Warning($"There are no metadata information for {script.Name}. Is this expected?");
             }
 
             return !foundIssue;
