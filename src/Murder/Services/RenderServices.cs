@@ -180,7 +180,7 @@ public static partial class RenderServices
         float sort,
         float currentTime)
     {
-        if (!asset.Animations.TryGetValue(animationId, out var animation))
+        if (animationId == null || !asset.Animations.TryGetValue(animationId, out var animation))
         {
             GameLogger.Log($"Couldn't find animation {animationId}.");
             return FrameInfo.Fail;

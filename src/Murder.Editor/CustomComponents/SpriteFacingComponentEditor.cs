@@ -105,7 +105,11 @@ public class SpriteFacingComponentEditor : CustomComponent
             int slices = sprite.FacingInfo.Length;
             ImGui.Text("Suffix:");
             ImGui.SameLine();
-            fileChanged |= ImGui.InputInt("##slices", ref slices);
+            if (ImGui.InputInt("##slices", ref slices))
+            {
+                fileChanged = true;
+                
+            }
 
             if (sprite.FacingInfo.Length > 0)
             {
