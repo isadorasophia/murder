@@ -34,6 +34,12 @@ public enum DirectionFlags
 
 public static class DirectionHelper
 {
+    public static Direction Rotate90Degrees(this Direction direction)
+    {
+        int newDirection = (int)direction + 2;
+        return (Direction)newDirection;
+    }
+
     public static DirectionFlags ToDirectionFlag(this Direction direction)
     {
         switch (direction)

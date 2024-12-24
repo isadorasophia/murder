@@ -89,8 +89,7 @@ namespace Murder.Editor
             Instance = this;
 
             _playerInput.Register(MurderInputAxis.EditorCamera,
-                new InputButtonAxis(Keys.W, Keys.A, Keys.S, Keys.D),
-                new InputButtonAxis(Keys.Up, Keys.Left, Keys.Down, Keys.Right));
+                new InputButtonAxis(Keys.W, Keys.A, Keys.S, Keys.D));
 
             ImGuiRenderer = new ImGuiRenderer(this);
             ImGuiRenderer.RebuildFontAtlas();

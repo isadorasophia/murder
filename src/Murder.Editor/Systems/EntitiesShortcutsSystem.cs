@@ -2,11 +2,13 @@ using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
+using Murder.Components;
 using Murder.Components.Graphics;
 using Murder.Core.Graphics;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.Messages;
+using Murder.Helpers;
 using Murder.Utilities;
 
 namespace Murder.Editor.Systems;
@@ -33,6 +35,27 @@ public class EntitiesShortcutsSystem : GenericSelectorSystem, IUpdateSystem
         if (hook.UsingGui)
         {
             return;
+        }
+
+        if (Game.Input.Shortcut(Microsoft.Xna.Framework.Input.Keys.R))
+        {
+            foreach (var entity in hook.AllSelectedEntities)
+            {
+                Direction currentDirection = entity.Value.TryGetFacing()?.Direction ?? Direction.Right;
+                currentDirection = currentDirection.Rotate90Degrees();
+                entity.Value.SetFacing(currentDirection);
+
+                entity.Value.SendMessage(new AssetUpdatedMessage(typeof(FacingComponent)));
+
+                if (entity.Value.TryGetSprite() is SpriteComponent sprite)
+                {
+                    if (!sprite.RotateWithFacing)
+                    {
+                        entity.Value.SetSprite(sprite with { RotateWithFacing = true });
+                        entity.Value.SendMessage(new AssetUpdatedMessage(typeof(SpriteComponent)));
+                    }
+                }
+            }
         }
 
         if (Game.Input.Shortcut(Microsoft.Xna.Framework.Input.Keys.H))

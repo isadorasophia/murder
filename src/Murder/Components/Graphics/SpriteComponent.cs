@@ -28,7 +28,7 @@ namespace Murder.Components
         [Tooltip("(0,0) is top left and (1,1) is bottom right"), Slider()]
         public readonly Vector2 Offset = Vector2.Zero;
 
-        public readonly bool RotateWithFacing = false;
+        public readonly bool RotateWithFacing { get; init; } = false;
         public readonly OutlineStyle HighlightStyle { get; init; } = OutlineStyle.None;
 
         public readonly bool UseUnscaledTime = false;
