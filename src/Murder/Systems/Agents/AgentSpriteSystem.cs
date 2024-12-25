@@ -20,7 +20,7 @@ using System.Numerics;
 
 namespace Murder.Systems
 {
-    [Filter(ContextAccessorFilter.AllOf, typeof(ITransformComponent), typeof(AgentSpriteComponent), typeof(FacingComponent))]
+    [Filter(ContextAccessorFilter.AllOf, typeof(ITransformComponent), typeof(AgentSpriteComponent), typeof(FacingComponent), typeof(InCameraComponent))]
     [ShowInEditor]
     public class AgentSpriteSystem : IMurderRenderSystem
     {
@@ -48,12 +48,7 @@ namespace Murder.Systems
                     renderPosition = transform.Vector2;
                 }
 
-                // This is as early as we can to check for out of bounds
-                if (!render.Camera.Bounds.Touches(new Rectangle(renderPosition - spriteAsset.Origin, spriteAsset.Size)))
-                    continue;
-
                 FacingComponent facing = e.GetFacing();
-
                 Vector2 impulse = Vector2.Zero;
 
                 if (e.TryGetAgentImpulse() is AgentImpulseComponent imp) impulse = imp.Impulse;
