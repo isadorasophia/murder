@@ -45,7 +45,8 @@ namespace Murder.Systems
 
                 if (!tracker.IsTracking(e.EntityId))
                 {
-                    if (e.GetParticleSystem().Asset != Guid.Empty)
+                    if (e.TryGetParticleSystem() is ParticleSystemComponent particle &&
+                        particle.Asset != Guid.Empty)
                     {
                         tracker.Track(e);
                     }
