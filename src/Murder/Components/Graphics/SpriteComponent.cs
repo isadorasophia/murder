@@ -100,7 +100,21 @@ namespace Murder.Components
                     TargetSpriteBatch);
             }
             else
+            {
                 return this;
+            }
+        }
+
+        public SpriteComponent PlayAfter(string[] ids)
+        {
+            return new SpriteComponent(
+                AnimationGuid,
+                Offset,
+                NextAnimations.AddRange(ids),
+                YSortOffset,
+                RotateWithFacing,
+                HighlightStyle,
+                TargetSpriteBatch);
         }
 
         public SpriteComponent Play(params string[] id) => this with {

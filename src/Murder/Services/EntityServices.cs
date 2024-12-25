@@ -127,27 +127,46 @@ public static class EntityServices
         return FindRootEntity(parent);
     }
 
-    public static SpriteComponent? TryPlayAsepriteAnimationNext(this Entity entity, string animationName)
+    public static SpriteComponent? PlaySpriteAnimationNext(this Entity entity, string animationName)
+    {
+        if (TryPlaySpriteAnimationNext(entity, animationName) is SpriteComponent result)
+        {
+            return result;
+        }
+
+        GameLogger.Error($"Entity {entity.EntityId} doesn's have an Seprite component ({entity.Components.Count()} components, trying to play '{animationName}')");
+        return null;
+    }
+
+    public static SpriteComponent? TryPlaySpriteAnimationNext(this Entity entity, string animationName)
     {
         if (entity.TryGetSprite() is SpriteComponent aseprite)
         {
             SpriteComponent result = aseprite.PlayAfter(animationName);
             entity.SetSprite(result);
+
             entity.RemoveAnimationComplete();
+            entity.RemoveAnimationCompleteMessage();
 
             return result;
         }
 
         return null;
     }
-    public static SpriteComponent? PlayAsepriteAnimationNext(this Entity entity, string animationName)
+
+    public static SpriteComponent? PlaySpriteAnimationNext(this Entity entity, params string[] animations)
     {
-        if (TryPlayAsepriteAnimationNext(entity, animationName) is SpriteComponent result)
+        if (entity.TryGetSprite() is SpriteComponent aseprite)
         {
+            SpriteComponent result = aseprite.PlayAfter(animations);
+            entity.SetSprite(result);
+
+            entity.RemoveAnimationComplete();
+            entity.RemoveAnimationCompleteMessage();
+
             return result;
         }
 
-        GameLogger.Error($"Entity {entity.EntityId} doesn's have an Seprite component ({entity.Components.Count()} components, trying to play '{animationName}')");
         return null;
     }
 
