@@ -323,23 +323,24 @@ namespace Murder.Data
             await Task.Yield();
 
             int slot = _activeSaveData.SaveSlot;
-            SaveDataInfo info = _allSavedData[slot];
 
-            using PerfTimeRecorder recorder = new("Serializing save");
+            PerfTimeRecorder saveToJsonRecorder = new("Serializing save");
 
             SaveDataTracker tracker = new(_allSavedData);
             string trackerJson = FileManager.SerializeToJson(tracker);
-
-            PackedSaveData packedData = new(_activeSaveData);
-            string packedDataJson = FileManager.SerializeToJson(packedData);
-
-            _waitPendingSaveTrackerOperation = false;
 
             // Wait for any pending operations.
             if (_activeSaveData.PendingOperation is not null)
             {
                 await _activeSaveData.PendingOperation;
             }
+
+            PackedSaveData packedData = new(_activeSaveData);
+            string packedDataJson = FileManager.SerializeToJson(packedData);
+
+            _waitPendingSaveTrackerOperation = false;
+
+            saveToJsonRecorder.Dispose();
 
             using PerfTimeRecorder recorderSerialize = new("Writing save to file");
 

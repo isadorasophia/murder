@@ -53,7 +53,7 @@ namespace Murder.Save
         /// Triggered modified values that must be cleaned up.
         /// </summary>
         [Serialize, HideInEditor]
-        private readonly List<(BlackboardInfo info, string fieldName, Type type)> _pendingModifiedValue = new();
+        private readonly List<PendingBlackboardValueInfo> _pendingModifiedValue = new();
 
         public virtual ImmutableDictionary<string, BlackboardInfo> FetchBlackboards() =>
             _blackboards ??= InitializeBlackboards();
@@ -109,7 +109,7 @@ namespace Murder.Save
             // Otherwise, look for a character script blackboard.
             if (!_characterBlackboards.ContainsKey(guid.Value))
             {
-                _characterBlackboards[guid.Value] = InitializeCharacterBlackboards();
+                _characterBlackboards[guid.Value] = InitializeCharacterBlackboards(guid.Value);
             }
 
             if (_characterBlackboards[guid.Value].TryGetValue(name, out var speakerBlackboard))
@@ -163,7 +163,7 @@ namespace Murder.Save
         /// <param name="blackboardName">AtlasId of the character blackboard.</param>
         /// <param name="fieldName">Target field name.</param>
         /// <param name="value">Target value.</param>
-        public bool SetValueForAllCharacterBlackboards<T>(string blackboardName, string fieldName, T value) where T : notnull
+        public bool SetValueForAllCharacterBlackboards<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T>(string blackboardName, string fieldName, T value) where T : notnull
         {
             foreach ((_, var blackboards) in _characterBlackboards)
             {
@@ -185,13 +185,13 @@ namespace Murder.Save
         {
             _blackboards ??= InitializeBlackboards();
 
-            foreach ((Type tBlackboard, IBlackboard blackboard) in _blackboards.Values)
+            foreach (BlackboardInfo info in _blackboards.Values)
             {
-                FieldInfo? f = tBlackboard.GetField(fieldName);
+                FieldInfo? f = info.Type.GetField(fieldName);
                 if (f is not null)
                 {
                     // Found our blackboard value!
-                    return f.GetValue(blackboard)?.ToString();
+                    return f.GetValue(info.Blackboard)?.ToString();
                 }
             }
 
@@ -423,7 +423,7 @@ namespace Murder.Save
             return GetValue<T>(info, fieldName);
         }
 
-        public void SetValue<T>(string? name, string fieldName, T value, Guid? character = null) where T : notnull
+        public void SetValue<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T>(string? name, string fieldName, T value, Guid? character = null) where T : notnull
         {
             if (FindBlackboard(name, character) is not BlackboardInfo info)
             {
@@ -433,7 +433,7 @@ namespace Murder.Save
             SetValue(info, fieldName, value);
         }
 
-        protected bool SetValue<T>(BlackboardInfo info, string fieldName, T value, bool isRevertingTrigger = false) where T : notnull
+        protected bool SetValue<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T>(BlackboardInfo info, string fieldName, T value, bool isRevertingTrigger = false) where T : notnull
         {
             FieldInfo? f = GetFieldFrom(info.Type, fieldName);
             if (f is null)
@@ -481,11 +481,11 @@ namespace Murder.Save
                 if (!value.Equals(default(T)))
                 {
                     // Only track if this is not assigning to the default value.
-                    _pendingModifiedValue.Add((info, fieldName, typeof(T)));
+                    _pendingModifiedValue.Add(new(info.Name, info.Guid, fieldName, typeof(T)));
                 }
             }
 
-            OnFieldModified(info, f, fieldName, value);
+            OnFieldModified(info.Name, info.Guid, f, fieldName, value);
             OnModified(info.Blackboard.Kind);
 
             return true;
@@ -495,7 +495,7 @@ namespace Murder.Save
         /// This provides custom proessing when a field is modified.
         /// This is used when tracking custom attribute behaviors.
         /// </summary>
-        protected virtual void OnFieldModified<T>(BlackboardInfo info, FieldInfo fieldInfo, string fieldName, T value) where T : notnull
+        protected virtual void OnFieldModified<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T>(string blackboardName, Guid? blackboardGuid, FieldInfo fieldInfo, string fieldName, T value) where T : notnull
         {
             // Implemented by third-party
         }
@@ -572,15 +572,22 @@ namespace Murder.Save
                 return;
             }
 
-            foreach ((BlackboardInfo info, string fieldName, Type t) in _pendingModifiedValue)
+            foreach (PendingBlackboardValueInfo info in _pendingModifiedValue)
             {
-                object? @default = Activator.CreateInstance(t);
-                if (Activator.CreateInstance(t) is null)
+                object? @default = Activator.CreateInstance(info.Type);
+                if (@default is null)
                 {
                     continue;
-                } 
+                }
 
-                SetValue(info, fieldName, @default!, isRevertingTrigger: true);
+                BlackboardInfo? blackboard = FindBlackboard(info.BlackboardName, info.BlackboardGuid);
+                if (blackboard is null)
+                {
+                    GameLogger.Error($"Unable to retrieve blackboard for reverting field {info.BlackboardName}.{info.FieldName}");
+                    return;
+                }
+
+                SetValue(blackboard, info.FieldName, @default!, isRevertingTrigger: true);
             }
 
             _pendingModifiedValue.Clear();
@@ -779,7 +786,7 @@ namespace Murder.Save
 
                 IBlackboard blackboard = (IBlackboard)Activator.CreateInstance(t)!;
 
-                BlackboardInfo info = new(t, blackboard);
+                BlackboardInfo info = new(attribute.Name, guid: null, t, blackboard);
                 if (attribute.IsDefault)
                 {
                     _defaultBlackboard = info;
@@ -800,7 +807,7 @@ namespace Murder.Save
         private ImmutableArray<Type>? _cachedCharacterBlackboards = null;
 
         [UnconditionalSuppressMessage("AOT", "IL2072:Calling public constructors.", Justification = "Assemblies are not trimmed.")]
-        private ImmutableDictionary<string, BlackboardInfo> InitializeCharacterBlackboards()
+        private ImmutableDictionary<string, BlackboardInfo> InitializeCharacterBlackboards(Guid guid)
         {
             _cachedCharacterBlackboards ??= FindAllBlackboards(typeof(ICharacterBlackboard)).ToImmutableArray();
 
@@ -808,10 +815,33 @@ namespace Murder.Save
             foreach (Type t in _cachedCharacterBlackboards)
             {
                 string name = t.GetCustomAttribute<BlackboardAttribute>()!.Name;
-                result.Add(name, new(t, (ICharacterBlackboard)Activator.CreateInstance(t)!));
+                result.Add(name, new(name, guid, t, (ICharacterBlackboard)Activator.CreateInstance(t)!));
             }
 
             return result.ToImmutable();
+        }
+
+        public readonly struct PendingBlackboardValueInfo
+        {
+            public readonly string BlackboardName;
+            public readonly Guid? BlackboardGuid;
+
+            public readonly string FieldName;
+
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
+            public readonly Type Type;
+
+            public PendingBlackboardValueInfo(
+                string blackboardName, 
+                Guid? blackboardGuid, 
+                string fieldName, 
+                [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type t)
+            {
+                BlackboardName = blackboardName;
+                BlackboardGuid = blackboardGuid;
+                FieldName = fieldName;
+                Type = t;
+            }
         }
     }
 }

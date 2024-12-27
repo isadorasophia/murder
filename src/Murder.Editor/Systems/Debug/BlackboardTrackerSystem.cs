@@ -114,7 +114,7 @@ namespace Murder.Editor.Systems.Debug
             }
             else
             {
-                var (_, blackboard) = blackboards[_targetBlackboard];
+                IBlackboard blackboard = blackboards[_targetBlackboard].Blackboard;
 
                 bool changed = CustomComponent.ShowEditorOf(ref blackboard);
                 if (changed)
