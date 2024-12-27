@@ -6,6 +6,7 @@ using Murder.Attributes;
 using Murder.Core.Dialogs;
 using Murder.Core.Geometry;
 using Murder.Core.Sounds;
+using Murder.Diagnostics;
 using Murder.Editor.Utilities;
 using Murder.Prefabs;
 using Murder.Utilities;
@@ -474,7 +475,24 @@ namespace Murder.Editor.ImGuiExtended
 
                         if (ImGuiHelpers.IconButton('', $"search_{id}") && spriteAsset.AsepriteFileInfo != null)
                         {
-                            Process.Start("Aseprite", $"\"{spriteAsset.AsepriteFileInfo.Value.Source}\"");
+                            try
+                            {
+                                var process = new Process
+                                {
+                                    StartInfo = new ProcessStartInfo
+                                    {
+                                        FileName = spriteAsset.AsepriteFileInfo.Value.Source,
+                                        UseShellExecute = true // Use the OS to open the file
+                                    }
+                                };
+
+                                process.Start();
+                            }
+                            catch (Exception ex)
+                            {
+                                // Handle exceptions like file not found, etc.
+                                GameLogger.Error($"Exception: {ex.Message}");
+                            }
                         }
 
                         if (spriteAsset.AsepriteFileInfo == null)
@@ -486,7 +504,7 @@ namespace Murder.Editor.ImGuiExtended
                         else
                         {
                             ImGui.EndGroup();
-                            ImGuiHelpers.HelpTooltip("Run Aseprite to edit this sprite");
+                            ImGuiHelpers.HelpTooltip("Open this in an external editor");
                         }
                             
                         ImGui.SameLine();
