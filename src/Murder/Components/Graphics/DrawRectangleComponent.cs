@@ -15,6 +15,9 @@ namespace Murder.Components
         [PaletteColor]
         public readonly Color Color = Color.Black;
 
+        public readonly float SmoothSize = 0f;
+        public readonly int SmoothingLayers = 0;
+
         public readonly float SortingOffset = 0f;
 
         public DrawRectangleComponent() { }

@@ -45,6 +45,13 @@ namespace Murder.Systems.Graphics
                 if (rect.Fill)
                 {
                     RenderServices.DrawRectangle(batch, box, rect.Color * alpha, RenderServices.YSort(box.Bottom + rect.SortingOffset));
+
+                    for (int i = 1; i <= rect.SmoothingLayers; i++)
+                    {
+                        float step = i / ((float)rect.SmoothingLayers + 1);
+                        float size = (i / (float)rect.SmoothingLayers) * rect.SmoothSize;
+                        RenderServices.DrawRectangle(batch, box.Expand(size), rect.Color * alpha * (1 - step), RenderServices.YSort(box.Bottom + rect.SortingOffset));
+                    }
                 }
                 else
                 {
