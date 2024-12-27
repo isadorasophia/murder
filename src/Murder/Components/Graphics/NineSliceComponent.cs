@@ -15,17 +15,17 @@ namespace Murder.Components
     {
         [GameAssetId(typeof(SpriteAsset))]
         [Tooltip("Sprite which will be drawn as a nine slice.")]
-        public readonly Guid Sprite = new();
+        public readonly Guid Sprite { get; init; } = new();
 
         [Tooltip("Final size of the nine slice.")]
-        public readonly Rectangle Target = Rectangle.Empty;
+        public readonly Rectangle Target { get; init; } = Rectangle.Empty;
 
         [SpriteBatchReference]
-        public readonly int TargetSpriteBatch = Batches2D.GameplayBatchId;
+        public readonly int TargetSpriteBatch { get; init; } = Batches2D.GameplayBatchId;
 
-        public readonly int YSortOffset = 0;
+        public readonly int YSortOffset { get; init; } = 0;
 
-        public readonly NineSliceStyle Style = NineSliceStyle.Stretch;
+        public readonly NineSliceStyle Style { get; init; } = NineSliceStyle.Stretch;
 
         public NineSliceComponent() { }
     }
