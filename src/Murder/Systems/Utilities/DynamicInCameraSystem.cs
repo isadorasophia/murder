@@ -47,7 +47,7 @@ public class DynamicInCameraSystem : IMonoPreRenderSystem
     {
         var camera = ((MonoWorld)context.World).Camera;
 
-        Rectangle cameraBounds = camera.Bounds;
+        Rectangle cameraBounds = camera.SafeBounds;
         Vector2 cameraPosition = camera.Position;
 
         if (context.World.TryGetUniqueDisableSceneTransitionEffects()?.OverrideCameraPosition is Vector2 overridePosition)
