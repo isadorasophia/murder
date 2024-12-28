@@ -49,7 +49,11 @@ namespace Murder.StateMachines
 
         public IEnumerator<Wait> Talk()
         {
-            Debug.Assert(_character is not null);
+            if (_character is null)
+            {
+                GameLogger.Fail("Unable to fetch character.");
+                yield break;
+            }
 
             if (Entity.HasAutomaticNextDialogue())
             {
