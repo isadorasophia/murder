@@ -338,16 +338,16 @@ namespace Murder.Editor.CustomEditors
                     continue;
                 }
 
-                if (!entity.HasComponent(typeof(ITransformComponent)))
+                if (!entity.HasComponent(typeof(PositionComponent)))
                 {
                     // Entity doesn't really have a transform component to move.
                     continue;
                 }
 
                 IMurderTransformComponent? transform =
-                    (IMurderTransformComponent)entity.GetComponent(typeof(IMurderTransformComponent));
+                    (PositionComponent)entity.GetComponent(typeof(PositionComponent));
 
-                ReplaceComponent(parent: null, entity, transform.Add(worldDelta));
+                ReplaceComponent(parent: null, entity, (PositionComponent)transform.Add(worldDelta));
             }
         }
     }
