@@ -2,6 +2,7 @@ using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
+using ImGuiNET;
 using Murder.Components;
 using Murder.Components.Graphics;
 using Murder.Core.Graphics;
@@ -32,7 +33,7 @@ public class EntitiesShortcutsSystem : GenericSelectorSystem, IUpdateSystem
 
         var hook = editorComponent.EditorHook;
 
-        if (hook.UsingGui)
+        if (hook.UsingGui || ImGui.IsAnyItemActive())
         {
             return;
         }
