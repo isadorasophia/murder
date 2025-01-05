@@ -2,7 +2,7 @@
 {
     public struct MenuOption
     {
-        public readonly string Text = string.Empty;
+        public readonly string Text { get; init; } = string.Empty;
         public readonly bool Enabled { get; init; } = true;
         public readonly bool Faded { get; init; } = true;
 
