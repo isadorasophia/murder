@@ -36,5 +36,15 @@ namespace Murder.Services
 
             return data.Value.String;
         }
+
+        public static bool IsTextWrapOnlyOnSpace()
+        {
+            if (Game.Data.CurrentLocalization.Id == LanguageId.Japanese)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

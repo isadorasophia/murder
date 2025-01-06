@@ -20,4 +20,7 @@ public readonly struct LocalizedString
 
     public static implicit operator string(LocalizedString localizedString) =>
         LocalizationServices.GetLocalizedString(localizedString);
+
+    public override string ToString() =>
+        LocalizationServices.GetLocalizedString(this);
 }

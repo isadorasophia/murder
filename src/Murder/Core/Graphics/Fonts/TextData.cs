@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using System.Numerics;
 using System.Globalization;
 using System.Text;
+using System.Diagnostics;
 
 namespace Murder.Core.Graphics;
 
@@ -534,8 +535,7 @@ public static partial class TextDataServices
 
         if (settings.MaxWidth > 0)
         {
-            string wrappedText = font.WrapString(parsedText, settings.MaxWidth, settings.Scale.X);
-            parsedText = wrappedText.ToString();
+            parsedText = font.WrapString(parsedText, settings.MaxWidth, settings.Scale.X);
         }
 
         data = new RuntimeTextData(parsedText, letters?.ToImmutable()) with

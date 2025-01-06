@@ -439,29 +439,31 @@ public class PixelFontSize
     {
         Vector2 offset = Vector2.Zero;
 
+        bool lineBreakOnSpace = LocalizationServices.IsTextWrapOnlyOnSpace();
+
         StringBuilder wrappedText = new StringBuilder();
         int cursor = 0;
         while (cursor < text.Length)
         {
             bool alreadyHasLineBreak = false;
 
-            int nextSpaceIndex = text[cursor..].IndexOf(' ');
+            int nextSeparatorIndex = lineBreakOnSpace ? text[cursor..].IndexOf(' ') : 1;
             int nextLineBreak = text[cursor..].IndexOf('\n');
 
-            if (nextLineBreak >= 0 && nextLineBreak < nextSpaceIndex)
+            if (nextLineBreak >= 0 && nextLineBreak < nextSeparatorIndex)
             {
                 alreadyHasLineBreak = true;
-                nextSpaceIndex = nextLineBreak + cursor;
+                nextSeparatorIndex = nextLineBreak + cursor;
             }
-            else if (nextSpaceIndex >= 0)
+            else if (nextSeparatorIndex >= 0)
             {
-                nextSpaceIndex = nextSpaceIndex + cursor;
+                nextSeparatorIndex = nextSeparatorIndex + cursor;
             }
 
-            if (nextSpaceIndex == -1)
-                nextSpaceIndex = text.Length - 1;
+            if (nextSeparatorIndex == -1 || nextSeparatorIndex >= text.Length - 1)
+                nextSeparatorIndex = text.Length - 1;
 
-            ReadOnlySpan<char> word = text.Slice(cursor, nextSpaceIndex - cursor + 1);
+            ReadOnlySpan<char> word = text.Slice(cursor, nextSeparatorIndex - cursor + 1);
             float wordWidth = WidthToNextLine(word, 0, false) * scale;
             bool overflow = offset.X + wordWidth > maxWidth;
 
@@ -489,7 +491,7 @@ public class PixelFontSize
 
             wrappedText.Append(word);
 
-            cursor = nextSpaceIndex + 1;
+            cursor = nextSeparatorIndex + 1;
         }
 
         return wrappedText.ToString();
