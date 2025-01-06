@@ -1,4 +1,6 @@
-﻿namespace Murder.Assets;
+﻿using Murder.Services;
+
+namespace Murder.Assets;
 
 public readonly struct LocalizedString
 {
@@ -15,4 +17,7 @@ public readonly struct LocalizedString
     public LocalizedString(Guid id) => Id = id;
 
     public LocalizedString(string overrideText) => OverrideText = overrideText;
+
+    public static implicit operator string(LocalizedString localizedString) =>
+        LocalizationServices.GetLocalizedString(localizedString);
 }

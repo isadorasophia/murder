@@ -76,6 +76,11 @@ namespace Murder
         public GamePreferences CreateGamePreferences() => new();
 
         /// <summary>
+        /// Allow the game to override a font based on localization settings.
+        /// </summary>
+        public int GetLocalizedFont(int index) => index;
+
+        /// <summary>
         /// Creates a custom render context for the game.
         /// </summary>
         public RenderContext CreateRenderContext(GraphicsDevice graphicsDevice, Camera2D camera, RenderContextFlags settings) =>

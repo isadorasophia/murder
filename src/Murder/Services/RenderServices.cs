@@ -12,8 +12,6 @@ using Murder.Services.Info;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Numerics;
-using static System.Formats.Asn1.AsnWriter;
-using static System.Net.Mime.MediaTypeNames;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 

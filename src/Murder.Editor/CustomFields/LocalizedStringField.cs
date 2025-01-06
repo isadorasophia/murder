@@ -16,7 +16,7 @@ internal class LocalizedStringField : CustomField
         bool modified = false;
         LocalizedString? localizedString = (LocalizedString?)fieldValue;
 
-        LocalizationAsset localization = LocalizationServices.GetCurrentLocalization();
+        LocalizationAsset localization = Game.Data.GetDefaultLocalization();
 
         if (localizedString is null || localizedString.Value.Id == Guid.Empty)
         {

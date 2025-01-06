@@ -10,7 +10,7 @@ internal static class EditorLocalizationServices
 {
     public static LocalizedString? SearchLocalizedString()
     {
-        LocalizationAsset localization = LocalizationServices.GetCurrentLocalization();
+        LocalizationAsset localization = Game.Data.GetDefaultLocalization();
 
         SearchBoxSettings<Guid> settings = new(initialText: "Create localized string") 
         { 
@@ -68,7 +68,7 @@ internal static class EditorLocalizationServices
     {
         LocalizedString result = new(Guid.NewGuid());
 
-        LocalizationAsset asset = Game.Data.Localization;
+        LocalizationAsset asset = Game.Data.GetDefaultLocalization();
         asset.AddResource(result.Id);
 
         EditorServices.SaveAssetWhenSelectedAssetIsSaved(asset.Guid);
@@ -79,7 +79,7 @@ internal static class EditorLocalizationServices
 
     private static void AddExistingResource(Guid g)
     {
-        LocalizationAsset asset = Game.Data.Localization;
+        LocalizationAsset asset = Game.Data.GetDefaultLocalization();
         asset.AddResource(g);
 
         EditorServices.SaveAssetWhenSelectedAssetIsSaved(asset.Guid);

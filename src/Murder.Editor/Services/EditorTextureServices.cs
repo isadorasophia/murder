@@ -29,12 +29,23 @@ internal static class EditorTextureServices
     }
 
     /// <summary>
-    /// Save a <paramref name="texture"/> as a QOI image.
+    /// Save a <paramref name="stream"/> as a QOI image.
     /// </summary>
     public static void ConvertPngStreamToQuoiGz(MemoryStream stream, string path)
     {
         using Texture2D texture = Texture2D.FromStream(Architect.GraphicsDevice, stream);
 
         SaveAsQoiGz(texture, path);
+    }
+
+    public static void SaveAsPng(MemoryStream stream, string path)
+    {
+        using Texture2D texture = Texture2D.FromStream(Architect.GraphicsDevice, stream);
+
+        {
+            using FileStream fileStream = File.Open(path, FileMode.OpenOrCreate);
+            texture.SaveAsPng(fileStream, texture.Width, texture.Height);
+            fileStream.Close();
+        }
     }
 }

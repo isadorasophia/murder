@@ -868,6 +868,11 @@ namespace Murder.Data
 
         public PixelFont GetFont(int index)
         {
+            if (_game is not null)
+            {
+                index = _game.GetLocalizedFont(index);
+            }
+
             if (_fonts.TryGetValue(index, out PixelFont? font))
             {
                 return font;

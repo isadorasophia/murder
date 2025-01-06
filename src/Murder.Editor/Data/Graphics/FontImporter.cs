@@ -173,6 +173,7 @@ internal class FontImporter
                 bitmap.Encode(stream, SKEncodedImageFormat.Png, 100);
             }
 
+            // EditorTextureServices.SaveAsPng(stream, Path.Join(sourcePackedPath, $"{name}.png"));
             EditorTextureServices.ConvertPngStreamToQuoiGz(stream, imageSourcePackedPath);
 
             // ProcessFinished:
