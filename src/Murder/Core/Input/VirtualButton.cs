@@ -52,6 +52,18 @@ public class VirtualButton : IVirtualInput
         }
     }
 
+    /// <summary>
+    /// Force pressing the button.
+    /// </summary>
+    public void Press()
+    {
+        Previous = false;
+        Down = true;
+        Consumed = false;
+
+        LastPressed = Game.NowUnscaled;
+    }
+
     public string GetDescriptor()
     {
         return StringHelper.ToHumanList(GetActiveDescriptors(), ",", "or");

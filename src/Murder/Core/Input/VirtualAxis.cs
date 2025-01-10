@@ -136,6 +136,33 @@ namespace Murder.Core.Input
             Consumed = false;
         }
 
+        public void Press(Vector2 value)
+        {
+            PreviousValue = Value;
+            IntPreviousValue = IntValue;
+
+            Down = true;
+            Consumed = false;
+
+            Value = value;
+            PressedValue = new Point(MathF.Sign(Value.X), MathF.Sign(Value.Y));
+            IntValue = new Point(Calculator.PolarSnapToInt(Value.X), Calculator.PolarSnapToInt(Value.Y));
+
+            if (PressedX)
+            {
+                _pressedXStart = Game.NowUnscaled;
+                _nextXTick = Game.NowUnscaled + _firstTickDelay;
+                _tickX = true;
+            }
+
+            if (PressedY)
+            {
+                _pressedYStart = Game.NowUnscaled;
+                _nextYTick = Game.NowUnscaled + _firstTickDelay;
+                _tickY = true;
+            }
+        }
+
         internal string GetDescriptor()
         {
             return StringHelper.ToHumanList(GetActiveButtonDescriptions(), ",", "or");

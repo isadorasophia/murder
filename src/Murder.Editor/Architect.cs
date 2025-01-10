@@ -163,7 +163,10 @@ namespace Murder.Editor
         private void QuitToEditor()
         {
             Microsoft.Xna.Framework.Media.MediaPlayer.Stop();
+
             Resume();
+            Input.LockInput(false);
+
             SoundPlayer.Stop(Murder.Core.Sounds.SoundLayer.Any, fadeOut: false);
 
             GameLogger.Verify(_sceneLoader is not null);

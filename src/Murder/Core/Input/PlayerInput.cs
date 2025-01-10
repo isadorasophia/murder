@@ -4,16 +4,21 @@ using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Numerics;
 using System.Text;
 
 namespace Murder.Core.Input
 {
     public class PlayerInput
     {
-        public int[] AllButtons => _buttons.Keys.ToArray();
-        public int[] AllAxis => _axis.Keys.ToArray();
-        private readonly Dictionary<int, VirtualButton> _buttons = new();
-        private readonly Dictionary<int, VirtualAxis> _axis = new();
+        // Debug only
+        public int[] AllButtons => [.. _buttons.Keys];
+
+        // Debug only
+        public int[] AllAxis => [.. _axis.Keys];
+
+        private readonly Dictionary<int, VirtualButton> _buttons = [];
+        private readonly Dictionary<int, VirtualAxis> _axis = [];
 
         private KeyboardState _rawPreviousKeyboardState;
         private KeyboardState _rawCurrentKeyboardState;
@@ -39,6 +44,11 @@ namespace Murder.Core.Input
         public bool MouseConsumed = false;
 
         /// <summary>
+        /// This will freeze any external input from the user.
+        /// </summary>
+        private bool _lockInput = false;
+
+        /// <summary>
         /// Scrollwheel delta
         /// </summary>
         public int ScrollWheel
@@ -54,6 +64,39 @@ namespace Murder.Core.Input
 
         private readonly KeyboardState _emptyKeyboardState = new KeyboardState();
         private readonly MouseState _emptyMouseState = new MouseState();
+
+        public void LockInput(bool @lock)
+        {
+            if (!@lock)
+            {
+                _lockInput = false;
+                return;
+            }
+
+            UpdateOnEmpty();
+            _lockInput = true;
+        }
+
+        public void MockInput(int button)
+        {
+            if (_buttons.TryGetValue(button, out VirtualButton? virtualButton))
+            {
+                virtualButton.Press();
+            }
+        }
+
+        public void MockInput(int axis, Vector2 value)
+        {
+            if (_axis.TryGetValue(axis, out VirtualAxis? virtualAxis))
+            {
+                virtualAxis.Press(value);
+            }
+        }
+
+        public void MockNoInput()
+        {
+            UpdateOnEmpty();
+        }
 
         public VirtualButton GetOrCreateButton(int button)
         {
@@ -149,6 +192,11 @@ namespace Murder.Core.Input
 
         public void Update()
         {
+            if (_lockInput)
+            {
+                return;
+            }
+
             _previousKeyboardState = _currentKeyboardState;
             if (!KeyboardConsumed)
             {
@@ -199,6 +247,22 @@ namespace Murder.Core.Input
             CursorPosition = new(
                 Calculator.RoundToInt(mouseState.X),
                 Calculator.RoundToInt(mouseState.Y));
+        }
+
+        public void UpdateOnEmpty()
+        {
+            _currentKeyboardState = _emptyKeyboardState;
+
+            InputState inputState = new(_currentKeyboardState, gamePadState: new(), _emptyMouseState);
+            foreach (var button in _buttons)
+            {
+                button.Value.Update(inputState);
+            }
+
+            foreach (var axis in _axis)
+            {
+                axis.Value.Update(inputState);
+            }
         }
 
         public void Bind(int button, Action<InputState> action)
@@ -734,6 +798,7 @@ namespace Murder.Core.Input
         }
 
         public string GetKeyboardInput() => _userKeyboardInput.ToString();
+
         public void SetKeyboardInput(string value)
         {
             _userKeyboardInput.Clear();
