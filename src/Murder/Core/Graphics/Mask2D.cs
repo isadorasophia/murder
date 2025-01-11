@@ -12,6 +12,7 @@ public class Mask2D : IDisposable
     public readonly Vector2 Size;
 
     private readonly RenderTarget2D _renderTarget;
+    private RenderTarget2D? _previousRenderTarget;
 
     public RenderTarget2D RenderTarget => _renderTarget;
     private readonly Batch2D _batch;
@@ -53,6 +54,11 @@ public class Mask2D : IDisposable
 
     private void SetRenderTarget()
     {
+        if (Game.GraphicsDevice.GetRenderTargets().Length>0)
+        {
+            _previousRenderTarget = (RenderTarget2D)Game.GraphicsDevice.GetRenderTargets()[0].RenderTarget;
+        }
+
         Game.GraphicsDevice.SetRenderTarget(_renderTarget);
         Game.GraphicsDevice.Clear(_color);
     }
@@ -79,6 +85,11 @@ public class Mask2D : IDisposable
             drawInfo.Color,
             drawInfo.Origin.ToXnaVector2(), 
             drawInfo.GetBlendMode());
+
+        if (_previousRenderTarget is not null)
+        {
+            Game.GraphicsDevice.SetRenderTarget(_previousRenderTarget);
+        }
     }
 
     /// <summary>

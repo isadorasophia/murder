@@ -10,6 +10,10 @@ public readonly struct AnimationInfo
     
     public float Start { get; init; } = 0f;
     public float Duration { get; init; } = -1f;
+
+    /// <summary>
+    /// User Game.Now instead of Game.NowUnscaled. False by default
+    /// </summary>
     public bool UseScaledTime { get; init; } = false;
     public bool Loop { get; init; } = true;
     public string Name { get; init; } = string.Empty;

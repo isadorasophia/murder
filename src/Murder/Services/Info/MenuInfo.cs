@@ -1,6 +1,7 @@
 ﻿using Murder.Core.Sounds;
 using Murder.Services;
 using Murder.Utilities;
+using static Murder.Core.Input.PlayerInput;
 
 namespace Murder.Core.Input
 {
@@ -17,7 +18,8 @@ namespace Murder.Core.Input
         public float LastPressed = 0;
         public float LastMoved;
 
-        public int Overflow = 0;
+        public int OverflowX = 0;
+        public int OverflowY = 0;
         public int PreviousSelection;
 
         /// <summary>
@@ -96,7 +98,8 @@ namespace Murder.Core.Input
         public float LastPressed;
         public bool Canceled;
         public bool Disabled = false;
-        public int Overflow = 0;
+        public int OverflowX = 0;
+        public int OverflowY = 0;
         public bool JustMoved = false;
         public int Scroll = 0;
 
