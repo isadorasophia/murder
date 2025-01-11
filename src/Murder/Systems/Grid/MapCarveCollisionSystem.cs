@@ -42,6 +42,11 @@ namespace Murder.Systems
             Map map = world.GetUniqueMap().Map;
             foreach (Entity e in entities)
             {
+                if (!e.IsActive)
+                {
+                    continue;
+                }
+
                 IntRectangle updatedRectangle = GetCarveBoundingBox(e);
 
                 if (!_trackEntitiesPreviousPosition.TryGetValue(e.EntityId, out IntRectangle previousRectangle))
@@ -81,6 +86,16 @@ namespace Murder.Systems
             }
 
             PathfindServices.UpdatePathfind(world);
+        }
+
+        public virtual void OnActivated(World world, ImmutableArray<Entity> entities) 
+        {
+            OnAdded(world, entities);
+        }
+
+        public virtual void OnDeactivated(World world, ImmutableArray<Entity> entities) 
+        {
+            OnRemoved(world, entities);
         }
 
         protected void TrackEntityOnGrid(Map map, Entity e, IntRectangle rect)
