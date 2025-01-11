@@ -39,6 +39,11 @@ public class Mask2D : IDisposable
 
     public Batch2D Begin(bool debug = false)
     {
+        if (Game.GraphicsDevice.GetRenderTargets().Length > 0)
+        {
+            _previousRenderTarget = (RenderTarget2D)Game.GraphicsDevice.GetRenderTargets()[0].RenderTarget;
+        }
+
         // TODO: Should this be in the End() instead?
         SetRenderTarget();
 
@@ -54,11 +59,6 @@ public class Mask2D : IDisposable
 
     private void SetRenderTarget()
     {
-        if (Game.GraphicsDevice.GetRenderTargets().Length>0)
-        {
-            _previousRenderTarget = (RenderTarget2D)Game.GraphicsDevice.GetRenderTargets()[0].RenderTarget;
-        }
-
         Game.GraphicsDevice.SetRenderTarget(_renderTarget);
         Game.GraphicsDevice.Clear(_color);
     }
