@@ -38,7 +38,7 @@ public class InteractOnCollisionSystem : IMessagerSystem
         }
 
         InteractOnCollisionComponent interactOnCollision = interactiveEntity.GetInteractOnCollision();
-        if (!IsInteractAllowed(interactorEntity, interactOnCollision))
+        if (!IsInteractAllowed(interactorEntity, interactiveEntity, interactOnCollision, msg))
         {
             return;
         }
@@ -79,7 +79,11 @@ public class InteractOnCollisionSystem : IMessagerSystem
         }
     }
 
-    protected virtual bool IsInteractAllowed(Entity interactor, InteractOnCollisionComponent component)
+    protected virtual bool IsInteractAllowed(
+        Entity interactor, 
+        Entity interacted, 
+        InteractOnCollisionComponent component,
+        OnCollisionMessage message)
     {
         return true;
     }
