@@ -6,6 +6,7 @@ using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
+using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using Murder.Editor.Utilities.Serialization;
 using System.Numerics;
@@ -123,7 +124,7 @@ namespace Murder.Editor.CustomEditors
                     ImGuiHelpers.DeleteButton($"delete_{g}");
 
                 // == Delete button ==
-                if (deleteButton && localizedStringData.IsGenerated)
+                if (deleteButton && !localizedStringData.IsGenerated)
                 {
                     _localization.RemoveResource(g, force: true);
                     _localization.FileChanged = true;
@@ -230,23 +231,7 @@ namespace Murder.Editor.CustomEditors
         private void DrawNotesPopup(Guid g, LocalizedStringData localizedStringData)
         {
             GameLogger.Verify(_localization is not null);
-
-            if (ImGui.BeginPopup($"notes_{g}"))
-            {
-                string text = localizedStringData.Notes ?? string.Empty;
-                if (ImGui.InputText("##notes_name", ref text, 1024, ImGuiInputTextFlags.AutoSelectAll))
-                {
-                    _localization.SetResource(localizedStringData with { Notes = text });
-                }
-
-                if (ImGui.Button("Ok!") || Game.Input.Pressed(MurderInputButtons.Submit))
-                {
-                    ImGui.CloseCurrentPopup();
-                }
-
-                ImGui.EndPopup();
-            }
+            EditorLocalizationServices.DrawNotesPopup(_localization, g, localizedStringData);
         }
-
     }
 }

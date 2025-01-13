@@ -47,11 +47,11 @@ internal class LocalizedStringField : CustomField
                 return (true, EditorLocalizationServices.AddNewResource());
             }
         }
-        else
+        else if (localizedString.Value.Id is Guid guid)
         {
             if (ImGuiHelpers.DeleteButton($"localized_{member.Name}"))
             {
-                localization.RemoveResource(localizedString.Value.Id);
+                localization.RemoveResource(guid);
 
                 localizedString = default;
                 modified = true;
@@ -65,7 +65,16 @@ internal class LocalizedStringField : CustomField
                 modified = true;
             }
 
-            ImGuiHelpers.HelpTooltip("Reset localized string");
+            ImGuiHelpers.HelpTooltip("Discard localized string without deleting");
+            ImGui.SameLine();
+
+            // == Notes ==
+            if (ImGuiHelpers.BlueIcon('\uf10d', $"note_b_{guid}"))
+            {
+                ImGui.OpenPopup($"notes_{guid}");
+            }
+
+            EditorLocalizationServices.DrawNotesPopup(guid);
             ImGui.SameLine();
         }
 
