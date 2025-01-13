@@ -4,6 +4,7 @@ using Murder.Assets.Localization;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Services;
+using Murder.Prefabs;
 using Murder.Services;
 
 namespace Murder.Editor.CustomFields;
@@ -18,11 +19,21 @@ internal class LocalizedStringField : CustomField
 
         LocalizationAsset localization = Game.Data.GetDefaultLocalization();
 
+        string searchId = $"Search_localized#{member.Name}";
+
         if (localizedString is null || localizedString.Value.Id == Guid.Empty)
         {
             bool create = false;
 
             ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.BgFaded);
+            if (ImGui.Button("\uf002"))
+            {
+                ImGui.OpenPopup(searchId);
+            }
+
+            ImGuiHelpers.HelpTooltip("Search existing localized string");
+
+            ImGui.SameLine();
             if (ImGui.Button("\uf15e"))
             {
                 create = true;
@@ -56,6 +67,23 @@ internal class LocalizedStringField : CustomField
 
             ImGuiHelpers.HelpTooltip("Reset localized string");
             ImGui.SameLine();
+        }
+
+        if (ImGui.BeginPopup(searchId))
+        {
+            ImGui.Dummy(new System.Numerics.Vector2(300, 0));
+
+            if (EditorLocalizationServices.SearchLocalizedString() is LocalizedString localizedResult)
+            {
+                localizedString = localizedResult;
+
+                ImGui.CloseCurrentPopup();
+            }
+
+            ImGui.Dummy(new System.Numerics.Vector2(300, 0));
+            ImGui.EndPopup();
+
+            return (true, localizedString);
         }
 
         if (localizedString is null || localizedString.Value.Id == Guid.Empty)
