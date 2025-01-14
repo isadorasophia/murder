@@ -866,9 +866,9 @@ namespace Murder.Data
             return builder.ToImmutableDictionary();
         }
 
-        public PixelFont GetFont(int index)
+        public PixelFont GetFont(int index, bool cultureInvariant = false)
         {
-            if (_game is not null)
+            if (_game is not null && !cultureInvariant)
             {
                 index = _game.GetLocalizedFont(index);
             }

@@ -59,6 +59,11 @@ public readonly struct DrawInfo
 
     public Rectangle Clip { get; init; } = Rectangle.Empty;
 
+    /// <summary>
+    /// Whether this should bypass localization fonts.
+    /// </summary>
+    public bool CultureInvariant { get; init; } = false;
+
     public DrawInfo()
     {
     }

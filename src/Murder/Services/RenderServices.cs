@@ -987,9 +987,10 @@ public static partial class RenderServices
         => DrawText(uiBatch, (int)font, text, position, maxWidth, -1, drawInfo ?? DrawInfo.Default);
     public static Point DrawText(this Batch2D uiBatch, MurderFonts font, string text, Vector2 position, int maxWidth, int visibleCharacters, DrawInfo? drawInfo = default)
         => DrawText(uiBatch, (int)font, text, position, maxWidth, visibleCharacters, drawInfo ?? DrawInfo.Default);
+
     public static Point DrawText(this Batch2D uiBatch, int pixelFont, string text, Vector2 position, int maxWidth, int visibleCharacters, DrawInfo drawInfo)
     {
-        var font = Game.Data.GetFont(pixelFont);
+        var font = Game.Data.GetFont(pixelFont, cultureInvariant: drawInfo.CultureInvariant);
         return font.Draw(uiBatch, text, position + drawInfo.Offset, drawInfo.Origin, drawInfo.Scale, drawInfo.Sort, drawInfo.Color, drawInfo.Outline, drawInfo.Shadow, maxWidth, visibleCharacters, drawInfo.Debug);
     }
 

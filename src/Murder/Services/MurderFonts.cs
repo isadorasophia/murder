@@ -30,4 +30,10 @@ public static class MurderFontServices
     {
         return GetLineWidth((int)font, text);
     }
+
+    public static int GetFontHeight(this MurderFonts font)
+    {
+        PixelFont f = Game.Data.GetFont((int)font);
+        return f.LineHeight;
+    }
 }
