@@ -1,6 +1,7 @@
 ﻿using ImGuiNET;
 using Murder.Assets;
 using Murder.Assets.Localization;
+using Murder.Attributes;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Services;
@@ -106,7 +107,16 @@ internal class LocalizedStringField : CustomField
         }
 
         string text = data.String;
-        if (ImGui.InputText($"##{data.Guid}", ref text, 2048))
+        if (AttributeExtensions.IsDefined(member, typeof(MultilineAttribute)))
+        {
+            modified = ImGui.InputTextMultiline($"##{data.Guid}", ref text, 1024, new(-1, 75));
+        }
+        else
+        {
+            modified = ImGui.InputText($"##{data.Guid}", ref text, 2048);
+        }
+
+        if (modified)
         {
             data = data with { String = text };
 
