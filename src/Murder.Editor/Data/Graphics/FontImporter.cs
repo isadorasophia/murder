@@ -8,6 +8,7 @@ using Murder.Services;
 using Murder.Utilities;
 using SkiaSharp;
 using System.Collections.Immutable;
+using System.Diagnostics;
 
 namespace Murder.Editor.Data.Graphics;
 
@@ -41,7 +42,6 @@ internal class FontImporter
             var bounds = new SKRect();
             var characters = new Dictionary<int, PixelFontCharacter>();
             var maxWidth = 0;
-            var nextPosition = 0;
 
             // Get the font metrics
             SKFontMetrics fontMetrics = new();
@@ -52,6 +52,8 @@ internal class FontImporter
             // There are no defined characters, so we will load the default ASCII characters
             if (chars.IsDefaultOrEmpty)
             {
+                int nextPosition = 0;
+
                 // Measure each character and store in dictionary
                 for (int i = 32; i < 255; i++)
                 {
@@ -68,6 +70,7 @@ internal class FontImporter
                     var character = new PixelFontCharacter(i,
                         new(nextPosition, 0, size.X, size.Y),
                         (int)bounds.Left, (int)bounds.Top, Calculator.CeilToInt(advance));
+
                     characters[i] = character;
                     maxWidth = Math.Max(maxWidth, (int)bounds.Width);
                     nextPosition += size.X + 1;
@@ -109,77 +112,79 @@ internal class FontImporter
             }
             else
             {
-                PackingRectangle[] rectangles = new PackingRectangle[chars.Length];
+                int widthBeforeNextLine = 1080;
+
+                int length = 16;
+
+                int nextPositionX = 0;
+                int nextPositionY = 0;
+
+                int maxYOnRow = 0;
+
                 const char MissingGlyph = '\u25fb';
-                for (var i = 0; i < chars.Length; i++)
-                {
-                    string charAsString = Char.ToString(chars[i]);
-                    // if (!skPaint.Typeface.GetGlyphs(charAsString).Any()) continue;
-                    if (!skPaint.Typeface.ContainsGlyph(chars[i])) // Skip if glyph does not exist
-                    {
-                        charAsString = $"{MissingGlyph}";
-                    }
-
-                    skPaint.MeasureText(charAsString, ref bounds);
-                    rectangles[i] = new PackingRectangle(0, 0, (uint)bounds.Width + 2, (uint)bounds.Height + 2) { Id = i };
-                }
-                
-                RectanglePacker.Pack(rectangles, out var textureBounds, PackingHints.MostlySquared, 1, 16, 4096, 4096);
-
-                for (var i = 0; i < chars.Length; i++)
+                for (int i = 0; i < chars.Length; i++)
                 {
                     int charIndex = chars[i];
-                    string charAsString = Char.ToString(chars[i]);
-                    // if (!skPaint.Typeface.GetGlyphs(charAsString).Any()) continue;
+
+                    string charAsString = char.ConvertFromUtf32(chars[i]);
                     if (!skPaint.Typeface.ContainsGlyph(charIndex)) // Skip if glyph does not exist
                     {
                         charAsString = $"{MissingGlyph}";
                     }
 
-                    var adjust = skPaint.MeasureText(charAsString, ref bounds);
-                    var advance = skPaint.GetGlyphWidths(charAsString).FirstOrDefault();
-                    var offset = skPaint.GetGlyphPositions(charAsString).FirstOrDefault();
-                    var fontRect = rectangles[i];
-                    
-                    var character = new PixelFontCharacter(charIndex,
-                        new(fontRect.X, fontRect.Y, fontRect.Width, fontRect.Height),
-                        (int)(bounds.Left + offset.X), (int)(bounds.Top + offset.Y), Calculator.CeilToInt(advance));
+                    float adjust = skPaint.MeasureText(charAsString, ref bounds);
+                    Point size = new((uint)bounds.Width, (uint)bounds.Height);
+
+                    float advance = skPaint.GetGlyphWidths(charAsString).FirstOrDefault();
+                    SKPoint offset = skPaint.GetGlyphPositions(charAsString).FirstOrDefault();
+
+                    if (nextPositionX + length >= widthBeforeNextLine)
+                    {
+                        nextPositionX = 0;
+                        nextPositionY += length;
+
+                        maxYOnRow = 0;
+                    }
+
+                    PixelFontCharacter character = new(i,
+                        new Rectangle(nextPositionX, nextPositionY, size.X, size.Y),
+                        (int)(bounds.Left), 
+                        (int)(bounds.Top), 
+                        Calculator.CeilToInt(advance));
+
                     characters[charIndex] = character;
-                    maxWidth = Math.Max(maxWidth, (int)bounds.Width);
+
+                    nextPositionX += length;
                 }
-                
-                using SKBitmap bitmap = new((int)textureBounds.Width, (int)textureBounds.Height, SKImageInfo.PlatformColorType, SKAlphaType.Premul);
+
+                using SKBitmap bitmap = new(widthBeforeNextLine, nextPositionY + maxYOnRow, SKImageInfo.PlatformColorType, SKAlphaType.Premul);
                 using SKCanvas canvas = new(bitmap);
                 
                 // Draw each character onto the bitmap
-                foreach (var character in characters)
+                foreach ((int index, PixelFontCharacter character) in characters)
                 {
-                    var glyph = character.Value.Glyph;
-                    
-                    if (skPaint.Typeface.ContainsGlyph(character.Key))
+                    Rectangle glyph = character.Glyph;
+
+                    string charAsString = char.ConvertFromUtf32(index);
+                    if (!skPaint.Typeface.ContainsGlyph(index)) // Skip if glyph does not exist
                     {
-                        canvas.DrawText(((char)character.Key).ToString(),
-                            glyph.Left - character.Value.XOffset, glyph.Top - character.Value.YOffset,
-                            skPaint);
+                        charAsString = $"{MissingGlyph}";
                     }
-                    else
-                    {
-                        canvas.DrawText(MissingGlyph.ToString(),
-                            glyph.Left - character.Value.XOffset, glyph.Top - character.Value.YOffset,
-                            skPaint);
-                    }
+
+                    canvas.DrawText(charAsString, glyph.Left - character.XOffset, glyph.Top - character.YOffset, skPaint);
                 }
 
                 bitmap.Encode(stream, SKEncodedImageFormat.Png, 100);
             }
 
-            // EditorTextureServices.SaveAsPng(stream, Path.Join(sourcePackedPath, $"{name}.png"));
+            EditorTextureServices.SaveAsPng(stream, Path.Join(sourcePackedPath, $"{name}.png"));
             EditorTextureServices.ConvertPngStreamToQuoiGz(stream, imageSourcePackedPath);
 
             // ProcessFinished:
             FontAsset fontAsset = new(
-                index:fontIndex, 
-                characters: characters, [..kernings], 
+                index: fontIndex, 
+                characters: characters, 
+                [..kernings], 
                 lineHeight: (int)fontMetrics.CapHeight - 1 + padding.Y,
                 texturePath: fontPath, 
                 baseline: -fontMetrics.Ascent - fontMetrics.Descent,
