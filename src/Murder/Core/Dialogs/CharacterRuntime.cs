@@ -634,7 +634,7 @@ namespace Murder.Core.Dialogs
                 line = line.WithSpeakerAndPortrait(_character.Speaker, _character.Portrait);
             }
 
-            if (!BlackboardHelpers.FormatText(LocalizationServices.GetLocalizedString(text.Value), out string result))
+            if (!BlackboardHelpers.FormatText(text.Value, out string result))
             {
                 return line;
             }
