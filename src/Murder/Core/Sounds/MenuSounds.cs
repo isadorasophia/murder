@@ -2,12 +2,12 @@
 {
     public readonly struct MenuSounds
     {
-        public readonly SoundEventId MenuSubmit;
+        public readonly SoundEventId MenuSubmit { get; init; }
 
-        public readonly SoundEventId TabSwitchChange;
-        public readonly SoundEventId SelectionChange;
-        public readonly SoundEventId Cancel;
+        public readonly SoundEventId TabSwitchChange { get; init; }
+        public readonly SoundEventId SelectionChange { get; init; }
+        public readonly SoundEventId Cancel { get; init; }
 
-        public readonly SoundEventId OnError;
+        public readonly SoundEventId OnError { get; init; }
     }
 }
