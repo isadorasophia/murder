@@ -299,7 +299,7 @@ public partial class EditorScene
                 CustomEditorInstance? instance = GetOrCreateAssetEditor(otherAsset);
                 if (instance?.Editor.RunDiagnostics(otherAsset.Guid) ?? true)
                 {
-                    GameLogger.Log($"\uf00c Successfully ran diagnostics on {otherAsset.Name}.");
+                    // GameLogger.Log($"\uf00c Successfully ran diagnostics on {otherAsset.Name}.");
                 }
                 else
                 {
