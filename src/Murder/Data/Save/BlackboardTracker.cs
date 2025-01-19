@@ -501,6 +501,15 @@ namespace Murder.Save
         }
 
         /// <summary>
+        /// This provides custom proessing when a field is modified because of a dialogue action.
+        /// This can do custom behaviors to post-process the field.
+        /// </summary>
+        public virtual void OnFieldModifiedByDialogue<T>(World? world, string? blackboardName, string fieldName, BlackboardActionKind kind, T value) where T : notnull
+        {
+            // Implemented by third-party
+        }
+
+        /// <summary>
         /// Set a variable value that is not available in any blackboard.
         /// </summary>
         private void SetValue<T>(string name, T value) where T : notnull

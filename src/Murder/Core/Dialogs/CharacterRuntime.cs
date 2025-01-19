@@ -473,7 +473,7 @@ namespace Murder.Core.Dialogs
                         }
                     }
 
-                    DoAction(actionEntity, tracker, action);
+                    DoAction(world, actionEntity, tracker, action);
                 }
 
                 // If an entity has been created, trigger it immediately.
@@ -517,7 +517,7 @@ namespace Murder.Core.Dialogs
             return true;
         }
 
-        private void DoAction(Entity? actionEntity, BlackboardTracker tracker, DialogAction action)
+        private void DoAction(World? world, Entity? actionEntity, BlackboardTracker tracker, DialogAction action)
         {
             if (action.ComponentValue is IComponent component)
             {
@@ -532,21 +532,31 @@ namespace Murder.Core.Dialogs
             switch (fact.Kind)
             {
                 case FactKind.Bool:
-                    tracker.SetBool(fact.Blackboard, fact.Name, action.Kind, action.BoolValue!.Value);
+                    bool @bool = action.BoolValue!.Value;
+
+                    tracker.SetBool(fact.Blackboard, fact.Name, action.Kind, @bool);
+                    tracker.OnFieldModifiedByDialogue(world, fact.Blackboard, fact.Name, action.Kind, @bool);
                     break;
 
                 case FactKind.Int:
-                    tracker.SetInt(fact.Blackboard, fact.Name, action.Kind, action.IntValue!.Value);
+                    int @int = action.IntValue!.Value;
+
+                    tracker.SetInt(fact.Blackboard, fact.Name, action.Kind, @int);
+                    tracker.OnFieldModifiedByDialogue(world, fact.Blackboard, fact.Name, action.Kind, @int);
                     break;
 
                 case FactKind.Float:
-                    tracker.SetFloat(fact.Blackboard, fact.Name, action.Kind, action.FloatValue!.Value);
+                    float @float = action.FloatValue!.Value;
+
+                    tracker.SetFloat(fact.Blackboard, fact.Name, action.Kind, @float);
+                    tracker.OnFieldModifiedByDialogue(world, fact.Blackboard, fact.Name, action.Kind, @float);
                     break;
 
                 case FactKind.String:
                     tracker.SetString(fact.Blackboard, fact.Name, action.StrValue!);
                     break;
             }
+
         }
 
         /// <summary>
