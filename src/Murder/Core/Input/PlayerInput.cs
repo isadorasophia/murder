@@ -624,7 +624,7 @@ namespace Murder.Core.Input
                 if (selectedOptionX >= currentWidth) // Is on last row and it has less than width.
                 {
                     overflowX = 1;
-                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampRight))
+                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampRight) || gridMenuFlags.HasFlag(GridMenuFlags.ClampAll))
                     {
                         selectedOptionX = currentWidth - 1;
                     }
@@ -632,7 +632,7 @@ namespace Murder.Core.Input
                 else if (selectedOptionX < 0)
                 {
                     overflowX = -1;
-                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampLeft))
+                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampLeft) || gridMenuFlags.HasFlag(GridMenuFlags.ClampAll))
                     {
                         selectedOptionX = 0;
                     }
@@ -648,15 +648,21 @@ namespace Murder.Core.Input
 
                 int currentHeight = selectedOptionX >= lastRowWidth ? height - 1 : height;
 
-                if (selectedOptionY >= currentHeight && gridMenuFlags.HasFlag(GridMenuFlags.ClampBottom))
+                if (selectedOptionY >= currentHeight)
                 {
                     overflowY = 1;
-                    selectedOptionY = currentHeight - 1;
+                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampBottom) || gridMenuFlags.HasFlag(GridMenuFlags.ClampAll))
+                    {
+                        selectedOptionY = currentHeight - 1;
+                    }
                 }
-                else if (selectedOptionY < 0 && gridMenuFlags.HasFlag(GridMenuFlags.ClampTop))
+                else if (selectedOptionY < 0)
                 {
                     overflowY = -1;
-                    selectedOptionY = 0;
+                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampTop) || gridMenuFlags.HasFlag(GridMenuFlags.ClampAll))
+                    {
+                        selectedOptionY = 0;
+                    }
                 }
 
                 selectedOptionY = Calculator.WrapAround(selectedOptionY, 0, currentHeight - 1);

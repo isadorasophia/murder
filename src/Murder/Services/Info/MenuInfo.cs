@@ -175,9 +175,9 @@ namespace Murder.Core.Input
             Resize(size);
         }
 
-        public void Clamp(int max)
+        public void Clamp()
         {
-            Selection = Math.Max(0, Math.Min(Selection, max));
+            Selection = Math.Max(0, Math.Min(Selection, Options.Length - 1));
         }
 
         public MenuInfo Disable(bool disabled)
