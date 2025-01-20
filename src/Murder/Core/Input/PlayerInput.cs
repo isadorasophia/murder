@@ -591,7 +591,8 @@ namespace Murder.Core.Input
             ClampLeft,
             ClampTop,
             ClampBottom,
-            ClampAll
+            ClampAllDirections,
+            ClampSize
         }
 
         public bool GridMenu(ref MenuInfo currentInfo, int width, int _, int size, GridMenuFlags gridMenuFlags = GridMenuFlags.None)
@@ -624,7 +625,7 @@ namespace Murder.Core.Input
                 if (selectedOptionX >= currentWidth) // Is on last row and it has less than width.
                 {
                     overflowX = 1;
-                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampRight) || gridMenuFlags.HasFlag(GridMenuFlags.ClampAll))
+                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampRight) || gridMenuFlags.HasFlag(GridMenuFlags.ClampAllDirections))
                     {
                         selectedOptionX = currentWidth - 1;
                     }
@@ -632,7 +633,7 @@ namespace Murder.Core.Input
                 else if (selectedOptionX < 0)
                 {
                     overflowX = -1;
-                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampLeft) || gridMenuFlags.HasFlag(GridMenuFlags.ClampAll))
+                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampLeft) || gridMenuFlags.HasFlag(GridMenuFlags.ClampAllDirections))
                     {
                         selectedOptionX = 0;
                     }
@@ -651,7 +652,7 @@ namespace Murder.Core.Input
                 if (selectedOptionY >= currentHeight)
                 {
                     overflowY = 1;
-                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampBottom) || gridMenuFlags.HasFlag(GridMenuFlags.ClampAll))
+                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampBottom) || gridMenuFlags.HasFlag(GridMenuFlags.ClampAllDirections))
                     {
                         selectedOptionY = currentHeight - 1;
                     }
@@ -659,7 +660,7 @@ namespace Murder.Core.Input
                 else if (selectedOptionY < 0)
                 {
                     overflowY = -1;
-                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampTop) || gridMenuFlags.HasFlag(GridMenuFlags.ClampAll))
+                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampTop) || gridMenuFlags.HasFlag(GridMenuFlags.ClampAllDirections))
                     {
                         selectedOptionY = 0;
                     }
