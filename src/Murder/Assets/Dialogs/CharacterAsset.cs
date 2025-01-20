@@ -102,7 +102,7 @@ public class CharacterAsset : GameAsset
             return;
         }
 
-        _allSituations.SetItem(index, situation);
+        _allSituations = _allSituations.SetItem(index, situation);
         FileChanged = true;
     }
 
