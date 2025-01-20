@@ -15,6 +15,7 @@ using Murder.Editor.Reflection;
 using Murder.Editor.Stages;
 using Murder.Editor.Systems;
 using Murder.Editor.Utilities.Attributes;
+using System.Collections.Immutable;
 using System.Diagnostics;
 
 namespace Murder.Editor.CustomEditors
@@ -274,8 +275,9 @@ namespace Murder.Editor.CustomEditors
                 return false;
             }
 
-            bool foundIssue = false;
+            ImmutableDictionary<DialogueId, LineInfo> scriptData = script.Data;
 
+            bool foundIssue = false;
             foreach ((string name, Situation situation) in script.Situations)
             {
                 foreach (Dialog d in situation.Dialogs)
@@ -291,7 +293,7 @@ namespace Murder.Editor.CustomEditors
                             }
 
                             DialogueId id = new(name, d.Id, i);
-                            if (!script.Data.TryGetValue(id, out LineInfo info) || info.Component is null)
+                            if (!scriptData.TryGetValue(id, out LineInfo info) || info.Component is null)
                             {
                                 GameLogger.Error($"Found empty component at: {name}, {d.Id}.");
                                 foundIssue = true;
@@ -302,7 +304,7 @@ namespace Murder.Editor.CustomEditors
             }
 
             bool hasAllDataInformation = true;
-            foreach ((DialogueId d, LineInfo info) in script.Data)
+            foreach ((DialogueId d, LineInfo info) in scriptData)
             {
                 if (info.Portrait is null && info.Event is null && info.Component is null)
                 {
@@ -310,7 +312,7 @@ namespace Murder.Editor.CustomEditors
                 }
             }
 
-            if (script.Data.Count == 0 || !hasAllDataInformation)
+            if (scriptData.Count == 0 || !hasAllDataInformation)
             {
                 GameLogger.Warning($"There are no metadata information for {script.Name}. Is this expected?");
             }

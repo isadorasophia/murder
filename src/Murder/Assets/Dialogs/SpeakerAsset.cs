@@ -1,4 +1,5 @@
-﻿using Murder.Assets.Sounds;
+﻿using Bang;
+using Murder.Assets.Sounds;
 using Murder.Attributes;
 using Murder.Core;
 using Murder.Utilities;
@@ -16,6 +17,8 @@ public enum PortraitProperties
 
 public readonly struct PortraitInfo
 {
+    public readonly string Name { get; init; } = string.Empty;
+
     public readonly Portrait Portrait { get; init; } = new();
 
     public readonly PortraitProperties Properties { get; init; } = PortraitProperties.Loop; 
@@ -44,5 +47,32 @@ public class SpeakerAsset : GameAsset
     [Font]
     public readonly int? CustomFont;
 
-    public readonly ImmutableDictionary<string, PortraitInfo> Portraits = ImmutableDictionary<string, PortraitInfo>.Empty;
+    [Serialize, ShowInEditor]
+    protected readonly ImmutableArray<PortraitInfo> _allPortraits = [];
+
+    private ImmutableDictionary<string, PortraitInfo>? _portraitsCache = null;
+
+    public ImmutableDictionary<string, PortraitInfo> Portraits
+    {
+        get
+        {
+            if (_portraitsCache is null)
+            {
+                var builder = ImmutableDictionary.CreateBuilder<string, PortraitInfo>();
+                foreach (PortraitInfo info in _allPortraits)
+                {
+                    builder[info.Name] = info;
+                }
+
+                _portraitsCache = builder.ToImmutable();
+            }
+
+            return _portraitsCache;
+        }
+    }
+
+    protected override void OnModified()
+    {
+        _portraitsCache = null;
+    }
 }

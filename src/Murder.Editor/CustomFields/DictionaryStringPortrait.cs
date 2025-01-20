@@ -10,86 +10,68 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Murder.Editor.CustomFields
 {
-    [CustomFieldOf(typeof(ImmutableDictionary<string, PortraitInfo>))]
-    internal class DictionaryStringPortrait : DictionaryField<string, PortraitInfo>
+    [CustomFieldOf(typeof(ImmutableArray<PortraitInfo>))]
+    internal class DictionaryStringPortrait : ImmutableArrayField<PortraitInfo>
     {
-        private string _new = string.Empty;
-
-        protected override bool Add(IList<string> candidates, [NotNullWhen(true)] out (string Key, PortraitInfo Value)? element)
+        protected override bool Add(in EditorMember member, [NotNullWhen(true)] out PortraitInfo element)
         {
             if (ImGui.Button("New Portrait"))
             {
-                _new = "Portrait-Name";
-                ImGui.OpenPopup("Add Item##dictionary");
+                element = new();
+                return true;
             }
 
-            if (ImGui.BeginPopup("Add Item##dictionary"))
-            {
-                ImGui.InputText("##AddAnim_new_name", ref _new, 128);
-
-                if (ImGui.Button("Create"))
-                {
-                    ImGui.CloseCurrentPopup();
-                    element = (_new, new PortraitInfo());
-
-                    ImGui.EndPopup();
-                    return true;
-                }
-
-                ImGui.EndPopup();
-            }
-
-            element = (default!, default!);
+            element = default;
             return false;
         }
 
-        protected override List<string> GetCandidateKeys(EditorMember member, IDictionary<string, PortraitInfo> fieldValue) =>
-            new() { default! };
-
-        protected override bool CanModifyKeys() => true;
-
-        public override bool DrawElementValue(EditorMember member, PortraitInfo value, out PortraitInfo modifiedValue)
+        protected override bool DrawElement(ref PortraitInfo element, EditorMember member, int index)
         {
             bool modified = false;
 
-            string id = $"action_{value.Portrait.Sprite}_{value.Portrait.AnimationId}";
+            string id = $"speaker_{index}";
             using TableMultipleColumns table = new(id, flags: ImGuiTableFlags.SizingFixedFit, 0, 0);
 
             ImGui.TableNextRow();
             ImGui.TableNextColumn();
 
-            if (Game.Data.TryGetAsset<SpriteAsset>(value.Portrait.Sprite) is SpriteAsset ase)
+            if (Game.Data.TryGetAsset<SpriteAsset>(element.Portrait.Sprite) is SpriteAsset ase)
             {
-                EditorAssetHelpers.DrawPreview(ase, maxSize: 256, value.Portrait.AnimationId);
+                EditorAssetHelpers.DrawPreview(ase, maxSize: 256, element.Portrait.AnimationId);
                 ImGui.TableNextColumn();
             }
 
             ImGui.PushItemWidth(300);
 
-            modifiedValue = value;
+            string name = element.Name;
+            if (DrawValue(ref element, nameof(PortraitInfo.Name)))
+            {
+                element = element with { Name = name };
+                modified = true;
+            }
 
-            Portrait portrait = modifiedValue.Portrait;
+            Portrait portrait = element.Portrait;
             if (DrawValue(ref portrait, nameof(Portrait.Sprite)))
             {
-                modifiedValue = value with { Portrait = value.Portrait.WithSprite(portrait.Sprite) };
+                element = element with { Portrait = element.Portrait.WithSprite(portrait.Sprite) };
                 modified = true;
             }
 
             // Draw combo box for the animation id
-            string animation = value.Portrait.AnimationId;
-            if (EditorAssetHelpers.DrawComboBoxFor(value.Portrait.Sprite, ref animation))
+            string animation = element.Portrait.AnimationId;
+            if (EditorAssetHelpers.DrawComboBoxFor(element.Portrait.Sprite, ref animation))
             {
-                modifiedValue = value with { Portrait = value.Portrait.WithAnimationId(animation) };
+                element = element with { Portrait = element.Portrait.WithAnimationId(animation) };
                 modified = true;
             }
             ImGui.PopItemWidth();
 
             if (portrait.Sprite != Guid.Empty)
             {
-                int flags = (int)value.Properties;
+                int flags = (int)element.Properties;
                 if (ImGuiHelpers.DrawEnumFieldAsFlags(id, typeof(PortraitProperties), ref flags))
                 {
-                    modifiedValue = value with { Properties = (PortraitProperties)flags };
+                    element = element with { Properties = (PortraitProperties)flags };
                     modified = true;
                 }
             }

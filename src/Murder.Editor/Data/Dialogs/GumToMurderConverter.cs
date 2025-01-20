@@ -61,11 +61,11 @@ namespace Murder.Editor.Data
             LocalizationAsset localizationAsset = Game.Data.GetDefaultLocalization();
             _previousStringsInScript = FetchResourcesForAsset(localizationAsset, asset.Guid);
 
-            var builder = ImmutableDictionary.CreateBuilder<string, Situation>();
+            var builder = ImmutableArray.CreateBuilder<Situation>();
             foreach (GumData.Situation gumSituation in script.FetchAllSituations())
             {
                 Situation situation = ConvertSituation(gumSituation);
-                builder[situation.Name] = situation;
+                builder.Add(situation);
             }
 
             asset.SetSituations(builder.ToImmutable());

@@ -1,30 +1,11 @@
 ﻿using Bang;
 using Bang.Components;
 using Murder.Attributes;
-using Murder.Core;
 using Murder.Core.Dialogs;
-using Murder.Diagnostics;
 using Murder.Serialization;
 using System.Collections.Immutable;
 
 namespace Murder.Assets;
-
-public readonly struct LineInfo
-{
-    public readonly Guid Speaker { get; init; } = Guid.Empty;
-    public readonly string? Portrait { get; init; } = null;
-
-    public string? Event { get; init; } = null;
-
-    /// <summary>
-    /// Component modified within a dialog.
-    /// </summary>
-    public IComponent? Component { get; init; } = null;
-
-    public LineInfo() { }
-
-    public bool Empty => Speaker == Guid.Empty && Portrait is null && Event is null && Component is null;
-}
 
 public class CharacterAsset : GameAsset
 {
@@ -48,23 +29,65 @@ public class CharacterAsset : GameAsset
     /// List of tasks or events that the <see cref="Situations"/> may do.
     /// </summary>
     [Serialize]
-    private ImmutableDictionary<string, Situation> _situations = ImmutableDictionary<string, Situation>.Empty;
+    private ImmutableArray<Situation> _allSituations = [];
+
+    [Serialize]
+    private ImmutableArray<DialogueLineInfo> _dialogueData = [];
+
+    private ImmutableDictionary<string, Situation>? _cachedSituations = null;
+    private ImmutableDictionary<DialogueId, LineInfo>? _cachedDialogueData = null;
 
     /// <summary>
-    /// List of all the lines that have custom information within a dialogue.
+    /// Fetch all situations for this character.
     /// </summary>
-    [Serialize]
-    private readonly ComplexDictionary<DialogueId, LineInfo> _data = [];
+    public ImmutableDictionary<string, Situation> Situations
+    {
+        get
+        {
+            if (_cachedSituations is null)
+            {
+                var builder = ImmutableDictionary.CreateBuilder<string, Situation>();
+                foreach (Situation situation in _allSituations)
+                {
+                    builder[situation.Name] = situation;
+                }
 
-    public ImmutableDictionary<string, Situation> Situations => _situations;
+                _cachedSituations = builder.ToImmutable();
+            }
+
+            return _cachedSituations;
+        }
+    }
+
+    /// <summary>
+    /// Fetch all the dialogue custom data.
+    /// </summary>
+    public ImmutableDictionary<DialogueId, LineInfo> Data
+    {
+        get
+        {
+            if (_cachedDialogueData is null)
+            {
+                var builder = ImmutableDictionary.CreateBuilder<DialogueId, LineInfo>();
+                foreach (DialogueLineInfo data in _dialogueData)
+                {
+                    builder[data.Id] = data.Info;
+                }
+
+                _cachedDialogueData = builder.ToImmutable();
+            }
+
+            return _cachedDialogueData;
+        }
+    }
 
     /// <summary>
     /// Set the situation to a list. 
     /// This is called when updating the scripts with the latest data.
     /// </summary>
-    public void SetSituations(ImmutableDictionary<string, Situation> situations)
+    public void SetSituations(ImmutableArray<Situation> situations)
     {
-        _situations = situations;
+        _allSituations = situations;
         FileChanged = true;
     }
 
@@ -73,41 +96,58 @@ public class CharacterAsset : GameAsset
     /// </summary>
     public void SetSituation(Situation situation)
     {
-        _situations = _situations.SetItem(situation.Name, situation);
+        int index = FindIndexForSituation(situation.Name);
+        if (index == -1)
+        {
+            return;
+        }
+
+        _allSituations.SetItem(index, situation);
         FileChanged = true;
     }
 
     public Situation? TryFetchSituation(string name)
     {
-        if (_situations.TryGetValue(name, out Situation value))
+        int index = FindIndexForSituation(name);
+        if (index == -1)
         {
-            return value;
+            return null;
         }
 
-        return null;
+        return _allSituations[index];
     }
 
     public void SetCustomComponentAt(DialogueId id, IComponent c)
     {
-        InitializeDataAt(id);
+        int index = GetOrCreateDataAt(id);
 
-        _data[id] = _data[id] with { Component = c };
+        DialogueLineInfo data = _dialogueData[index];
+        _dialogueData = _dialogueData.SetItem(
+            index,
+            data with { Info = data.Info with { Component = c } });
+
         FileChanged = true;
     }
 
     public void SetCustomPortraitAt(DialogueId id, Guid speaker, string? portrait)
     {
-        InitializeDataAt(id);
+        int index = GetOrCreateDataAt(id);
 
-        _data[id] = _data[id] with { Speaker = speaker, Portrait = portrait };
+        DialogueLineInfo data = _dialogueData[index];
+        _dialogueData = _dialogueData.SetItem(
+            index, 
+            data with { Info = data.Info with { Speaker = speaker, Portrait = portrait } });
+
         FileChanged = true;
     }
 
     public void SetEventInfoAt(DialogueId id, string? @event)
     {
-        InitializeDataAt(id);
+        int index = GetOrCreateDataAt(id);
 
-        _data[id] = _data[id] with { Event = @event };
+        DialogueLineInfo data = _dialogueData[index];
+        _dialogueData = _dialogueData.SetItem(index, data with { Info = data.Info with { Event = @event } });
+
         FileChanged = true;
     }
 
@@ -115,46 +155,77 @@ public class CharacterAsset : GameAsset
     {
         foreach (DialogueId id in unusedComponents)
         {
-            InitializeDataAt(id);
+            int index = FindIndexForDialogueId(id);
+            if (index == -1)
+            {
+                continue;
+            }
 
-            _data[id] = _data[id] with { Component = null };
+            DialogueLineInfo data = _dialogueData[index];
+            _dialogueData = _dialogueData.SetItem(index, data with { Info = data.Info with { Component = null } });
         }
 
         FileChanged = true;
     }
 
-    private void InitializeDataAt(DialogueId id)
-    {
-        if (!_data.ContainsKey(id))
-        {
-            _data[id] = new();
-        }
-    }
-
     public void PrunUnusedData()
     {
-        foreach ((DialogueId id, LineInfo info) in Data)
+        for (int i = 0; i < _dialogueData.Length; i++)
         {
-            if (info.Empty)
+            DialogueLineInfo data = _dialogueData[i];
+            if (data.Info.Empty)
             {
-                _data.Remove(id);
+                _dialogueData = _dialogueData.RemoveAt(i);
+                i--; // adjust index which will be added in the next iteration
             }
         }
 
         FileChanged = true;
     }
 
-    public void RemoveCustomPortraits(IEnumerable<DialogueId> actionIds)
+    protected override void OnModified()
     {
-        foreach (DialogueId id in actionIds)
-        {
-            InitializeDataAt(id);
-
-            _data[id] = _data[id] with { Speaker = Guid.Empty, Portrait = null };
-        }
-
-        FileChanged = true;
+        _cachedSituations = null;
+        _cachedDialogueData = null;
     }
 
-    public ImmutableDictionary<DialogueId, LineInfo> Data => _data.ToImmutableDictionary();
+    private int GetOrCreateDataAt(DialogueId id)
+    {
+        int index = FindIndexForDialogueId(id);
+        if (index == -1)
+        {
+            index = _dialogueData.Length;
+            _dialogueData = _dialogueData.Add(new(id));
+        }
+
+        return index;
+    }
+
+    private int FindIndexForDialogueId(DialogueId id)
+    {
+        for (int i = 0; i < _dialogueData.Length; ++i)
+        {
+            DialogueLineInfo info = _dialogueData[i];
+            if (info.Id == id)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private int FindIndexForSituation(string name)
+    {
+        for (int i = 0; i < _allSituations.Length; ++i)
+        {
+            Situation target = _allSituations[i];
+            if (name.Equals(target.Name))
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
 }
