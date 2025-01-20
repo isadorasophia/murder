@@ -672,6 +672,11 @@ namespace Murder.Core.Input
 
             int selectedOptionIndex = selectedOptionX + selectedOptionY * width;
 
+            if (gridMenuFlags.HasFlag(GridMenuFlags.ClampSize))
+            {
+                selectedOptionIndex = Math.Clamp(selectedOptionIndex, 0, currentInfo.Length - 1);
+            }
+
             bool pressed = false;
             if (PressedAndConsume(MurderInputButtons.Submit))
             {
@@ -741,14 +746,18 @@ namespace Murder.Core.Input
                 if (selectedOptionX >= currentWidth) // Is on last row and it has less than width.
                 {
                     overflowX = 1;
-                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampRight))
+                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampRight) || gridMenuFlags.HasFlag(GridMenuFlags.ClampAllDirections))
+                    {
                         selectedOptionX = currentWidth - 1;
+                    }
                 }
                 else if (selectedOptionX < 0)
                 {
                     overflowX = -1;
-                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampLeft))
+                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampLeft) || gridMenuFlags.HasFlag(GridMenuFlags.ClampAllDirections))
+                    {
                         selectedOptionX = 0;
+                    }
                 }
 
                 selectedOptionX = Calculator.WrapAround(selectedOptionX, 0, currentWidth - 1);
@@ -762,15 +771,21 @@ namespace Murder.Core.Input
 
                 int currentHeight = selectedOptionX >= lastRowWidth ? height - 1 : height;
 
-                if (selectedOptionY >= currentHeight && gridMenuFlags.HasFlag(GridMenuFlags.ClampBottom))
+                if (selectedOptionY >= currentHeight)
                 {
-                    selectedOptionY = currentHeight - 1;
                     overflowY = 1;
+                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampBottom) || gridMenuFlags.HasFlag(GridMenuFlags.ClampAllDirections))
+                    {
+                        selectedOptionY = currentHeight - 1;
+                    }
                 }
-                else if (selectedOptionY < 0 && gridMenuFlags.HasFlag(GridMenuFlags.ClampTop))
+                else if (selectedOptionY < 0)
                 {
                     overflowY = -1;
-                    selectedOptionY = 0;
+                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampTop) || gridMenuFlags.HasFlag(GridMenuFlags.ClampAllDirections))
+                    {
+                        selectedOptionY = 0;
+                    }
                 }
 
                 selectedOptionY = Calculator.WrapAround(selectedOptionY, 0, Math.Max(0, currentHeight - 1));
@@ -779,6 +794,11 @@ namespace Murder.Core.Input
             }
 
             int selectedOptionIndex = selectedOptionX + selectedOptionY * width;
+
+            if (gridMenuFlags.HasFlag(GridMenuFlags.ClampSize))
+            {
+                selectedOptionIndex = Math.Clamp(selectedOptionIndex, 0, currentInfo.Length - 1);
+            }
 
             bool pressed = false;
             if (PressedAndConsume(MurderInputButtons.Submit))
