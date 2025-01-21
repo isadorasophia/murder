@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Murder.Editor.CustomFields
 {
     [CustomFieldOf(typeof(ImmutableArray<PortraitInfo>))]
-    internal class DictionaryStringPortrait : ImmutableArrayField<PortraitInfo>
+    internal class ImmutableArrayPortraitField : ImmutableArrayField<PortraitInfo>
     {
         protected override bool Add(in EditorMember member, [NotNullWhen(true)] out PortraitInfo element)
         {
@@ -46,7 +46,6 @@ namespace Murder.Editor.CustomFields
             string name = element.Name;
             if (DrawValue(ref element, nameof(PortraitInfo.Name)))
             {
-                element = element with { Name = name };
                 modified = true;
             }
 
