@@ -10,6 +10,7 @@ namespace Murder.Core.Input
         public T[] Options = new T[0];
 
         public int Scroll = 0;
+        public float SmoothScroll = 0;
 
         public bool Canceled = false;
         public bool Disabled = false;
@@ -61,19 +62,9 @@ namespace Murder.Core.Input
             return option;
         }
 
-        public void Select(int index) => Select(index, Game.NowUnscaled);
 
         public void Select(int index, float now)
-        {
-            if (index < Scroll)
-            {
-                Scroll = index;
-            }
-            else if (index >= Scroll + VisibleItems)
-            {
-                Scroll = index - VisibleItems + 1;
-            }
-
+        {           
             JustMoved = Selection != index;
 
             PreviousSelection = Selection;

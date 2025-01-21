@@ -2,9 +2,11 @@
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
 using Murder.Utilities;
+using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Numerics;
+using System.Reflection;
 using System.Text;
 
 namespace Murder.Core.Input
@@ -562,6 +564,14 @@ namespace Murder.Core.Input
                 int newOption = currentInfo.NextAvailableOption(currentInfo.Selection, sign);
                 if (newOption != currentInfo.Selection)
                 {
+                    if (newOption < currentInfo.Scroll)
+                    {
+                        currentInfo.Scroll = newOption;
+                    }
+                    else if (newOption >= currentInfo.Scroll + currentInfo.VisibleItems)
+                    {
+                        currentInfo.Scroll = newOption - currentInfo.VisibleItems + 1;
+                    }
                     currentInfo.Select(newOption, Game.NowUnscaled);
                 }
             }
@@ -812,7 +822,18 @@ namespace Murder.Core.Input
                 canceled = true;
             }
 
+            int selectedOptionColumn = currentInfo.Selection / width;
+            int visibleColumns = currentInfo.VisibleItems / width;
+            if (selectedOptionColumn < currentInfo.Scroll)
+            {
+                currentInfo.Scroll = selectedOptionColumn;
+            }
+            else if (selectedOptionColumn >= currentInfo.Scroll + visibleColumns)
+            {
+                currentInfo.Scroll = selectedOptionColumn - visibleColumns + 1;
+            }
             currentInfo.Select(selectedOptionIndex, lastMoved);
+            currentInfo.SmoothScroll = Calculator.LerpSmooth(currentInfo.SmoothScroll, currentInfo.Scroll, Game.UnscaledDeltaTime, 0.1f);
 
             currentInfo.Canceled = canceled;
             currentInfo.OverflowX = overflowX;
