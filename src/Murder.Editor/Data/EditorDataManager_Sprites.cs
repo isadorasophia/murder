@@ -129,10 +129,11 @@ public partial class EditorDataManager
         }
 
         DateTime lastTimeFetched = EditorSettings.LastMetadataImported;
-        if (File.GetLastWriteTime(path) < lastTimeFetched)
-        {
-            return;
-        }
+        // something about this is off, so I'll just skip for now.
+        //if (File.GetLastWriteTime(path) < lastTimeFetched)
+        //{
+        //    return;
+        //}
 
         using PerfTimeRecorder recorder = new("Update Sprite Events");
 
