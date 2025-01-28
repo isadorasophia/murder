@@ -71,7 +71,6 @@ namespace Murder.Core.Input
 
             Selection = index;
             LastMoved = now;
-            LastPressed = now;
 
             if (JustMoved)
             {

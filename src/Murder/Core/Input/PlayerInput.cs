@@ -813,6 +813,7 @@ namespace Murder.Core.Input
             bool pressed = false;
             if (PressedAndConsume(MurderInputButtons.Submit))
             {
+                currentInfo.LastPressed = Game.NowUnscaled;
                 pressed = true;
             }
 
@@ -838,6 +839,7 @@ namespace Murder.Core.Input
             currentInfo.Canceled = canceled;
             currentInfo.OverflowX = overflowX;
             currentInfo.OverflowY = overflowY;
+
             return pressed;
         }
 
