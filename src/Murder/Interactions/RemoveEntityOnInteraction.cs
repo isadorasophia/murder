@@ -4,6 +4,8 @@ using Bang.Entities;
 using Bang.Interactions;
 using Murder.Attributes;
 using Murder.Diagnostics;
+using Murder.Services;
+using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 
 namespace Murder.Interactions
@@ -17,11 +19,17 @@ namespace Murder.Interactions
         Parent,
         Children
     }
+
     public readonly struct RemoveEntityOnInteraction : IInteraction
     {
         public readonly DestroyWho DestroyWho;
+
+        [Target]
+        public readonly string? Target = null;
+
         [Tooltip("Useful to filter out reactive systems")]
         public readonly ImmutableArray<IComponent> AddComponentsBeforeRemoving = ImmutableArray<IComponent>.Empty;
+        
         public RemoveEntityOnInteraction() { }
 
         public void Interact(World world, Entity interactor, Entity? interacted)
@@ -32,14 +40,18 @@ namespace Murder.Interactions
             switch (DestroyWho)
             {
                 case DestroyWho.Target:
-                    if (interacted.TryGetIdTarget()?.Target is int targetId &&
-                        world.TryGetEntity(targetId) is Entity targetEntity)
+                    int? targetId = Target is not null ? 
+                        interacted.FindTarget(Target) : 
+                        interacted.TryGetIdTarget()?.Target;
+
+                    if (targetId is not null && world.TryGetEntity(targetId.Value) is Entity targetEntity)
                     {
                         target = targetEntity;
                     }
 
                     // Also delete all entities defined in a collection.
-                    if (interacted.TryGetIdTargetCollection()?.Targets is ImmutableDictionary<string, int> targets)
+                    if (Target is null && 
+                        interacted.TryGetIdTargetCollection()?.Targets is ImmutableDictionary<string, int> targets)
                     {
                         foreach (int entityId in targets.Values)
                         {
@@ -58,9 +70,11 @@ namespace Murder.Interactions
                 case DestroyWho.Interactor:
                     target = interactor;
                     break;
+
                 case DestroyWho.Parent:
                     target = interacted.TryFetchParent();
                     break;
+
                 case DestroyWho.Children:
                     // For now, this only destroys the first child.
                     if (interacted.Children.Length > 0)

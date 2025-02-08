@@ -151,6 +151,7 @@ namespace Murder.Editor.Systems
                 else if (_wasEditing == e.EntityId)
                 {
                     e.SendMessage(new AssetUpdatedMessage(typeof(ColliderComponent)));
+                    _wasEditing = -1;
                 }
             }
 
