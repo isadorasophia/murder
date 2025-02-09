@@ -59,6 +59,11 @@ namespace Murder.Interactions
             }
         }
 
+        public static Entity? TryFetchDialogueChild(Entity? interacted)
+        {
+            return interacted?.TryFetchChild(DIALOGUE_CHILD);
+        }
+
         public static Entity? CreateDialogueChild(World world, Entity? interacted)
         {
             if (interacted is null)
