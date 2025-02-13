@@ -81,6 +81,12 @@ public partial class EditorScene
                     chord: new Chord(Keys.F7, Keys.LeftShift),
                     toggle: ToggleHotReloadDialogue,
                     defaultCheckedValue: Architect.EditorSettings.EnableDialogueHotReload
+                ),
+                new ToggleShortcut(
+                    name: "Hot Reload for Localization",
+                    chord: new Chord(Keys.F8, Keys.LeftShift),
+                    toggle: ToggleHotReloadLocalization,
+                    defaultCheckedValue: Architect.EditorSettings.AutomaticallyHotReloadLocalizationChanges
                 )
             ],
             [ShortcutGroup.Tools] =
@@ -99,6 +105,11 @@ public partial class EditorScene
     private void ToggleCommandPalette()
     {
         _commandPaletteIsVisible = !_commandPaletteIsVisible;
+    }
+
+    private void ToggleHotReloadLocalization(bool value)
+    {
+        Architect.EditorData.ToggleHotReloadLocalization(value);
     }
 
     private void ToggleHotReloadShader(bool value)

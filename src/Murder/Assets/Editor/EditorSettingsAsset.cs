@@ -176,6 +176,9 @@ public class EditorSettingsAsset : GameAsset
     [Tooltip("Whether we will automatically apply any chances made to dialogues")]
     public bool EnableDialogueHotReload = false;
 
+    [Tooltip("Whether we will automatically apply any chances made to localization resources")]
+    public bool AutomaticallyHotReloadLocalizationChanges = false;
+
     [JsonConstructor]
     public EditorSettingsAsset(string name, string gameSourcePath)
     {

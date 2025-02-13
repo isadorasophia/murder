@@ -281,6 +281,24 @@ namespace Murder.Editor.CustomEditors
 
                     ImGui.SetCursorPosY(ImGui.GetCursorPosY() + textHeight);
 
+                    bool selected = info.Stage.EditorHook.SelectedDialogueLine?.Text?.Id == line.Text?.Id;
+                    if (ImGuiHelpers.ColoredIconButton('\uf06e', $"highlight_{i}", isActive: selected))
+                    {
+                        if (selected)
+                        {
+                            info.Stage.EditorHook.SelectedDialogueLine = null;
+                        }
+                        else
+                        {
+                            Debug.Assert(_script is not null);
+                            info.Stage.EditorHook.SelectedSituation = new(_script.Guid, info.ActiveSituation);
+                            info.Stage.EditorHook.SelectedDialogueLine = line;
+                        }
+                    }
+
+                    ImGuiHelpers.HelpTooltip(selected ? "Hide line with game UI" : "Preview line with game UI");
+
+                    ImGui.SameLine();
                     ImGui.TextWrapped(value);
                 }
 

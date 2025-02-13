@@ -3,6 +3,8 @@ using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
 using Murder.Attributes;
+using Murder.Components;
+using Murder.Core.Dialogs;
 using Murder.Core.Geometry;
 using Murder.Core.Physics;
 using Murder.Editor.Assets;
@@ -232,6 +234,10 @@ namespace Murder.Editor.Utilities
         public bool ShowStates = false;
         public bool DrawTargetInteractions = false;
         public bool DrawAnimationEvents = true;
+
+        public SituationComponent? SelectedSituation = null;
+        public Line? SelectedDialogueLine = null;
+        public bool ForceUpdateDialogue = false;
 
         public CameraBoundsInfo? DrawCameraBounds = null;
         public class CameraBoundsInfo

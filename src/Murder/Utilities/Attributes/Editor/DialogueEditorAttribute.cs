@@ -1,4 +1,4 @@
-﻿namespace Murder.Editor.Utilities.Attributes
+﻿namespace Murder.Attributes
 {
     public class DialogueEditorAttribute : Attribute
     {

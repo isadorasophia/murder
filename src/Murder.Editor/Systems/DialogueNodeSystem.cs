@@ -1,5 +1,6 @@
 ﻿using Bang.Contexts;
 using Bang.Systems;
+using Murder.Attributes;
 using Murder.Core;
 using Murder.Core.Dialogs;
 using Murder.Core.Geometry;
@@ -9,7 +10,6 @@ using Murder.Core.Ui;
 using Murder.Diagnostics;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
-using Murder.Editor.Utilities.Attributes;
 using Murder.Services;
 using Murder.Utilities;
 using System.Numerics;
@@ -28,11 +28,12 @@ namespace Murder.Editor.Systems
 
         private readonly float _zoom = 100;
 
-        private readonly List<Guid> _iconsCache = new List<Guid>(6);
+        private readonly List<Guid> _iconsCache = new(6);
 
         private SimpleButton? _stepBackButton;
         private SimpleButton? _stepForwardButton;
         private SimpleButton? _playButton;
+
         public void Update(Context context)
         {
             if (!context.HasAnyEntity)
@@ -76,18 +77,20 @@ namespace Murder.Editor.Systems
                 }
             }
 
-            _stepBackButton?.Update(hook.CursorScreenPosition, clicked, Game.Input.Down(MurderInputButtons.LeftClick), () =>
-            {
-                GameLogger.Log("Pressed Back!");
-            });
-            _stepForwardButton?.Update(hook.CursorScreenPosition, clicked, Game.Input.Down(MurderInputButtons.LeftClick), () =>
-            {
-                GameLogger.Log("Pressed Play!");
-            });
-            _playButton?.Update(hook.CursorScreenPosition, clicked, Game.Input.Down(MurderInputButtons.LeftClick), () =>
-            {
-                GameLogger.Log("Pressed Forward!");
-            });
+            //_stepBackButton?.Update(hook.CursorScreenPosition, clicked, Game.Input.Down(MurderInputButtons.LeftClick), () =>
+            //{
+            //    GameLogger.Log("Pressed back!");
+            //});
+
+            //_stepForwardButton?.Update(hook.CursorScreenPosition, clicked, Game.Input.Down(MurderInputButtons.LeftClick), () =>
+            //{
+            //    GameLogger.Log("Pressed play!");
+            //});
+
+            //_playButton?.Update(hook.CursorScreenPosition, clicked, Game.Input.Down(MurderInputButtons.LeftClick), () =>
+            //{
+            //    GameLogger.Log("Pressed forward!");
+            //});
         }
 
         public void Draw(RenderContext render, Context context)
@@ -181,15 +184,18 @@ namespace Murder.Editor.Systems
             }
 
             // TODO: Currently unused because they are being drawn weird and are non-functional anyway.
-            var drawInfo = new DrawInfo() { Scale = Vector2.One * 2f, Color = Color.White };
-            Vector2 position = new(render.Camera.Width / 2f - 72, 10);
-            _stepBackButton?.UpdatePosition(new Rectangle(position.X, position.Y, 32, 32));
-            _playButton?.UpdatePosition(new Rectangle(position.X + 36, position.Y, 32, 32));
-            _stepForwardButton?.UpdatePosition(new Rectangle(position.X + 72, position.Y, 32, 32));
+            //DrawInfo drawInfo = new() { Scale = Vector2.One * 2f, Color = Color.White };
 
-            _stepBackButton?.Draw(render.UiBatch, drawInfo);
-            _stepForwardButton?.Draw(render.UiBatch, drawInfo);
-            _playButton?.Draw(render.UiBatch, drawInfo);
+            //Vector2 position = new(render.Camera.Width / 2f - 72, 10);
+
+            //_playButton?.UpdatePosition(new Rectangle(position.X + 36, position.Y, 32, 32));
+            //_playButton?.Draw(render.UiBatch, drawInfo);
+
+            //_stepBackButton?.UpdatePosition(new Rectangle(position.X, position.Y, 32, 32));
+            //_stepForwardButton?.UpdatePosition(new Rectangle(position.X + 72, position.Y, 32, 32));
+
+            //_stepBackButton?.Draw(render.UiBatch, drawInfo);
+            //_stepForwardButton?.Draw(render.UiBatch, drawInfo);
         }
 
         private static Vector2 GetPushSpeed(Vector2 delta)

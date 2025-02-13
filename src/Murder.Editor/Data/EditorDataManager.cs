@@ -893,6 +893,8 @@ namespace Murder.Editor.Data
             FlushResourceImporters();
 
             InitializeShaderFileSystemWather();
+            InitializeLocalizationFileSystemWather();
+
             ReloadDialogs();
 
             _cachedFilteredAssetsWithImplementation.Clear();
