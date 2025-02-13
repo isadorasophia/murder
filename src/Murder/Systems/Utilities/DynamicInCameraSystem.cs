@@ -15,7 +15,7 @@ using System.Numerics;
 namespace Murder.Systems;
 
 [Filter(typeof(IMurderTransformComponent))]
-[Filter(ContextAccessorFilter.AnyOf, typeof(SpriteComponent), typeof(ColliderComponent))]
+[Filter(ContextAccessorFilter.AnyOf, typeof(SpriteComponent), typeof(AgentSpriteComponent))]
 [Filter(ContextAccessorFilter.NoneOf, typeof(StaticComponent))]
 public class DynamicInCameraSystem : IMonoPreRenderSystem
 {
@@ -98,16 +98,29 @@ public class DynamicInCameraSystem : IMonoPreRenderSystem
             }
             else
             {
-                ColliderComponent collider = e.GetCollider();
-
-                Rectangle edges = collider.GetBoundingBox(position);
-                if (cameraBounds.Touches(edges))
+                if (e.TryGetCollider() is ColliderComponent collider)
                 {
-                    e.SetInCamera();
+                    Rectangle edges = collider.GetBoundingBox(position);
+                    if (cameraBounds.Touches(edges))
+                    {
+                        e.SetInCamera();
+                    }
+                    else
+                    {
+                        e.RemoveInCamera();
+                    }
                 }
                 else
                 {
-                    e.RemoveInCamera();
+                    // Assume a 1px point
+                    if (cameraBounds.Contains(position.ToPoint()))
+                    {
+                        e.SetInCamera();
+                    }
+                    else
+                    {
+                        e.RemoveInCamera();
+                    }
                 }
             }
         }

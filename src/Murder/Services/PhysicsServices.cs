@@ -1160,7 +1160,7 @@ namespace Murder.Services
                     Point point;
                     Circle circle;
 
-                    if (shape1 is BoxShape)
+                    if (shape1 is CircleShape)
                     {
                         circle = ((CircleShape)shape1).Circle.AddPosition(position1);
                         point = ((PointShape)shape2).Point + position2;
