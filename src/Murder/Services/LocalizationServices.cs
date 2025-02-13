@@ -4,6 +4,13 @@ using Murder.Diagnostics;
 
 namespace Murder.Services
 {
+    [Flags]
+    public enum LocalizationFlags
+    {
+        None,
+        ForceDefault
+    }
+
     public static class LocalizationServices
     {
         public static LocalizationAsset GetCurrentLocalization() => Game.Data.Localization;
@@ -11,7 +18,7 @@ namespace Murder.Services
         public static string? TryGetLocalizedString(LocalizedString? localized) =>
             localized is null ? null : GetLocalizedString(localized.Value);
 
-        public static string GetLocalizedString(LocalizedString localized)
+        public static string GetLocalizedString(LocalizedString localized, LocalizationFlags flags = LocalizationFlags.None)
         {
             if (localized.OverrideText is not null)
             {
@@ -23,7 +30,9 @@ namespace Murder.Services
                 return string.Empty;
             }
 
-            LocalizationAsset asset = Game.Data.Localization;
+            LocalizationAsset asset = flags.HasFlag(LocalizationFlags.ForceDefault) ?
+                Game.Data.GetDefaultLocalization() :
+                Game.Data.Localization;
 
             LocalizedStringData? data = asset.TryGetResource(localized.Id) ??
                 Game.Data.GetDefaultLocalization().TryGetResource(localized.Id);

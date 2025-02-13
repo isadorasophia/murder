@@ -274,7 +274,7 @@ namespace Murder.Editor.CustomEditors
                 if (line.Text is not null)
                 {
                     // Centralizes the text vertically.
-                    string value = LocalizationServices.GetLocalizedString(line.Text.Value);
+                    string value = LocalizationServices.GetLocalizedString(line.Text.Value, LocalizationFlags.ForceDefault);
 
                     float textHeight = (ImGui.GetItemRectSize().Y * .45f -
                         ImGui.CalcTextSize(value, wrapWidth: ImGui.GetContentRegionAvail().X).Y) / 2f;
