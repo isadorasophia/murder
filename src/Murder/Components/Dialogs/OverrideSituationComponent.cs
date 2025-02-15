@@ -10,7 +10,8 @@ public enum SituationOrigin
     Any = 0,
     Scene = 1,
     Moving = 2,
-    Story = 3
+    Story = 3,
+    Important = 4
 }
 
 [RuntimeOnly]
