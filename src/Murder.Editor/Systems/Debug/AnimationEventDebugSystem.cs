@@ -17,6 +17,11 @@ internal class AnimationEventDebugSystem : IMessagerSystem
 {
     public void OnMessage(World world, Entity entity, IMessage message)
     {
+        if (Game.Instance.IsSkippingDeltaTimeOnUpdate)
+        {
+            return;
+        }
+
         if (world.TryGetUnique<EditorComponent>()?.EditorHook is not EditorHook hook || !hook.DrawAnimationEvents)
         {
             return;
