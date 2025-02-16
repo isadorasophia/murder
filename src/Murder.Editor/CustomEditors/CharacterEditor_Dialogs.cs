@@ -293,6 +293,7 @@ namespace Murder.Editor.CustomEditors
                             Debug.Assert(_script is not null);
                             info.Stage.EditorHook.SelectedSituation = new(_script.Guid, info.ActiveSituation);
                             info.Stage.EditorHook.SelectedDialogueLine = line;
+                            info.Stage.EditorHook.ForceUpdateDialogue = true;
                         }
                     }
 
