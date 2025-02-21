@@ -69,6 +69,16 @@ namespace Murder.Core.Input
             {
                 var vector = axis.Check(inputState);
 
+                // use a deadzone to prevent small values from being registered
+                if (MathF.Abs(MathF.Abs(vector.X)) < 0.05f)
+                {
+                    vector = new Vector2(0, vector.Y);
+                }
+                if (MathF.Abs(MathF.Abs(vector.Y)) < 0.05f)
+                {
+                    vector = new Vector2(vector.X, 0);
+                }
+
                 if (vector.HasValue())
                 {
                     Down = true;
