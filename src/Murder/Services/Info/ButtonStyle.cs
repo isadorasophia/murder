@@ -28,4 +28,6 @@ public readonly struct ButtonStyle()
     public readonly Color? TextOutlineColor { get; init; } = null;
 
     public readonly Point ExtraPaddingX { get; init; }
+
+    public readonly int ExtraPaddingRight { get; init; }
 }
