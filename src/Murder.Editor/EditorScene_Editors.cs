@@ -16,6 +16,7 @@ namespace Murder.Editor
 {
     public partial class EditorScene
     {
+        private float _copiedTime = -1;
         private record CustomEditorInstance : IDisposable
         {
             public readonly RenderContext SharedRenderContext;
@@ -62,11 +63,11 @@ namespace Murder.Editor
 
             _lastActiveEditorInstance.Editor.UpdateEditor();
         }
-        
+
         private void DrawAssetEditors()
         {
             GameAsset? closeTab = null;
-            
+
             foreach (GameAsset currentAsset in _selectedAssets.Values.ToImmutableArray())
             {
                 bool show = true;
@@ -77,7 +78,7 @@ namespace Murder.Editor
 
                 if (_openAsset == currentAsset.Guid || !_initializedEditors && Architect.EditorSettings.LastOpenedAsset == currentAsset.Guid)
                 {
-                    _openAsset= Guid.Empty;
+                    _openAsset = Guid.Empty;
                     ImGui.SetNextWindowFocus();
                 }
 
@@ -162,12 +163,30 @@ namespace Murder.Editor
                 }
                 else
                 {
-                    ImGui.TextColored(Microsoft.Xna.Framework.Color.DarkGray.ToSysVector4(), $"({asset.FilePath}){(asset.FileChanged ? "*" : "")}");
+                    string path = $"({asset.FilePath}){(asset.FileChanged ? "*" : "")}";
+                    if (_copiedTime > 0 && Game.NowUnscaled - _copiedTime < 1)
+                    {
+                        string padding = new string('-', (path.Length - "Copied!".Length) / 2);
+                        ImGui.TextColored(Game.Profile.Theme.Green, $"{padding}Copied!{padding}");
+                    }
+                    else
+                    {
+                        ImGui.TextColored(Microsoft.Xna.Framework.Color.DarkGray.ToSysVector4(), path);
+                    }
                 }
 
                 ImGui.SameLine();
                 if (ImGui.IsItemHovered())
+                {
                     ImGui.SetTooltip(asset.Guid.ToString());
+                    if (ImGui.IsItemClicked(ImGuiMouseButton.Left))
+                    {
+                        ImGui.SetClipboardText(asset.Guid.ToString());
+                        _copiedTime = Game.NowUnscaled;
+                    }
+
+                }
+
                 ImGui.TextColored(Microsoft.Xna.Framework.Color.DarkGray.ToSysVector4(), $"({asset.GetType().Name})");
                 ImGui.SameLine();
 
@@ -251,7 +270,7 @@ namespace Murder.Editor
                     bool showReflection = assetEditor.ShowReflection;
                     ImGui.Checkbox("\uf24d", ref showReflection);
                     ImGui.SetItemTooltip($"{(showReflection ? "Show" : "Hide")} reflections");
-                    assetEditor.ShowReflection = showReflection; 
+                    assetEditor.ShowReflection = showReflection;
                 }
 
                 if (customEditor.Editor is WorldAssetEditor worldEditor)
@@ -302,7 +321,7 @@ namespace Murder.Editor
                 {
                     SaveEditorState();
                 }
-                
+
                 customEditor.Editor.DrawEditor();
             }
             else
