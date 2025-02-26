@@ -9,6 +9,8 @@ using System.Collections.Immutable;
 namespace Murder.Editor.Systems
 {
     [WorldEditor(startActive: true)]
+    [PathfindEditor]
+    [StoryEditor]
     [Watch(typeof(TileGridComponent))]
     internal class DebugMapInitializerSystem : MapInitializerSystem, IReactiveSystem
     {
