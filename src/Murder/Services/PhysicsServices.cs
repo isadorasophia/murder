@@ -5,6 +5,7 @@ using Bang.Entities;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
+using Murder.Core.Graphics;
 using Murder.Core.Physics;
 using Murder.Diagnostics;
 using Murder.Utilities;
@@ -422,6 +423,30 @@ namespace Murder.Services
 
             return FindNextAvailablePosition(world, e, center, target, map, collisionEntities, _checkedPositionsCache, flags, layerMask);
         }
+
+        public static bool CollidesAt(
+            World world,
+            Entity e,
+            Vector2 position,
+            int layerMask)
+        {
+            Map map = world.GetUniqueMap().Map;
+            var collisionEntities = FilterPositionAndColliderEntities(
+                world,
+                layerMask);
+
+            if (e.TryGetCollider() is ColliderComponent collider)
+            {
+                return CollidesAt(map, e.EntityId, collider, position, collisionEntities, layerMask, out int _);
+            }
+            else
+            {
+                GameLogger.Warning("Creating a collider on the fly, is this really what you want?");
+                // Check using a single point
+                return CollidesAt(map, e.EntityId, new ColliderComponent(new PointShape(), CollisionLayersBase.NONE, Color.Gray), position, collisionEntities, layerMask, out int _);
+            }
+        }
+
 
 
         /// <summary>

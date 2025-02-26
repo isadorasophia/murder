@@ -9,5 +9,10 @@ namespace Murder.Components;
 
 public readonly struct FreeMovementComponent : IComponent
 {
+    public readonly float Since;
 
+    public FreeMovementComponent()
+    {
+        Since = Game.Now;
+    }
 }
