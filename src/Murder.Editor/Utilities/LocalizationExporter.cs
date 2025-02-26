@@ -102,7 +102,7 @@ internal static class LocalizationExporter
 
         try
         {
-            File.Copy(fullLocalizationPath, tmpPath);
+            File.Copy(fullLocalizationPath, tmpPath, true);
 
             using TextFieldParser parser = new(tmpPath);
 

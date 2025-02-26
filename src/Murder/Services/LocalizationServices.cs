@@ -48,7 +48,8 @@ namespace Murder.Services
 
         public static bool IsTextWrapOnlyOnSpace()
         {
-            if (Game.Data.CurrentLocalization.Id == LanguageId.Japanese)
+            if (Game.Data.CurrentLocalization.Id == LanguageId.Japanese || 
+                Game.Data.CurrentLocalization.Id == LanguageId.Chinese)
             {
                 return false;
             }
