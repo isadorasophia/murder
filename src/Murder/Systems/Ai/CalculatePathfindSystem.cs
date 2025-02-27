@@ -66,8 +66,14 @@ namespace Murder.Systems
 
         public void OnRemoved(World world, ImmutableArray<Entity> entities)
         {
-            foreach (var entity in entities)
+            foreach (Entity entity in entities)
             {
+                if (entity.HasPathfind())
+                {
+                    // if a pathfind has been added at the same frame, let's skip
+                    continue;
+                }
+
                 entity.RemoveRoute();
                 entity.SetFriction(0.25f);
             }
