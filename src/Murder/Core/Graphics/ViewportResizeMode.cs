@@ -27,7 +27,7 @@ public readonly struct ViewportResizeStyle
     [Tooltip("Used on letterbox and stretch modes only")]
     public readonly float NegativeApectRatioAllowance = 0.1f;
 
-    public readonly float? AbsoluteScale = null;
+    public readonly float? AbsoluteScale { get; init; } = null;
     public ViewportResizeStyle()
     {
         

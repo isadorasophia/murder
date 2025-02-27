@@ -301,7 +301,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
 
     }
 
-    private static void ResizeWindow(RenderContext render, Point windowSize)
+    public static void ResizeWindow(RenderContext render, Point windowSize)
     {
         Game.Instance.Fullscreen = false;
         Game.Instance.SetWindowSize(windowSize, false);
