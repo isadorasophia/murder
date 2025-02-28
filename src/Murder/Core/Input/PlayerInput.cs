@@ -690,7 +690,7 @@ namespace Murder.Core.Input
             }
 
             currentInfo.Select(selectedOptionIndex, lastMoved, false);
-            
+
             if (currentInfo.PreviousSelection != currentInfo.Selection)
             {
                 bool isDisabled = currentInfo.Selection < 0 || currentInfo.Selection >= currentInfo.Length || !currentInfo.Options[currentInfo.Selection].Enabled;
@@ -726,7 +726,7 @@ namespace Murder.Core.Input
             }
             if (selectedOptionY - currentInfo.Scroll < 0)
             {
-                currentInfo.Scroll--;
+                currentInfo.Scroll = Math.Max(0, currentInfo.Scroll - 1);
             }
 
             bool pressed = false;
