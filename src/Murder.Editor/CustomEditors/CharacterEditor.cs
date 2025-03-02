@@ -12,6 +12,7 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Stages;
 using Murder.Editor.Systems;
+using Murder.Services;
 using System.Collections.Immutable;
 
 namespace Murder.Editor.CustomEditors
@@ -280,6 +281,20 @@ namespace Murder.Editor.CustomEditors
             {
                 foreach (Dialog d in situation.Dialogs)
                 {
+                    foreach (Line l in d.Lines)
+                    {
+                        if (!l.IsText)
+                        {
+                            continue;
+                        }
+
+                        if (LocalizationServices.TryGetLocalizedString(l.Text) is null)
+                        {
+                            GameLogger.Error($"Found invalid string at: {name}, {d.Id}.");
+                            foundIssue = true;
+                        }
+                    }
+
                     if (d.Actions is not null)
                     {
                         for (int i = 0; i < d.Actions.Value.Length; ++i)
