@@ -20,8 +20,12 @@ internal static class LocalizationExporter
 
     private static string Escape(string? text) => text is null ? string.Empty : text.Replace("\"", "\"\"");
 
+    private static bool _isExporting = false;
+
     public static bool ExportToCsv(LocalizationAsset asset)
     {
+        _isExporting = true;
+
         LocalizationAsset reference = Architect.EditorData.GetDefaultLocalization();
 
         StringBuilder builder = new();
@@ -86,11 +90,19 @@ internal static class LocalizationExporter
         FileManager.CreateDirectoryPathIfNotExists(fullLocalizationPath);
 
         _ = File.WriteAllTextAsync(fullLocalizationPath, builder.ToString(), Encoding.UTF8);
+
+        _isExporting = false;
         return true;
     }
 
     public static bool ImportFromCsv(LocalizationAsset asset)
     {
+        if (_isExporting)
+        {
+            // do not import while we are exporting...
+            return false;
+        }
+
         string fullLocalizationPath = GetFullRawLocalizationPath(asset.Name);
         if (!File.Exists(fullLocalizationPath))
         {
