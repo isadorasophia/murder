@@ -669,14 +669,17 @@ namespace Murder.Services
             return collisionEntities;
         }
 
+        private static readonly List<NodeInfo<Entity>> _cachedCollisions = new();
+
         public static IEnumerable<Entity> GetAllCollisionsAt(World world, Point position, ColliderComponent collider, int ignoreId, int mask)
         {
-            var qt = world.GetUniqueQuadtree().Quadtree;
-            // Now, check against other entities.
-            List<NodeInfo<Entity>> others = new();
-            qt.GetCollisionEntitiesAt(GetBoundingBox(collider, position), others);
+            _cachedCollisions.Clear();
 
-            foreach (var other in others)
+            // Now, check against other entities.
+            Quadtree qt = world.GetUniqueQuadtree().Quadtree;
+            qt.GetCollisionEntitiesAt(GetBoundingBox(collider, position), _cachedCollisions);
+
+            foreach (var other in _cachedCollisions)
             {
                 if (other.EntityInfo.IsDestroyed || other.EntityInfo.TryGetCollider() is not ColliderComponent otherCollider)
                     continue;
