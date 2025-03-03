@@ -94,6 +94,8 @@ namespace Murder.Core.Input
         public bool JustMoved = false;
         public int Scroll = 0;
 
+        public float SmoothScroll = 0;
+
         /// <summary>
         /// Number of options in this menu
         /// </summary>

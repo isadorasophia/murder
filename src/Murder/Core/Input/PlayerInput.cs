@@ -510,8 +510,19 @@ namespace Murder.Core.Input
                 {
                     currentInfo.Select(newOption, Game.NowUnscaled);
                 }
+
+                // == scroll ==
+                if (newOption < currentInfo.Scroll)
+                {
+                    currentInfo.Scroll = 0;
+                }
+                else if (newOption >= currentInfo.Scroll + currentInfo.VisibleItems)
+                {
+                    currentInfo.Scroll = newOption - currentInfo.VisibleItems + 1;
+                }
             }
 
+            currentInfo.SmoothScroll = Calculator.LerpSmooth(currentInfo.SmoothScroll, currentInfo.Scroll, Game.UnscaledDeltaTime, 0.1f);
             return pressed;
         }
 
