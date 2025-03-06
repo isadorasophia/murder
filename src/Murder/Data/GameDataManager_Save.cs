@@ -347,8 +347,21 @@ namespace Murder.Data
             PackedSaveAssetsData packedAssetsData = new([.. _currentSaveAssets.Values]);
             string packedAssetsDataJson = FileManager.SerializeToJson(packedAssetsData);
 
-            string packedSavePath = Path.Join(SaveDataInfo.GetFullPackedSavePath(slot));
-            string packedSaveAssetsPath = Path.Join(SaveDataInfo.GetFullPackedAssetsSavePath(slot));
+            string packedSavePath = SaveDataInfo.GetFullPackedSavePath(slot);
+            string packedSaveAssetsPath = SaveDataInfo.GetFullPackedAssetsSavePath(slot);
+
+            // before doing anything, let's save a backup, shall we?
+            if (File.Exists(packedSavePath) && File.Exists(packedSaveAssetsPath))
+            {
+                string backupDirectory = SaveDataInfo.GetFullPackedSaveBackupDirectory(slot);
+                FileManager.GetOrCreateDirectory(backupDirectory);
+
+                string packedSavePathBackup = Path.Join(backupDirectory, PackedSaveData.Name);
+                File.Copy(packedSavePath, packedSavePathBackup);
+
+                string packedSaveAssetsPathBackup = Path.Join(backupDirectory, PackedSaveAssetsData.Name);
+                File.Copy(packedSaveAssetsPath, packedSaveAssetsPathBackup);
+            }
 
             FileManager.CreateDirectoryPathIfNotExists(packedSavePath);
 

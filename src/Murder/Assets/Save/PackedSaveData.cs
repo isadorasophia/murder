@@ -21,6 +21,9 @@ public class SaveDataInfo
 
     public static string GetFullPackedSaveDirectory(int slot) =>
         Path.Join(Game.Data.SaveBasePath, slot.ToString());
+
+    public static string GetFullPackedSaveBackupDirectory(int slot) =>
+        Path.Join(Game.Data.SaveBasePath, slot.ToString(), "backup");
 }
 
 [Serializable]
