@@ -22,7 +22,7 @@ namespace Murder.Editor.CustomEditors
         {
             bool modified = false;
 
-            ImGui.Dummy(new(10, 0));
+            ImGui.SeparatorText("Tiles");
 
             IList<IEntity> tileset = stage.FindEntitiesWith(typeof(TilesetComponent));
             if (tileset.Count != 0)
@@ -37,11 +37,12 @@ namespace Murder.Editor.CustomEditors
             }
 
             ImGui.Separator();
-            ImGui.Dummy(new(10, 0));
 
             IList<IEntity> rooms = stage.FindEntitiesWith(typeof(TileGridComponent));
             if (rooms.Count > 0)
             {
+                ImGui.SeparatorText("Rooms");
+
                 foreach (IEntity room in rooms)
                 {
                     if (ImGuiHelpers.DeleteButton($"Delete#{room.Guid}"))
@@ -145,9 +146,9 @@ namespace Murder.Editor.CustomEditors
             int currentSelectedTile = stage.EditorHook.CurrentSelectedTile;
 
             TilesetComponent tilesetComponent = (TilesetComponent)e.GetComponent(typeof(TilesetComponent));
-
             {
-
+                Vector2 tilesArea = ImGui.GetContentRegionAvail();
+                ImGui.BeginChild("tileset_list", new Vector2(tilesArea.X, 118), ImGuiChildFlags.Border, ImGuiWindowFlags.AlwaysHorizontalScrollbar);
                 ImGui.Dummy(new Vector2(0, 2));
                 ImGui.SameLine();
 
@@ -225,8 +226,9 @@ namespace Murder.Editor.CustomEditors
                     }
                 }
 
-                ImGui.PushID("tileset_component_search");
+                ImGui.EndChild();
 
+                ImGui.PushID("tileset_component_search");
                 Guid newTileGuid = Guid.Empty;
                 if (SearchBox.SearchAsset(ref newTileGuid, typeof(TilesetAsset), SearchBoxFlags.None, tilesetComponent.Tilesets.ToArray()))
                 {
