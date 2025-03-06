@@ -689,6 +689,14 @@ namespace Murder.Core.Input
                         currentInfo.Scroll = 0;
                     }
                 }
+
+                if (selectedOptionY >= currentHeight)
+                {
+                    // Select the last option
+                    selectedOptionY = currentHeight - 1;
+                    selectedOptionX = currentWidth;
+                }
+
                 selectedOptionY = Calculator.WrapAround(selectedOptionY, 0, currentHeight - 1);
                 lastMoved = Game.NowUnscaled;
             }
@@ -700,33 +708,54 @@ namespace Murder.Core.Input
                 selectedOptionIndex = Math.Clamp(selectedOptionIndex, 0, currentInfo.Length - 1);
             }
 
-            currentInfo.Select(selectedOptionIndex, lastMoved, false);
+            currentInfo.JustMoved = currentInfo.Selection != selectedOptionIndex;
 
-            if (currentInfo.PreviousSelection != currentInfo.Selection)
+            currentInfo.PreviousSelection = currentInfo.Selection;
+
+            currentInfo.LastMoved = lastMoved;
+            currentInfo.LastPressed = lastMoved;
+
+            if (currentInfo.JustMoved)
             {
-                bool isDisabled = currentInfo.Selection < 0 || currentInfo.Selection >= currentInfo.Length || !currentInfo.Options[currentInfo.Selection].Enabled;
+                bool isDisabled = selectedOptionIndex < 0 || selectedOptionIndex >= currentInfo.Length || !currentInfo.Options[selectedOptionIndex].Enabled;
 
-                if (isDisabled && axis.PressedY)
+                if (!isDisabled)
                 {
-                    int newOption = currentInfo.Selection;
-                    int sign = Math.Sign(axis.Value.Y) < 0 ? -1 : 1;
-                    if (sign != 0)
-                    {
-                        newOption = currentInfo.NextAvailableOptionVertical(currentInfo.Selection, width, sign);
-                    }
-
-                    currentInfo.Select(newOption, Game.NowUnscaled, false);
+                    currentInfo.Select(selectedOptionIndex, lastMoved, false);
                 }
-                else if (isDisabled && axis.PressedX)
+                else
                 {
-                    int newOption = currentInfo.Selection;
-                    int sign = Math.Sign(axis.Value.X) < 0 ? -1 : 1;
-                    if (sign != 0)
+                    if (axis.PressedY)
                     {
-                        newOption = currentInfo.NextAvailableOptionHorizontal(currentInfo.Selection, width, sign);
-                    }
+                        int newOption = currentInfo.Selection;
+                        int sign = Math.Sign(axis.Value.Y) < 0 ? -1 : 1;
+                        if (sign != 0)
+                        {
+                            (newOption, bool wrapped) = currentInfo.NextAvailableOptionVertical(selectedOptionIndex, width, sign);
+                            if (wrapped)
+                            {
+                                currentInfo.OverflowY = sign;
+                            }
+                        }
 
-                    currentInfo.Select(newOption, Game.NowUnscaled, false);
+                        currentInfo.Select(newOption, Game.NowUnscaled, false);
+                    }
+                    
+                    if (axis.PressedX)
+                    {
+                        int newOption = currentInfo.Selection;
+                        int sign = Math.Sign(axis.Value.X) < 0 ? -1 : 1;
+                        if (sign != 0)
+                        {
+                            (newOption, bool wrapped) = currentInfo.NextAvailableOptionHorizontal(selectedOptionIndex, width, sign);
+                            if (wrapped)
+                            {
+                                currentInfo.OverflowX = sign;
+                            }
+                        }
+
+                        currentInfo.Select(newOption, Game.NowUnscaled, false);
+                    }
                 }
             }
 

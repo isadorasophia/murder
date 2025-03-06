@@ -244,21 +244,31 @@ namespace Murder.Core.Input
             return option;
         }
 
-        public int NextAvailableOptionHorizontal(in int option, int width, int direction)
+        public (int option, bool wrapped) NextAvailableOptionHorizontal(in int option, int width, int direction)
         {
-            int row = Calculator.FloorToInt(option / width);
-            int totalRows = Calculator.CeilToInt(Length / width);
-            int totalAttempts = 0;
+            int startRow = Calculator.FloorToInt(option / (float)width);
             int startCollumn = option % width;
 
+            int totalCollumns = width;
+            int totalAttempts = 0;
+
+            bool wrapped = false;
             while (totalAttempts < width)
             {
                 int collumn = Calculator.WrapAround(startCollumn + direction * totalAttempts, 0, width - 1);
-
-                // First we try the first one imediatelly to the right or left of the current selection.
-                for (int i = 0; i < totalRows; i++)
+                // Did we wrap around?
+                if (collumn > startCollumn && direction < 0)
                 {
-                    int checkRow = row - i;
+                    wrapped = true;
+                }
+                if (collumn < startCollumn && direction > 0)
+                {
+                    wrapped = true;
+                }
+
+                for (int i = 0; i < totalCollumns; i++)
+                {
+                    int checkRow = startRow - i;
                     if (checkRow >= 0)
                     {
                         int nextOption = checkRow * width + collumn;
@@ -266,20 +276,20 @@ namespace Murder.Core.Input
                         {
                             if (IsOptionAvailable(nextOption))
                             {
-                                return nextOption;
+                                return (nextOption, wrapped);
                             }
                         }
                     }
 
-                    checkRow = row + i;
-                    if (checkRow < totalRows)
+                    checkRow = startRow + i;
+                    if (checkRow < totalCollumns)
                     {
                         int nextOption = checkRow * width + collumn;
                         if (nextOption > 0 && nextOption < Length)
                         {
                             if (IsOptionAvailable(nextOption))
                             {
-                                return nextOption;
+                                return (nextOption, wrapped);
                             }
                         }
                     }
@@ -287,10 +297,11 @@ namespace Murder.Core.Input
 
                 totalAttempts++;
             }
-            return option;
+
+            return (option, false);
         }
 
-        public int NextAvailableOptionVertical(in int option, int width, int direction)
+        public (int option, bool wrapped) NextAvailableOptionVertical(in int option, int width, int direction)
         {
             // If we didn't find an option in the current column, closest to the current selection,
             // the first option available in the next row.
@@ -300,9 +311,19 @@ namespace Murder.Core.Input
             int collumn = option % width;
 
             int totalAttempts = 0;
+            bool wrapped = false;
             while (totalAttempts < totalRows)
             {
                 int row = Calculator.WrapAround(initialRow + direction * totalAttempts, 0, totalRows);
+                // Did we wrap around?
+                if (row > initialRow && direction < 0)
+                {
+                    wrapped = true;
+                }
+                if (row < initialRow && direction > 0)
+                {
+                    wrapped = true;
+                }
 
                 // First we try the first one imediatelly below or above the current selection.
                 for (int i = 0; i < width; i++)
@@ -315,7 +336,7 @@ namespace Murder.Core.Input
                         {
                             if (IsOptionAvailable(nextOption))
                             {
-                                return nextOption;
+                                return (nextOption, wrapped);
                             }
                         }
                     }
@@ -328,7 +349,7 @@ namespace Murder.Core.Input
                         {
                             if (IsOptionAvailable(nextOption))
                             {
-                                return nextOption;
+                                return (nextOption, wrapped);
                             }
                         }
                     }
@@ -337,7 +358,7 @@ namespace Murder.Core.Input
                 totalAttempts++;
             }
 
-            return option;
+            return (option, false);
         }
 
         /// <summary>
