@@ -165,17 +165,29 @@ public class PixelFontSize
         // Trim ending whitepace
         if (trimWhitespace)
         {
-            i--;
-            if (i > 0 && text.Length > i && (text[i] == ' ' || text[i] == '\n'))
+            while (i > 0)
             {
-                PixelFontCharacter? c = null;
-                if (Characters.TryGetValue(text[i], out c))
-                {
-                    currentLineWidth -= c.XAdvance;
-                    int kerning;
-                    if (i < j - 1 && c.Kerning.TryGetValue(text[i + 1], out kerning))
-                        currentLineWidth -= kerning;
+                i--;
 
+                char current = text[i];
+                if (i > 0 && text.Length > i && (current == ' ' || current == '\n'))
+                {
+                    PixelFontCharacter? c = null;
+                    if (Characters.TryGetValue(text[i], out c))
+                    {
+                        currentLineWidth -= c.XAdvance;
+                        int kerning;
+                        if (i < j - 1 && c.Kerning.TryGetValue(text[i + 1], out kerning))
+                            currentLineWidth -= kerning;
+                    }
+                    else
+                    {
+                        GameLogger.Warning($"Character '{current}' not found in font.");
+                    }
+                }
+                else
+                {
+                    break;
                 }
             }
         }
@@ -237,7 +249,7 @@ public class PixelFontSize
         position = position.Round();
 
         Vector2 offset = Offset;
-        Vector2 justified = new(WidthToNextLine(text, 0) * origin.X * scale.X, HeightOf(text) * origin.Y * scale.Y);
+        Vector2 justified = new(WidthToNextLine(text, 0, true) * origin.X * scale.X, HeightOf(text) * origin.Y * scale.Y);
 
         Color currentColor = color;
 
@@ -260,9 +272,9 @@ public class PixelFontSize
             char character = text[i];
 
             RuntimeLetterProperties? letter = textData.TryGetLetterProperty(letterIndex);
-            
 
-            bool isPostAddedLineEnding = letter?.Properties is not RuntimeLetterPropertiesFlag properties || 
+
+            bool isPostAddedLineEnding = letter?.Properties is not RuntimeLetterPropertiesFlag properties ||
                 !properties.HasFlag(RuntimeLetterPropertiesFlag.DoNotSkipLineEnding);
 
             if (character == '\n')
@@ -275,7 +287,7 @@ public class PixelFontSize
 
                 if (origin.X != 0)
                 {
-                    justified.X = WidthToNextLine(text, i + 1) * origin.X;
+                    justified.X = Calculator.FloorToInt(WidthToNextLine(text, i + 1) * origin.X); // This is suspicious, shound't this be round?
                 }
 
                 if (isPostAddedLineEnding)
@@ -295,7 +307,8 @@ public class PixelFontSize
             {
                 float waveOffset = 0f;
                 Vector2 shake = Vector2.Zero;
-                if (letter != null) {
+                if (letter != null)
+                {
                     if (letter.Value.Glitch != 0)
                     {
                         glitchAmount = letter.Value.Glitch;
@@ -315,13 +328,13 @@ public class PixelFontSize
                         float smoothFactor = Math.Abs(MathF.Sin(Game.NowUnscaled * 16f + i * 2));
                         smoothFactor *= smoothFactor;
                         shake = new Vector2(Game.Random.NextFloat(-smoothFactor, smoothFactor) * amplitude, Game.Random.NextFloat(-smoothFactor, smoothFactor) * amplitude);
-                    } 
+                    }
                 }
 
                 Vector2 effects = new Vector2(shake.X, shake.Y + waveOffset);
 
 
-                Point pos = (position + (offset + new Vector2(c.XOffset, c.YOffset + LineHeight - 1) * scale - justified)  + effects).Floor();
+                Point pos = (position + (offset + new Vector2(c.XOffset, c.YOffset + LineHeight - 1) * scale - justified) + effects).Floor();
 
                 var texture = Textures[c.Page];
                 Rectangle glyph = c.Glyph;
@@ -331,9 +344,9 @@ public class PixelFontSize
                 {
                     float seed = (Game.NowUnscaled) % 64 + i;
                     float glitch = glitchAmount * 0.8f;
-                    if (RandomExtensions.SmoothRandom(((int)(seed * 10 + i) % 64) / 64f, 10.5f) > 0.96f * (1 - glitch)) 
+                    if (RandomExtensions.SmoothRandom(((int)(seed * 10 + i) % 64) / 64f, 10.5f) > 0.96f * (1 - glitch))
                     {
-                        float val = RandomExtensions.SmoothRandom(seed  + i * 7.1f, 10) * 5;
+                        float val = RandomExtensions.SmoothRandom(seed + i * 7.1f, 10) * 5;
                         character = (char)((int)character + val);
                         if (Characters.TryGetValue(character, out var newC))
                         {
@@ -341,7 +354,7 @@ public class PixelFontSize
                         }
                     }
 
-                    if (RandomExtensions.SmoothRandom(seed  * 2, 10.5f) < 0.25f * glitch)
+                    if (RandomExtensions.SmoothRandom(seed * 2, 10.5f) < 0.25f * glitch)
                     {
                         if (Game.Random.TryWithChanceOf(0.72f * glitch))
                         {
@@ -464,7 +477,7 @@ public class PixelFontSize
                 nextSeparatorIndex = text.Length - 1;
 
             ReadOnlySpan<char> word = text.Slice(cursor, nextSeparatorIndex - cursor + 1);
-            float wordWidth = WidthToNextLine(word, 0, false) * scale;
+            float wordWidth = WidthToNextLine(word, 0, true) * scale;
             bool overflow = offset.X + wordWidth > maxWidth;
 
             if (overflow)
@@ -472,6 +485,11 @@ public class PixelFontSize
                 // Has overflow, word is going down.
                 if (wrappedText.Length != 0)
                 {
+                    // Trim wrapped text of any whitespace at the end.
+                    while (wrappedText.Length > 0 && wrappedText[^1] == ' ')
+                    {
+                        wrappedText.Length--;
+                    }
                     wrappedText.Append('\n');
                 }
 
@@ -480,7 +498,7 @@ public class PixelFontSize
             else
             {
                 // Didn't break line
-                offset.X += wordWidth;
+                offset.X += WidthToNextLine(word, 0, false); // Add the width of the word plus any whitespace.
             }
 
             if (alreadyHasLineBreak)
@@ -510,7 +528,7 @@ public class PixelFont
     public PixelFont(FontAsset asset)
     {
         // get textures
-        MurderTexture[] textures = 
+        MurderTexture[] textures =
             [new MurderTexture($"fonts/{Path.GetFileNameWithoutExtension(asset.TexturePath)}")];
 
         Index = asset.Index;
@@ -560,7 +578,7 @@ public class PixelFont
         return width;
     }
 
-    public Point Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, Vector2 scale, float sort, Color color, Color? strokeColor, 
+    public Point Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, Vector2 scale, float sort, Color color, Color? strokeColor,
         Color? shadowColor, int maxWidth = -1, int visibleCharacters = -1, bool debugBox = false)
     {
         if (_pixelFontSize == null || string.IsNullOrEmpty(text))
@@ -568,11 +586,11 @@ public class PixelFont
             return Point.Zero;
         }
 
-        return _pixelFontSize.Draw(text, spriteBatch, position, alignment, scale, visibleCharacters >= 0 ? visibleCharacters : text.Length, 
+        return _pixelFontSize.Draw(text, spriteBatch, position, alignment, scale, visibleCharacters >= 0 ? visibleCharacters : text.Length,
             sort, color, strokeColor, shadowColor, maxWidth, debugBox);
     }
 
-    public Point Draw(Batch2D spriteBatch, RuntimeTextData data, Vector2 position, Vector2 alignment, Vector2 scale, float sort, Color color, 
+    public Point Draw(Batch2D spriteBatch, RuntimeTextData data, Vector2 position, Vector2 alignment, Vector2 scale, float sort, Color color,
         Color? strokeColor, Color? shadowColor, int visibleCharacters = -1, bool debugBox = false)
     {
         if (_pixelFontSize == null)
@@ -580,11 +598,11 @@ public class PixelFont
             return Point.Zero;
         }
 
-        return _pixelFontSize.Draw(data, spriteBatch, position, alignment, scale, visibleCharacters >= 0 ? visibleCharacters : data.Length, 
+        return _pixelFontSize.Draw(data, spriteBatch, position, alignment, scale, visibleCharacters >= 0 ? visibleCharacters : data.Length,
             sort, color, strokeColor, shadowColor, debugBox);
     }
-    
-    public Point DrawSimple(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, Vector2 scale, float sort, 
+
+    public Point DrawSimple(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, Vector2 scale, float sort,
         Color color, Color? strokeColor, Color? shadowColor, bool debugBox = false)
     {
         if (_pixelFontSize == null)
