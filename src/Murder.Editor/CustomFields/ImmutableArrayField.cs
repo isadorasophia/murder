@@ -1,4 +1,6 @@
-﻿using ImGuiNET;
+﻿using Gum;
+using ImGuiNET;
+using Murder.Assets;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using System.Collections.Immutable;
@@ -10,6 +12,8 @@ namespace Murder.Editor.CustomFields
     {
         private int _draggedIndex = -1;
         private string _draggedId = string.Empty;
+
+        protected virtual bool AllowReorder => false;
 
         protected abstract bool Add(in EditorMember member, [NotNullWhen(true)] out T? element);
 
@@ -28,6 +32,17 @@ namespace Murder.Editor.CustomFields
             }
 
             ImGui.PopID();
+
+            if (AllowReorder)
+            {
+                ImGui.SameLine();
+
+                if (ImGui.Button("Reorder"))
+                {
+                    Reorder(ref elements);
+                    modified = true;
+                }
+            }
 
             if (modified || elements.Length == 0)
             {
@@ -166,5 +181,7 @@ namespace Murder.Editor.CustomFields
 
             return modified;
         }
+
+        protected virtual void Reorder(ref ImmutableArray<T> portraits) { }
     }
 }

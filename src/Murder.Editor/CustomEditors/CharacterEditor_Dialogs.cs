@@ -51,14 +51,13 @@ namespace Murder.Editor.CustomEditors
             return line;
         }
 
-        private Line? ModifyEventAt(ScriptInformation info, int lineIndex, string? @event)
+        private Line? ModifyEventAt(DialogueId id, int lineIndex, string? @event)
         {
             if (_script is null || !FetchActiveSituation(out Situation? situation))
             {
                 return null;
             }
 
-            DialogueId id = new(info.ActiveSituation, info.ActiveDialog, lineIndex);
             Dialog dialog = situation.Value.Dialogs[id.DialogId];
 
             Line line = dialog.Lines[lineIndex].WithEvent(@event);
@@ -339,6 +338,7 @@ namespace Murder.Editor.CustomEditors
                     ImGui.PushID($"portrait_kind_{i}");
 
                     SpeakerAsset? speaker = Game.Data.TryGetAsset<SpeakerAsset>(speakerGuid);
+                    string? portrait = null;
 
                     // -- Select speaker portrait --
                     if (speaker is not null)
@@ -351,11 +351,13 @@ namespace Murder.Editor.CustomEditors
                         if (portraitIndex == -1 && allPortraits.Count > 0)
                         {
                             // Just set the first portrait as default.
-                            line = ModifyPortraitAt(info, i, speakerGuid, speaker.DefaultPortrait ?? allPortraits[0])!.Value;
+                            portrait = speaker.DefaultPortrait ?? allPortraits[0];
+                            line = ModifyPortraitAt(info, i, speakerGuid, portrait)!.Value;
                         }
                         else if (ImGui.Combo($"##portrait_{i}", ref portraitIndex, allPortraits.ToArray(), allPortraits.Count))
                         {
-                            line = ModifyPortraitAt(info, i, speakerGuid, allPortraits[portraitIndex])!.Value;
+                            portrait = allPortraits[portraitIndex];
+                            line = ModifyPortraitAt(info, i, speakerGuid, portrait)!.Value;
                         }
 
                         ImGui.PopItemWidth();
@@ -366,57 +368,92 @@ namespace Murder.Editor.CustomEditors
                     // -- Optional event sound --
                     if (speaker?.Events is not null && speaker.Events?.TryAsset is SpeakerEventsAsset speakerEvents)
                     {
-                        string[] names = [.. speakerEvents.Events.Keys.Order()];
+                        DialogueId id = new(info.ActiveSituation, info.ActiveDialog, id: i);
 
-                        string? name = line.Event;
+                        bool chooseSound = true;
 
-                        if (name is not null &&
-                            speakerEvents.Events.TryGetValue(name, out SpriteEventInfo spriteEventInfo) &&
-                            spriteEventInfo.Sound is SoundEventId sound)
+                        if (_script is not null &&
+                            GetPortraitName(speaker, line) is string targetPortrait &&
+                            speaker.Portraits[targetPortrait].Sound is SoundEventId portraitSound)
                         {
-                            if (ImGuiHelpers.IconButton('', $"play_sound_{i}"))
+                            if (!_script.GetEventInfoFlags(id).HasFlag(LineInfoProperties.SkipDefaultPortraitSound))
                             {
-                                EditorSoundServices.Play(sound);
+                                chooseSound = false;
+
+                                if (ImGuiHelpers.BlueIcon('\uf7d2', $"delete_sound_{i}"))
+                                {
+                                    _script.SetEventInfoAt(id, LineInfoProperties.SkipDefaultPortraitSound);
+                                }
+
+                                ImGui.SameLine();
+
+                                if (ImGuiHelpers.IconButton('', $"play_sound_{i}")) EditorSoundServices.Play(portraitSound);
+                                ImGui.SameLine();
+
+                                if (ImGuiHelpers.IconButton('\uf04c', $"stop_sound_{i}")) SoundServices.StopAll(fadeOut: false);
+                                ImGui.SameLine();
+
+                                ImGui.TextColored(Game.Profile.Theme.Faded, portraitSound.Path);
+                            }
+                            else
+                            {
+                                if (ImGuiHelpers.BlueIcon('\uf1da', $"revert_sound_{i}"))
+                                {
+                                    _script.SetEventInfoAt(id, LineInfoProperties.None);
+
+                                    // make sure this is no longer valid
+                                    line = ModifyEventAt(id, i, @event: null) ?? line;
+                                }
+
+                                ImGui.SameLine();
+                            }
+                        }
+
+                        if (chooseSound)
+                        {
+                            string[] names = [.. speakerEvents.Events.Keys.Order()];
+
+                            string? name = line.Event;
+
+                            if (name is not null &&
+                                speakerEvents.Events.TryGetValue(name, out SpriteEventInfo spriteEventInfo) &&
+                                spriteEventInfo.Sound is SoundEventId sound)
+                            {
+                                if (ImGuiHelpers.IconButton('', $"play_sound_{i}")) EditorSoundServices.Play(sound);
+                                ImGui.SameLine();
+
+                                if (ImGuiHelpers.IconButton('\uf04c', $"stop_sound_{i}")) SoundServices.StopAll(fadeOut: false);
+                                ImGui.SameLine();
+
+                                if (ImGuiHelpers.IconButton('\uf2ed', $"reset_sound_{i}", bgColor: Game.Profile.Theme.Faded))
+                                {
+                                    name = null;
+                                    line = ModifyEventAt(id, i, name) ?? line;
+                                }
+
+                                ImGui.SameLine();
                             }
 
-                            ImGui.SameLine();
-
-                            if (ImGuiHelpers.IconButton('\uf04c', $"stop_sound_{i}"))
+                            if (name is null)
                             {
-                                SoundServices.StopAll(fadeOut: false);
+                                ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
+                                name = "Play an event...";
+                            }
+                            else
+                            {
+                                ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.White);
                             }
 
-                            ImGui.SameLine();
+                            ImGui.PushItemWidth(-1);
 
-                            if (ImGuiHelpers.IconButton('\uf2ed', $"reset_sound_{i}", bgColor: Game.Profile.Theme.Faded))
+                            if (StringField.ProcessStringCombo($"##portrait_sound_{i}", ref name, names))
                             {
-                                name = null;
-                                line = ModifyEventAt(info, i, name) ?? line;
+                                _ = ModifyEventAt(id, i, name) ?? line;
                             }
 
-                            ImGui.SameLine();
+                            ImGui.PopItemWidth();
+                            ImGui.PopStyleColor();
                         }
-
-                        if (name is null)
-                        {
-                            ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
-                            name = "Play an event...";
-                        }
-                        else
-                        {
-                            ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.White);
-                        }
-
-                        ImGui.PushItemWidth(-1);
-
-                        if (StringField.ProcessStringCombo($"##portrait_sound_{i}", ref name, names))
-                        {
-                            _ = ModifyEventAt(info, i, name) ?? line;
-                        }
-
-                        ImGui.PopItemWidth();
-                        ImGui.PopStyleColor();
-
                     }
                 }
             }

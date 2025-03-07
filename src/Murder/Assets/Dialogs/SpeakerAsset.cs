@@ -2,6 +2,7 @@
 using Murder.Assets.Sounds;
 using Murder.Attributes;
 using Murder.Core;
+using Murder.Core.Sounds;
 using Murder.Utilities;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
@@ -21,7 +22,10 @@ public readonly struct PortraitInfo
 
     public readonly Portrait Portrait { get; init; } = new();
 
-    public readonly PortraitProperties Properties { get; init; } = PortraitProperties.Loop; 
+    public readonly PortraitProperties Properties { get; init; } = PortraitProperties.Loop;
+
+    [Tooltip("If there is a sound associated with this portrait")]
+    public readonly SoundEventId? Sound { get; init; } = null;
 
     public PortraitInfo() { }
 }

@@ -2,9 +2,11 @@
 using Bang.Components;
 using Bang.Entities;
 using Bang.Interactions;
+using Microsoft.Xna.Framework.Media;
 using Murder.Assets;
 using Murder.Assets.Sounds;
 using Murder.Components;
+using Murder.Core.Sounds;
 using Murder.Diagnostics;
 using Murder.Messages;
 using Murder.Save;
@@ -147,7 +149,7 @@ namespace Murder.Core.Dialogs
                 if (dialog.IsChoice)
                 {
                     // We will continue to be in a choice until DoChoice gets kicked off.
-                    DoLineEvents(target, dialog.Lines[_activeLine]);
+                    DoActiveLineSounds(target, dialog.Lines[_activeLine]);
                     return new(FormatChoice(dialog));
                 }
 
@@ -162,10 +164,11 @@ namespace Murder.Core.Dialogs
                     if (_activeLine < dialog.Lines.Length)
                     {
                         Line line = dialog.Lines[_activeLine];
-                        _activeLine++;
 
                         TrackInteracted();
-                        DoLineEvents(target, line);
+                        DoActiveLineSounds(target, line);
+
+                        _activeLine++;
 
                         return new(FormatLine(line));
                     }
@@ -438,7 +441,7 @@ namespace Murder.Core.Dialogs
             ImmutableArray<int> choices = ActiveSituation.Edges[_currentDialog.Value].Dialogs;
 
             Line choiceLine = ActiveSituation.Dialogs[choices[choice]].Lines[0];
-            DoLineEvents(target, choiceLine);
+            DoActiveLineSounds(target, choiceLine);
 
             // Go to the choice made by the player.
             _currentDialog = choices[choice];
@@ -485,36 +488,55 @@ namespace Murder.Core.Dialogs
             return false;
         }
 
-        private bool DoLineEvents(Entity? target, Line line)
+        private bool DoActiveLineSounds(Entity? target, Line line)
         {
-            if (string.IsNullOrEmpty(line.Event))
+            SoundEventId? sound = FindSoundForActiveLine(line);
+            if (sound is null)
             {
-                // No event to play, whatever.
                 return false;
             }
 
+            _ = SoundServices.Play(sound.Value, target: target);
+            return true;
+        }
+
+        private SoundEventId? FindSoundForActiveLine(Line line)
+        {
             Guid speakerGuid = line.Speaker ?? _character.Speaker;
 
             SpeakerAsset? speaker = Game.Data.TryGetAsset<SpeakerAsset>(speakerGuid);
             if (speaker is null)
             {
-                GameLogger.Error("Unable to find speaker for playing event!");
-                return false;
+                return null;
             }
 
-            if (speaker.Events?.TryAsset is not SpeakerEventsAsset speakerEvents)
+            // first, ask whether the line has a custom event set. if so, fetch its associated value for the speaker.
+            if (line.Event is not null && 
+                speaker.Events?.TryAsset is SpeakerEventsAsset speakerEvents && 
+                speakerEvents.Events.TryGetValue(line.Event, out SpriteEventInfo info) &&
+                info.Sound is not null)
             {
-                return false;
+                return info.Sound;
             }
 
-            if (!speakerEvents.Events.TryGetValue(line.Event, out SpriteEventInfo info) || info.Sound is null)
+            string portrait = DialogueServices.GetPortraitName(speaker, line.Portrait, fallback: _character.Portrait);
+
+            // otherwise, the portrait might have a sound associated with it.
+            if (speaker.Portraits.TryGetValue(portrait, out PortraitInfo portraitInfo) &&
+                portraitInfo.Sound is not null &&
+                Game.Data.TryGetAsset<CharacterAsset>(_character.Guid) is CharacterAsset asset)
             {
-                return false;
+                DialogueId id = new(_currentSituation, _currentDialog ?? 0, _activeLine);
+
+                // before returning, let's see if the user wants to bypass this sound.
+                LineInfoProperties flags = asset.GetEventInfoFlags(id);
+                if (!flags.HasFlag(LineInfoProperties.SkipDefaultPortraitSound))
+                {
+                    return portraitInfo.Sound;
+                }
             }
 
-            SoundServices.Play(info.Sound.Value, target: target);
-
-            return true;
+            return null;
         }
 
         private void DoAction(World? world, Entity? actionEntity, BlackboardTracker tracker, DialogAction action)

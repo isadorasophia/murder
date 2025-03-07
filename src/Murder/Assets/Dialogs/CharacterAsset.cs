@@ -151,6 +151,27 @@ public class CharacterAsset : GameAsset
         FileChanged = true;
     }
 
+    public void SetEventInfoAt(DialogueId id, LineInfoProperties flags)
+    {
+        int index = GetOrCreateDataAt(id);
+
+        DialogueLineInfo data = _dialogueData[index];
+        _dialogueData = _dialogueData.SetItem(index, data with { Info = data.Info with { Flags = flags } });
+
+        FileChanged = true;
+    }
+
+    public LineInfoProperties GetEventInfoFlags(DialogueId id)
+    {
+        int index = FindIndexForDialogueId(id);
+        if (index == -1)
+        {
+            return LineInfoProperties.None;
+        }
+
+        return _dialogueData[index].Info.Flags;
+    }
+
     public void PrunUnusedComponents(IEnumerable<DialogueId> unusedComponents)
     {
         foreach (DialogueId id in unusedComponents)

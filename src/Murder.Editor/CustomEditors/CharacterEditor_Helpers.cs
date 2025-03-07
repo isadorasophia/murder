@@ -7,6 +7,7 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Stages;
 using Murder.Editor.Utilities;
+using Murder.Services;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -73,7 +74,7 @@ namespace Murder.Editor.CustomEditors
                 return false;
             }
 
-            string portraitName = line.Portrait is null ? _script.Portrait ?? speaker.DefaultPortrait ?? speaker.Portraits.Keys.First() : line.Portrait;
+            string portraitName = GetPortraitName(speaker, line);
 
             if (!speaker.Portraits.TryGetValue(portraitName, out PortraitInfo portrait) ||
                 Game.Data.TryGetAsset<SpriteAsset>(portrait.Portrait.Sprite) is not SpriteAsset aseprite)
@@ -83,6 +84,11 @@ namespace Murder.Editor.CustomEditors
 
             EditorAssetHelpers.DrawPreview(aseprite, maxSize: 100, portrait.Portrait.AnimationId);
             return true;
+        }
+        
+        private string GetPortraitName(SpeakerAsset speaker, Line line)
+        {
+            return DialogueServices.GetPortraitName(speaker, line.Portrait, _script?.Portrait);
         }
 
         private bool FetchActiveSituation([NotNullWhen(true)] out Situation? situation)

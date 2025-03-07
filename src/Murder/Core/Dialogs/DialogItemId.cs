@@ -20,6 +20,13 @@ public readonly record struct DialogueId
     }
 }
 
+[Flags]
+public enum LineInfoProperties
+{
+    None = 0,
+    SkipDefaultPortraitSound = 1
+}
+
 public readonly struct LineInfo
 {
     public readonly Guid Speaker { get; init; } = Guid.Empty;
@@ -31,6 +38,8 @@ public readonly struct LineInfo
     /// Component modified within a dialog.
     /// </summary>
     public IComponent? Component { get; init; } = null;
+
+    public LineInfoProperties Flags { get; init; } = LineInfoProperties.None;
 
     public LineInfo() { }
 

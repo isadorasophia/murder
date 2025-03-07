@@ -7,15 +7,18 @@ using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Xml.Linq;
 
 namespace Murder.Editor.CustomFields
 {
     [CustomFieldOf(typeof(ImmutableArray<PortraitInfo>))]
     internal class ImmutableArrayPortraitField : ImmutableArrayField<PortraitInfo>
     {
+        protected override bool AllowReorder => true;
+
         protected override bool Add(in EditorMember member, [NotNullWhen(true)] out PortraitInfo element)
         {
-            if (ImGui.Button("New Portrait"))
+            if (ImGui.Button("New portrait"))
             {
                 element = new();
                 return true;
@@ -25,12 +28,17 @@ namespace Murder.Editor.CustomFields
             return false;
         }
 
+        protected override void Reorder(ref ImmutableArray<PortraitInfo> elements)
+        {
+            elements = [.. elements.OrderBy(p => p.Name)];
+        }
+
         protected override bool DrawElement(ref PortraitInfo element, EditorMember member, int index)
         {
             bool modified = false;
 
             string id = $"speaker_{index}";
-            using TableMultipleColumns table = new(id, flags: ImGuiTableFlags.SizingFixedFit, 0, 0);
+            using TableMultipleColumns table = new(id, flags: ImGuiTableFlags.SizingFixedFit, 65, 400, 400);
 
             ImGui.TableNextRow();
             ImGui.TableNextColumn();
@@ -41,7 +49,9 @@ namespace Murder.Editor.CustomFields
                 ImGui.TableNextColumn();
             }
 
-            ImGui.PushItemWidth(300);
+            ImGui.Dummy(new System.Numerics.Vector2(20, 0));
+
+            ImGui.PushItemWidth(-1);
 
             string name = element.Name;
             if (DrawValue(ref element, nameof(PortraitInfo.Name)))
@@ -65,14 +75,27 @@ namespace Murder.Editor.CustomFields
             }
             ImGui.PopItemWidth();
 
+            ImGui.TableNextColumn();
+            ImGui.Dummy(new System.Numerics.Vector2(20, 0));
+
             if (portrait.Sprite != Guid.Empty)
             {
+                ImGui.Text("\uf0c3");
+                ImGui.SameLine();
+
                 int flags = (int)element.Properties;
                 if (ImGuiHelpers.DrawEnumFieldAsFlags(id, typeof(PortraitProperties), ref flags))
                 {
                     element = element with { Properties = (PortraitProperties)flags };
                     modified = true;
                 }
+            }
+
+            ImGui.Text("\uf001");
+            ImGui.SameLine();
+            if (DrawValue(ref element, nameof(PortraitInfo.Sound)))
+            {
+                modified = true;
             }
 
             return modified;

@@ -182,4 +182,19 @@ public static class DialogueServices
             e.SetOverrideSituation(existingSituation);
         }
     }
+
+    public static string GetPortraitName(SpeakerAsset speaker, string? portrait, string? fallback = null)
+    {
+        if (portrait is not null)
+        {
+            return portrait;
+        }
+
+        if (fallback is not null)
+        {
+            return fallback;
+        }
+
+        return speaker.DefaultPortrait ?? speaker.Portraits.Keys.First();
+    }
 }
