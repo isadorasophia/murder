@@ -20,7 +20,7 @@ using System.Reflection;
 
 namespace Murder.Editor.Utilities;
 
-internal static class StageHelpers
+public static class StageHelpers
 {
     private static List<(Type tSystem, bool isActive)>? _cachedEditorSystems = null;
 
@@ -334,9 +334,10 @@ internal static class StageHelpers
             return null;
         }
 
-        SpriteAsset? spriteAsset = GetSpriteAssetForEntity(target); 
+        SpriteAsset? spriteAsset = GetSpriteAssetForEntity(target);
 
-        var spriteProperties = spriteAsset is null ? null : GetSpriteEventsForAsset(spriteAsset);
+        (string[] Animations, HashSet<string> Events)? spriteProperties = 
+            spriteAsset is null ? null : GetSpriteEventsForAsset(spriteAsset);
 
         string[]? animations = spriteProperties?.Animations;
         HashSet<string>? events = spriteProperties?.Events;
@@ -352,6 +353,11 @@ internal static class StageHelpers
             {
                 AddEventsIfAny(c, ref events, child: true);
             }
+        }
+
+        if (Architect.Game?.CustomHelper is IStageCustomHelper customHelper)
+        {
+            customHelper.AddEventsForSelectedEntity(target, ref events);
         }
 
         if (events is null)
@@ -416,7 +422,7 @@ internal static class StageHelpers
         }
     }
 
-    public static (string[] Animations, HashSet<string> Events)? GetSpriteEventsForAsset(SpriteAsset asset)
+    public static (string[] Animations, HashSet<string> Events) GetSpriteEventsForAsset(SpriteAsset asset)
     {
         HashSet<string> animations = new();
         HashSet<string> events = new();
