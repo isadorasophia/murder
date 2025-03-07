@@ -5,6 +5,7 @@ using Murder.Diagnostics;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -273,7 +274,6 @@ public class PixelFontSize
 
             RuntimeLetterProperties? letter = textData.TryGetLetterProperty(letterIndex);
 
-
             bool isPostAddedLineEnding = letter?.Properties is not RuntimeLetterPropertiesFlag properties ||
                 !properties.HasFlag(RuntimeLetterPropertiesFlag.DoNotSkipLineEnding);
 
@@ -288,11 +288,6 @@ public class PixelFontSize
                 if (origin.X != 0)
                 {
                     justified.X = Calculator.FloorToInt(WidthToNextLine(text, i + 1) * origin.X); // This is suspicious, shound't this be round?
-                }
-
-                if (isPostAddedLineEnding)
-                {
-                    letterIndex--;
                 }
 
                 continue;
