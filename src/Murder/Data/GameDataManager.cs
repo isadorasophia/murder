@@ -837,11 +837,22 @@ namespace Murder.Data
         {
             var builder = ImmutableDictionary.CreateBuilder<Guid, GameAsset>();
 
-            foreach (var t in types)
+            foreach (Type t in types)
             {
                 if (_database.TryGetValue(t, out HashSet<Guid>? assetGuids))
                 {
                     builder.AddRange(assetGuids.ToDictionary(id => id, id => _allAssets[id]));
+                }
+                else
+                {
+                    // this might be available as an implementation
+                    foreach ((Type tt, HashSet<Guid>? ttAssets) in _database)
+                    {
+                        if (tt.BaseType == t)
+                        {
+                            builder.AddRange(ttAssets.ToDictionary(id => id, id => _allAssets[id]));
+                        }
+                    }
                 }
             }
 
