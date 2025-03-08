@@ -272,10 +272,33 @@ public class PixelFontSize
 
             char character = text[i];
 
+            // check for letter properties before doing anything else. 
+            // even if this is an invalid character, we still need to keep track of its properties
             RuntimeLetterProperties? letter = textData.TryGetLetterProperty(letterIndex);
+            if (letter is not null)
+            {
+                if (letter.Value.Glitch != 0)
+                {
+                    glitchAmount = letter.Value.Glitch;
+                }
+                if (letter.Value.Properties.HasFlag(RuntimeLetterPropertiesFlag.ResetGlitch))
+                {
+                    glitchAmount = 0;
+                }
 
-            bool isPostAddedLineEnding = letter?.Properties is not RuntimeLetterPropertiesFlag properties ||
-                !properties.HasFlag(RuntimeLetterPropertiesFlag.DoNotSkipLineEnding);
+                if (letter.Value.Color is Color newColor)
+                {
+                    currentColor = newColor * color.A;
+                }
+                else if (letter.Value.Properties.HasFlag(RuntimeLetterPropertiesFlag.ResetColor))
+                {
+                    currentColor = color;
+                }
+            }
+
+            // i don't think we need this anymore?
+            //bool isPostAddedLineEnding = letter?.Properties is not RuntimeLetterPropertiesFlag properties ||
+            //    !properties.HasFlag(RuntimeLetterPropertiesFlag.DoNotSkipLineEnding);
 
             if (character == '\n')
             {
@@ -302,17 +325,8 @@ public class PixelFontSize
             {
                 float waveOffset = 0f;
                 Vector2 shake = Vector2.Zero;
-                if (letter != null)
+                if (letter is not null)
                 {
-                    if (letter.Value.Glitch != 0)
-                    {
-                        glitchAmount = letter.Value.Glitch;
-                    }
-                    if (letter.Value.Properties.HasFlag(RuntimeLetterPropertiesFlag.ResetGlitch))
-                    {
-                        glitchAmount = 0;
-                    }
-
                     if (letter.Value.Properties.HasFlag(RuntimeLetterPropertiesFlag.Wave))
                     {
                         waveOffset = MathF.Sin(Game.NowUnscaled * 4f + i);
@@ -328,12 +342,10 @@ public class PixelFontSize
 
                 Vector2 effects = new Vector2(shake.X, shake.Y + waveOffset);
 
-
                 Point pos = (position + (offset + new Vector2(c.XOffset, c.YOffset + LineHeight - 1) * scale - justified) + effects).Floor();
 
                 var texture = Textures[c.Page];
                 Rectangle glyph = c.Glyph;
-
 
                 if (glitchAmount != 0)
                 {
@@ -402,18 +414,6 @@ public class PixelFontSize
                 {
                     // Use 0.001f as the sort so draw the shadow under the font.
                     texture.Draw(spriteBatch, pos + new Point(0, 1), Vector2.One * scale, glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
-                }
-
-                if (letter is not null)
-                {
-                    if (letter.Value.Color is Color newColor)
-                    {
-                        currentColor = newColor * color.A;
-                    }
-                    else if (letter.Value.Properties.HasFlag(RuntimeLetterPropertiesFlag.ResetColor))
-                    {
-                        currentColor = color;
-                    }
                 }
 
                 // draw normal character
