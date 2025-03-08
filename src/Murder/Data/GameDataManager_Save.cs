@@ -357,10 +357,10 @@ namespace Murder.Data
                 FileManager.GetOrCreateDirectory(backupDirectory);
 
                 string packedSavePathBackup = Path.Join(backupDirectory, PackedSaveData.Name);
-                File.Copy(packedSavePath, packedSavePathBackup);
+                File.Copy(packedSavePath, packedSavePathBackup, overwrite: true);
 
                 string packedSaveAssetsPathBackup = Path.Join(backupDirectory, PackedSaveAssetsData.Name);
-                File.Copy(packedSaveAssetsPath, packedSaveAssetsPathBackup);
+                File.Copy(packedSaveAssetsPath, packedSaveAssetsPathBackup, overwrite: true);
             }
 
             FileManager.CreateDirectoryPathIfNotExists(packedSavePath);
