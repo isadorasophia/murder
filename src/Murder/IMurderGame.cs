@@ -89,9 +89,14 @@ namespace Murder
         public bool HasCursor => true;
 
         /// <summary>
-        /// This is the name of the game, used when creating assets and loading save data.
+        /// This is the name of the game, used when creating assets.
         /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// This is the name of the game, used when loading save data.
+        /// </summary>
+        public string SaveName => Name;
 
         /// <summary>
         /// This is the version of the game, used when checking for save compatibility.

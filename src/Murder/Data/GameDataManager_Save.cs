@@ -30,6 +30,11 @@ namespace Murder.Data
         /// </summary>
         public virtual string GameDirectory => _game?.Name ?? "Murder";
 
+        /// <summary>
+        /// Directory used for saving custom data.
+        /// </summary>
+        public virtual string SaveDirectory => _game?.SaveName ?? GameDirectory;
+
         public virtual float CurrentGameVersion => _game?.Version ?? 1;
 
         private string? _saveBasePath = null;
@@ -46,7 +51,7 @@ namespace Murder.Data
                     return _saveBasePath;
                 }
 
-                _saveBasePath = FileHelper.GetSaveBasePath(GameDirectory);
+                _saveBasePath = FileHelper.GetSaveBasePath(SaveDirectory);
                 return _saveBasePath;
             }
         }
