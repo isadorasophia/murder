@@ -23,8 +23,54 @@ namespace Murder.Editor.Systems
 {
     [TileEditor]
     [Filter(typeof(TileGridComponent))]
-    public partial class TileEditorSystem : IMurderRenderSystem
+    public partial class TileEditorSystem : IUpdateSystem, IMurderRenderSystem
     {
+        public void Update(Context context)
+        {
+            if (context.World.TryGetUnique<EditorComponent>() is not EditorComponent editor)
+            {
+                return;
+            }
+
+            if (!Game.Instance.IsActive)
+            {
+                return;
+            }
+
+            if (editor.EditorHook.CursorWorldPosition is null)
+            {
+                return;
+            }
+
+            foreach (Entity e in context.Entities)
+            {
+                TileGridComponent gridComponent = e.GetTileGrid();
+
+                TileGrid grid = gridComponent.Grid;
+                Point position = gridComponent.Origin;
+
+                if (_dragModeAvailable)
+                {
+                    IntRectangle gridRectangle = new Rectangle(position.X, position.Y, grid.Width, grid.Height);
+                    Rectangle worldRectangle = gridRectangle * Grid.CellSize;
+
+                    int id = e.EntityId;
+                    if (EditorServices.DragArea(
+                        $"drag_{id}", editor.EditorHook.CursorWorldPosition.Value, worldRectangle, out Vector2 newDragWorldTopLeft))
+                    {
+                        Point newGridTopLeft = newDragWorldTopLeft.ToGridPoint();
+
+                        // Clamp at zero.
+                        newGridTopLeft.X = Math.Max(newGridTopLeft.X, 0);
+                        newGridTopLeft.Y = Math.Max(newGridTopLeft.Y, 0);
+
+                        _resize = new(position: newGridTopLeft, gridRectangle.Size);
+                        _targetEntity = id;
+                    }
+                }
+            }
+        }
+
         public void Draw(RenderContext render, Context context)
         {
             if (context.World.TryGetUnique<EditorComponent>() is not EditorComponent editor)
@@ -103,6 +149,9 @@ namespace Murder.Editor.Systems
         private int _targetEntity = -1;
         private Rectangle? _resize;
 
+        private bool _dragModeAvailable = false;
+        private int _selectedEntity = -1;
+
         /// <summary>
         /// Draw a box and listen to user input.
         /// </summary>
@@ -141,6 +190,8 @@ namespace Murder.Editor.Systems
 
             int lineWidth = Calculator.RoundToInt(2 / render.Camera.Zoom);
 
+            _dragModeAvailable = false;
+
             // Zoom out mode, so we can just drag the whole room.
             if (render.Camera.Zoom < EditorFloorRenderSystem.ZoomThreshold)
             {
@@ -148,23 +199,12 @@ namespace Murder.Editor.Systems
 
                 if (_inputAvailable && editor.EditorHook.CursorWorldPosition != null)
                 {
-                    if (EditorServices.DragArea(
-                        $"drag_{id}", editor.EditorHook.CursorWorldPosition.Value, worldRectangle, out Vector2 newDragWorldTopLeft))
-                    {
-                        Point newGridTopLeft = newDragWorldTopLeft.ToGridPoint();
-
-                        // Clamp at zero.
-                        newGridTopLeft.X = Math.Max(newGridTopLeft.X, 0);
-                        newGridTopLeft.Y = Math.Max(newGridTopLeft.Y, 0);
-
-                        _resize = new(position: newGridTopLeft, gridRectangle.Size);
-                        _targetEntity = id;
-                    }
+                    _dragModeAvailable = true;
                 }
 
                 Point offset = new(lineWidth, lineWidth);
 
-                // Draw a cute area within the rectangle.
+                // Draw a cute area within the gridRectangle.
                 RenderServices.DrawRectangle(
                     render.DebugFxBatch,
                     new Rectangle(gridRectangle.TopLeft * Grid.CellSize + offset, gridRectangle.Size * Grid.CellSize - offset),
@@ -311,7 +351,7 @@ namespace Murder.Editor.Systems
             int selectedTileMask = editor.EditorHook.CurrentSelectedTile.ToMask();
             if (_startedShiftDragging != null && _dragColor != null)
             {
-                // Draw the rectangle applied over the area.
+                // Draw the gridRectangle applied over the area.
                 IntRectangle draggedRectangle = GridHelper.FromTopLeftToBottomRight(_startedShiftDragging.Value, cursorGridPosition);
                 Rectangle targetSize = draggedRectangle * Grid.CellSize;
                 _currentRectDraw = Rectangle.Lerp(_currentRectDraw, targetSize, 0.45f);

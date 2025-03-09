@@ -430,7 +430,7 @@ namespace Murder.Editor.Services
 
             if (area.Contains(cursorPosition))
             {
-                if (Game.Input.Down(MurderInputButtons.LeftClick))
+                if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                 {
                     _draggingHandle = id;
                     _dragOffset = area.TopLeft - cursorPosition;

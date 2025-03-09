@@ -173,7 +173,10 @@ namespace Murder.Editor.Systems
             var icon = atlas.Get(_editorMode == EditorMode.Cut ? "cursor_cut" : "cursor_pencil");
 
             Rectangle buttonRect = Rectangle.CenterRectangle(new Vector2(render.Camera.HalfWidth, 30), 39, 39);
-            bool hovered = buttonRect.Contains(editor.EditorHook.CursorScreenPosition);
+
+            Rectangle collisionButtonRect = buttonRect * Architect.EditorSettings.DpiScale;
+            bool hovered = collisionButtonRect.Contains(editor.EditorHook.CursorScreenPosition);
+
             bool down = false;
 
             if (hovered)

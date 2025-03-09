@@ -360,6 +360,7 @@ namespace Murder.Editor.Stages
                     else
                     {
                         ImGui.TextColored(Game.Profile.Theme.Faded, $"{EditorHook.CursorWorldPosition}");
+                        // ImGui.TextColored(Game.Profile.Theme.Faded, $"{EditorHook.CursorScreenPosition}"); // use this to debug the screen position (useful for dpi)
                     }
                     ImGui.End();
                 }
