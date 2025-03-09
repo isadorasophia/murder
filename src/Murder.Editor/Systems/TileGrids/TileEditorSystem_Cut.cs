@@ -7,6 +7,7 @@ using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Data;
 using Murder.Editor.Components;
+using Murder.Editor.Utilities;
 using Murder.Services;
 using Murder.Utilities;
 using System.Numerics;
@@ -166,28 +167,24 @@ namespace Murder.Editor.Systems
             return true;
         }
 
-        // Draw the gesture for switching tile mode.
-        private bool DrawToolbox(RenderContext render, EditorComponent editor)
+        private void UpdateToolbox(Camera2D camera, EditorHook hook)
         {
-            var atlas = Game.Data.FetchAtlas(AtlasIdentifiers.Editor);
-            var icon = atlas.Get(_editorMode == EditorMode.Cut ? "cursor_cut" : "cursor_pencil");
-
-            Rectangle buttonRect = Rectangle.CenterRectangle(new Vector2(render.Camera.HalfWidth, 30), 39, 39);
+            Rectangle buttonRect = Rectangle.CenterRectangle(new Vector2(camera.HalfWidth, 30), 39, 39);
 
             Rectangle collisionButtonRect = buttonRect * Architect.EditorSettings.DpiScale;
-            bool hovered = collisionButtonRect.Contains(editor.EditorHook.CursorScreenPosition);
+            _hoveredOnToolboxArea = collisionButtonRect.Contains(hook.CursorScreenPosition);
 
-            bool down = false;
+            _downOnToolboxArea = false;
 
-            if (hovered)
+            if (_hoveredOnToolboxArea)
             {
-                down = Game.Input.Down(MurderInputButtons.LeftClick);
+                _downOnToolboxArea = Game.Input.Down(MurderInputButtons.LeftClick);
 
-                if (down)
+                if (_downOnToolboxArea)
                 {
                     if (!_pressedToolboxCut)
                     {
-                        down = true;
+                        _downOnToolboxArea = true;
                         _pressedToolboxCut = true;
                     }
                 }
@@ -210,18 +207,30 @@ namespace Murder.Editor.Systems
                 }
             }
 
-            if ((down || _pressedToolboxCut) && !Game.Input.Down(MurderInputButtons.LeftClick))
+            if ((_downOnToolboxArea || _pressedToolboxCut) && !Game.Input.Down(MurderInputButtons.LeftClick))
             {
-                down = false;
+                _downOnToolboxArea = false;
                 _pressedToolboxCut = false;
             }
+        }
 
-            render.UiBatch.DrawRectangle(buttonRect, down ? Color.White : hovered ? Color.Gray * 0.8f : Color.Gray * 0.5f, 0.2f);
+        private bool _downOnToolboxArea = false;
+        private bool _hoveredOnToolboxArea = false;
+
+        // Draw the gesture for switching tile mode.
+        private bool DrawToolbox(RenderContext render)
+        {
+            var atlas = Game.Data.FetchAtlas(AtlasIdentifiers.Editor);
+            var icon = atlas.Get(_editorMode == EditorMode.Cut ? "cursor_cut" : "cursor_pencil");
+
+            Rectangle buttonRect = Rectangle.CenterRectangle(new Vector2(render.Camera.HalfWidth, 30), 39, 39);
+
+            render.UiBatch.DrawRectangle(buttonRect, _downOnToolboxArea ? Color.White : _hoveredOnToolboxArea ? Color.Gray * 0.8f : Color.Gray * 0.5f, 0.2f);
             render.UiBatch.DrawRectangleOutline(buttonRect, Color.Black, 1, 0.12f);
             icon.Draw(render.UiBatch, buttonRect.Center,
                 new(Vector2.Zero, icon.Size), Color.White, Vector2.One * 2, 0, icon.Size / 2f - new Vector2(0, 0), ImageFlip.None, RenderServices.BLEND_NORMAL, 0);
 
-            return hovered || _pressedToolboxCut;
+            return _hoveredOnToolboxArea || _pressedToolboxCut;
         }
 
         private void Delete(Context context, IntRectangle area)

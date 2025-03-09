@@ -27,7 +27,7 @@ namespace Murder.Editor.Systems
     {
         public void Update(Context context)
         {
-            if (context.World.TryGetUnique<EditorComponent>() is not EditorComponent editor)
+            if (context.World.TryGetUnique<EditorComponent>()?.EditorHook is not EditorHook hook)
             {
                 return;
             }
@@ -37,37 +37,65 @@ namespace Murder.Editor.Systems
                 return;
             }
 
-            if (editor.EditorHook.CursorWorldPosition is null)
+            if (hook.CursorWorldPosition is null)
             {
                 return;
             }
 
-            foreach (Entity e in context.Entities)
+            _inputAvailable = true;
+
+            if (hook.CursorIsBusy.Count != 0 || hook.UsingGui)
             {
-                TileGridComponent gridComponent = e.GetTileGrid();
+                // Someone else is using our cursor, let's wait out turn.
+                _inputAvailable = false;
+            }
 
-                TileGrid grid = gridComponent.Grid;
-                Point position = gridComponent.Origin;
+            UpdateToolbox(((MonoWorld)context.World).Camera, hook);
 
-                if (_dragModeAvailable)
+            bool isCursorBusy = _downOnToolboxArea || _hoveredOnToolboxArea;
+            if (isCursorBusy)
+            {
+                return;
+            }
+
+            if (_editorMode == EditorMode.Cut)
+            {
+                // update here?
+            }
+            else
+            {
+                foreach (Entity e in context.Entities)
                 {
-                    IntRectangle gridRectangle = new Rectangle(position.X, position.Y, grid.Width, grid.Height);
-                    Rectangle worldRectangle = gridRectangle * Grid.CellSize;
+                    TileGridComponent gridComponent = e.GetTileGrid();
 
-                    int id = e.EntityId;
-                    if (EditorServices.DragArea(
-                        $"drag_{id}", editor.EditorHook.CursorWorldPosition.Value, worldRectangle, out Vector2 newDragWorldTopLeft))
+                    TileGrid grid = gridComponent.Grid;
+                    Point position = gridComponent.Origin;
+
+                    if (_dragModeAvailable)
                     {
-                        Point newGridTopLeft = newDragWorldTopLeft.ToGridPoint();
-
-                        // Clamp at zero.
-                        newGridTopLeft.X = Math.Max(newGridTopLeft.X, 0);
-                        newGridTopLeft.Y = Math.Max(newGridTopLeft.Y, 0);
-
-                        _resize = new(position: newGridTopLeft, gridRectangle.Size);
-                        _targetEntity = id;
+                        UpdateDragRoom(e, hook.CursorWorldPosition.Value, position, grid);
                     }
                 }
+            }
+        }
+
+        private void UpdateDragRoom(Entity e, Point cursorWorldPosition, Point position, TileGrid grid)
+        {
+            IntRectangle gridRectangle = new Rectangle(position.X, position.Y, grid.Width, grid.Height);
+            Rectangle worldRectangle = gridRectangle * Grid.CellSize;
+
+            int id = e.EntityId;
+            if (EditorServices.DragArea(
+                $"drag_{id}", cursorWorldPosition, worldRectangle, out Vector2 newDragWorldTopLeft))
+            {
+                Point newGridTopLeft = newDragWorldTopLeft.ToGridPoint();
+
+                // Clamp at zero.
+                newGridTopLeft.X = Math.Max(newGridTopLeft.X, 0);
+                newGridTopLeft.Y = Math.Max(newGridTopLeft.Y, 0);
+
+                _resize = new(position: newGridTopLeft, gridRectangle.Size);
+                _targetEntity = id;
             }
         }
 
@@ -83,38 +111,33 @@ namespace Murder.Editor.Systems
                 return;
             }
 
-            _inputAvailable = true;
+            bool isCursorBusy = _downOnToolboxArea || _hoveredOnToolboxArea;
 
-            EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
-            if (hook.CursorIsBusy.Any() || hook.UsingGui)
-            {
-                // Someone else is using our cursor, let's wait out turn.
-                _inputAvailable = false;
-            }
+            _dragModeAvailable = false;
 
             // Draw the toolbox
-            bool isCursorWithin = DrawToolbox(render, editor);
+            DrawToolbox(render);
 
             // Whether the cursor if within or interacting with any of the rooms.
 
-            if (!isCursorWithin)
+            if (!isCursorBusy)
             {
                 if (_editorMode == EditorMode.Cut)
                 {
-                    isCursorWithin |= DrawTileSelector(render, context, editor);
+                    isCursorBusy |= DrawTileSelector(render, context, editor);
                 }
                 else
                 {
                     foreach (Entity e in context.Entities)
                     {
-                        isCursorWithin |= DrawResizeBox(render, context.World, editor, e);
-                        isCursorWithin |= DrawTilePainter(render, editor, e);
+                        isCursorBusy |= DrawResizeBox(render, context.World, editor, e);
+                        isCursorBusy |= DrawTilePainter(render, editor, e);
                     }
                 }
                 
             }
 
-            if (!isCursorWithin)
+            if (!isCursorBusy)
             {
                 DrawNewRoom(editor);
             }
@@ -150,7 +173,6 @@ namespace Murder.Editor.Systems
         private Rectangle? _resize;
 
         private bool _dragModeAvailable = false;
-        private int _selectedEntity = -1;
 
         /// <summary>
         /// Draw a box and listen to user input.
@@ -189,8 +211,6 @@ namespace Murder.Editor.Systems
             Vector2 worldBottomRight = gridRectangle.BottomRight * Grid.CellSize;
 
             int lineWidth = Calculator.RoundToInt(2 / render.Camera.Zoom);
-
-            _dragModeAvailable = false;
 
             // Zoom out mode, so we can just drag the whole room.
             if (render.Camera.Zoom < EditorFloorRenderSystem.ZoomThreshold)
@@ -281,7 +301,6 @@ namespace Murder.Editor.Systems
         private float _tweenStart;
         private Rectangle _currentRectDraw;
         private bool _inputAvailable;
-
 
         /// <summary>
         /// This is the logic for capturing input for new tiles.
