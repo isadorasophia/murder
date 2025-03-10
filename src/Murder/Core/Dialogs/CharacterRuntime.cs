@@ -480,7 +480,7 @@ namespace Murder.Core.Dialogs
                 }
 
                 // If an entity has been created, trigger it immediately.
-                actionEntity?.SendMessage<InteractMessage>();
+                actionEntity?.SendInteractMessage();
 
                 return true;
             }
