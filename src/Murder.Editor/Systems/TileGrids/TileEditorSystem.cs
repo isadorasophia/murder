@@ -81,6 +81,11 @@ namespace Murder.Editor.Systems
                         UpdatePaintTile(hook, e, gridComponent);
                     }
                 }
+
+                if (Game.Input.Released(MurderInputButtons.LeftClick) || Game.Input.Released(MurderInputButtons.RightClick))
+                {
+                    _startedShiftDragging = null;
+                }
             }
         }
 
@@ -146,12 +151,10 @@ namespace Murder.Editor.Systems
 
                 if (Game.Input.Released(MurderInputButtons.LeftClick))
                 {
-                    _startedShiftDragging = null;
                     grid.Grid.SetGridPosition(draggedRectangle, selectedTileMask);
                 }
                 else if (Game.Input.Released(MurderInputButtons.RightClick))
                 {
-                    _startedShiftDragging = null;
                     grid.Grid.UnsetGridPosition(draggedRectangle, selectedTileMask);
                 }
 
@@ -251,6 +254,8 @@ namespace Murder.Editor.Systems
             if (DrawHandles(render, world, editor, e.EntityId, rectangle, color) is IntRectangle newRectangle)
             {
                 grid.Resize(newRectangle);
+
+                e.RemoveTileGrid();
                 e.SetTileGrid(grid);
             }
 
@@ -457,45 +462,6 @@ namespace Murder.Editor.Systems
             }
 
             return true;        
-        }
-
-        private bool GatherMapInfo(RenderContext render, EditorComponent editor, Entity e,
-            out TileGridComponent gridComponent,
-            [NotNullWhen(true)] out TileGrid? grid,
-            out Point cursorGridPosition,
-            out IntRectangle bounds)
-        {
-            gridComponent = default;
-            grid = null;
-            bounds = default;
-            cursorGridPosition = default;
-
-            if (_resize is not null || render.Camera.Zoom < EditorFloorRenderSystem.ZoomThreshold)
-            {
-                // We are currently resizing, we have no business building tiles for now.
-                return false;
-            }
-
-            if (_startedShiftDragging != null && _targetEntity != e.EntityId)
-            {
-                // we have no business just yet.
-                return false;
-            }
-
-            if (!_inputAvailable)
-            {
-                return false;
-            }
-
-            gridComponent = e.GetTileGrid();
-            grid = gridComponent.Grid;
-
-            if (editor.EditorHook.CursorWorldPosition is not Point cursorWorldPosition)
-                return false;
-
-            cursorGridPosition = cursorWorldPosition.FromWorldToLowerBoundGridPosition();
-            bounds = gridComponent.Rectangle;
-            return true;
         }
 
         /// <summary>

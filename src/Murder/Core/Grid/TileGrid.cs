@@ -210,6 +210,8 @@ namespace Murder.Core
 
         public void Unset(int x, int y, int value)
         {
+            if (x < 0 || y < 0) return;
+
             _gridMap[(y * Width) + x] &= ~value;
             _tiles = ImmutableArray<ImmutableArray<(int tile, int sortAdjust, bool occludeGround)>>.Empty;
 
