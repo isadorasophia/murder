@@ -506,6 +506,12 @@ namespace Murder.Editor.Systems
                     return null;
                 }
 
+                IntRectangle draggedRectangle = GridHelper.FromTopLeftToBottomRight(_startedShiftDragging.Value, cursorGridPosition);
+                if (!bounds.TouchesInside(draggedRectangle))
+                {
+                    return null;
+                }
+
                 // If we are dragging, clamp the bounds of the current room.
                 if (cursorGridPosition.X < grid.Origin.X)
                 {
