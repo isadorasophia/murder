@@ -674,6 +674,14 @@ namespace Murder.Utilities
             var y = Math.Sin(angle);
             return new Vector2((float)x, (float)y);
         }
+
+        public static Vector2 RandomPointInRectangle(IntRectangle rectangle)
+        {
+            var x = Random.Shared.Next(rectangle.Left, rectangle.Right);
+            var y = Random.Shared.Next(rectangle.Top, rectangle.Bottom);
+            return new Vector2(x, y);
+        }
+
         public static Vector2 RandomPointInsideCircle()
         {
             var angle = Random.Shared.NextDouble() * Math.PI * 2;
