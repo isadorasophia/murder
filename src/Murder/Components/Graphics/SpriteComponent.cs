@@ -105,7 +105,19 @@ namespace Murder.Components
             }
         }
 
-        public SpriteComponent PlayAfter(string[] ids)
+        public SpriteComponent ClearAllNext()
+        {
+            return new SpriteComponent(
+                AnimationGuid,
+                Offset,
+                [CurrentAnimation],
+                YSortOffset,
+                RotateWithFacing,
+                HighlightStyle,
+                TargetSpriteBatch);
+        }
+
+        public SpriteComponent PlayAfter(IList<string> ids)
         {
             return new SpriteComponent(
                 AnimationGuid,

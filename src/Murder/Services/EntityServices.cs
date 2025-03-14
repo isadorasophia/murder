@@ -170,6 +170,22 @@ public static class EntityServices
         return null;
     }
 
+    public static SpriteComponent? PlaySpriteAnimationNext(this Entity entity, ImmutableArray<string> animations)
+    {
+        if (entity.TryGetSprite() is SpriteComponent aseprite)
+        {
+            SpriteComponent result = aseprite.PlayAfter(animations);
+            entity.SetSprite(result);
+
+            entity.RemoveAnimationComplete();
+            entity.RemoveAnimationCompleteMessage();
+
+            return result;
+        }
+
+        return null;
+    }
+
     public static SpriteComponent? TryPlaySpriteAnimation(this Entity entity, params string[] nextAnimations) =>
         TryPlaySpriteAnimation(entity, nextAnimations.ToImmutableArray());
 
