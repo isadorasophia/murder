@@ -20,6 +20,8 @@ namespace Murder.Components
         [SpriteBatchReference]
         public readonly int? ChangeSpriteBatchOnComplete { get; init; } = null; // Batches2D.GameplayBatchId;
 
+        public readonly bool KeepComponentAfterTriggered = false;
+
         public DestroyOnAnimationCompleteComponent() { }
 
         public DestroyOnAnimationCompleteComponent(DestroyOnAnimationCompleteFlags settings) =>
