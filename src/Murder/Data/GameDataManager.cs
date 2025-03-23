@@ -884,6 +884,11 @@ namespace Murder.Data
                 index = _game.GetLocalizedFont(index);
             }
 
+            if (index == (int)MurderFonts.SmallFont)
+            {
+                index = (int)MurderFonts.PixelFont;
+            }
+
             if (_fonts.TryGetValue(index, out PixelFont? font))
             {
                 return font;

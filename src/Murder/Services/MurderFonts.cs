@@ -7,7 +7,8 @@ namespace Murder.Services;
 public enum MurderFonts
 {
     PixelFont = 100,
-    LargeFont = 101
+    LargeFont = 101,
+    SmallFont = 102
 }
 
 public static class MurderFontServices

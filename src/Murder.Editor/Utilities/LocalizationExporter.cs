@@ -162,6 +162,10 @@ internal static class LocalizationExporter
         {
             GameLogger.Warning($"Unable to open the file: {fullLocalizationPath}.");
         }
+        catch (MalformedLineException)
+        {
+
+        }
 
         File.Delete(tmpPath);
         return true;
