@@ -316,7 +316,7 @@ public class PixelFontSize
                 continue;
             }
 
-            if (visibleCharacters >= 0 && letterIndex > visibleCharacters)
+            if (visibleCharacters >= 0 && letterIndex >= visibleCharacters)
             {
                 break;
             }
