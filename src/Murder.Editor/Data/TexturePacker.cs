@@ -661,6 +661,7 @@ namespace Murder.Editor.Data
             var ase = AsepriteFiles[n.Texture!.AsepriteFile];
 
             sourceImg = new Texture2D(Architect.GraphicsDevice, ase.Width, ase.Height);
+            sourceImg.Name = $"Source:{n.Texture.Source}";
             Microsoft.Xna.Framework.Color[]? data;
             if (n.Texture.Layer == -1)
             {

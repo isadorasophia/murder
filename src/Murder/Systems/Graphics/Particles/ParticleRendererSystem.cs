@@ -138,6 +138,7 @@ namespace Murder.Systems
                                 scale: scale,
                                 color,
                                 blend: RenderServices.BLEND_NORMAL,
+                                blendState: MurderBlendState.AlphaBlend,
                                 sort: ySort,
                                 currentTime: Game.Now);
 
@@ -157,7 +158,8 @@ namespace Murder.Systems
                                     ImageFlip.None,
                                     color,
                                     Vector2Helper.Center.ToXnaVector2() * simpleTexture.Bounds.XnaSize(),
-                                    RenderServices.BLEND_NORMAL
+                                    RenderServices.BLEND_NORMAL,
+                                    MurderBlendState.AlphaBlend
                                     );
                             }
                             else

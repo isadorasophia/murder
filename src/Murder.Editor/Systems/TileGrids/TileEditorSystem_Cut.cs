@@ -228,7 +228,7 @@ namespace Murder.Editor.Systems
             render.UiBatch.DrawRectangle(buttonRect, _downOnToolboxArea ? Color.White : _hoveredOnToolboxArea ? Color.Gray * 0.8f : Color.Gray * 0.5f, 0.2f);
             render.UiBatch.DrawRectangleOutline(buttonRect, Color.Black, 1, 0.12f);
             icon.Draw(render.UiBatch, buttonRect.Center,
-                new(Vector2.Zero, icon.Size), Color.White, Vector2.One * 2, 0, icon.Size / 2f - new Vector2(0, 0), ImageFlip.None, RenderServices.BLEND_NORMAL, 0);
+                new(Vector2.Zero, icon.Size), Color.White, Vector2.One * 2, 0, icon.Size / 2f - new Vector2(0, 0), ImageFlip.None, RenderServices.BLEND_NORMAL, MurderBlendState.AlphaBlend, 0);
 
             return _hoveredOnToolboxArea || _pressedToolboxCut;
         }

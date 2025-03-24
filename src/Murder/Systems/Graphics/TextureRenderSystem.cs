@@ -39,7 +39,8 @@ public class TextureRenderSystem : IMurderRenderSystem, IReactiveSystem, IExitSy
                 ImageFlip.None,
                 Color.White * alpha,
                 Microsoft.Xna.Framework.Vector2.Zero,
-                RenderServices.BLEND_NORMAL);
+                RenderServices.BLEND_NORMAL,
+                MurderBlendState.AlphaBlend);
         }
     }
 

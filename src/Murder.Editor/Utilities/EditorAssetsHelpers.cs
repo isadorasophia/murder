@@ -383,7 +383,6 @@ public static class EditorAssetHelpers
         Batch2D batch = new("Preview", Game.GraphicsDevice,
             Game.Data.ShaderSprite,
             BatchMode.DepthSortDescending,
-            BlendState.AlphaBlend,
             SamplerState.PointClamp,
             DepthStencilState.DepthRead);
         batch.Begin(Matrix.Identity);

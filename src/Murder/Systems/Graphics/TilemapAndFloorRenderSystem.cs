@@ -122,7 +122,8 @@ public class TilemapAndFloorRenderSystem : IMurderRenderSystem
                             ImageFlip.None,
                             Color.White,
                             Microsoft.Xna.Framework.Vector2.Zero,
-                            RenderServices.BLEND_NORMAL
+                            RenderServices.BLEND_NORMAL,
+                            MurderBlendState.AlphaBlend
                             );
                     }
                 }

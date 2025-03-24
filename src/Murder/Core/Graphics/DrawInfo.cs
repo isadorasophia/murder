@@ -10,6 +10,11 @@ public enum BlendStyle
     Wash,
     Color
 }
+public enum MurderBlendState
+{
+    AlphaBlend,
+    Additive,
+}
 
 [Flags]
 public enum OutlineStyle
@@ -55,6 +60,8 @@ public readonly struct DrawInfo
     public bool Debug { get; init; } = false;
 
     public BlendStyle BlendMode { get; init; } = BlendStyle.Normal;
+    public MurderBlendState BlendState { get; init; } = MurderBlendState.AlphaBlend;
+
     public ImageFlip ImageFlip { get; init; } = ImageFlip.None;
 
     public Rectangle Clip { get; init; } = Rectangle.Empty;

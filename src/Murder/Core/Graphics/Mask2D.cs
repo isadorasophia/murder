@@ -24,7 +24,6 @@ public class Mask2D : IDisposable
             Game.GraphicsDevice,
             Game.Data.ShaderSprite,
             BatchMode.DepthSortDescending,
-            BlendState.AlphaBlend,
             SamplerState.PointClamp,
             DepthStencilState.None
             );
@@ -74,17 +73,18 @@ public class Mask2D : IDisposable
         _batch.End();
 
         targetBatch.Draw(
-            _renderTarget, 
-            position.ToXnaVector2(), 
-            _renderTarget.Bounds.XnaSize(), 
-            _renderTarget.Bounds, 
+            _renderTarget,
+            position.ToXnaVector2(),
+            _renderTarget.Bounds.XnaSize(),
+            _renderTarget.Bounds,
             drawInfo.Sort,
-            drawInfo.Rotation, 
-            drawInfo.Scale.ToXnaVector2(), 
-            drawInfo.ImageFlip, 
+            drawInfo.Rotation,
+            drawInfo.Scale.ToXnaVector2(),
+            drawInfo.ImageFlip,
             drawInfo.Color,
-            drawInfo.Origin.ToXnaVector2(), 
-            drawInfo.GetBlendMode());
+            drawInfo.Origin.ToXnaVector2(),
+            drawInfo.GetBlendMode(),
+            drawInfo.BlendState);
 
         if (_previousRenderTarget is not null)
         {
@@ -105,17 +105,19 @@ public class Mask2D : IDisposable
         }
 
         targetBatch.Draw(
-            _renderTarget, 
-            position.ToXnaVector2(), 
-            _renderTarget.Bounds.XnaSize(), 
-            _renderTarget.Bounds, 
+            _renderTarget,
+            position.ToXnaVector2(),
+            _renderTarget.Bounds.XnaSize(),
+            _renderTarget.Bounds,
             drawInfo.Sort,
-            drawInfo.Rotation, 
-            drawInfo.Scale.ToXnaVector2(), 
-            drawInfo.ImageFlip, 
+            drawInfo.Rotation,
+            drawInfo.Scale.ToXnaVector2(),
+            drawInfo.ImageFlip,
             drawInfo.Color,
-            drawInfo.Origin.ToXnaVector2(), 
-            drawInfo.GetBlendMode());
+            drawInfo.Origin.ToXnaVector2(),
+            drawInfo.GetBlendMode(),
+            drawInfo.BlendState
+            );
     }
 
     public bool IsDisposed => _batch.IsDisposed;

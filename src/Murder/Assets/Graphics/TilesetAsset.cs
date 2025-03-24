@@ -131,7 +131,7 @@ namespace Murder.Assets.Graphics
 
             texture.Draw(batch, new Vector2(x - Offset.X, y - Offset.Y),
                 new Rectangle(tileX * Size.X, tileY * Size.Y, Size.X, Size.Y),
-                color * alpha, Vector2.One, 0, Vector2.Zero, ImageFlip.None, blend, sort);
+                color * alpha, Vector2.One, 0, Vector2.Zero, ImageFlip.None, blend, MurderBlendState.AlphaBlend, sort);
         }
     }
 }

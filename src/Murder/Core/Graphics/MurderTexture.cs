@@ -47,6 +47,7 @@ namespace Murder.Core.Graphics
                     Vector2.Zero,
                     flip,
                     blend,
+                    MurderBlendState.AlphaBlend,
                     sort
                 );
             }
@@ -65,7 +66,9 @@ namespace Murder.Core.Graphics
                     flip,
                     color,
                     Microsoft.Xna.Framework.Vector2.Zero,
-                    blend);
+                    blend,
+                    MurderBlendState.AlphaBlend
+                    );
             }
             else
             {

@@ -29,7 +29,7 @@ public class Batch2D : IDisposable
 
     public GraphicsDevice GraphicsDevice { get; set; }
     public readonly BatchMode BatchMode;
-    public readonly BlendState BlendState;
+    private BlendState BlendState;
     public readonly SamplerState SamplerState;
     public readonly DepthStencilState DepthStencilState;
     public readonly RasterizerState RasterizerState;
@@ -38,7 +38,6 @@ public class Batch2D : IDisposable
         GraphicsDevice graphicsDevice,
         Effect? effect,
         BatchMode batchMode,
-        BlendState blendState,
         SamplerState samplerState,
         DepthStencilState? depthStencilState = null,
         RasterizerState? rasterizerState = null,
@@ -49,19 +48,17 @@ public class Batch2D : IDisposable
               false,
               effect,
               batchMode,
-              blendState,
               samplerState,
               depthStencilState,
               rasterizerState,
               autoHandleAlphaBlendedSprites)
     { }
-    
+
     public Batch2D(string name,
         GraphicsDevice graphicsDevice,
         bool followCamera,
         Effect? effect,
         BatchMode batchMode,
-        BlendState blendState,
         SamplerState samplerState,
         DepthStencilState? depthStencilState = null,
         RasterizerState? rasterizerState = null,
@@ -72,7 +69,6 @@ public class Batch2D : IDisposable
         GraphicsDevice = graphicsDevice;
         Effect = effect;
         BatchMode = batchMode;
-        BlendState = blendState;
         SamplerState = samplerState;
         DepthStencilState = depthStencilState ?? DepthStencilState.None;
         RasterizerState = rasterizerState ?? RasterizerState.CullNone;
@@ -171,7 +167,9 @@ public class Batch2D : IDisposable
         ImageFlip flip,
         XnaColor color,
         Vector2 offset,
-        Vector3 blendStyle)
+        Vector3 blendStyle,
+        MurderBlendState blendState
+        )
     {
 #if DEBUG
         if (!IsBatching)
@@ -182,7 +180,7 @@ public class Batch2D : IDisposable
 #endif
 
         ref SpriteBatchItem batchItem = ref GetBatchItem(AutoHandleAlphaBlendedSprites && color.A < byte.MaxValue);
-        batchItem.Set(texture, position, targetSize, sourceRectangle, rotation, scale, flip, color, offset, blendStyle, sort);
+        batchItem.Set(texture, position, targetSize, sourceRectangle, rotation, scale, flip, color, offset, blendStyle, blendState, sort);
 
         if (BatchMode == BatchMode.Immediate)
         {
@@ -396,8 +394,8 @@ public class Batch2D : IDisposable
 
         SpriteBatchItem batchItem = batchItems[0];
         Texture? texture = batchItem.Texture != null ? batchItem.Texture : null;
-
-        int endIndex = 0;
+        MurderBlendState blendState = batchItem.BlendState;
+        SetBlendState(blendState);
 
         var matrix = Transform;
 
@@ -414,10 +412,12 @@ public class Batch2D : IDisposable
         int indicesIndex = 0;
 
         Effect?.Parameters["MatrixTransform"]?.SetValue(matrix);
+        
         for (int i = 0; i < itemsCount; i++)
         {
             batchItem = batchItems[i];
 
+            // If the texture is different, we need to flush the current batch and start a new one
             if (batchItem.Texture != null && batchItem.Texture != texture)
             {
                 DrawQuads(_vertices, verticesIndex, _indices, indicesIndex, texture, depthStencilState, matrix);
@@ -427,33 +427,59 @@ public class Batch2D : IDisposable
                 indicesIndex = 0;
             }
 
+            if (blendState != batchItem.BlendState)
+            {
+                DrawQuads(_vertices, verticesIndex, _indices, indicesIndex, texture, depthStencilState, matrix);
+                blendState = batchItem.BlendState;
+                SetBlendState(blendState);
+                verticesIndex = 0;
+                indicesIndex = 0;
+            }
+
             int vertexOffset = verticesIndex;
             for (int v = 0; v < batchItem.VertexCount; v++)
             {
+                // Copy the vertex data to the vertex buffer
                 _vertices[verticesIndex++] = batchItem.VertexData[v];
 
                 if (verticesIndex >= _vertices.Length)
                 {
+                    // Resize the vertex buffer if we've run out of space
                     Resize(ref _vertices);
                 }
             }
 
             for (int v = 0; v < (batchItem.VertexCount - 2) * 3; v++)
             {
+                // Copy the index data to the index buffer
                 _indices[indicesIndex++] = batchItem.IndexData[v] + vertexOffset;
 
                 if (indicesIndex >= _indices.Length)
                 {
+                    // Resize the index buffer if we've run out of space
                     Resize(ref _indices);
                 }
             }
-
-            endIndex++;
         }
-        
+
         Effect?.Parameters["MatrixTransform"]?.SetValue(matrix);
         DrawQuads(_vertices, verticesIndex, _indices, indicesIndex, texture, depthStencilState, matrix);
     }
+
+    private void SetBlendState(MurderBlendState blendState)
+    {
+        switch (blendState)
+        {
+            default:
+            case MurderBlendState.AlphaBlend:
+                BlendState = BlendState.AlphaBlend;
+                break;
+            case MurderBlendState.Additive:
+                BlendState = BlendState.Additive;
+                break;
+        }
+    }
+
     private void DrawQuads(
     VertexInfo[] vertices,
     int verticesLength,
@@ -483,6 +509,7 @@ public class Batch2D : IDisposable
                 pass.Apply();
                 GraphicsDevice.Textures[0] = texture;
 
+                // This is where we finally draw the vertices too the screen
                 GraphicsDevice.DrawUserIndexedPrimitives(
                     PrimitiveType.TriangleList,
                     vertexData: vertices,

@@ -190,6 +190,7 @@ namespace Murder.Core.Graphics
             {
                 string path = Path.Join(atlasPath, $"{AtlasId}{i:000}{TextureServices.QOI_GZ_EXTENSION}");
                 _textures[i] = TextureServices.FromFile(Game.GraphicsDevice, path);
+                _textures[i].Name = $"(Atlas){AtlasId}{i:000}";
 
                 GameLogger.Verify(Textures[i] is not null, $"Couldn't load atlas file at {path}");
             }

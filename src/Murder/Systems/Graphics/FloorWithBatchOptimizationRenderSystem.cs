@@ -31,7 +31,7 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
     }
 
     private static int TileChunkSize => 18;
-    
+
     // Cache
     TilesetAsset[]? _tilesetAssetsCache = null;
 
@@ -96,7 +96,7 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
                         {
                             continue;
                         }
-                        _chunks[index] = new(CreateChunk(x, y, context.Entities, tilesetComponent), new Point(x,y));
+                        _chunks[index] = new(CreateChunk(x, y, context.Entities, tilesetComponent), new Point(x, y));
                     }
                     _chunksToDraw.Add(index);
                 }
@@ -204,7 +204,8 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
                                 ImageFlip.None,
                                 Color.White,
                                 Microsoft.Xna.Framework.Vector2.Zero,
-                                RenderServices.BLEND_NORMAL
+                                RenderServices.BLEND_NORMAL,
+                                MurderBlendState.AlphaBlend
                                 );
                         }
                     }

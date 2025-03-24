@@ -14,10 +14,11 @@ public class SpriteBatchItem
     public VertexInfo[] VertexData = new VertexInfo[4];
     public int[] IndexData = new int[6];
     public int VertexCount = 4;
+    public MurderBlendState BlendState;
     public SpriteBatchItem() { }
 
-    private readonly int[] _defaultIndexData = new int[6] { 3, 0, 2, 2, 0, 1 };
-
+    // deprecated
+    //private readonly int[] _defaultIndexData = new int[6] { 3, 0, 2, 2, 0, 1 };
 
     /// <summary>
     /// Sets a Texture to be drawn to the batch
@@ -33,9 +34,10 @@ public class SpriteBatchItem
     /// <param name="origin">Origin coordinates 0 is top left, 1 is bottom right</param>
     /// <param name="colorBlend"></param>
     /// <param name="layerDepth"></param>
-    public void Set(Texture2D texture, Vector2 position, Vector2 destinationSize, Rectangle? sourceRectangle, float rotation, Vector2 scale, ImageFlip flip, Color color, Vector2 origin, Vector3 colorBlend, float layerDepth = 1f)
+    public void Set(Texture2D texture, Vector2 position, Vector2 destinationSize, Rectangle? sourceRectangle, float rotation, Vector2 scale, ImageFlip flip, Color color, Vector2 origin, Vector3 colorBlend, MurderBlendState blendState, float layerDepth = 1f)
     {
         Texture = texture;
+        BlendState = blendState;
         VertexCount = 4;
         IndexData[0] = 3;
         IndexData[1] = 0;

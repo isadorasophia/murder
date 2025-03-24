@@ -29,6 +29,7 @@ namespace Murder.Core.Graphics
         public static Texture2D CreatePixel(Color color)
         {
             var pixel = new Texture2D(Game.GraphicsDevice, 1, 1);
+            pixel.Name = "White Pixel";
             pixel.SetData(new Microsoft.Xna.Framework.Color[] { color });
 
             return pixel;

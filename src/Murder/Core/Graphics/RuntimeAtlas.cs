@@ -49,7 +49,6 @@ public class RuntimeAtlas : IDisposable
             Game.GraphicsDevice,
             Game.Data.ShaderSprite,
             BatchMode.DepthSortDescending,
-            BlendState.AlphaBlend,
             SamplerState.PointClamp,
             DepthStencilState.None
             );
@@ -167,7 +166,8 @@ public class RuntimeAtlas : IDisposable
             drawInfo.ImageFlip,
             drawInfo.Color,
             drawInfo.Origin.ToXnaVector2(),
-            drawInfo.GetBlendMode()
+            drawInfo.GetBlendMode(),
+            drawInfo.BlendState
         );
 
         return true;

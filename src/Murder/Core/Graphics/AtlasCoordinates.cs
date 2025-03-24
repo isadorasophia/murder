@@ -43,7 +43,7 @@ namespace Murder.Core.Graphics
         /// <summary>
         ///  Draws a partial image stored inside an atlas to the spritebatch.
         /// </summary>
-        public void Draw(Batch2D spriteBatch, Vector2 position, Rectangle clip, Color color, Vector2 scale, float rotation, Vector2 offset, ImageFlip imageFlip, Vector3 blend, float sort)
+        public void Draw(Batch2D spriteBatch, Vector2 position, Rectangle clip, Color color, Vector2 scale, float rotation, Vector2 offset, ImageFlip imageFlip, Vector3 blend, MurderBlendState blendState, float sort)
         {
             bool flipH = imageFlip == ImageFlip.Horizontal || imageFlip == ImageFlip.Both;
             bool flipV = imageFlip == ImageFlip.Vertical || imageFlip == ImageFlip.Both;
@@ -74,6 +74,7 @@ namespace Murder.Core.Graphics
                     color: color,
                     offset: finalOffset.ToXnaVector2(),
                     blendStyle: blend,
+                    blendState: blendState,
                     sort: sort);
             }
             else
@@ -103,7 +104,8 @@ namespace Murder.Core.Graphics
                     imageFlip,
                     color,
                     finalOffset.ToXnaVector2(),
-                    blend
+                    blend,
+                    blendState
                     );
             }
         }
@@ -180,7 +182,8 @@ namespace Murder.Core.Graphics
                 ImageFlip.None,
                 color,
                 Microsoft.Xna.Framework.Vector2.Zero,
-                blend
+                blend,
+                MurderBlendState.AlphaBlend // Default blend state
                 );
         }
     }

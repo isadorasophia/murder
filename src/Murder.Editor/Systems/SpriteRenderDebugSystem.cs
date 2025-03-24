@@ -33,7 +33,6 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
     private readonly static int _hash = typeof(DebugColliderRenderSystem).GetHashCode();
     private int _draggingY = -1;
     private int _hoverY = -1;
-
     private const int _segments = 5;
     private static readonly Vector2[] _verticesList = new Vector2[_segments + 2];
 
@@ -138,6 +137,17 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
             else
             {
                 alpha = 1f;
+            }
+
+
+            MurderBlendState blendState;
+            if (e.TryGetSpriteBlend() is SpriteBlendComponent spriteBlend)
+            {
+                blendState = spriteBlend.BlendState;
+            }
+            else
+            {
+                blendState = MurderBlendState.AlphaBlend;
             }
 
             // This is as early as we can to check for out of bounds
@@ -260,6 +270,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
                     Scale = scale,
                     Color = baseColor,
                     Outline = isSelected ? Color.White.FadeAlpha(0.65f) : null,
+                    BlendState = blendState,
                 },
                 animationInfo);
 

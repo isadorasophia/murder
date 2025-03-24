@@ -2,6 +2,7 @@
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
+using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Components.Graphics;
@@ -84,6 +85,16 @@ namespace Murder.Systems.Graphics
                 else
                 {
                     blend = BlendStyle.Normal;
+                }
+
+                Core.Graphics.MurderBlendState blendState;
+                if (e.TryGetSpriteBlend() is SpriteBlendComponent spriteBlend)
+                {
+                    blendState = spriteBlend.BlendState;
+                }
+                else
+                {
+                    blendState = Core.Graphics.MurderBlendState.AlphaBlend;
                 }
 
                 float ySortOffsetRaw = transform.Y + s.YSortOffset;
@@ -180,6 +191,7 @@ namespace Murder.Systems.Graphics
                             Scale = scale,
                             Color = color,
                             BlendMode = blend,
+                            BlendState = blendState,
                             Sort = ySort,
                             OutlineStyle = s.HighlightStyle,
                             Outline = outlineColor,

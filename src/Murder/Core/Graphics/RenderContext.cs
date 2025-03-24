@@ -185,7 +185,6 @@ public class RenderContext : IDisposable
             true,
             Game.Data.ShaderSprite,
             BatchMode.DepthSortDescending,
-            BlendState.AlphaBlend,
             SamplerState.PointClamp
             ));
         
@@ -195,7 +194,6 @@ public class RenderContext : IDisposable
             true,
             Game.Data.ShaderSprite,
             BatchMode.DepthSortDescending,
-            BlendState.AlphaBlend,
             SamplerState.PointClamp
             ));
 
@@ -207,7 +205,6 @@ public class RenderContext : IDisposable
                 true,
                 Game.Data.ShaderSprite,
                 BatchMode.DrawOrder,
-                BlendState.AlphaBlend,
                 SamplerState.PointClamp
                 ));
 
@@ -217,7 +214,6 @@ public class RenderContext : IDisposable
                 true,
                 Game.Data.ShaderSprite,
                 BatchMode.DrawOrder,
-                BlendState.AlphaBlend,
                 SamplerState.PointClamp
                 ));
         }
@@ -228,7 +224,6 @@ public class RenderContext : IDisposable
             true,
             Game.Data.ShaderSprite,
             BatchMode.DepthSortDescending,
-            BlendState.AlphaBlend,
             SamplerState.PointClamp
             ));
 
@@ -238,7 +233,6 @@ public class RenderContext : IDisposable
             false,
             Game.Data.ShaderSprite,
             BatchMode.DepthSortDescending,
-            BlendState.AlphaBlend,
             SamplerState.PointClamp
             ));
     }

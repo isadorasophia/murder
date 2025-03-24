@@ -44,6 +44,7 @@ namespace Murder.Services
                     Vector2.Zero,
                     ImageFlip.None,
                     RenderServices.BLEND_NORMAL,
+                    MurderBlendState.AlphaBlend,
                     sort
                     );
 
@@ -71,6 +72,7 @@ namespace Murder.Services
                     Vector2.Zero,
                     ImageFlip.None,
                     RenderServices.BLEND_NORMAL,
+                    MurderBlendState.AlphaBlend,
                     sort
                     );
             }
@@ -87,6 +89,7 @@ namespace Murder.Services
                     Vector2.Zero,
                     ImageFlip.None,
                     RenderServices.BLEND_NORMAL,
+                    MurderBlendState.AlphaBlend,
                     sort
                 );
 
@@ -111,6 +114,7 @@ namespace Murder.Services
                     Vector2.Zero,
                     ImageFlip.None,
                     RenderServices.BLEND_NORMAL,
+                    MurderBlendState.AlphaBlend,
                     sort
                 );
             }

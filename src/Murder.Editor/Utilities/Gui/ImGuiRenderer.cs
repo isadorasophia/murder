@@ -134,6 +134,7 @@ namespace Murder.Editor.ImGuiExtended
 
             // Create and register the texture as an XNA texture
             var tex2d = new Texture2D(_graphicsDevice, width, height, false, SurfaceFormat.Color);
+            tex2d.Name = "ImGui Font Atlas";
             tex2d.SetData(pixels);
 
             // Should a texture already have been build previously, unbind it first so it can be deallocated
