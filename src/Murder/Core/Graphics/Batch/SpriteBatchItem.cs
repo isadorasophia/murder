@@ -33,6 +33,7 @@ public class SpriteBatchItem
     /// <param name="color"></param>
     /// <param name="origin">Origin coordinates 0 is top left, 1 is bottom right</param>
     /// <param name="colorBlend"></param>
+    /// <param name="blendState"></param>
     /// <param name="layerDepth"></param>
     public void Set(Texture2D texture, Vector2 position, Vector2 destinationSize, Rectangle? sourceRectangle, float rotation, Vector2 scale, ImageFlip flip, Color color, Vector2 origin, Vector3 colorBlend, MurderBlendState blendState, float layerDepth = 1f)
     {

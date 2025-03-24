@@ -157,6 +157,7 @@ public static partial class RenderServices
     /// <param name="scale">Scale applied to the sprite.</param>
     /// <param name="color">Color.</param>
     /// <param name="blend">Blend.</param>
+    /// <param name="blendState">Blend state type.</param>
     /// <param name="sort">Sort layer. 0 is in front, 1 is behind</param>
     /// <param name="currentTime">Current time of the game used to render this sprite.</param>
     /// <returns>If the animation is complete or not</returns>

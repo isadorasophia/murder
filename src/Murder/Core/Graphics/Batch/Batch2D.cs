@@ -154,6 +154,7 @@ public class Batch2D : IDisposable
     /// <param name="color">The color tint (or fill) to be applied to the image. The alpha is also applied to the image for transparency.</param>
     /// <param name="offset">The origin point for scaling and rotating. In pixels, before scaling.</param>
     /// <param name="blendStyle">The blend style to be used by the shader. Use the constants in <see cref="RenderServices"/>.</param>
+    /// <param name="blendState">The blend state which will be used.</param>
     /// <param name="sort">A number from 0 to 1 that will be used to sort the images. 0 is behind, 1 is in front.</param>
     /// <exception cref="InvalidOperationException"></exception>
     public void Draw(
