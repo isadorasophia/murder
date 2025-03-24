@@ -51,6 +51,8 @@ public readonly struct Particle
     public readonly bool RotateWithVelocity = false;
     public readonly float SortOffset;
 
+    public readonly MurderBlendState BlendState = MurderBlendState.AlphaBlend;
+
     public Particle() { }
 
     public Particle(

@@ -91,8 +91,8 @@ namespace Murder.Systems
                             RenderServices.DrawRectangle(
                                 batch,
                                 new Rectangle(rectangle.TopLeft - rectangle.Size * scale * 0.5f, rectangle.Size * scale),
-                                color,
-                                sorting: ySort);
+                                new DrawInfo(ySort) { Color = color, BlendState = tracker.Particle.BlendState }
+                                );
                             break;
 
                         case ParticleTextureKind.Circle:
@@ -104,7 +104,7 @@ namespace Murder.Systems
                                     new Rectangle(particle.Position.X - halfSize.X, particle.Position.Y - halfSize.Y,
                                     size.X, size.Y),
                                     Circle.EstipulateSidesFromRadius(Math.Max(size.X, size.Y)),
-                                    new DrawInfo(ySort) { Color = color });
+                                    new DrawInfo(ySort) { Color = color, BlendState= tracker.Particle.BlendState });
                             }
                             break;
 
@@ -138,7 +138,7 @@ namespace Murder.Systems
                                 scale: scale,
                                 color,
                                 blend: RenderServices.BLEND_NORMAL,
-                                blendState: MurderBlendState.AlphaBlend,
+                                blendState: tracker.Particle.BlendState,
                                 sort: ySort,
                                 currentTime: Game.Now);
 
@@ -159,7 +159,7 @@ namespace Murder.Systems
                                     color,
                                     Vector2Helper.Center.ToXnaVector2() * simpleTexture.Bounds.XnaSize(),
                                     RenderServices.BLEND_NORMAL,
-                                    MurderBlendState.AlphaBlend
+                                    tracker.Particle.BlendState
                                     );
                             }
                             else

@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using Murder.Core.Graphics;
+using Murder.Diagnostics;
 using System.IO.Compression;
 
 namespace Murder.Services;
@@ -28,6 +30,12 @@ public static class TextureServices
     //     but perceptually the images should be identical.
     public static Texture2D FromFile(GraphicsDevice graphicsDevice, string path)
     {
+        if (File.Exists(path) == false)
+        {
+            GameLogger.Error($"File not found: {path}");
+            return SharedResources.GetOrCreatePixel();
+        }
+
         using FileStream file = File.OpenRead(path);
 
         if (!path.EndsWith(QOI_GZ_EXTENSION))

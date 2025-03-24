@@ -531,6 +531,24 @@ public static partial class RenderServices
         DrawRectangle(spriteBatch, new Rectangle(x, y, line, length), color, sorting);
     }
 
+    public static void DrawRectangle(this Batch2D batch, Rectangle rectangle, DrawInfo drawInfo)
+    {
+        batch.Draw(
+            texture: SharedResources.GetOrCreatePixel(),
+            position: rectangle.TopLeft.ToXnaVector2(),
+            targetSize: Point.One,
+            sourceRectangle: default,
+            sort: drawInfo.Sort,
+            rotation: 0,
+            scale: rectangle.Size.ToXnaVector2(),
+            flip: ImageFlip.None,
+            color: drawInfo.Color,
+            offset: Microsoft.Xna.Framework.Vector2.Zero,
+            drawInfo.GetBlendMode(),
+            drawInfo.BlendState
+            );
+    }
+
     public static void DrawRectangle(this Batch2D batch, Rectangle rectangle, Color color, float sorting = 0)
     {
         batch.Draw(
