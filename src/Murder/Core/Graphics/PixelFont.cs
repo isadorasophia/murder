@@ -455,10 +455,10 @@ public class PixelFontSize
         {
             bool alreadyHasLineBreak = false;
 
-            int nextSeparatorIndex = lineBreakOnSpace ? text[cursor..].IndexOf(' ') : 1;
+            int nextSeparatorIndex = lineBreakOnSpace ? text[cursor..].IndexOf(' ') : 0;
             int nextLineBreak = text[cursor..].IndexOf('\n');
 
-            if (nextLineBreak >= 0 && nextLineBreak < nextSeparatorIndex)
+            if (nextLineBreak >= 0 && nextLineBreak <= nextSeparatorIndex)
             {
                 alreadyHasLineBreak = true;
                 nextSeparatorIndex = nextLineBreak + cursor;
