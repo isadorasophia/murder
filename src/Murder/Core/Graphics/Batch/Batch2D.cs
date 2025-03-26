@@ -29,7 +29,7 @@ public class Batch2D : IDisposable
 
     public GraphicsDevice GraphicsDevice { get; set; }
     public readonly BatchMode BatchMode;
-    private BlendState BlendState;
+    private BlendState? _blendState;
     public readonly SamplerState SamplerState;
     public readonly DepthStencilState DepthStencilState;
     public readonly RasterizerState RasterizerState;
@@ -473,10 +473,10 @@ public class Batch2D : IDisposable
         {
             default:
             case MurderBlendState.AlphaBlend:
-                BlendState = BlendState.AlphaBlend;
+                _blendState = BlendState.AlphaBlend;
                 break;
             case MurderBlendState.Additive:
-                BlendState = BlendState.Additive;
+                _blendState = BlendState.Additive;
                 break;
         }
     }
@@ -490,7 +490,7 @@ public class Batch2D : IDisposable
     DepthStencilState depthStencilState,
     Matrix matrix)
     {
-        GraphicsDevice.BlendState = BlendState;
+        GraphicsDevice.BlendState = _blendState;
         GraphicsDevice.SamplerStates[0] = SamplerState;
 
         if (GraphicsDevice.DepthStencilState != depthStencilState)
