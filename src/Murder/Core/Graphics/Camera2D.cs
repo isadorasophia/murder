@@ -126,6 +126,11 @@ namespace Murder.Core.Graphics
             ShakeTime = time;
         }
 
+        public void Bump(float intensity, float time)
+        {
+            // TODO: Implement!!
+        }
+
         public Vector2 ScreenToWorldPosition(Vector2 screenPosition)
         {
             return Microsoft.Xna.Framework.Vector2.Transform(
