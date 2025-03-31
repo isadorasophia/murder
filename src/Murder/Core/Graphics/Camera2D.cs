@@ -18,6 +18,8 @@ namespace Murder.Core.Graphics
         public Rectangle SafeBounds { get; private set; }
 
         private readonly Vector2 _origin = Vector2.Zero;
+        private float _bump = 0;
+        private float _bumpStart = 0;
 
         private Vector2 _position = Vector2.Zero;
 
@@ -87,13 +89,24 @@ namespace Murder.Core.Graphics
         {
             get
             {
+                float bump = 0;
+                if (_bumpStart > 0)
+                {
+                    float bumpDelta = Calculator.ClampTime(Game.NowUnscaled - _bumpStart, 0.3f);
+                    bump = Ease.BackIn(1 - bumpDelta);
+                    _cachedWorldViewProjection = null;
+                }
+
                 if (ShakeTime > 0)
                 {
                     float shakeX = (float)Math.Sin((Game.NowAbsolute * 200f) * 31) * 2 - 1; // The numbers here can be adjusted for different shake patterns
                     float shakeY = (float)Math.Sin((Game.NowAbsolute * 200f) * 17) * 2 - 1; // These should ideally be irrational numbers
-                    return _position + new Vector2(shakeX, shakeY) * ShakeIntensity;
+                    _cachedWorldViewProjection = null;
+
+                    return _position + new Vector2(shakeX, shakeY) * ShakeIntensity + new Vector2(0, bump * _bump);
                 }
-                return _position;
+
+                return _position + new Vector2(0, bump * _bump);
             }
             set
             {
@@ -126,9 +139,10 @@ namespace Murder.Core.Graphics
             ShakeTime = time;
         }
 
-        public void Bump(float intensity, float time)
+        public void Bump(float intensity = 1)
         {
-            // TODO: Implement!!
+            _bump = intensity;
+            _bumpStart = Game.NowUnscaled;
         }
 
         public Vector2 ScreenToWorldPosition(Vector2 screenPosition)
