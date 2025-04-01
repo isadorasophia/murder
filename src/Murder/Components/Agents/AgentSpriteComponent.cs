@@ -37,5 +37,8 @@ namespace Murder.Components
 
         public AgentSpriteComponent WithIdleAndWalkPrefix(string idle, string walk) =>
             new AgentSpriteComponent(AnimationGuid, TargetSpriteBatch, YSortOffset, idle, walk);
+
+        public AgentSpriteComponent WithIdleAndWalkPrefix(Guid? spriteGuid, string idle, string walk) =>
+            new AgentSpriteComponent(spriteGuid ?? AnimationGuid, TargetSpriteBatch, YSortOffset, idle, walk);
     }
 }
