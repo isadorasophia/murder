@@ -390,6 +390,29 @@ public static class StageHelpers
             }
         }
 
+        SpriteAsset? sprite = null;
+        if (c is SpriteComponent spriteComponent)
+        {
+            sprite = Game.Data.TryGetAsset<SpriteAsset>(spriteComponent.AnimationGuid);
+        }
+        else if (c is AgentSpriteComponent agentSpriteComponent)
+        {
+            sprite = Game.Data.TryGetAsset<SpriteAsset>(agentSpriteComponent.AnimationGuid);
+        }
+
+        if (sprite is not null)
+        {
+            (_, HashSet<string> spriteEventsForChild) = GetSpriteEventsForAsset(sprite);
+            events ??= [];
+
+            foreach (string e in spriteEventsForChild)
+            {
+                events.Add(e);
+            }
+
+            return;
+        }
+
         if (Attribute.GetCustomAttribute(t, typeof(EventMessagesAttribute)) is not EventMessagesAttribute attribute)
         {
             return;
