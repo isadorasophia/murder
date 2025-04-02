@@ -34,7 +34,7 @@ namespace Murder.Components
     public readonly struct EventListenerEditorComponent : IComponent
     {
         [Tooltip("Events triggered by an animation")]
-        public readonly ImmutableArray<SpriteEventInfo> Events = ImmutableArray<SpriteEventInfo>.Empty;
+        public readonly ImmutableArray<SpriteEventInfo> Events { get; init; } = [];
 
         public EventListenerEditorComponent() { }
 

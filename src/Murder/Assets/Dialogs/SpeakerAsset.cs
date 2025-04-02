@@ -1,6 +1,7 @@
 ﻿using Bang;
 using Murder.Assets.Sounds;
 using Murder.Attributes;
+using Murder.Components;
 using Murder.Core;
 using Murder.Core.Sounds;
 using Murder.Utilities;
@@ -26,6 +27,11 @@ public readonly struct PortraitInfo
 
     [Tooltip("If there is a sound associated with this portrait")]
     public readonly SoundEventId? Sound { get; init; } = null;
+
+    /// <summary>
+    /// Any events associated with this portrait.
+    /// </summary>
+    public readonly EventListenerEditorComponent? Events { get; init; } = null;
 
     public PortraitInfo() { }
 }
@@ -54,6 +60,8 @@ public class SpeakerAsset : GameAsset
     [Serialize, ShowInEditor]
     protected readonly ImmutableArray<PortraitInfo> _allPortraits = [];
 
+    private ImmutableDictionary<string, ImmutableDictionary<string, SoundEventId>>? _portraitsToEventsCache = null;
+
     private ImmutableDictionary<string, PortraitInfo>? _portraitsCache = null;
 
     public ImmutableDictionary<string, PortraitInfo> Portraits
@@ -75,8 +83,34 @@ public class SpeakerAsset : GameAsset
         }
     }
 
+    public ImmutableDictionary<string, SoundEventId>? TryFetchEventsForPortrait(string portrait)
+    {
+        if (_portraitsToEventsCache is null)
+        {
+            var builder = ImmutableDictionary.CreateBuilder<string, ImmutableDictionary<string, SoundEventId>>();
+            foreach (PortraitInfo info in _allPortraits)
+            {
+                if (info.Events?.Events is ImmutableArray<SpriteEventInfo> @events)
+                {
+                    builder[info.Name] =
+                        @events.Where(e => e.Sound is not null).ToImmutableDictionary(e => e.Id, e => e.Sound!.Value);
+                }
+            }
+
+            _portraitsToEventsCache = builder.ToImmutableDictionary();
+        }
+
+        if (_portraitsToEventsCache.TryGetValue(portrait, out ImmutableDictionary<string, SoundEventId>? result))
+        {
+            return result;
+        }
+
+        return null;
+    }
+
     protected override void OnModified()
     {
         _portraitsCache = null;
+        _portraitsToEventsCache = null;
     }
 }

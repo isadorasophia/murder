@@ -1154,5 +1154,78 @@ public static partial class RenderServices
         return false;
     }
 
+    public static string? CheckForEvents(
+        RenderedSpriteCacheComponent? previous, 
+        Guid currentAnimationGuid, 
+        AnimationInfo animationInfo, 
+        FrameInfo frameInfo)
+    {
+        // Check for animation events
+        // First, assume that we are starting a new animation
+        int previousFrame = previous?.LastFrameIndex ?? -1;
+
+        // Make sure we didn't change animations
+        if (previous is null || 
+            previous.Value.RenderedSprite != currentAnimationGuid ||
+            !string.Equals(previous.Value.AnimInfo.Name, animationInfo.Name, StringComparison.InvariantCulture))
+        {
+            // We changed animations, so we need to reset to -1 so we can trigger the first frame event
+            previousFrame = frameInfo.InternalFrame - 1;
+        }
+
+        // Quickly check if we even changed frames, if not, don't bother with events
+        if (frameInfo.InternalFrame != previousFrame)
+        {
+            Animation currentAnimation = frameInfo.Animation;
+
+            if (currentAnimation.Events is null || currentAnimation.Events.Count == 0)
+            {
+                return null;
+            }
+
+            int lastFrame = previousFrame;
+            while (lastFrame != frameInfo.InternalFrame)
+            {
+                // Trigger events on the next frame (most likelly the frame just rendered, uunless there was a major slowdown)
+
+                if (animationInfo.Loop)
+                {
+                    int next = Calculator.WrapAround(lastFrame + 1, 0, currentAnimation.FrameCount - 1);
+
+                    if (currentAnimation.Events.TryGetValue(next, out string? eventName))
+                    {
+                        return eventName;
+                    }
+
+                    lastFrame = next;
+                    if (previousFrame == lastFrame)
+                    {
+                        // We've looped through all the frames and didn't find the previous frame, so we're stuck in a loop or a major slowdown happened
+                        return null;
+                    }
+                }
+                else
+                {
+                    int next = Math.Min(lastFrame + 1, currentAnimation.FrameCount - 1);
+
+                    if (currentAnimation.Events.TryGetValue(next, out string? eventName))
+                    {
+                        return eventName;
+                    }
+
+                    lastFrame = next;
+                    // This animation doesn't loop and we've reached the end, so we're done
+                    if (next == currentAnimation.FrameCount - 1)
+                    {
+                        return null;
+                    }
+
+                }
+            }
+        }
+
+        return null;
+    }
+
     #endregion
 }

@@ -20,16 +20,25 @@ namespace Murder.Editor.CustomComponents
 
         protected override bool DrawAllMembersWithTable(ref object target)
         {
+            EventListenerEditorComponent listener = (EventListenerEditorComponent)target;
+
+            (string[] Animations, HashSet<string> Events)? entityProperties = StageHelpers.GetEventsForSelectedEntity();
+            
+            bool changed = DrawEventsListener(
+                ref listener, drawPlayAnimations: true, entityProperties?.Animations, entityProperties?.Events);
+
+            if (changed)
+            {
+                target = listener;
+            }
+
+            return changed;
+        }
+
+        public static bool DrawEventsListener(ref EventListenerEditorComponent listener, bool drawPlayAnimations, string[]? animations, HashSet<string>? eventNames)
+        {
             bool fileChanged = false;
 
-            FieldInfo field = typeof(EventListenerEditorComponent).GetField(nameof(EventListenerEditorComponent.Events))!;
-
-            var entityProperties = StageHelpers.GetEventsForSelectedEntity();
-
-            HashSet<string>? eventNames = entityProperties?.Events;
-            string[]? animations = entityProperties?.Animations;
-
-            EventListenerEditorComponent listener = (EventListenerEditorComponent)target;
             ImmutableArray<SpriteEventInfo> events = eventNames is null || eventNames.Count == 0 ?
                 listener.Events :
                 eventNames.Select(e => new SpriteEventInfo(e)).ToImmutableArray();
@@ -90,7 +99,7 @@ namespace Murder.Editor.CustomComponents
             // ======
             // Things get interesting here: play an animation.
             // ======
-            if (animations is not null)
+            if (animations is not null && drawPlayAnimations)
             {
                 SelectAnimation(animations);
             }
@@ -180,7 +189,10 @@ namespace Murder.Editor.CustomComponents
                     EditorServices.SaveAssetWhenSelectedAssetIsSaved(spriteAsset.Guid);
                 }
 
-                field.SetValue(target, events.Where(s => (eventNames is not null && !eventNames.Contains(s.Id)) || s.Sound is not null || eventNames is null).ToImmutableArray());
+                listener = listener with
+                {
+                    Events = events.Where(s => (eventNames is not null && !eventNames.Contains(s.Id)) || s.Sound is not null || eventNames is null).ToImmutableArray()
+                };
             }
 
             return fileChanged;
@@ -188,7 +200,7 @@ namespace Murder.Editor.CustomComponents
 
         private static int _lastAnimationSelected = 0;
 
-        private void SelectAnimation(string[] animations)
+        private static void SelectAnimation(string[] animations)
         {
             ImGui.SameLine();
             ImGui.Text("\uf03d");
