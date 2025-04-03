@@ -643,7 +643,7 @@ public static class ImGuiHelpers
                 continue;
             }
 
-            bool isChecked = (value & intValue) != 0;
+            bool isChecked = ~(~value | intValue) == 0;
 
             if (ImGui.Checkbox($"##{id}-{i}-col-layer", ref isChecked))
             {
