@@ -81,11 +81,11 @@ namespace Murder.Editor.CustomFields
             {
                 if (AttributeExtensions.IsDefined(member, typeof(MultilineAttribute)))
                 {
-                    modified = ImGui.InputTextMultiline(memberId, ref text, 1024, new(-1, 75));
+                    modified = ImGui.InputTextMultiline(memberId, ref text, 2048, new(-1, 75));
                 }
                 else
                 {
-                    modified = ImGui.InputText("", ref text, 1024);
+                    modified = ImGui.InputText("", ref text, 2048);
                 }
             }
 

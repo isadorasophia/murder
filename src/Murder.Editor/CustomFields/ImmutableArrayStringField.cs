@@ -43,7 +43,7 @@ namespace Murder.Editor.CustomFields
             }
 
             var cache = String.Join(',', current);
-            var modified = ImGui.InputText($"##{member.Name}_value", ref cache, 256);
+            var modified = ImGui.InputText($"##{member.Name}_value", ref cache, 1024);
 
             if (!ImGui.IsItemFocused())
             {
