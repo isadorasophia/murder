@@ -5,7 +5,7 @@ using System.Numerics;
 
 namespace Murder.Components
 {
-    [RuntimeOnly, DoNotPersistOnSave]
+    [RuntimeOnly, DoNotPersistOnSave, KeepOnReplace]
     public readonly struct InCameraComponent : IComponent
     {
         public readonly Vector2 RenderPosition = Vector2.Zero;
