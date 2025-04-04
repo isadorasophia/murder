@@ -192,7 +192,7 @@ namespace Murder.Core
 
         public void Set(int x, int y, int value, bool overridePreviousValues = false)
         {
-            if (x < 0 || y < 0) return;
+            if (x < 0 || y < 0 || (y * Width) + x > _gridMap.Length) return;
 
             if (overridePreviousValues)
             {
