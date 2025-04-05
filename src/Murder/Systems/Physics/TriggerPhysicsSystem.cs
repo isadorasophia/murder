@@ -17,7 +17,7 @@ namespace Murder.Systems.Physics
     [Watch(typeof(ITransformComponent))]
     public class TriggerPhysicsSystem : IReactiveSystem
     {
-        private readonly List<NodeInfo<Entity>> _others = new();
+        private readonly List<NodeInfo<Entity>> _others = [];
 
         // Used for reclycing over the same collision cache.
         private readonly HashSet<int> _collisionVisitedEntities = new(516);
