@@ -12,6 +12,7 @@ public readonly struct TriggerReactionOnHitComponent : IComponent
     public readonly ImmutableArray<string> Animations = [];
 
     public readonly bool DestroySolid = true;
+    public readonly bool OnlyOnce = true;
 
     [SpriteBatchReference]
     public readonly int? ChangeSpriteBatchOnComplete { get; init; } = null;
