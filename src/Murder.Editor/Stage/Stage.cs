@@ -243,6 +243,17 @@ namespace Murder.Editor.Stages
                                 }
                             }
 
+                            if (Game.Input.Shortcut(Microsoft.Xna.Framework.Input.Keys.D1))
+                            {
+                                EditorHook.StageSettings |= StageSetting.ShowSprite;
+                                EditorHook.StageSettings &= ~StageSetting.ShowCollider;
+                            }
+                            if (Game.Input.Shortcut(Microsoft.Xna.Framework.Input.Keys.D2))
+                            {
+                                EditorHook.StageSettings |= StageSetting.ShowCollider;
+                                EditorHook.StageSettings &= ~StageSetting.ShowSprite;
+                            }
+
                             ImGui.TextColored(Game.Profile.Theme.Faded, "[Press TAB to exit]");
                         }
                         else
