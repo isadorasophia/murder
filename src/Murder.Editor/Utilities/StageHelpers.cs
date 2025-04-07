@@ -239,12 +239,22 @@ public static class StageHelpers
                 }
             }
 
-            if (guidToIdCollection is null)
+            if (guidToIdCollection is null || guidToIdCollection.Value.Collection.Length == 0)
             {
-                return null;
+                foreach (Guid child in selectedEntity.Children)
+                {
+                    foreach (IComponent c in selectedEntity.GetChildComponents(child))
+                    {
+                        if (c is GuidToIdTargetCollectionComponent collection)
+                        {
+                            guidToIdCollection = collection;
+                            break;
+                        }
+                    }
+                }
             }
 
-            return guidToIdCollection.Value.Collection.Select(a => a.Id).ToHashSet();
+            return guidToIdCollection?.Collection.Select(a => a.Id).ToHashSet();
         }
 
         return null;
