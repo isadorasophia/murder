@@ -7,6 +7,7 @@ using Murder.Editor.Assets;
 using Murder.Serialization;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
@@ -197,12 +198,11 @@ public partial class Aseprite
                         cel.X = SHORT();
                         cel.Y = SHORT();
                         cel.Alpha = BYTE() / 255f;
-                        var celType = WORD(); // type
+                        ushort celType = WORD(); // type
                         SEEK(7);
 
-                        // SPLIT sprites (that save individual layers) always save all layers
-                        // Normal sprites that flatten everything ignore layers that are not toggled on in aseprite
-                        if (loadImageData && (SplitLayers || cel.Layer.Flag.HasFlag(Layer.Flags.Visible)) && !cel.Layer.Flag.HasFlag(Layer.Flags.Reference) && cel.Layer.Name != "REF")
+                        // We always use all layers, except for layers that are marked as reference layers (which are ignored)
+                        if (loadImageData && !cel.Layer.Flag.HasFlag(Layer.Flags.Reference) && cel.Layer.Name != "REF")
                         {
                             // RAW or DEFLATE
                             if (celType == 0 || celType == 2)
@@ -478,16 +478,26 @@ public partial class Aseprite
         for (int frameIndex = 0; frameIndex < Frames.Count; frameIndex++)
         {
             var frame = Frames[frameIndex];
-            foreach (var cel in frame.Cels.Values)
+            for (int layerIndex = 0; layerIndex < Layers.Count; layerIndex++)
             {
+                if (!frame.Cels.TryGetValue(layerIndex, out Cel? cel))
+                    continue;
+
+                // If the cel is linked, we need to copy the pixels from the linked cel
+                // to the current cel.
                 if (cel.Link != null)
                 {
-                    CelToFrame(frame, Frames[cel.Link.Value].Cels[cel.Layer.Index]);
+                    Cel sourceCel = Frames[cel.Link.Value].Cels[cel.Layer.Index];
+                    if (sourceCel == null)
+                    {
+                        Console.Error.WriteLine($"Aseprite file {Source} has a cel that is linked to a cel that doesn't exist. Cel: {cel.Link.Value}");
+                        continue;
+                    }
+
+                    CelToCel(cel, sourceCel, Width, Height);
                 }
-                else
-                {
-                    CelToFrame(frame, cel);
-                }
+
+                CelToFrame(frame, cel);
             }
         }
 
@@ -545,9 +555,13 @@ public partial class Aseprite
             {
                 // For non-transparent blending, calculate the final color.
                 // Pre-multiply source color components by their effective alpha.
-                float srcPreR = src.R * srcEffectiveAlpha;
-                float srcPreG = src.G * srcEffectiveAlpha;
-                float srcPreB = src.B * srcEffectiveAlpha;
+                // EDIT: We no longer pre-multiply
+                //float srcPreR = src.R * srcEffectiveAlpha;
+                //float srcPreG = src.G * srcEffectiveAlpha;
+                //float srcPreB = src.B * srcEffectiveAlpha;
+                float srcPreR = src.R;
+                float srcPreG = src.G;
+                float srcPreB = src.B;
 
                 // Normalize destination alpha for calculations.
                 float destNormalizedAlpha = dest.A / 255f;
@@ -643,6 +657,9 @@ public partial class Aseprite
         var opacity = (byte)(cel.Alpha * cel.Layer.Alpha * 255);
         var blend = _blendModes[cel.Layer.BlendMode];
 
+        if (opacity == 0)
+            return; // No need to do anything if the cel is completely transparent
+
         for (int cx = 0; cx < cel.Width; cx++)
         {
             for (int cy = 0; cy < cel.Height; cy++)
@@ -650,8 +667,10 @@ public partial class Aseprite
                 var framePosition = new Point(cel.X + cx, cel.Y + cy);
                 if (framePosition.X < 0 || framePosition.Y < 0 || framePosition.X >= frame.Sprite.Width || framePosition.Y >= frame.Sprite.Height)
                     continue;
-
-                blend(ref frame.Pixels[framePosition.X + framePosition.Y * frame.Sprite.Width], cel.Pixels[cx + cy * cel.Width], opacity);
+                Color pixel = cel.Pixels[cx + cy * cel.Width];
+                if (pixel.A == 0)
+                    continue;
+                blend(ref frame.Pixels[framePosition.X + framePosition.Y * frame.Sprite.Width], pixel, opacity);
             }
         }
     }
