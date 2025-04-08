@@ -494,10 +494,22 @@ public partial class Aseprite
                         continue;
                     }
 
-                    CelToCel(cel, sourceCel, Width, Height);
+                    if (SplitLayers)
+                    {
+                        // I  don't understand why I need to do this, but it seems to be the only way to get the liked cel to work on split layers
+                        CelToCel(cel, sourceCel, Width, Height);
+                        CelToFrame(frame, cel);
+                    }
+                    else
+                    {
+                        CelToFrame(frame, sourceCel);
+                    }
+                }
+                else
+                {
+                    CelToFrame(frame, cel);
                 }
 
-                CelToFrame(frame, cel);
             }
         }
 
