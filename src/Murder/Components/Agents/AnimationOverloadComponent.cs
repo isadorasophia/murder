@@ -143,13 +143,15 @@ namespace Murder.Components
         }
 
         public AnimationOverloadComponent PlayNext() => new AnimationOverloadComponent(
-            _animationId, Duration, Loop, IgnoreFacing, Math.Min(_animationId.Length - 1, Current + 1), SortOffset, _customSprite);
+            _animationId, Duration, Loop, IgnoreFacing, Math.Min(_animationId.Length - 1, Current + 1), SortOffset, _customSprite) with
+                { Flip = Flip };
 
         public AnimationOverloadComponent Now => new AnimationOverloadComponent(
-            _animationId, Duration, Loop, IgnoreFacing, Current, SortOffset, _customSprite);
+            _animationId, Duration, Loop, IgnoreFacing, Current, SortOffset, _customSprite) with
+                { Flip = Flip };
 
         public AnimationOverloadComponent NoLoop => new AnimationOverloadComponent(
-            _animationId, Duration, loop: false, IgnoreFacing, Current, SortOffset, _customSprite, Start);
-
+            _animationId, Duration, loop: false, IgnoreFacing, Current, SortOffset, _customSprite, Start) with
+                { Flip = Flip };
     }
 }
