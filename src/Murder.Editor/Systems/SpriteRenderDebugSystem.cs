@@ -299,20 +299,21 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
                     if (overload.Value.Current < overload.Value.AnimationCount - 1)
                     {
                         e.SetAnimationOverload(overload.Value.PlayNext());
+                        e.SendAnimationCompleteMessage();
                     }
                     else
                     {
-                        e.SendMessage<AnimationCompleteMessage>();
+                        e.SendAnimationCompleteMessage();
                     }
                 }
                 else if (!overload.Value.Loop)
                 {
                     e.RemoveAnimationOverload();
-                    e.SendMessage<AnimationCompleteMessage>();
+                    e.SendAnimationCompleteMessage();
                 }
                 else
                 {
-                    e.SendMessage<AnimationCompleteMessage>();
+                    e.SendAnimationCompleteMessage();
                 }
             }
 

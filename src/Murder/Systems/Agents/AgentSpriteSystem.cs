@@ -236,6 +236,7 @@ namespace Murder.Systems
                         if (overload.Value.Current < overload.Value.AnimationCount - 1)
                         {
                             e.SetAnimationOverload(overload.Value.PlayNext());
+                            e.SendAnimationCompleteMessage();
                         }
                         else
                         {
