@@ -250,7 +250,7 @@ public class PixelFontSize
         position = position.Round();
 
         Vector2 offset = Offset;
-        Vector2 justified = new(WidthToNextLine(text, 0, true) * origin.X * scale.X, HeightOf(text) * origin.Y * scale.Y);
+        Vector2 justified = new(Calculator.RoundToInt(WidthToNextLine(text, 0, true) * origin.X * scale.X), HeightOf(text) * origin.Y * scale.Y);
 
         Color currentColor = color;
 
