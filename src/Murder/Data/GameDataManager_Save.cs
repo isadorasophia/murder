@@ -68,7 +68,11 @@ namespace Murder.Data
         protected SaveData? _activeSaveData;
 
         private GamePreferences? _preferences;
-        public ImmutableArray<Color> CurrentPalette;
+        
+        /// <summary>
+        /// Used by the color picker to allow selecting common colors quicker.
+        /// </summary>
+        public ImmutableArray<Color> CurrentPalette = [];
 
         private bool _loadedSaveFiles = false;
 

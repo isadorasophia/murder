@@ -27,6 +27,7 @@ namespace Murder.Core.Particles
                     return Vector2.Lerp(Line.Start, Line.End, random.NextFloat());
 
                 case EmitterShapeKind.Circle:
+                case EmitterShapeKind.CircleOutline:
                     // Creates a normalized vector, then multiply it by the radius
                     return Vector2Helper.FromAngle(random.NextFloat() * MathF.PI * 2) * random.NextFloat() * Circle.Radius + Circle.Center;
 
