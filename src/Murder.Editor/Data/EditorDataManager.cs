@@ -274,7 +274,8 @@ namespace Murder.Editor.Data
                 return;
             }
 
-            if (!FileLoadHelpers.ShouldRecalculate(ttfFontsPath, FontImporter.SourcePackedPath))
+            if (Directory.GetFiles(FontImporter.SourcePackedPath).Length > 0 &&
+                !FileLoadHelpers.ShouldRecalculate(ttfFontsPath, FontImporter.SourcePackedPath))
             {
                 return;
             }
