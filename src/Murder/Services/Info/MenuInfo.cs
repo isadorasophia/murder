@@ -8,7 +8,7 @@ namespace Murder.Core.Input
 {
     public struct GenericMenuInfo<T>
     {
-        public T[] Options = new T[0];
+        public T[] Options = [];
 
         public int Scroll = 0;
         public float SmoothScroll = 0;
