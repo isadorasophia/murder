@@ -55,7 +55,7 @@ namespace Murder.Editor.Systems
                 {
                     Rectangle cellRectangle = new Rectangle(x * Grid.CellSize, y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
 
-                    int mask = map.GetCollision(x, y);
+                    int mask = map.At(x, y);
 
                     int collisionMask = map.GetGridMap(x, y).CollisionType;
                     bool hasTileCollision = IsSolid(collisionMask);
@@ -63,8 +63,8 @@ namespace Murder.Editor.Systems
                     int weight = map.WeightAt(x, y);
                     if (pathfindMap is not null)
                     {
-                        int collisionMaskForPathfind = pathfindMap.GetCollision(x, y);
-                        mask |= pathfindMap.GetCollision(x, y);
+                        int collisionMaskForPathfind = pathfindMap.At(x, y);
+                        mask |= pathfindMap.At(x, y);
                         weight += pathfindMap.WeightAt(x, y);
 
                         hasTileCollision |= IsSolid(collisionMaskForPathfind);

@@ -145,8 +145,8 @@ public class PathfindEditorSystem : IStartupSystem, IUpdateSystem, IGuiSystem, I
         Map? map = context.World.TryGetUniqueMap()?.Map;
 
         Point cursor = _cachedRectangle.TopLeft;
-        int mask = pathMap.GetCollision(cursor.X, cursor.Y);
-        int mapMask = map?.GetCollision(cursor.X, cursor.Y) ?? 0;
+        int mask = pathMap.At(cursor.X, cursor.Y);
+        int mapMask = map?.At(cursor.X, cursor.Y) ?? 0;
 
         if (ImGui.BeginTooltip())
         {

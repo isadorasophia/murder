@@ -78,7 +78,7 @@ namespace Murder.Core
             {
                 if (excludeEdges && (grid == end || grid == start))
                     continue;
-                if (GetCollision(grid.X, grid.Y).HasFlag(blocking))
+                if (At(grid.X, grid.Y).HasFlag(blocking))
                 {
                     return false;
                 }
@@ -90,7 +90,7 @@ namespace Murder.Core
 
         public bool HasCollision(int x, int y, int layer)
         {
-            return (GetCollision(x, y) & layer) != CollisionLayersBase.NONE;
+            return (At(x, y) & layer) != CollisionLayersBase.NONE;
         }
 
         public bool IsInsideGrid(int x, int y)
@@ -105,14 +105,6 @@ namespace Murder.Core
                 return false;
             }
             return true;
-        }
-
-        public int GetCollision(int x, int y)
-        {
-            if (!IsInsideGrid(x, y))
-                return CollisionLayersBase.SOLID;
-
-            return At(x, y);
         }
 
         public bool HasCollision(int x, int y, int width, int height, int mask)
@@ -304,7 +296,7 @@ namespace Murder.Core
             }
         }
 
-        private int At(int x, int y)
+        public int At(int x, int y)
         {
             if (!IsInsideGrid(x, y))
             {

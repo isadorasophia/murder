@@ -12,6 +12,7 @@ using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace Murder.Services
 {
@@ -116,93 +117,75 @@ namespace Murder.Services
         /// <summary>
         /// Tryies to raycast looking for tile collisions.
         /// </summary>
-        /// <param name="world"></param>
-        /// <param name="startPosition"></param>
-        /// <param name="endPosition"></param>
-        /// <param name="flags"></param>
-        /// <param name="hit"></param>
-        /// <returns>Returns true if it hits a tile</returns>
-        public static bool RaycastTiles(World world, Vector2 startPosition, Vector2 endPosition, int flags, out RaycastHit hit)
+        public static bool RaycastTiles(
+            World world,
+            Vector2 startPos, Vector2 endPos,
+            int flags, out RaycastHit hit)
         {
             Map map = world.GetUniqueMap().Map;
-            (float x0, float y0) = (startPosition / Grid.CellSize).XY();
-            (float x1, float y1) = (endPosition / Grid.CellSize).XY();
 
-            double dx = MathF.Abs(x1 - x0);
-            double dy = MathF.Abs(y1 - y0);
+            // Convert to *grid* space once
+            Vector2 startGrid = startPos / Grid.CellSize;
+            Vector2 endGrid = endPos / Grid.CellSize;
 
-            int x = Calculator.FloorToInt(x0);
-            int y = Calculator.FloorToInt(y0);
+            int x = Calculator.FloorToInt(startGrid.X);
+            int y = Calculator.FloorToInt(startGrid.Y);
+            int endX = Calculator.FloorToInt(endGrid.X);
+            int endY = Calculator.FloorToInt(endGrid.Y);
 
-            int n = 1;
-            int x_inc, y_inc;
-            double error;
+            int stepX = Math.Sign(endX - x); // −1, 0, or +1
+            int stepY = Math.Sign(endY - y);
 
-            if (dx == 0)
-            {
-                x_inc = 0;
-                error = float.MaxValue;
-            }
-            else if (x1 > x0)
-            {
-                x_inc = 1;
-                n += Calculator.FloorToInt(x1) - x;
-                error = (Calculator.FloorToInt(x0) + 1 - x0) * dy;
-            }
-            else
-            {
-                x_inc = -1;
-                n += x - Calculator.FloorToInt(x1);
-                error = (x0 - Calculator.FloorToInt(x0)) * dy;
-            }
+            // How far we must move along the ray to cross the first X / Y cell boundary
+            float tMaxX = (stepX != 0)
+                ? ((stepX > 0 ? (x + 1) - startGrid.X : startGrid.X - x) / MathF.Abs(endGrid.X - startGrid.X))
+                : float.PositiveInfinity;
 
-            if (dy == 0)
-            {
-                y_inc = 0;
-                error -= float.MaxValue;
-            }
-            else if (y1 > y0)
-            {
-                y_inc = 1;
-                n += Calculator.FloorToInt(y1) - y;
-                error -= (Calculator.FloorToInt(y0) + 1 - y0) * dx;
-            }
-            else
-            {
-                y_inc = -1;
-                n += y - Calculator.FloorToInt(y1);
-                error -= (y0 - Calculator.FloorToInt(y0)) * dx;
-            }
+            float tMaxY = (stepY != 0)
+                ? ((stepY > 0 ? (y + 1) - startGrid.Y : startGrid.Y - y) / MathF.Abs(endGrid.Y - startGrid.Y))
+                : float.PositiveInfinity;
 
-            for (; n > 0; --n)
+            // Distance to cross one whole cell in X / Y
+            float tDeltaX = (stepX != 0) ? 1f / MathF.Abs(endGrid.X - startGrid.X) : float.PositiveInfinity;
+            float tDeltaY = (stepY != 0) ? 1f / MathF.Abs(endGrid.Y - startGrid.Y) : float.PositiveInfinity;
+
+            // Traverse
+            while (true)
             {
-                if (map.GetCollision(x, y).HasFlag(flags))
+                if (!map.IsInsideGrid(x, y)) break;
+
+                int tile = map.At(x, y);
+
+                // Uncomment this to debug the raycast tiles
+                //DebugServices.DrawText(world, tile.ToString(), (new Vector2(x, y) + Vector2.One * 0.45f) * Grid.CellSize , 0.2f, Color.Red);
+
+                if (tile.HasFlag(flags))
                 {
-                    var box = new Rectangle(x * Grid.CellSize, y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
-                    Line2 line = new(startPosition, endPosition);
-
-                    if (line.TryGetIntersectingPoint(box, out var intersectTilePoint))
-                    {
-                        hit = new RaycastHit(new Point(x, y), intersectTilePoint);
-                        return true;
-                    }
+                    Vector2 hitPoint = startPos + (endPos - startPos) *
+                                       MathF.Min(tMaxX, tMaxY);
+                    hit = new RaycastHit(new Point(x, y), hitPoint);
+                    return true;
                 }
 
-                if (error > 0)
+                // step to next cell
+                if (tMaxX < tMaxY)
                 {
-                    y += y_inc;
-                    error -= dx;
+                    x += stepX;
+                    tMaxX += tDeltaX;
                 }
                 else
                 {
-                    x += x_inc;
-                    error += dy;
+                    y += stepY;
+                    tMaxY += tDeltaY;
                 }
+
+                if (x == endX && y == endY) break;
             }
 
             hit = default;
             return false;
         }
+
 
         public static bool HasLineOfSight(World world, Vector2 from, Vector2 to, int mask)
         {
@@ -250,7 +233,7 @@ namespace Murder.Services
                 return false;
             }
 
-            if (Raycast(world, origin, target, CollisionLayersBase.BLOCK_VISION, 
+            if (Raycast(world, origin, target, CollisionLayersBase.BLOCK_VISION,
                 Enumerable.Empty<int>(), out RaycastHit hit))
             {
                 if (hit.Entity?.EntityId == to.EntityId)
@@ -757,7 +740,7 @@ namespace Murder.Services
                             }
 
                             float similarity = Calculator.Vector2Similarity(totalMtv, colliderMtv);
-                            
+
                             totalMtv += colliderMtv * (1 - similarity);
                             hasCollision = true;
                         }
@@ -856,7 +839,7 @@ namespace Murder.Services
 
             for (int i = 0; i < collider.Shapes.Length; i++)
             {
-                var shape = collider.Shapes[i];     
+                var shape = collider.Shapes[i];
                 var polygon = shape.GetPolygon();
                 var boundingBox = new IntRectangle(Grid.FloorToGrid(polygon.Rect.X), Grid.FloorToGrid(polygon.Rect.Y),
                                     Grid.CeilToGrid(polygon.Rect.Width) + 2, Grid.CeilToGrid(polygon.Rect.Height) + 2)
@@ -867,7 +850,7 @@ namespace Murder.Services
                     IntRectangle adjustedRect = (tileCollisionInfo.Rectangle * Grid.CellSize);
                     adjustedRect.Height += 1;
                     var tilePolygon = Polygon.FromRectangle(adjustedRect);
-                    
+
                     if (polygon.Polygon.Intersects(tilePolygon, toPosition, Vector2.Zero) is Vector2 mtv && mtv.HasValue())
                     {
                         collisionCount++;
