@@ -249,7 +249,11 @@ namespace Murder.Services
 
             return false;
         }
-
+        public static bool Raycast(World world, Vector2 startPosition, Vector2 endPosition, float minHitDistance, int layerMask, IEnumerable<int> ignoreEntities, out RaycastHit hit)
+        {
+            Vector2 newStartPosition = startPosition + (endPosition - startPosition).Normalized() * minHitDistance;
+            return Raycast(world, newStartPosition, endPosition, layerMask, ignoreEntities, out hit);
+        }
         public static bool Raycast(World world, Vector2 startPosition, Vector2 endPosition, int layerMask, IEnumerable<int> ignoreEntities, out RaycastHit hit)
         {
             hit = default;
