@@ -51,7 +51,16 @@ namespace Murder.Editor.Data
             GameLogger.Log("Starting to convert *.gum dialogs...");
 
             DateTime? target = force ? null : File.GetLastWriteTime(descriptorPath);
-            ProcessDialogs(dialogsRawResourcesPath, target);
+
+            try
+            {
+                ProcessDialogs(dialogsRawResourcesPath, target);
+            }
+            catch (Exception ex)
+            {
+                GameLogger.Error($"Unable to convert *.gum dialogs: {ex.Message}");
+                return false;
+            }
 
             GameLogger.Log("Finished generating dialogs!");
 
