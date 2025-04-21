@@ -22,7 +22,8 @@ namespace Murder.Systems;
 /// Be careful because this WILL fail at higher resolutions!
 /// </summary>
 [Filter(filter: ContextAccessorFilter.AnyOf, kind: ContextAccessorKind.Read, typeof(TileGridComponent))]
-public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExitSystem
+[Watch(typeof(TileGridComponent))]
+public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExitSystem, IReactiveSystem
 {
     private struct FloorChunk(int id, Point position)
     {
@@ -219,6 +220,18 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
     }
 
     public void Exit(Context context)
+    {
+        _chunks.Clear();
+        _atlas.Cleanup();
+    }
+
+    public void OnAdded(World world, ImmutableArray<Entity> entities)
+    { }
+
+    public void OnRemoved(World world, ImmutableArray<Entity> entities)
+    { }
+
+    public void OnModified(World world, ImmutableArray<Entity> entities)
     {
         _chunks.Clear();
         _atlas.Cleanup();
