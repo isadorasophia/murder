@@ -569,5 +569,9 @@ public enum AnimationOverloadProperties
     Loop = 0x1,
     IgnoreFacing = 0x10,
     FlipHorizontal = 0x100,
-    LockTo4Directions = 0x1000
+    LockTo4Directions = 0x1000,
+    /// <summary>
+    /// Not implemented yet.
+    /// </summary>
+    Once = 0x10000
 }
