@@ -71,6 +71,7 @@ namespace Murder.Systems
                 // TODO: Check if this works for all animations
                 float ySortOffsetRaw = transform.Y + sprite.YSortOffset;
 
+                float angle = facing.Angle;
                 AnimationOverloadComponent? overload = null;
                 if (e.TryGetAnimationOverload() is AnimationOverloadComponent o)
                 {
@@ -79,14 +80,23 @@ namespace Murder.Systems
 
                     start = o.Start;
                     if (o.CustomSprite is SpriteAsset customSprite)
+                    {
                         spriteAsset = customSprite;
+                    }
 
                     ySortOffsetRaw += o.SortOffset;
+                    
+                    // todo: support more directions?
+                    if (o.SupportedDirections is int supportedOverloadDirections &&
+                        supportedOverloadDirections == 4)
+                    {
+                        angle = facing.Direction.RoundTo4Directions(Orientation.Both).ToAngle();
+                    }
                 }
 
                 float ySort = RenderServices.YSort(ySortOffsetRaw);
 
-                (string suffix, bool horizontalFlip) = DirectionHelper.GetSuffixFromAngle(e, prefix, facing.Angle);
+                (string suffix, bool horizontalFlip) = DirectionHelper.GetSuffixFromAngle(e, prefix, angle);
                 ImageFlip imageFlip = horizontalFlip ? ImageFlip.Horizontal : ImageFlip.None;
 
                 if (overload is not null)
@@ -106,7 +116,9 @@ namespace Murder.Systems
                 }
 
                 if (string.IsNullOrEmpty(suffix))
+                {
                     prefix = prefix.Trim('_');
+                }
 
                 float speed = overload?.Duration ?? -1;
                 AnimationSpeedOverload? speedOverload = e.TryGetAnimationSpeedOverload();

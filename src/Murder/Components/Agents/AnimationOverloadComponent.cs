@@ -58,6 +58,11 @@ namespace Murder.Components
 
         public readonly float SortOffset { get; init; } = 0f;
 
+        /// <summary>
+        /// Supported facing directions, optional.
+        /// </summary>
+        public readonly int? SupportedDirections { get; init; } = null;
+
         public SpriteAsset? CustomSprite
         {
             get

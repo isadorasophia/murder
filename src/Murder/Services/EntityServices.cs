@@ -551,7 +551,9 @@ public static class EntityServices
                     { 
                         SortOffset = offset,
                         Flip = properties.HasFlag(AnimationOverloadProperties.FlipHorizontal) ? 
-                                ImageFlip.Horizontal : ImageFlip.None
+                                ImageFlip.Horizontal : ImageFlip.None,
+                        SupportedDirections = properties.HasFlag(AnimationOverloadProperties.LockTo4Directions) ? 
+                                4 : null
                     };
 
         e.SetAnimationOverload(overload);
@@ -566,5 +568,6 @@ public enum AnimationOverloadProperties
     None = 0,
     Loop = 0x1,
     IgnoreFacing = 0x10,
-    FlipHorizontal = 0x100
+    FlipHorizontal = 0x100,
+    LockTo4Directions = 0x1000
 }
