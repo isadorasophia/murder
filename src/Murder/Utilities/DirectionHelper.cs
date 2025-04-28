@@ -261,6 +261,19 @@ public static class DirectionHelper
         return (Direction)quadra;
     }
 
+    public static Direction FromVectorCardinal(Vector2 vector)
+    {
+        float angle = MathF.Atan2(vector.Y, vector.X);
+        int quadra = Calculator.RoundToInt(4 * angle / (2 * MathF.PI) + 4) % 4;
+        switch (quadra)
+        {
+            case 0: return Direction.Right;
+            case 1: return Direction.Down;
+            case 2: return Direction.Left;
+            default: return Direction.Up;
+        }
+    }
+
     public static Direction FromVectorWithHorizontal(Vector2 vector)
     {
         // Check if the vector is pointing more to the left or right
