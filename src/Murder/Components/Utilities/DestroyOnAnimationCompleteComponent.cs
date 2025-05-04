@@ -10,7 +10,8 @@ namespace Murder.Components
         Deactivate = 1,
         RemoveSolid = 2,
         None = 3,
-        RemoveDeactivateHighlight = 4
+        RemoveDeactivateHighlight = 4,
+        AlphaZero = 5
     }
 
     public readonly struct DestroyOnAnimationCompleteComponent : IComponent
