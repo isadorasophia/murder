@@ -15,6 +15,11 @@ namespace Murder.Utilities
             var builder = ImmutableDictionary.CreateBuilder<string, SpriteEventInfo>(StringComparer.OrdinalIgnoreCase);
             foreach (SpriteEventInfo info in messages)
             {
+                if (info.Id is null)
+                {
+                    continue;
+                }
+
                 builder[info.Id] = info;
             }
 
