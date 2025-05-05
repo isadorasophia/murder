@@ -45,6 +45,8 @@ namespace Murder.Systems.Effects
                     {
                         properties |= SoundProperties.Persist;
                         layer = specificLayer;
+
+                        entity.SetPlayingPersistedEvent();
                     }
 
                     _ = SoundServices.Play(sound, entity, layer, properties);
@@ -71,6 +73,29 @@ namespace Murder.Systems.Effects
             if (entity.TryFetchChild(broadcast.Target) is Entity target)
             {
                 target.SendAnimationEventMessage(animationEvent);
+            }
+        }
+    }
+
+    [Filter(typeof(EventListenerComponent))]
+    [Watch(typeof(PlayingPersistedEventComponent))]
+    public class EventPersistedOnEntityListenerSystem : IReactiveSystem
+    {
+        public void OnAdded(World world, ImmutableArray<Entity> entities) { }
+
+        public void OnModified(World world, ImmutableArray<Entity> entities) { }
+
+        public void OnRemoved(World world, ImmutableArray<Entity> entities)
+        {
+            foreach (Entity e in entities)
+            {
+                if (e.TryGetEventListener() is EventListenerComponent listener)
+                {
+                    foreach ((string _, SpriteEventInfo info) in listener.Events)
+                    {
+                        SoundServices.Stop(info.Sound, fadeOut: true, entityId: e.EntityId);
+                    }
+                }
             }
         }
     }

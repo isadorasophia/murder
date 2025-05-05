@@ -33,3 +33,6 @@ public readonly struct EventListenerComponent : IComponent
         return new(builder.ToImmutable());
     }
 }
+
+[RuntimeOnly]
+public readonly struct PlayingPersistedEventComponent : IComponent { }
