@@ -39,7 +39,7 @@ public static class DialogueServices
         CharacterRuntime? character = CreateCharacterFrom(situation.Character, situation.Situation);
         if (character is null)
         {
-            return Array.Empty<Line>();
+            return [];
         }
 
         List<Line>? lines = null;
@@ -58,7 +58,7 @@ public static class DialogueServices
             }
         }
 
-        return lines?.ToArray() ?? Array.Empty<Line>();
+        return lines?.ToArray() ?? [];
     }
 
     public static string FetchAllLinesSeparatedBy(World? world, Entity? target, SituationComponent situation, string separator)
