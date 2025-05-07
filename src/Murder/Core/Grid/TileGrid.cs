@@ -70,7 +70,7 @@ namespace Murder.Core
 
             CacheAutoTile(tileEntities, totalTilemaps);
 
-            OnModified?.Invoke();
+            // OnModified?.Invoke();
         }
 
         private void CacheAutoTile(ImmutableArray<Entity> tileEntities, int totalTilemaps)
