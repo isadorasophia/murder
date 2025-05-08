@@ -398,6 +398,11 @@ public static partial class RenderServices
             return frameInfo;
         }
 
+        if (animationInfo.Name == "_")
+        {
+            return new FrameInfo(0, 0, true, Animation.Empty);
+        }
+
         if (drawInfo.Outline.HasValue && drawInfo.OutlineStyle != OutlineStyle.None)
         {
             if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Bottom))
@@ -1155,9 +1160,9 @@ public static partial class RenderServices
     }
 
     public static string? CheckForEvents(
-        RenderedSpriteCacheComponent? previous, 
-        Guid currentAnimationGuid, 
-        AnimationInfo animationInfo, 
+        RenderedSpriteCacheComponent? previous,
+        Guid currentAnimationGuid,
+        AnimationInfo animationInfo,
         FrameInfo frameInfo)
     {
         // Check for animation events
@@ -1165,7 +1170,7 @@ public static partial class RenderServices
         int previousFrame = previous?.LastFrameIndex ?? -1;
 
         // Make sure we didn't change animations
-        if (previous is null || 
+        if (previous is null ||
             previous.Value.RenderedSprite != currentAnimationGuid ||
             !string.Equals(previous.Value.AnimInfo.Name, animationInfo.Name, StringComparison.InvariantCulture))
         {
