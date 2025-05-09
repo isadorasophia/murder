@@ -534,6 +534,16 @@ public static class EntityServices
         PlayAnimationOverload(e, [animation], properties, offset, customSprite);
     }
 
+    public static void PlayAnimationOverloadAndDisappear(
+        this Entity e,
+        string animation,
+        AnimationOverloadProperties properties = AnimationOverloadProperties.Loop | AnimationOverloadProperties.IgnoreFacing,
+        int offset = 0,
+        Guid? customSprite = null)
+    {
+        PlayAnimationOverload(e, [animation, "_"], properties, offset, customSprite);
+    }
+
     public static void PlayAnimationOverload(
         this Entity e,
         ImmutableArray<string> animations,
