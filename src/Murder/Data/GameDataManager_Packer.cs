@@ -16,5 +16,5 @@ public partial class GameDataManager
     /// <summary>
     /// File path of the packed contents for the released game.
     /// </summary>
-    protected virtual string PublishedPackedAssetsFullPath => FileHelper.GetPath(Game.Data.BinResourcesDirectoryPath, _packedGameDataDirectory);
+    public virtual string PublishedPackedAssetsFullPath => FileHelper.GetPath(Game.Data.BinResourcesDirectoryPath, _packedGameDataDirectory);
 }

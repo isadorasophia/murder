@@ -526,7 +526,7 @@ namespace Murder.Data
         /// This will skip loading assets that start with a certain char. This is used to filter assets
         /// that are only used in the editor.
         /// </summary>
-        protected virtual bool ShouldSkipAsset(string fullFilename)
+        public virtual bool ShouldSkipAsset(string fullFilename)
         {
             if (Path.GetFileName(fullFilename).StartsWith(SKIP_CHAR))
             {

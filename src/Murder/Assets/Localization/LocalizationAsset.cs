@@ -143,6 +143,12 @@ public class LocalizationAsset : GameAsset
             return null;
         }
 
+        if (index >= _resources.Length)
+        {
+            _guidToIndexCache = null;
+            return null;
+        }
+
         return _resources[index];
     }
 

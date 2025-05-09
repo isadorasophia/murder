@@ -23,6 +23,8 @@ namespace Murder.Editor.CustomEditors
 
         private Guid? _referenceResource = null;
 
+        private volatile bool _currentlyPruningData = false;
+
         public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target, bool overwrite)
         {
             _localization = target as LocalizationAsset;
@@ -76,6 +78,17 @@ namespace Murder.Editor.CustomEditors
                             _localization.RemoveResourceForDialogue(data.DialogueResourceGuid);
                             _localization.FileChanged = true;
                         }
+                    }
+
+                    if (!_currentlyPruningData)
+                    {
+                        _currentlyPruningData = true;
+
+                        Task.Run(() =>
+                        {
+                            EditorLocalizationServices.PrunNonReferencedStrings(_localization);
+                            _currentlyPruningData = false;
+                        });
                     }
                 }
             }
@@ -188,7 +201,6 @@ namespace Murder.Editor.CustomEditors
 
                 ImGui.PopItemWidth();
             }
-
         }
 
         /// <summary>

@@ -260,7 +260,7 @@ namespace Murder.Editor.Data
         /// <summary>
         /// Always loads all the assets in the editor. Except! When already loaded when generating assets.
         /// </summary>
-        protected override bool ShouldSkipAsset(string fullFilename)
+        public override bool ShouldSkipAsset(string fullFilename)
         {
             return IsPathOnSkipLoading(fullFilename);
         }

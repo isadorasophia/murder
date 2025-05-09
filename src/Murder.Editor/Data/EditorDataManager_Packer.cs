@@ -15,7 +15,7 @@ public partial class EditorDataManager
     /// <summary>
     /// File path of the packed contents for the released game.
     /// </summary>
-    protected override string PublishedPackedAssetsFullPath => FileHelper.GetPath(Architect.EditorData.PackedSourceDirectoryPath, _packedGameDataDirectory);
+    public override string PublishedPackedAssetsFullPath => FileHelper.GetPath(Architect.EditorData.PackedSourceDirectoryPath, _packedGameDataDirectory);
 
     private string[]? _preloadRelativePaths = null;
 
