@@ -1,4 +1,6 @@
 using Murder.Assets.Localization;
+using Murder.Core.Input;
+using System.Collections.Immutable;
 using System.Text.Json;
 
 namespace Murder.Save
@@ -31,6 +33,8 @@ namespace Murder.Save
         [Bang.Serialize]
         protected bool _fullscreen = true;
 
+        [Bang.Serialize]
+        protected ImmutableArray<ButtonBindingsInfo> buttonBindingsInfos = ImmutableArray<ButtonBindingsInfo>.Empty;
         protected void SaveSettings()
         {
             Game.Data.FileManager.SaveSerialized(this, _path);
@@ -60,6 +64,13 @@ namespace Murder.Save
         public float MusicVolume => _musicVolume;
 
         public LanguageId Language => _language;
+
+        public ImmutableArray<ButtonBindingsInfo> ButtonBindingsInfos => buttonBindingsInfos;
+        public void SetButtonBindingsInfos(ImmutableArray<ButtonBindingsInfo> buttonBindingsInfos)
+        {
+            this.buttonBindingsInfos = buttonBindingsInfos;
+            OnPreferencesChanged();
+        }
 
         /// <summary>
         /// This toggles the volume to the opposite of the current setting.

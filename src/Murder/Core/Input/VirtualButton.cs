@@ -1,12 +1,13 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using Murder.Utilities;
+using System.Collections.Immutable;
 using System.Diagnostics;
 
 namespace Murder.Core.Input;
 
 public class VirtualButton : IVirtualInput
 {
-    public List<InputButton> Buttons = new();
+    public ImmutableArray<InputButton> Buttons = ImmutableArray<InputButton>.Empty;
     public InputButton?[] _lastPressedButton = new InputButton?[2];
 
     public bool Pressed => Down && !Previous && !Consumed;
@@ -109,11 +110,19 @@ public class VirtualButton : IVirtualInput
         };
     }
 
+    public void Register(ButtonBindingsInfo bindingsInfo)
+    {
+        foreach (var button in bindingsInfo.Buttons)
+        {
+            Buttons = Buttons.Add(button);
+        }
+    }
+
     internal void Register(Keys[] keys)
     {
         foreach (var key in keys)
         {
-            Buttons.Add(new InputButton(key));
+            Buttons = Buttons.Add(new InputButton(key));
         }
     }
 
@@ -121,7 +130,7 @@ public class VirtualButton : IVirtualInput
     {
         foreach (var button in buttons)
         {
-            Buttons.Add(new InputButton(button));
+            Buttons = Buttons.Add(new InputButton(button));
         }
     }
 
@@ -129,14 +138,14 @@ public class VirtualButton : IVirtualInput
     {
         foreach (var button in buttons)
         {
-            Buttons.Add(new InputButton(button));
+            Buttons = Buttons.Add(new InputButton(button));
         }
     }
     internal void Register(GamepadAxis[] buttons)
     {
         foreach (var button in buttons)
         {
-            Buttons.Add(new InputButton(button));
+            Buttons = Buttons.Add(new InputButton(button));
         }
     }
 
