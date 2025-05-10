@@ -630,14 +630,12 @@ namespace Murder.Core.Input
 
             bool rotateInput = gridMenuFlags.HasFlag(GridMenuFlags.Rotate);
 
-            // 2. Build *logical* Horizontal / Vertical inputs that already
-            //    include the optional 90° clockwise rotation.
+            // Horizontal / Vertical inputs
             bool horizontalPressed = rotateInput ? rawAxis.PressedY : rawAxis.PressedX;
             bool verticalPressed = rotateInput ? rawAxis.PressedX : rawAxis.PressedY;
 
             float horizontalValue = rotateInput ? rawAxis.Value.Y : rawAxis.Value.X;
-            float verticalValue = rotateInput ? rawAxis.Value.X : rawAxis.Value.Y; // the – sign keeps “Right ⇒ Down”
-
+            float verticalValue = rotateInput ? rawAxis.Value.X : rawAxis.Value.Y;
 
             float lastMoved = currentInfo.LastMoved;
             float lastPressed = currentInfo.LastPressed;
@@ -808,8 +806,16 @@ namespace Murder.Core.Input
             {
                 return false;
             }
+            var rawAxis = GetAxis(MurderInputAxis.Ui);
+            bool rotateInput = gridMenuFlags.HasFlag(GridMenuFlags.Rotate);
 
-            var axis = GetAxis(MurderInputAxis.Ui);
+            // Horizontal / Vertical inputs
+            bool horizontalPressed = rotateInput ? rawAxis.PressedY : rawAxis.PressedX;
+            bool verticalPressed = rotateInput ? rawAxis.PressedX : rawAxis.PressedY;
+
+            float horizontalValue = rotateInput ? rawAxis.Value.Y : rawAxis.Value.X;
+            float verticalValue = rotateInput ? rawAxis.Value.X : rawAxis.Value.Y;
+
             float lastMoved = currentInfo.LastMoved;
 
             // Recalculate height based on the size.
@@ -820,9 +826,9 @@ namespace Murder.Core.Input
             int selectedOptionY = Calculator.FloorToInt(currentInfo.Selection / width);
             int overflowX = 0;
             int overflowY = 0;
-            if (axis.PressedX)
+            if (horizontalPressed)
             {
-                selectedOptionX += Math.Sign(axis.Value.X);
+                selectedOptionX += Math.Sign(horizontalValue);
 
                 int currentWidth = selectedOptionY == height - 1 ? lastRowWidth : width;
 
@@ -848,9 +854,9 @@ namespace Murder.Core.Input
                 lastMoved = Game.NowUnscaled;
             }
 
-            if (axis.PressedY)
+            if (verticalPressed)
             {
-                selectedOptionY += Math.Sign(axis.Value.Y);
+                selectedOptionY += Math.Sign(verticalValue);
 
                 int currentHeight = selectedOptionX >= lastRowWidth ? height - 1 : height;
 

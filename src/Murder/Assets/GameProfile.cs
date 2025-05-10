@@ -175,7 +175,6 @@ namespace Murder.Assets
 
         public readonly Theme Theme = new Theme();
 
-        public readonly Exploration Exploration = new();
         public readonly EditorAssets EditorAssets = new();
 
         /// <summary>
@@ -202,6 +201,9 @@ namespace Murder.Assets
 
         [Tooltip("Aditional collision checks will be done if an entity moves more than X pixels per frame")]
         public int MinimumVelocityForSweep = 6;
+
+        [GameAssetId<InputInformationAsset>]
+        public Guid InputInformation = Guid.Empty;
 
         public GameProfile() =>
             FilePath = GameDataManager.GameProfileFileName;

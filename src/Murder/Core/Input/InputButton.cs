@@ -11,6 +11,11 @@ public readonly struct InputButton
     private readonly MouseButtons? _mouse = null;
     private readonly GamepadAxis? _axis = null;
 
+    internal Keys? Keyboard => _keyboard;
+    internal Buttons? Gamepad => _gamepad;
+    internal MouseButtons? Mouse => _mouse;
+    internal GamepadAxis? Axis => _axis;
+
     public InputButton() { }
     public InputButton(Keys key)
     {
