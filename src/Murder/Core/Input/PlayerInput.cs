@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
+using Murder.Save;
 using Murder.Utilities;
 using System;
 using System.Collections.Immutable;
@@ -614,7 +615,8 @@ namespace Murder.Core.Input
             ClampBottom,
             ClampAllDirections,
             ClampSize,
-            SelectDisabled
+            SelectDisabled,
+            Rotate
         }
 
         public bool GridMenu(ref MenuInfo currentInfo, int width, int maxHeight, int size, GridMenuFlags gridMenuFlags = GridMenuFlags.None)
@@ -624,7 +626,19 @@ namespace Murder.Core.Input
                 return false;
             }
 
-            VirtualAxis axis = GetAxis(MurderInputAxis.Ui);
+            VirtualAxis rawAxis = GetAxis(MurderInputAxis.Ui);
+
+            bool rotateInput = gridMenuFlags.HasFlag(GridMenuFlags.Rotate);
+
+            // 2. Build *logical* Horizontal / Vertical inputs that already
+            //    include the optional 90° clockwise rotation.
+            bool horizontalPressed = rotateInput ? rawAxis.PressedY : rawAxis.PressedX;
+            bool verticalPressed = rotateInput ? rawAxis.PressedX : rawAxis.PressedY;
+
+            float horizontalValue = rotateInput ? rawAxis.Value.Y : rawAxis.Value.X;
+            float verticalValue = rotateInput ? rawAxis.Value.X : rawAxis.Value.Y; // the – sign keeps “Right ⇒ Down”
+
+
             float lastMoved = currentInfo.LastMoved;
             float lastPressed = currentInfo.LastPressed;
 
@@ -641,9 +655,9 @@ namespace Murder.Core.Input
             int overflowY = 0;
 
             int currentWidth = selectedOptionY == height - 1 ? lastRowWidth : width;
-            if (axis.PressedX)
+            if (horizontalPressed)
             {
-                selectedOptionX += Math.Sign(axis.Value.X);
+                selectedOptionX += Math.Sign(horizontalValue);
 
                 if (selectedOptionX >= currentWidth) // Is on last row and it has less than width.
                 {
@@ -667,9 +681,9 @@ namespace Murder.Core.Input
             }
 
             int currentHeight = selectedOptionX >= lastRowWidth ? height - 1 : height;
-            if (axis.PressedY)
+            if (verticalPressed)
             {
-                selectedOptionY += Math.Sign(axis.Value.Y);
+                selectedOptionY += Math.Sign(verticalValue);
 
                 if (selectedOptionY >= currentHeight)
                 {
@@ -725,10 +739,10 @@ namespace Murder.Core.Input
                 }
                 else
                 {
-                    if (axis.PressedY)
+                    if (verticalPressed)
                     {
                         int newOption = currentInfo.Selection;
-                        int sign = Math.Sign(axis.Value.Y) < 0 ? -1 : 1;
+                        int sign = Math.Sign(verticalValue) < 0 ? -1 : 1;
                         if (sign != 0)
                         {
                             (newOption, bool wrapped) = currentInfo.NextAvailableOptionVertical(selectedOptionIndex, width, sign);
@@ -741,10 +755,10 @@ namespace Murder.Core.Input
                         currentInfo.Select(newOption, Game.NowUnscaled, false);
                     }
                     
-                    if (axis.PressedX)
+                    if (horizontalPressed)
                     {
                         int newOption = currentInfo.Selection;
-                        int sign = Math.Sign(axis.Value.X) < 0 ? -1 : 1;
+                        int sign = Math.Sign(horizontalValue) < 0 ? -1 : 1;
                         if (sign != 0)
                         {
                             (newOption, bool wrapped) = currentInfo.NextAvailableOptionHorizontal(selectedOptionIndex, width, sign);
@@ -983,6 +997,37 @@ namespace Murder.Core.Input
         {
             var keyboardState = Keyboard.GetState();
             return keyboardState.IsKeyDown(key);
+        }
+
+
+        static readonly ImmutableArray<ButtonBindingsInfo>.Builder _bindingsInfoBuilder = ImmutableArray.CreateBuilder<ButtonBindingsInfo>();
+        public void SaveBidings(GamePreferences gamePreferences)
+        {
+            if (_bindingsInfoBuilder.Any())
+            {
+                _bindingsInfoBuilder.Clear();
+            }
+
+            foreach (var button in _buttons)
+            {
+                var bindingsInfo = new ButtonBindingsInfo(button.Key, button.Value);
+                _bindingsInfoBuilder.Add(bindingsInfo);
+            }
+
+            gamePreferences.SetButtonBindingsInfos(_bindingsInfoBuilder.DrainToImmutable());
+        }
+
+        public void LoadBindings(GamePreferences gamePreferences)
+        {
+            if (_bindingsInfoBuilder.Any())
+            {
+                _bindingsInfoBuilder.Clear();
+            }
+            foreach (var bindingsInfo in gamePreferences.ButtonBindingsInfos)
+            {
+
+                _buttons[bindingsInfo.Key] = bindingsInfo.CreateVirtualButton();
+            }
         }
     }
 }
