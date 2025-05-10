@@ -124,8 +124,27 @@ public class LocalizationAsset : GameAsset
             return;
         }
 
+        LocalizationAsset @default = Game.Data.GetDefaultLocalization();
+        if (!string.IsNullOrEmpty(notes) && @default.Guid != Guid)
+        {
+            @default.UpdateOrSetNotes(id, notes);
+        }
+
         value = _resources[index] with { String = translated, Notes = string.IsNullOrEmpty(notes) ? null : notes };
         _resources = _resources.SetItem(index, value);
+    }
+
+    public bool UpdateOrSetNotes(Guid id, string? notes)
+    {
+        if (!GuidToResourceIndex.TryGetValue(id, out int index))
+        {
+            return false;
+        }
+
+        LocalizedStringData value = _resources[index] with { Notes = notes };
+        _resources = _resources.SetItem(index, value);
+
+        return true;
     }
 
     /// <summary>

@@ -1,14 +1,17 @@
 ﻿using ImGuiNET;
+using Murder.Assets;
 using Murder.Assets.Localization;
 using Murder.Core.Graphics;
-using Murder.Core.Input;
 using Murder.Diagnostics;
+using Murder.Editor.Assets;
 using Murder.Editor.Attributes;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using Murder.Editor.Utilities.Serialization;
+using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using static Murder.Assets.Localization.LocalizationAsset;
 
@@ -23,6 +26,7 @@ namespace Murder.Editor.CustomEditors
 
         private Guid? _referenceResource = null;
 
+        private string? _selectedMode = null;
         private volatile bool _currentlyPruningData = false;
 
         public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target, bool overwrite)
@@ -40,6 +44,30 @@ namespace Murder.Editor.CustomEditors
             typeof(LocalizationAsset).TryGetFieldForEditor(nameof(LocalizationAsset.Resources)));
 
         public override void DrawEditor()
+        {
+            GameLogger.Verify(_localization is not null);
+            bool isDefaultResource = _referenceResource == _localization.Guid;
+
+            if (ImGui.BeginTabBar("EditorBar"))
+            {
+                if (ImGui.BeginTabItem("Resources"))
+                {
+                    DrawResources();
+                    ImGui.EndTabItem();
+                }
+
+                if (!isDefaultResource)
+                {
+                    if (ImGui.BeginTabItem("Exporter"))
+                    {
+                        DrawAssetPicker();
+                        ImGui.EndTabItem();
+                    }
+                }
+            }
+        }
+
+        public void DrawResources()
         {
             GameLogger.Verify(_localization is not null);
 
@@ -86,18 +114,20 @@ namespace Murder.Editor.CustomEditors
 
                         Task.Run(() =>
                         {
-                            EditorLocalizationServices.PrunNonReferencedStrings(_localization);
+                            EditorLocalizationServices.PrunNonReferencedStrings(
+                                _localization, name: FilterLocalizationAsset.DefaultFilterName, log: true);
+
                             _currentlyPruningData = false;
                         });
                     }
                 }
             }
-            
-            ImGuiHelpers.HelpTooltip(!isDefaultResource ? 
+
+            ImGuiHelpers.HelpTooltip(!isDefaultResource ?
                 "Fix references from the default resource" : "Fix strings not referenced");
 
             ImGui.SameLine();
-            
+
             bool importButton = isDefaultResource ?
                 ImGuiHelpers.SelectedIconButton('\uf56f') :
                 ImGuiHelpers.IconButton('\uf56f', $"import_{_localization.Guid}");
@@ -108,18 +138,6 @@ namespace Murder.Editor.CustomEditors
             }
 
             ImGuiHelpers.HelpTooltip("Import from .csv");
-            ImGui.SameLine();
-
-            bool exportButton = isDefaultResource ?
-                ImGuiHelpers.SelectedIconButton('\uf56e') :
-                ImGuiHelpers.IconButton('\uf56e', $"export_{_localization.Guid}");
-
-            if (exportButton && !isDefaultResource)
-            {
-                LocalizationExporter.ExportToCsv(_localization);
-            }
-
-            ImGuiHelpers.HelpTooltip("Export to .csv");
 
             if (_referenceResource == _localization.Guid)
             {
@@ -203,6 +221,197 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
+        private string _modeBuff = string.Empty;
+
+        public void DrawAssetPicker()
+        {
+            GameLogger.Verify(_localization is not null);
+
+            FilterLocalizationAsset f = EditorLocalizationServices.GetFilterLocalizationAsset();
+
+            bool modified = SelectOrCreateFilterMode(f);
+            modified |= DrawFilteredAssets(_selectedMode);
+
+            if (modified)
+            {
+                _localization?.TrackAssetOnSave(f.Guid);
+            }
+        }
+
+        [MemberNotNull(nameof(_selectedMode))]
+        private bool SelectOrCreateFilterMode(FilterLocalizationAsset filter)
+        {
+            GameLogger.Verify(_localization is not null);
+
+            bool modifiedAsset = false;
+
+            _selectedMode ??= FilterLocalizationAsset.DefaultFilterName;
+
+            int index = 0;
+            string[] items = filter.Filters.Keys.Order().ToArray();
+            for (int i = 0; i < items.Length; ++i)
+            {
+                if (items[i].Equals(_selectedMode))
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            ImGui.PushItemWidth(150);
+            bool modified = ImGui.Combo("##select_filter_mode", ref index, items, items.Length);
+            if (modified)
+            {
+                _selectedMode = items[index];
+            }
+            ImGui.PopItemWidth();
+
+            ImGui.SameLine();
+
+            if (ImGuiHelpers.BlueIcon('\uf303', $"add_mode"))
+            {
+                ImGui.OpenPopup($"add_mode");
+            }
+
+            if (ImGui.BeginPopup("add_mode"))
+            {
+                ImGui.SetNextItemWidth(200);
+                ImGui.InputText($"##add_mode_input", ref _modeBuff, 200);
+
+                bool submit = false;
+                if (string.IsNullOrEmpty(_modeBuff))
+                {
+                    ImGuiHelpers.SelectedButton("Add");
+                }
+                else
+                {
+                    submit |= ImGui.Button("Add");
+                }
+
+                if (submit)
+                {
+                    modifiedAsset = true;
+
+                    _ = filter.GetOrCreate(_modeBuff);
+                    _modeBuff = string.Empty;
+
+                    ImGui.CloseCurrentPopup();
+                }
+
+                ImGui.EndPopup();
+            }
+
+            ImGui.SameLine();
+
+            if (!_selectedMode.Equals(FilterLocalizationAsset.DefaultFilterName))
+            {
+                if (ImGuiHelpers.IconButton('\uf2ed', "delete_mode"))
+                {
+                    modifiedAsset = true;
+
+                    filter.Remove(_selectedMode);
+                    _selectedMode = FilterLocalizationAsset.DefaultFilterName;
+                }
+            }
+            else
+            {
+                ImGuiHelpers.SelectedIconButton('\uf2ed');
+            }
+
+            ImGuiHelpers.HelpTooltip("Remove mode");
+            ImGui.SameLine();
+
+            if (ImGuiHelpers.IconButton('\uf021', $"clear_{_localization.Guid}"))
+            {
+                modifiedAsset = true;
+                filter.Clear();
+            }
+
+            ImGuiHelpers.HelpTooltip("Clear and get all assets");
+            ImGui.SameLine();
+
+            if (ImGuiHelpers.IconButton('\uf56e', $"export_{_localization.Guid}"))
+            {
+                LocalizationExporter.ExportToCsv(_localization, name: _selectedMode);
+            }
+
+            ImGuiHelpers.HelpTooltip("Export to .csv");
+
+            return modifiedAsset;
+        }
+
+        private bool DrawFilteredAssets(string name)
+        {
+            ImmutableArray<(string, AssetInfoPropertiesForEditor)> resources =
+                EditorLocalizationServices.GetLocalizationCandidates(name);
+
+            bool modified = false;
+
+            using TableMultipleColumns table = new($"localization_filter",
+                flags: ImGuiTableFlags.SizingFixedSame,
+                (20, ImGuiTableColumnFlags.WidthFixed), (-1, ImGuiTableColumnFlags.WidthStretch));
+
+            ImGui.TableNextRow();
+            ImGui.TableNextColumn();
+
+            foreach ((string label, AssetInfoPropertiesForEditor info) in resources)
+            {
+                bool selected = info.IsSelected;
+                if (ImGui.Checkbox(label: $"##{label}", ref selected))
+                {
+                    info.IsSelected = selected;
+                    modified = true;
+                }
+
+                ImGui.TableNextColumn();
+
+                if (TreeGroupNode(label, Game.Profile.Theme.White, icon: '\uf500', flags: ImGuiTreeNodeFlags.None))
+                {
+                    ImGui.TableNextRow();
+                    ImGui.TableNextColumn();
+                    ImGui.TableNextColumn();
+
+                    using TableMultipleColumns innerTable = new($"subassets_filter",
+                        flags: ImGuiTableFlags.SizingFixedSame,
+                        (20, ImGuiTableColumnFlags.WidthFixed), (-1, ImGuiTableColumnFlags.WidthStretch));
+
+                    ImGui.TableNextRow();
+                    ImGui.TableNextColumn();
+
+                    for (int i = 0; i < info.Assets.Length; ++i)
+                    {
+                        AssetPropertiesForEditor assetInfo = info.Assets[i];
+
+                        GameAsset? asset = Game.Data.TryGetAsset(assetInfo.Guid);
+                        if (asset is null)
+                        {
+                            continue;
+                        }
+
+                        bool selectedAsset = assetInfo.Show;
+                        if (ImGui.Checkbox(label: $"##{assetInfo.Guid}", ref selectedAsset))
+                        {
+                            assetInfo.Show = selectedAsset;
+                            modified = true;
+                        }
+
+                        ImGui.TableNextColumn();
+                        ImGui.Text($"{asset.Name}");
+
+                        ImGui.TableNextRow();
+                        ImGui.TableNextColumn();
+                    }
+
+                    ImGui.TreePop();
+                }
+
+                ImGui.TableNextRow();
+                ImGui.TableNextColumn();
+            }
+
+            return modified;
+        }
+
         /// <summary>
         /// Scan all resources from <paramref name="asset"/> and fill the <see cref="_localization"/> resources
         /// data.
@@ -244,6 +453,17 @@ namespace Murder.Editor.CustomEditors
         {
             GameLogger.Verify(_localization is not null);
             EditorLocalizationServices.DrawNotesPopup(_localization, g, localizedStringData);
+        }
+
+        private bool TreeGroupNode(string name, System.Numerics.Vector4 textColor, char icon = '\uf49e', ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.None)
+        {
+            return ImGuiHelpers.TreeNodeWithIconAndColor(
+                icon: icon,
+                label: name,
+                flags: ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.FramePadding | flags,
+                text: textColor,
+                background: Game.Profile.Theme.BgFaded,
+                active: Game.Profile.Theme.Bg);
         }
     }
 }

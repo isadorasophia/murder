@@ -5,6 +5,8 @@ using System.Text;
 using Murder.Serialization;
 using Murder.Assets;
 using System.IO;
+using Murder.Utilities;
+using Murder.Editor.Services;
 
 namespace Murder.Editor.Utilities.Serialization;
 
@@ -22,18 +24,22 @@ internal static class LocalizationExporter
 
     private static bool _isExporting = false;
 
-    public static bool ExportToCsv(LocalizationAsset asset)
+    public static bool ExportToCsv(LocalizationAsset asset, string name)
     {
         _isExporting = true;
 
         LocalizationAsset reference = Architect.EditorData.GetDefaultLocalization();
+
+        // create a copy so we don't modify the actual asset
+        LocalizationAsset target = SerializationHelper.DeepCopy(asset);
+        EditorLocalizationServices.PrunNonReferencedStrings(target, name, log: false);
 
         StringBuilder builder = new();
 
         builder.AppendLine("Guid,Speaker,Original,Translated,Notes");
 
         HashSet<Guid> dialogueResources = new();
-        foreach (LocalizationAsset.ResourceDataForAsset data in asset.DialogueResources)
+        foreach (LocalizationAsset.ResourceDataForAsset data in target.DialogueResources)
         {
             foreach (LocalizedDialogueData g in data.DataResources)
             {
@@ -41,7 +47,7 @@ internal static class LocalizationExporter
             }
         }
 
-        foreach (LocalizedStringData data in asset.Resources)
+        foreach (LocalizedStringData data in target.Resources)
         {
             if (dialogueResources.Contains(data.Guid))
             {
@@ -55,7 +61,7 @@ internal static class LocalizationExporter
 
         // Now, put all these right at the end of the document.
         // Why, do you ask? Absolutely no reason. It just seemed reasonable that generated strings came later.
-        foreach (LocalizationAsset.ResourceDataForAsset dialogueData in asset.DialogueResources)
+        foreach (LocalizationAsset.ResourceDataForAsset dialogueData in target.DialogueResources)
         {
             if (Game.Data.TryGetAsset<CharacterAsset>(dialogueData.DialogueResourceGuid) is CharacterAsset characterAsset)
             {
@@ -71,7 +77,7 @@ internal static class LocalizationExporter
 
             foreach (LocalizedDialogueData localizedDialogueData in dialogueData.DataResources)
             {
-                LocalizedStringData? data = asset.TryGetResource(localizedDialogueData.Guid);
+                LocalizedStringData? data = target.TryGetResource(localizedDialogueData.Guid);
                 if (data is null)
                 {
                     continue;
@@ -86,7 +92,7 @@ internal static class LocalizationExporter
             }
         }
 
-        string fullLocalizationPath = GetFullRawLocalizationPath(asset.Name);
+        string fullLocalizationPath = GetFullRawLocalizationPath(target.Name);
         FileManager.CreateDirectoryPathIfNotExists(fullLocalizationPath);
 
         _ = File.WriteAllTextAsync(fullLocalizationPath, builder.ToString(), Encoding.UTF8);

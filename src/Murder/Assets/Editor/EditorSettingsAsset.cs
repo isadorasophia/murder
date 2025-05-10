@@ -179,6 +179,9 @@ public class EditorSettingsAsset : GameAsset
     [Tooltip("Whether we will automatically apply any chances made to localization resources")]
     public bool AutomaticallyHotReloadLocalizationChanges = false;
 
+    [GameAssetId<FilterLocalizationAsset>]
+    public Guid LocalizationFilter = Guid.Empty;
+
     [JsonConstructor]
     public EditorSettingsAsset(string name, string gameSourcePath)
     {

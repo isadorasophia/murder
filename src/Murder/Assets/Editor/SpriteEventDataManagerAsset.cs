@@ -1,4 +1,5 @@
-﻿using Murder.Assets;
+﻿using Bang;
+using Murder.Assets;
 using Murder.Attributes;
 using Murder.Data;
 
@@ -14,7 +15,7 @@ public class SpriteEventDataManagerAsset : GameAsset
     /// </summary>
     public override string EditorFolder => GameDataManager.HiddenAssetsRelativePath;
 
-    [Bang.Serialize]
+    [Serialize]
     public ImmutableDictionary<Guid, SpriteEventData> Events { get; private set; } = 
         ImmutableDictionary<Guid, SpriteEventData>.Empty;
 
