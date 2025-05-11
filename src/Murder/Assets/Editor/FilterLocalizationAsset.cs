@@ -4,6 +4,7 @@ using Murder.Assets.Graphics;
 using Murder.Assets.Localization;
 using Murder.Attributes;
 using Murder.Data;
+using Murder.Diagnostics;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
@@ -91,7 +92,8 @@ public class FilteredAssetsForLocalization
 
     public void Clear()
     {
-        _localizationCandidates = null;
+        //_localizationCandidates = null;
+        GameLogger.Warning("Unsupported as of now!");
     }
 }
 
