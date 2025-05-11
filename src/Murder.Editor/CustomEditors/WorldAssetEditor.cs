@@ -307,7 +307,7 @@ namespace Murder.Editor.CustomEditors
                         ImGuiHelpers.HelpTooltip("Display name of the world");
                         ImGui.SameLine();
 
-                        modified |= CustomField.DrawValueWithId(ref _asset, nameof(WorldAsset.WorldName));
+                        modified |= CustomField.DrawValueWithId(ref _asset, nameof(WorldAsset.LocalizedWorldName));
 
                         ImGuiHelpers.ColorIcon('\uf0dc', Game.Profile.Theme.Accent);
                         ImGuiHelpers.HelpTooltip("Order which this world should be displayed");

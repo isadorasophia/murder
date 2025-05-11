@@ -30,7 +30,7 @@ namespace Murder.Assets
         /// <summary>
         /// This is the world name used when fetching this world within the game.
         /// </summary>
-        public readonly string WorldName = "World";
+        public readonly LocalizedString LocalizedWorldName = new();
 
         /// <summary>
         /// This is the order in which this world will be displayed in game (when selecting a lvel, etc.)
