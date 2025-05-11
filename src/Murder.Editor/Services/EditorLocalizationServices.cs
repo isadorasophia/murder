@@ -1,13 +1,10 @@
-﻿using Bang.Diagnostics;
-using ImGuiNET;
+﻿using ImGuiNET;
 using Murder.Assets;
-using Murder.Assets.Graphics;
 using Murder.Assets.Localization;
 using Murder.Core.Input;
 using Murder.Diagnostics;
 using Murder.Editor.Assets;
 using Murder.Editor.ImGuiExtended;
-using Murder.Editor.Utilities;
 using Murder.Serialization;
 using System.Collections.Immutable;
 using System.Text;
@@ -214,6 +211,11 @@ internal static class EditorLocalizationServices
         {
             localization.FileChanged = true;
             localization.RemoveResource(g, force: true);
+        }
+
+        if (log)
+        {
+            GameLogger.Log($"Completed pruning!");
         }
     }
 }
