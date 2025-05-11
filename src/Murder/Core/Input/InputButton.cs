@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Bang;
+using Microsoft.Xna.Framework.Input;
 using System.Numerics;
 
 namespace Murder.Core.Input;
@@ -6,15 +7,19 @@ namespace Murder.Core.Input;
 public readonly struct InputButton
 {
     public readonly InputSource Source = InputSource.None;
+    [Serialize]
     private readonly Keys? _keyboard = null;
+    [Serialize]
     private readonly Buttons? _gamepad = null;
+    [Serialize]
     private readonly MouseButtons? _mouse = null;
+    [Serialize]
     private readonly GamepadAxis? _axis = null;
 
-    internal Keys? Keyboard => _keyboard;
-    internal Buttons? Gamepad => _gamepad;
-    internal MouseButtons? Mouse => _mouse;
-    internal GamepadAxis? Axis => _axis;
+    public Keys? Keyboard => _keyboard;
+    public Buttons? Gamepad => _gamepad;
+    public MouseButtons? Mouse => _mouse;
+    public GamepadAxis? Axis => _axis;
 
     public InputButton() { }
     public InputButton(Keys key)
@@ -39,6 +44,16 @@ public readonly struct InputButton
         Source = InputSource.GamepadAxis;
         _axis = axis;
     }
+
+    public InputButton(InputSource source, Keys? keys, Buttons? buttons, MouseButtons? mouseButtons, GamepadAxis? gamepadAxis) : this()
+    {
+        Source = source;
+        _keyboard = keys;
+        _gamepad = buttons;
+        _mouse = mouseButtons;
+        _axis = gamepadAxis;
+    }
+
     public Vector2 GetAxis(GamePadState gamepadState)
     {
         if (Source == InputSource.GamepadAxis)
@@ -202,11 +217,11 @@ public readonly struct InputButton
         switch (Source)
         {
             case InputSource.Keyboard:
-                return _keyboard!.Value.ToString();
+                return _keyboard?.ToString() ?? "<none>";
             case InputSource.Mouse:
-                return _mouse!.Value.ToString();
+                return _mouse?.ToString() ?? "<none>";
             case InputSource.Gamepad:
-                return _gamepad!.Value.ToString();
+                return _gamepad?.ToString() ?? "<none>";
             case InputSource.None:
             default:
                 return "?";

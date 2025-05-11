@@ -15,6 +15,7 @@ public class InputInformationAsset : GameAsset
     public override string EditorFolder => "#Ui";
     public override Vector4 EditorColor => "#f4eb6f".ToVector4Color();
 
+    public ImmutableArray<InputInformation> Axis = ImmutableArray<InputInformation>.Empty;
     public ImmutableArray<InputInformation> Buttons = ImmutableArray<InputInformation>.Empty;
     public ImmutableArray<ButtonGraphics> Graphics = ImmutableArray<ButtonGraphics>.Empty;
 
@@ -50,7 +51,7 @@ public class InputInformationAsset : GameAsset
         return builder.ToImmutable();
     }
 
-    public Portrait? GetGraphicsFor(InputButton key)
+    public (Portrait?, string?) GetGraphicsFor(InputButton key)
     {
         if (_graphicsCacheKeys == null)
         {
@@ -62,33 +63,29 @@ public class InputInformationAsset : GameAsset
             case InputSource.Keyboard:
                 if (key.Keyboard is Keys keyCode && _graphicsCacheKeys!.TryGetValue(keyCode, out var graphics))
                 {
-                    return graphics.Icon;
+                    return (graphics.Icon, graphics.Text);
                 }
-                GameLogger.Error($"Input button source is Keyboard but no key found for {key} in {this}");
-                return null;
+                return (null, null);
             case InputSource.Mouse:
                 if (key.Mouse is MouseButtons mouseButton && _graphicsCacheMouseButtons!.TryGetValue(mouseButton, out var mouseGraphics))
                 {
-                    return mouseGraphics.Icon;
+                    return (mouseGraphics.Icon, mouseGraphics.Text);
                 }
-                GameLogger.Error($"Input button source is Mouse but no key found for {key} in {this}");
-                return null;
+                return (null, null);
             case InputSource.Gamepad:
                 if (key.Gamepad is Buttons button && _graphicsCacheButtons!.TryGetValue(button, out var buttonGraphics))
                 {
-                    return buttonGraphics.Icon;
+                    return (buttonGraphics.Icon, buttonGraphics.Text);
                 }
-                GameLogger.Error($"Input button source is Gamepad but no key found for {key} in {this}");
-                return null;
+                return (null, null);
             case InputSource.GamepadAxis:
                 if (key.Axis is GamepadAxis axis && _graphicsCacheGamepadAxis!.TryGetValue(axis, out var axisGraphics))
                 {
-                    return axisGraphics.Icon;
+                    return (axisGraphics.Icon, axisGraphics.Text);
                 }
-                GameLogger.Error($"Input button source is GamepadAxis but no key found for {key} in {this}");
-                return null;
+                return (null, null);
             default:
-                return null;
+                return (null, null);
         }
     }
 
@@ -167,7 +164,7 @@ public class InputInformationAsset : GameAsset
     {
         public readonly Portrait Icon = new();
         public readonly InputButton InputButton = new();
-
+        public readonly string? Text = null;
         public ButtonGraphics()
         {
 

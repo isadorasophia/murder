@@ -9,12 +9,21 @@ namespace Murder.Services
     public readonly struct InputMenuOption
     {
         public readonly string Text { get; init; } = string.Empty;
-        public readonly int? ButtonId { get;init; } = 0;
+        public readonly int? Id { get;init; } = 0;
+        public readonly InputStyle Style { get; init; } = 0;
 
-        public InputMenuOption(string text, int? buttonId = null)
+        public enum InputStyle
+        {
+            None = 0,
+            Button = 1,
+            Axis = 2,
+        }
+
+        public InputMenuOption(string text, InputStyle style, int? buttonId)
         {
             Text = text;
-            ButtonId = buttonId;
+            Id = buttonId;
+            Style = style;
         }
     }
 }

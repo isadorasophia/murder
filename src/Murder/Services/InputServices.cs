@@ -40,12 +40,23 @@ public static class InputServices
 
             string text = $"{buttonInfo.LocalizedName}:";
 
-            builder.Add(new InputMenuOption(text, buttonInfo.ButtonId));
+            builder.Add(new InputMenuOption(text, InputMenuOption.InputStyle.Button, buttonInfo.ButtonId));
+        }
+
+        foreach (var axisInfo in inputInformation.Axis)
+        {
+            if (!axisInfo.AllowPlayerCustomization)
+            {
+                continue;
+            }
+            var virtualAxis = Game.Input.GetOrCreateAxis(axisInfo.ButtonId);
+            string text = $"{axisInfo.LocalizedName}:";
+            builder.Add(new InputMenuOption(text, InputMenuOption.InputStyle.Axis, axisInfo.ButtonId));
         }
 
         if (exitText != null)
         {
-            builder.Add(new InputMenuOption(exitText));
+            builder.Add(new InputMenuOption(exitText, InputMenuOption.InputStyle.None, null));
         }
 
         return new GenericMenuInfo<InputMenuOption>(builder.ToArray());
@@ -60,9 +71,7 @@ public static class InputServices
         float sort = .1f)
     {
         PixelFont font = Game.Data.GetFont(style.Font);
-        int lineHeight = font.LineHeight + style.ExtraVerticalSpace;
-
-        int maxSelectionWidth = 0;
+        int lineHeight = font.LineHeight + style.ExtraVerticalSpace + 11;
 
         Point finalPosition = new(Math.Max(position.X, 0), Math.Max(position.Y, 0));
         Point textFinalPosition = new(Math.Max(position.X, 0), Math.Max(position.Y, 0));
@@ -76,12 +85,15 @@ public static class InputServices
 
         Vector2 CalculateSelector(int line, int column) => new Point(
             (column + 0.5f) * itemMaxWidth - (totalMenuWidth / 2f) - 4,
-            lineHeight * (line + 1.5f)) + finalPosition;
+            lineHeight * (line + 1f) - 4) + finalPosition;
+
+        var infoBindings = Game.Data.GetAsset<InputInformationAsset>(Game.Profile.InputInformation);
 
         for (int i = 0; i < menuInfo.Length; i++)
         {
             int column = Calculator.FloorToInt(i / (float)maxItemsPerLine);
             int line = i % maxItemsPerLine;
+            int x = 0;
 
             var label = menuInfo.Options[i].Text;
             Vector2 labelPosition = CalculateText(line, column);
@@ -93,15 +105,69 @@ public static class InputServices
 
             Point textSize = RenderServices.DrawText(batch, style.Font, label ?? string.Empty, labelPosition, itemMaxWidth, new DrawInfo(sort)
             {
-                Origin = new Vector2(0, 0),
+                Origin = new Vector2(0, 0.5f),
                 Color = currentColor,
                 Shadow = currentShadow,
                 Debug = false
             });
 
-            if (textSize.X > maxSelectionWidth)
+            x += textSize.X + 16;
+
+            if (infoBindings == null)
             {
-                maxSelectionWidth = textSize.X;
+                GameLogger.Error("Input information not set in the GameProfile asset!");
+                continue;
+            }
+
+            if (menuInfo.Options[i].Id is not int buttonId)
+            {
+                continue;
+            }
+
+            if (menuInfo.Options[i].Style == InputMenuOption.InputStyle.Axis)
+            {
+                var axis = Game.Input.GetOrCreateAxis(buttonId);
+                if (axis == null)
+                {
+                    continue;
+                }
+                // Draw each individual icon
+                foreach (var inputButton in axis.ButtonAxis)
+                {
+                    // Axis buttons are not implemented yet
+                }
+            }
+            else if (Game.Input.GetOrCreateButton(buttonId) is VirtualButton virtualButton)
+            {
+                // Draw each individual icon
+                foreach (var inputButton in virtualButton.Buttons)
+                {
+                    (Portrait? icon, string? extraText) = infoBindings.GetGraphicsFor(inputButton);
+                    Vector2 iconPosition = new Vector2(labelPosition.X + x, labelPosition.Y - 4);
+
+                    if (icon != null)
+                    {
+                        RenderServices.DrawPortrait(batch, icon.Value, iconPosition, new DrawInfo(sort)
+                        {
+                            Color = currentColor,
+                            Outline = currentShadow,
+                            Debug = false
+                        });
+                    }
+
+                    if (extraText != null)
+                    {
+                        Point extraTextSize = RenderServices.DrawText(batch, style.Font, extraText, iconPosition, itemMaxWidth, new DrawInfo(sort)
+                        {
+                            Origin = new Vector2(0.5f, 0.5f),
+                            Color = style.Color,
+                            Shadow = currentShadow,
+                            Debug = false
+                        });
+                    }
+
+                    x += 16;
+                }
             }
 
         }

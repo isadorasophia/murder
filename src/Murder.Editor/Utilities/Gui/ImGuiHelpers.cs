@@ -1,6 +1,8 @@
 ﻿using ImGuiNET;
 using Murder.Core.Graphics;
 using Murder.Editor.Reflection;
+using Murder.Utilities;
+using System;
 using System.Numerics;
 using System.Text;
 
@@ -357,7 +359,7 @@ public static class ImGuiHelpers
         {
             ImGui.PopStyleColor();
         }
-       
+
         if (tooltip is not null)
         {
             HelpTooltip(tooltip);
@@ -453,6 +455,89 @@ public static class ImGuiHelpers
         fieldValue = (T)(object)result;
 
         return mod;
+    }
+
+    private static string _enumFilterCache = string.Empty;
+    public static bool DrawEnumFieldWithSearch<T>(string id, ref T fieldValue) where T : Enum
+    {
+        var t = fieldValue.GetType();
+        bool modified = false;
+
+        string[] fieldNames = Enum.GetNames(t);
+        Array values = Enum.GetValues(t);
+
+        int selectedValue = 0;
+        int selectedIndex = 0;
+
+        // Find the right index (tentatively).
+        int i = 0;
+        foreach (var value in values)
+        {
+            int v = Convert.ToInt32(value);
+
+            if (v == (int)(object)fieldValue!)
+            {
+                selectedValue = v;
+                selectedIndex = i;
+                break;
+            }
+
+            i++;
+        }
+
+        bool clicked = ImGui.ArrowButton("##" + id, ImGuiDir.Down);
+        Vector2 startPosition = ImGui.GetItemRectMax();
+
+        ImGui.SameLine();
+
+        ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Accent);
+        ImGui.PushStyleColor(ImGuiCol.Header, Game.Profile.Theme.Bg);
+        ImGui.PushStyleColor(ImGuiCol.HeaderHovered, Game.Profile.Theme.Faded);
+        clicked |= ImGui.Selectable(fieldNames[selectedIndex], true, ImGuiSelectableFlags.None);
+        ImGui.PopStyleColor(3);
+
+
+        if (clicked)
+        {
+            ImGui.OpenPopup($"{id}_search");
+            ImGui.SetNextWindowPos(startPosition, ImGuiCond.Always);
+            _enumFilterCache = string.Empty;
+        }
+
+        if (ImGui.BeginPopup($"{id}_search", ImGuiWindowFlags.NoMove))
+        {
+            ImGui.SetWindowPos(startPosition, ImGuiCond.Always);
+
+            if (clicked)
+            {
+                ImGui.SetKeyboardFocusHere();
+            }
+            ImGui.InputText($"##{id}-search-field", ref _enumFilterCache, 364);
+
+            for (int index = 0; index < fieldNames.Length; index++)
+            {
+                string EnumFieldName = fieldNames[index];
+                int value = Convert.ToInt32(values.GetValue(index));
+
+                if (!string.IsNullOrWhiteSpace(EnumFieldName) && !StringHelper.FuzzyMatch(_enumFilterCache, EnumFieldName))
+                {
+                    continue;
+                }
+
+                if (ImGui.Selectable(EnumFieldName, value == selectedValue, ImGuiSelectableFlags.None, new Vector2(0, 0)))
+                {
+                    selectedValue = value;
+                    modified = true;
+                }
+            }
+
+            fieldValue = (T)(object)selectedValue;
+
+
+            ImGui.EndPopup();
+        }
+
+        return modified;
     }
 
     // Helper method to calculate the combined value of all enum flags
@@ -575,7 +660,7 @@ public static class ImGuiHelpers
                     }
 
                     int value = (int)objValue;
-                    if (value ==0 || value == allFlags)
+                    if (value == 0 || value == allFlags)
                     {
                         continue;
                     }
@@ -673,7 +758,7 @@ public static class ImGuiHelpers
             tableIndex++;
 
         }
-        
+
         return changed;
     }
 
@@ -708,6 +793,37 @@ public static class ImGuiHelpers
         fieldValue = Convert.ToInt32(values.GetValue(result));
     }
 
+    public static (bool modified, int result) DrawEnumFieldWithSearch(string id, Type enumType, int fieldValue)
+    {
+        string[] fields = Enum.GetNames(enumType);
+        Array values = Enum.GetValues(enumType);
+
+        int result = 0;
+
+        // Find the right index (tentatively).
+        int index = 0;
+        foreach (var value in values)
+        {
+            int v = Convert.ToInt32(value);
+
+            if (v == fieldValue)
+            {
+                result = index;
+                break;
+            }
+
+            index++;
+        }
+
+        bool modified = ImGui.Combo(id, ref result, fields, fields.Length);
+        if (result < 0)
+        {
+            return (false, 0);
+        }
+
+        return (modified, Convert.ToInt32(values.GetValue(result)));
+    }
+
     public static (bool modified, int result) DrawEnumField(string id, Type enumType, int fieldValue)
     {
         string[] fields = Enum.GetNames(enumType);
@@ -738,6 +854,8 @@ public static class ImGuiHelpers
 
         return (modified, Convert.ToInt32(values.GetValue(result)));
     }
+
+
 
     public static void DrawHistogram(IEnumerable<(string label, double size)> values)
     {
