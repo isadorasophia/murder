@@ -324,10 +324,10 @@ namespace Murder.Editor.CustomEditors
             if (ImGuiHelpers.IconButton('\uf021', $"clear_{_localization.Guid}"))
             {
                 modifiedAsset = true;
-                filter.Clear();
+                filter.FetchLatestAssets();
             }
 
-            ImGuiHelpers.HelpTooltip("Clear and get all assets");
+            ImGuiHelpers.HelpTooltip("Fetch latest assets");
             ImGui.SameLine();
 
             if (ImGuiHelpers.IconButton('\uf56e', $"export_{_localization.Guid}"))
