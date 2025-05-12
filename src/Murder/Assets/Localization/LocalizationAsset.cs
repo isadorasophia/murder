@@ -150,6 +150,15 @@ public class LocalizationAsset : GameAsset
     /// <summary>
     /// Used when setting data from a reference data.
     /// </summary>
+    public void SetAllResources(ImmutableArray<LocalizedStringData> resources)
+    {
+        _resources = resources;
+        _guidToIndexCache = null;
+    }
+
+    /// <summary>
+    /// Used when setting data from a reference data.
+    /// </summary>
     public void SetAllDialogueResources(ImmutableArray<ResourceDataForAsset> resources)
     {
         _dialogueResources = resources;

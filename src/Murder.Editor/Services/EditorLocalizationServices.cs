@@ -7,6 +7,7 @@ using Murder.Editor.Assets;
 using Murder.Editor.ImGuiExtended;
 using Murder.Serialization;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Text;
 using static Murder.Editor.ImGuiExtended.SearchBox;
 
@@ -158,6 +159,72 @@ internal static class EditorLocalizationServices
     {
         FilterLocalizationAsset? asset = GetFilterLocalizationAsset();
         return asset.GetLocalizationCandidates(name);
+    }
+
+    public static void ReorderResources(LocalizationAsset localization)
+    {
+        GameLogger.Log("Started reordering resources...");
+
+        // this is only supported from the mode with all assets.
+        ImmutableArray<(string, AssetInfoPropertiesForEditor)> resources = 
+            GetLocalizationCandidates(FilterLocalizationAsset.DefaultFilterName);
+
+        int resourceIndex = 0;
+        Dictionary<Guid, int> resourceToIndex = [];
+
+        StringBuilder resource = new();
+        foreach ((string _, AssetInfoPropertiesForEditor info) in resources)
+        {
+            if (!info.IsSelected)
+            {
+                continue;
+            }
+
+            // assets are ordered alphabetically
+            foreach (AssetPropertiesForEditor assetInfo in info.Assets)
+            {
+                if (!assetInfo.Show)
+                {
+                    continue;
+                }
+
+                GameAsset? asset = Game.Data.TryGetAsset(assetInfo.Guid);
+                if (asset is null)
+                {
+                    continue;
+                }
+
+                string json = FileManager.SerializeToJson(asset);
+                foreach (LocalizedStringData data in localization.Resources)
+                {
+                    if (resourceToIndex.ContainsKey(data.Guid))
+                    {
+                        // already accounted
+                        continue;
+                    }
+
+                    if (json.Contains(data.Guid.ToString()))
+                    {
+                        resourceToIndex[data.Guid] = resourceIndex;
+                        resourceIndex++;
+                    }
+                }
+            }
+        }
+
+        var reordered = localization.Resources.OrderBy(l =>
+        {
+            if (resourceToIndex.TryGetValue(l.Guid, out int index))
+            {
+                return index;
+            }
+
+            return 0;
+        });
+
+        localization.SetAllResources([.. reordered]);
+
+        GameLogger.Log("Finished reordering resources!");
     }
 
     public static void PrunNonReferencedStrings(LocalizationAsset localization, string name, bool log)

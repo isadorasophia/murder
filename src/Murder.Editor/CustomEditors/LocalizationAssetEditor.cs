@@ -27,7 +27,7 @@ namespace Murder.Editor.CustomEditors
         private Guid? _referenceResource = null;
 
         private string? _selectedMode = null;
-        private volatile bool _currentlyPruningData = false;
+        private volatile bool _currentlyRunningOnLocalization = false;
 
         public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target, bool overwrite)
         {
@@ -108,16 +108,16 @@ namespace Murder.Editor.CustomEditors
                         }
                     }
 
-                    if (!_currentlyPruningData)
+                    if (!_currentlyRunningOnLocalization)
                     {
-                        _currentlyPruningData = true;
+                        _currentlyRunningOnLocalization = true;
 
                         Task.Run(() =>
                         {
                             EditorLocalizationServices.PrunNonReferencedStrings(
                                 _localization, name: FilterLocalizationAsset.DefaultFilterName, log: true);
 
-                            _currentlyPruningData = false;
+                            _currentlyRunningOnLocalization = false;
                         });
                     }
                 }
@@ -127,6 +127,31 @@ namespace Murder.Editor.CustomEditors
                 "Fix references from the default resource" : "Fix strings not referenced");
 
             ImGui.SameLine();
+
+            if (isDefaultResource)
+            {
+                if (!_currentlyRunningOnLocalization)
+                {
+                    if (ImGuiHelpers.IconButton('\uf5c3', $"reorder_{_localization.Guid}"))
+                    {
+                        _currentlyRunningOnLocalization = true;
+
+                        Task.Run(() =>
+                        {
+                            EditorLocalizationServices.ReorderResources(_localization);
+                            _currentlyRunningOnLocalization = false;
+                        });
+                    }
+
+                    ImGuiHelpers.HelpTooltip("Reorder resources");
+                    ImGui.SameLine();
+                }
+                else
+                {
+                    ImGuiHelpers.SelectedIconButton('\uf5c3');
+                    ImGui.SameLine();
+                }
+            }
 
             bool importButton = isDefaultResource ?
                 ImGuiHelpers.SelectedIconButton('\uf56f') :
