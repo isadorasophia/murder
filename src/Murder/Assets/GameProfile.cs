@@ -1,5 +1,6 @@
 ﻿using Bang;
 using Murder.Assets.Graphics;
+using Murder.Assets.Input;
 using Murder.Assets.Localization;
 using Murder.Attributes;
 using Murder.Core.Graphics;
@@ -202,8 +203,11 @@ namespace Murder.Assets
         [Tooltip("Aditional collision checks will be done if an entity moves more than X pixels per frame")]
         public int MinimumVelocityForSweep = 6;
 
-        [GameAssetId<InputInformationAsset>]
-        public Guid InputInformation = Guid.Empty;
+        [GameAssetId<InputGraphicsAsset>]
+        public Guid InputGraphics = Guid.Empty;
+
+        [GameAssetId<InputProfileAsset>]
+        public Guid InputProfile = Guid.Empty;
 
         public GameProfile() =>
             FilePath = GameDataManager.GameProfileFileName;

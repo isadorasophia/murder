@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using Murder.Assets;
 using Murder.Assets.Graphics;
+using Murder.Assets.Input;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
@@ -11,7 +12,7 @@ using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Numerics;
 using System.Security.Authentication.ExtendedProtection;
-using static Murder.Assets.InputInformationAsset;
+using static Murder.Assets.InputGraphicsAsset;
 
 namespace Murder.Services;
 
@@ -20,19 +21,26 @@ public static class InputServices
     /// <summary>  
     /// Creates a menu info object for input bindings, allowing customization of player controls.  
     /// </summary>  
+    /// <param name="reset">Optional text for an option to reset all bidings to default ones</param>
     /// <param name="exitText">Optional text for the exit option in the menu.</param>  
     /// <returns>A <see cref="GenericMenuInfo{InputMenuOption}"/> containing the input bindings menu options.</returns>  
     public static GenericMenuInfo<InputMenuOption> CreateBindingsMenuInfo(string? reset, string? exitText)
     {
         var builder = ImmutableArray.CreateBuilder<InputMenuOption>();
 
-        if (Game.Data.TryGetAsset<InputInformationAsset>(Game.Profile.InputInformation) is not InputInformationAsset inputInformation)
+        if (Game.Data.TryGetAsset<InputGraphicsAsset>(Game.Profile.InputGraphics) is not InputGraphicsAsset inputGraphics)
         {
             GameLogger.Error("Input information not set in the GameProfile asset!");
             return new GenericMenuInfo<InputMenuOption>();
         }
 
-        foreach (var buttonInfo in inputInformation.Buttons)
+        if (Game.Data.TryGetAsset<InputProfileAsset>(Game.Profile.InputProfile) is not InputProfileAsset profile)
+        {
+            GameLogger.Error("Input profile not set in the GameProfile asset!");
+            return new GenericMenuInfo<InputMenuOption>();
+        }
+
+        foreach (var buttonInfo in profile.Buttons)
         {
             if (!buttonInfo.AllowPlayerCustomization)
             {
@@ -46,7 +54,7 @@ public static class InputServices
             builder.Add(new InputMenuOption(text, InputMenuOption.InputStyle.Button, buttonInfo.ButtonId));
         }
 
-        foreach (var axisInfo in inputInformation.Axis)
+        foreach (var axisInfo in profile.Axis)
         {
             if (!axisInfo.AllowPlayerCustomization)
             {
@@ -72,7 +80,7 @@ public static class InputServices
 
     public static (Portrait?, string?) GetGraphicsFor(InputButton key)
     {
-        if (Game.Data.TryGetAsset<InputInformationAsset>(Game.Profile.InputInformation) is not InputInformationAsset inputInformationAsset)
+        if (Game.Data.TryGetAsset<InputGraphicsAsset>(Game.Profile.InputGraphics) is not InputGraphicsAsset inputGraphicsAsset)
         {
             GameLogger.Error("Input information not set in the GameProfile asset!");
             return (null, null);
@@ -81,7 +89,7 @@ public static class InputServices
         // TODO: Detect changes in the asset and rebuild the cache if needed
         if (_graphicsCacheKeys == null)
         {
-            InputServices.BuildGraphicsCache(inputInformationAsset);
+            InputServices.BuildGraphicsCache(inputGraphicsAsset);
         }
 
         switch (key.Source)
@@ -89,43 +97,43 @@ public static class InputServices
             case InputSource.Keyboard:
                 if (key.Keyboard is Keys keyCode && _graphicsCacheKeys!.TryGetValue(keyCode, out var graphicsIndex))
                 {
-                    var graphics = inputInformationAsset.Graphics[graphicsIndex];
-                    return (graphics.Icon.HasImage ? graphics.Icon : inputInformationAsset.KeyboardDefault, graphics.Text);
+                    var graphics = inputGraphicsAsset.Graphics[graphicsIndex];
+                    return (graphics.Icon.HasImage ? graphics.Icon : inputGraphicsAsset.KeyboardDefault, graphics.Text);
                 }
                 else
                 {
-                    return (inputInformationAsset.KeyboardDefault, key.Keyboard.ToString());
+                    return (inputGraphicsAsset.KeyboardDefault, key.Keyboard.ToString());
                 }
 
             case InputSource.Mouse:
                 if (key.Mouse is MouseButtons mouseButton && _graphicsCacheMouseButtons!.TryGetValue(mouseButton, out var mouseGraphicsIndex))
                 {
-                    var mouseGraphics = inputInformationAsset.Graphics[mouseGraphicsIndex];
-                    return (mouseGraphics.Icon.HasValue ? mouseGraphics.Icon : inputInformationAsset.MouseDefault, mouseGraphics.Text);
+                    var mouseGraphics = inputGraphicsAsset.Graphics[mouseGraphicsIndex];
+                    return (mouseGraphics.Icon.HasValue ? mouseGraphics.Icon : inputGraphicsAsset.MouseDefault, mouseGraphics.Text);
                 }
                 else
                 {
-                    return (inputInformationAsset.MouseDefault, key.Mouse.ToString());
+                    return (inputGraphicsAsset.MouseDefault, key.Mouse.ToString());
                 }
             case InputSource.Gamepad:
                 if (key.Gamepad is Buttons button && _graphicsCacheButtons!.TryGetValue(button, out var buttonGraphicsIndex))
                 {
-                    var buttonGraphics = inputInformationAsset.Graphics[buttonGraphicsIndex];
-                    return (buttonGraphics.Icon.HasImage ? buttonGraphics.Icon : inputInformationAsset.GamepadDefault, buttonGraphics.Text);
+                    var buttonGraphics = inputGraphicsAsset.Graphics[buttonGraphicsIndex];
+                    return (buttonGraphics.Icon.HasImage ? buttonGraphics.Icon : inputGraphicsAsset.GamepadDefault, buttonGraphics.Text);
                 }
                 else
                 {
-                    return (inputInformationAsset.GamepadDefault, key.Gamepad.ToString());
+                    return (inputGraphicsAsset.GamepadDefault, key.Gamepad.ToString());
                 }
             case InputSource.GamepadAxis:
                 if (key.Axis is GamepadAxis axis && _graphicsCacheGamepadAxis!.TryGetValue(axis, out var axisGraphicsIndex))
                 {
-                    var axisGraphics = inputInformationAsset.Graphics[axisGraphicsIndex];
-                    return (axisGraphics.Icon.HasValue ? axisGraphics.Icon : inputInformationAsset.GamepadAxisDefault, axisGraphics.Text);
+                    var axisGraphics = inputGraphicsAsset.Graphics[axisGraphicsIndex];
+                    return (axisGraphics.Icon.HasValue ? axisGraphics.Icon : inputGraphicsAsset.GamepadAxisDefault, axisGraphics.Text);
                 }
                 else
                 {
-                    return (inputInformationAsset.GamepadAxisDefault, key.Axis.ToString());
+                    return (inputGraphicsAsset.GamepadAxisDefault, key.Axis.ToString());
                 }
             default:
                 GameLogger.Warning($"Input button source for {key} is invalid");
@@ -138,7 +146,7 @@ public static class InputServices
     private static ImmutableDictionary<MouseButtons, int>? _graphicsCacheMouseButtons = null;
     private static ImmutableDictionary<GamepadAxis, int>? _graphicsCacheGamepadAxis = null;
 
-    private static void BuildGraphicsCache(InputInformationAsset asset)
+    private static void BuildGraphicsCache(InputGraphicsAsset asset)
     {
         var keysBuilder = ImmutableDictionary.CreateBuilder<Keys, int>();
         var buttonsBuilder = ImmutableDictionary.CreateBuilder<Buttons, int>();
@@ -212,14 +220,14 @@ public static class InputServices
     }
     public static InputInformation? GetButtonInfo(int id)
     {
-        if (Game.Data.TryGetAsset<InputInformationAsset>(Game.Profile.InputInformation) is not InputInformationAsset inputInformationAsset)
+        if (Game.Data.TryGetAsset<InputProfileAsset>(Game.Profile.InputProfile) is not InputProfileAsset inputProfile)
         {
             GameLogger.Error("Input information not set in the GameProfile asset!");
             return null;
         }
 
         // TODO: This should be cached
-        foreach (var buttonInfo in inputInformationAsset.Buttons)
+        foreach (var buttonInfo in inputProfile.Buttons)
         {
             if (buttonInfo.ButtonId == id)
             {

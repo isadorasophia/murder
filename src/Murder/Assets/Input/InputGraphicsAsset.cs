@@ -10,29 +10,18 @@ using System.Numerics;
 
 namespace Murder.Assets;
 
-public class InputInformationAsset : GameAsset
+public class InputGraphicsAsset : GameAsset
 {
     public override char Icon => '';
     public override string EditorFolder => "#Ui";
     public override Vector4 EditorColor => "#f4eb6f".ToVector4Color();
 
-    public ImmutableArray<InputInformation> Axis = ImmutableArray<InputInformation>.Empty;
-    public ImmutableArray<InputInformation> Buttons = ImmutableArray<InputInformation>.Empty;
     public ImmutableArray<ButtonGraphics> Graphics = ImmutableArray<ButtonGraphics>.Empty;
 
     public Portrait KeyboardDefault = new();
     public Portrait GamepadDefault = new();
     public Portrait MouseDefault = new();
     public Portrait GamepadAxisDefault = new();
-
-    public readonly struct InputInformation
-    {
-        public readonly int ButtonId;
-
-        public readonly bool AllowPlayerCustomization;
-        public readonly LocalizedString LocalizedName;
-    }
-
 
     public readonly struct ButtonGraphics
     {
