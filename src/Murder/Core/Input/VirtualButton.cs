@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Diagnostics;
 
 namespace Murder.Core.Input;
 

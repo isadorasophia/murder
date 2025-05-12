@@ -6,6 +6,7 @@ using Murder.Diagnostics;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Services;
 using Murder.Editor.Utilities;
+using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -332,6 +333,7 @@ public partial class EditorScene
     {
         AssetsFilter.RefreshCache();
         ReflectionHelper.ClearCache();
+        InputServices.ClearCache();
     }
 
     private static void ReloadShaders()

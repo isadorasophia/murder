@@ -22,7 +22,7 @@ public static class InputServices
     /// </summary>  
     /// <param name="exitText">Optional text for the exit option in the menu.</param>  
     /// <returns>A <see cref="GenericMenuInfo{InputMenuOption}"/> containing the input bindings menu options.</returns>  
-    public static GenericMenuInfo<InputMenuOption> CreateBindingsMenuInfo(string? exitText)
+    public static GenericMenuInfo<InputMenuOption> CreateBindingsMenuInfo(string? reset, string? exitText)
     {
         var builder = ImmutableArray.CreateBuilder<InputMenuOption>();
 
@@ -57,6 +57,11 @@ public static class InputServices
             builder.Add(new InputMenuOption(text, InputMenuOption.InputStyle.Axis, axisInfo.ButtonId));
         }
 
+        if (reset != null)
+        {
+            builder.Add(new InputMenuOption(reset, InputMenuOption.InputStyle.None, null));
+        }
+
         if (exitText != null)
         {
             builder.Add(new InputMenuOption(exitText, InputMenuOption.InputStyle.None, null));
@@ -85,7 +90,7 @@ public static class InputServices
                 if (key.Keyboard is Keys keyCode && _graphicsCacheKeys!.TryGetValue(keyCode, out var graphicsIndex))
                 {
                     var graphics = inputInformationAsset.Graphics[graphicsIndex];
-                    return (graphics.Icon, graphics.Text);
+                    return (graphics.Icon.HasImage ? graphics.Icon : inputInformationAsset.KeyboardDefault, graphics.Text);
                 }
                 else
                 {
@@ -96,7 +101,7 @@ public static class InputServices
                 if (key.Mouse is MouseButtons mouseButton && _graphicsCacheMouseButtons!.TryGetValue(mouseButton, out var mouseGraphicsIndex))
                 {
                     var mouseGraphics = inputInformationAsset.Graphics[mouseGraphicsIndex];
-                    return (mouseGraphics.Icon, mouseGraphics.Text);
+                    return (mouseGraphics.Icon.HasValue ? mouseGraphics.Icon : inputInformationAsset.MouseDefault, mouseGraphics.Text);
                 }
                 else
                 {
@@ -106,7 +111,7 @@ public static class InputServices
                 if (key.Gamepad is Buttons button && _graphicsCacheButtons!.TryGetValue(button, out var buttonGraphicsIndex))
                 {
                     var buttonGraphics = inputInformationAsset.Graphics[buttonGraphicsIndex];
-                    return (buttonGraphics.Icon, buttonGraphics.Text);
+                    return (buttonGraphics.Icon.HasImage ? buttonGraphics.Icon : inputInformationAsset.GamepadDefault, buttonGraphics.Text);
                 }
                 else
                 {
@@ -116,7 +121,7 @@ public static class InputServices
                 if (key.Axis is GamepadAxis axis && _graphicsCacheGamepadAxis!.TryGetValue(axis, out var axisGraphicsIndex))
                 {
                     var axisGraphics = inputInformationAsset.Graphics[axisGraphicsIndex];
-                    return (axisGraphics.Icon, axisGraphics.Text);
+                    return (axisGraphics.Icon.HasValue ? axisGraphics.Icon : inputInformationAsset.GamepadAxisDefault, axisGraphics.Text);
                 }
                 else
                 {
@@ -152,7 +157,7 @@ public static class InputServices
                 case InputSource.Keyboard:
                     if (graphics.InputButton.Keyboard is Keys key)
                     {
-
+                        keysBuilder.Add(key, i);
                     }
                     else
                     {
@@ -198,7 +203,13 @@ public static class InputServices
         _graphicsCacheMouseButtons = mouseButtonsBuilder.ToImmutable();
         _graphicsCacheGamepadAxis = gamepadAxisBuilder.ToImmutable();
     }
-
+    public static void ClearCache()
+    {
+        _graphicsCacheButtons = null;
+        _graphicsCacheKeys = null;
+        _graphicsCacheMouseButtons = null;
+        _graphicsCacheGamepadAxis = null;
+    }
     public static InputInformation? GetButtonInfo(int id)
     {
         if (Game.Data.TryGetAsset<InputInformationAsset>(Game.Profile.InputInformation) is not InputInformationAsset inputInformationAsset)
