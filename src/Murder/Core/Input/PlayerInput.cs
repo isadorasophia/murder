@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Input;
+using Murder.Assets.Input;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
 using Murder.Save;
@@ -381,7 +382,8 @@ public class PlayerInput
             return btn.Pressed && (raw || !btn.Consumed);
         }
 
-        throw new Exception($"Couldn't find button of type {button}");
+        GameLogger.Error($"Couldn't find button of type {button}");
+        return false;
     }
 
     public bool Down(int button, bool raw = false)
@@ -391,7 +393,8 @@ public class PlayerInput
             return btn.Down && (raw || !btn.Consumed);
         }
 
-        throw new Exception($"Couldn't find button of type {button}");
+        GameLogger.Error($"Couldn't find button of type {button}");
+        return false;
     }
 
     internal bool Released(int button, bool raw = false)
@@ -401,7 +404,8 @@ public class PlayerInput
             return btn.Released && (raw || !btn.Consumed);
         }
 
-        throw new Exception($"Couldn't find button of type {button}");
+        GameLogger.Error($"Couldn't find button of type {button}");
+        return false;
     }
 
 
@@ -1009,7 +1013,7 @@ public class PlayerInput
 
 
     static readonly ImmutableArray<ButtonBindingsInfo>.Builder _bindingsInfoBuilder = ImmutableArray.CreateBuilder<ButtonBindingsInfo>();
-    public void SaveBidings(GamePreferences gamePreferences)
+    public void SaveCurrentToPreferences(GamePreferences gamePreferences)
     {
         if (_bindingsInfoBuilder.Any())
         {
@@ -1025,16 +1029,35 @@ public class PlayerInput
         gamePreferences.SetButtonBindingsInfos(_bindingsInfoBuilder.DrainToImmutable());
     }
 
-    public void LoadBindings(GamePreferences gamePreferences)
+    public void LoadFromPreferences(GamePreferences gamePreferences)
     {
-        if (_bindingsInfoBuilder.Any())
+        if (Game.Data.GetAsset<InputProfileAsset>(Game.Profile.InputProfile) is not InputProfileAsset inputProfile)
         {
-            _bindingsInfoBuilder.Clear();
+            GameLogger.Error("Input profile not found, did you set it in GameProfile?");
+            return;
         }
-        foreach (var bindingsInfo in gamePreferences.ButtonBindingsInfos)
-        {
 
-            _buttons[bindingsInfo.Key] = bindingsInfo.CreateVirtualButton();
+        foreach (var button in inputProfile.Buttons)
+        {
+            bool loaded = false;
+            foreach (var bindingsInfo in gamePreferences.ButtonBindingsInfos)
+            {
+                if (button.ButtonId == bindingsInfo.Key  && button.AllowPlayerCustomization)
+                {
+                    _buttons[bindingsInfo.Key] = bindingsInfo.CreateVirtualButton();
+                    loaded = true;
+                    break;
+                }
+            }
+
+            if (!loaded)
+            {
+                var virtualButton = GetOrCreateButton(button.ButtonId);
+                virtualButton.ClearBinds();
+                virtualButton.DeregisterAll();
+
+                RestoreBindings(virtualButton, button);
+            }
         }
     }
 
@@ -1044,4 +1067,64 @@ public class PlayerInput
         virtualButton.ClearBinds();
         virtualButton.DeregisterAll();
     }
+
+    public void RestoreDefaults(int v)
+    {
+        if (Game.Data.GetAsset<InputProfileAsset>(Game.Profile.InputProfile) is not InputProfileAsset inputProfile)
+        {
+            GameLogger.Error("Input profile not found, did you set it in GameProfile?");
+            return;
+        }
+
+        var virtualButton = GetOrCreateButton(v);
+        virtualButton.ClearBinds();
+        virtualButton.DeregisterAll();
+
+        foreach (var button in inputProfile.Buttons)
+        {
+            if (button.ButtonId == v)
+            {
+                // We have a match
+                RestoreBindings(virtualButton, button);
+                break;
+            }
+        }
+    }
+
+    private static void RestoreBindings(VirtualButton virtualButton, InputInformation button)
+    {
+        foreach (var key in button.DefaultKeyboard)
+        {
+            virtualButton.Register([key]);
+        }
+
+        foreach (var gamepad in button.DefaultGamePadButtons)
+        {
+            virtualButton.Register([gamepad]);
+        }
+
+        foreach (var mouse in button.DefaultMouseButtons)
+        {
+            virtualButton.Register([mouse]);
+        }
+    }
+
+    public void RestoreAllDefaults()
+    {
+        if (Game.Data.GetAsset<InputProfileAsset>(Game.Profile.InputProfile) is not InputProfileAsset inputProfile)
+        {
+            GameLogger.Warning("Skiping input config, InputProfile not found, did you set it in GameProfile?");
+            return;
+        }
+        foreach (var button in inputProfile.Buttons)
+        {
+            var virtualButton = GetOrCreateButton(button.ButtonId);
+            virtualButton.ClearBinds();
+            virtualButton.DeregisterAll();
+
+            RestoreBindings(virtualButton, button);
+        }
+    }
+
+
 }

@@ -515,7 +515,7 @@ public static class ImGuiHelpers
 
         if (ImGui.BeginPopup($"{id}_search", ImGuiWindowFlags.NoMove))
         {
-            ImGui.SetWindowPos(startPosition, ImGuiCond.Always);
+            ImGui.SetWindowPos(startPosition, ImGuiCond.Appearing);
 
             if (clicked)
             {
