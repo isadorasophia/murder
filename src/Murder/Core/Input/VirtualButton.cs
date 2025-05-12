@@ -148,6 +148,13 @@ public class VirtualButton : IVirtualInput
         }
     }
 
+    public void DeregisterAll()
+    {
+        Buttons = ImmutableArray<InputButton>.Empty;
+        _lastPressedButton[0] = null;
+        _lastPressedButton[1] = null;
+    }
+
     public InputButton LastPressedButton(bool keyboard)
     {
         if (_lastPressedButton[keyboard ? 1 : 0] is InputButton button)
