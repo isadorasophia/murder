@@ -1042,7 +1042,7 @@ public class PlayerInput
             bool loaded = false;
             foreach (var bindingsInfo in gamePreferences.ButtonBindingsInfos)
             {
-                if (button.ButtonId == bindingsInfo.Key  && button.AllowPlayerCustomization)
+                if (button.ButtonId == bindingsInfo.Key && button.AllowPlayerCustomization)
                 {
                     _buttons[bindingsInfo.Key] = bindingsInfo.CreateVirtualButton();
                     loaded = true;
@@ -1126,5 +1126,20 @@ public class PlayerInput
         }
     }
 
+    public Buttons? GetAnyGamepadButton()
+    {
+        var gamepadState = GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One);
+        if (gamepadState.IsConnected)
+        {
+            foreach (var button in Enum.GetValues<Buttons>())
+            {
+                if (gamepadState.IsButtonDown(button))
+                {
+                    return button;
+                }
+            }
+        }
 
+        return null;
+    }
 }
