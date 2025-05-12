@@ -7,6 +7,7 @@ using Murder.Assets;
 using System.IO;
 using Murder.Utilities;
 using Murder.Editor.Services;
+using System.Diagnostics;
 
 namespace Murder.Editor.Utilities.Serialization;
 
@@ -63,6 +64,24 @@ internal static class LocalizationExporter
         // Why, do you ask? Absolutely no reason. It just seemed reasonable that generated strings came later.
         foreach (LocalizationAsset.ResourceDataForAsset dialogueData in target.DialogueResources)
         {
+            // Sometimes, an entire dialogue might have been skipped out and its data has been removed from the resource.
+            // we do a sanity check here.
+            bool hasAnyLineAvailable = false;
+            foreach (LocalizedDialogueData localizedDialogueData in dialogueData.DataResources)
+            {
+                LocalizedStringData? data = target.TryGetResource(localizedDialogueData.Guid);
+                if (data is not null)
+                {
+                    hasAnyLineAvailable = true;
+                    break;
+                }
+            }
+
+            if (!hasAnyLineAvailable)
+            {
+                continue;
+            }
+
             if (Game.Data.TryGetAsset<CharacterAsset>(dialogueData.DialogueResourceGuid) is CharacterAsset characterAsset)
             {
                 if (characterAsset.LocalizationNotes is null)
