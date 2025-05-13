@@ -1166,12 +1166,24 @@ public class PlayerInput
                 switch (digital[0].Source)
                 {
                     case InputSource.Keyboard:
-                        if (digital[0].Keyboard is Keys up && digital[1].Keyboard is Keys left &&
-                            digital[2].Keyboard is Keys down && digital[3].Keyboard is Keys right)
                         {
-                            virtualAxis.Register([new InputButtonAxis(up, left, right, right)]);
+                            if (digital[0].Keyboard is Keys up && digital[1].Keyboard is Keys left &&
+                                digital[2].Keyboard is Keys down && digital[3].Keyboard is Keys right)
+                            {
+                                virtualAxis.Register([new InputButtonAxis(up, left, down, right)]);
+                            }
                         }
                         break;
+                    case InputSource.Gamepad:
+                        {
+                            if (digital[0].Gamepad is Buttons up && digital[1].Gamepad is Buttons left &&
+                                digital[2].Gamepad is Buttons down && digital[3].Gamepad is Buttons right)
+                            {
+                                virtualAxis.Register([new InputButtonAxis(up, left, down, right)]);
+                            }
+                        }
+                        break;
+
                     default:
                         GameLogger.Warning("Not implemented yet!");
                         break;
@@ -1183,9 +1195,19 @@ public class PlayerInput
                 switch (digital[0].Source)
                 {
                     case InputSource.Keyboard:
-                        if (digital[0].Keyboard is Keys up && digital[1].Keyboard is Keys down)
                         {
-                            virtualAxis.Register([new InputButtonAxis(up, up, down, down)]);
+                            if (digital[0].Keyboard is Keys up && digital[1].Keyboard is Keys down)
+                            {
+                                virtualAxis.Register([new InputButtonAxis(up, up, down, down)]);
+                            }
+                        }
+                        break;
+                    case InputSource.Gamepad:
+                        {
+                            if (digital[0].Gamepad is Buttons up && digital[1].Gamepad is Buttons down)
+                            {
+                                virtualAxis.Register([new InputButtonAxis(up, up, down, down)]);
+                            }
                         }
                         break;
                     default:

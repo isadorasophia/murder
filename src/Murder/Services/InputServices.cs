@@ -62,15 +62,28 @@ public static class InputServices
             }
             var virtualAxis = Game.Input.GetOrCreateAxis(axisInfo.AxisId);
             string text = $"{axisInfo.LocalizedName}";
+
+            if (axisInfo.Horizontal && axisInfo.Vertical)
+            {
+                builder.Add(new InputMenuOption(text + " (analogue)", InputMenuOption.InputStyle.AxisAnalogue, axisInfo.AxisId));
+            }
+
+
+            if (axisInfo.Vertical)
+            {
+                builder.Add(new InputMenuOption(text + " (up)", InputMenuOption.InputStyle.AxisDigitalUp, axisInfo.AxisId));
+            }
             if (axisInfo.Horizontal)
             {
-                builder.Add(new InputMenuOption(text + " (left)", InputMenuOption.InputStyle.AxisDigital, axisInfo.AxisId));
-                builder.Add(new InputMenuOption(text + " (right)", InputMenuOption.InputStyle.AxisDigital, axisInfo.AxisId));
+                builder.Add(new InputMenuOption(text + " (left)", InputMenuOption.InputStyle.AxisDigitalLeft, axisInfo.AxisId));
             }
             if (axisInfo.Vertical)
             {
-                builder.Add(new InputMenuOption(text + " (up)", InputMenuOption.InputStyle.AxisDigital, axisInfo.AxisId));
-                builder.Add(new InputMenuOption(text + " (down)", InputMenuOption.InputStyle.AxisDigital, axisInfo.AxisId));
+                builder.Add(new InputMenuOption(text + " (down)", InputMenuOption.InputStyle.AxisDigitalDown, axisInfo.AxisId));
+            }
+            if (axisInfo.Horizontal)
+            {
+                builder.Add(new InputMenuOption(text + " (right)", InputMenuOption.InputStyle.AxisDigitalRight, axisInfo.AxisId));
             }
         }
 

@@ -9,7 +9,7 @@ namespace Murder.Services
     public readonly struct InputMenuOption
     {
         public readonly string Text { get; init; } = string.Empty;
-        public readonly int? Id { get;init; } = 0;
+        public readonly int? Id { get; init; } = 0;
         public readonly InputStyle Style { get; init; } = 0;
 
         public enum InputStyle
@@ -17,7 +17,10 @@ namespace Murder.Services
             None = 0,
             Button = 1,
             AxisAnalogue = 2,
-            AxisDigital = 3,
+            AxisDigitalUp = 3,
+            AxisDigitalLeft = 4,
+            AxisDigitalDown = 5,
+            AxisDigitalRight = 6,
         }
 
         public InputMenuOption(string text, InputStyle style, int? buttonId)
