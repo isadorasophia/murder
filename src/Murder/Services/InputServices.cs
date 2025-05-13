@@ -187,7 +187,12 @@ public static class InputServices
                 case InputSource.Keyboard:
                     if (graphics.InputButton.Keyboard is Keys key)
                     {
-                        keysBuilder.Add(key, i);
+                        if (keysBuilder.ContainsKey(key))
+                        {
+                            GameLogger.Warning($"{key} added twice!");
+                        }
+
+                        keysBuilder[key] = i;
                     }
                     else
                     {
@@ -197,7 +202,12 @@ public static class InputServices
                 case InputSource.Mouse:
                     if (graphics.InputButton.Mouse is MouseButtons mouseButton)
                     {
-                        mouseButtonsBuilder.Add(mouseButton, i);
+                        if (mouseButtonsBuilder.ContainsKey(mouseButton))
+                        {
+                            GameLogger.Warning($"{mouseButton} added twice!");
+                        }
+
+                        mouseButtonsBuilder[mouseButton] = i;
                     }
                     else
                     {
@@ -207,7 +217,12 @@ public static class InputServices
                 case InputSource.Gamepad:
                     if (graphics.InputButton.Gamepad is Buttons button)
                     {
-                        buttonsBuilder.Add(button, i);
+                        if (buttonsBuilder.ContainsKey(button))
+                        {
+                            GameLogger.Warning($"{button} added twice!");
+                        }
+
+                        buttonsBuilder[button] = i;
                     }
                     else
                     {
@@ -217,7 +232,12 @@ public static class InputServices
                 case InputSource.GamepadAxis:
                     if (graphics.InputButton.Axis is GamepadAxis axis)
                     {
-                        gamepadAxisBuilder.Add(axis, i);
+                        if (gamepadAxisBuilder.ContainsKey(axis))
+                        {
+                            GameLogger.Warning($"{axis} added twice!");
+                        }
+
+                        gamepadAxisBuilder[axis] = i;
                     }
                     else
                     {

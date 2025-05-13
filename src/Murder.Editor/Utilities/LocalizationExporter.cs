@@ -184,7 +184,6 @@ internal static class LocalizationExporter
 
                 string translated = tokens.Length > 3 ? tokens[3] : string.Empty;
                 string? notes = tokens.Length > 4 ? tokens[4] : null;
-
                 asset.UpdateOrSetResource(guid, translated, notes);
             }
         }
