@@ -4,19 +4,24 @@ using Murder.Diagnostics;
 using System.Text;
 using Murder.Serialization;
 using Murder.Assets;
-using System.IO;
 using Murder.Utilities;
 using Murder.Editor.Services;
-using System.Diagnostics;
 
 namespace Murder.Editor.Utilities.Serialization;
 
 internal static class LocalizationExporter
 {
-    public static string GetFullRawLocalizationPath() => Path.Combine(
-        FileHelper.GetPath(
-            Architect.EditorData.EditorSettings.RawResourcesPath),
-            Game.Profile.LocalizationPath);
+    public static string GetFullRawLocalizationPath()
+    {
+#if NO_SOURCE
+
+        return FileHelper.GetPath(Game.Profile.LocalizationPath);
+#endif
+
+        return Path.Combine(FileHelper.GetPath(
+                Architect.EditorData.EditorSettings.RawResourcesPath),
+                Game.Profile.LocalizationPath);
+    }
 
     public static string GetFullRawLocalizationPath(string name) => Path.Combine(
         GetFullRawLocalizationPath(), $"{name}.csv");

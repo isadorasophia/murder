@@ -471,8 +471,11 @@ namespace Murder.Editor.Data
 
             PopulateEditorSettings(EditorSettings);
 
+#if NO_SOURCE
+            string gameProfilePath = FileHelper.GetPath(Path.Join(EditorSettings.BinResourcesPath, GameProfileFileName));
+#else
             string gameProfilePath = FileHelper.GetPath(Path.Join(EditorSettings.SourceResourcesPath, GameProfileFileName));
-
+#endif
             if (FileManager.Exists(gameProfilePath))
             {
                 _gameProfile = (GameProfile)FileManager.DeserializeAsset<GameAsset>(gameProfilePath)!;
@@ -570,6 +573,11 @@ namespace Murder.Editor.Data
         /// </summary>
         public void SaveAsset<T>(T asset) where T : GameAsset
         {
+#if NO_SOURCE
+            GameLogger.Log("Skipping save asset since there is no source available!");
+            return;
+#endif
+
             if (asset.IsSavePacked)
             {
                 // Asset is actually stored in the save data. In that case, save it through a different path.
