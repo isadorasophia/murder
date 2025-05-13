@@ -361,26 +361,26 @@ namespace Murder
             // Register Input
 
             // Editor input
-            _playerInput.Register(MurderInputButtons.Debug, Keys.F1);
-            _playerInput.Register(MurderInputButtons.PlayGame, Keys.F5);
+            _playerInput.RegisterButton(MurderInputButtons.Debug, Keys.F1);
+            _playerInput.RegisterButton(MurderInputButtons.PlayGame, Keys.F5);
             _playerInput.Register(MurderInputButtons.LeftClick, MouseButtons.Left);
             _playerInput.Register(MurderInputButtons.RightClick, MouseButtons.Right);
             _playerInput.Register(MurderInputButtons.MiddleClick, MouseButtons.Middle);
 
-            _playerInput.Register(MurderInputButtons.Shift, Keys.LeftShift);
-            _playerInput.Register(MurderInputButtons.Esc, Keys.Escape);
-            _playerInput.Register(MurderInputButtons.Delete, Keys.Delete);
-            _playerInput.Register(MurderInputButtons.Ctrl, Keys.LeftControl, Keys.RightControl);
-            _playerInput.Register(MurderInputButtons.Space, Keys.Space);
+            _playerInput.RegisterButton(MurderInputButtons.Shift, Keys.LeftShift);
+            _playerInput.RegisterButton(MurderInputButtons.Esc, Keys.Escape);
+            _playerInput.RegisterButton(MurderInputButtons.Delete, Keys.Delete);
+            _playerInput.RegisterButton(MurderInputButtons.Ctrl, Keys.LeftControl, Keys.RightControl);
+            _playerInput.RegisterButton(MurderInputButtons.Space, Keys.Space);
 
             // Navigation input
-            _playerInput.Register(MurderInputButtons.Submit, Keys.Space, Keys.Enter);
-            _playerInput.Register(MurderInputButtons.Submit, Buttons.A, Buttons.Y);
+            _playerInput.RegisterButton(MurderInputButtons.Submit, Keys.Space, Keys.Enter);
+            _playerInput.RegisterButton(MurderInputButtons.Submit, Buttons.A, Buttons.Y);
 
-            _playerInput.Register(MurderInputButtons.Cancel, Buttons.B, Buttons.Back, Buttons.Start);
+            _playerInput.RegisterButton(MurderInputButtons.Cancel, Buttons.B, Buttons.Back, Buttons.Start);
 
-            _playerInput.Register(MurderInputButtons.Pause, Keys.Escape, Keys.P);
-            _playerInput.Register(MurderInputButtons.Pause, Buttons.Start);
+            _playerInput.RegisterButton(MurderInputButtons.Pause, Keys.Escape, Keys.P);
+            _playerInput.RegisterButton(MurderInputButtons.Pause, Buttons.Start);
 
             _playerInput.RegisterAxes(MurderInputAxis.Ui, GamepadAxis.LeftThumb, GamepadAxis.RightThumb, GamepadAxis.Dpad);
             _playerInput.Register(MurderInputAxis.Ui,

@@ -1,3 +1,4 @@
+using Murder.Assets.Input;
 using Murder.Assets.Localization;
 using Murder.Core.Input;
 using System.Collections.Immutable;
@@ -35,6 +36,13 @@ namespace Murder.Save
 
         [Bang.Serialize]
         protected ImmutableArray<ButtonBindingsInfo> buttonBindingsInfos = ImmutableArray<ButtonBindingsInfo>.Empty;
+
+        [Bang.Serialize]
+        protected ImmutableArray<AxisBindingsInfo> axisBindingsInfos = ImmutableArray<AxisBindingsInfo>.Empty;
+
+        public ImmutableArray<ButtonBindingsInfo> ButtonBindingsInfos => buttonBindingsInfos;
+        public ImmutableArray<AxisBindingsInfo> AxisBindingsInfos => axisBindingsInfos;
+
         protected void SaveSettings()
         {
             Game.Data.FileManager.SaveSerialized(this, _path);
@@ -65,7 +73,6 @@ namespace Murder.Save
 
         public LanguageId Language => _language;
 
-        public ImmutableArray<ButtonBindingsInfo> ButtonBindingsInfos => buttonBindingsInfos;
         public void SetButtonBindingsInfos(ImmutableArray<ButtonBindingsInfo> buttonBindingsInfos)
         {
             this.buttonBindingsInfos = buttonBindingsInfos;

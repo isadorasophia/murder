@@ -166,7 +166,7 @@ public class PlayerInput
     /// <summary>
     /// Registers a keyboard key as a button
     /// </summary>
-    public void Register(int button, params Keys[] keys)
+    public void RegisterButton(int button, params Keys[] keys)
     {
         var b = GetOrCreateButton(button);
         b.Register(keys);
@@ -175,7 +175,7 @@ public class PlayerInput
     /// <summary>
     /// Registers a mouse button as a button
     /// </summary>
-    public void Register(int button, params Buttons[] buttons)
+    public void RegisterButton(int button, params Buttons[] buttons)
     {
         var b = GetOrCreateButton(button);
         b.Register(buttons);
@@ -1056,7 +1056,28 @@ public class PlayerInput
                 virtualButton.ClearBinds();
                 virtualButton.DeregisterAll();
 
-                RestoreBindings(virtualButton, button);
+                RegisterAll(virtualButton, button);
+            }
+        }
+
+        foreach (var axis in inputProfile.Axis)
+        {
+            bool loaded = false;
+            foreach (var bindingsInfo in gamePreferences.AxisBindingsInfos)
+            {
+                if (axis.AxisId == bindingsInfo.Key && axis.AllowPlayerCustomization)
+                {
+                    _axis[bindingsInfo.Key] = bindingsInfo.CreateVirtualAxis();
+                    loaded = true;
+                    break;
+                }
+            }
+
+            if (!loaded)
+            {
+                var virtualAxis = GetOrCreateAxis(axis.AxisId);
+                virtualAxis.DeregisterAll();
+                RegisterAll(virtualAxis, axis);
             }
         }
     }
@@ -1068,7 +1089,7 @@ public class PlayerInput
         virtualButton.DeregisterAll();
     }
 
-    public void RestoreDefaults(int v)
+    public void RestoreDefaults(int id)
     {
         if (Game.Data.GetAsset<InputProfileAsset>(Game.Profile.InputProfile) is not InputProfileAsset inputProfile)
         {
@@ -1076,22 +1097,44 @@ public class PlayerInput
             return;
         }
 
-        var virtualButton = GetOrCreateButton(v);
+        var virtualButton = GetOrCreateButton(id);
         virtualButton.ClearBinds();
         virtualButton.DeregisterAll();
 
         foreach (var button in inputProfile.Buttons)
         {
-            if (button.ButtonId == v)
+            if (button.ButtonId == id)
             {
                 // We have a match
-                RestoreBindings(virtualButton, button);
+                RegisterAll(virtualButton, button);
                 break;
             }
         }
     }
 
-    private static void RestoreBindings(VirtualButton virtualButton, InputInformation button)
+    public void RestoreAxisDefaults(int id)
+    {
+        if (Game.Data.GetAsset<InputProfileAsset>(Game.Profile.InputProfile) is not InputProfileAsset inputProfile)
+        {
+            GameLogger.Error("Input profile not found, did you set it in GameProfile?");
+            return;
+        }
+
+        var virtualAxis = GetOrCreateAxis(id);
+        virtualAxis.DeregisterAll();
+
+        foreach (var axis in inputProfile.Axis)
+        {
+            if (axis.AxisId == id)
+            {
+                // We have a match
+                RegisterAll(virtualAxis, axis);
+                break;
+            }
+        }
+    }
+
+    private static void RegisterAll(VirtualButton virtualButton, InputInformation button)
     {
         foreach (var key in button.DefaultKeyboard)
         {
@@ -1109,6 +1152,52 @@ public class PlayerInput
         }
     }
 
+    private static void RegisterAll(VirtualAxis virtualAxis, InputAxisInformation axis)
+    {
+        foreach (var analogue in axis.Analogue)
+        {
+            virtualAxis.Register([analogue]);
+        }
+
+        foreach (var digital in axis.Digital)
+        {
+            if (axis.Horizontal && axis.Vertical)
+            {
+                switch (digital[0].Source)
+                {
+                    case InputSource.Keyboard:
+                        if (digital[0].Keyboard is Keys up && digital[1].Keyboard is Keys left &&
+                            digital[2].Keyboard is Keys down && digital[3].Keyboard is Keys right)
+                        {
+                            virtualAxis.Register([new InputButtonAxis(up, left, right, right)]);
+                        }
+                        break;
+                    default:
+                        GameLogger.Warning("Not implemented yet!");
+                        break;
+                }
+            }
+            else
+            {
+                // Horizontal or vertical only, doesn't matter, duplicate the same value
+                switch (digital[0].Source)
+                {
+                    case InputSource.Keyboard:
+                        if (digital[0].Keyboard is Keys up && digital[1].Keyboard is Keys down)
+                        {
+                            virtualAxis.Register([new InputButtonAxis(up, up, down, down)]);
+                        }
+                        break;
+                    default:
+                        GameLogger.Warning("Not implemented yet!");
+                        break;
+
+                }
+            }
+        }
+
+    }
+
     public void RestoreAllDefaults()
     {
         if (Game.Data.GetAsset<InputProfileAsset>(Game.Profile.InputProfile) is not InputProfileAsset inputProfile)
@@ -1122,7 +1211,14 @@ public class PlayerInput
             virtualButton.ClearBinds();
             virtualButton.DeregisterAll();
 
-            RestoreBindings(virtualButton, button);
+            RegisterAll(virtualButton, button);
+        }
+
+        foreach (var axis in inputProfile.Axis)
+        {
+            var virtualAxes = GetOrCreateAxis(axis.AxisId);
+
+
         }
     }
 

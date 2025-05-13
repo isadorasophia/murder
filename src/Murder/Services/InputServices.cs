@@ -49,7 +49,7 @@ public static class InputServices
 
             var virtualButton = Game.Input.GetOrCreateButton(buttonInfo.ButtonId);
 
-            string text = $"{buttonInfo.LocalizedName}:";
+            string text = $"{buttonInfo.LocalizedName}";
 
             builder.Add(new InputMenuOption(text, InputMenuOption.InputStyle.Button, buttonInfo.ButtonId));
         }
@@ -60,9 +60,18 @@ public static class InputServices
             {
                 continue;
             }
-            var virtualAxis = Game.Input.GetOrCreateAxis(axisInfo.ButtonId);
-            string text = $"{axisInfo.LocalizedName}:";
-            builder.Add(new InputMenuOption(text, InputMenuOption.InputStyle.Axis, axisInfo.ButtonId));
+            var virtualAxis = Game.Input.GetOrCreateAxis(axisInfo.AxisId);
+            string text = $"{axisInfo.LocalizedName}";
+            if (axisInfo.Horizontal)
+            {
+                builder.Add(new InputMenuOption(text + " (left)", InputMenuOption.InputStyle.AxisDigital, axisInfo.AxisId));
+                builder.Add(new InputMenuOption(text + " (right)", InputMenuOption.InputStyle.AxisDigital, axisInfo.AxisId));
+            }
+            if (axisInfo.Vertical)
+            {
+                builder.Add(new InputMenuOption(text + " (up)", InputMenuOption.InputStyle.AxisDigital, axisInfo.AxisId));
+                builder.Add(new InputMenuOption(text + " (down)", InputMenuOption.InputStyle.AxisDigital, axisInfo.AxisId));
+            }
         }
 
         if (reset != null)

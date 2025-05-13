@@ -22,13 +22,13 @@ public class InputButtonField : CustomField
 
         if (inputButton != null)
         {
-            ImGui.Text(member.Name);
-
             var source = inputButton.Value.Source;
-            if (ImGuiHelpers.DrawEnumField<InputSource>(member.Name + "_source", ref source))
+            ImGui.SetNextItemWidth(100);
+            if (ImGuiHelpers.DrawEnumField<InputSource>($"##{member.Name}_source", ref source))
             {
                 modified = true;
             }
+            ImGui.SameLine();
 
             Keys? keys = inputButton.Value.Keyboard;
             Buttons? buttons = inputButton.Value.Gamepad;

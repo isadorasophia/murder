@@ -497,12 +497,14 @@ public static class ImGuiHelpers
         bool clicked = ImGui.ArrowButton("##" + id, ImGuiDir.Down);
         Vector2 startPosition = ImGui.GetItemRectMax();
 
+        float availableWidth = ImGui.GetContentRegionAvail().X;
+
         ImGui.SameLine();
 
         ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Accent);
         ImGui.PushStyleColor(ImGuiCol.Header, Game.Profile.Theme.Bg);
         ImGui.PushStyleColor(ImGuiCol.HeaderHovered, Game.Profile.Theme.Faded);
-        clicked |= ImGui.Selectable(fieldNames[selectedIndex], true, ImGuiSelectableFlags.None);
+        clicked |= ImGui.Selectable(fieldNames[selectedIndex], true, ImGuiSelectableFlags.None, new Vector2(availableWidth - 100,0));
         ImGui.PopStyleColor(3);
 
 

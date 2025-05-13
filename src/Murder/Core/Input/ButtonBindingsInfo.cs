@@ -8,24 +8,27 @@ using System.Threading.Tasks;
 
 namespace Murder.Core.Input;
 
+/// <summary>
+/// Struct used for serializing and saving current bindings on buttons
+/// </summary>
 public readonly struct ButtonBindingsInfo
 {
-    public readonly ImmutableArray<InputButton> Buttons = ImmutableArray<InputButton>.Empty;
     public readonly int Key;
+    public readonly ImmutableArray<InputButton> Buttons = ImmutableArray<InputButton>.Empty;
 
-    public static readonly ImmutableArray<InputButton>.Builder buttonsBuilder = ImmutableArray.CreateBuilder<InputButton>();
+    private static readonly ImmutableArray<InputButton>.Builder _buttonsBuilder = ImmutableArray.CreateBuilder<InputButton>();
 
-    public ButtonBindingsInfo(int key, VirtualButton virtualButton) : this()
+    public ButtonBindingsInfo(int key, VirtualButton virtualButton)
     {
         Key = key;
         
-        buttonsBuilder.Clear();
+        _buttonsBuilder.Clear();
         foreach (var button in virtualButton.Buttons)
         {
-            buttonsBuilder.Add(button);
+            _buttonsBuilder.Add(button);
         }
 
-        Buttons = buttonsBuilder.DrainToImmutable();
+        Buttons = _buttonsBuilder.DrainToImmutable();
     }
 
     public VirtualButton CreateVirtualButton()

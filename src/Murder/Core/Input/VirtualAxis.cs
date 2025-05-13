@@ -15,7 +15,7 @@ namespace Murder.Core.Input
         public Point PressedValue { get; private set; }
 
         public ImmutableArray<InputButtonAxis> ButtonAxis => _buttonAxis;
-        private ImmutableArray<InputButtonAxis> _buttonAxis = ImmutableArray.Create<InputButtonAxis>();
+        private ImmutableArray<InputButtonAxis> _buttonAxis = [];
 
         public InputButtonAxis?[] _lastPressedButton = new InputButtonAxis?[2];
 
@@ -227,6 +227,25 @@ namespace Murder.Core.Input
             }
 
             return _buttonAxis.FirstOrDefault();
+        }
+
+        internal void DeregisterAll()
+        {
+            _buttonAxis = ImmutableArray<InputButtonAxis>.Empty;
+
+        }
+
+        internal void Register(AxisBindingsInfo info)
+        {
+            foreach (var button in info.Buttons)
+            {
+                Register(button);
+            }
+        }
+
+        internal void Register(InputButtonAxis button)
+        {
+            _buttonAxis = _buttonAxis.Add(button);
         }
     }
 

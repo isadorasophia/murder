@@ -16,6 +16,5 @@ namespace Murder.Core.Input
         public const int Ui = 101;
         public const int UiTab = 102;
         public const int EditorCamera = 103;
-
     }
 }
