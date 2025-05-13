@@ -7,6 +7,7 @@
         Sound,
         State,
         Story,
+        Tutorial,
         All
     }
 }
