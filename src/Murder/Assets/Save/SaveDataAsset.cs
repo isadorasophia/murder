@@ -137,6 +137,8 @@ namespace Murder.Assets
             SaveName = name;
         }
 
+        public virtual void OnBeforeSave() { }
+
         /// <summary>
         /// Get a world asset to instantiate in the game.
         /// This tracks the <paramref name="guid"/> at <see cref="_lastWorld"/>.

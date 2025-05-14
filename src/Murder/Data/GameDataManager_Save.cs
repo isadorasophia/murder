@@ -275,7 +275,10 @@ namespace Murder.Data
             GameLogger.Verify(!string.IsNullOrWhiteSpace(asset.Name));
             GameLogger.Verify(!string.IsNullOrWhiteSpace(asset.FilePath));
 
-            _allSavedData.Add(asset.SaveSlot, new(asset.SaveVersion, asset.SaveName));
+            SaveDataInfo info = _game?.CreateSaveDataInfo(asset.SaveVersion, asset.SaveName) ?? 
+                new(asset.SaveVersion, asset.SaveName);
+
+            _allSavedData.Add(asset.SaveSlot, info);
             _activeSaveData = asset;
 
             return true;
@@ -334,6 +337,9 @@ namespace Murder.Data
             int slot = _activeSaveData.SaveSlot;
 
             PerfTimeRecorder saveToJsonRecorder = new("Serializing save");
+
+            // make sure we do any last minute changes...
+            _activeSaveData.OnBeforeSave();
 
             SaveDataTracker tracker = new(_allSavedData);
             string trackerJson = FileManager.SerializeToJson(tracker);

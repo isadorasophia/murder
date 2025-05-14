@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets;
+using Murder.Assets.Save;
 using Murder.Core.Graphics;
 using Murder.Core.Sounds;
 using Murder.Data;
@@ -59,6 +60,11 @@ namespace Murder
         /// Creates save data for the game.
         /// </summary>
         public SaveData CreateSaveData(int slot) => new(slot, Version);
+
+        /// <summary>
+        /// Creates save data for the game.
+        /// </summary>
+        public SaveDataInfo CreateSaveDataInfo(float version, string name) => new(version, name);
 
         /// <summary>
         /// Creates the client custom sound player.

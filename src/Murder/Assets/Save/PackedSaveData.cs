@@ -2,6 +2,7 @@
 
 namespace Murder.Assets.Save;
 
+[Serializable]
 public class SaveDataInfo
 {
     public float Version;
