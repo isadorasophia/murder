@@ -633,6 +633,9 @@ namespace Murder.Editor.CustomEditors
             WorldStageInfo info = _worldStageInfo[_world.Guid];
             ImmutableArray<Guid> entities = _world.FetchEntitiesOfGroup(groupName);
 
+            // don't hide anything under default sounds group!
+            if (groupName.Equals("Sounds")) return;
+
             if (show)
             {
                 info.HiddenGroups.Remove(groupName);
