@@ -175,14 +175,21 @@ namespace Murder.Assets
 
                 _pendingOperation = Task.Run(async delegate
                 {
-                    SavedWorld state = await SavedWorld.CreateAsync(world, entitiesOnSaveRequested);
-                    Game.Data.AddAssetForCurrentSave(state);
+                    try
+                    {
+                        SavedWorld state = await SavedWorld.CreateAsync(world, entitiesOnSaveRequested);
+                        Game.Data.AddAssetForCurrentSave(state);
 
-                    // Replace and delete the instance it has just replaced.
-                    SavedWorlds.TryGetValue(world.WorldAssetGuid, out Guid previousState);
-                    Game.Data.RemoveAssetForCurrentSave(previousState);
+                        // Replace and delete the instance it has just replaced.
+                        SavedWorlds.TryGetValue(world.WorldAssetGuid, out Guid previousState);
+                        Game.Data.RemoveAssetForCurrentSave(previousState);
 
-                    SavedWorlds = SavedWorlds.SetItem(world.WorldAssetGuid, state.Guid);
+                        SavedWorlds = SavedWorlds.SetItem(world.WorldAssetGuid, state.Guid);
+                    }
+                    catch (Exception e)
+                    {
+                        GameLogger.Error($"How were we unable to save world {world.WorldAssetGuid}: {e.Message}");
+                    }
                 });
             }
         }
