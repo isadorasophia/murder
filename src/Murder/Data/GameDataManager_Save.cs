@@ -267,8 +267,7 @@ namespace Murder.Data
         {
             if (_allSavedData.ContainsKey(asset.SaveSlot))
             {
-                GameLogger.Fail("Adding duplicate save asset?");
-                return false;
+                GameLogger.Warning("Overwriting save slot...");
             }
 
             GameLogger.Verify(asset.Guid != Guid.Empty);
@@ -278,7 +277,7 @@ namespace Murder.Data
             SaveDataInfo info = _game?.CreateSaveDataInfo(asset.SaveVersion, asset.SaveName) ?? 
                 new(asset.SaveVersion, asset.SaveName);
 
-            _allSavedData.Add(asset.SaveSlot, info);
+            _allSavedData[asset.SaveSlot] = info;
             _activeSaveData = asset;
 
             return true;
