@@ -138,6 +138,8 @@ namespace Murder
 
         public readonly ISoundPlayer SoundPlayer;
 
+        public readonly HapticsManager Haptics;
+
         /// <summary>
         /// Initialized in <see cref="LoadContent"/>.
         /// </summary>
@@ -340,6 +342,8 @@ namespace Murder
 
             _playerInput = new PlayerInput();
             SoundPlayer = game?.CreateSoundPlayer() ?? new SoundPlayer();
+
+            Haptics = new HapticsManager();
 
             _game = game;
             _gameData = dataManager;
@@ -642,6 +646,9 @@ namespace Murder
 
             // Update sound logic!
             SoundPlayer.Update();
+
+            // Update haptics
+            Haptics.Update();
         }
         
         /// <summary>
