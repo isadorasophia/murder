@@ -5,11 +5,12 @@ namespace Murder.Core.Input;
 
 public class HapticsManager
 {
-    private const int MAX_CONTROLLERS = 3;
+    private const int MAX_CONTROLLERS = 4;
 
     private readonly List<HapticsOrder> _currentOrders = new List<HapticsOrder>(128);
     private readonly float[] _leftVibration = new float[MAX_CONTROLLERS];
     private readonly float[] _rightVibration = new float[MAX_CONTROLLERS];
+
     public void Update()
     {
         for (int i = 0; i < MAX_CONTROLLERS; i++)
@@ -48,10 +49,13 @@ public class HapticsManager
             }
         }
 
-        for (int i = 0; (i < MAX_CONTROLLERS); i++)
+        for (int i = 0; i < MAX_CONTROLLERS; i++)
         {
             if (!GamePad.GetState((Microsoft.Xna.Framework.PlayerIndex)i).IsConnected)
+            {
                 continue;
+            }
+
             GamePad.SetVibration((Microsoft.Xna.Framework.PlayerIndex)i, _leftVibration[i], _rightVibration[i]);
         }
     }
@@ -69,6 +73,22 @@ public class HapticsManager
             {
                 _currentOrders.RemoveAt(i);
             }
+        }
+    }
+
+    public void ClearAll()
+    {
+        for (int i = 0; i < MAX_CONTROLLERS; i++)
+        {
+            _leftVibration[i] = 0;
+            _rightVibration[i] = 0;
+
+            if (!GamePad.GetState((Microsoft.Xna.Framework.PlayerIndex)i).IsConnected)
+            {
+                continue;
+            }
+
+            GamePad.SetVibration((Microsoft.Xna.Framework.PlayerIndex)i, 0, 0);
         }
     }
 }

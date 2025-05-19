@@ -894,6 +894,7 @@ namespace Murder
         protected virtual void OnClose(object? sender, EventArgs e)
         {
             // right before the game itself closes.
+            Haptics.ClearAll();
         }
     }
 }
