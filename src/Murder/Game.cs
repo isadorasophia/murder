@@ -358,7 +358,8 @@ namespace Murder
         /// </remarks>
         protected override void Initialize()
         {
-            // Register Input
+            // Subscribe events
+            AppDomain.CurrentDomain.ProcessExit += OnClose;
 
             // Editor input
             _playerInput.RegisterButton(MurderInputButtons.Debug, Keys.F1);
@@ -871,6 +872,11 @@ namespace Murder
 
             Microsoft.Xna.Framework.Media.MediaPlayer.Stop();
             base.Exit();
+        }
+
+        protected virtual void OnClose(object? sender, EventArgs e)
+        {
+            // right before the game itself closes.
         }
     }
 }
