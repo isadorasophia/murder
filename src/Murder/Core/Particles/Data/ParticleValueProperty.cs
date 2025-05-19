@@ -108,7 +108,7 @@ namespace Murder.Core.Particles
                     return Calculator.LerpSnap(_rangeStartMin, _rangeEndMax, delta);
 
                 case ParticleValuePropertyKind.Curve:
-                    return Calculator.InterpolateSmoothCurve(_curvePoints, delta);
+                    return Calculator.Curve(_curvePoints, delta);
 
                 default:
                     // Curve is not implemented yet.

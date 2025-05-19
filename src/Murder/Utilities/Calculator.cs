@@ -183,7 +183,7 @@ namespace Murder.Utilities
             return a * t * t * t + b * t * t + c * t + d;
         }
 
-        public static float InterpolateSmoothCurve(IList<float> values, float t)
+        public static float Curve(IList<float> values, float t)
         {
             int count = values.Count;
             if (count == 0)
@@ -203,6 +203,35 @@ namespace Murder.Utilities
             float localT = scaledT - index;
 
             return CatmullRom(p0, p1, p2, p3, localT);
+        }
+
+        public static float Curve(float delta, params float[] values)
+        {
+            if (values.Length == 0)
+                return 0;
+            if (values.Length == 1)
+                return values[0];
+            float scaledDelta = delta * (values.Length - 1);
+            int index = Math.Clamp(FloorToInt(scaledDelta), 0, values.Length - 1);
+            float p0 = values[Math.Max(index - 1, 0)];
+            float p1 = values[index];
+            float p2 = values[Math.Min(index + 1, values.Length - 1)];
+            float p3 = values[Math.Min(index + 2, values.Length - 1)];
+            float localT = scaledDelta - index;
+            return CatmullRom(p0, p1, p2, p3, localT);
+        }
+
+        // Faster shorthand version of Curve
+        public static float Curve(float delta, float start, float middle, float end)
+        {
+            if (delta < 0.5f)
+            {
+                return Lerp(start, middle, delta * 2);
+            }
+            else
+            {
+                return Lerp(middle, end, (delta - 0.5f) * 2);
+            }
         }
 
 
