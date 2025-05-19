@@ -364,6 +364,7 @@ namespace Murder
         {
             // Subscribe events
             AppDomain.CurrentDomain.ProcessExit += OnClose;
+            AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 
             // Editor input
             _playerInput.RegisterButton(MurderInputButtons.Debug, Keys.F1);
@@ -879,6 +880,15 @@ namespace Murder
 
             Microsoft.Xna.Framework.Media.MediaPlayer.Stop();
             base.Exit();
+        }
+
+        protected virtual void OnUnhandledException(object? sender, EventArgs e)
+        {
+            if (e is UnhandledExceptionEventArgs unhandled && unhandled.IsTerminating)
+            {
+                OnClose(sender, e);
+                GameLogger.CaptureCrash();
+            }
         }
 
         protected virtual void OnClose(object? sender, EventArgs e)

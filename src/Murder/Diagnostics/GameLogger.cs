@@ -322,15 +322,14 @@ public class GameLogger
     /// <summary>
     /// Used to filter exceptions once a crash is yet to happen.
     /// </summary>
-    public static bool CaptureCrash(Exception _, string logFile = "crash.log")
+    public static bool CaptureCrash(string logFile = "crash.log")
     {
         string currentDirectory = Environment.CurrentDirectory;
         string logFilePath = Path.Join(currentDirectory, logFile);
 
         StringBuilder content = new(GetCurrentLog());
 
-        File.AppendAllTextAsync(logFilePath, content.ToString());
-
+        File.WriteAllTextAsync(logFilePath, content.ToString());
         return false;
     }
 
