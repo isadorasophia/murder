@@ -291,6 +291,8 @@ namespace Murder
         /// </summary>
         protected readonly IMurderGame? _game;
 
+        public IMurderGame? MurderGame => _game;
+
         /// <summary>
         /// Single logger of the game.
         /// </summary>
