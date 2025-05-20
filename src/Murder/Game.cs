@@ -364,6 +364,8 @@ namespace Murder
         /// </remarks>
         protected override void Initialize()
         {
+            World.InitializeLookupComponents(_game?.ComponentsLookup ?? new MurderComponentsLookup());
+
             // Subscribe events
             AppDomain.CurrentDomain.ProcessExit += OnClose;
             AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Bang;
+using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets;
 using Murder.Assets.Save;
 using Murder.Core.Graphics;
@@ -18,6 +19,11 @@ namespace Murder
         /// Serialization options. This is generated automatically by the game based on the assets.
         /// </summary>
         public JsonSerializerOptions Options { get; }
+
+        /// <summary>
+        /// Cache of all the components. This is generated automatically by the game according to the Bang data.
+        /// </summary>
+        public ComponentsLookup ComponentsLookup { get; }
 
         /// <summary>
         /// Called once, when the executable for the game starts and initializes.

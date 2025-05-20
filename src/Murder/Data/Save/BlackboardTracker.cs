@@ -772,7 +772,9 @@ namespace Murder.Save
                 return Attribute.IsDefined(t, typeof(BlackboardAttribute)) && tInterface.IsAssignableFrom(t);
             }
 
-            Assembly[] allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+            IEnumerable<Assembly> allAssemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => a == typeof(World).Assembly || a == typeof(Game).Assembly || a.IsDefined(typeof(MurderAttribute)));
+
             foreach (Assembly s in allAssemblies)
             {
                 foreach (Type t in s.GetTypes())
