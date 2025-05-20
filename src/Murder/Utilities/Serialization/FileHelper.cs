@@ -79,12 +79,30 @@ public static partial class FileHelper
     {
         _osVersion ??= SDL2.SDL.SDL_GetPlatform();
 
-        if (_osVersion.Equals("Windows") || _osVersion.Equals("Mac OS X") ||
-            _osVersion.Equals("Linux") || _osVersion.Equals("FreeBSD") ||
-            _osVersion.Equals("OpenBSD") || _osVersion.Equals("NetBSD"))
+        if (_osVersion.Equals("Windows"))
         {
             return Path.Join(Environment.GetFolderPath(
                 Environment.SpecialFolder.LocalApplicationData), gameName);
+        }
+
+        if (_osVersion.Equals("Mac OS X"))
+        {
+            return Path.Join(Environment.GetFolderPath(
+                Environment.SpecialFolder.ApplicationData), gameName);
+        }
+        
+        if (_osVersion.Equals("Linux") || _osVersion.Equals("FreeBSD") ||
+            _osVersion.Equals("OpenBSD") || _osVersion.Equals("NetBSD"))
+        {
+            if (Environment.GetEnvironmentVariable("XDG_DATA_HOME") is string dataPath)
+            {
+                return Path.Join(dataPath, gameName);
+            }
+
+            if (Environment.GetEnvironmentVariable("HOME") is string homePath)
+            {
+                return Path.Join(homePath, ".local", "share", gameName);
+            }
         }
 
         return SDL2.SDL.SDL_GetPrefPath(null, gameName);

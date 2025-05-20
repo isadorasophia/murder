@@ -54,7 +54,7 @@ namespace Murder
         /// <summary>
         /// Called once the game exits.
         /// </summary>
-        public void OnExit() { }
+        public void OnClose() { }
 
         /// <summary>
         /// Creates save data for the game.

@@ -876,9 +876,6 @@ namespace Murder
         /// </summary>
         protected virtual void ExitGame()
         {
-            _game?.OnExit();
-
-            Microsoft.Xna.Framework.Media.MediaPlayer.Stop();
             base.Exit();
         }
 
@@ -895,6 +892,7 @@ namespace Murder
         {
             // right before the game itself closes.
             Haptics.ClearAll();
+            _game?.OnClose();
         }
     }
 }
