@@ -163,6 +163,11 @@ internal static class LocalizationExporter
                     continue;
                 }
 
+                if (string.IsNullOrEmpty(tokens[0]))
+                {
+                    continue;
+                }
+
                 if (tokens.Length < 2)
                 {
                     GameLogger.Warning($"Skipping row {row} from {fullLocalizationPath}.");
