@@ -220,7 +220,7 @@ public class PixelFontSize
         }
 
         RuntimeTextData data = TextDataServices.GetOrCreateText(this, text, new TextSettings() { MaxWidth = maxWidth, Scale = scale });
-        return DrawImpl(data, spriteBatch, position, origin, scale, sort, color, strokeColor, shadowColor, debugBox, visibleCharacters);
+        return DrawImpl(data, spriteBatch, position, origin, scale, sort, color, strokeColor, shadowColor, debugBox, visibleCharacters >= 0 ? visibleCharacters : data.Length);
     }
 
     public Point Draw(RuntimeTextData data, Batch2D spriteBatch, Vector2 position, Vector2 origin, Vector2 scale, int visibleCharacters,
@@ -485,6 +485,7 @@ public class PixelFontSize
                     {
                         wrappedText.Length--;
                     }
+
                     wrappedText.Append('\n');
                 }
 
@@ -581,7 +582,7 @@ public class PixelFont
             return Point.Zero;
         }
 
-        return _pixelFontSize.Draw(text, spriteBatch, position, alignment, scale, visibleCharacters >= 0 ? visibleCharacters : text.Length,
+        return _pixelFontSize.Draw(text, spriteBatch, position, alignment, scale, visibleCharacters,
             sort, color, strokeColor, shadowColor, maxWidth, debugBox);
     }
 
