@@ -1,4 +1,5 @@
 ﻿using Bang.Components;
+using Bang.Interactions;
 using Murder.Attributes;
 using Murder.Core.Sounds;
 using Murder.Utilities.Attributes;
@@ -17,17 +18,20 @@ namespace Murder.Components
         [Default("Whether this should be persisted (such as ambience sounds)")]
         public readonly SoundLayer? Persisted = null;
 
+        public readonly ImmutableArray<IInteractiveComponent>? Interactions { get; init; } = null;
+
         public SpriteEventInfo(string id) => Id = id;
 
-        public SpriteEventInfo(string id, SoundEventId? sound, SoundLayer? persisted)
+        public SpriteEventInfo(string id, SoundEventId? sound, SoundLayer? persisted, ImmutableArray<IInteractiveComponent>? interactions)
         {
             Id = id;
             Sound = sound;
             Persisted = persisted;
+            Interactions = interactions;
         }
 
         public SpriteEventInfo WithPersist(SoundLayer persisted) =>
-            new(Id, Sound, persisted);
+            new(Id, Sound, persisted, Interactions);
     }
 
     [SoundPlayer]

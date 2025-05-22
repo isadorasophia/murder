@@ -177,7 +177,33 @@ namespace Murder.Editor.CustomComponents
                     }
 
                     ImGui.SameLine();
-                    ImGuiHelpers.HelpTooltip("Whether this event should persist.");
+                    ImGuiHelpers.HelpTooltip("Whether this event should persist");
+
+                    if (info.Interactions is null)
+                    {
+                        if (ImGuiHelpers.ColoredIconButton('\uf70c', $"add_interactions_{i}", isActive: true))
+                        {
+                            events = events.SetItem(i, info with { Interactions = [] });
+                            fileChanged = true;
+                        }
+
+                        ImGuiHelpers.HelpTooltip("Play interactions on event");
+                    }
+                    else
+                    {
+                        ImGuiHelpers.ColoredIconButton('\uf70c', $"add_interactions_{i}", isActive: false);
+
+                        ImGui.TableNextRow();
+                        ImGui.TableNextColumn();
+                        ImGui.TableNextColumn();
+                        ImGui.TableNextColumn();
+
+                        if (CustomField.DrawValue(ref info, fieldName: nameof(SpriteEventInfo.Interactions)))
+                        {
+                            events = events.SetItem(i, info);
+                            fileChanged = true;
+                        }
+                    }
                 }
             }
 

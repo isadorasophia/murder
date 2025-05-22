@@ -2,6 +2,7 @@
 using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
+using Bang.Interactions;
 using Bang.Systems;
 using Murder.Attributes;
 using Murder.Components;
@@ -51,6 +52,14 @@ namespace Murder.Systems.Effects
 
                     _ = SoundServices.Play(sound, entity, layer, properties);
                 }
+
+                if (info.Interactions is ImmutableArray<IInteractiveComponent> interactions)
+                {
+                    foreach (IInteractiveComponent interaction in interactions)
+                    {
+                        interaction.Interact(world, entity, entity);
+                    }
+                }
             }
         }
     }
@@ -97,6 +106,11 @@ namespace Murder.Systems.Effects
                     }
                 }
             }
+        }
+
+        public void OnDeactivated(World world, ImmutableArray<Entity> entities)
+        {
+            OnRemoved(world, entities);
         }
     }
 }

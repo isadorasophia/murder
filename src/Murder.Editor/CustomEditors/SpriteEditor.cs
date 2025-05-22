@@ -191,7 +191,7 @@ namespace Murder.Editor.CustomEditors
                     continue;
                 }
 
-                builder[message] = new(message, sound.Value, persisted: null);
+                builder[message] = new(message, sound.Value, persisted: null, interactions: null);
             }
 
             info.Stage.AddOrReplaceComponentOnEntity(

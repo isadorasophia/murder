@@ -199,7 +199,7 @@ public static class SoundServices
         foreach ((string id, SpriteEventInfo info) in source)
         {
             string newIdentifier = converter(id);
-            builder[newIdentifier] = new(newIdentifier, info.Sound, info.Persisted);
+            builder[newIdentifier] = new(newIdentifier, info.Sound, info.Persisted, info.Interactions);
         }
 
         return builder.ToImmutable();
