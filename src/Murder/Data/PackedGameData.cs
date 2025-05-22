@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 namespace Murder.Data;
 
 /// <summary>
-/// This has the data regarding all assets and textures loaded in the gmae.
+/// This has the data regarding all assets and textures loaded in the game.
 /// </summary>
 [Serializable]
 public class PackedGameData

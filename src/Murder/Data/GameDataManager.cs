@@ -244,10 +244,10 @@ namespace Murder.Data
         {
             await Task.Yield();
 
-            await LoadSoundsAsync();
             await LoadContentAsyncImpl();
 
             await Task.WhenAll(
+                LoadSoundsAsync(),
                 LoadAllAssetsAsync(),
                 LoadFontsAndTexturesAsync());
 
