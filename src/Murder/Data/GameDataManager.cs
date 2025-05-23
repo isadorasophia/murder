@@ -178,6 +178,35 @@ namespace Murder.Data
             return Game.Data.GetAsset<LocalizationAsset>(resourceGuid);
         }
 
+        /// <summary>
+        /// Adds color to the game data's current palette, if it does not already exist.
+        /// </summary>
+        /// <param name="color"></param>
+        public void AddPaletteColor(Color color)
+        {
+            if (color.R < 0 || color.R > 1 || color.G < 0 || color.G > 1 || color.B < 0 || color.B > 1) {
+                return;
+            }
+            if (color.A < 1) { 
+                return;
+            }
+            if (CurrentPalette == null)
+            {
+                CurrentPalette = [color];
+            }
+            else
+            {
+                if (CurrentPalette.Any(color.Equals))
+                {
+                    return;
+                }
+
+                List<Color> colors = [color];
+                colors.AddRange(CurrentPalette.ToList().Take(7));
+                CurrentPalette = ImmutableArray.CreateRange(colors);
+            }
+        }
+
         public void ChangeLanguage(LanguageId id) => ChangeLanguage(Languages.Get(id));
 
         public void ChangeLanguage(LanguageIdData data)
