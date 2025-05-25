@@ -101,19 +101,4 @@ public readonly struct CachedNineSlice
         FrameInfo frameInfo = animation.Evaluate((animationInfo.UseScaledTime ? Game.Now : Game.NowUnscaled) - animationInfo.Start, animationInfo.Loop);
         RenderServices.Draw9Slice(batch, _image.GetFrame(frameInfo.Frame), _core, target, NineSliceStyle.Stretch, drawInfo);
     }
-
-    public void DrawWithText(Batch2D batch, string text, int font, Color textColor, Color? textOutlineColor, Color? textShadowColor, Rectangle target, float sort)
-    {
-        var anim = _animation.Evaluate(Game.NowUnscaled, true);
-        RenderServices.Draw9Slice(batch, _image.GetFrame(anim.Frame), _core, target, sort);
-
-        // Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth
-        RenderServices.DrawText(batch, font, text, target.Center, (int)target.Width, new DrawInfo(sort - 0.001f)
-        {
-            Origin = Vector2Helper.Center,
-            Color = textColor,
-            Outline = textOutlineColor,
-            Shadow = textShadowColor
-        });
-    }
 }

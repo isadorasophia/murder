@@ -169,9 +169,6 @@ namespace Murder.Services
             }
         }
 
-        public static void Draw9Slice(Batch2D batch, AtlasCoordinates texture, Rectangle core, Rectangle target, float sort) =>
-            Draw9Slice(batch, texture, core, target, NineSliceStyle.Stretch, new DrawInfo() { Sort = sort });
-
         public static void Draw9Slice(
             Batch2D batch,
             AtlasCoordinates texture,
@@ -185,7 +182,8 @@ namespace Murder.Services
             var bottomRightSize = new Vector2(fullSize.X - core.X - core.Width, fullSize.Y - core.Y - core.Height);
             var sort = info.Sort;
 
-            IntRectangle finalTarget = target - (target.Size * info.Origin).Point();
+            IntRectangle finalTarget = new IntRectangle(target.X - (target.Width * info.Origin.X), target.Y - (target.Height * info.Origin.Y), target.Width, target.Height);
+
             if (info.Outline != null)
             {
                 Draw9SliceImpl(batch, texture, core, finalTarget + new Point(0, 1), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true, style);
