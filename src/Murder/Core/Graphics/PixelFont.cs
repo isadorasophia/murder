@@ -347,7 +347,7 @@ public class PixelFontSize
                 var texture = Textures[c.Page];
                 Rectangle glyph = c.Glyph;
 
-                if (glitchAmount != 0)
+                if (glitchAmount != 0 && character != ' ')
                 {
                     float seed = (Game.NowUnscaled) % 64 + i;
                     float glitch = glitchAmount * 0.8f;
