@@ -328,63 +328,71 @@ namespace Murder.Data
                 return false;
             }
 
-            _waitPendingSaveTrackerOperation = true;
-            Game.Instance.SetWaitForSaveComplete();
-
-            await Task.Yield();
-
-            int slot = _activeSaveData.SaveSlot;
-
-            PerfTimeRecorder saveToJsonRecorder = new("Serializing save");
-
-            // make sure we do any last minute changes...
-            _activeSaveData.OnBeforeSave();
-
-            SaveDataTracker tracker = new(_allSavedData);
-            string trackerJson = FileManager.SerializeToJson(tracker);
-
-            // Wait for any pending operations.
-            if (_activeSaveData.PendingOperation is not null)
+            try
             {
-                await _activeSaveData.PendingOperation;
+                _waitPendingSaveTrackerOperation = true;
+                Game.Instance.SetWaitForSaveComplete();
+
+                await Task.Yield();
+
+                int slot = _activeSaveData.SaveSlot;
+
+                PerfTimeRecorder saveToJsonRecorder = new("Serializing save");
+
+                // make sure we do any last minute changes...
+                _activeSaveData.OnBeforeSave();
+
+                SaveDataTracker tracker = new(_allSavedData);
+                string trackerJson = FileManager.SerializeToJson(tracker);
+
+                // Wait for any pending operations.
+                if (_activeSaveData.PendingOperation is not null)
+                {
+                    await _activeSaveData.PendingOperation;
+                }
+
+                PackedSaveData packedData = new(_activeSaveData);
+                string packedDataJson = FileManager.SerializeToJson(packedData);
+
+                _waitPendingSaveTrackerOperation = false;
+
+                saveToJsonRecorder.Dispose();
+
+                using PerfTimeRecorder recorderSerialize = new("Writing save to file");
+
+                PackedSaveAssetsData packedAssetsData = new([.. _currentSaveAssets.Values]);
+                string packedAssetsDataJson = FileManager.SerializeToJson(packedAssetsData);
+
+                string packedSavePath = SaveDataInfo.GetFullPackedSavePath(slot);
+                string packedSaveAssetsPath = SaveDataInfo.GetFullPackedAssetsSavePath(slot);
+
+                // before doing anything, let's save a backup, shall we?
+                if (File.Exists(packedSavePath) && File.Exists(packedSaveAssetsPath))
+                {
+                    string backupDirectory = SaveDataInfo.GetFullPackedSaveBackupDirectory(slot);
+                    FileManager.GetOrCreateDirectory(backupDirectory);
+
+                    string packedSavePathBackup = Path.Join(backupDirectory, PackedSaveData.Name);
+                    File.Copy(packedSavePath, packedSavePathBackup, overwrite: true);
+
+                    string packedSaveAssetsPathBackup = Path.Join(backupDirectory, PackedSaveAssetsData.Name);
+                    File.Copy(packedSaveAssetsPath, packedSaveAssetsPathBackup, overwrite: true);
+                }
+
+                FileManager.CreateDirectoryPathIfNotExists(packedSavePath);
+
+                await Task.WhenAll(
+                    FileManager.PackContentAsync(trackerJson, path: Path.Join(Game.Data.SaveBasePath, SaveDataTracker.Name)),
+                    FileManager.PackContentAsync(packedDataJson, path: packedSavePath),
+                    FileManager.PackContentAsync(packedAssetsDataJson, packedSaveAssetsPath));
+
+                return true;
             }
-
-            PackedSaveData packedData = new(_activeSaveData);
-            string packedDataJson = FileManager.SerializeToJson(packedData);
-
-            _waitPendingSaveTrackerOperation = false;
-
-            saveToJsonRecorder.Dispose();
-
-            using PerfTimeRecorder recorderSerialize = new("Writing save to file");
-
-            PackedSaveAssetsData packedAssetsData = new([.. _currentSaveAssets.Values]);
-            string packedAssetsDataJson = FileManager.SerializeToJson(packedAssetsData);
-
-            string packedSavePath = SaveDataInfo.GetFullPackedSavePath(slot);
-            string packedSaveAssetsPath = SaveDataInfo.GetFullPackedAssetsSavePath(slot);
-
-            // before doing anything, let's save a backup, shall we?
-            if (File.Exists(packedSavePath) && File.Exists(packedSaveAssetsPath))
+            catch (Exception e)
             {
-                string backupDirectory = SaveDataInfo.GetFullPackedSaveBackupDirectory(slot);
-                FileManager.GetOrCreateDirectory(backupDirectory);
-
-                string packedSavePathBackup = Path.Join(backupDirectory, PackedSaveData.Name);
-                File.Copy(packedSavePath, packedSavePathBackup, overwrite: true);
-
-                string packedSaveAssetsPathBackup = Path.Join(backupDirectory, PackedSaveAssetsData.Name);
-                File.Copy(packedSaveAssetsPath, packedSaveAssetsPathBackup, overwrite: true);
+                GameLogger.Error($"An unexpected error occurred while saving: {e.Message}");
+                return false;
             }
-
-            FileManager.CreateDirectoryPathIfNotExists(packedSavePath);
-
-            await Task.WhenAll(
-                FileManager.PackContentAsync(trackerJson, path: Path.Join(Game.Data.SaveBasePath, SaveDataTracker.Name)),
-                FileManager.PackContentAsync(packedDataJson, path: packedSavePath),
-                FileManager.PackContentAsync(packedAssetsDataJson, packedSaveAssetsPath));
-
-            return true;
         }
 
         public bool RemoveAssetForCurrentSave(Guid guid)
