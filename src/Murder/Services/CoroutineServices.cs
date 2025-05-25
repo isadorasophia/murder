@@ -35,4 +35,17 @@ public static class CoroutineServices
         // Immediately run the first tick!
         e.GetStateMachine().Tick(Game.DeltaTime);
     }
+
+    public static void FireAfter(this World world, float seconds, Action action)
+    {
+        Entity e = world.AddEntity();
+        e.RunCoroutine(WaitAndRun(seconds, action));
+    }
+
+    private static IEnumerator<Wait> WaitAndRun(float seconds, Action action)
+    {
+        yield return Wait.ForSeconds(seconds);
+
+        action.Invoke();
+    }
 }
