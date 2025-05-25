@@ -10,7 +10,7 @@ namespace Murder.Data;
 [Serializable]
 public class PackedGameData
 {
-    public const string Name = "data.gz";
+    public const string Name = "data{0}.gz";
 
     public readonly List<GameAsset> Assets;
 

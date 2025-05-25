@@ -4,6 +4,7 @@ using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Editor.Utilities;
 using Murder.Serialization;
+using Murder.Utilities;
 
 namespace Murder.Editor.Data;
 
@@ -22,7 +23,7 @@ public partial class EditorDataManager
     private string[]? _preloadSourcePath = null;
 
     /// <summary>
-    /// This will pack all the assets into a single asset for publishing the game.
+    /// This will pack all the collectionOfAssets into a single asset for publishing the game.
     /// </summary>
     public void PackPublishedGame()
     {
@@ -33,7 +34,11 @@ public partial class EditorDataManager
         }
 
         List<GameAsset> preloadAssets = new(32);
-        List<GameAsset> assets = new(_allAssets.Count);
+
+        int maxAssetsPerSaveData = 500;
+        int currentSplitSave = 0;
+
+        List<List<GameAsset>> collectionOfAssets = [];
 
         foreach (GameAsset asset in _allAssets.Values)
         {
@@ -54,15 +59,30 @@ public partial class EditorDataManager
                 continue;
             }
 
-            assets.Add(asset);
+            if (collectionOfAssets.Count <= currentSplitSave)
+            {
+                collectionOfAssets.Add([]);
+            }
+
+            collectionOfAssets[currentSplitSave].Add(asset);
+
+            if (collectionOfAssets[currentSplitSave].Count > maxAssetsPerSaveData)
+            {
+                currentSplitSave++;
+            }
         }
 
-        PreloadPackedGameData preloadData = new(preloadAssets);
+        int totalData = collectionOfAssets.Count;
+        PreloadPackedGameData preloadData = new(totalData, preloadAssets);
 
-        PackedGameData gameData = new(assets)
+        PackedGameData[] packedGameData = new PackedGameData[totalData];
+        for (int i = 0; i < totalData; i++)
         {
-            TexturesNoAtlasPath = AvailableUniqueTextures
-        };
+            packedGameData[i] = new(collectionOfAssets[i])
+            {
+                TexturesNoAtlasPath = i == 0 ? AvailableUniqueTextures : []
+            };
+        }
 
         PackedSoundData soundData = new()
         {
@@ -78,14 +98,21 @@ public partial class EditorDataManager
             await Task.Yield();
 
             string preloadPackedGameDataPath = Path.Join(PublishedPackedAssetsFullPath, PreloadPackedGameData.Name);
-            string packedGameDataPath = Path.Join(PublishedPackedAssetsFullPath, PackedGameData.Name);
             string packedSoundDataPath = Path.Join(PublishedPackedAssetsFullPath, PackedSoundData.Name);
 
             FileManager.PackContent(preloadData, preloadPackedGameDataPath);
-            FileManager.PackContent(gameData, packedGameDataPath);
             FileManager.PackContent(soundData, packedSoundDataPath);
 
-            GameLogger.Log($"Published game content with {preloadAssets.Count} (preload) and {assets.Count} (gameplay) assets at '{PublishedPackedAssetsFullPath}'.");
+            int totalAssets = 0;
+            for (int i = 0; i < packedGameData.Length; i++)
+            {
+                string packedGameDataPath = Path.Join(PublishedPackedAssetsFullPath, string.Format(PackedGameData.Name, i));
+                FileManager.PackContent(packedGameData[i], packedGameDataPath);
+
+                totalAssets += packedGameData[i].Assets.Count;
+            }
+
+            GameLogger.Log($"Published game content with {preloadAssets.Count} (preload) and {totalAssets} (gameplay) assets at '{PublishedPackedAssetsFullPath}'.");
         });
     }
 

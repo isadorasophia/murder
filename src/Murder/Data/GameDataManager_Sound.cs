@@ -11,6 +11,8 @@ namespace Murder.Data
         {
             using PerfTimeRecorder recorder = new("Loading Sounds");
 
+            await Task.Yield();
+
             PreprocessSoundFiles();
             await LoadSoundsImplAsync(reload);
         }

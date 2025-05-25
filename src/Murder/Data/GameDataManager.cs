@@ -135,6 +135,11 @@ namespace Murder.Data
         private volatile bool _errorLoadingLastAsset = false;
 
         /// <summary>
+        /// Populated by the preload asset.
+        /// </summary>
+        private int _totalPackedGameDataCount = 1;
+
+        /// <summary>
         /// Whether we will continue trying to deserialize a file after finding an issue.
         /// </summary>
         public virtual bool IgnoreSerializationErrors => false;
@@ -286,6 +291,8 @@ namespace Murder.Data
                 return;
             }
 
+            _totalPackedGameDataCount = data.TotalPackedData;
+
             foreach (GameAsset asset in data.Assets)
             {
                 AddAsset(asset);
@@ -308,11 +315,23 @@ namespace Murder.Data
 
             await Task.Yield();
 
-            string path = Path.Join(PublishedPackedAssetsFullPath, PackedGameData.Name);
+            Task[] unloadAllData = new Task[_totalPackedGameDataCount];
+            for (int i = 0; i < _totalPackedGameDataCount; ++i)
+            {
+                unloadAllData[i] = LoadSaveGameDataAssetsAsync(i);
+            }
+
+            await Task.WhenAll(unloadAllData);
+        }
+
+        protected virtual async Task LoadSaveGameDataAssetsAsync(int index)
+        {
+            await Task.Yield();
+
+            string path = Path.Join(PublishedPackedAssetsFullPath, string.Format(PackedGameData.Name, index));
             if (!File.Exists(path))
             {
                 GameLogger.Warning("Unable to load game content. Did you pack the game assets?");
-
                 throw new InvalidOperationException("Unable to find game content.");
             }
 
