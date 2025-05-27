@@ -404,6 +404,30 @@ namespace Murder.Assets
             _entitiesToFolder.Remove(instanceGuid);
         }
 
+        public void ClearAllMissingInstances()
+        {
+            int totalEntitiesCleared = 0;
+            foreach ((string name, ImmutableArray<Guid> entities) in _folders)
+            {
+                var result = entities;
+                foreach (Guid g in entities)
+                {
+                    if (TryGetInstance(g) is null)
+                    {
+                        totalEntitiesCleared++;
+                        result = result.Remove(g);
+
+                        _entitiesToFolder.Remove(g);
+                        _entitiesToFilter.Remove(g);
+                    }
+                }
+
+                _folders[name] = result;
+            }
+
+            GameLogger.Log($"Finish clearing {totalEntitiesCleared} entities.");
+        }
+
         public void UpdateSystems(ImmutableArray<(Type systemType, bool isActive)> systems) => _systems = systems;
         public void UpdateFeatures(ImmutableArray<(Guid guid, bool isActive)> features) => _features = features;
         public void UpdateSystemsToRemove(ImmutableArray<Type> systems) => _systemsToRemove = systems;

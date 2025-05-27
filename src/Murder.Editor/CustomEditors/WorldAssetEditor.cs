@@ -321,11 +321,23 @@ namespace Murder.Editor.CustomEditors
 
                         modified |= CustomField.DrawValueWithId(ref _asset, nameof(WorldAsset.ReferencedAtlas));
 
+                        ImGuiHelpers.ColorIcon('\uf0d1', Game.Profile.Theme.Accent);
+                        ImGuiHelpers.HelpTooltip("Move entities in the map");
+                        ImGui.SameLine();
+
                         ImGui.DragInt2("##MoveRoom", ref _moveRoomAmount[0], 1);
                         ImGui.SameLine();
-                        if (ImGui.Button("Move Whole Map"))
+                        if (ImGui.Button("Move whole map"))
                         {
                             MoveMap(currentStage, new(_moveRoomAmount[0], _moveRoomAmount[1]));
+                        }
+
+                        ImGuiHelpers.ColorIcon('\uf0ad', Game.Profile.Theme.Accent);
+                        ImGui.SameLine();
+
+                        if (ImGui.Button("Clear missing entities..."))
+                        {
+                            _world?.ClearAllMissingInstances();
                         }
 
                         ImGui.EndChild();
