@@ -18,6 +18,11 @@ namespace Murder.Services
 {
     public static class PhysicsServices
     {
+        public static Map? TryGetMap(World world)
+        {
+            return world.TryGetUniqueMap()?.Map;
+        }
+
         public static IntRectangle GetCarveBoundingBox(this ColliderComponent collider, Vector2 position)
         {
             Rectangle rect = collider.GetBoundingBox(position);
