@@ -13,7 +13,7 @@ namespace Murder.Interaction
         public readonly float Time = 0;
 
         [Default("Add interaction...")]
-        public readonly IInteraction? Interactive = null;
+        public readonly IInteractiveComponent? Interactive = null;
 
         public InteractWithDelayInteraction() { }
 
@@ -29,7 +29,7 @@ namespace Murder.Interaction
         }
 
         private static IEnumerator<Wait> WaitBeforeInteract(
-            World world, Entity interactor, Entity? interacted, float time, IInteraction interactive)
+            World world, Entity interactor, Entity? interacted, float time, IInteractiveComponent interactive)
         {
             yield return Wait.ForSeconds(time);
             interactive.Interact(world, interactor, interacted);
