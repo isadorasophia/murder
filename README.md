@@ -43,9 +43,12 @@ There is no nuget package for Murder yet, so the recommended way is to keep a gi
 For more information on how the ECS applies to the engine, I recommend checking out the documentation for [Bang](https://github.com/isadorasophia/bang), the framework that Murder uses.
 
 ### Requirements
-We support developing (which means, running the editor) on **Linux, MacOS, Windows** and even **SteamDeck**. All you really need is .NET 8 SDK installed. The game obviously also ships to all these architectures. 
+We support developing (which means, running the editor) on **Linux, MacOS, Windows** and even **Steam Deck**. All you really need is .NET 8 SDK installed.
 
-Console support is still on progress.
+### Supported platforms
+The engine supports targeting your game to Linux (which includes Steam Deck), MacOS and Windows. Console support is currently on progress. 
+
+We have no plans on officially supporting web or mobile (iOS or Android) for now, sorry!
 
 ### Contributing
 This is still super early, but feel free to contact me or [saint11](http://saint11.org/) if you have any suggestions. I am very interested in people trying it out and any feedback you may have!
