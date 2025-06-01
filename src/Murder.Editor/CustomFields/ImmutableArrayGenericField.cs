@@ -2,6 +2,7 @@
 using Murder.Editor.Reflection;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace Murder.Editor.CustomFields
 {
@@ -14,11 +15,27 @@ namespace Murder.Editor.CustomFields
 
             if (ImGui.Button("Add item"))
             {
-                element = new();
+                element = CreateNewInstance()!;
                 return true;
             }
 
             return false;
+        }
+
+        private T CreateNewInstance()
+        {
+            Type t = typeof(T);
+            if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(ImmutableArray<>))
+            {
+                MethodInfo? create = typeof(ImmutableArray).GetMethod("Create", BindingFlags.Public | BindingFlags.Static, [])?
+                    .MakeGenericMethod(t.GenericTypeArguments[0]);
+
+                return (T)create?.Invoke(null, null)!;
+            }
+            else
+            {
+                return new();
+            }
         }
     }
 }
