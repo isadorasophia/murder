@@ -225,7 +225,7 @@ public class PlayerInput
             gamepadAvailable = capabilities.IsConnected && capabilities.GamePadType == GamePadType.GamePad;
         }
 
-        GamePadState gamepadState = gamepadAvailable ? GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One) : new();
+        GamePadState gamepadState = gamepadAvailable ? GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One, GamePadDeadZone.Circular) : new();
         InputState inputState = new(_currentKeyboardState, gamepadState, MouseConsumed ? _emptyMouseState : mouseState);
         var scale = Game.Instance.GameScale;
 

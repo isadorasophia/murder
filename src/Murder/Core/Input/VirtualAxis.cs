@@ -69,16 +69,6 @@ namespace Murder.Core.Input
             {
                 var vector = axis.Check(inputState);
 
-                // use a deadzone to prevent small values from being registered
-                if (MathF.Abs(MathF.Abs(vector.X)) < 0.05f)
-                {
-                    vector = new Vector2(0, vector.Y);
-                }
-                if (MathF.Abs(MathF.Abs(vector.Y)) < 0.05f)
-                {
-                    vector = new Vector2(vector.X, 0);
-                }
-
                 if (vector.HasValue())
                 {
                     Down = true;
@@ -89,6 +79,19 @@ namespace Murder.Core.Input
             }
 
             var lengthSq = Value.LengthSquared();
+            if (lengthSq < 0.0001f)
+            {
+                Value = Vector2.Zero;
+                IntValue = Point.Zero;
+                PressedValue = Point.Zero;
+                _tickX = false;
+                _tickY = false;
+                _pressedXStart = 0;
+                _pressedYStart = 0;
+                _nextXTick = 0;
+                _nextYTick = 0;
+            }
+
             if (lengthSq > 1)
                 Value = Value.Normalized();
 
