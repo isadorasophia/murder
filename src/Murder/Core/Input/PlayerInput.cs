@@ -444,7 +444,7 @@ public class PlayerInput
         // Check for vertical overflow
         currentInfo.OverflowY = axis.TickY ? axis.IntValue.Y : 0;
 
-        return HorizontalOrVerticalMenu(ref currentInfo, input: axis.TickX ? Math.Sign(axis.Value.X) : null);
+        return HorizontalOrVerticalMenu(ref currentInfo, input: axis.TickX ? axis.IntValue.X : null);
     }
 
     public bool VerticalMenu(ref MenuInfo currentInfo, SimpleMenuFlags flags = SimpleMenuFlags.None)
@@ -460,7 +460,7 @@ public class PlayerInput
         // Check for horizontal overflow
         currentInfo.OverflowX = axis.TickX ? axis.IntValue.X : 0;
 
-        return HorizontalOrVerticalMenu(ref currentInfo, axis.TickY ? Math.Sign(axis.Value.Y) : null, flags);
+        return HorizontalOrVerticalMenu(ref currentInfo, axis.TickY ? axis.IntValue.Y : null, flags);
     }
 
     private bool HorizontalOrVerticalMenu(ref MenuInfo currentInfo, float? input, SimpleMenuFlags flags = SimpleMenuFlags.None)
@@ -543,11 +543,11 @@ public class PlayerInput
         currentInfo.JustMoved = false;
 
         VirtualAxis axis = GetAxis(MurderInputAxis.Ui);
-        return HorizontalOrVerticalMenu(ref currentInfo, axis.PressedY ? Math.Sign(axis.Value.Y) : null,
+        return HorizontalOrVerticalMenu(ref currentInfo, axis.TickY ? axis.IntValue.Y : null,
             axis.PressedX ? axis.IntValue.X : 0);
     }
 
-    private bool HorizontalOrVerticalMenu<T>(ref GenericMenuInfo<T> currentInfo, float? input, int overflow)
+    private bool HorizontalOrVerticalMenu<T>(ref GenericMenuInfo<T> currentInfo, int? input, int overflow)
     {
         bool pressed = false;
         if (Pressed(MurderInputButtons.Submit))
@@ -637,11 +637,11 @@ public class PlayerInput
         bool rotateInput = gridMenuFlags.HasFlag(GridMenuFlags.Rotate);
 
         // Horizontal / Vertical inputs
-        bool horizontalPressed = rotateInput ? rawAxis.PressedY : rawAxis.PressedX;
-        bool verticalPressed = rotateInput ? rawAxis.PressedX : rawAxis.PressedY;
+        bool horizontalPressed = rotateInput ? rawAxis.TickY : rawAxis.TickX;
+        bool verticalPressed = rotateInput ? rawAxis.TickX : rawAxis.TickY;
 
-        float horizontalValue = rotateInput ? rawAxis.Value.Y : rawAxis.Value.X;
-        float verticalValue = rotateInput ? rawAxis.Value.X : rawAxis.Value.Y;
+        int horizontalValue = rotateInput ? rawAxis.IntValue.Y : rawAxis.IntValue.X;
+        int verticalValue = rotateInput ? rawAxis.IntValue.X : rawAxis.IntValue.Y;
 
         float lastMoved = currentInfo.LastMoved;
         float lastPressed = currentInfo.LastPressed;

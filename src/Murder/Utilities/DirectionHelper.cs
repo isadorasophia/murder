@@ -46,15 +46,15 @@ public static class DirectionHelper
         {
             case Direction.UpRight:
             case Direction.UpLeft:
-            case Direction.Up: 
+            case Direction.Up:
                 return DirectionFlags.Up;
 
-            case Direction.Down: 
+            case Direction.Down:
             case Direction.DownLeft:
-            case Direction.DownRight: 
+            case Direction.DownRight:
                 return DirectionFlags.Down;
 
-            case Direction.Left: 
+            case Direction.Left:
                 return DirectionFlags.Left;
 
             case Direction.Right:
@@ -230,7 +230,7 @@ public static class DirectionHelper
         int directionIndex = (int)MathF.Round(8 * angle / (2 * MathF.PI)) % 8;
         return (Direction)directionIndex;
     }
-    
+
     /// <summary>
     /// The angle of the direction, in radians.
     /// </summary>
@@ -288,7 +288,7 @@ public static class DirectionHelper
     }
 
     public static Direction FromVectorWithVertical(Vector2 vector)
-    { 
+    {
         // Check if the vector is pointing more upward or downward
         if (vector.Y < 0)
         {
@@ -413,5 +413,18 @@ public static class DirectionHelper
     {
         Direction direction = LookAtEntity(from, to);
         from.SetFacing(direction);
+    }
+
+    internal static float SnapTo8Directions(float angle)
+    {
+        // Convert the angle to a 0-1 range
+        float normalizedAngle = (angle % (2 * MathF.PI)) / (2 * MathF.PI);
+
+        float step = 1f / 8f; // 8 directions
+
+        // Find the closest step
+        int closestStep = (int)MathF.Round(normalizedAngle * 8);
+
+        return closestStep * (2 * MathF.PI) * step;
     }
 }
