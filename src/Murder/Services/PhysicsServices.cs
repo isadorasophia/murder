@@ -84,6 +84,11 @@ namespace Murder.Services
         /// </summary>
         public static IntRectangle GetColliderBoundingBox(this Entity target)
         {
+            if (!target.HasCollider() || !target.HasTransform())
+            {
+                return IntRectangle.Empty;
+            }
+
             ColliderComponent collider = target.GetCollider();
             Vector2 position = target.GetGlobalTransform().Vector2;
 
