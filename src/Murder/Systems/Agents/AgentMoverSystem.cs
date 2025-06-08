@@ -105,7 +105,7 @@ namespace Murder.Systems
                 }
             }
 
-            return Calculator.Approach(velocity, finalImpulse * speed * multiplier, accel * multiplier * Game.FixedDeltaTime);
+            return Calculator.Approach(velocity, finalImpulse * speed * multiplier, accel * multiplier * Game.DeltaTime);
         }
     }
 }

@@ -485,7 +485,7 @@ namespace Murder.Utilities
             if (diff.LengthSquared() <= amount * amount)
                 return target;
             else
-                return from + diff.Normalized() * amount;
+                return from + diff.NormalizedWithSanity() * amount;
         }
 
         public static Vector2 Normalized(this in Vector2 vector2)
