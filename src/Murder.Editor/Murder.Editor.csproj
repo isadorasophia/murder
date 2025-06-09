@@ -6,6 +6,9 @@
     <PublishReadyToRun>false</PublishReadyToRun>
     <TieredCompilation>false</TieredCompilation>
     <DefineConstants>$(DefineConstants);EDITOR</DefineConstants>
+
+    <!-- Uncomment this for a standalone build of the editor -->
+    <!-- <DefineConstants>$(DefineConstants);NO_SOURCE</DefineConstants> -->
   </PropertyGroup>
 
   <!-- Set icons -->
