@@ -48,19 +48,19 @@ namespace Murder.Systems
             }
         }
 
-        private static Vector2 GetVelocity(Entity entity, AgentComponent agent, AgentImpulseComponent impulse, in Vector2 currentVelocity)
+        private static Vector2 GetVelocity(Entity entity, AgentComponent agent, AgentImpulseComponent impulse, in Vector2 previousVelocity)
         {
-            var velocity = currentVelocity;
+            var velocity = previousVelocity;
 
             if (impulse.Impulse.HasValue())
             {
-                if (impulse.Impulse.X == 0 || !Calculator.SameSignOrSimilar(impulse.Impulse.X, currentVelocity.X))
+                if (impulse.Impulse.X == 0 || !Calculator.SameSignOrSimilar(impulse.Impulse.X, previousVelocity.X))
                 {
-                    velocity = new Vector2(currentVelocity.X * agent.Friction, velocity.Y);
+                    velocity = new Vector2(previousVelocity.X * agent.Friction, velocity.Y);
                 }
-                if (impulse.Impulse.Y == 0 || !Calculator.SameSignOrSimilar(impulse.Impulse.Y, currentVelocity.Y))
+                if (impulse.Impulse.Y == 0 || !Calculator.SameSignOrSimilar(impulse.Impulse.Y, previousVelocity.Y))
                 {
-                    velocity = new Vector2(velocity.X, velocity.Y * agent.Friction);
+                    velocity = new Vector2(velocity.X, previousVelocity.Y * agent.Friction);
                 }
             }
 
@@ -105,6 +105,7 @@ namespace Murder.Systems
                 }
             }
 
+            
             return Calculator.Approach(velocity, finalImpulse * speed * multiplier, accel * multiplier * Game.DeltaTime);
         }
     }
