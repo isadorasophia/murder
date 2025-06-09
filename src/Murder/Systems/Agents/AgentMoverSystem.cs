@@ -48,19 +48,19 @@ namespace Murder.Systems
             }
         }
 
-        private static Vector2 GetVelocity(Entity entity, AgentComponent agent, AgentImpulseComponent impulse, in Vector2 previousVelocity)
+        private static Vector2 GetVelocity(Entity entity, AgentComponent agent, AgentImpulseComponent impulse, in Vector2 currentVelocity)
         {
-            var velocity = previousVelocity;
+            var newVelocity = currentVelocity;
 
             if (impulse.Impulse.HasValue())
             {
-                if (impulse.Impulse.X == 0 || !Calculator.SameSignOrSimilar(impulse.Impulse.X, previousVelocity.X))
+                if (impulse.Impulse.X == 0 || !Calculator.SameSignOrSimilar(impulse.Impulse.X, currentVelocity.X))
                 {
-                    velocity = new Vector2(previousVelocity.X * agent.Friction, velocity.Y);
+                    newVelocity = new Vector2(currentVelocity.X * agent.Friction, newVelocity.Y);
                 }
-                if (impulse.Impulse.Y == 0 || !Calculator.SameSignOrSimilar(impulse.Impulse.Y, previousVelocity.Y))
+                if (impulse.Impulse.Y == 0 || !Calculator.SameSignOrSimilar(impulse.Impulse.Y, currentVelocity.Y))
                 {
-                    velocity = new Vector2(velocity.X, previousVelocity.Y * agent.Friction);
+                    newVelocity = new Vector2(newVelocity.X, newVelocity.Y * agent.Friction);
                 }
             }
 
@@ -106,7 +106,7 @@ namespace Murder.Systems
             }
 
             
-            return Calculator.Approach(velocity, finalImpulse * speed * multiplier, accel * multiplier * Game.DeltaTime);
+            return Calculator.Approach(newVelocity, finalImpulse * speed * multiplier, accel * multiplier * Game.FixedDeltaTime);
         }
     }
 }
