@@ -1,4 +1,5 @@
-﻿using Murder.Assets;
+﻿using Bang;
+using Murder.Assets;
 using Murder.Data;
 using Murder.Diagnostics;
 
@@ -51,9 +52,6 @@ namespace Murder.Core
 
         public override async Task UnloadAsyncImpl()
         {
-            ValueTask<bool> result = Game.Data.PendingSave ?? new(true);
-            await result;
-
             if (Game.Data.TryGetAsset<WorldAsset>(_worldGuid) is WorldAsset world)
             {
                 foreach (ReferencedAtlas atlas in world.ReferencedAtlas)
@@ -67,8 +65,15 @@ namespace Murder.Core
                 }
             }
 
-            _world?.Dispose();
+            World? previousWorld = _world;
+
+            // immediately nullify this value.
             _world = null;
+
+            ValueTask<bool> result = Game.Data.PendingSave ?? new(true);
+            await result;
+
+            previousWorld?.Dispose();
         }
 
         /// <summary>
