@@ -3,8 +3,6 @@ using Bang.Components;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
-using Murder.Components.Utilities;
-using Murder.Core;
 using Murder.Messages.Physics;
 
 namespace Murder.Systems;
@@ -48,6 +46,10 @@ public class AgentMovementModifierSystem : IMessagerSystem
                 if (currentArea.RemoveArea(area) is InsideMovementModAreaComponent newAreaInfo)
                 {
                     actor.SetInsideMovementModArea(newAreaInfo);
+                }
+                else
+                {
+                    actor.RemoveInsideMovementModArea();
                 }
             }
         }
