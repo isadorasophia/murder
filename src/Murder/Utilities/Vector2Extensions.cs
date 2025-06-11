@@ -125,11 +125,33 @@ namespace Murder.Utilities
         }
 
         /// <summary>
-        /// Returns the perpendicular vector to the given vector.
+        /// Returns the perpendicular left vector to the given vector.
         /// </summary>
         public static Vector2 Perpendicular(this Vector2 vector)
         {
             return new Vector2(-vector.Y, vector.X);
+        }
+
+
+        /// <summary>
+        /// Same as <see cref="Perpendicular"/>
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <returns></returns>
+        public static Vector2 PerpendicularLeft(this Vector2 vector)
+        {
+            return Perpendicular(vector);
+        }
+
+
+        /// <summary>
+        /// Returns the perpendicular right vector to the given vector.
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <returns></returns>
+        public static Vector2 PerpendicularRight(this Vector2 vector)
+        {
+            return new Vector2(vector.Y, -vector.X);
         }
     }
 }
