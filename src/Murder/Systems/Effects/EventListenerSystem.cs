@@ -109,6 +109,11 @@ namespace Murder.Systems.Effects
                 {
                     foreach ((string _, SpriteEventInfo info) in listener.Events)
                     {
+                        if (info.Sound is null)
+                        {
+                            continue;
+                        }
+
                         SoundServices.Stop(info.Sound, fadeOut: true, entityId: e.EntityId);
                     }
                 }
