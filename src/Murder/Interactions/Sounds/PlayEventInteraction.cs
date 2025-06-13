@@ -7,10 +7,11 @@ using Murder.Utilities.Attributes;
 
 namespace Murder.Interactions
 {
+    [Sound]
     [CustomName("\uf2a2 Play Event On Interaction")]
     public readonly struct PlayEventInteraction : IInteraction
     {
-        public readonly SoundEventId Event = new();
+        public readonly SoundEventId? Event = null;
 
         public readonly SoundProperties Properties = SoundProperties.Persist;
         public readonly SoundLayer Layer = SoundLayer.Ambience;
@@ -19,6 +20,11 @@ namespace Murder.Interactions
 
         public void Interact(World world, Entity interactor, Entity? interacted)
         {
+            if (Event is null)
+            {
+                return;
+            }
+
             if (Properties.HasFlag(SoundProperties.StopOtherEventsInLayer))
             {
                 SoundServices.Stop(id: null, fadeOut: true);
@@ -30,7 +36,14 @@ namespace Murder.Interactions
                 properties |= SoundProperties.SkipIfAlreadyPlaying;
             }
 
-            _ = SoundServices.Play(Event, interactor, Layer, properties);
+            if (interactor.HasOnExitMessage())
+            {
+                SoundServices.Stop(Event.Value, fadeOut: true);
+            }
+            else
+            {
+                _ = SoundServices.Play(Event.Value, interactor, Layer, properties);
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Bang.Components;
-using Bang.Contexts;
+﻿using Bang.Contexts;
 using Bang.Interactions;
 using Bang.Systems;
 using ImGuiNET;
@@ -18,7 +17,7 @@ using System.Numerics;
 namespace Murder.Editor.Systems.Sounds
 {
     [SoundEditor]
-    [Filter(typeof(SoundComponent), typeof(MusicComponent), typeof(SoundParameterComponent))]
+    [Filter(typeof(SoundComponent), typeof(SoundParameterComponent))]
     internal class SoundCreationEditorSystem : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)
@@ -34,34 +33,40 @@ namespace Murder.Editor.Systems.Sounds
 
             if (ImGui.BeginPopupContextItem())
             {
-                if (ImGui.Selectable("\uf2a2 Create sound shape"))
+                if (ImGui.Selectable("\uf2a2 Create event with distance tracking"))
                 {
                     Point cursorWorldPosition = hook.LastCursorWorldPosition;
                     CreateSoundShape(hook, cursorWorldPosition);
                 }
 
-                if (ImGui.Selectable("\uf2a2 Set ambience on area"))
+                if (ImGui.Selectable("\uf2a2 Play event while on world"))
+                {
+                    Point cursorWorldPosition = hook.LastCursorWorldPosition;
+                    CreateNewOnStartOnEndEventArea(hook, cursorWorldPosition);
+                }
+
+                if (ImGui.Selectable("\uf2a2 Trigger when entering or exiting area"))
+                {
+                    Point cursorWorldPosition = hook.LastCursorWorldPosition;
+                    CreateNewOnEnterOnExitPlayEventArea(hook, cursorWorldPosition);
+                }
+
+                if (ImGui.Selectable("\uf2a2 Play ambience event while inside area"))
                 {
                     Point cursorWorldPosition = hook.LastCursorWorldPosition;
                     CreateAmbienceArea(hook, cursorWorldPosition);
                 }
 
-                if (ImGui.Selectable("\uf2a2 Change parameter on area"))
+                if (ImGui.Selectable("\uf70c Set parameter when entering area"))
                 {
                     Point cursorWorldPosition = hook.LastCursorWorldPosition;
                     CreateNewSoundTriggerArea(hook, cursorWorldPosition);
                 }
 
-                if (ImGui.Selectable("\uf70c On enter/exit"))
+                if (ImGui.Selectable("\uf70c Set parameter when entering or exiting area"))
                 {
                     Point cursorWorldPosition = hook.LastCursorWorldPosition;
                     CreateNewOnEnterOnExitEventArea(hook, cursorWorldPosition);
-                }
-
-                if (ImGui.Selectable("\uf70c Play/stop"))
-                {
-                    Point cursorWorldPosition = hook.LastCursorWorldPosition;
-                    CreateNewOnEnterOnExitPlayEventArea(hook, cursorWorldPosition);
                 }
 
                 ImGui.EndPopup();
@@ -75,8 +80,7 @@ namespace Murder.Editor.Systems.Sounds
         private void CreateNewSoundTriggerArea(EditorHook hook, Vector2 position)
         {
             hook.AddEntityWithStage?.Invoke(
-                new IComponent[]
-                {
+                [
                     new PositionComponent(position),
                     new SoundParameterComponent(),
                     new InteractOnCollisionComponent(playerOnly: true),
@@ -85,16 +89,15 @@ namespace Murder.Editor.Systems.Sounds
                         layer: CollisionLayersBase.TRIGGER,
                         color: new Color(104 / 255f, 234 / 255f, 137 / 255f)),
                     new InteractiveComponent<SetSoundParameterOnInteraction>(new SetSoundParameterOnInteraction())
-                },
+                ],
                 /* group */ "Sounds",
-                /* name */ "Set parameter trigger area");
+                /* name */ "Set parameter when entering area");
         }
 
         private void CreateNewStartEventArea(EditorHook hook, Vector2 position)
         {
             hook.AddEntityWithStage?.Invoke(
-                new IComponent[]
-                {
+                [
                     new PositionComponent(position),
                     new SoundParameterComponent(),
                     new InteractOnCollisionComponent(playerOnly: true),
@@ -103,16 +106,15 @@ namespace Murder.Editor.Systems.Sounds
                         layer: CollisionLayersBase.TRIGGER,
                         color: new Color(104 / 255f, 234 / 255f, 137 / 255f)),
                     new InteractiveComponent<PlayEventInteraction>(new PlayEventInteraction())
-                },
+                ],
                 /* group */ "Sounds",
-                /* name */ "Play event Area");
+                /* name */ "Play event when entering area");
         }
 
         private void CreateNewStopEventArea(EditorHook hook, Vector2 position)
         {
             hook.AddEntityWithStage?.Invoke(
-                new IComponent[]
-                {
+                [
                     new PositionComponent(position),
                     new SoundParameterComponent(),
                     new InteractOnCollisionComponent(playerOnly: true),
@@ -121,16 +123,15 @@ namespace Murder.Editor.Systems.Sounds
                         layer: CollisionLayersBase.TRIGGER,
                         color: new Color(104 / 255f, 234 / 255f, 137 / 255f)),
                     new InteractiveComponent<StopEventInteraction>(new StopEventInteraction())
-                },
+                ],
                 /* group */ "Sounds",
-                /* name */ "Stop event Area");
+                /* name */ "Stop event when enter area");
         }
 
         private void CreateNewOnEnterOnExitEventArea(EditorHook hook, Vector2 position)
         {
             hook.AddEntityWithStage?.Invoke(
-                new IComponent[]
-                {
+                [
                     new PositionComponent(position),
                     new SoundParameterComponent(),
                     new InteractOnCollisionComponent(playerOnly: true, sendMessageOnExit: true),
@@ -141,16 +142,28 @@ namespace Murder.Editor.Systems.Sounds
                     new OnEnterOnExitComponent(
                         new InteractiveComponent<SetSoundParameterOnInteraction>(new SetSoundParameterOnInteraction()),
                         new InteractiveComponent<SetSoundParameterOnInteraction>(new SetSoundParameterOnInteraction()))
-                },
+                ],
                 /* group */ "Sounds",
-                /* name */ "On enter/exit area");
+                /* name */ "Set parameter when entering or exiting area");
+        }
+
+        private void CreateNewOnStartOnEndEventArea(EditorHook hook, Vector2 position)
+        {
+            hook.AddEntityWithStage?.Invoke(
+                [
+                    new PositionComponent(position),
+                    new InteractOnStartOnEndComponent(),
+                    new InteractiveComponent<PlayEventInteraction>(),
+                    new SoundParameterComponent()
+                ],
+                /* group */ "Sounds",
+                /* name */ "Event while on world");
         }
 
         private void CreateNewOnEnterOnExitPlayEventArea(EditorHook hook, Vector2 position)
         {
             hook.AddEntityWithStage?.Invoke(
-                new IComponent[]
-                {
+                [
                     new PositionComponent(position),
                     new SoundParameterComponent(),
                     new InteractOnCollisionComponent(playerOnly: true, sendMessageOnExit: true),
@@ -161,9 +174,9 @@ namespace Murder.Editor.Systems.Sounds
                     new OnEnterOnExitComponent(
                         new InteractiveComponent<PlayEventInteraction>(new PlayEventInteraction()),
                         new InteractiveComponent<StopEventInteraction>(new StopEventInteraction()))
-                },
+                ],
                 /* group */ "Sounds",
-                /* name */ "Play/stop on enter/exit");
+                /* name */ "Trigger when entering or exiting area");
         }
 
 
@@ -180,7 +193,7 @@ namespace Murder.Editor.Systems.Sounds
                         color: new Color(104 / 255f, 234 / 255f, 137 / 255f))
                 ],
                 /* group */ "Sounds",
-                /* name */ "Ambience Area");
+                /* name */ "Play ambience while inside area");
         }
 
         private void CreateSoundShape(EditorHook hook, Vector2 position)
@@ -193,7 +206,7 @@ namespace Murder.Editor.Systems.Sounds
                     new SoundShapeComponent([new Point(0, 0)]),
                 ],
                 /* group */ "Sounds",
-                /* name */ "Ambience Area");
+                /* name */ "Event with distance tracking");
         }
     }
 }
