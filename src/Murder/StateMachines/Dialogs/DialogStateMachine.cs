@@ -7,11 +7,13 @@ using Murder.Diagnostics;
 using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
+using Murder.Utilities.Attributes;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Murder.StateMachines
 {
+    [RuntimeOnly]
     public class DialogStateMachine : StateMachine
     {
         private CharacterRuntime? _character;
