@@ -42,6 +42,8 @@ namespace Murder.Assets
         /// </summary>
         public readonly ImmutableArray<ReferencedAtlas> ReferencedAtlas = [];
 
+        public readonly WorldFlags Flags = WorldFlags.None;
+
         /// <summary>
         /// Map of all the systems and whether they are active or not.
         /// </summary>
@@ -626,5 +628,13 @@ namespace Murder.Assets
         }
 
         public bool IsOnFilter(Guid g) => _entitiesToFilter.ContainsKey(g);
+    }
+
+    [Flags]
+    public enum WorldFlags
+    {
+        None = 0,
+        IgnoreSoundFadeOnEnter = 1,
+        IgnoreSoundFadeOnExit = 0x10,
     }
 }

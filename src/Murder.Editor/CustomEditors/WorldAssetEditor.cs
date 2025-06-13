@@ -315,6 +315,12 @@ namespace Murder.Editor.CustomEditors
 
                         modified |= CustomField.DrawValueWithId(ref _asset, nameof(WorldAsset.Order));
 
+                        ImGuiHelpers.ColorIcon('\uf024', Game.Profile.Theme.Accent);
+                        ImGuiHelpers.HelpTooltip("Flags associated with this world");
+                        ImGui.SameLine();
+
+                        modified |= CustomField.DrawValueWithId(ref _asset, nameof(WorldAsset.Flags));
+
                         ImGuiHelpers.ColorIcon('\uf008', Game.Profile.Theme.Accent);
                         ImGuiHelpers.HelpTooltip("Atlas which should be loaded with this map");
                         ImGui.SameLine();
