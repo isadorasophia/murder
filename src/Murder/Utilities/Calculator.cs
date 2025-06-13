@@ -498,6 +498,17 @@ namespace Murder.Utilities
         public static float Clamp01(float v) => Math.Clamp(v, 0.0f, 1.0f);
         public static float Clamp01(int v) => Math.Clamp(v, 0, 1);
 
+        /// <summary>
+        /// Remaps a value from the range [-1, 1] to [0, 1].
+        /// </summary>
+        /// <param name="value">A float between -1 and 1.</param>
+        /// <returns>The corresponding value between 0 and 1.</returns>
+        public static float RemapAmplitude(float value)
+        {
+            return (value + 1f) * 0.5f;
+        }
+
+
         public static float Remap(float input, float inputMin, float inputMax, float min, float max)
         {
             return min + (input - inputMin) * (max - min) / (inputMax - inputMin);
