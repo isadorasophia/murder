@@ -8,7 +8,7 @@ using Murder.Editor.Reflection;
 namespace Murder.Editor.CustomFields
 {
     [CustomFieldOf(typeof(DialogAction))]
-    internal class DialogActionField : CustomField
+    public class DialogActionField : CustomField
     {
         public override (bool modified, object? result) ProcessInput(EditorMember member, object? fieldValue)
         {
