@@ -38,7 +38,7 @@ namespace Murder.Interactions
 
             if (interactor.HasOnExitMessage())
             {
-                SoundServices.Stop(Event.Value, fadeOut: true);
+                SoundServices.Stop(Event.Value, fadeOut: true, interactor.EntityId);
             }
             else
             {
