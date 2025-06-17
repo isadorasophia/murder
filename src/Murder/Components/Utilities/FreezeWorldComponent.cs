@@ -9,14 +9,14 @@ namespace Murder.Components
     {
         public readonly int Count = 1;
         public readonly float StartTime;
+
         public FreezeWorldComponent(float startTime)
         {
             StartTime = startTime;
         }
 
-        public FreezeWorldComponent(float startTime, int count)
+        public FreezeWorldComponent(float startTime, int count) : this(startTime)
         {
-            StartTime = startTime;
             Count = count;
         } 
     }
