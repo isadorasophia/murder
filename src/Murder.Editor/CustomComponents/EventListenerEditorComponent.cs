@@ -217,7 +217,7 @@ namespace Murder.Editor.CustomComponents
 
                 listener = listener with
                 {
-                    Events = events.Where(s => (eventNames is not null && !eventNames.Contains(s.Id)) || s.Sound is not null || eventNames is null).ToImmutableArray()
+                    Events = events.Where(s => (eventNames is not null && !eventNames.Contains(s.Id)) || s.Sound is not null || eventNames is null || s.Interactions is not null).ToImmutableArray()
                 };
             }
 
