@@ -38,8 +38,11 @@ namespace Murder.Services
             }
 
             Entity e = world.AddEntity();
-            e.SetFadeScreen(new FadeScreenComponent(FadeType.In, Game.NowUnscaled, time, color, sorting: sorting)
-                with { TargetBatch = targetBatch });
+            string? customTexture = world.TryGetUniqueCustomFadeScreenStyle()?.CustomFadeImage;
+
+            e.SetFadeScreen(new FadeScreenComponent(FadeType.In, Game.NowUnscaled, time, color, customTexture != null ? Path.Join("images", customTexture) : string.Empty, sorting: sorting)
+                with
+            { TargetBatch = targetBatch });
 
             return e;
         }
@@ -60,16 +63,17 @@ namespace Murder.Services
             }
 
             var e = world.AddEntity();
+            string? customTexture = world.TryGetUniqueCustomFadeScreenStyle()?.CustomFadeImage;
 
             if (bufferDrawFrames > 0)
             {
                 // With buffer frames we must wait until we get Game.Now otherwise we will get an value
                 // specially at lower frame rates
-                e.SetFadeScreen(new(FadeType.Out, delay, duration, color, string.Empty, 0, bufferDrawFrames));
+                e.SetFadeScreen(new(FadeType.Out, delay, duration, color, customTexture != null ? Path.Join("images", customTexture) : string.Empty, 0, bufferDrawFrames));
             }
             else
             {
-                e.SetFadeScreen(new(FadeType.Out, Game.NowUnscaled + delay, duration, color, string.Empty, 0, bufferDrawFrames));
+                e.SetFadeScreen(new(FadeType.Out, Game.NowUnscaled + delay, duration, color, customTexture != null ? Path.Join("images", customTexture) : string.Empty, 0, bufferDrawFrames));
             }
         }
 
