@@ -159,6 +159,10 @@ public static class EditorAssetHelpers
                 {
                     return false;
                 }
+                if (aseprite.Frames.Length == 0)
+                {
+                    return false;
+                }
 
                 string frameId = string.IsNullOrEmpty(animationId) ? aseprite.Frames[0].Name : aseprite.Animations.ContainsKey(animationId) ?
                     aseprite.Frames[aseprite.Animations[animationId].Frames[0]].Name : aseprite.Frames[0].Name;

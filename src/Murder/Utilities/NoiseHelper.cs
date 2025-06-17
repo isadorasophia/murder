@@ -1,6 +1,8 @@
 ﻿using Murder.Diagnostics;
 using System;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace Murder.Utilities
@@ -417,19 +419,24 @@ namespace Murder.Utilities
         #region Gustavson Private Helper Functions
         private static void RecalculatePermutations()
         {
-            Random rand;
-            if (_seed != -1)
-                rand = new Random(_seed);
-            else
-                rand = new Random();
+            Random rand = (_seed != -1) ? new Random(_seed) : new Random();
 
-            // Randomize permutations array
-            for (int i = 0; i < _p.Length; i++)
-                _p[i] = rand.Next(_halfLength);
+            // Step 1: fill _p[0..255] with [0..255]
+            for (int i = 0; i < 256; i++)
+                _p[i] = (byte)i;
 
-            for (int i = 0; i < 512; i++)
-                _perm[i] = _p[i & 255];
+            // Step 2: Fisher–Yates shuffle
+            for (int i = 255; i > 0; i--)
+            {
+                int j = rand.Next(i + 1);
+                (_p[i], _p[j]) = (_p[j], _p[i]);
+            }
+
+            // Step 3: duplicate the array
+            for (int i = 0; i < 256; i++)
+                _perm[i] = _perm[i + 256] = _p[i];
         }
+
 
         private static float Dot(int[] g, float x, float y)
         {
@@ -510,80 +517,65 @@ namespace Murder.Utilities
         }
         #endregion
 
-        private readonly static int[] _hash = {
-            151,160,137, 91, 90, 15,131, 13,201, 95, 96, 53,194,233,  7,225,
-            140, 36,103, 30, 69,142,  8, 99, 37,240, 21, 10, 23,190,  6,148,
-            247,120,234, 75,  0, 26,197, 62, 94,252,219,203,117, 35, 11, 32,
-             57,177, 33, 88,237,149, 56, 87,174, 20,125,136,171,168, 68,175,
-             74,165, 71,134,139, 48, 27,166, 77,146,158,231, 83,111,229,122,
-             60,211,133,230,220,105, 92, 41, 55, 46,245, 40,244,102,143, 54,
-             65, 25, 63,161,  1,216, 80, 73,209, 76,132,187,208, 89, 18,169,
-            200,196,135,130,116,188,159, 86,164,100,109,198,173,186,  3, 64,
-             52,217,226,250,124,123,  5,202, 38,147,118,126,255, 82, 85,212,
-            207,206, 59,227, 47, 16, 58, 17,182,189, 28, 42,223,183,170,213,
-            119,248,152,  2, 44,154,163, 70,221,153,101,155,167, 43,172,  9,
-            129, 22, 39,253, 19, 98,108,110, 79,113,224,232,178,185,112,104,
-            218,246, 97,228,251, 34,242,193,238,210,144, 12,191,179,162,241,
-             81, 51,145,235,249, 14,239,107, 49,192,214, 31,181,199,106,157,
-            184, 84,204,176,115,121, 50, 45,127,  4,150,254,138,236,205, 93,
-            222,114, 67, 29, 24, 72,243,141,128,195, 78, 66,215, 61,156,180,
-
-            151,160,137, 91, 90, 15,131, 13,201, 95, 96, 53,194,233,  7,225,
-            140, 36,103, 30, 69,142,  8, 99, 37,240, 21, 10, 23,190,  6,148,
-            247,120,234, 75,  0, 26,197, 62, 94,252,219,203,117, 35, 11, 32,
-             57,177, 33, 88,237,149, 56, 87,174, 20,125,136,171,168, 68,175,
-             74,165, 71,134,139, 48, 27,166, 77,146,158,231, 83,111,229,122,
-             60,211,133,230,220,105, 92, 41, 55, 46,245, 40,244,102,143, 54,
-             65, 25, 63,161,  1,216, 80, 73,209, 76,132,187,208, 89, 18,169,
-            200,196,135,130,116,188,159, 86,164,100,109,198,173,186,  3, 64,
-             52,217,226,250,124,123,  5,202, 38,147,118,126,255, 82, 85,212,
-            207,206, 59,227, 47, 16, 58, 17,182,189, 28, 42,223,183,170,213,
-            119,248,152,  2, 44,154,163, 70,221,153,101,155,167, 43,172,  9,
-            129, 22, 39,253, 19, 98,108,110, 79,113,224,232,178,185,112,104,
-            218,246, 97,228,251, 34,242,193,238,210,144, 12,191,179,162,241,
-             81, 51,145,235,249, 14,239,107, 49,192,214, 31,181,199,106,157,
-            184, 84,204,176,115,121, 50, 45,127,  4,150,254,138,236,205, 93,
-            222,114, 67, 29, 24, 72,243,141,128,195, 78, 66,215, 61,156,180
-        };
-
-        private const int HASH_MASK = 255;
-        public static float Simple2D(float x, float y, float frequency = 1f)
+        private const int Mask = 255;        // &-mask removes a slow modulus.
+        private const float Inv255 = 1f / 255f;
+        public static float Value2D(float x, float y, float frequency = 1f)
         {
-            int ix0 = Calculator.FloorToInt(x * frequency);
-            int iy0 = Calculator.FloorToInt(y * frequency);
-            ix0 &= HASH_MASK;
-            iy0 &= HASH_MASK;
-            int ix1 = ix0 + 1;
-            int iy1 = iy0 + 1;
 
-            int h0 = _hash[ix0];
-            int h1 = _hash[ix1];
-            int h00 = _hash[h0 + iy0];
-            int h11 = _hash[h1 + iy1];
+            // Scale into “grid space”.
+            x *= frequency;
+            y *= frequency;
 
-            return h00 * (1f / HASH_MASK);
-        }
-        public static float Simple01(float point, float frequency = 1f)
-        {
-            point *= frequency;
-            int i0 = Calculator.FloorToInt(point);
-            float t = point - i0;
-            i0 &= HASH_MASK;
-            int i1 = i0 + 1;
+            // Integer lattice coordinates of the cell.
+            int xi = (int)MathF.Floor(x) & Mask;
+            int yi = (int)MathF.Floor(y) & Mask;
 
-            int h0 = _hash[i0];
-            int h1 = _hash[i1];
-            t = Smooth(t);
-            return Calculator.Lerp(h0, h1, t) * (1f / HASH_MASK);
-        }
-        private static float Smooth(float t)
-        {
-            return t * t * t * (t * (t * 6f - 15f) + 10f);
+            // Fraction inside the cell.
+            float xf = x - MathF.Floor(x);
+            float yf = y - MathF.Floor(y);
+
+            // Four deterministic pseudorandom corner values in [0,1].
+            float v00 = _perm[_perm[xi] + yi] * Inv255;
+            float v10 = _perm[_perm[xi + 1] + yi] * Inv255;
+            float v01 = _perm[_perm[xi] + yi + 1] * Inv255;
+            float v11 = _perm[_perm[xi + 1] + yi + 1] * Inv255;
+
+            // Smoothstep (Perlin’s “fade”) for nicer transitions.
+            float u = xf * xf * xf * (xf * (xf * 6f - 15f) + 10f);
+            float v = yf * yf * yf * (yf * (yf * 6f - 15f) + 10f);
+
+            // Bilinear interpolation.
+            float a = Lerp(v00, v10, u);
+            float b = Lerp(v01, v11, u);
+            return Lerp(a, b, v);
         }
 
-        public static long LCG(long seed, long a, long c, long m)
+        /// <summary>Linear interpolation helper with aggressive inlining for this class only</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static float Lerp(float a, float b, float t) => a + (b - a) * t;
+
+        /// <summary>
+        /// Smooth 1D value noise in the range [0, 1], deterministic and tileable.
+        /// </summary>
+        /// <param name="x">Input coordinate</param>
+        /// <param name="frequency">Grid frequency (higher = more variation)</param>
+        /// <returns>Smoothed pseudorandom float between 0 and 1</returns>
+        public static float Value1D(float x, float frequency = 1f)
         {
-            return ((a * seed + c) & m);
+            x *= frequency;
+
+            int i = (int)MathF.Floor(x);
+            float t = x - i;
+
+            int i0 = i & Mask;
+            int i1 = (i + 1) & Mask;
+
+            float v0 = _perm[i0] * Inv255;
+            float v1 = _perm[i1] * Inv255;
+
+            t = t * t * t * (t * (t * 6f - 15f) + 10f); // smoothstep
+
+            return v0 + (v1 - v0) * t;
         }
     }
 }

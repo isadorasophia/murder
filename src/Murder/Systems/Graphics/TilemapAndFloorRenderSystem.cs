@@ -107,7 +107,7 @@ public class TilemapAndFloorRenderSystem : IMurderRenderSystem
                     {
                         ImmutableArray<int> floorFrames = floorSpriteAsset.Animations[string.Empty].Frames;
 
-                        var noise = Calculator.RoundToInt(NoiseHelper.Simple2D(x, y) * (floorFrames.Length - 1));
+                        var noise = Calculator.RoundToInt(NoiseHelper.Value2D(x, y) * (floorFrames.Length - 1));
                         AtlasCoordinates floor = floorSpriteAsset.GetFrame(floorFrames[noise]);
 
                         // Draw each individual ground tile.

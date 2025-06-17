@@ -53,7 +53,7 @@ namespace Murder.Systems
 
                 if (e.TryGetAgentImpulse() is AgentImpulseComponent imp) impulse = imp.Impulse;
 
-                float start = NoiseHelper.Simple01(e.EntityId * 10) * 5f;
+                float start = NoiseHelper.Value1D(e.EntityId * 10) * 5f;
                 var prefix = sprite.IdlePrefix;
 
                 if (impulse.HasValue() && !e.HasDisableAgent() && !e.HasAgentPause())
