@@ -450,7 +450,8 @@ namespace Murder
         /// </remarks>
         public virtual void SetWindowSize(Point screenSize, bool remember)
         {
-            _graphics.SynchronizeWithVerticalRetrace = true;
+            // _graphics.SynchronizeWithVerticalRetrace = true;
+            
             if (Fullscreen)
             {
                 _windowedSize = _graphics.GraphicsDevice.Viewport.Bounds.Size();
