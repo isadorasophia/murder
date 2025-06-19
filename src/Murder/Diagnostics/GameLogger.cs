@@ -300,12 +300,13 @@ public class GameLogger
 
     private bool CheckRepeat(string rawMessage)
     {
-        if (_lastInput == rawMessage)
+        if (_lastInput == rawMessage && _log.Count > 0)
         {
             LogLine lastLog = _log.Last();
             _log[^1] = lastLog with { Repeats = lastLog.Repeats + 1 };
             return true;
         }
+
         _lastInput = rawMessage;
         return false;
     }
