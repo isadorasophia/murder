@@ -1,10 +1,5 @@
 ﻿using Bang.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Bang.StateMachines;
+using Murder.Core.Sounds;
 
 namespace Murder.Components;
 
@@ -12,9 +7,7 @@ namespace Murder.Components;
 public readonly struct CustomFadeScreenStyleComponent: IComponent
 {
     public readonly string? CustomFadeImage = null;
+    public readonly SoundEventId? CustomSoundFadeIn = null;
 
-    public CustomFadeScreenStyleComponent()
-    {
-        
-    }
+    public CustomFadeScreenStyleComponent() { }
 }
