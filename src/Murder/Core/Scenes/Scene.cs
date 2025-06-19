@@ -138,16 +138,16 @@ namespace Murder.Core
             World?.PreDraw();
         }
 
-        public virtual void Draw()
+        public virtual bool DrawStart()
         {
             if (World is null)
             {
-                return;
+                return false;
             }
 
             if (!_calledStart)
             {
-                return;
+                return false;
             }
 
             GameLogger.Verify(RenderContext is not null);
@@ -156,6 +156,12 @@ namespace Murder.Core
 
             RenderContext.Begin();
             World?.Draw(RenderContext);
+            return true;
+        }
+
+        public void DrawEnd()
+        {
+            GameLogger.Verify(RenderContext is not null);
             RenderContext.End();
         }
 

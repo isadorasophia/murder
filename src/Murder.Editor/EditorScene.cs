@@ -145,13 +145,14 @@ namespace Murder.Editor
             UpdateShortcuts();
         }
 
-        public override void Draw()
+        public override bool DrawStart()
         {
             // We don't need to draw the world when in the editor scene
             // TODO: Pedro fix shader
             // Game.Data.SimpleShader.CurrentTechnique.Passes[0].Apply();
             Game.GraphicsDevice.SetRenderTarget(null);
             Game.GraphicsDevice.Clear(Game.Profile.Theme.Bg.ToXnaColor());
+            return false;
         }
 
         public override void DrawGui()

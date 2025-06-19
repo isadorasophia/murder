@@ -323,16 +323,21 @@ public class GenericSelectorSystem
 
             Vector2 position = e.GetGlobalTransform().Vector2;
             Rectangle rect = GetSeletionBoundingBox(e, world, position, out _);
+            if (!rect.TouchesInside(cameraRect))
+            {
+                continue;
+            }
 
             if (e.Parent is not null && !hook.EnableSelectChildren)
             {
                 // We block dragging entities on world editors otherwise it would be too confusing (signed: Pedro).
                 continue;
             }
-            bool isInsideCamera = cameraRect.IsInside(rect);
+            bool isCameraInsideObject = cameraRect.IsInside(rect);
+
             bool isMuchBiggerThanCamera = rect.Width > cameraRect.Width && rect.Height > cameraRect.Height;
 
-            if (isInsideCamera && isMuchBiggerThanCamera)
+            if (isCameraInsideObject && isMuchBiggerThanCamera)
             {
                 // If the entity is much bigger than the camera, you can still select it by clicking on the very center of it.
                 rect = new Rectangle(rect.Center - new Point(5), new Point(10));

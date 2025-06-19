@@ -80,7 +80,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
 
         // FPS Window
         ImGui.SetNextWindowBgAlpha(Calculator.Lerp(0.5f, 1f, _hovered));
-        if (ImGui.Begin("Insights", ImGuiWindowFlags.AlwaysAutoResize))
+        if (ImGui.Begin("Insights", ImGuiWindowFlags.None))
         {
             if (ImGui.BeginTabBar("Insights Tabs"))
             {
@@ -215,11 +215,12 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
 
                     ImGui.EndTabItem();
                 }
-                
+
                 if (ImGui.BeginTabItem("Details"))
                 {
                     ImGui.SeparatorText("Performance");
 
+                    // To calculate FPS from LastFrameDuration (in seconds), use the formula: FPS = 1 / LastFrameDuration.
                     ImGui.Text($"FPS: {_frameRate.Value}");
                     ImGui.Text($"Update: {Game.Instance.UpdateTime:00.00} ({Game.Instance.LongestUpdateTime:00.00})");
                     ImGui.Text($"Render: {Game.Instance.RenderTime:00.00} ({Game.Instance.LongestRenderTime:00.00})");
@@ -320,8 +321,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
 
     public void Update(Context context)
     {
-        _frameRate.Update(Game.DeltaTime);
-
+        _frameRate.Update(Game.Instance.LastFrameDuration);
         MonoWorld world = (MonoWorld)context.World;
         EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
 
@@ -395,22 +395,87 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         }
     }
 
+    private int _previousGCGen1Count = 0;
+    private int _previousGCGen2Count = 0;
+    /// <summary>
+    /// Only updated byt the EditorSystem
+    /// </summary>
+    public static UpdateTimeTracker GcTracker = new();
     private void PlotDeltaTimeGraph()
     {
         // TODO: Get more meaningful information from this...
         int gen1Count = GC.CollectionCount(generation: 1);
         int gen2Count = GC.CollectionCount(generation: 2);
+        if (gen2Count != _previousGCGen2Count)
+        {
+            _previousGCGen2Count = gen2Count;
+            GcTracker.Update(1f);
+        }
+        else if (gen1Count != _previousGCGen1Count)
+        {
+            _previousGCGen1Count = gen1Count;
+            GcTracker.Update(0.5f);
+        }
+        else
+        {
+            GcTracker.Update(0f);
+        }
+        if (Game.IsRunningSlowly)
+        {
+            ImGui.TextColored(Game.Profile.Theme.Red, "Running slowly!");
+        }
+        ImGui.PlotHistogram("##GC_histogram", ref GcTracker.Sample[0], GcTracker.Length, 0, "GC Collection", 0, 1000, new Vector2(ImGui.GetContentRegionAvail().X, 20));
 
         // ImGui.Text($"Gen 1/Gen 2 GC Count: {gen1Count}, {gen2Count}");
-        UpdateTimeTracker tracker = Game.TimeTrackerDiagnoostics;
+        UpdateTimeTracker tracker = Game.TimeTrackerDiagnostics;
+        UpdateTimeTracker renderTracker = Game.RenderTimeTrackerDiagnostics;
+        UpdateTimeTracker gcTracker = Game.RenderTimeTrackerDiagnostics;
         if (tracker.Length >= 0)
         {
-            ImGui.PlotHistogram("##fps_histogram", ref tracker.Sample[0], tracker.Length, 0, "Delta Time Tracker (ms)", 0, Game.FixedDeltaTime * 1.5f * 1000, new Vector2(ImGui.GetContentRegionAvail().X, 80));
+            ImGui.PlotHistogram("##fps_histogram", ref tracker.Sample[0], tracker.Length, 0, "Update Time Tracker (ms)", 0, Game.FixedDeltaTime * 1.25f * 1000, new Vector2(ImGui.GetContentRegionAvail().X, 80));
+            ImGui.PlotHistogram("##render_histogram", ref renderTracker.Sample[0], renderTracker.Length, 0, "Render Time Tracker (ms)", 0, Game.FixedDeltaTime * 0.5f * 1000, new Vector2(ImGui.GetContentRegionAvail().X, 80));
+            (float low, float median, float high) = GetHighLowAndMedian(tracker);
+            ImGui.Text($"Fastest Update Time: {low:0.00} ms");
+            ImGui.Text($"Median Update Time: {median:0.00} ms");
+            ImGui.Text($"Slowest Update Time: {high:0.00} ms");
         }
         else
         {
             ImGui.Text($"Graph is empty. Is DIAGNOSTICS_MODE enabled?");
         }
-
     }
+
+    private (float low, float median, float high) GetHighLowAndMedian(UpdateTimeTracker tracker)
+    {
+        float[] samples = tracker.Sample;
+        int length = tracker.Length;
+
+        if (length <= 0 || samples == null || samples.Length < length)
+            return (0f, 0f, 0f);
+
+        // Copy only the valid samples
+        float[] validSamples = new float[length];
+        Array.Copy(samples, validSamples, length);
+
+        // Sort to compute median and get min/max
+        Array.Sort(validSamples);
+        float low = validSamples[0];
+        float high = validSamples[length - 1];
+        float median;
+
+        if (length % 2 == 0)
+        {
+            // Even number of elements
+            median = (validSamples[length / 2 - 1] + validSamples[length / 2]) / 2f;
+        }
+        else
+        {
+            // Odd number of elements
+            median = validSamples[length / 2];
+        }
+
+        return (low, median, high);
+    }
+
+
 }
