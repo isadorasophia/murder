@@ -29,13 +29,6 @@ namespace Murder.Systems.Graphics
 
             foreach (Entity e in context.Entities)
             {
-                ImageFlip flip = ImageFlip.None;
-
-                if (e.TryGetFlipSprite() is FlipSpriteComponent flipSprite)
-                {
-                    flip = flipSprite.Orientation;
-                }
-
                 IMurderTransformComponent transform = e.GetGlobalTransform();
                 SpriteComponent s = e.GetSprite();
 
@@ -48,6 +41,12 @@ namespace Murder.Systems.Graphics
                     asset = loadedAsset;
                 }
 
+                ImageFlip flip = ImageFlip.None;
+
+                if (e.TryGetFlipSprite() is FlipSpriteComponent flipSprite)
+                {
+                    flip = flipSprite.Orientation;
+                }
 
                 Vector2 renderPosition;
                 if (e.TryGetParallax() is ParallaxComponent parallax)

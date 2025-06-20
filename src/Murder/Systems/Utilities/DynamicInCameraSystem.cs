@@ -35,7 +35,8 @@ public class DynamicInCameraSystem : IMonoPreRenderSystem
         bottomRight *= new Vector2(Math.Abs(scale.X), Math.Abs(scale.Y));
 
         // Adjust for rotation by using the maximum extent
-        float maxExtent = Math.Max(topLeft.Length(), bottomRight.Length());
+        float maxExtentSq = Math.Max(topLeft.LengthSquared(), bottomRight.LengthSquared());
+        float maxExtent = MathF.Sqrt(maxExtentSq);
 
         // Calculate the AABB
         Vector2 min = position - new Vector2(maxExtent, maxExtent);
@@ -60,9 +61,41 @@ public class DynamicInCameraSystem : IMonoPreRenderSystem
         {
             Vector2 position = e.GetGlobalTransform().Vector2;
 
-            if (e.TryGetSprite() is SpriteComponent sprite)
+            if (e.TryGetEntityBoundsCache() is EntityBoundsCacheComponent entityBoundsCacheComponent)
             {
-                if (Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid) is not SpriteAsset ase)
+                Vector2 renderPosition;
+                if (e.TryGetParallax() is ParallaxComponent parallax)
+                {
+                    renderPosition = position + cameraPosition * (1 - parallax.Factor);
+                }
+                else
+                {
+                    renderPosition = position;
+                }
+
+                Vector2 scale = Vector2.One;
+                if (e.TryGetScale() is ScaleComponent scaleCompoennt)
+                {
+                    scale = scaleCompoennt.Scale;
+                }
+
+                // If we have a bounds cache, we can use it to determine if the entity is in camera.
+                Rectangle bounds = new Rectangle(renderPosition.X + entityBoundsCacheComponent.Bounds.X, renderPosition.Y + entityBoundsCacheComponent.Bounds.Y,
+                                                 entityBoundsCacheComponent.Bounds.Width, entityBoundsCacheComponent.Bounds.Height);
+                if (cameraBounds.Touches(bounds))
+                {
+                    e.SetInCamera();
+                }
+                else
+                {
+                    e.RemoveInCamera();
+                }
+                continue;
+            }
+
+            else if (e.TryGetSprite() is SpriteComponent sprite)
+            {
+                if (Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid) is not SpriteAsset spriteAsset)
                 {
                     continue;
                 }
@@ -83,8 +116,9 @@ public class DynamicInCameraSystem : IMonoPreRenderSystem
                     scale = scaleCompoennt.Scale;
                 }
 
+                Rectangle spriteRect = CalculateBounds(renderPosition, sprite.Offset + spriteAsset.Origin, spriteAsset.Size, scale);
+                e.SetEntityBoundsCache(spriteRect.AddPosition(-renderPosition));
 
-                Rectangle spriteRect = CalculateBounds(renderPosition, sprite.Offset + ase.Origin, ase.Size, scale);
                 // This is as early as we can to check for out of bounds
                 if (sprite.TargetSpriteBatch == Batches2D.UiBatchId ||
                     cameraBounds.Touches(spriteRect))
@@ -101,6 +135,7 @@ public class DynamicInCameraSystem : IMonoPreRenderSystem
                 if (e.TryGetCollider() is ColliderComponent collider)
                 {
                     Rectangle edges = collider.GetBoundingBox(position);
+                    e.SetEntityBoundsCache(edges.AddPosition(-position));
                     if (cameraBounds.Touches(edges))
                     {
                         e.SetInCamera();
@@ -113,6 +148,7 @@ public class DynamicInCameraSystem : IMonoPreRenderSystem
                 else
                 {
                     // Assume a 1px point
+                    e.SetEntityBoundsCache(Rectangle.One);
                     if (cameraBounds.Contains(position.ToPoint()))
                     {
                         e.SetInCamera();

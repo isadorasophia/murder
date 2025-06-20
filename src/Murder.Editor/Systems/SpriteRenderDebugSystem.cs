@@ -20,6 +20,7 @@ using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
 using System.Numerics;
+using Murder.Diagnostics;
 
 namespace Murder.Editor.Systems;
 
@@ -362,6 +363,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
         if (issueSlowdownWarning)
         {
             // Do nothing! But we could issue an warning somewhere.
+            GameLogger.Warning("SpriteRenderDebugSystem: Slowdown detected! You might miss some animation events");
         }
     }
 
