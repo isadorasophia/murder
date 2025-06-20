@@ -136,12 +136,6 @@ public class Batch2D : IDisposable
             throw new System.InvalidOperationException("Begin() must be called before End().");
         }
 
-        if (SpriteCount == 0)
-        {
-            GiveUp();
-            return;
-        }
-
         Flush();
 
         IsBatching = false;
