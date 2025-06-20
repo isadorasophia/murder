@@ -8,7 +8,6 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Prefabs;
 using Murder.Services;
 using Murder.Utilities;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace Murder.Editor.Stages

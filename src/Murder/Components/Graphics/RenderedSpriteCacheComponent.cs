@@ -8,7 +8,7 @@ namespace Murder.Components.Graphics
 {
     [RuntimeOnly]
     [DoNotPersistOnSave]
-    public readonly struct RenderedSpriteCacheComponent : IComponent
+    public readonly struct RenderedSpriteCacheComponent : IComponent, IDoNotCheckOnReplaceTag
     {
         public readonly Animation CurrentAnimation { get; init; }
         public readonly Vector2 RenderPosition { get; init; }
