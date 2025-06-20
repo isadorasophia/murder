@@ -359,7 +359,7 @@ namespace Murder.Services
                                 break;
                             case PolygonShape polygon:
                                 {
-                                    if (polygon.Polygon.Intersects(line.AddPosition(position.Point), out Vector2 hitPoint))
+                                    if (polygon.Polygon.Intersects(line.AddPosition(-position.Point), out Vector2 hitPoint))
                                     {
                                         CompareShapeHits(startPosition, ref hit, ref hitSomething, ref closest, e, hitPoint.Point());
 
