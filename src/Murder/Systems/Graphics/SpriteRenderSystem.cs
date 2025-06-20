@@ -129,6 +129,12 @@ namespace Murder.Systems.Graphics
                     renderPosition = new Vector2(renderPosition.X, renderPosition.Y - verticalPosition.Value.Z);
                 }
 
+                int? forceFrame = null;
+                if (e.TryGetSpriteFrame() is SpriteFrameComponent spriteFrame && spriteFrame.Animation.Equals(animation))
+                {
+                    forceFrame = spriteFrame.Frame;
+                }
+
                 var animationInfo = new AnimationInfo()
                 {
                     Name = animation,
@@ -139,7 +145,7 @@ namespace Murder.Systems.Graphics
                         !e.HasDoNotLoop() &&                       // if this has the DoNotLoop component, don't loop
                         !e.HasDestroyOnAnimationComplete() &&     // if you want to destroy this, don't loop
                         (overload == null || (overload.Value.AnimationCount == 1 && overload.Value.Loop)),
-                    ForceFrame = e.TryGetSpriteFrame()?.Frame
+                    ForceFrame = forceFrame
                 };
 
                 var scale = e.TryGetScale()?.Scale ?? Vector2.One;
