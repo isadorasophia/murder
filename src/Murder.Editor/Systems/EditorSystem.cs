@@ -97,7 +97,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
 
         // FPS Window
         ImGui.SetNextWindowBgAlpha(Calculator.Lerp(0.5f, 1f, _hovered));
-        if (ImGui.Begin("Insights", ImGuiWindowFlags.None))
+        if (ImGui.Begin("Insights", ImGuiWindowFlags.AlwaysAutoResize))
         {
             if (ImGui.BeginTabBar("Insights Tabs"))
             {
@@ -284,10 +284,24 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                         float imguiEnd = start.X + availableSize.X * (renderRatio + updateRatio + imguiRatio);
                         float soundEnd = start.X + availableSize.X * (renderRatio + updateRatio + imguiRatio + soundRatio);
 
-                        dl.AddRectFilled(new Vector2(start.X, start.Y), new Vector2(renderEnd, end.Y), Color.ToUint(Game.Profile.Theme.White), 4f);
-                        dl.AddRectFilled(new Vector2(renderEnd, start.Y), new Vector2(updateEnd, end.Y), Color.ToUint(Game.Profile.Theme.HighAccent), 4f);
-                        dl.AddRectFilled(new Vector2(updateEnd, start.Y), new Vector2(imguiEnd, end.Y), Color.ToUint(Game.Profile.Theme.Yellow), 4f);
-                        dl.AddRectFilled(new Vector2(imguiEnd, start.Y), new Vector2(soundEnd, end.Y), Color.ToUint(Game.Profile.Theme.Green), 4f);
+                        if (renderEnd - start.X >= 1)
+                        {
+                            dl.AddRectFilled(new Vector2(start.X, start.Y), new Vector2(renderEnd, end.Y), Color.ToUint(Game.Profile.Theme.White), 4f);
+                        }
+
+                        if (updateEnd - renderEnd >= 1)
+                        {
+                            dl.AddRectFilled(new Vector2(renderEnd, start.Y), new Vector2(updateEnd, end.Y), Color.ToUint(Game.Profile.Theme.HighAccent), 4f);
+                        }
+
+                        if (imguiEnd - updateEnd >= 1)
+                        {
+                            dl.AddRectFilled(new Vector2(updateEnd, start.Y), new Vector2(imguiEnd, end.Y), Color.ToUint(Game.Profile.Theme.Yellow), 4f);
+                        }
+                        if (soundEnd - imguiEnd >= 1)
+                        {
+                            dl.AddRectFilled(new Vector2(imguiEnd, start.Y), new Vector2(soundEnd, end.Y), Color.ToUint(Game.Profile.Theme.Green), 4f);
+                        }
 
                         if (excess > 0)
                         {
