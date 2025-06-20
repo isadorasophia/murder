@@ -296,12 +296,22 @@ public class PixelFontSize
                 }
             }
 
-            // i don't think we need this anymore?
-            //bool isPostAddedLineEnding = letter?.Properties is not RuntimeLetterPropertiesFlag properties ||
-            //    !properties.HasFlag(RuntimeLetterPropertiesFlag.DoNotSkipLineEnding);
-
             if (character == '\n')
             {
+                // If this is *not* a language that does new line over spaces, we'll need to manually
+                // take into account the new line as a character that was introduced, instead of replaced within the
+                // space character.
+                if (!LocalizationServices.IsTextWrapOnlyOnSpace())
+                {
+                    bool isPostAddedLineEnding = letter?.Properties is not RuntimeLetterPropertiesFlag properties ||
+                        !properties.HasFlag(RuntimeLetterPropertiesFlag.DoNotSkipLineEnding);
+
+                    if (isPostAddedLineEnding)
+                    {
+                        letterIndex--;
+                    }
+                }
+
                 currentWidth = 0;
 
                 lineCount++;
