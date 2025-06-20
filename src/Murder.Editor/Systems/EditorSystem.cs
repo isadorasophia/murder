@@ -78,6 +78,23 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
 
         ImGui.EndMainMenuBar();
 
+        // Record slowdowns
+        float totalFrameTime = Game.FixedDeltaTime;
+        if (totalFrameTime > 0)
+        {
+            float renderRatio = Game.Instance.RenderTime / totalFrameTime;
+            float updateRatio = Game.Instance.UpdateTime / totalFrameTime;
+            float imguiRatio = Game.Instance.ImGuiRenderTime / totalFrameTime;
+            if (renderRatio + updateRatio + imguiRatio > 1)
+            {
+                SlowDownTracker.Update(renderRatio + updateRatio + imguiRatio - 1f);
+            }
+            else
+            {
+                SlowDownTracker.Update(0f);
+            }
+        }
+
         // FPS Window
         ImGui.SetNextWindowBgAlpha(Calculator.Lerp(0.5f, 1f, _hovered));
         if (ImGui.Begin("Insights", ImGuiWindowFlags.None))
@@ -90,8 +107,8 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                 {
                     ImGui.SeparatorText("Performance");
                     ImGui.Text($"FPS: {_frameRate.Value}");
-                    ImGui.Text($"Update: {Game.Instance.UpdateTime:00.00} ({Game.Instance.LongestUpdateTime:00.00})");
-                    ImGui.Text($"Render: {Game.Instance.RenderTime:00.00} ({Game.Instance.LongestRenderTime:00.00})");
+                    ImGui.Text($"Update: {Game.Instance.UpdateTime * 1000:00.00} ({Game.Instance.LongestUpdateTime * 1000:00.00})");
+                    ImGui.Text($"Render: {Game.Instance.RenderTime * 1000:00.00} ({Game.Instance.LongestRenderTime * 1000:00.00})");
                     ImGui.Text($"Entities: {context.World.EntityCount}");
 
 
@@ -222,9 +239,53 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
 
                     // To calculate FPS from LastFrameDuration (in seconds), use the formula: FPS = 1 / LastFrameDuration.
                     ImGui.Text($"FPS: {_frameRate.Value}");
-                    ImGui.Text($"Update: {Game.Instance.UpdateTime:00.00} ({Game.Instance.LongestUpdateTime:00.00})");
-                    ImGui.Text($"Render: {Game.Instance.RenderTime:00.00} ({Game.Instance.LongestRenderTime:00.00})");
-                    ImGui.Text($"Entities: {context.World.EntityCount}");
+                    ImGui.Text($"Update: {Game.Instance.UpdateTime * 1000:00.00} ({Game.Instance.LongestUpdateTime * 1000:00.00})");
+                    ImGui.Text($"Render: {Game.Instance.RenderTime * 1000:00.00} ({Game.Instance.LongestRenderTime * 1000:00.00})");
+                    ImGui.Text($"ImGui: {Game.Instance.ImGuiRenderTime * 1000:00.00}");
+
+                    ImGui.Text($"Total: {Game.Instance.LastFrameDuration * 1000:00.00}");
+
+                    ImGui.Dummy(new Vector2(0, 24));
+                    var dl = ImGui.GetWindowDrawList();
+                    Vector2 start = ImGui.GetItemRectMin();
+                    Vector2 end = ImGui.GetItemRectMax();
+                    Vector2 availableSize = ImGui.GetContentRegionAvail();
+                    // Draw a border around the frame insight area
+                    dl.AddRect(start, new Vector2(start.X + availableSize.X, end.Y), Color.ToUint(Game.Profile.Theme.Faded), 0f, ImDrawFlags.None, 1f);
+
+                    // Draw Update, Render in proportion to the total frame time
+                    if (totalFrameTime > 0)
+                    {
+                        float renderRatio = Game.Instance.RenderTime / totalFrameTime;
+                        float updateRatio = Game.Instance.UpdateTime / totalFrameTime;
+                        float imguiRatio = Game.Instance.ImGuiRenderTime / totalFrameTime;
+
+                        float excess = renderRatio + updateRatio + imguiRatio - 1f;
+
+                        if (excess > 0)
+                        {
+                            // If the ratios exceed 1, we need to adjust them to fit within the available space
+                            float totalRatio = renderRatio + updateRatio + imguiRatio;
+                            renderRatio /= totalRatio;
+                            updateRatio /= totalRatio;
+                            imguiRatio /= totalRatio;
+                        }
+
+                        float renderEnd = start.X + availableSize.X * renderRatio;
+                        float updateEnd = start.X + availableSize.X * (renderRatio + updateRatio);
+                        float imguiEnd = start.X + availableSize.X * (renderRatio + updateRatio + imguiRatio);
+
+                        dl.AddRectFilled(new Vector2(start.X, start.Y), new Vector2(renderEnd, end.Y), Color.ToUint(Game.Profile.Theme.White), 4f);
+                        dl.AddRectFilled(new Vector2(renderEnd, start.Y), new Vector2(updateEnd, end.Y), Color.ToUint(Game.Profile.Theme.Green), 4f);
+                        dl.AddRectFilled(new Vector2(updateEnd, start.Y), new Vector2(imguiEnd, end.Y), Color.ToUint(Game.Profile.Theme.Yellow), 4f);
+
+                        if (excess > 0)
+                        {
+                            // If the render and update ratios exceed 1, draw the overflow in red as a small bar under the frame insight area
+                            float overflowRatio = Calculator.Clamp01(excess - 1);
+                            dl.AddRectFilled(new Vector2(start.X, end.Y), new Vector2(start.X + availableSize.X * overflowRatio, end.Y + 10), Color.ToUint(Game.Profile.Theme.Red), 0);
+                        }
+                    }
 
                     ImGui.Separator();
                     PlotDeltaTimeGraph();
@@ -322,6 +383,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
     public void Update(Context context)
     {
         _frameRate.Update(Game.Instance.LastFrameDuration);
+
         MonoWorld world = (MonoWorld)context.World;
         EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
 
@@ -401,6 +463,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
     /// Only updated byt the EditorSystem
     /// </summary>
     public static UpdateTimeTracker GcTracker = new();
+    public static UpdateTimeTracker SlowDownTracker = new();
     private void PlotDeltaTimeGraph()
     {
         // TODO: Get more meaningful information from this...
@@ -424,6 +487,11 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         {
             ImGui.TextColored(Game.Profile.Theme.Red, "Running slowly!");
         }
+
+        ImGui.PushStyleColor(ImGuiCol.PlotHistogram, Game.Profile.Theme.Red);
+        ImGui.PlotHistogram("##Slowdown History", ref SlowDownTracker.Sample[0], SlowDownTracker.Length, 0, "Slowdowns", 0, 1000, new Vector2(ImGui.GetContentRegionAvail().X, 20));
+        ImGui.PopStyleColor();
+
         ImGui.PlotHistogram("##GC_histogram", ref GcTracker.Sample[0], GcTracker.Length, 0, "GC Collection", 0, 1000, new Vector2(ImGui.GetContentRegionAvail().X, 20));
 
         // ImGui.Text($"Gen 1/Gen 2 GC Count: {gen1Count}, {gen2Count}");
@@ -432,7 +500,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         UpdateTimeTracker gcTracker = Game.RenderTimeTrackerDiagnostics;
         if (tracker.Length >= 0)
         {
-            ImGui.PlotHistogram("##fps_histogram", ref tracker.Sample[0], tracker.Length, 0, "Update Time Tracker (ms)", 0, Game.FixedDeltaTime * 1.25f * 1000, new Vector2(ImGui.GetContentRegionAvail().X, 80));
+            ImGui.PlotHistogram("##fps_histogram", ref tracker.Sample[0], tracker.Length, 0, "Systems Time Tracker (ms)", 0, Game.FixedDeltaTime * 1.25f * 1000, new Vector2(ImGui.GetContentRegionAvail().X, 80));
             ImGui.PlotHistogram("##render_histogram", ref renderTracker.Sample[0], renderTracker.Length, 0, "Render Time Tracker (ms)", 0, Game.FixedDeltaTime * 0.5f * 1000, new Vector2(ImGui.GetContentRegionAvail().X, 80));
             (float low, float median, float high) = GetHighLowAndMedian(tracker);
             ImGui.Text($"Fastest Update Time: {low:0.00} ms");

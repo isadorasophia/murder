@@ -125,6 +125,11 @@ namespace Murder
         /// </summary>
         public float LastFrameDuration { get; private set; } = 0f;
         private readonly Stopwatch _lastFrameStopwatch = new Stopwatch();
+        
+        private readonly Stopwatch _updateStopwatch = new();
+        private readonly Stopwatch _renderStopWatch = new();
+        private readonly Stopwatch _imGuiStopWatch = new();
+
 
         /// <summary>
         /// Beautiful hardcoded grid so it's very easy to access in game!
@@ -181,9 +186,15 @@ namespace Murder
         /// <summary>
         /// Time in seconds that the Draw() method took to finish.
         /// This is not the time that the render systems take, instead it's the time
-        /// that the game takes to actually render the scene, including all the draw calls and ImGui rendering.
+        /// that the game takes to actually render the scene, including all the draw calls.
         /// </summary>
         public float RenderTime { get; private set; }
+
+        /// <summary>
+        /// Time in seconds that the ImGui rendering took to finish.
+        /// </summary>
+        public float ImGuiRenderTime { get; private set; }
+
 
         /// <summary>
         /// Gets the longest render time ever recorded.
@@ -298,8 +309,6 @@ namespace Murder
 
         private double _scaledPreviousElapsedTime = 0;
         private double _unscaledPreviousElapsedTime = 0;
-
-        private double _lastRenderTime = 0;
 
         private double _scaledDeltaTime = 0;
         private double _unscaledDeltaTime = 0;
@@ -434,7 +443,7 @@ namespace Murder
         /// </remarks>
         public virtual void RefreshWindow()
         {
-            SetTargetFps(Profile.TargetFps, Profile.FixedUpdateFactor);
+            SetTargetFps(Profile.TargetFps);
 
             _screenSize = new Point(Width, Height) * Data.GameProfile.GameScale;
 
@@ -679,7 +688,6 @@ namespace Murder
             Haptics.Update();
         }
 
-        private readonly Stopwatch _updateStopwatch = new();
         /// <summary>
         /// Implements core update logic, including frame freezing, world transitions, input handling, and time scaling.
         /// </summary>
@@ -712,7 +720,7 @@ namespace Murder
             double deltaTime;
             if (_isSkippingDeltaTimeOnUpdate)
             {
-                deltaTime = TargetElapsedTime.TotalSeconds;
+                deltaTime = LastFrameDuration;
             }
             else
             {
@@ -781,7 +789,6 @@ namespace Murder
             ActiveScene.Update();
         }
 
-        private readonly Stopwatch _renderStopWatch = new();
         /// <summary>
         /// Renders the current frame, handling loading draw and ImGui rendering, and tracks rendering time.
         /// </summary>
@@ -789,13 +796,13 @@ namespace Murder
         {
             GameLogger.Verify(ActiveScene is not null);
 
-
             if (!ActiveScene.Loaded && ActiveScene.RenderContext is RenderContext renderContext)
             {
                 OnLoadingDraw(renderContext);
             }
 
-            bool drawStarted = ActiveScene.DrawStart();
+            bool drawStarted = ActiveScene.DrawStart(); // <==== Start RenderContext draw call
+
             UpdateTime = (float)(_updateStopwatch.Elapsed.TotalSeconds);
             _updateStopwatch.Stop();
             _updateStopwatch.Reset();
@@ -814,18 +821,26 @@ namespace Murder
             }
 
             _renderStopWatch.Start();
+
             if (drawStarted)
             {
-                ActiveScene.DrawEnd();
+                ActiveScene.DrawEnd(); // <==== End RenderContext draw call
             }
-            base.Draw(gameTime);
-            DrawImGui(gameTime);
-
-            _lastRenderTime = gameTime.TotalGameTime.TotalSeconds;
+            base.Draw(gameTime); // Monogame/XNA internal Draw
 
             RenderTime = (float)(_renderStopWatch.Elapsed.TotalSeconds);
             _renderStopWatch.Stop();
             _renderStopWatch.Reset();
+            RenderTimeTrackerDiagnostics.Update(RenderTime);
+
+            _imGuiStopWatch.Start();
+            
+            DrawImGui(gameTime); // <== Draw ImGui content
+
+            ImGuiRenderTime = (float)(_imGuiStopWatch.Elapsed.TotalSeconds);
+            _imGuiStopWatch.Stop();
+            _imGuiStopWatch.Reset();
+
 
             if (Now > _longestRenderTimeAt + LONGEST_TIME_RESET)
             {
@@ -837,11 +852,6 @@ namespace Murder
             {
                 _longestRenderTimeAt = Now;
                 LongestRenderTime = UpdateTime;
-            }
-
-            if (DIAGNOSTICS_MODE)
-            {
-                RenderTimeTrackerDiagnostics.Update(RenderTime);
             }
 
             _game?.OnDraw();
@@ -905,9 +915,9 @@ namespace Murder
             _scaledDeltaTime = deltaTime;
         }
 
-        private void SetTargetFps(int fps, float fixedUpdateFactor)
+        private void SetTargetFps(int fps)
         {
-            _fixedUpdateDelta = 1f / (fps / fixedUpdateFactor);
+            _fixedUpdateDelta = 1f / fps;
         }
 
         /// <summary>

@@ -157,7 +157,6 @@ namespace Murder.Assets
         public bool ScalingFilter => _scalingFilter;
 
         public readonly int TargetFps = 60;
-        public readonly float FixedUpdateFactor = 2;
         public readonly bool IsVSyncEnabled = false;
         public readonly bool ShowUiDebug = true;
         public readonly float PushAwayInterval = 0.05f;
