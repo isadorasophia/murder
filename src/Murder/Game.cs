@@ -126,10 +126,11 @@ namespace Murder
         /// </summary>
         public float LastFrameDuration { get; private set; } = 0f;
         private readonly Stopwatch _lastFrameStopwatch = new Stopwatch();
-        
+
         private readonly Stopwatch _updateStopwatch = new();
         private readonly Stopwatch _renderStopWatch = new();
         private readonly Stopwatch _imGuiStopWatch = new();
+        private readonly Stopwatch _soundStopWatch = new();
 
 
         /// <summary>
@@ -195,6 +196,7 @@ namespace Murder
         /// Time in seconds that the ImGui rendering took to finish.
         /// </summary>
         public float ImGuiRenderTime { get; private set; }
+        public float SoundUpdateTime { get; private set; }
 
 
         /// <summary>
@@ -669,7 +671,11 @@ namespace Murder
                 _gameData.AfterContentLoadedFromMainThread();
                 _initialiazedAfterContentLoaded = true;
             }
-            _updateStopwatch.Start();
+
+            if (DIAGNOSTICS_MODE)
+            {
+                _updateStopwatch.Start();
+            }
             UpdateImpl(gameTime);
 
             // Absolute time is ALWAYS updated.
@@ -682,8 +688,19 @@ namespace Murder
                 ActiveScene?.OnBeforeDraw();
             }
 
+            if (DIAGNOSTICS_MODE)
+            {
+                _soundStopWatch.Start();
+            }
             // Update sound logic!
             SoundPlayer.Update();
+
+            if (DIAGNOSTICS_MODE)
+            {
+                SoundUpdateTime = (float)(_soundStopWatch.Elapsed.TotalSeconds);
+                _soundStopWatch.Stop();
+                _soundStopWatch.Reset();
+            }
 
             // Update haptics
             Haptics.Update();
@@ -804,24 +821,27 @@ namespace Murder
 
             bool drawStarted = ActiveScene.DrawStart(); // <==== Start RenderContext draw call
 
-            UpdateTime = (float)(_updateStopwatch.Elapsed.TotalSeconds);
-            _updateStopwatch.Stop();
-            _updateStopwatch.Reset();
-            TimeTrackerDiagnostics.Update(UpdateTime);
-
-            if (Now > _longestUpdateTimeAt + LONGEST_TIME_RESET)
+            if (DIAGNOSTICS_MODE)
             {
-                _longestUpdateTimeAt = Now;
-                LongestUpdateTime = 0.0f;
-            }
+                UpdateTime = (float)(_updateStopwatch.Elapsed.TotalSeconds);
+                _updateStopwatch.Stop();
+                _updateStopwatch.Reset();
+                TimeTrackerDiagnostics.Update(UpdateTime);
 
-            if (UpdateTime > LongestUpdateTime)
-            {
-                _longestUpdateTimeAt = Now;
-                LongestUpdateTime = UpdateTime;
-            }
+                if (Now > _longestUpdateTimeAt + LONGEST_TIME_RESET)
+                {
+                    _longestUpdateTimeAt = Now;
+                    LongestUpdateTime = 0.0f;
+                }
 
-            _renderStopWatch.Start();
+                if (UpdateTime > LongestUpdateTime)
+                {
+                    _longestUpdateTimeAt = Now;
+                    LongestUpdateTime = UpdateTime;
+                }
+
+                _renderStopWatch.Start();
+            }
 
             if (drawStarted)
             {
@@ -829,30 +849,35 @@ namespace Murder
             }
             base.Draw(gameTime); // Monogame/XNA internal Draw
 
-            RenderTime = (float)(_renderStopWatch.Elapsed.TotalSeconds);
-            _renderStopWatch.Stop();
-            _renderStopWatch.Reset();
-            RenderTimeTrackerDiagnostics.Update(RenderTime);
-
-            _imGuiStopWatch.Start();
-            
-            DrawImGui(gameTime); // <== Draw ImGui content
-
-            ImGuiRenderTime = (float)(_imGuiStopWatch.Elapsed.TotalSeconds);
-            _imGuiStopWatch.Stop();
-            _imGuiStopWatch.Reset();
-
-
-            if (Now > _longestRenderTimeAt + LONGEST_TIME_RESET)
+            if (DIAGNOSTICS_MODE)
             {
-                _longestRenderTimeAt = Now;
-                LongestRenderTime = 0.0f;
+                RenderTime = (float)(_renderStopWatch.Elapsed.TotalSeconds);
+                _renderStopWatch.Stop();
+                _renderStopWatch.Reset();
+                RenderTimeTrackerDiagnostics.Update(RenderTime);
+
+                _imGuiStopWatch.Start();
             }
 
-            if (RenderTime > LongestRenderTime)
+            DrawImGui(gameTime); // <== Draw ImGui content
+
+            if (DIAGNOSTICS_MODE)
             {
-                _longestRenderTimeAt = Now;
-                LongestRenderTime = UpdateTime;
+                ImGuiRenderTime = (float)(_imGuiStopWatch.Elapsed.TotalSeconds);
+                _imGuiStopWatch.Stop();
+                _imGuiStopWatch.Reset();
+
+                if (Now > _longestRenderTimeAt + LONGEST_TIME_RESET)
+                {
+                    _longestRenderTimeAt = Now;
+                    LongestRenderTime = 0.0f;
+                }
+
+                if (RenderTime > LongestRenderTime)
+                {
+                    _longestRenderTimeAt = Now;
+                    LongestRenderTime = UpdateTime;
+                }
             }
 
             _game?.OnDraw();

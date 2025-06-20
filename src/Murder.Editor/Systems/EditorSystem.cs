@@ -107,10 +107,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                 {
                     ImGui.SeparatorText("Performance");
                     ImGui.Text($"FPS: {_frameRate.Value}");
-                    ImGui.Text($"Update: {Game.Instance.UpdateTime * 1000:00.00} ({Game.Instance.LongestUpdateTime * 1000:00.00})");
-                    ImGui.Text($"Render: {Game.Instance.RenderTime * 1000:00.00} ({Game.Instance.LongestRenderTime * 1000:00.00})");
-                    ImGui.Text($"Entities: {context.World.EntityCount}");
-
+                    PlotSlowdowGraph();
 
                     ImGui.SeparatorText("Window Scale");
                     if (ImGui.Button("1x"))
@@ -250,6 +247,9 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                     ImGui.Text($"   ImGui: {Game.Instance.ImGuiRenderTime * 1000:00.00}");
                     dl.AddCircleFilled(ImGui.GetItemRectMin() + new Vector2(10, 6), 5, Color.ToUint(Game.Profile.Theme.Yellow), 12);
 
+                    ImGui.Text($"   Sound: {Game.Instance.SoundUpdateTime * 1000:00.00}");
+                    dl.AddCircleFilled(ImGui.GetItemRectMin() + new Vector2(10, 6), 5, Color.ToUint(Game.Profile.Theme.Green), 12);
+
                     ImGui.Text($"Total: {Game.Instance.LastFrameDuration * 1000:00.00}");
 
                     ImGui.Dummy(new Vector2(0, 24));
@@ -265,8 +265,9 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                         float renderRatio = Game.Instance.RenderTime / totalFrameTime;
                         float updateRatio = Game.Instance.UpdateTime / totalFrameTime;
                         float imguiRatio = Game.Instance.ImGuiRenderTime / totalFrameTime;
+                        float soundRatio = Game.Instance.SoundUpdateTime / totalFrameTime;
 
-                        float excess = renderRatio + updateRatio + imguiRatio - 1f;
+                        float excess = renderRatio + updateRatio + imguiRatio + soundRatio - 1f;
 
                         if (excess > 0)
                         {
@@ -275,15 +276,18 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                             renderRatio /= totalRatio;
                             updateRatio /= totalRatio;
                             imguiRatio /= totalRatio;
+                            soundRatio /= totalRatio;
                         }
 
                         float renderEnd = start.X + availableSize.X * renderRatio;
                         float updateEnd = start.X + availableSize.X * (renderRatio + updateRatio);
                         float imguiEnd = start.X + availableSize.X * (renderRatio + updateRatio + imguiRatio);
+                        float soundEnd = start.X + availableSize.X * (renderRatio + updateRatio + imguiRatio + soundRatio);
 
                         dl.AddRectFilled(new Vector2(start.X, start.Y), new Vector2(renderEnd, end.Y), Color.ToUint(Game.Profile.Theme.White), 4f);
                         dl.AddRectFilled(new Vector2(renderEnd, start.Y), new Vector2(updateEnd, end.Y), Color.ToUint(Game.Profile.Theme.HighAccent), 4f);
                         dl.AddRectFilled(new Vector2(updateEnd, start.Y), new Vector2(imguiEnd, end.Y), Color.ToUint(Game.Profile.Theme.Yellow), 4f);
+                        dl.AddRectFilled(new Vector2(imguiEnd, start.Y), new Vector2(soundEnd, end.Y), Color.ToUint(Game.Profile.Theme.Green), 4f);
 
                         if (excess > 0)
                         {
@@ -493,10 +497,8 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         {
             ImGui.TextColored(Game.Profile.Theme.Red, "Running slowly!");
         }
-
-        ImGui.PushStyleColor(ImGuiCol.PlotHistogram, Game.Profile.Theme.Red);
-        ImGui.PlotHistogram("##Slowdown History", ref SlowDownTracker.Sample[0], SlowDownTracker.Length, 0, "Slowdowns", 0, 1000, new Vector2(ImGui.GetContentRegionAvail().X, 20));
-        ImGui.PopStyleColor();
+        
+        PlotSlowdowGraph();
 
         ImGui.PlotHistogram("##GC_histogram", ref GcTracker.Sample[0], GcTracker.Length, 0, "GC Collection", 0, 1000, new Vector2(ImGui.GetContentRegionAvail().X, 20));
 
@@ -517,6 +519,13 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         {
             ImGui.Text($"Graph is empty. Is DIAGNOSTICS_MODE enabled?");
         }
+    }
+
+    private static void PlotSlowdowGraph()
+    {
+        ImGui.PushStyleColor(ImGuiCol.PlotHistogram, Game.Profile.Theme.Red);
+        ImGui.PlotHistogram("##Slowdown History", ref SlowDownTracker.Sample[0], SlowDownTracker.Length, 0, "Slowdowns", 0, 1000, new Vector2(ImGui.GetContentRegionAvail().X, 20));
+        ImGui.PopStyleColor();
     }
 
     private (float low, float median, float high) GetHighLowAndMedian(UpdateTimeTracker tracker)
