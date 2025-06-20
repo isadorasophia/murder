@@ -470,10 +470,29 @@ namespace Murder.Core.Geometry
         {
             if (_boundingBox.IsEmpty)
             {
-                var minX = Vertices.Min(v => v.X);
-                var minY = Vertices.Min(v => v.Y);
-                var maxX = Vertices.Max(v => v.X);
-                var maxY = Vertices.Max(v => v.Y);
+                float minX = float.MaxValue, minY = float.MaxValue, maxX = 0, maxY = 0;
+                foreach (Vector2 p in Vertices)
+                {
+                    if (p.X < minX)
+                    {
+                        minX = p.X;
+                    }
+
+                    if (p.Y < minY)
+                    {
+                        minY = p.Y;
+                    }
+
+                    if (p.X > maxX)
+                    {
+                        maxX = p.X;
+                    }
+
+                    if (p.Y > maxY)
+                    {
+                        maxY = p.Y;
+                    }
+                }
 
                 _boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
             }
