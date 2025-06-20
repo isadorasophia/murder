@@ -1458,7 +1458,7 @@ namespace Murder.Services
             { // Polygon vs. Polygon
                 if (shape1 is PolygonShape poly1 && shape2 is PolygonShape poly2)
                 {
-                    return poly1.Polygon.CheckOverlapAt(poly2.Polygon, position2 - position1);
+                    return poly1.Polygon.CheckOverlapAt(poly2.Polygon, position1 - position2);
                 }
             }
 
@@ -1736,7 +1736,7 @@ namespace Murder.Services
                     }
                     else if (otherShape is PolygonShape poly)
                     {
-                        if (polygon.CheckOverlapAt(poly.Polygon, otherPosition))
+                        if (polygon.CheckOverlapAt(poly.Polygon, otherPosition - coneStart))
                             yield return other.EntityInfo;
                     }
                     else if (otherShape is CircleShape circle)
