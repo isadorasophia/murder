@@ -125,7 +125,7 @@ namespace Murder.Editor.Systems
                         other.Speed += GetPushSpeed(delta);
                     }
                 }
-                node.Position += node.Speed * Game.DeltaTime;
+                node.Position += node.Speed * Game.Instance.LastFrameDuration;
                 float maxValue = 10;
                 node.Position = new Vector2(Math.Clamp(node.Position.X, -maxValue, maxValue), Math.Clamp(node.Position.Y, -maxValue, maxValue));
                 node.Speed *= 0.2f;

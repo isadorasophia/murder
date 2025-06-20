@@ -344,11 +344,11 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
 
         if (ImGui.IsWindowHovered())
         {
-            _hovered = Calculator.Approach(_hovered, 1, Game.DeltaTime * 5);
+            _hovered = Calculator.Approach(_hovered, 1, Game.Instance.LastFrameDuration * 5);
         }
         else
         {
-            _hovered = Calculator.Approach(_hovered, 0, Game.DeltaTime * 5);
+            _hovered = Calculator.Approach(_hovered, 0, Game.Instance.LastFrameDuration * 5);
         }
 
         ImGui.End();

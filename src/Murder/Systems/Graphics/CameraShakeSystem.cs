@@ -17,7 +17,7 @@ public class CameraShakeSystem : IMonoPreRenderSystem
         var camera = ((MonoWorld)context.World).Camera;
         if (camera.ShakeTime > 0)
         {
-            camera.ShakeTime -= Game.DeltaTime;
+            camera.ShakeTime -= Game.Instance.LastFrameDuration;
             if (camera.ShakeTime < 0)
             {
                 camera.ShakeTime = 0f;
