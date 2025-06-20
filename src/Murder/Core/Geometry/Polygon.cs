@@ -158,90 +158,11 @@ namespace Murder.Core.Geometry
             return false;
         }
 
-        /// <summary>
-        /// Checks for a collision between this polygon and a circle with the polygon at a specific position.
-        /// </summary>
-        /// <param name="circle"></param>
-        /// <param name="position"></param>
-        /// <returns></returns>
-        public bool IntersectAt(Circle circle, Vector2 position)
-        {
-            // go through each of the vertices, plus
-            // the next vertex in the list
-            int next = 0;
-            Circle offsetCircle = new Circle(circle.Radius, circle.X + position.X, circle.Y + position.Y);
-            for (int current = 0; current < Vertices.Length; current++)
-            {
-                // get next vertex in list
-                // if we've hit the end, wrap around to 0
-                next = current + 1;
-                if (next == Vertices.Length) next = 0;
-
-                // get the Vectors at our current position
-                // this makes our if statement a little cleaner
-                var vc = Vertices[current];    // c for "current"
-                var vn = Vertices[next];       // n for "next"
-
-                // check for collision between the circle and
-                // a line formed between the two vertices
-                var line = new Line2(vc, vn);
-                bool collision = line.IntersectsCircle(offsetCircle);
-                if (collision) return true;
-            }
-
-            // the above algorithm only checks if the circle
-            // is touching the edges of the polygon
-
-            if (Contains(offsetCircle.Center))
-                return true;
-
-            return false;
-        }
-
         internal bool Intersect(Rectangle rect)
         {
             // go through each of the vertices, plus
             // the next vertex in the list
             int next = 0;
-            for (int current = 0; current < Vertices.Length; current++)
-            {
-                // get next vertex in list
-                // if we've hit the end, wrap around to 0
-                next = current + 1;
-                if (next == Vertices.Length) next = 0;
-
-                // get the Vectors at our current position
-                // this makes our if statement a little cleaner
-                var vc = Vertices[current];    // c for "current"
-                var vn = Vertices[next];       // n for "next"
-
-                // check for collision between the rect and
-                // a line formed between the two vertices
-                var line = new Line2(vc, vn);
-                if (line.IntersectsRect(rect))
-                    return true;
-            }
-
-            // the above algorithm only checks if the rectangle
-            // is touching the edges of the polygon
-
-            if (Contains(rect.TopLeft))
-                return true;
-
-            return false;
-        }
-        /// <summary>
-        /// Checks for a collision between this polygon and a rectangle, with the polygon at a specific position.
-        /// </summary>
-        /// <param name="rectangle"></param>
-        /// <param name="position"></param>
-        /// <returns></returns>
-        internal bool IntersectAt(in Rectangle rectangle, Vector2 position)
-        {
-            // go through each of the vertices, plus
-            // the next vertex in the list
-            int next = 0;
-            Rectangle rect = rectangle.AddPosition(-position);
             for (int current = 0; current < Vertices.Length; current++)
             {
                 // get next vertex in list

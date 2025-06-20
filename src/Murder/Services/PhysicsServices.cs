@@ -359,7 +359,7 @@ namespace Murder.Services
                                 break;
                             case PolygonShape polygon:
                                 {
-                                    if (polygon.Polygon.AddPosition(position.Point).Intersects(line, out Vector2 hitPoint))
+                                    if (polygon.Polygon.Intersects(line.AddPosition(position.Point), out Vector2 hitPoint))
                                     {
                                         CompareShapeHits(startPosition, ref hit, ref hitSomething, ref closest, e, hitPoint.Point());
 
@@ -988,15 +988,15 @@ namespace Murder.Services
         public static bool CollidesWith(Entity entityA, Entity entityB)
         {
             if (entityA.TryGetCollider() is ColliderComponent colliderA
-                && entityA.TryGetTransform() is IMurderTransformComponent positionA
+                && entityA.GetGlobalPositionIfValid() is Vector2 positionA
                 && entityB.TryGetCollider() is ColliderComponent colliderB
-                && entityB.TryGetTransform() is IMurderTransformComponent positionB)
+                && entityB.GetGlobalPositionIfValid() is Vector2 positionB)
             {
                 foreach (var shapeA in colliderA.Shapes)
                 {
                     foreach (var shapeB in colliderB.Shapes)
                     {
-                        if (CollidesWith(shapeA, positionA.GetGlobal().Point, shapeB, positionB.GetGlobal().Point))
+                        if (CollidesWith(shapeA, positionA.Point(), shapeB, positionB.Point()))
                             return true;
                     }
                 }
@@ -1135,21 +1135,18 @@ namespace Murder.Services
                 {
                     Rectangle circle;
                     Polygon polygon;
-                    Vector2 polygonOffset;
                     if (shape1 is PolygonShape)
                     {
                         polygon = ((PolygonShape)shape1).Polygon;
-                        polygonOffset = position1 - position2;
-                        circle = ((LazyShape)shape2).Rectangle();
+                        circle = ((LazyShape)shape2).Rectangle(position1 - position2);
                     }
                     else
                     {
                         polygon = ((PolygonShape)shape2).Polygon;
-                        polygonOffset = position2 - position1;
-                        circle = ((LazyShape)shape1).Rectangle();
+                        circle = ((LazyShape)shape1).Rectangle(position2 - position1);
                     }
 
-                    return polygon.IntersectAt(circle, polygonOffset);
+                    return polygon.Intersect(circle);
                 }
             }
 
@@ -1398,22 +1395,19 @@ namespace Murder.Services
                 {
                     Circle circle;
                     Polygon polygon;
-                    Vector2 polygonOffset;
 
                     if (shape1 is PolygonShape)
                     {
                         polygon = ((PolygonShape)shape1).Polygon;
-                        polygonOffset = position1;
-                        circle = ((CircleShape)shape2).Circle.AddPosition(position2);
+                        circle = ((CircleShape)shape2).Circle.AddPosition(position2 - position1);
                     }
                     else
                     {
                         polygon = ((PolygonShape)shape2).Polygon;
-                        polygonOffset = position2;
-                        circle = ((CircleShape)shape1).Circle.AddPosition(position1);
+                        circle = ((CircleShape)shape1).Circle.AddPosition(position1 - position2);
                     }
 
-                    return polygon.IntersectAt(circle, polygonOffset);
+                    return polygon.Intersect(circle);
 
                 }
             }
@@ -1464,7 +1458,7 @@ namespace Murder.Services
             { // Polygon vs. Polygon
                 if (shape1 is PolygonShape poly1 && shape2 is PolygonShape poly2)
                 {
-                    return poly1.Polygon.CheckOverlapAt(poly2.Polygon, position1 - position2);
+                    return poly1.Polygon.CheckOverlapAt(poly2.Polygon, position2 - position1);
                 }
             }
 

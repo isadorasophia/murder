@@ -413,6 +413,11 @@ namespace Murder.Core.Geometry
             }
         }
 
+        internal Line2 AddPosition(Point point)
+        {
+            return new Line2(X1 + point.X, Y1 + point.Y, X2 + point.X, Y2 + point.Y);
+        }
+
         #endregion
     }
 }
