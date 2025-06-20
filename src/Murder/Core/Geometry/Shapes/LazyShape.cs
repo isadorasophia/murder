@@ -13,6 +13,10 @@ namespace Murder.Core.Geometry
         {
             return new(addPosition.X + Offset.X - Radius * 1.25f, addPosition.Y + Offset.Y - Radius, Radius * 2.5f, Radius * 2);
         }
+        public Rectangle Rectangle()
+        {
+            return new(Offset.X - Radius * 1.25f, Offset.Y - Radius, Radius * 2.5f, Radius * 2);
+        }
 
         public Rectangle GetBoundingBox()
         {

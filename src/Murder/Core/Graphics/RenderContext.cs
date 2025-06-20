@@ -256,7 +256,7 @@ public class RenderContext : IDisposable
             height,
             mipMap: false,
             SurfaceFormat.Color,
-            DepthFormat.Depth16,
+            DepthFormat.None,
             0,
             preserveContents ? RenderTargetUsage.PreserveContents : RenderTargetUsage.DiscardContents
         );

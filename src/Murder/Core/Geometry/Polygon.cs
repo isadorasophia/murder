@@ -14,6 +14,8 @@ namespace Murder.Core.Geometry
 
         public readonly ImmutableArray<Vector2> Vertices = [];
 
+        private Rectangle _boundingBox = Rectangle.Empty;
+
         [JsonIgnore]
         private Vector2[]? _normals = null;
 
@@ -117,7 +119,11 @@ namespace Murder.Core.Geometry
             return result;
         }
 
-
+        /// <summary>
+        /// Checks for a collision between this polygon and a circle.
+        /// </summary>
+        /// <param name="circle"></param>
+        /// <returns></returns>
         public bool Intersect(Circle circle)
         {
             // go through each of the vertices, plus
@@ -152,6 +158,45 @@ namespace Murder.Core.Geometry
             return false;
         }
 
+        /// <summary>
+        /// Checks for a collision between this polygon and a circle with the polygon at a specific position.
+        /// </summary>
+        /// <param name="circle"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public bool IntersectAt(Circle circle, Vector2 position)
+        {
+            // go through each of the vertices, plus
+            // the next vertex in the list
+            int next = 0;
+            Circle offsetCircle = new Circle(circle.Radius, circle.X + position.X, circle.Y + position.Y);
+            for (int current = 0; current < Vertices.Length; current++)
+            {
+                // get next vertex in list
+                // if we've hit the end, wrap around to 0
+                next = current + 1;
+                if (next == Vertices.Length) next = 0;
+
+                // get the Vectors at our current position
+                // this makes our if statement a little cleaner
+                var vc = Vertices[current];    // c for "current"
+                var vn = Vertices[next];       // n for "next"
+
+                // check for collision between the circle and
+                // a line formed between the two vertices
+                var line = new Line2(vc, vn);
+                bool collision = line.IntersectsCircle(offsetCircle);
+                if (collision) return true;
+            }
+
+            // the above algorithm only checks if the circle
+            // is touching the edges of the polygon
+
+            if (Contains(offsetCircle.Center))
+                return true;
+
+            return false;
+        }
 
         internal bool Intersect(Rectangle rect)
         {
@@ -160,7 +205,45 @@ namespace Murder.Core.Geometry
             int next = 0;
             for (int current = 0; current < Vertices.Length; current++)
             {
+                // get next vertex in list
+                // if we've hit the end, wrap around to 0
+                next = current + 1;
+                if (next == Vertices.Length) next = 0;
 
+                // get the Vectors at our current position
+                // this makes our if statement a little cleaner
+                var vc = Vertices[current];    // c for "current"
+                var vn = Vertices[next];       // n for "next"
+
+                // check for collision between the rect and
+                // a line formed between the two vertices
+                var line = new Line2(vc, vn);
+                if (line.IntersectsRect(rect))
+                    return true;
+            }
+
+            // the above algorithm only checks if the rectangle
+            // is touching the edges of the polygon
+
+            if (Contains(rect.TopLeft))
+                return true;
+
+            return false;
+        }
+        /// <summary>
+        /// Checks for a collision between this polygon and a rectangle, with the polygon at a specific position.
+        /// </summary>
+        /// <param name="rectangle"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        internal bool IntersectAt(in Rectangle rectangle, Vector2 position)
+        {
+            // go through each of the vertices, plus
+            // the next vertex in the list
+            int next = 0;
+            Rectangle rect = rectangle.AddPosition(-position);
+            for (int current = 0; current < Vertices.Length; current++)
+            {
                 // get next vertex in list
                 // if we've hit the end, wrap around to 0
                 next = current + 1;
@@ -347,8 +430,6 @@ namespace Murder.Core.Geometry
             return mtvAxis * minOverlap;
         }
 
-
-
         internal bool CheckOverlap(Polygon polygon)
         {
             // go through each of the vertices, plus
@@ -383,6 +464,50 @@ namespace Murder.Core.Geometry
             return false;
         }
 
+        internal bool CheckOverlapAt(Polygon polygon, Vector2 offset)
+        {
+            if (!polygon.GetBoundingBox().TouchesAt(GetBoundingBox(), offset))
+            {
+                return false; // Early exit if bounding boxes don't touch
+            }
+
+            // go through each of the vertices, plus
+            // the next vertex in the list
+            int next = 0;
+            for (int current = 0; current < Vertices.Length; current++)
+            {
+
+                // get next vertex in list
+                // if we've hit the end, wrap around to 0
+                next = current + 1;
+                if (next == Vertices.Length) next = 0;
+
+                // get the Vectors at our current position
+                // this makes our if statement a little cleaner
+                var vc = Vertices[current] + offset;    // c for "current"
+                var vn = Vertices[next] + offset;       // n for "next"
+
+                // check for collision between the rect and
+                // a line formed between the two vertices
+                var line = new Line2(vc, vn);
+                if (polygon.Intersects(line, out _))
+                    return true;
+            }
+
+            // the above algorithm only checks if the rectangle
+            // is touching the edges of the polygon
+
+            if (Contains(polygon.Vertices[0] + offset))
+                return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// This will create a new polygon and will generate some garbage. Avoid using if possible.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
         internal Polygon AddPosition(Point position)
         {
             return new Polygon(Vertices, position);
@@ -422,12 +547,17 @@ namespace Murder.Core.Geometry
 
         public Rectangle GetBoundingBox()
         {
-            var minX = Vertices.Min(v => v.X);
-            var minY = Vertices.Min(v => v.Y);
-            var maxX = Vertices.Max(v => v.X);
-            var maxY = Vertices.Max(v => v.Y);
+            if (_boundingBox.IsEmpty)
+            {
+                var minX = Vertices.Min(v => v.X);
+                var minY = Vertices.Min(v => v.Y);
+                var maxX = Vertices.Max(v => v.X);
+                var maxY = Vertices.Max(v => v.Y);
 
-            return new Rectangle(minX, minY, maxX - minX, maxY - minY);
+                _boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
+            }
+
+            return _boundingBox;
         }
 
         public void Draw(Batch2D batch, Vector2 position, bool flip, Color color)
