@@ -32,12 +32,13 @@ namespace Murder.Core.Geometry
         {
             _polygonCache ??= new PolygonShape(
                 new Polygon(
-                        new Vector2[] {
+                        [
                             Line.Start,
                             Line.End
-                        }
+                        ]
                     )
                 );
+
             return _polygonCache.Value;
         }
     }

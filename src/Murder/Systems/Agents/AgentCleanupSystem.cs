@@ -6,7 +6,6 @@ using Murder.Utilities;
 
 namespace Murder.Systems
 {
-
     [Filter(typeof(AgentComponent))]
     [Filter(ContextAccessorFilter.AnyOf, typeof(VelocityComponent), typeof(AgentImpulseComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(DisableAgentComponent), typeof(AgentPauseComponent))]

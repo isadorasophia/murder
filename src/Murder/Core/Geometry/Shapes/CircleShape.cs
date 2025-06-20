@@ -26,9 +26,7 @@ namespace Murder.Core.Geometry
         public PolygonShape GetPolygon()
         {
             _polygonCache ??= new PolygonShape(
-                new Polygon(
-                        Circle.MakePolygon()
-                    )
+                new Polygon(Circle.MakePolygon())
                 );
             return _polygonCache.Value;
         }

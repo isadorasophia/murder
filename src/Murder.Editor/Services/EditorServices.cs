@@ -3,6 +3,7 @@ using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Services;
 using Murder.Utilities;
+using System.Collections.Immutable;
 using System.Numerics;
 
 namespace Murder.Editor.Services
@@ -454,8 +455,8 @@ namespace Murder.Editor.Services
                 if (DrawHandle($"{id}_point_{i}", render, cursorPosition, position + pointA, color, out Vector2 newPosition))
                 {
                     modified = true;
-                    var newVertices = polygon.Vertices.ToArray();
-                    newVertices[i] = newPosition.Point();
+
+                    ImmutableArray<Vector2> newVertices = polygon.Vertices.Insert(i, newPosition.Point());
                     result = new Polygon(newVertices);
                 }
             }
@@ -467,8 +468,8 @@ namespace Murder.Editor.Services
                 if (DrawHandle($"{id}_point_{polygon.Vertices.Length}", render, cursorPosition, position + lastVert, color, out Vector2 newPosition))
                 {
                     modified = true;
-                    var newVertices = polygon.Vertices.ToArray();
-                    newVertices[polygon.Vertices.Length - 1] = newPosition.Point();
+
+                    ImmutableArray<Vector2> newVertices = polygon.Vertices.Insert(polygon.Vertices.Length - 1, newPosition.Point());
                     result = new Polygon(newVertices);
                 }
             }

@@ -1,13 +1,14 @@
 ﻿using Murder.Core.Geometry;
 using Murder.Utilities;
+using System.Collections.Immutable;
 using System.Numerics;
 
 namespace Murder.Services
 {
     public static class GeometryServices
     {
-        private static readonly Dictionary<String, Vector2[]> _circleCache = new();
-        private static readonly Dictionary<String, Vector2[]> _flatCircleCache = new();
+        private static readonly Dictionary<String, ImmutableArray<Vector2>> _circleCache = [];
+        private static readonly Dictionary<String, ImmutableArray<Vector2>> _flatCircleCache = [];
 
         /// <summary>
         /// Creates a list of vectors that represents a circle
@@ -15,36 +16,36 @@ namespace Murder.Services
         /// <param name="radius">The radius of the circle</param>
         /// <param name="sides">The number of sides to generate</param>
         /// <returns>A list of vectors that, if connected, will create a circle</returns>
-        public static Vector2[] CreateCircle(double radius, int sides)
+        public static ImmutableArray<Vector2> CreateCircle(double radius, int sides)
         {
             // Look for a cached version of this circle
-            String circleKey = $"{radius}x{sides}";
+            string circleKey = $"{radius}x{sides}";
             if (_circleCache.ContainsKey(circleKey))
             {
                 return _circleCache[circleKey];
             }
 
-            List<Vector2> vectors = new List<Vector2>();
-
             const double max = 2.0 * Math.PI;
             double step = max / sides;
 
+            // perf: pre-allocate this?
+            var builder = ImmutableArray.CreateBuilder<Vector2>();
             for (double theta = 0.0; theta < max; theta += step)
             {
-                vectors.Add(new Vector2((float)(radius * Math.Cos(theta)), (float)(radius * Math.Sin(theta))));
+                builder.Add(new Vector2((float)(radius * Math.Cos(theta)), (float)(radius * Math.Sin(theta))));
             }
 
             // Cache this circle so that it can be quickly drawn next time
-            var result = vectors.ToArray();
-            _circleCache.Add(circleKey, result);
+            ImmutableArray<Vector2> result = builder.ToImmutable();
 
+            _circleCache.Add(circleKey, result);
             return result;
         }
 
         /// <summary>
         /// Gets or creates a list of vectors that represents a circle using a rectangle as a base
         /// </summary>
-        public static Vector2[] CreateOrGetCircle(Vector2 size, int sides)
+        public static ImmutableArray<Vector2> CreateOrGetCircle(Vector2 size, int sides)
         {
             float width = size.X;
             float height = size.Y;
@@ -57,40 +58,40 @@ namespace Murder.Services
             float scaleY = height / diameter;
 
             // Look for a cached version of this circle
-            String circleKey = $"{radius}x{scaleX}x{scaleY}x{sides}";
+            string circleKey = $"{radius}x{scaleX}x{scaleY}x{sides}";
             if (_flatCircleCache.ContainsKey(circleKey))
             {
                 return _flatCircleCache[circleKey];
             }
 
-            List<Vector2> vectors = new List<Vector2>();
-
             const double max = 2.0 * Math.PI;
             double step = max / sides;
 
+            // perf: pre-allocate this?
+            var builder = ImmutableArray.CreateBuilder<Vector2>();
             for (double theta = 0.0; theta < max; theta += step)
             {
-                vectors.Add(new Vector2(
+                builder.Add(new Vector2(
                     (float)(radius * Math.Cos(theta) * scaleX),
                     (float)(radius * Math.Sin(theta) * scaleY)
                 ));
             }
 
             // then add the first vector again so it's a complete loop
-            vectors.Add(new Vector2(
+            builder.Add(new Vector2(
                 (float)(radius * Math.Cos(0) * scaleX),
                 (float)(radius * Math.Sin(0) * scaleY)
             ));
 
             // Cache this circle so that it can be quickly drawn next time
-            var result = vectors.ToArray();
+            var result = builder.ToImmutable();
             _flatCircleCache.Add(circleKey, result);
 
             return result;
         }
 
 
-        public static Vector2[] CreateOrGetFlattenedCircle(float radius, float scaleY, int sides)
+        public static ImmutableArray<Vector2> CreateOrGetFlattenedCircle(float radius, float scaleY, int sides)
         {
             // Look for a cached version of this circle
             String circleKey = $"{radius}x{scaleY}x{sides}";
@@ -99,21 +100,21 @@ namespace Murder.Services
                 return _flatCircleCache[circleKey];
             }
 
-            List<Vector2> vectors = new List<Vector2>();
-
             const double max = 2.0 * Math.PI;
             double step = max / sides;
 
+            // perf: pre-allocate this?
+            var builder = ImmutableArray.CreateBuilder<Vector2>();
             for (double theta = 0.0; theta < max; theta += step)
             {
-                vectors.Add(new Vector2((float)(radius * Math.Cos(theta)), (float)(radius * Math.Sin(theta)) * scaleY));
+                builder.Add(new Vector2((float)(radius * Math.Cos(theta)), (float)(radius * Math.Sin(theta)) * scaleY));
             }
 
             // then add the first vector again so it's a complete loop
-            vectors.Add(new Vector2((float)(radius * Math.Cos(0)), (float)(radius * Math.Sin(0)) * scaleY));
+            builder.Add(new Vector2((float)(radius * Math.Cos(0)), (float)(radius * Math.Sin(0)) * scaleY));
 
             // Cache this circle so that it can be quickly drawn next time
-            var result = vectors.ToArray();
+            var result = builder.ToImmutable();
             _flatCircleCache.Add(circleKey, result);
 
             return result;

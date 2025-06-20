@@ -2,13 +2,12 @@
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Numerics;
 using System.Text.Json.Serialization;
 
 namespace Murder.Core.Geometry
 {
-    public readonly record struct Polygon
+    public record struct Polygon
     {
         public static readonly Polygon EMPTY = new();
         public static readonly Polygon DIAMOND = new([new(-10, 0), new(0, -10), new(10, 0), new(0, 10)]);
@@ -16,47 +15,55 @@ namespace Murder.Core.Geometry
         public readonly ImmutableArray<Vector2> Vertices = [];
 
         [JsonIgnore]
-        public readonly ImmutableArray<Vector2> Normals = [];
+        private Vector2[]? _normals = null;
+
+        public Vector2[] Normals
+        {
+            get
+            {
+                if (_normals is null)
+                {
+                    _normals = CreateNormals();
+                }
+
+                return _normals;
+            }
+        }
 
         [JsonConstructor]
         public Polygon(ImmutableArray<Vector2> vertices)
         {
             Vertices = vertices;
-            Normals = GetNormals().ToImmutableArray();
         }
 
-        public Polygon(IEnumerable<Vector2> vertices) : this(vertices.ToImmutableArray()) { }
-
-        public Polygon(IEnumerable<Vector2> vertices, Vector2 position)
+        public Polygon(ImmutableArray<Vector2> vertices, Vector2 position)
         {
-            var builder = ImmutableArray.CreateBuilder<Vector2>();
-            foreach (var v in vertices)
+            var builder = ImmutableArray.CreateBuilder<Vector2>(initialCapacity: vertices.Length);
+            for (int i = 0; i < vertices.Length; ++i)
             {
-                builder.Add(v + position);
+                builder.Add(vertices[i] + position);
             }
 
             Vertices = builder.ToImmutable();
-            Normals = GetNormals().ToImmutableArray();
         }
-
-        private static readonly Vector2[] _rectangleCache = new Vector2[4];
 
         public static Polygon FromRectangle(int x, int y, int width, int height)
         {
-            _rectangleCache[0] = new Vector2(x, y);
-            _rectangleCache[1] = new Vector2(x + width, y);
-            _rectangleCache[2] = new Vector2(x + width, y + height);
-            _rectangleCache[3] = new Vector2(x, y + height);
-            return new Polygon(_rectangleCache);
+            return new Polygon([
+                new Vector2(x, y),
+                new Vector2(x + width, y),
+                new Vector2(x + width, y + height),
+                new Vector2(x, y + height)]);
         }
+
         public static Polygon FromRectangle(IntRectangle rectangle)
         {
-            _rectangleCache[0] = new Vector2(rectangle.X, rectangle.Y);
-            _rectangleCache[1] = new Vector2(rectangle.X + rectangle.Width , rectangle.Y);
-            _rectangleCache[2] = new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height);
-            _rectangleCache[3] = new Vector2(rectangle.X, rectangle.Y + rectangle.Height);
-
-            return new Polygon(_rectangleCache);
+            return new Polygon([
+                new Vector2(rectangle.X, rectangle.Y),
+                new Vector2(rectangle.X + rectangle.Width , rectangle.Y),
+                new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height),
+                new Vector2(rectangle.X, rectangle.Y + rectangle.Height)
+            ]);
         }
 
         public bool Contains(Vector2 vector)
@@ -396,10 +403,9 @@ namespace Murder.Core.Geometry
             return (min, max);
         }
 
-        private IEnumerable<Vector2> GetNormals()
+        private Vector2[] CreateNormals()
         {
-            // [PERF] We can cache the normals on creation
-
+            Vector2[] result = new Vector2[Vertices.Length];
             for (int i = 0; i < Vertices.Length; i++)
             {
                 Vector2 currentVertex = Vertices[i];
@@ -408,8 +414,10 @@ namespace Murder.Core.Geometry
                 Vector2 edge = nextVertex - currentVertex;
                 Vector2 normal = new Vector2(edge.Y, -edge.X);
 
-                yield return normal.Normalized();
+                result[i] = normal.Normalized();
             }
+
+            return result;
         }
 
         public Rectangle GetBoundingBox()
@@ -460,33 +468,37 @@ namespace Murder.Core.Geometry
         /// <exception cref="NotImplementedException"></exception>
         public Polygon AtPosition(Point target)
         {
-            var translatedVertices = new List<Vector2>();
+            var builder = ImmutableArray.CreateBuilder<Vector2>(initialCapacity: Vertices.Length);
+
             var delta = target - Vertices[0];
             foreach (var vertex in Vertices)
             {
-                translatedVertices.Add(vertex + delta);
+                builder.Add(vertex + delta);
             }
-            return new Polygon(translatedVertices);
+            return new Polygon(builder.ToImmutable());
         }
 
         public Polygon AddPosition(Vector2 add)
         {
-            var translatedVertices = new List<Vector2>();
+            var builder = ImmutableArray.CreateBuilder<Vector2>(initialCapacity: Vertices.Length);
             foreach (var vertex in Vertices)
             {
-                translatedVertices.Add(vertex + add);
+                builder.Add(vertex + add);
             }
-            return new Polygon(translatedVertices);
+
+            return new Polygon(builder.ToImmutable());
         }
 
         public Polygon WithVerticeAt(int index, Vector2 target)
         {
             return new Polygon(Vertices.SetItem(index, target));
         }
+
         public Polygon WithNewVerticeAt(int index, Vector2 target)
         {
             return new Polygon(Vertices.Insert(index, target));
         }
+
         public Polygon RemoveVerticeAt(int index)
         {
             return new Polygon(Vertices.RemoveAt(index));
@@ -584,7 +596,7 @@ namespace Murder.Core.Geometry
 
                     if (!hasPointInside)
                     {
-                        var newTriangle = new Polygon(new Vector2[] { a, b, c });
+                        var newTriangle = new Polygon([a, b, c]);
 
                         bool mergeSuccess = false;
                         // Try merging this new triangle with an old one
@@ -639,7 +651,9 @@ namespace Murder.Core.Geometry
             List<Polygon> convexPolygons = new List<Polygon>();
 
             List<int> concaveVertices = FindConcaveVertices(concave.Vertices);
-            List<Vector2> centralPolygonPoints = new List<Vector2>(concave.Vertices);
+
+            var centralPolygonPoints = ImmutableArray.CreateBuilder<Vector2>();
+            centralPolygonPoints.AddRange(concave.Vertices);
 
             while (concaveVertices.Count > 0)
             {
@@ -650,14 +664,15 @@ namespace Murder.Core.Geometry
                 int bestVertex = (concaveIndex + 2) % concave.Vertices.Length;
 
                 // Create a new convex polygon using the vertices from concaveIndex to bestVertex
-                List<Vector2> newPolygonPoints = new List<Vector2>();
+                var newPolygonPoints = ImmutableArray.CreateBuilder<Vector2>();
                 for (int i = concaveIndex; i != bestVertex; i = (i + 1) % concave.Vertices.Length)
                 {
                     newPolygonPoints.Add(concave.Vertices[i]);
                 }
+
                 newPolygonPoints.Add(concave.Vertices[bestVertex]);
 
-                Polygon newPolygon = new Polygon(newPolygonPoints.ToArray());
+                Polygon newPolygon = new Polygon(newPolygonPoints.ToImmutable());
                 convexPolygons.Add(newPolygon);
 
                 // Add this diagonal to the central polygon
@@ -668,7 +683,7 @@ namespace Murder.Core.Geometry
             }
 
             // Finally, add the central polygon to the list of convex polygons
-            Polygon centralPolygon = new Polygon(centralPolygonPoints.ToArray());
+            Polygon centralPolygon = new Polygon(centralPolygonPoints.ToImmutable());
             convexPolygons.Add(centralPolygon);
 
             return convexPolygons;
@@ -693,24 +708,21 @@ namespace Murder.Core.Geometry
 
         public static Polygon? MergePolygons(Polygon a, Polygon b)
         {
-            HashSet<Line2> lineSet = new HashSet<Line2>();
-
-            // Add all lines from both polygons to the set.
-            // This will automatically remove duplicates since HashSet does not allow them.
-            foreach (var line in a.GetLines())
-            {
-                lineSet.Add(line);
-            }
-            foreach (var line in b.GetLines())
-            {
-                lineSet.Add(line);
-            }
+            HashSet<Line2> lineSet =
+            [
+                // Add all lines from both polygons to the set.
+                // This will automatically remove duplicates since HashSet does not allow them.
+                .. a.GetLines(),
+                .. b.GetLines(),
+            ];
 
             // Re-constitute the vertices based on the unique line segments
             Line2 firstLine = lineSet.First();
             lineSet.Remove(firstLine);
 
-            List<Vector2> mergedVertices = new List<Vector2> { firstLine.Start, firstLine.End };
+            var mergedVertices = ImmutableArray.CreateBuilder<Vector2>();
+            mergedVertices.Add(firstLine.Start);
+            mergedVertices.Add(firstLine.End);
 
             while (lineSet.Count > 0)
             {
@@ -743,9 +755,10 @@ namespace Murder.Core.Geometry
                 mergedVertices.Reverse();
             }
 
-            return new Polygon(mergedVertices.ToArray());
+            return new Polygon(mergedVertices.ToImmutable());
         }
-        public static bool IsClockwise(List<Vector2> vertices)
+
+        public static bool IsClockwise(IList<Vector2> vertices)
         {
             float area = 0;
 
@@ -763,7 +776,7 @@ namespace Murder.Core.Geometry
         public static bool TryMerge(Polygon a, Polygon b, float minDistance, out Polygon result)
         {
             int commonCount = 0;
-            HashSet<Vector2> uniqueVertices = new HashSet<Vector2>();
+            HashSet<Vector2> uniqueVertices = [];
 
             // Find common vertices
             foreach (Vector2 vertex in a.Vertices)
@@ -785,7 +798,7 @@ namespace Murder.Core.Geometry
             if (commonCount >= 2)
             {
                 // Assume the vertices are listed in clockwise order.
-                result = new Polygon(uniqueVertices);
+                result = new Polygon(uniqueVertices.ToImmutableArray());
 
                 // Now check if the resulting polygon is convex
                 if (result.IsConvex())

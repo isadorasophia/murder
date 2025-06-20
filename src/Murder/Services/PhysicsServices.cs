@@ -1696,13 +1696,13 @@ namespace Murder.Services
             var coneEndMin = coneStart + new Vector2(range, 0).Rotate(angle - angleRange / 2f);
             var coneEndMax = coneStart + new Vector2(range, 0).Rotate(angle + angleRange / 2f);
 
-            var polygon = new Polygon(new Vector2[] {
+            var polygon = new Polygon([
                 coneStart1.Point(),
                 coneEndMin.Point(),
                 coneEnd.Point(),
                 coneEndMax.Point(),
                 coneStart2.Point()
-            });
+            ]);
 
             Rectangle boundingBox = polygon.GetBoundingBox();
 

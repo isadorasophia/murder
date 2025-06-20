@@ -68,14 +68,14 @@ namespace Murder.Core.Geometry
         {
             _polygonCache ??= new PolygonShape(
                 new Polygon(
-                    new Vector2[] {
-                        Rectangle.TopLeft,
-                        Rectangle.TopRight,
-                        Rectangle.BottomRight,
-                        Rectangle.BottomLeft,
-                    }
-                    )
-                );
+                [
+                    Rectangle.TopLeft,
+                    Rectangle.TopRight,
+                    Rectangle.BottomRight,
+                    Rectangle.BottomLeft
+                ])
+            );
+
             return _polygonCache.Value;
         }
     }

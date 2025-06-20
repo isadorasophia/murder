@@ -450,16 +450,17 @@ public static partial class RenderServices
     /// <param name="points">The points to connect with lines</param>
     /// <param name="color">The color to use</param>
     /// <param name="thickness">The thickness of the lines</param>
-    public static void DrawPoints(this Batch2D spriteBatch, Vector2 position, Vector2[] points, Color color, float thickness)
+    public static void DrawPoints(this Batch2D spriteBatch, Vector2 position, IList<Vector2> points, Color color, float thickness)
     {
-        if (points.Length < 2)
+        if (points.Count < 2)
             return;
 
-        for (int i = 1; i < points.Length; i++)
+        for (int i = 1; i < points.Count; i++)
         {
             DrawLine(spriteBatch, points[i - 1] + position, points[i] + position, color, thickness);
         }
-        DrawLine(spriteBatch, points[points.Length - 1] + position, points[0] + position, color, thickness);
+
+        DrawLine(spriteBatch, points[points.Count - 1] + position, points[0] + position, color, thickness);
     }
 
     /// <summary>
@@ -700,9 +701,6 @@ public static partial class RenderServices
     {
         DrawPoints(spriteBatch, rectangle.TopLeft, GeometryServices.CreateOrGetCircle(rectangle.Size, sides), color, 1.0f);
     }
-
-
-
 
     public static void DrawPoint(this Batch2D spriteBatch, Point pos, Color color, float sorting = 0)
     {
@@ -960,17 +958,23 @@ public static partial class RenderServices
 
     public static void DrawFilledCircle(this Batch2D batch, Vector2 center, float radius, int steps, DrawInfo? drawInfo = default)
     {
-        Vector2[] circleVertices = GeometryServices.CreateOrGetFlattenedCircle(1f, 1f, steps);
+        ImmutableArray<Vector2> circleVertices = GeometryServices.CreateOrGetFlattenedCircle(1f, 1f, steps);
 
+        // perf: don't allocate this every call...
         // Scale and translate the vertices
-        var scaledTranslatedVertices = circleVertices.Select(p => new Vector2(p.X * radius + center.X, p.Y * radius + center.Y)).ToArray();
+        Vector2[] scaled = new Vector2[circleVertices.Length];
+        for (int i = 0; i < circleVertices.Length; ++i)
+        {
+            Vector2 p = circleVertices[i];
+            scaled[i] = new Vector2(p.X * radius + center.X, p.Y * radius + center.Y);
+        }
 
-        batch.DrawPolygon(SharedResources.GetOrCreatePixel(), scaledTranslatedVertices, drawInfo ?? DrawInfo.Default);
+        batch.DrawPolygon(SharedResources.GetOrCreatePixel(), scaled, drawInfo ?? DrawInfo.Default);
     }
 
     public static void DrawFilledCircle(this Batch2D batch, Rectangle circleRect, int steps, DrawInfo drawInfo)
     {
-        Vector2[] circleVertices = GeometryServices.CreateOrGetFlattenedCircle(1f, 1f, steps);
+        ImmutableArray<Vector2> circleVertices = GeometryServices.CreateOrGetFlattenedCircle(1f, 1f, steps);
 
         // Scale and translate the vertices
         batch.DrawPolygon(SharedResources.GetOrCreatePixel(), circleVertices, drawInfo.WithScale(circleRect.Size).WithOffset(circleRect.Center));
@@ -983,7 +987,7 @@ public static partial class RenderServices
             _cachedPieChartVertices = new Vector2[steps + 3];
         }
 
-        Vector2[] circleVertices = GeometryServices.CreateOrGetFlattenedCircle(1f, 1f, steps);
+        ImmutableArray<Vector2> circleVertices = GeometryServices.CreateOrGetFlattenedCircle(1f, 1f, steps);
 
         // Scale and translate the vertices
         for (int i = 0; i <= steps; i++)
