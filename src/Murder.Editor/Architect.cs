@@ -95,6 +95,7 @@ namespace Murder.Editor
             ImGuiRenderer.RebuildFontAtlas();
 
             _logger = EditorGameLogger.OverrideInstanceWithEditor();
+            _ = EditorDebugSnapshot.OverrideInstanceWithEditor();
 
             InitializeImGui();
 

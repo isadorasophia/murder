@@ -156,9 +156,13 @@ public class SystemsDiagnosticsSystem : IGuiSystem
                     var batch = render.GetBatch(b.id);
                     ImGui.TextColored(Game.Profile.Theme.Accent, (b.name).ToString());
 
-                    ImGui.Text("Items");
+                    ImGui.TextColored(Game.Profile.Theme.Faded, "Max Items");
                     ImGui.SameLine();
                     ImGui.Text(batch.TotalItemCount.ToString());
+
+                    ImGui.TextColored(Game.Profile.Theme.Faded, "Items");
+                    ImGui.SameLine();
+                    ImGui.Text(batch.ItemsQueued.ToString());
 
                     ImGui.Separator();
                 }

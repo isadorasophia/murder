@@ -351,6 +351,18 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
 
                     ImGui.EndTabItem();
                 }
+                if (ImGui.BeginTabItem("Snapshots"))
+                {
+                    if (ImGui.Button("Take Snapshot"))
+                    {
+                        DebugSnapshot.TakeSnapShot();
+
+                    }
+
+                    ImGui.TextColored(Game.Profile.Theme.White, $"{DebugSnapshot.GetTotalTime()}");
+
+                    ImGuiHelpers.DrawBarsGraph(DebugSnapshot.GetAllEntries(), 20);
+                }
 
                 ImGui.EndTabBar();
             }
@@ -511,7 +523,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         {
             ImGui.TextColored(Game.Profile.Theme.Red, "Running slowly!");
         }
-        
+
         PlotSlowdowGraph();
 
         ImGui.PlotHistogram("##GC_histogram", ref GcTracker.Sample[0], GcTracker.Length, 0, "GC Collection", 0, 1000, new Vector2(ImGui.GetContentRegionAvail().X, 20));

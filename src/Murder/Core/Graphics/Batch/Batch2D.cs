@@ -14,6 +14,8 @@ public class Batch2D : IDisposable
 
     public const int StartBatchItemsCount = 128;
     public int TotalItemCount => _batchItems.Length;
+    private int _lastQueue = 0;
+    public int ItemsQueued => _lastQueue;
     public int TotalTransparentItemCount => _transparencyBatchItems?.Length ?? 0;
 
     private VertexInfo[] _vertices = new VertexInfo[StartBatchItemsCount * 4];
@@ -126,6 +128,7 @@ public class Batch2D : IDisposable
     public void GiveUp()
     {
         _nextItemWithTransparencyIndex = 0;
+        _lastQueue = _nextItemIndex;
         _nextItemIndex = 0;
     }
 
@@ -276,6 +279,7 @@ public class Batch2D : IDisposable
         SpriteCount += _nextItemIndex;
 #endif
 
+        _lastQueue = _nextItemIndex;
         _nextItemIndex = 0;
     }
 

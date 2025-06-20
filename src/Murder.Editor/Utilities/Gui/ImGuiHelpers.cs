@@ -3,6 +3,7 @@ using Murder.Core.Graphics;
 using Murder.Editor.Reflection;
 using Murder.Utilities;
 using System;
+using System.Collections.Immutable;
 using System.Numerics;
 using System.Text;
 
@@ -504,7 +505,7 @@ public static class ImGuiHelpers
         ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Accent);
         ImGui.PushStyleColor(ImGuiCol.Header, Game.Profile.Theme.Bg);
         ImGui.PushStyleColor(ImGuiCol.HeaderHovered, Game.Profile.Theme.Faded);
-        clicked |= ImGui.Selectable(fieldNames[selectedIndex], true, ImGuiSelectableFlags.None, new Vector2(availableWidth - 100,0));
+        clicked |= ImGui.Selectable(fieldNames[selectedIndex], true, ImGuiSelectableFlags.None, new Vector2(availableWidth - 100, 0));
         ImGui.PopStyleColor(3);
 
 
@@ -910,5 +911,42 @@ public static class ImGuiHelpers
         var dl = ImGui.GetWindowDrawList();
 
         dl.AddRect(min, max, Color.ToUint(color), rounding);
+    }
+
+
+    /// <summary>
+    /// Draw a bar graph with the given values.
+    /// </summary>
+    internal static void DrawBarsGraph(ImmutableArray<(string id, float time)> values, int height)
+    {
+        ImDrawListPtr drawList = ImGui.GetWindowDrawList();
+        var entries = DebugSnapshot.GetAllEntries().Sort((a, b) => b.time.CompareTo(a.time)).ToArray();
+        float totalTime = 0;
+        for (int i = 0; i < entries.Length; i++)
+        {
+            var entry = entries[i];
+            ImGui.Text($"   {entry.id}: {entry.time:0.00}");
+            drawList.AddCircleFilled(ImGui.GetItemRectMin() + new Vector2(10, 6), 5, Color.ToUint(ColorHelper.ColorFromIndex(i, entries.Length).ToSysVector4()), 12);
+            totalTime += entry.time;
+        }
+
+        ImGui.Dummy(new Vector2(0, height));
+        Vector2 position = ImGui.GetItemRectMin();
+        Vector2 end = ImGui.GetItemRectMax();
+        Vector2 size = ImGui.GetContentRegionAvail();
+
+        // Draw the whole bar outline
+        drawList.AddRect(position, new Vector2(position.X + size.X, end.Y), ImGuiHelpers.MakeColor32(Game.Profile.Theme.Faded), 4f, ImDrawFlags.None, 2);
+
+        float currentRatio = 0;
+        for (int i = 0; i < entries.Length; i++)
+        {
+            float stepRatio = entries[i].time / totalTime;
+            float barSize = size.X * stepRatio;
+            Vector2 barPosition = new Vector2(position.X + currentRatio * size.X, position.Y);
+
+            drawList.AddRectFilled(barPosition, new Vector2(barPosition.X + barSize, end.Y), Color.ToUint(ColorHelper.ColorFromIndex(i, entries.Length).ToSysVector4()), 4f);
+            currentRatio += stepRatio;
+        }
     }
 }
