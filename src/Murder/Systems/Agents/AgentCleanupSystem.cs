@@ -18,18 +18,17 @@ namespace Murder.Systems
             {
                 var agent = e.GetAgent();
 
-                AgentImpulseComponent? impulse = e.TryGetAgentImpulse();
-                bool hasImpulse = impulse?.Impulse.HasValue() ?? false;
-
-                if (!hasImpulse) // Cleanup the impulse
+                if (e.TryGetAgentImpulse() is AgentImpulseComponent impulse)
+                {
+                    if (!impulse.Flags.HasFlag(AgentImpulseFlags.DoNotClear))
+                    {
+                        e.RemoveAgentImpulse();
+                    }
+                }
+                else// Cleanup the impulse
                 {
                     // Set the friction if there is no impulse
                     e.SetFriction(agent.Friction);
-                }
-
-                if (impulse is not null && !impulse.Value.Flags.HasFlag(AgentImpulseFlags.DoNotClear))
-                {
-                    e.RemoveAgentImpulse();
                 }
             }
         }
