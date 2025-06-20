@@ -82,6 +82,7 @@ namespace Murder
 
         /// <summary>
         /// The time difference between current and last update, scaled by pause and other time scaling. Value is reliable only during the Update().
+        /// This value will be zero during render.
         /// </summary>
         public static float DeltaTime => (float)Instance._scaledDeltaTime;
         /// <summary>

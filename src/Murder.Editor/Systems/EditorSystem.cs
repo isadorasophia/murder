@@ -236,17 +236,23 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                 if (ImGui.BeginTabItem("Details"))
                 {
                     ImGui.SeparatorText("Performance");
+                    var dl = ImGui.GetWindowDrawList();
 
                     // To calculate FPS from LastFrameDuration (in seconds), use the formula: FPS = 1 / LastFrameDuration.
                     ImGui.Text($"FPS: {_frameRate.Value}");
-                    ImGui.Text($"Update: {Game.Instance.UpdateTime * 1000:00.00} ({Game.Instance.LongestUpdateTime * 1000:00.00})");
-                    ImGui.Text($"Render: {Game.Instance.RenderTime * 1000:00.00} ({Game.Instance.LongestRenderTime * 1000:00.00})");
-                    ImGui.Text($"ImGui: {Game.Instance.ImGuiRenderTime * 1000:00.00}");
+
+                    ImGui.Text($"   Render: {Game.Instance.RenderTime * 1000:00.00} ({Game.Instance.LongestRenderTime * 1000:00.00})");
+                    dl.AddCircleFilled(ImGui.GetItemRectMin() + new Vector2(10, 6), 5, Color.ToUint(Game.Profile.Theme.White), 12);
+
+                    ImGui.Text($"   Update: {Game.Instance.UpdateTime * 1000:00.00} ({Game.Instance.LongestUpdateTime * 1000:00.00})");
+                    dl.AddCircleFilled(ImGui.GetItemRectMin() + new Vector2(10, 6), 5, Color.ToUint(Game.Profile.Theme.HighAccent), 12);
+
+                    ImGui.Text($"   ImGui: {Game.Instance.ImGuiRenderTime * 1000:00.00}");
+                    dl.AddCircleFilled(ImGui.GetItemRectMin() + new Vector2(10, 6), 5, Color.ToUint(Game.Profile.Theme.Yellow), 12);
 
                     ImGui.Text($"Total: {Game.Instance.LastFrameDuration * 1000:00.00}");
 
                     ImGui.Dummy(new Vector2(0, 24));
-                    var dl = ImGui.GetWindowDrawList();
                     Vector2 start = ImGui.GetItemRectMin();
                     Vector2 end = ImGui.GetItemRectMax();
                     Vector2 availableSize = ImGui.GetContentRegionAvail();
@@ -276,14 +282,14 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                         float imguiEnd = start.X + availableSize.X * (renderRatio + updateRatio + imguiRatio);
 
                         dl.AddRectFilled(new Vector2(start.X, start.Y), new Vector2(renderEnd, end.Y), Color.ToUint(Game.Profile.Theme.White), 4f);
-                        dl.AddRectFilled(new Vector2(renderEnd, start.Y), new Vector2(updateEnd, end.Y), Color.ToUint(Game.Profile.Theme.Green), 4f);
+                        dl.AddRectFilled(new Vector2(renderEnd, start.Y), new Vector2(updateEnd, end.Y), Color.ToUint(Game.Profile.Theme.HighAccent), 4f);
                         dl.AddRectFilled(new Vector2(updateEnd, start.Y), new Vector2(imguiEnd, end.Y), Color.ToUint(Game.Profile.Theme.Yellow), 4f);
 
                         if (excess > 0)
                         {
                             // If the render and update ratios exceed 1, draw the overflow in red as a small bar under the frame insight area
-                            float overflowRatio = Calculator.Clamp01(excess - 1);
-                            dl.AddRectFilled(new Vector2(start.X, end.Y), new Vector2(start.X + availableSize.X * overflowRatio, end.Y + 10), Color.ToUint(Game.Profile.Theme.Red), 0);
+                            float overflowRatio = Calculator.Clamp01(excess);
+                            dl.AddRectFilled(new Vector2(start.X, end.Y - 10), new Vector2(start.X + availableSize.X * overflowRatio, end.Y), Color.ToUint(Game.Profile.Theme.Red), 0);
                         }
                     }
 
