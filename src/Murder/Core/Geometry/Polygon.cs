@@ -387,7 +387,7 @@ namespace Murder.Core.Geometry
 
         internal bool CheckOverlapAt(Polygon polygon, Vector2 offset)
         {
-            if (!polygon.GetBoundingBox().Intersects(GetBoundingBox(), offset))
+            if (!polygon.GetBoundingBox().Intersects(GetBoundingBox(), -offset))
             {
                 return false; // Early exit if bounding boxes don't touch
             }

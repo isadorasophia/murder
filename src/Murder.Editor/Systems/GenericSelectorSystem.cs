@@ -92,7 +92,7 @@ public class GenericSelectorSystem
                 ImGui.InputTextWithHint("##search", "Filter...", ref _filter, 300);
 
                 ImGui.BeginChild("hierarchy_entities");
-                
+
                 int? filterId = null;
                 bool filter = false;
                 if (int.TryParse(_filter, out int filterAttempt))
@@ -141,7 +141,7 @@ public class GenericSelectorSystem
                         if (!hasName)
                         {
                             if (parent is not null)
-                            { 
+                            {
                                 if (EntityServices.TryGetEntityName(parent) is string parentName)
                                 {
                                     if (!parentName.Contains(_filter, StringComparison.InvariantCultureIgnoreCase))
@@ -241,7 +241,7 @@ public class GenericSelectorSystem
         {
             return;
         }
-        
+
         if (hook.EntityToBePlaced is not null)
         {
             // An entity will be placed, skip this.
@@ -349,7 +349,7 @@ public class GenericSelectorSystem
 
                 if (!hook.IsEntityHovered(e.EntityId))
                 {
-                    hook.HoverEntity(e, clear:false);
+                    hook.HoverEntity(e, clear: false);
                     // hook.HoverEntity(e, clear: !clearOnlyWhenSelectedNewEntity);
                 }
 
@@ -416,7 +416,7 @@ public class GenericSelectorSystem
                 }
             }
 
-            if (_dragging == null && _dragStart != null && _startedDragging!=null && down && _startedDragging.HasTransform())
+            if (_dragging == null && _dragStart != null && _startedDragging != null && down && _startedDragging.HasTransform())
             {
                 float distance = (cursorPosition - _dragStart.Value).Length();
                 if (distance > 4)
@@ -441,7 +441,7 @@ public class GenericSelectorSystem
 
             // On "shift", constrain entities to the axis corresponding to the direction are being dragged in.
             bool snapToAxis = Game.Input.Down(Keys.LeftShift);
-            
+
             // Drag all the entities which are currently selected.
             foreach ((int _, Entity e) in selectedEntities)
             {
@@ -591,7 +591,7 @@ public class GenericSelectorSystem
         if (MathF.Abs(vector.X) > MathF.Abs(vector.Y))
         {
             return new Vector2(1, 0);
-        } 
+        }
         else
         {
             return new Vector2(0, 1);
@@ -630,6 +630,16 @@ public class GenericSelectorSystem
         if (e.TryGetCollider() is ColliderComponent colliderComponent)
         {
             var rect = colliderComponent.GetBoundingBox(position);
+            if (!rect.IsEmpty)
+            {
+                HasBox = true;
+                return rect;
+            }
+        }
+
+        if (e.TryGetEntityBoundsCache() is EntityBoundsCacheComponent bounds)
+        {
+            var rect = bounds.Bounds.AddPosition(position);
             if (!rect.IsEmpty)
             {
                 HasBox = true;
@@ -693,7 +703,7 @@ public class GenericSelectorSystem
         Entity? smallest = null;
 
         // If one entity is previously selected, we select the next hovered entity.
-        if (selectedEntities.Length== 1)
+        if (selectedEntities.Length == 1)
         {
             int selected = selectedEntities[0];
             if (cycle)
@@ -711,7 +721,7 @@ public class GenericSelectorSystem
             {
                 int hoveredIndex = hovering.IndexOf(selected);
 
-                if (hoveredIndex>=0 && world.TryGetEntity(selected) is Entity entity)
+                if (hoveredIndex >= 0 && world.TryGetEntity(selected) is Entity entity)
                 {
                     return entity;
                 }
@@ -828,7 +838,7 @@ public class GenericSelectorSystem
 
                         Vector2 bottomLeft = bounds.BottomLeft + new Vector2(corners, -corners) * 4;
                         RenderServices.DrawLine(render.DebugFxBatch, bottomLeft, bottomLeft + new Vector2(cornerSize, 0), Game.Profile.Theme.HighAccent, 0.5f);
-                        RenderServices.DrawLine(render.DebugFxBatch, bottomLeft, bottomLeft + new Vector2(0,-cornerSize), Game.Profile.Theme.HighAccent, 0.5f);
+                        RenderServices.DrawLine(render.DebugFxBatch, bottomLeft, bottomLeft + new Vector2(0, -cornerSize), Game.Profile.Theme.HighAccent, 0.5f);
 
                         Vector2 bottomRight = bounds.BottomRight + new Vector2(-corners, -corners) * 4;
                         RenderServices.DrawLine(render.DebugFxBatch, bottomRight, bottomRight + new Vector2(-cornerSize, 0), Game.Profile.Theme.HighAccent, 0.5f);
@@ -866,7 +876,7 @@ public class GenericSelectorSystem
             {
                 RenderServices.DrawCircleOutline(render.DebugBatch, position, 2, 6, Game.Profile.Theme.Yellow);
             }
-            
+
         }
 
         DrawSelectionRectangle(render);
