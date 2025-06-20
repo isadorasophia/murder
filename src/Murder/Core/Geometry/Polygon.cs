@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace Murder.Core.Geometry
 {
-    public readonly record struct Polygon
+    public record struct Polygon
     {
         public static readonly Polygon EMPTY = new();
         public static readonly Polygon DIAMOND = new([new(-10, 0), new(0, -10), new(10, 0), new(0, 10)]);
@@ -24,6 +24,8 @@ namespace Murder.Core.Geometry
             Vertices = vertices;
             Normals = GetNormals().ToImmutableArray();
         }
+
+        private Rectangle _boundingBox = Rectangle.Empty;
 
         public Polygon(IEnumerable<Vector2> vertices) : this(vertices.ToImmutableArray()) { }
 
@@ -457,6 +459,11 @@ namespace Murder.Core.Geometry
 
         internal bool CheckOverlapAt(Polygon polygon, Vector2 offset)
         {
+            if (!polygon.GetBoundingBox().TouchesAt(GetBoundingBox(), offset))
+            {
+                return false; // Early exit if bounding boxes don't touch
+            }
+
             // go through each of the vertices, plus
             // the next vertex in the list
             int next = 0;
@@ -532,12 +539,16 @@ namespace Murder.Core.Geometry
 
         public Rectangle GetBoundingBox()
         {
-            var minX = Vertices.Min(v => v.X);
-            var minY = Vertices.Min(v => v.Y);
-            var maxX = Vertices.Max(v => v.X);
-            var maxY = Vertices.Max(v => v.Y);
+            if (_boundingBox.IsEmpty)
+            {
+                var minX = Vertices.Min(v => v.X);
+                var minY = Vertices.Min(v => v.Y);
+                var maxX = Vertices.Max(v => v.X);
+                var maxY = Vertices.Max(v => v.Y);
+                _boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
+            }
 
-            return new Rectangle(minX, minY, maxX - minX, maxY - minY);
+            return _boundingBox;
         }
 
         public void Draw(Batch2D batch, Vector2 position, bool flip, Color color)
