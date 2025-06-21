@@ -65,11 +65,11 @@ namespace Murder.Core.Particles
             }
             else if (Shape.Kind == EmitterShapeKind.Circle)
             {
-                return Rectangle.CenterRectangle(new Point(Shape.Circle.X, Shape.Circle.Y), Shape.Circle.Radius / 2f, Shape.Circle.Radius / 2f);
+                return Rectangle.CenterRectangle(new Point(Shape.Circle.X, Shape.Circle.Y), Shape.Circle.Radius, Shape.Circle.Radius);
             }
             else //if (Shape.Kind == EmitterShapeKind.CircleOutline)
             {
-                return Rectangle.CenterRectangle(new Point(Shape.Circle.X, Shape.Circle.Y), Shape.Circle.Radius / 2f, Shape.Circle.Radius / 2f);
+                return Rectangle.CenterRectangle(new Point(Shape.Circle.X, Shape.Circle.Y), Shape.Circle.Radius, Shape.Circle.Radius);
             }
         }
     }

@@ -44,12 +44,6 @@ namespace Murder.Systems
 
             foreach (ParticleSystemTracker tracker in worldTracker.FetchActiveParticleTrackers())
             {
-                Rectangle boundingBox = tracker.Emitter.BoundingBoxSize();
-                if (!boundingBox.Intersects(_cameraArea, -tracker.LastEmitterPosition))
-                {
-                    continue;
-                }
-
                 ParticleTexture texture = tracker.Particle.Texture;
                 Batch2D batch = render.GetBatch((int)tracker.Particle.SpriteBatch);
 

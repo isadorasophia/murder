@@ -654,7 +654,7 @@ namespace Murder
         /// </summary>
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            LastFrameDuration = (float)_lastFrameStopwatch.Elapsed.TotalSeconds;
+            LastFrameDuration = Math.Clamp((float)_lastFrameStopwatch.Elapsed.TotalSeconds,0, FixedDeltaTime * 2);
             _lastFrameStopwatch.Restart();
 
             if (_waitForSaveComplete && !CanResumeAfterSaveComplete())

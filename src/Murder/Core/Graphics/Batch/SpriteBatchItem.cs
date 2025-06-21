@@ -13,7 +13,7 @@ public class SpriteBatchItem
     public Texture2D? Texture;
     public VertexInfo[] VertexData = new VertexInfo[4];
     public short[] IndexData = new short[6];
-    public int VertexCount = 4;
+    public short VertexCount = 4;
     public MurderBlendState BlendState;
     public SpriteBatchItem() { }
 
@@ -121,7 +121,7 @@ public class SpriteBatchItem
     public void SetPolygon(Texture2D texture, ReadOnlySpan<System.Numerics.Vector2> vertices, DrawInfo drawInfo)
     {
         Texture = texture;
-        VertexCount = vertices.Length;
+        VertexCount = (short)vertices.Length;
         int triangleCount = VertexCount - 2;
 
         // Make sure we have space

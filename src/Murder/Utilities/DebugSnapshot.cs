@@ -38,6 +38,15 @@ public class DebugSnapshot
 
         GetOrCreateInstance().StartStopwatchImpl(id);
     }
+    public static void PauseStopwatch()
+    {
+        if (!Game.DIAGNOSTICS_MODE)
+        {
+            return;
+        }
+
+        GetOrCreateInstance().PauseStopWatchImpl();
+    }
 
     public static void EndSnapshot()
     {
@@ -74,6 +83,8 @@ public class DebugSnapshot
     protected virtual void StartStopwatchImpl(string id) { }
 
     protected virtual void EndSnapshotImpl() { }
+
+    protected virtual void PauseStopWatchImpl() { }
 
     protected virtual float GetTotalTimeImpl() => 0;
 

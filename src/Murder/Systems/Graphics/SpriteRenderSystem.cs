@@ -25,6 +25,7 @@ namespace Murder.Systems.Graphics
         
         public void Draw(RenderContext render, Context context)
         {
+            DebugSnapshot.StartStopwatch("Sprite Render System");
             bool issueSlowdownWarning = false;
 
             foreach (Entity e in context.Entities)
@@ -253,6 +254,8 @@ namespace Murder.Systems.Graphics
             {
                 GameLogger.Warning("Animation event loop reached. Breaking out of loop. This was probably caused by a major slowdown.");
             }
+
+            DebugSnapshot.PauseStopwatch();
         }
 
         private float GetInheritedAlpha(Entity entity)

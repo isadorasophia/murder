@@ -1,4 +1,5 @@
 ﻿using Murder.Core.Geometry;
+using Murder.Services;
 using Murder.Utilities;
 using System.Diagnostics;
 using System.Numerics;
@@ -64,12 +65,6 @@ namespace Murder.Core.Particles
         /// <param name="id">Entity id, used when generating the correct seed for the particle.</param>
         public void Step(bool allowSpawn, Vector2 emitterPosition, Rectangle cameraArea, int id)
         {
-            Rectangle boundingBox = Emitter.BoundingBoxSize();
-            if (!boundingBox.Intersects(cameraArea, -emitterPosition))
-            {
-                return;
-            }
-
             _lastEmitterPosition = emitterPosition;
 
             if (!_hasStarted)
@@ -101,6 +96,13 @@ namespace Murder.Core.Particles
             }
 
             _time += dt;
+
+            Rectangle boundingBox = Emitter.BoundingBoxSize().AddPosition(emitterPosition);
+            if (!boundingBox.Touches(cameraArea))
+            {
+                return;
+            }
+
             if (allowSpawn)
             {
                 SpawnNewParticlesPerSec(emitterPosition);

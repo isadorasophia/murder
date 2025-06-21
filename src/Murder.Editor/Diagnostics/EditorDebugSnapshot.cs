@@ -72,15 +72,29 @@ public class EditorDebugSnapshot : DebugSnapshot
     {
         if (!_snapShotStarted)
             return;
+
+        RecordCurrentlyRunningSnapshot();
+
+        _currentlyRecording = id;
+        _stopwatch.Restart();
+    }
+
+    protected override void PauseStopWatchImpl()
+    {
+        RecordCurrentlyRunningSnapshot();
+
+        _currentlyRecording = null;
+        _stopwatch.Stop();
+    }
+
+    private void RecordCurrentlyRunningSnapshot()
+    {
         float elapsed = (float)_stopwatch.Elapsed.TotalSeconds * _divider;
         if (_currentlyRecording != null)
         {
             _recodedTimes[_currentlyRecording] = elapsed;
         }
         _totalTime += elapsed;
-
-        _currentlyRecording = id;
-        _stopwatch.Restart();
     }
 
     protected override void EndSnapshotImpl()
@@ -88,12 +102,7 @@ public class EditorDebugSnapshot : DebugSnapshot
         if (!_snapShotStarted)
             return;
 
-        if (_currentlyRecording != null)
-        {
-            float elapsed = (float)_stopwatch.Elapsed.TotalSeconds;
-            _recodedTimes[_currentlyRecording] = elapsed;
-            _totalTime += elapsed;
-        }
+        RecordCurrentlyRunningSnapshot();
 
         // Fold this snapshot into the running totals
         foreach (var (key, value) in _recodedTimes)

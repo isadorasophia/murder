@@ -27,7 +27,7 @@ public class Batch2D : IDisposable
     private SpriteBatchItem[] _batchItems = new SpriteBatchItem[StartBatchItemsCount];
     private SpriteBatchItem[]? _transparencyBatchItems;
 
-    private int _nextItemIndex, _nextItemWithTransparencyIndex;
+    private int _nextItemIndex;
 
     public GraphicsDevice GraphicsDevice { get; set; }
     public readonly BatchMode BatchMode;
@@ -115,7 +115,6 @@ public class Batch2D : IDisposable
     /// </summary>
     public void GiveUp()
     {
-        _nextItemWithTransparencyIndex = 0;
         _lastQueue = _nextItemIndex;
         _nextItemIndex = 0;
     }
