@@ -42,8 +42,7 @@ public class Batch2D : IDisposable
         BatchMode batchMode,
         SamplerState samplerState,
         DepthStencilState? depthStencilState = null,
-        RasterizerState? rasterizerState = null,
-        bool autoHandleAlphaBlendedSprites = false)
+        RasterizerState? rasterizerState = null)
         : this(
               name,
               graphicsDevice,
@@ -52,8 +51,7 @@ public class Batch2D : IDisposable
               batchMode,
               samplerState,
               depthStencilState,
-              rasterizerState,
-              autoHandleAlphaBlendedSprites)
+              rasterizerState)
     { }
 
     public Batch2D(string name,
@@ -63,8 +61,7 @@ public class Batch2D : IDisposable
         BatchMode batchMode,
         SamplerState samplerState,
         DepthStencilState? depthStencilState = null,
-        RasterizerState? rasterizerState = null,
-        bool autoHandleAlphaBlendedSprites = false)
+        RasterizerState? rasterizerState = null)
     {
         Name = name;
 
@@ -75,14 +72,6 @@ public class Batch2D : IDisposable
         DepthStencilState = depthStencilState ?? DepthStencilState.None;
         RasterizerState = rasterizerState ?? RasterizerState.CullNone;
         _followCamera = followCamera;
-
-        AutoHandleAlphaBlendedSprites = autoHandleAlphaBlendedSprites;
-
-        if (AutoHandleAlphaBlendedSprites)
-        {
-            _transparencyBatchItems = new SpriteBatchItem[_batchItems.Length / 2];
-            InitializeTransparencyItemsBuffers();
-        }
 
         Initialize();
     }
@@ -108,7 +97,6 @@ public class Batch2D : IDisposable
     /// Auto handle any non-opaque (i.e. with some transparency; Opacity &lt; 1.0f) sprite rendering.
     /// By drawing first all opaque sprites, with depth write enabled, followed by non-opaque sprites, with only depth read enabled.
     /// </summary>
-    public bool AutoHandleAlphaBlendedSprites { get; private set; }
     public bool AllowIBasicShaderEffectParameterClone { get; set; } = true;
 
     public Matrix Transform { get; private set; }
@@ -183,7 +171,7 @@ public class Batch2D : IDisposable
         }
 #endif
 
-        ref SpriteBatchItem batchItem = ref GetBatchItem(AutoHandleAlphaBlendedSprites && color.A < byte.MaxValue);
+        ref SpriteBatchItem batchItem = ref GetBatchItem();
         batchItem.Set(texture, position, targetSize, sourceRectangle, rotation, scale, flip, color, offset, blendStyle, blendState, sort);
 
         if (BatchMode == BatchMode.Immediate)
@@ -208,7 +196,7 @@ public class Batch2D : IDisposable
             throw new InvalidOperationException("Begin() must be called before any Draw() operation.");
         }
 
-        ref SpriteBatchItem batchItem = ref GetBatchItem(AutoHandleAlphaBlendedSprites && drawInfo.Color.A < byte.MaxValue);
+        ref SpriteBatchItem batchItem = ref GetBatchItem();
         batchItem.SetPolygon(texture, vertices, drawInfo);
 
         if (BatchMode == BatchMode.Immediate)
@@ -224,7 +212,7 @@ public class Batch2D : IDisposable
             throw new InvalidOperationException("Begin() must be called before any Draw() operation.");
         }
 
-        ref SpriteBatchItem batchItem = ref GetBatchItem(AutoHandleAlphaBlendedSprites && drawInfo.Color.A < byte.MaxValue);
+        ref SpriteBatchItem batchItem = ref GetBatchItem();
 
         batchItem.SetPolygon(texture, vertices.AsSpan(), drawInfo);
 
@@ -239,6 +227,7 @@ public class Batch2D : IDisposable
     /// </summary>
     public void Dispose()
     {
+        // Do we need this?? I don't think so
         if (!IsDisposed)
         {
             IsDisposed = true;
@@ -259,47 +248,16 @@ public class Batch2D : IDisposable
 
         Render(ref _batchItems, _nextItemIndex, DepthStencilState);
 
-        if (AutoHandleAlphaBlendedSprites && includeAlphaBlendedSprites)
-        {
-            GameLogger.Verify(_transparencyBatchItems is not null);
-
-            Render(ref _transparencyBatchItems, _nextItemWithTransparencyIndex, DepthStencilState.DepthRead);
-
 #if DEBUG
-
-            SpriteCount += _nextItemWithTransparencyIndex;
-
-#endif
-
-            _nextItemWithTransparencyIndex = 0;
-        }
-
-#if DEBUG
-
         SpriteCount += _nextItemIndex;
+        _lastQueue = _nextItemIndex;
 #endif
 
-        _lastQueue = _nextItemIndex;
         _nextItemIndex = 0;
     }
 
-    private ref SpriteBatchItem GetBatchItem(bool needsTransparency)
+    private ref SpriteBatchItem GetBatchItem()
     {
-        if (needsTransparency)
-        {
-            GameLogger.Verify(_transparencyBatchItems is not null);
-
-            if (_nextItemWithTransparencyIndex >= _transparencyBatchItems.Length)
-            {
-                SetTransparencyBuffersCapacity(_transparencyBatchItems.Length + _transparencyBatchItems.Length / 2);
-            }
-
-            ref SpriteBatchItem transparencyBatchItem = ref _transparencyBatchItems[_nextItemWithTransparencyIndex];
-            _nextItemWithTransparencyIndex++;
-
-            return ref transparencyBatchItem;
-        }
-
         if (_nextItemIndex >= _batchItems.Length)
         {
             SetBuffersCapacity(_batchItems.Length * 2);

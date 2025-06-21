@@ -336,13 +336,12 @@ public struct Rectangle : IEquatable<Rectangle>
         }
     }
 
+
     /// <summary>
     /// Checks if this rectangle intersects with another rectangle, taking an offset into account.
     /// </summary>
     /// <param name="rectangle"></param>
     /// <param name="offset"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     internal bool Intersects(Rectangle rectangle, Vector2 offset)
     {
         return rectangle.Left + offset.X < Right &&

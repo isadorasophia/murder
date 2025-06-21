@@ -19,14 +19,14 @@ public class DebugSnapshot
         return _instance;
     }
 
-    public static void TakeSnapShot(float divider = 1000f)
+    public static void TakeSnapShot(int samples, float divider = 1000f)
     {
         if (!Game.DIAGNOSTICS_MODE)
         {
             return;
         }
 
-        GetOrCreateInstance().TakeSnapShotImpl(divider);
+        GetOrCreateInstance().TakeSnapShotImpl(samples, divider);
     }
 
     public static void StartStopwatch(string id)
@@ -69,7 +69,7 @@ public class DebugSnapshot
         return GetOrCreateInstance().GetAllEntriesImpl();
     }
 
-    protected virtual void TakeSnapShotImpl(float divider) { }
+    protected virtual void TakeSnapShotImpl(int samples, float divider) { }
 
     protected virtual void StartStopwatchImpl(string id) { }
 

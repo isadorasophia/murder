@@ -20,6 +20,7 @@ namespace Murder.Systems
     [Filter(ContextAccessorFilter.NoneOf, typeof(InvisibleComponent))]
     public class ParticleRendererSystem : IStartupSystem, IMurderRenderSystem, IUpdateSystem
     {
+        Rectangle _cameraArea = Rectangle.Empty;
         public void Start(Context context)
         {
             if (context.HasAnyEntity)
@@ -33,15 +34,22 @@ namespace Murder.Systems
 
         public void Update(Context context)
         {
-            context.Entity.GetParticleSystemWorldTracker().Tracker.Step(context.World);
+            context.Entity.GetParticleSystemWorldTracker().Tracker.Step(context.World, _cameraArea);
         }
 
         public void Draw(RenderContext render, Context context)
         {
+            _cameraArea = render.Camera.SafeBounds;
             WorldParticleSystemTracker worldTracker = context.Entity.GetParticleSystemWorldTracker().Tracker;
 
             foreach (ParticleSystemTracker tracker in worldTracker.FetchActiveParticleTrackers())
             {
+                Rectangle boundingBox = tracker.Emitter.BoundingBoxSize();
+                if (!boundingBox.Intersects(_cameraArea, -tracker.LastEmitterPosition))
+                {
+                    continue;
+                }
+
                 ParticleTexture texture = tracker.Particle.Texture;
                 Batch2D batch = render.GetBatch((int)tracker.Particle.SpriteBatch);
 
@@ -104,7 +112,7 @@ namespace Murder.Systems
                                     new Rectangle(particle.Position.X - halfSize.X, particle.Position.Y - halfSize.Y,
                                     size.X, size.Y),
                                     Circle.EstipulateSidesFromRadius(Math.Max(size.X, size.Y)),
-                                    new DrawInfo(ySort) { Color = color, BlendState= tracker.Particle.BlendState });
+                                    new DrawInfo(ySort) { Color = color, BlendState = tracker.Particle.BlendState });
                             }
                             break;
 

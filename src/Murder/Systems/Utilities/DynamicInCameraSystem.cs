@@ -10,6 +10,7 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Services;
 using Murder.Utilities;
+using System;
 using System.Numerics;
 
 namespace Murder.Systems;
@@ -17,149 +18,150 @@ namespace Murder.Systems;
 [Filter(typeof(IMurderTransformComponent))]
 [Filter(ContextAccessorFilter.AnyOf, typeof(SpriteComponent), typeof(AgentSpriteComponent))]
 [Filter(ContextAccessorFilter.NoneOf, typeof(StaticComponent))]
-public class DynamicInCameraSystem : IMonoPreRenderSystem
+public sealed class DynamicInCameraSystem : IMonoPreRenderSystem
 {
-    public static Rectangle CalculateBounds(Vector2 position, Vector2 origin, Point size, Vector2 scale)
+    /// <summary>
+    /// Returns a conservative axis-aligned bounding box that fully contains
+    /// the sprite after scale, flip, origin offset and rotation.
+    /// </summary>
+    public static Rectangle CalculateBounds(
+        Vector2 position,
+        Vector2 origin,
+        Point size,
+        Vector2 scale,
+        ImageFlip flip = ImageFlip.None)
     {
-        // Determine if the sprite is flipped
-        bool isFlippedHorizontally = scale.X < 0;
-        bool isFlippedVertically = scale.Y < 0;
+        // ----- Apply flipping to scale -------------------------------------------------
+        if ((flip & ImageFlip.Horizontal) != 0)
+            scale.X = -scale.X;
 
-        // Adjust corners based on the flip
-        Vector2 topLeft = new Vector2(isFlippedHorizontally ? size.X - origin.X : -origin.X,
-                                      isFlippedVertically ? size.Y - origin.Y : -origin.Y);
-        Vector2 bottomRight = new Vector2(size.X - topLeft.X, size.Y - topLeft.Y);
+        if ((flip & ImageFlip.Vertical) != 0)
+            scale.Y = -scale.Y;
 
-        // Apply absolute scale
-        topLeft *= new Vector2(Math.Abs(scale.X), Math.Abs(scale.Y));
-        bottomRight *= new Vector2(Math.Abs(scale.X), Math.Abs(scale.Y));
+        // ----- World-space half-extents (after scale) ----------------------------------
+        float absScaleX = Math.Abs(scale.X);
+        float absScaleY = Math.Abs(scale.Y);
 
-        // Adjust for rotation by using the maximum extent
-        float maxExtentSq = Math.Max(topLeft.LengthSquared(), bottomRight.LengthSquared());
-        float maxExtent = MathF.Sqrt(maxExtentSq);
+        float halfW = size.X * absScaleX * 0.5f;
+        float halfH = size.Y * absScaleY * 0.5f;
 
-        // Calculate the AABB
-        Vector2 min = position - new Vector2(maxExtent, maxExtent);
-        Vector2 max = position + new Vector2(maxExtent, maxExtent);
+        // ----- Bounding circle radius --------------------------------------------------
+        float radius = MathF.Sqrt(halfW * halfW + halfH * halfH);
 
-        return new Rectangle((int)min.X, (int)min.Y, (int)(max.X - min.X), (int)(max.Y - min.Y));
+        // Position is typically centre; offset origin first
+        Vector2 worldPos = position - Vector2.Multiply(origin, scale);
+
+        Vector2 min = new(worldPos.X - radius, worldPos.Y - radius);
+        int wh = (int)(radius * 2);
+
+        return new Rectangle((int)min.X, (int)min.Y, wh, wh);
     }
+
     public void BeforeDraw(Context context)
     {
-        var camera = ((MonoWorld)context.World).Camera;
+        var world = (MonoWorld)context.World;
+        var camera = world.Camera;
 
         Rectangle cameraBounds = camera.SafeBounds;
-        Vector2 cameraPosition = camera.Position;
+        Vector2 cameraPos = camera.Position;
 
-        if (context.World.TryGetUniqueDisableSceneTransitionEffects()?.OverrideCameraPosition is Vector2 overridePosition)
+        // Respect scene-override camera
+        if (context.World.TryGetUniqueDisableSceneTransitionEffects()?.OverrideCameraPosition
+            is Vector2 overridePos)
         {
-            cameraPosition = overridePosition;
-            cameraBounds = cameraBounds.SetPosition(cameraPosition);
+            cameraPos = overridePos;
+            cameraBounds = cameraBounds.SetPosition(cameraPos);
         }
 
         foreach (Entity e in context.Entities)
         {
-            Vector2 position = e.GetGlobalTransform().Vector2;
+            var transform = e.GetGlobalTransform();
+            Vector2 pos = transform.Vector2;
 
-            if (e.TryGetEntityBoundsCache() is EntityBoundsCacheComponent entityBoundsCacheComponent)
+            // ------------  cached bounds -------------------------------------
+            if (e.TryGetEntityBoundsCache() is EntityBoundsCacheComponent cache)
             {
-                Vector2 renderPosition;
-                if (e.TryGetParallax() is ParallaxComponent parallax)
-                {
-                    renderPosition = position + cameraPosition * (1 - parallax.Factor);
-                }
-                else
-                {
-                    renderPosition = position;
-                }
-
-                Vector2 scale = Vector2.One;
-                if (e.TryGetScale() is ScaleComponent scaleCompoennt)
-                {
-                    scale = scaleCompoennt.Scale;
-                }
-
-                // If we have a bounds cache, we can use it to determine if the entity is in camera.
-                Rectangle bounds = new Rectangle(renderPosition.X + entityBoundsCacheComponent.Bounds.X, renderPosition.Y + entityBoundsCacheComponent.Bounds.Y,
-                                                 entityBoundsCacheComponent.Bounds.Width, entityBoundsCacheComponent.Bounds.Height);
-                if (cameraBounds.Touches(bounds))
-                {
+                Rectangle worldBounds = cache.Bounds.AddPosition(pos);
+                if (cameraBounds.Touches(worldBounds))
                     e.SetInCamera();
-                }
                 else
-                {
                     e.RemoveInCamera();
-                }
+
                 continue;
             }
 
-            else if (e.TryGetSprite() is SpriteComponent sprite)
+            // ------------ Sprite  ------------------------------------------------
+            if (e.TryGetSprite() is SpriteComponent sprite &&
+                Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid) is SpriteAsset asset)
             {
-                if (Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid) is not SpriteAsset spriteAsset)
+                // Parallax adjustment
+                Vector2 renderPos = pos;
+                if (e.TryGetParallax() is ParallaxComponent parallax)
+                    renderPos += cameraPos * (1f - parallax.Factor);
+
+                // Scale / rotation
+                Vector2 scale = (e.TryGetScale() is ScaleComponent sc) ? sc.Scale : Vector2.One;
+                var flip = (e.TryGetFlipSprite() is FlipSpriteComponent fc) ? fc.Orientation : ImageFlip.None;
+
+                // ----- circle vs camera early-out -------------------------------
+                float absScaleX = Math.Abs(scale.X);
+                float absScaleY = Math.Abs(scale.Y);
+                float radius = 0.5f * MathF.Sqrt(
+                    asset.Size.X * asset.Size.X * absScaleX * absScaleX +
+                    asset.Size.Y * asset.Size.Y * absScaleY * absScaleY);
+
+                if (!cameraBounds.Expand(radius).Contains(renderPos))
                 {
+                    e.RemoveInCamera();
                     continue;
                 }
 
-                Vector2 renderPosition;
-                if (e.TryGetParallax() is ParallaxComponent parallax)
-                {
-                    renderPosition = position + cameraPosition * (1 - parallax.Factor);
-                }
-                else
-                {
-                    renderPosition = position;
-                }
+                // ----- Full AABB only if needed ---------------------------------------
+                Rectangle aabb = CalculateBounds(
+                    renderPos,
+                    sprite.Offset + asset.Origin,
+                    asset.Size,
+                    scale,
+                    flip);
 
-                Vector2 scale = Vector2.One;
-                if (e.TryGetScale() is ScaleComponent scaleCompoennt)
-                {
-                    scale = scaleCompoennt.Scale;
-                }
+                // Cache bounds for future frames if entity is static
+                if (e.HasStatic())
+                    e.SetEntityBoundsCache(aabb.AddPosition(-pos));
 
-                Rectangle spriteRect = CalculateBounds(renderPosition, sprite.Offset + spriteAsset.Origin, spriteAsset.Size, scale);
-                e.SetEntityBoundsCache(spriteRect.AddPosition(-renderPosition));
-
-                // This is as early as we can to check for out of bounds
-                if (sprite.TargetSpriteBatch == Batches2D.UiBatchId ||
-                    cameraBounds.Touches(spriteRect))
-                {
+                if (sprite.TargetSpriteBatch == Batches2D.UiBatchId || cameraBounds.Touches(aabb))
                     e.SetInCamera();
-                }
                 else
-                {
                     e.RemoveInCamera();
-                }
+
+                continue;
             }
-            else
+
+            // ------------ Collider ---------------------------------------------
+            if (e.TryGetCollider() is ColliderComponent col)
             {
-                if (e.TryGetCollider() is ColliderComponent collider)
-                {
-                    Rectangle edges = collider.GetBoundingBox(position);
-                    e.SetEntityBoundsCache(edges.AddPosition(-position));
-                    if (cameraBounds.Touches(edges))
-                    {
-                        e.SetInCamera();
-                    }
-                    else
-                    {
-                        e.RemoveInCamera();
-                    }
-                }
+                Rectangle worldBox = col.GetBoundingBox(pos);
+
+                // Cache once for static colliders
+                if (e.HasStatic())
+                    e.SetEntityBoundsCache(worldBox.AddPosition(-pos));
+
+                if (cameraBounds.Touches(worldBox))
+                    e.SetInCamera();
                 else
-                {
-                    // Assume a 1px point
-                    e.SetEntityBoundsCache(Rectangle.One);
-                    if (cameraBounds.Contains(position.ToPoint()))
-                    {
-                        e.SetInCamera();
-                    }
-                    else
-                    {
-                        e.RemoveInCamera();
-                    }
-                }
+                    e.RemoveInCamera();
+
+                continue;
             }
+
+            // ------------ Fallback: 1-pixel -------------------------------------
+            if (cameraBounds.Contains(pos.ToPoint()))
+                e.SetInCamera();
+            else
+                e.RemoveInCamera();
+
+            // Cache a 1-pixel box if it will never change
+            if (e.HasStatic())
+                e.SetEntityBoundsCache(Rectangle.One);
         }
     }
-
 }

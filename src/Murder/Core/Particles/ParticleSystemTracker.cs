@@ -1,4 +1,5 @@
-﻿using Murder.Utilities;
+﻿using Murder.Core.Geometry;
+using Murder.Utilities;
 using System.Diagnostics;
 using System.Numerics;
 
@@ -59,10 +60,16 @@ namespace Murder.Core.Particles
         /// </summary>
         /// <param name="allowSpawn">Whether spawning new entities is allowed, e.g. the entity is not deactivated.</param>
         /// <param name="emitterPosition">Emitter position in game where the particles are fired from.</param>
+        /// <param name="cameraArea">Emmiters outside of this area won't step</param>
         /// <param name="id">Entity id, used when generating the correct seed for the particle.</param>
-        /// <returns>Returns whether the emitter is still running.</returns>
-        public bool Step(bool allowSpawn, Vector2 emitterPosition, int id)
+        public void Step(bool allowSpawn, Vector2 emitterPosition, Rectangle cameraArea, int id)
         {
+            Rectangle boundingBox = Emitter.BoundingBoxSize();
+            if (!boundingBox.Intersects(cameraArea, -emitterPosition))
+            {
+                return;
+            }
+
             _lastEmitterPosition = emitterPosition;
 
             if (!_hasStarted)
@@ -98,8 +105,6 @@ namespace Murder.Core.Particles
             {
                 SpawnNewParticlesPerSec(emitterPosition);
             }
-
-            return false;
         }
 
         public void Start(Vector2 emitterPosition, int id)

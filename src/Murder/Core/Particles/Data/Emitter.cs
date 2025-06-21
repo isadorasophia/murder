@@ -1,4 +1,6 @@
 ﻿using Murder.Attributes;
+using Murder.Core.Geometry;
+using System.Numerics;
 
 namespace Murder.Core.Particles
 {
@@ -41,5 +43,34 @@ namespace Murder.Core.Particles
 
         public Emitter WithShape(EmitterShape shape) =>
             new(MaxParticlesPool, shape, Angle, ParticlesPerSecond, Burst, Speed);
+
+        internal Rectangle BoundingBoxSize()
+        {
+            if (Shape.Kind == EmitterShapeKind.Rectangle)
+            {
+                return Shape.Rectangle;
+            }
+            else if (Shape.Kind == EmitterShapeKind.Point)
+            {
+                return new Rectangle(0, 0, 1, 1);
+            }
+            else if (Shape.Kind == EmitterShapeKind.Line)
+            {
+                return new Rectangle(
+                    Shape.Line.Top,
+                    Shape.Line.Left,
+                    Shape.Line.Bottom,
+                    Shape.Line.Right
+                    );
+            }
+            else if (Shape.Kind == EmitterShapeKind.Circle)
+            {
+                return Rectangle.CenterRectangle(new Point(Shape.Circle.X, Shape.Circle.Y), Shape.Circle.Radius / 2f, Shape.Circle.Radius / 2f);
+            }
+            else //if (Shape.Kind == EmitterShapeKind.CircleOutline)
+            {
+                return Rectangle.CenterRectangle(new Point(Shape.Circle.X, Shape.Circle.Y), Shape.Circle.Radius / 2f, Shape.Circle.Radius / 2f);
+            }
+        }
     }
 }

@@ -353,10 +353,19 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                 }
                 if (ImGui.BeginTabItem("Snapshots"))
                 {
-                    if (ImGui.Button("Take Snapshot"))
+                    if (ImGui.Button("Snapshot (Single)"))
                     {
-                        DebugSnapshot.TakeSnapShot();
+                        DebugSnapshot.TakeSnapShot(1);
+                    }
 
+                    if (ImGui.Button("Snapshot (30)"))
+                    {
+                        DebugSnapshot.TakeSnapShot(30);
+                    }
+
+                    if (ImGui.Button("Snapshot (120)"))
+                    {
+                        DebugSnapshot.TakeSnapShot(120);
                     }
 
                     ImGui.TextColored(Game.Profile.Theme.White, $"{DebugSnapshot.GetTotalTime()}");
