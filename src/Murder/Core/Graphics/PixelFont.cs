@@ -487,19 +487,32 @@ public class PixelFontSize
 
             if (overflow)
             {
-                // Has overflow, word is going down.
-                if (wrappedText.Length != 0)
+                bool applyLineBreak = true;
+                if (!lineBreakOnSpace && 
+                    (cursor == text.Length - 1 || nextLineBreak == cursor + 1) &&
+                    IsPonctuation(text[cursor]))
                 {
-                    // Trim wrapped text of any whitespace at the end.
-                    while (wrappedText.Length > 0 && wrappedText[^1] == ' ')
-                    {
-                        wrappedText.Length--;
-                    }
-
-                    wrappedText.Append('\n');
+                    // If this is a ponctuation right at the end of the sentence or before a new line,
+                    // we should be okay overflowing. It's better than the alternative.
+                    applyLineBreak = false;
                 }
 
-                offset.X = wordWidth;
+                if (applyLineBreak)
+                {
+                    // Has overflow, word is going down.
+                    if (wrappedText.Length != 0)
+                    {
+                        // Trim wrapped text of any whitespace at the end.
+                        while (wrappedText.Length > 0 && wrappedText[^1] == ' ')
+                        {
+                            wrappedText.Length--;
+                        }
+
+                        wrappedText.Append('\n');
+                    }
+
+                    offset.X = wordWidth;
+                }
             }
             else
             {
@@ -519,6 +532,15 @@ public class PixelFontSize
         }
 
         return wrappedText.ToString();
+    }
+
+    private static bool IsPonctuation(char c)
+    {
+        return c switch
+        {
+            '!' or '！' or ':' or '?' or '？' or '、' or '.' or '。' or '…' => true,
+            _ => false,
+        };
     }
 }
 
