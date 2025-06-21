@@ -1,6 +1,7 @@
 ﻿using Bang;
 using Bang.Entities;
 using Microsoft.Xna.Framework.Graphics;
+using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using System.Numerics;
@@ -61,7 +62,7 @@ public static class DebugServices
 #endif
     }
 
-    public static void DrawLine(World world, Vector2 start, Vector2 end, Color color, float duration = 1/30f)
+    public static void DrawLine(World world, Vector2 start, Vector2 end, Color color, float duration = 1 / 30f)
     {
 #if DEBUG
         var e = world.AddEntity();
@@ -78,4 +79,22 @@ public static class DebugServices
         });
 #endif
     }
+
+    public static void DrawRectangle(World world, Rectangle rect, Color color, float duration = 1 / 30f)
+    {
+#if DEBUG
+        var e = world.AddEntity();
+        var time = Game.NowUnscaled;
+        e.SetCustomDraw((render) =>
+        {
+            if (Game.NowUnscaled - time > duration)
+            {
+                e.Destroy();
+            }
+            float delta = (Game.NowUnscaled - time) / duration;
+            RenderServices.DrawRectangleOutline(render.DebugBatch, rect, color * delta, 1);
+        });
+#endif
+    }
+
 }

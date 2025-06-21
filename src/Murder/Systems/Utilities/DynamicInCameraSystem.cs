@@ -26,7 +26,6 @@ public sealed class DynamicInCameraSystem : IMonoPreRenderSystem
     /// </summary>
     public static Rectangle CalculateBounds(
         Vector2 position,
-        Vector2 origin,
         Point size,
         Vector2 scale,
         ImageFlip flip = ImageFlip.None)
@@ -48,10 +47,7 @@ public sealed class DynamicInCameraSystem : IMonoPreRenderSystem
         // ----- Bounding circle radius --------------------------------------------------
         float radius = MathF.Sqrt(halfW * halfW + halfH * halfH);
 
-        // Position is typically centre; offset origin first
-        Vector2 worldPos = position - Vector2.Multiply(origin, scale);
-
-        Vector2 min = new(worldPos.X - radius, worldPos.Y - radius);
+        Vector2 min = new(position.X - radius, position.Y - radius);
         int wh = (int)(radius * 2);
 
         return new Rectangle((int)min.X, (int)min.Y, wh, wh);
@@ -81,11 +77,15 @@ public sealed class DynamicInCameraSystem : IMonoPreRenderSystem
             // ------------  cached bounds -------------------------------------
             if (e.TryGetEntityBoundsCache() is EntityBoundsCacheComponent cache)
             {
-                Rectangle worldBounds = cache.Bounds.AddPosition(pos);
+                Rectangle worldBounds = cache.Bounds;
                 if (cameraBounds.Touches(worldBounds))
+                {
                     e.SetInCamera();
+                }
                 else
+                {
                     e.RemoveInCamera();
+                }
 
                 continue;
             }
@@ -119,19 +119,24 @@ public sealed class DynamicInCameraSystem : IMonoPreRenderSystem
                 // ----- Full AABB only if needed ---------------------------------------
                 Rectangle aabb = CalculateBounds(
                     renderPos,
-                    sprite.Offset + asset.Origin,
                     asset.Size,
                     scale,
                     flip);
 
                 // Cache bounds for future frames if entity is static
                 if (e.HasStatic())
-                    e.SetEntityBoundsCache(aabb.AddPosition(-pos));
+                {
+                    e.SetEntityBoundsCache(aabb);
+                }
 
                 if (sprite.TargetSpriteBatch == Batches2D.UiBatchId || cameraBounds.Touches(aabb))
+                {
                     e.SetInCamera();
+                }
                 else
+                {
                     e.RemoveInCamera();
+                }
 
                 continue;
             }
