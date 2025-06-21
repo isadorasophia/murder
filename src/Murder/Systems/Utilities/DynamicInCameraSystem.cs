@@ -26,6 +26,7 @@ public sealed class DynamicInCameraSystem : IMonoPreRenderSystem
     /// </summary>
     public static Rectangle CalculateBounds(
         Vector2 position,
+        Vector2 origin,
         Point size,
         Vector2 scale,
         ImageFlip flip = ImageFlip.None)
@@ -41,8 +42,14 @@ public sealed class DynamicInCameraSystem : IMonoPreRenderSystem
         float absScaleX = Math.Abs(scale.X);
         float absScaleY = Math.Abs(scale.Y);
 
-        float halfW = size.X * absScaleX * 0.5f;
-        float halfH = size.Y * absScaleY * 0.5f;
+        float width = size.X * absScaleX;
+        float height = size.Y * absScaleY;
+
+        float maxOriginFactorX = Math.Max(origin.X, 1 - origin.X);
+        float maxOriginFactorY = Math.Max(origin.Y, 1 - origin.Y);
+
+        float halfW = (width * maxOriginFactorX);
+        float halfH = (height * maxOriginFactorY);
 
         // ----- Bounding circle radius --------------------------------------------------
         float radius = MathF.Sqrt(halfW * halfW + halfH * halfH);
@@ -106,7 +113,7 @@ public sealed class DynamicInCameraSystem : IMonoPreRenderSystem
                 // ----- circle vs camera early-out -------------------------------
                 float absScaleX = Math.Abs(scale.X);
                 float absScaleY = Math.Abs(scale.Y);
-                float radius = 0.5f * MathF.Sqrt(
+                float radius = MathF.Sqrt(
                     asset.Size.X * asset.Size.X * absScaleX * absScaleX +
                     asset.Size.Y * asset.Size.Y * absScaleY * absScaleY);
 
@@ -119,6 +126,7 @@ public sealed class DynamicInCameraSystem : IMonoPreRenderSystem
                 // ----- Full AABB only if needed ---------------------------------------
                 Rectangle aabb = CalculateBounds(
                     renderPos,
+                    (asset.Origin + sprite.Offset) / asset.Size,
                     asset.Size,
                     scale,
                     flip);
