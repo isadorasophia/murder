@@ -296,6 +296,11 @@ public class PixelFontSize
                 }
             }
 
+            if (character == TextDataServices.SPECIAL_BREAK_WORD_CHARACTER)
+            {
+                continue;
+            }
+
             if (character == '\n')
             {
                 // If this is *not* a language that does new line over spaces, we'll need to manually
@@ -459,31 +464,72 @@ public class PixelFontSize
 
         bool lineBreakOnSpace = LocalizationServices.IsTextWrapOnlyOnSpace();
 
-        StringBuilder wrappedText = new StringBuilder();
         int cursor = 0;
+        StringBuilder wrappedText = new();
+
         while (cursor < text.Length)
         {
+            bool appendWordPriorToNewLine = false;
+
+            ReadOnlySpan<char> word = [];
+            bool overflow = false;
+            float wordWidth = 0;
+
             bool alreadyHasLineBreak = false;
 
-            int nextSeparatorIndex = lineBreakOnSpace ? text[cursor..].IndexOf(' ') : 0;
-            int nextLineBreak = text[cursor..].IndexOf('\n');
+            int nextSeparatorIndex = 0;
 
+            if (!lineBreakOnSpace)
+            {
+                int breakpointWord = text[cursor..].IndexOf(TextDataServices.SPECIAL_BREAK_WORD_CHARACTER);
+                if (breakpointWord != -1)
+                {
+                    // before we decide whether we use this, check if the remaining of the string will overflow.
+                    word = text.Slice(cursor, text.Length - cursor);
+                    wordWidth = WidthToNextLine(word, 0, true) * scale;
+
+                    bool overflowToEndOfLine = offset.X + wordWidth > maxWidth;
+                    if (overflowToEndOfLine)
+                    {
+                        // okay, it's going to overflow. so now, check whether the next line break
+                        // will solve this, or if it'll overflow anyway.
+                        word = text.Slice(cursor, breakpointWord);
+                        wordWidth = WidthToNextLine(word, 0, true) * scale;
+
+                        overflowToEndOfLine = offset.X + wordWidth > maxWidth;
+                        if (!overflowToEndOfLine)
+                        {
+                            overflow = true;
+                            appendWordPriorToNewLine = true;
+
+                            nextSeparatorIndex = breakpointWord;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                nextSeparatorIndex = text[cursor..].IndexOf(' ');
+            }
+
+            int nextLineBreak = text[cursor..].IndexOf('\n');
             if (nextLineBreak >= 0 && nextLineBreak <= nextSeparatorIndex)
             {
                 alreadyHasLineBreak = true;
-                nextSeparatorIndex = nextLineBreak + cursor;
+                nextSeparatorIndex = nextLineBreak;
             }
-            else if (nextSeparatorIndex >= 0)
+
+            if (nextSeparatorIndex == -1 || nextSeparatorIndex + cursor >= text.Length - 1)
             {
-                nextSeparatorIndex = nextSeparatorIndex + cursor;
+                nextSeparatorIndex = text.Length - 1 - cursor;
             }
 
-            if (nextSeparatorIndex == -1 || nextSeparatorIndex >= text.Length - 1)
-                nextSeparatorIndex = text.Length - 1;
-
-            ReadOnlySpan<char> word = text.Slice(cursor, nextSeparatorIndex - cursor + 1);
-            float wordWidth = WidthToNextLine(word, 0, true) * scale;
-            bool overflow = offset.X + wordWidth > maxWidth;
+            if (!overflow)
+            {
+                word = text.Slice(cursor, nextSeparatorIndex + 1);
+                wordWidth = WidthToNextLine(word, 0, true) * scale;
+                overflow = offset.X + wordWidth > maxWidth;
+            }
 
             if (overflow)
             {
@@ -499,6 +545,12 @@ public class PixelFontSize
 
                 if (applyLineBreak)
                 {
+                    if (appendWordPriorToNewLine)
+                    {
+                        wrappedText.Append(word);
+                        wordWidth = 0;
+                    }
+
                     // Has overflow, word is going down.
                     if (wrappedText.Length != 0)
                     {
@@ -526,9 +578,12 @@ public class PixelFontSize
                 offset.X = 0;
             }
 
-            wrappedText.Append(word);
+            if (!appendWordPriorToNewLine)
+            {
+                wrappedText.Append(word);
+            }
 
-            cursor = nextSeparatorIndex + 1;
+            cursor += nextSeparatorIndex + 1;
         }
 
         return wrappedText.ToString();

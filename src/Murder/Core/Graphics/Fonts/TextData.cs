@@ -191,6 +191,9 @@ public static partial class TextDataServices
         // Replace two consecutive newlines with a single one
         text = ReplaceTwoNewLines().Replace(text, "\n");
 
+        // Replace two consecutive newlines with a single one
+        text = ReplaceBreakpointOnWords().Replace(text, $"{TextDataServices.SPECIAL_BREAK_WORD_CHARACTER}");
+
         // Replace two or more spaces with a single one
         text = TrimSpaces().Replace(text, " ");
 
@@ -592,4 +595,9 @@ public static partial class TextDataServices
 
     [GeneratedRegex("<speed=([^\\/]+)\\/>|<speed=([^>]+)>(.*?)</speed>", RegexOptions.IgnoreCase)]
     private static partial Regex SpeedTags();
+
+    [GeneratedRegex("<bp>")]
+    private static partial Regex ReplaceBreakpointOnWords();
+
+    public const char SPECIAL_BREAK_WORD_CHARACTER = '\a';
 }
