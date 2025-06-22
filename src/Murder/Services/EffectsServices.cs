@@ -2,6 +2,7 @@
 using Bang.Contexts;
 using Bang.Entities;
 using Murder.Components;
+using Murder.Components.Graphics;
 using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Core.Physics;
@@ -18,7 +19,8 @@ namespace Murder.Services
                 new SpriteComponent(info.Sprite, Vector2.Zero, info.Animations, info.YSortOffset, false, OutlineStyle.None, info.TargetSpriteBatch),
                 new DestroyOnAnimationCompleteComponent(),
                 new PositionComponent(info.Offset),
-                new DoNotPersistEntityOnSaveComponent()
+                new DoNotPersistEntityOnSaveComponent(),
+                new FlipSpriteComponent(info.Flip)
             );
 
             if (parent != null)

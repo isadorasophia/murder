@@ -18,8 +18,16 @@ public readonly struct QuickSpriteInfo
     public readonly ImmutableArray<string> Animations { get; init; } = [];
     public readonly Vector2 Offset { get; init; } = Vector2.Zero;
     public readonly int YSortOffset { get; init; } = 0;
+    public readonly ImageFlip Flip { get; init; } = ImageFlip.None;
+
     [SpriteBatchReference]
     public readonly int TargetSpriteBatch { get; init; } = Batches2D.GameplayBatchId;
+
+    public QuickSpriteInfo(Portrait portrait)
+    {
+        Sprite = portrait.Sprite;
+        Animations = [portrait.AnimationId];
+    }
 
     public QuickSpriteInfo(Guid sprite)
     {
