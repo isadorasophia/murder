@@ -426,7 +426,7 @@ namespace Murder.Services
                     {
                         texture.Draw(
                         batch,
-                        clip: new IntRectangle(core.X, fullTextureSize.Y - bottomRightSize.Y, core.Width, bottomRightSize.Y),
+                        clip: new IntRectangle(core.X, fullTextureSize.Y - bottomRightSize.Y, remainder, bottomRightSize.Y),
                         target: new Rectangle(target.Left + core.X + tiles * core.Width, target.Bottom - bottomRightSize.Y, remainder, bottomRightSize.Y),
                         color,
                         sort,
