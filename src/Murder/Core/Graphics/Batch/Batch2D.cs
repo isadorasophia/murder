@@ -8,7 +8,7 @@ using System.Collections.Immutable;
 using XnaColor = Microsoft.Xna.Framework.Color;
 
 namespace Murder.Core.Graphics;
-public class Batch2D : IDisposable
+public class Batch2D
 {
     public string Name;
 
@@ -100,7 +100,6 @@ public class Batch2D : IDisposable
     public bool AllowIBasicShaderEffectParameterClone { get; set; } = true;
 
     public Matrix Transform { get; private set; }
-    public bool IsDisposed { get; private set; }
 
     private readonly bool _followCamera;
 
@@ -218,18 +217,6 @@ public class Batch2D : IDisposable
         if (BatchMode == BatchMode.Immediate)
         {
             Flush();
-        }
-    }
-
-    /// <summary>
-    /// Immediately releases the unmanaged resources used by this object.
-    /// </summary>
-    public void Dispose()
-    {
-        // Do we need this?? I don't think so
-        if (!IsDisposed)
-        {
-            IsDisposed = true;
         }
     }
 

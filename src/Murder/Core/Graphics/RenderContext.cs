@@ -565,11 +565,6 @@ public class RenderContext : IDisposable
     {
         CachedTextTextures.Dispose();
 
-        foreach (var batch in _spriteBatches)
-        {
-            batch?.Dispose();
-        }
-
         _floorBufferTarget?.Dispose();
         _uiTarget?.Dispose();
         _mainTarget?.Dispose();

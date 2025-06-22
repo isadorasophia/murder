@@ -2,7 +2,6 @@
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
-using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Components.Graphics;
@@ -10,7 +9,6 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
-using Murder.Helpers;
 using Murder.Services;
 using Murder.Utilities;
 using System.Numerics;
@@ -19,28 +17,21 @@ namespace Murder.Systems.Graphics
 {
     [Filter(ContextAccessorFilter.AllOf, typeof(SpriteComponent), typeof(ITransformComponent), typeof(InCameraComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(InvisibleComponent), typeof(ThreeSliceComponent))]
-    public class SpriteRenderSystem : IStartupSystem, IExitSystem, IMurderRenderSystem
+    public class SpriteRenderSystem : IMurderRenderSystem
     {
-        private readonly Dictionary<Guid, SpriteAsset> _spriteAssetCache = [];
-        
         public void Draw(RenderContext render, Context context)
         {
             DebugSnapshot.StartStopwatch("Sprite Render System");
             bool issueSlowdownWarning = false;
 
-            foreach (Entity e in context.Entities)
+            for (int i = 0; i < context.Entities.Length; i++)
             {
+                Entity e = context.Entities[i];
                 IMurderTransformComponent transform = e.GetGlobalTransform();
                 SpriteComponent s = e.GetSprite();
 
-                if (!_spriteAssetCache.TryGetValue(s.AnimationGuid, out SpriteAsset? asset))
-                {
-                    if (Game.Data.TryGetAsset<SpriteAsset>(s.AnimationGuid) is not SpriteAsset loadedAsset)
-                        continue;
-
-                    _spriteAssetCache[s.AnimationGuid] = loadedAsset;
-                    asset = loadedAsset;
-                }
+                if (Game.Data.TryGetAsset<SpriteAsset>(s.AnimationGuid) is not SpriteAsset asset)
+                    continue;
 
                 ImageFlip flip = ImageFlip.None;
 
@@ -267,25 +258,6 @@ namespace Murder.Systems.Graphics
             }
 
             return alpha * (entity.TryGetAlpha()?.Alpha ?? 1.0f);
-        }
-
-        public void ClearCache()
-        {
-            _spriteAssetCache.Clear();
-        }
-
-        public void Start(Context context)
-        {
-#if DEBUG
-            Game.Data.TrackOnHotReloadSprite(ClearCache);
-#endif
-        }
-
-        public void Exit(Context context)
-        {
-#if DEBUG
-            Game.Data.UntrackOnHotReloadSprite(ClearCache);
-#endif
         }
     }
 }
