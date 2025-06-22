@@ -19,6 +19,12 @@ public static class MurderFontServices
         return f.GetLineWidth(text);
     }
 
+    public static float GetLineHeight(RuntimeTextData text)
+    {
+        PixelFont f = Game.Data.GetFont(text.Font);
+        return f.PixelFontSize.HeightOf(text.Text);
+    }
+
     public static float GetLineWidth(int font, string text)
     {
         PixelFont f = Game.Data.GetFont(font);

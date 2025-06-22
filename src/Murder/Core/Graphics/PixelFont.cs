@@ -195,10 +195,12 @@ public class PixelFontSize
         return currentLineWidth;
     }
 
-    public float HeightOf(string text)
+    public float HeightOf(ReadOnlySpan<char> text)
     {
-        if (string.IsNullOrEmpty(text))
+        if (text.Length == 0)
+        {
             return 0;
+        }
 
         int lines = 1;
         if (text.IndexOf('\n') >= 0)
