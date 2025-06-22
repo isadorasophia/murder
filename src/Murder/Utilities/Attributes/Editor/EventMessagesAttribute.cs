@@ -1,4 +1,6 @@
-﻿namespace Murder.Utilities.Attributes;
+﻿using System.Collections.Immutable;
+
+namespace Murder.Utilities.Attributes;
 
 public enum EventMessageAttributeFlags
 {
@@ -21,10 +23,20 @@ public class EventMessagesAttribute : Attribute
 
     public readonly EventMessageAttributeFlags Flags;
 
+    /// <summary>
+    /// Also check for any sprite events in the specified fields of the component.
+    /// </summary>
+    public readonly string[]? CheckForSpriteFields = null;
+
     public EventMessagesAttribute(params string[] events) => Events = events;
 
     public EventMessagesAttribute(EventMessageAttributeFlags flags, params string[] events) : this(events)
     {
         Flags = flags;
+    }
+
+    public EventMessagesAttribute(EventMessageAttributeFlags flags, string[] events, string[] spriteFields) : this(flags, events)
+    {
+        CheckForSpriteFields = spriteFields;
     }
 }

@@ -6,15 +6,18 @@ using Murder.Assets.Graphics;
 using Murder.Attributes;
 using Murder.Components;
 using Murder.Components.Serialization;
+using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.CustomEditors;
+using Murder.Editor.Data.Graphics;
 using Murder.Editor.Utilities.Attributes;
 using Murder.Interactions;
 using Murder.Prefabs;
 using Murder.Utilities;
 using Murder.Utilities.Attributes;
+using System.Collections.Immutable;
 using System.Numerics;
 using System.Reflection;
 
@@ -380,7 +383,9 @@ public static class StageHelpers
 
     private static void AddEventsIfAny(IComponent c, ref HashSet<string>? events, bool child)
     {
-        Type t = c.GetType();
+        Type tBase = c.GetType();
+
+        Type t = tBase;
         if (t.IsGenericType)
         {
             t = t.GetGenericArguments()[0];
@@ -412,14 +417,7 @@ public static class StageHelpers
 
         if (sprite is not null)
         {
-            (_, HashSet<string> spriteEventsForChild) = GetSpriteEventsForAsset(sprite);
-            events ??= [];
-
-            foreach (string e in spriteEventsForChild)
-            {
-                events.Add(e);
-            }
-
+            AddEventsFromSprite(sprite, ref events);
             return;
         }
 
@@ -452,6 +450,78 @@ public static class StageHelpers
         foreach (string e in attribute.Events)
         {
             events.Add(e);
+        }
+
+        if (attribute.CheckForSpriteFields is string[] fieldsToCheck)
+        {
+            foreach (string f in fieldsToCheck)
+            {
+                FieldInfo? fInfo = t.GetField(f, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+                if (fInfo is null)
+                {
+                    continue;
+                }
+
+                object? cToGetField = c;
+                if (tBase.IsGenericType && tBase.GetGenericTypeDefinition() == typeof(InteractiveComponent<>))
+                {
+                    FieldInfo? fInteraction = tBase
+                        .GetField("_interaction", BindingFlags.NonPublic | BindingFlags.Instance);
+
+                    cToGetField = fInteraction?.GetValue(cToGetField);
+                }
+
+                object? value = fInfo.GetValue(cToGetField);
+                if (value is Guid spriteGuid)
+                {
+                    AddEventsFromSprite(spriteGuid, ref events);
+                }
+                else if (value is Portrait portrait)
+                {
+                    AddEventsFromPortrait(portrait, ref events);
+                }
+            }
+        }
+    }
+
+    private static void AddEventsFromSprite(Guid spriteGuid, ref HashSet<string>? events)
+    {
+        SpriteAsset? sprite = Game.Data.TryGetAsset<SpriteAsset>(spriteGuid);
+        if (sprite is null)
+        {
+            return;
+        }
+
+        AddEventsFromSprite(sprite, ref events);
+    }
+
+    private static void AddEventsFromSprite(SpriteAsset sprite, ref HashSet<string>? events)
+    {
+        events ??= [];
+
+        (_, HashSet<string> spriteEventsForChild) = GetSpriteEventsForAsset(sprite);
+        foreach (string e in spriteEventsForChild)
+        {
+            events.Add(e);
+        }
+    }
+
+    private static void AddEventsFromPortrait(Portrait portrait, ref HashSet<string>? events)
+    {
+        SpriteAsset? sprite = Game.Data.TryGetAsset<SpriteAsset>(portrait.Sprite);
+        if (sprite is null)
+        {
+            return;
+        }
+
+        events ??= [];
+
+        if (sprite.Animations.TryGetValue(portrait.AnimationId, out Animation animation))
+        {
+            foreach ((_, var @event) in animation.Events)
+            {
+                events.Add(@event);
+            }
         }
     }
 
