@@ -8,6 +8,7 @@ using Murder.Components;
 using Murder.Components.Serialization;
 using Murder.Core;
 using Murder.Core.Graphics;
+using Murder.Core.Input;
 using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.CustomEditors;
@@ -426,6 +427,22 @@ public static class StageHelpers
             return;
         }
 
+        CheckForAttributeEventsOnType(t, c, child, ref events);
+    }
+
+    private static void CheckForAttributeEventsOnType(Type tBaseType, IComponent c, bool isChildComponent, ref HashSet<string>? events)
+    {
+        Type t = tBaseType;
+        if (t.IsGenericType)
+        {
+            t = t.GetGenericArguments()[0];
+        }
+
+        if (Attribute.GetCustomAttribute(t, typeof(EventMessagesAttribute)) is not EventMessagesAttribute attribute)
+        {
+            return;
+        }
+
         if (attribute.Flags.HasFlag(EventMessageAttributeFlags.CheckDisplayOnlyIf))
         {
             MethodInfo? method = t.GetMethod("VerifyEventMessages", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
@@ -440,7 +457,7 @@ public static class StageHelpers
             }
         }
 
-        if (child && !attribute.Flags.HasFlag(EventMessageAttributeFlags.PropagateToParent))
+        if (isChildComponent && !attribute.Flags.HasFlag(EventMessageAttributeFlags.PropagateToParent))
         {
             return;
         }
@@ -463,9 +480,9 @@ public static class StageHelpers
                 }
 
                 object? cToGetField = c;
-                if (tBase.IsGenericType && tBase.GetGenericTypeDefinition() == typeof(InteractiveComponent<>))
+                if (tBaseType.IsGenericType && tBaseType.GetGenericTypeDefinition() == typeof(InteractiveComponent<>))
                 {
-                    FieldInfo? fInteraction = tBase
+                    FieldInfo? fInteraction = tBaseType
                         .GetField("_interaction", BindingFlags.NonPublic | BindingFlags.Instance);
 
                     cToGetField = fInteraction?.GetValue(cToGetField);
@@ -481,6 +498,12 @@ public static class StageHelpers
                     AddEventsFromPortrait(portrait, ref events);
                 }
             }
+        }
+
+        if (t.BaseType is Type tParent &&
+            (tParent.Assembly == t.Assembly || tParent.Assembly == typeof(IComponent).Assembly))
+        {
+            CheckForAttributeEventsOnType(tParent, c, isChildComponent, ref events);
         }
     }
 
