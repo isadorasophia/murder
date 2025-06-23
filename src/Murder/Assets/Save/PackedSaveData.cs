@@ -30,7 +30,7 @@ public class SaveDataInfo
 [Serializable]
 public struct SaveDataTracker
 {
-    public const string Name = "save_data";
+    public const string Name = "save_data.gz";
 
     public readonly Dictionary<int, SaveDataInfo> Info = [];
 
