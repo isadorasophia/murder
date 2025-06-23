@@ -107,22 +107,26 @@ namespace Murder.Diagnostics
             Assembly[] allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach (Assembly s in allAssemblies)
             {
-                foreach (Type t in s.GetTypes())
+                try
                 {
-                    if (!t.IsAssignableTo(tCommand))
+                    foreach (Type t in s.GetTypes())
                     {
-                        continue;
-                    }
+                        if (!t.IsAssignableTo(tCommand))
+                        {
+                            continue;
+                        }
 
-                    builder.AddRange(t
-                        .GetMethods()
-                        .Where(m => Attribute.IsDefined(m, typeof(CommandAttribute)) && !string.IsNullOrEmpty(m.Name))
-                        .ToImmutableDictionary(
-                            ToName,
-                            ToCommand,
-                            StringComparer.OrdinalIgnoreCase
-                        ));
+                        builder.AddRange(t
+                            .GetMethods()
+                            .Where(m => Attribute.IsDefined(m, typeof(CommandAttribute)) && !string.IsNullOrEmpty(m.Name))
+                            .ToImmutableDictionary(
+                                ToName,
+                                ToCommand,
+                                StringComparer.OrdinalIgnoreCase
+                            ));
+                    }
                 }
+                catch { } // ignore type errors
             }
 
             return builder.ToImmutable();
