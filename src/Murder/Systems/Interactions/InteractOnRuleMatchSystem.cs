@@ -159,6 +159,10 @@ namespace Murder.Systems
                         case AfterInteractRule.RemoveComponent:
                             e.RemoveInteractOnRuleMatch();
                             break;
+
+                        case AfterInteractRule.Destroy:
+                            e.Destroy();
+                            break;
                     }
 
                     triggeredRequirements.Pop();
@@ -192,6 +196,10 @@ namespace Murder.Systems
 
                 case AfterInteractRule.RemoveComponent:
                     e.RemoveInteractOnRuleMatch();
+                    break;
+
+                case AfterInteractRule.Destroy:
+                    e.Destroy();
                     break;
             }
         }

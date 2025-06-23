@@ -8,7 +8,6 @@ namespace Murder.Interactions;
 public readonly struct ToggleActivateTargetInteraction : IInteraction
 {
     public readonly string Target = string.Empty;
-
     public readonly bool Activate = true;
 
     public ToggleActivateTargetInteraction() { }

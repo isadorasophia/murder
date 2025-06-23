@@ -25,7 +25,12 @@ namespace Murder.Components
         /// <summary>
         /// Remove InteractOnRuleMatchComponent after this is triggered.
         /// </summary>
-        RemoveComponent = 4
+        RemoveComponent = 4,
+
+        /// <summary>
+        /// Destroy entity.
+        /// </summary>
+        Destroy = 5
     }
 
     [Story]
