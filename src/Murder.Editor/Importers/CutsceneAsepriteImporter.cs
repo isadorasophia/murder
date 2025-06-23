@@ -29,7 +29,7 @@ internal class CutsceneAsepriteImporter(EditorSettingsAsset editorSettings) : Re
     /// </summary>
     private readonly Dictionary<string, AsepriteImporter> _importers = [];
 
-    public override async ValueTask LoadStagedContentAsync(bool reload)
+    public override async ValueTask LoadStagedContentAsync(bool reload, bool skipIfNoChangesFound)
     {
         if (AllFiles.Count == 0)
         {
@@ -50,7 +50,12 @@ internal class CutsceneAsepriteImporter(EditorSettingsAsset editorSettings) : Re
                 importer.ClearBeforeSaving = false;
             }
 
-            await importer.LoadStagedContentAsync(reload);
+            if (skipIfNoChangesFound && !importer.HasChanges)
+            {
+                continue;
+            }
+
+            await importer.LoadStagedContentAsync(reload, skipIfNoChangesFound);
         }
 
         AllFiles.Clear();

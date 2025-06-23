@@ -70,7 +70,7 @@ public partial class EditorDataManager
                 continue;
             }
 
-            _ = importer.LoadStagedContentAsync(reload);
+            _ = importer.LoadStagedContentAsync(reload, skipIfNoChangesFound);
         }
     }
 
@@ -107,7 +107,7 @@ public partial class EditorDataManager
                 continue;
             }
 
-            await importer.LoadStagedContentAsync(reload);
+            await importer.LoadStagedContentAsync(reload, skipIfNoChangesFound);
         }
     }
 

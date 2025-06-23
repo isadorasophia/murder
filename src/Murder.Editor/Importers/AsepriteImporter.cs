@@ -37,7 +37,7 @@ namespace Murder.Editor.Importers
         /// </summary>
         public bool ClearBeforeSaving = true;
 
-        public override async ValueTask LoadStagedContentAsync(bool reload)
+        public override async ValueTask LoadStagedContentAsync(bool reload, bool skipIfNoChangesFound)
         {
             if (AllFiles.Count == 0)
             {
@@ -62,7 +62,7 @@ namespace Murder.Editor.Importers
             _reloadedSprites.Clear();
         }
 
-        public override string GetSourcePackedAtlasDescriptorPath() => GetSourcePackedAtlasDescriptorPath(Atlas.GetDescription());
+        public override string GetSourcePackedAtlasDescriptorPath() => GetSourcePackedAtlasDescriptorPath(GetAtlasName(Atlas, SubAtlasId));
 
         protected override void StageFileImpl(string file, bool changed)
         {

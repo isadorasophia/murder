@@ -28,7 +28,7 @@ class CorrectImporter : ResourceImporter
     
     public CorrectImporter(EditorSettingsAsset editorSettings) : base(editorSettings) { }
 
-    public override ValueTask LoadStagedContentAsync(bool reload)
+    public override ValueTask LoadStagedContentAsync(bool reload, bool skipIfNoChangesFound)
     {
         throw new System.NotImplementedException();
     }
@@ -58,7 +58,7 @@ class IncorrectImporter : ResourceImporter
     
     public IncorrectImporter(EditorSettingsAsset editorSettings) : base(editorSettings) { }
 
-    public override ValueTask LoadStagedContentAsync(bool reload)
+    public override ValueTask LoadStagedContentAsync(bool reload, bool skipIfNoChangesFound)
     {
         throw new System.NotImplementedException();
     }

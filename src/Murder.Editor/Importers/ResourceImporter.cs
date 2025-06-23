@@ -72,7 +72,7 @@ namespace Murder.Editor.Importers
         /// Loads this importer's content into the "Generated/<see cref="RelativeOutputPath"/>" folder.
         /// It's expected that you should perform a Clean Import before shipping your game.
         /// </summary>
-        public abstract ValueTask LoadStagedContentAsync(bool reload);
+        public abstract ValueTask LoadStagedContentAsync(bool reload, bool skipIfNoChangesFound);
 
         /// <summary>
         /// Flush changes and populate atlas with the file content. Only implemented when <see cref="SupportsAsyncLoading"/>. 

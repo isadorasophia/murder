@@ -25,7 +25,7 @@ namespace Murder.Editor.Importers
 
         public PngImporter(EditorSettingsAsset editorSettings) : base(editorSettings) { }
 
-        public override ValueTask LoadStagedContentAsync(bool reload)
+        public override ValueTask LoadStagedContentAsync(bool reload, bool skipIfNoChangesFound)
         {
             string sourcePath = GetRawResourcesPath();
             string outputPath = GetSourcePackedPath();
