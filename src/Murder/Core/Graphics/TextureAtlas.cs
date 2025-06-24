@@ -173,6 +173,11 @@ namespace Murder.Core.Graphics
         [MemberNotNull(nameof(_textures))]
         public void LoadTextures()
         {
+            if (_textures is not null)
+            {
+                return;
+            }
+
             string atlasPath = FileHelper.GetPath(Game.Data.PackedBinDirectoryPath, Game.Profile.AtlasFolderName);
             if (!Directory.Exists(atlasPath))
             {
@@ -183,6 +188,8 @@ namespace Murder.Core.Graphics
             {
                 throw new FileNotFoundException($"Atlas '{AtlasId}' not found in '{atlasPath}'");
             }
+
+            GameLogger.LogPerf($"Loading textures for: {AtlasId}");
 
             _textures = new Texture2D[_atlasMaxIndex + 1];
 

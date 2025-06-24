@@ -267,8 +267,10 @@ namespace Murder.Data
         /// </summary>
         public virtual void AfterContentLoadedFromMainThread()
         {
-            using PerfTimeRecorder recorder = new("Preloading Fonts");
+            using PerfTimeRecorder recorder = new("Preloading textures");
+
             PreloadFontTextures();
+            TryFetchAtlas(AtlasIdentifiers.Gameplay)?.LoadTextures();
         }
 
         protected virtual Task LoadContentAsyncImpl() => Task.CompletedTask;
@@ -969,6 +971,8 @@ namespace Murder.Data
 
             if (!LoadedAtlasses.ContainsKey(atlas))
             {
+                GameLogger.LogPerf($"Loading atlas: {atlas}");
+
                 string filepath = Path.Join(_packedBinDirectoryPath, GameProfile.AtlasFolderName, $"{atlas}.json");
                 TextureAtlas? newAtlas = FileManager.DeserializeGeneric<TextureAtlas>(filepath, warnOnError);
 

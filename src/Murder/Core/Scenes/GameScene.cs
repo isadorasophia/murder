@@ -1,5 +1,6 @@
 ﻿using Bang;
 using Murder.Assets;
+using Murder.Core.Graphics;
 using Murder.Data;
 using Murder.Diagnostics;
 
@@ -28,7 +29,8 @@ namespace Murder.Core
             {
                 foreach (ReferencedAtlas atlas in world.ReferencedAtlas)
                 {
-                    _ = Game.Data.FetchAtlas(atlas.Id);
+                    TextureAtlas texture = Game.Data.FetchAtlas(atlas.Id);
+                    texture.LoadTextures();
                 }
             }
 
