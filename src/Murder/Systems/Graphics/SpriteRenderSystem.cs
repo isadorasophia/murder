@@ -88,11 +88,9 @@ namespace Murder.Systems.Graphics
                     blendState = Core.Graphics.MurderBlendState.AlphaBlend;
                 }
 
-                float ySortOffsetRaw = transform.Y + s.YSortOffset;
+                float ySortOffsetRaw = 0;
 
                 string animation = s.CurrentAnimation;
-
-
                 float startTime = e.TryGetAnimationStarted()?.StartTime ?? (s.UseUnscaledTime ? Game.Now : Game.NowUnscaled);
 
                 AnimationOverloadComponent? overload = null;
@@ -112,18 +110,22 @@ namespace Murder.Systems.Graphics
                     ySortOffsetRaw += o.SortOffset;
                 }
 
+                float yPositionForYSort = transform.Y;
+
+                int? forceFrame = null;
+                if (e.TryGetSpriteFrame() is SpriteFrameComponent spriteFrame && spriteFrame.Animation.Equals(animation))
+                {
+                    forceFrame = spriteFrame.Frame;
+                    yPositionForYSort = spriteFrame.Y;
+                }
+
+                ySortOffsetRaw += yPositionForYSort + s.YSortOffset;
                 float ySort = e.HasUiDisplay() ? e.GetUiDisplay().YSort : RenderServices.YSort(ySortOffsetRaw + 0.01f * (e.EntityId % 20));
 
                 VerticalPositionComponent? verticalPosition = e.TryGetVerticalPosition();
                 if (verticalPosition is not null)
                 {
                     renderPosition = new Vector2(renderPosition.X, renderPosition.Y - verticalPosition.Value.Z);
-                }
-
-                int? forceFrame = null;
-                if (e.TryGetSpriteFrame() is SpriteFrameComponent spriteFrame && spriteFrame.Animation.Equals(animation))
-                {
-                    forceFrame = spriteFrame.Frame;
                 }
 
                 var animationInfo = new AnimationInfo()
