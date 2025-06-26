@@ -5,6 +5,7 @@ using System.Numerics;
 using System.Globalization;
 using System.Text;
 using System.Diagnostics;
+using Murder.Services;
 
 namespace Murder.Core.Graphics;
 
@@ -233,6 +234,10 @@ public static partial class TextDataServices
 
         if (matchesForPauses.Count > 0)
         {
+            // in japanese and chinese, we don't use the ' ' space character, so the pause will apply before showing the next letter.
+            // otherwise, the pause applies before showing the last letter.
+            bool pauseBeforeShowingCharacter = LocalizationServices.IsTextWrapOnlyOnSpace();
+
             for (int i = 0; i < matchesForPauses.Count; ++i)
             {
                 Match match = matchesForPauses[i];
@@ -244,7 +249,7 @@ public static partial class TextDataServices
                 }
 
                 // Track that there is a pause at this index.
-                int index = Math.Max(0, match.Index - 2);
+                int index = Math.Max(0, match.Index - (pauseBeforeShowingCharacter ? 2 : 1));
                 lettersBuilder[index] = lettersBuilder[index] with { Pause = match.Length };
             }
         }
