@@ -384,14 +384,6 @@ public static class StageHelpers
 
     private static void AddEventsIfAny(IComponent c, ref HashSet<string>? events, bool child)
     {
-        Type tBase = c.GetType();
-
-        Type t = tBase;
-        if (t.IsGenericType)
-        {
-            t = t.GetGenericArguments()[0];
-        }
-
         if (c is InteractiveComponent<InteractionCollection>)
         {
             FieldInfo? f = typeof(InteractiveComponent<InteractionCollection>)
@@ -422,17 +414,12 @@ public static class StageHelpers
             return;
         }
 
-        if (Attribute.GetCustomAttribute(t, typeof(EventMessagesAttribute)) is not EventMessagesAttribute attribute)
-        {
-            return;
-        }
-
-        CheckForAttributeEventsOnType(t, c, child, ref events);
+        CheckForAttributeEventsOnType(c.GetType(), c, child, ref events);
     }
 
-    private static void CheckForAttributeEventsOnType(Type tBaseType, IComponent c, bool isChildComponent, ref HashSet<string>? events)
+    private static void CheckForAttributeEventsOnType(Type t, IComponent c, bool isChildComponent, ref HashSet<string>? events)
     {
-        Type t = tBaseType;
+        Type tBase = t;
         if (t.IsGenericType)
         {
             t = t.GetGenericArguments()[0];
@@ -480,9 +467,9 @@ public static class StageHelpers
                 }
 
                 object? cToGetField = c;
-                if (tBaseType.IsGenericType && tBaseType.GetGenericTypeDefinition() == typeof(InteractiveComponent<>))
+                if (tBase.IsGenericType && tBase.GetGenericTypeDefinition() == typeof(InteractiveComponent<>))
                 {
-                    FieldInfo? fInteraction = tBaseType
+                    FieldInfo? fInteraction = tBase
                         .GetField("_interaction", BindingFlags.NonPublic | BindingFlags.Instance);
 
                     cToGetField = fInteraction?.GetValue(cToGetField);
