@@ -48,7 +48,7 @@ internal static class EditorLocalizationServices
 
                 if (result.ContainsKey(key))
                 {
-                    continue;
+                    key += " (alt)";
                 }
 
                 result[key] = data.Guid;

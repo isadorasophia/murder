@@ -38,7 +38,7 @@ namespace Murder.Editor.Data
         /// <summary>
         /// These are all the previous localized strings that existed in the .gum file.
         /// </summary>
-        private Dictionary<string, LocalizedString> _previousStringsInScript = new();
+        private Dictionary<string, PreviousStringData> _previousStringsInScript = new();
 
         public void Reset()
         {
@@ -78,11 +78,11 @@ namespace Murder.Editor.Data
             Architect.EditorData.SaveAsset(localizationAsset);
         }
 
-        private Dictionary<string, LocalizedString> FetchResourcesForAsset(LocalizationAsset localizationAsset, Guid characterGuid)
+        private Dictionary<string, PreviousStringData> FetchResourcesForAsset(LocalizationAsset localizationAsset, Guid characterGuid)
         {
             ImmutableArray<LocalizedDialogueData> resources = localizationAsset.FetchResourcesForDialogue(characterGuid);
 
-            Dictionary<string, LocalizedString> result = new();
+            Dictionary<string, PreviousStringData> result = new();
             foreach (LocalizedDialogueData resource in resources)
             {
                 LocalizedStringData? data = localizationAsset.TryGetResource(resource.Guid);
@@ -104,7 +104,7 @@ namespace Murder.Editor.Data
                 return null;
             }
 
-            if (!_previousStringsInScript.TryGetValue(text, out LocalizedString data))
+            if (!_previousStringsInScript.TryGetValue(text, out PreviousStringData? info) || info.Consume() is not LocalizedString data)
             {
                 LocalizationAsset localizationAsset = Game.Data.GetDefaultLocalization();
                 data = localizationAsset.AddResource(text, isGenerated: true);
@@ -132,6 +132,44 @@ namespace Murder.Editor.Data
             }
 
             return new(gumSituation.Id, gumSituation.Name, dialogsBuilder.ToImmutable(), edges.ToImmutable());
+        }
+
+        private class PreviousStringData
+        {
+            private readonly LocalizedString _string;
+
+            private List<LocalizedString>? _nextStrings = null;
+            private int _nextIndex = -1;
+
+            public PreviousStringData(Guid guid)
+            {
+                _string = new(guid);
+            }
+
+            public void AddString(Guid guid)
+            {
+                _nextStrings ??= [];
+                _nextStrings.Add(new(guid));
+
+                _nextIndex++;
+            }
+
+            public LocalizedString? Consume()
+            {
+                if (_nextIndex >= 0)
+                {
+                    if (_nextStrings is not null && _nextIndex < _nextStrings.Count)
+                    {
+                        return _nextStrings[_nextIndex++];
+                    }
+
+                    // no longer available
+                    return null;
+                }
+
+                _nextIndex++;
+                return _string;
+            }
         }
 
         #region ⭐ Edge ⭐
