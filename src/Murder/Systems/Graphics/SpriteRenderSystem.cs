@@ -24,9 +24,8 @@ namespace Murder.Systems.Graphics
             DebugSnapshot.StartStopwatch("Sprite Render System");
             bool issueSlowdownWarning = false;
 
-            for (int i = 0; i < context.Entities.Length; i++)
+            foreach (Entity e in context.Entities)
             {
-                Entity e = context.Entities[i];
                 IMurderTransformComponent transform = e.GetGlobalTransform();
                 SpriteComponent s = e.GetSprite();
 
@@ -157,8 +156,8 @@ namespace Murder.Systems.Graphics
                 {
                     renderPosition += offset.Offset;
                 }
-                Color? outlineColor = e.HasDeactivateHighlightSprite() ? null :
-                    e.TryGetHighlightSprite()?.Color;
+
+                Color? outlineColor = e.HasDeactivateHighlightSprite() ? null : e.TryGetHighlightSprite()?.Color;
 
                 FrameInfo frameInfo;
                 if (animationInfo.ForceFrame.HasValue)
