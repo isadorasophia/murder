@@ -31,7 +31,10 @@ namespace Murder.Systems.Graphics
                 SpriteComponent s = e.GetSprite();
 
                 if (Game.Data.TryGetAsset<SpriteAsset>(s.AnimationGuid) is not SpriteAsset asset)
+                {
+                    GameLogger.Error($"Sprite GUID not found {s.AnimationGuid}");
                     continue;
+                }
 
                 ImageFlip flip = ImageFlip.None;
 
@@ -217,7 +220,10 @@ namespace Murder.Systems.Graphics
                 });
 
                 if (frameInfo.Failed)
+                {
+                    GameLogger.Error($"Sprite render failed!");
                     continue;
+                }
 
                 // Animations do not send complete messages until the current sequence is done
                 if (frameInfo.Complete)

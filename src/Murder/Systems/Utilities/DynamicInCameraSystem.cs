@@ -111,16 +111,6 @@ public sealed class DynamicInCameraSystem : IMonoPreRenderSystem
                 Vector2 scale = (e.TryGetScale() is ScaleComponent sc) ? sc.Scale : Vector2.One;
                 var flip = (e.TryGetFlipSprite() is FlipSpriteComponent fc) ? fc.Orientation : ImageFlip.None;
 
-                // ----- circle vs camera early-out -------------------------------
-                Vector2 absSize = new(MathF.Abs(scale.X) * asset.Size.X, MathF.Abs(scale.Y) * asset.Size.Y);
-                float diagonal = MathF.Sqrt(absSize.X * absSize.X + absSize.Y * absSize.Y);
-
-                if (!cameraBounds.Expand(diagonal).Contains(adjustedPosition))
-                {
-                    e.RemoveInCamera();
-                    continue;
-                }
-
                 // ----- Full AABB only if needed ---------------------------------------
                 Rectangle aabb = CalculateBounds(
                     adjustedPosition,
