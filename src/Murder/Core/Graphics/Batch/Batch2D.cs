@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Murder.Diagnostics;
 using Murder.Services;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using XnaColor = Microsoft.Xna.Framework.Color;
 
 namespace Murder.Core.Graphics;
@@ -77,7 +78,6 @@ public class Batch2D
     }
 
 #if DEBUG
-
     /// <summary>
     /// Track number of draw calls.
     /// </summary>
@@ -92,12 +92,6 @@ public class Batch2D
 
     public bool IsBatching { get; private set; }
     public Effect? Effect { get; set; } = null;
-
-    /// <summary>
-    /// Auto handle any non-opaque (i.e. with some transparency; Opacity &lt; 1.0f) sprite rendering.
-    /// By drawing first all opaque sprites, with depth write enabled, followed by non-opaque sprites, with only depth read enabled.
-    /// </summary>
-    public bool AllowIBasicShaderEffectParameterClone { get; set; } = true;
 
     public Matrix Transform { get; private set; }
 
@@ -243,7 +237,7 @@ public class Batch2D
     }
 
     private ref SpriteBatchItem GetBatchItem()
-    {
+    { 
         if (_nextItemIndex >= _batchItems.Length)
         {
             SetBuffersCapacity(_batchItems.Length * 2);
@@ -366,6 +360,14 @@ public class Batch2D
         {
             batchItem = batchItems[i];
 
+#if DEBUG
+            if (texture == null)
+            {
+                GameLogger.Error($"Batch2D '{Name}' has a null texture at index {i}. This is likely a bug.");
+                Debugger.Break();
+            }
+#endif
+
             // If the texture is different, we need to flush the current batch and start a new one
             if (batchItem.Texture != null && batchItem.Texture != texture)
             {
@@ -455,8 +457,8 @@ public class Batch2D
         {
             foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
             {
-                pass.Apply();
                 GraphicsDevice.Textures[0] = texture;
+                pass.Apply();
 
                 // This is where we finally draw the vertices too the screen
                 GraphicsDevice.DrawUserIndexedPrimitives(
