@@ -22,7 +22,7 @@ public class Batch2D
     private int[] _indices = new int[StartBatchItemsCount * 4];
 
     private VertexInfo[] _vertexBuffer = new VertexInfo[StartBatchItemsCount * 4];
-    private short[] _indexBuffer = new short[StartBatchItemsCount * 6];
+    private int[] _indexBuffer = new int[StartBatchItemsCount * 6];
 
     private SpriteBatchItem[] _batchItems = new SpriteBatchItem[StartBatchItemsCount];
     private SpriteBatchItem[]? _transparencyBatchItems;
@@ -291,13 +291,13 @@ public class Batch2D
         {
             _batchItems[i] = new SpriteBatchItem();
 
-            _indexBuffer[i * 6] = (short)(i * 4 + 3);
-            _indexBuffer[i * 6 + 1] = (short)(i * 4);
-            _indexBuffer[i * 6 + 2] = (short)(i * 4 + 2);
+            _indexBuffer[i * 6] = (i * 4 + 3);
+            _indexBuffer[i * 6 + 1] = (i * 4);
+            _indexBuffer[i * 6 + 2] = (i * 4 + 2);
 
-            _indexBuffer[i * 6 + 3] = (short)(i * 4 + 2);
-            _indexBuffer[i * 6 + 4] = (short)(i * 4);
-            _indexBuffer[i * 6 + 5] = (short)(i * 4 + 1);
+            _indexBuffer[i * 6 + 3] = (i * 4 + 2);
+            _indexBuffer[i * 6 + 4] = (i * 4);
+            _indexBuffer[i * 6 + 5] = (i * 4 + 1);
         }
     }
 
