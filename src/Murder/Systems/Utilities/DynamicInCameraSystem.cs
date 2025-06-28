@@ -102,22 +102,20 @@ public sealed class DynamicInCameraSystem : IMonoPreRenderSystem
                 Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid) is SpriteAsset asset)
             {
                 // Parallax adjustment
-                Vector2 renderPos = pos;
+                Vector2 adjustedPosition = pos;
                 if (e.TryGetParallax() is ParallaxComponent parallax)
-                    renderPos += cameraPos * (1f - parallax.Factor);
+                    adjustedPosition += cameraPos * (1f - parallax.Factor);
+                Vector2 renderPosition = adjustedPosition + sprite.Offset * asset.Origin + asset.Size;
 
                 // Scale / rotation
                 Vector2 scale = (e.TryGetScale() is ScaleComponent sc) ? sc.Scale : Vector2.One;
                 var flip = (e.TryGetFlipSprite() is FlipSpriteComponent fc) ? fc.Orientation : ImageFlip.None;
 
                 // ----- circle vs camera early-out -------------------------------
-                float absScaleX = Math.Abs(scale.X);
-                float absScaleY = Math.Abs(scale.Y);
-                float radius = MathF.Sqrt(
-                    asset.Size.X * asset.Size.X * absScaleX * absScaleX +
-                    asset.Size.Y * asset.Size.Y * absScaleY * absScaleY);
+                Vector2 absSize = new(MathF.Abs(scale.X) * asset.Size.X, MathF.Abs(scale.Y) * asset.Size.Y);
+                float diagonal = MathF.Sqrt(absSize.X * absSize.X + absSize.Y * absSize.Y);
 
-                if (!cameraBounds.Expand(radius).Contains(renderPos))
+                if (!cameraBounds.Expand(diagonal).Contains(adjustedPosition))
                 {
                     e.RemoveInCamera();
                     continue;
@@ -125,7 +123,7 @@ public sealed class DynamicInCameraSystem : IMonoPreRenderSystem
 
                 // ----- Full AABB only if needed ---------------------------------------
                 Rectangle aabb = CalculateBounds(
-                    renderPos,
+                    adjustedPosition,
                     (asset.Origin + sprite.Offset) / asset.Size,
                     asset.Size,
                     scale,
