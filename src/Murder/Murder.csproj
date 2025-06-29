@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Murder.FNA" Version="24.6.2" />
+    <PackageReference Include="Murder.FNA" Version="25.6.0" />
   </ItemGroup>
 
   <ItemGroup>

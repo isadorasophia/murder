@@ -537,35 +537,8 @@ namespace Murder.Editor.Data
 
         internal void SaveSettings()
         {
-            // Saving editor settings
-            {
-                GameLogger.Verify(EditorSettings != null, "Cannot serialize a null EditorSettings");
-                string? editorPath = EditorSettings.GetEditorAssetPath();
-                if (editorPath is not null)
-                {
-                    FileManager.SaveSerialized<GameAsset>(EditorSettings, editorPath);
-                }
-            }
-
-            if (!Path.Exists(_sourceResourcesDirectory))
-            {
-                GameLogger.Error(
-                    "Please select a valid Source Resources Path in \"Editor Profile\" in order to synchronize the game settings.");
-
-                return;
-            }
-
-            // Saving game settings
-            {
-                GameLogger.Verify(GameProfile != null, "Cannot serialize a null GameSettings");
-
-                // Manually create our path to source directory.
-                string? profilePath = GameProfile.GetEditorAssetPath();
-                if (profilePath is not null)
-                {
-                    FileManager.SaveSerialized<GameAsset>(GameProfile, profilePath);
-                }
-            }
+            Architect.EditorData.SaveAsset(EditorSettings);
+            Architect.EditorData.SaveAsset(GameProfile);
         }
 
         /// <summary>

@@ -282,11 +282,14 @@ namespace Murder.Editor
         public void SaveEditorState()
         {
             Architect.EditorSettings.OpenedTabs = new Guid[_selectedAssets.Count];
+
             int i = 0;
             foreach (var asset in _selectedAssets.Values)
             {
                 Architect.EditorSettings.OpenedTabs[i++] = asset.Guid;
             }
+
+            Architect.Instance.SaveWindowPosition();
 
             Architect.EditorSettings.LastOpenedAsset = CurrentAsset?.Guid;
             Architect.EditorData.SaveAsset(Architect.EditorSettings);

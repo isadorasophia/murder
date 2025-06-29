@@ -77,7 +77,7 @@ public static partial class FileHelper
     /// </summary>
     public static string GetSaveBasePath(string gameName)
     {
-        _osVersion ??= SDL2.SDL.SDL_GetPlatform();
+        _osVersion ??= SDL3.SDL.SDL_GetPlatform();
 
         if (_osVersion.Equals("Windows"))
         {
@@ -105,7 +105,7 @@ public static partial class FileHelper
             }
         }
 
-        return SDL2.SDL.SDL_GetPrefPath(null, gameName);
+        return SDL3.SDL.SDL_GetPrefPath(null, gameName);
     }
 
     public static string GetScreenshotFolder()

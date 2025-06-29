@@ -17,7 +17,6 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Systems.Debug;
 using Murder.Editor.Utilities;
 using Murder.Utilities;
-using SDL2;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -152,11 +151,13 @@ namespace Murder.Editor
                 _graphics.PreferredBackBufferHeight = EditorSettings.WindowSize.Y;
             }
 
-            if (EditorSettings.StartMaximized && GetWindowPosition() is Point startPosition)
+            if (EditorSettings.StartMaximized)
             {
-                int titleBar = 34;
+                if (GetWindowPosition() is Point startPosition)
+                {
+                    SetWindowPosition(new Point(startPosition.X, startPosition.Y));
+                }
 
-                SetWindowPosition(new Point(startPosition.X, titleBar));
                 MaximizeWindow();
             }
         }
@@ -397,12 +398,28 @@ namespace Murder.Editor
 
             ImGuiRenderer.AfterLayout();
 
-            if (!_isPlayingGame) SaveWindowPosition();
+            if (!_isPlayingGame)
+            {
+                SaveWindowPosition();
+                SaveEditorState();
+            }
 
-            Architect.EditorData.SaveSettings();
+            EditorData.SaveSettings();
         }
 
         internal void SaveWindowPosition()
+        {
+            bool isMaximized = IsMaximized();
+            if (!isMaximized && GetWindowPosition() is Point position)
+            {
+                EditorSettings.WindowStartPosition = position;
+                EditorSettings.WindowSize = Window.ClientBounds.Size();
+            }
+
+            EditorSettings.StartMaximized = isMaximized;
+        }
+
+        private void SaveEditorState()
         {
             if (ActiveScene is EditorScene editor)
             {
@@ -412,22 +429,14 @@ namespace Murder.Editor
             {
                 GameLogger.Fail("How was this called out of an Editor scene?");
             }
-
-            if (GetWindowPosition() is Point position)
-            {
-                EditorSettings.WindowStartPosition = position;
-            }
-
-            EditorSettings.WindowSize = Window.ClientBounds.Size();
-            EditorSettings.StartMaximized = IsMaximized();
         }
 
         protected bool IsMaximized()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                var windowState = SDL2.SDL.SDL_GetWindowFlags(Window.Handle);
-                return (windowState & SDL_WINDOW_MAXIMIZED) != 0;
+                SDL3.SDL.SDL_WindowFlags windowState = SDL3.SDL.SDL_GetWindowFlags(Window.Handle);
+                return (windowState & SDL3.SDL.SDL_WindowFlags.SDL_WINDOW_MAXIMIZED) != 0;
             }
 
             return false;
@@ -437,20 +446,20 @@ namespace Murder.Editor
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                uint windowState = SDL2.SDL.SDL_GetWindowFlags(Window.Handle);
-                SDL2.SDL.SDL_MaximizeWindow(Window.Handle);
+                SDL3.SDL.SDL_MaximizeWindow(Window.Handle);
             }
         }
 
         protected Point? GetWindowPosition()
         {
             // Not sure what is not supported here?
-            bool supportedOs = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
-                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+            bool supportedOs = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || 
+                RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ||
+                RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
 
             if (supportedOs)
             {
-                SDL2.SDL.SDL_GetWindowPosition(Window.Handle, out int x, out int y);
+                SDL3.SDL.SDL_GetWindowPosition(Window.Handle, out int x, out int y);
                 return new(x, y);
             }
 
@@ -465,7 +474,7 @@ namespace Murder.Editor
 
             if (supportedOs)
             {
-                SDL2.SDL.SDL_SetWindowPosition(Window.Handle, p.X, p.Y);
+                SDL3.SDL.SDL_SetWindowPosition(Window.Handle, p.X, p.Y);
                 return true;
             }
 
@@ -525,8 +534,9 @@ namespace Murder.Editor
                 // We must make sure this is not called while drawing.
                 EditorData.ReloadShaders();
             }
-            
-            SDL.SDL_EventState(SDL.SDL_EventType.SDL_DROPFILE, SDL.SDL_ENABLE);
+
+            // TODO: Figure out how to listen to drop file events
+            SDL3.SDL.SDL_SetEventEnabled((uint)SDL3.SDL.SDL_EventType.SDL_EVENT_DROP_FILE, true);
             UpdateCursor();
         }
 
