@@ -52,7 +52,7 @@ namespace Murder.Core
             _world?.DeactivateAllSystems();
         }
 
-        public override async Task UnloadAsyncImpl()
+        protected override async Task UnloadAsyncImpl()
         {
             if (Game.Data.TryGetAsset<WorldAsset>(_worldGuid) is WorldAsset world)
             {

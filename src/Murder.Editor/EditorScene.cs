@@ -111,6 +111,14 @@ namespace Murder.Editor
             _changingScenesLock = 3;
 
             base.Start();
+
+            AfterInitialized();
+        }
+
+        private void AfterInitialized()
+        {
+            // always keep the text input
+            TextInputEXT.StartTextInput();
         }
 
         private void ReopenLastTabs()   
@@ -135,6 +143,14 @@ namespace Murder.Editor
         public override void ReloadImpl()
         {
             _initializedEditors = false;
+
+            AfterInitialized();
+        }
+
+        protected override Task UnloadAsyncImpl()
+        {
+            TextInputEXT.StopTextInput();
+            return Task.CompletedTask;
         }
 
         public override void Update()

@@ -69,7 +69,7 @@ namespace Murder.Core
         public virtual void ReloadImpl() { }
         public virtual void ResumeImpl() { }
         public virtual void SuspendImpl() { }
-        public virtual Task UnloadAsyncImpl() => Task.CompletedTask;
+        protected virtual Task UnloadAsyncImpl() => Task.CompletedTask;
 
         /// <summary>
         /// Refresh the window size, updating the camera and render context.

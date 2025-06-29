@@ -954,10 +954,14 @@ public class PlayerInput
 
         if (enable)
         {
+            TextInputEXT.StartTextInput();
+
             TextInputEXT.TextInput += OnDesktopTextInput;
         }
         else
         {
+            TextInputEXT.StopTextInput();
+
             TextInputEXT.TextInput -= OnDesktopTextInput;
         }
 
