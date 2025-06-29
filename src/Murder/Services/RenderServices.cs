@@ -521,7 +521,7 @@ public static partial class RenderServices
     public static float YSort(float y)
     {
         // TODO: Solve a better ySort that takes in consideration the camera position
-        return (Y_SORT_RANGE - y) / Y_SORT_RANGE_X2;
+        return (float)(Y_SORT_RANGE - y) / Y_SORT_RANGE_X2;
     }
 
     public static void DrawHorizontalLine(this Batch2D spriteBatch, int x, int y, int length, Color color, float sorting = 0)

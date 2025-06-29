@@ -21,7 +21,7 @@ public readonly struct AnimationInfo
     /// Ignores the current time and forces the rendering of this specific frame.
     /// The frame is counted from the start of the animation.
     /// </summary>
-    public int? ForceFrame { get; init; } = 0;
+    public int? ForceFrame { get; init; } = null;
 
     /// <summary>
     /// If different than -1, it will ignore <see cref="UseScaledTime"/> and use the
