@@ -27,11 +27,11 @@ namespace Murder.Editor.ImGuiExtended
         private readonly RasterizerState _rasterizerState;
 
         private byte[]? _vertexData;
-        private VertexBuffer? _vertexBuffer;
+        private DynamicVertexBuffer? _vertexBuffer;
         private int _vertexBufferSize;
 
         private byte[]? _indexData;
-        private IndexBuffer? _indexBuffer;
+        private DynamicIndexBuffer? _indexBuffer;
         private int _indexBufferSize;
 
         // Textures
@@ -466,7 +466,7 @@ namespace Murder.Editor.ImGuiExtended
                 _vertexBuffer?.Dispose();
 
                 _vertexBufferSize = (int)(drawData.TotalVtxCount * 1.5f);
-                _vertexBuffer = new VertexBuffer(_graphicsDevice, DrawVertDeclaration.Declaration, _vertexBufferSize, BufferUsage.None);
+                _vertexBuffer = new DynamicVertexBuffer(_graphicsDevice, DrawVertDeclaration.Declaration, _vertexBufferSize, BufferUsage.None);
                 _vertexData = new byte[_vertexBufferSize * DrawVertDeclaration.Size];
             }
 
@@ -480,7 +480,7 @@ namespace Murder.Editor.ImGuiExtended
                 _indexBuffer?.Dispose();
 
                 _indexBufferSize = (int)(drawData.TotalIdxCount * 1.5f);
-                _indexBuffer = new IndexBuffer(_graphicsDevice, IndexElementSize.SixteenBits, _indexBufferSize, BufferUsage.None);
+                _indexBuffer = new DynamicIndexBuffer(_graphicsDevice, IndexElementSize.SixteenBits, _indexBufferSize, BufferUsage.None);
                 _indexData = new byte[_indexBufferSize * sizeof(ushort)];
             }
 
@@ -509,8 +509,8 @@ namespace Murder.Editor.ImGuiExtended
             }
 
             // Copy the managed byte arrays to the gpu vertex- and index buffers
-            _vertexBuffer.SetData(_vertexData, 0, drawData.TotalVtxCount * DrawVertDeclaration.Size);
-            _indexBuffer.SetData(_indexData, 0, drawData.TotalIdxCount * sizeof(ushort));
+            _vertexBuffer.SetData(_vertexData, 0, drawData.TotalVtxCount * DrawVertDeclaration.Size, SetDataOptions.Discard);
+            _indexBuffer.SetData(_indexData, 0, drawData.TotalIdxCount * sizeof(ushort), SetDataOptions.Discard);
         }
 
         private unsafe void RenderCommandLists(ImDrawDataPtr drawData)
