@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using SDL2;
+using Murder.Utilities;
+using SDL3;
 using System.Runtime.InteropServices;
 
 namespace Murder.Editor.Core;
@@ -75,18 +76,18 @@ public partial class MouseCursor : IDisposable
 
     static MouseCursor()
     {
-        Arrow = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_ARROW);
-        IBeam = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_IBEAM);
+        Arrow = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_DEFAULT);
+        IBeam = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_TEXT);
         Wait = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_WAIT);
         Crosshair = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_CROSSHAIR);
-        WaitArrow = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_WAITARROW);
-        SizeNWSE = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_SIZENWSE);
-        SizeNESW = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_SIZENESW);
-        SizeWE = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_SIZEWE);
-        SizeNS = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_SIZENS);
-        SizeAll = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_SIZEALL);
-        No = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_NO);
-        Hand = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_HAND);
+        WaitArrow = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_PROGRESS);
+        SizeNWSE = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_NWSE_RESIZE);
+        SizeNESW = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_NESW_RESIZE);
+        SizeWE = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_EW_RESIZE);
+        SizeNS = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_NS_RESIZE);
+        SizeAll = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_MOVE);
+        No = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_NOT_ALLOWED);
+        Hand = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_POINTER);
     }
 
     private MouseCursor(SDL.SDL_SystemCursor cursor)
@@ -109,12 +110,13 @@ public partial class MouseCursor : IDisposable
     {
         IntPtr surface = IntPtr.Zero;
         IntPtr handle = IntPtr.Zero;
+
         try
         {
-            var bytes = new byte[texture.Width * texture.Height * 4];
-            texture.GetData(bytes);
+            byte[] pixels = new byte[texture.Width * texture.Height * 4];
+            texture.GetData(pixels);
 
-            surface = CreateRGBSurfaceFrom(bytes, texture.Width, texture.Height, 32, texture.Width * 4, 0x000000ff, 0x0000FF00, 0x00FF0000, 0xFF000000);
+            surface = CreateRGBSurfaceFrom(pixels, texture.Width, texture.Height);
             if (surface == IntPtr.Zero)
             {
                 throw new InvalidOperationException("Failed to create surface for mouse cursor: " + SDL.SDL_GetError());
@@ -130,19 +132,24 @@ public partial class MouseCursor : IDisposable
         {
             if (surface != IntPtr.Zero)
             {
-                SDL.SDL_FreeSurface(surface);
+                SDL.SDL_DestroySurface(surface);
             }
         }
 
         return new MouseCursor(handle);
     }
 
-    public static IntPtr CreateRGBSurfaceFrom(byte[] pixels, int width, int height, int depth, int pitch, uint rMask, uint gMask, uint bMask, uint aMask)
+    public static IntPtr CreateRGBSurfaceFrom(byte[] pixels, int width, int height)
     {
-        var handle = GCHandle.Alloc(pixels, GCHandleType.Pinned);
+        GCHandle handle = GCHandle.Alloc(pixels, GCHandleType.Pinned);
+        nint pixelPtr = handle.AddrOfPinnedObject();
+
         try
         {
-            return SDL.SDL_CreateRGBSurfaceFrom(handle.AddrOfPinnedObject(), width, height, depth, pitch, rMask, gMask, bMask, aMask);
+            IntPtr surface = SDL.SDL_CreateSurfaceFrom(
+                width, height, SDL.SDL_PixelFormat.SDL_PIXELFORMAT_ABGR8888, pixelPtr, pitch: width * 4);
+
+            return surface;
         }
         finally
         {
@@ -168,7 +175,7 @@ public partial class MouseCursor : IDisposable
             return;
         }
 
-        SDL.SDL_FreeCursor(Handle);
+        SDL.SDL_DestroyCursor(Handle);
         Handle = IntPtr.Zero;
     }
 }

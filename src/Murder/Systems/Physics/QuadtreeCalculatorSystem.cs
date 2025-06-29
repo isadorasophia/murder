@@ -85,9 +85,9 @@ public class QuadtreeCalculatorSystem : IReactiveSystem, IStartupSystem
 
     public void Start(Context context)
     {
-        for (int i = 0; i < context.Entities.Length; i++)
+        foreach (Entity e in context.Entities)
         {
-            _entitiesOnWatch.Add(context.Entities[i].EntityId);
+            _entitiesOnWatch.Add(e.EntityId);
         }
     }
 }

@@ -167,7 +167,7 @@ public unsafe static class OperatingSystemHelpers
 
     const string NSPasteboardTypeString = "public.utf8-plain-text";
 
-    public const string SDL = "libSDL2-2.0.so.0";
+    public const string SDL = "libSDL3.so";
 
     [DllImport(SDL, CallingConvention = CallingConvention.Cdecl)]
     private static extern int SDL_SetClipboardText(string text);
