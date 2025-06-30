@@ -40,4 +40,4 @@ jobs:
         run: dotnet build src/Murder.Editor
 
       - name: Run unit tests
-        run: dotnet test src/Murder.Editor
+        run: dotnet test src/Murder.Tests
