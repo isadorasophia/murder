@@ -14,6 +14,7 @@ using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using Murder.Services;
 using Murder.Utilities;
+using System.Numerics;
 
 namespace Murder.Editor.Systems
 {
@@ -171,7 +172,13 @@ namespace Murder.Editor.Systems
 
                         foreach ((Guid g, string name) in _saveStateInfo)
                         {
-                            if (ImGui.MenuItem($"State '{name}'"))
+                            bool isFavorite = Architect.EditorSettings.FavoriteAssets.Contains(g);
+                            if (isFavorite)
+                            {
+                                ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Yellow);
+                            }
+
+                            if (ImGui.MenuItem((isFavorite? " " : "") + name))
                             {
                                 hook.Cursor = CursorStyle.Normal;
 
@@ -183,6 +190,18 @@ namespace Murder.Editor.Systems
                                     StartingScene = world.Guid(),
                                     LoadStateFrom = g
                                 });
+                            }
+
+                            if (isFavorite)
+                            {
+                                Vector2 min = ImGui.GetItemRectMin();
+                                Vector2 max = ImGui.GetItemRectMax();
+                                var dl = ImGui.GetForegroundDrawList();
+
+                                dl.AddRect(min, max, Color.ToUint(Game.Profile.Theme.Yellow), 0, ImDrawFlags.RoundCornersAll);
+
+                                ImGui.GetItemRectMax();
+                                ImGui.PopStyleColor();
                             }
                         }
                     }
