@@ -9,7 +9,7 @@
 <p align="center">
 <a href="https://github.com/isadorasophia/murder/actions/workflows/ci.yml"><img src="https://github.com/isadorasophia/murder/actions/workflows/ci.yml/badge.svg" alt="Publish release"></a>
 <a href="LICENSE"><img src="https://img.shields.io/github/license/isadorasophia/murder.svg" alt="License"></a>
-<a href="https://discord.gg/zF6axz9nQy"><img src="https://dcbadge.vercel.app/api/server/zF6axz9nQy?style=flat" /></a>
+<a href="https://discord.gg/zF6axz9nQy"><img src="https://dcbadge.limes.pink/api/server/zF6axz9nQy?style=flat" /></a>
 </p>
 
 > 🚧👷 **Warning** Proceed at your own risk. This is an in-development engine, which is another way of saying that it will change _quite a lot_. We do our best to keep release branches stable, but expect a lot of breaking changes and things that are not perfect (yet!).
