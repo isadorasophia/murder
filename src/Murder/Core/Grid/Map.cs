@@ -245,9 +245,9 @@ namespace Murder.Core
                 return;
             }
 
-            for (int cy = y; cy < y + height; cy++)
+            for (int cy = y; cy < y + height && cy < Height; cy++)
             {
-                for (int cx = x; cx < x + width; cx++)
+                for (int cx = x; cx < x + width && cx < Width; cx++)
                 {
                     int position = (cy * Width) + cx;
                     _gridMap[position].CollisionType &= ~value;
