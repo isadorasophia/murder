@@ -68,6 +68,30 @@ namespace Murder.Core.Geometry
             ]);
         }
 
+        public bool Contains(Vector2 point, Vector2 polygonScale)
+        {
+            (float px, float py) = (point.X, point.Y);
+            bool collision = false;
+
+            int next;
+            for (int current = 0; current < Vertices.Length; current++)
+            {
+                // get next vertex in list
+                // if we've hit the end, wrap around to 0
+                next = current + 1;
+                if (next == Vertices.Length) next = 0;
+
+                var vc = Vertices[current] * polygonScale;    // c for "current"
+                var vn = Vertices[next] * polygonScale;       // n for "next"
+
+                if (((vc.Y > py) != (vn.Y > py)) && (px < (vn.X - vc.X) * (py - vc.Y) / (vn.Y - vc.Y) + vc.X))
+                {
+                    collision = !collision;
+                }
+            }
+            return collision;
+        }
+
         public bool Contains(Vector2 vector)
         {
             (float px, float py) = (vector.X, vector.Y);
@@ -91,6 +115,35 @@ namespace Murder.Core.Geometry
             }
             return collision;
         }
+
+        public bool Contains(Point point, Vector2 polygonScale)
+        {
+            bool result = false;
+
+            // go through each of the vertices, plus
+            // the next vertex in the list
+            int next;
+            for (int current = 0; current < Vertices.Length; current++)
+            {
+                // get next vertex in list
+                // if we've hit the end, wrap around to 0
+                next = current + 1;
+                if (next == Vertices.Length) next = 0;
+
+                Vector2 vc = Vertices[current] * polygonScale;    // c for "current"
+                Vector2 vn = Vertices[next] * polygonScale;       // n for "next"
+
+                // check if point is within polygon bounds
+                if (((vc.Y > point.Y) != (vn.Y > point.Y)) &&
+                    (point.X < (vn.X - vc.X) * (point.Y - vc.Y) / (vn.Y - vc.Y) + vc.X))
+                {
+                    result = !result;
+                }
+            }
+
+            return result;
+        }
+
         public bool Contains(Point point)
         {
             bool result = false;
@@ -117,6 +170,43 @@ namespace Murder.Core.Geometry
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Checks for a collision between this polygon and a circle.
+        /// </summary>
+        public bool Intersect(Circle circle, Vector2 polygonScale)
+        {
+            // go through each of the vertices, plus
+            // the next vertex in the list
+            int next = 0;
+            for (int current = 0; current < Vertices.Length; current++)
+            {
+
+                // get next vertex in list
+                // if we've hit the end, wrap around to 0
+                next = current + 1;
+                if (next == Vertices.Length) next = 0;
+
+                // get the Vectors at our current position
+                // this makes our if statement a little cleaner
+                var vc = Vertices[current] * polygonScale;    // c for "current"
+                var vn = Vertices[next] * polygonScale;       // n for "next"
+
+                // check for collision between the circle and
+                // a line formed between the two vertices
+                var line = new Line2(vc, vn);
+                bool collision = line.IntersectsCircle(circle);
+                if (collision) return true;
+            }
+
+            // the above algorithm only checks if the circle
+            // is touching the edges of the polygon
+
+            if (Contains(circle.Center))
+                return true;
+
+            return false;
         }
 
         /// <summary>
@@ -158,6 +248,38 @@ namespace Murder.Core.Geometry
             return false;
         }
 
+        internal bool Intersect(Rectangle rect, Vector2 polygonScale)
+        {
+            // go through each of the vertices, plus
+            // the next vertex in the list
+            int next = 0;
+            for (int current = 0; current < Vertices.Length; current++)
+            {
+                // get next vertex in list
+                // if we've hit the end, wrap around to 0
+                next = current + 1;
+                if (next == Vertices.Length) next = 0;
+
+                // get the Vectors at our current position
+                Vector2 vc = Vertices[current] * polygonScale;    // c for "current"
+                Vector2 vn = Vertices[next] * polygonScale;       // n for "next"
+
+                // check for collision between the rect and
+                // a line formed between the two vertices
+                Line2 line = new Line2(vc, vn);
+                if (line.IntersectsRect(rect))
+                    return true;
+            }
+            // the above algorithm only checks if the rectangle
+            // is touching the edges of the polygon
+
+            // Now check if the rectangle is fully contained within the polygon without touching the edges
+            if (Contains(rect.TopLeft))
+                return true;
+
+            return false;
+        }
+
         internal bool Intersect(Rectangle rect)
         {
             // go through each of the vertices, plus
@@ -171,7 +293,6 @@ namespace Murder.Core.Geometry
                 if (next == Vertices.Length) next = 0;
 
                 // get the Vectors at our current position
-                // this makes our if statement a little cleaner
                 var vc = Vertices[current];    // c for "current"
                 var vn = Vertices[next];       // n for "next"
 
@@ -181,10 +302,10 @@ namespace Murder.Core.Geometry
                 if (line.IntersectsRect(rect))
                     return true;
             }
-
             // the above algorithm only checks if the rectangle
             // is touching the edges of the polygon
 
+            // Now check if the rectangle is fully contained within the polygon without touching the edges
             if (Contains(rect.TopLeft))
                 return true;
 
@@ -230,6 +351,58 @@ namespace Murder.Core.Geometry
             }
 
             return false;
+        }
+
+
+
+        /// <summary>
+        /// Checks if a line intersects with the polygon, and where.
+        /// </summary>
+        internal bool Intersects(Line2 line2, Vector2 polygonScale, out Vector2 hitPoint)
+        {
+            bool intersects = false;
+            hitPoint = line2.End;
+
+            // go through each of the vertices, plus
+            // the next vertex in the list
+            int next = 0;
+
+            for (int current = 0; current < Vertices.Length; current++)
+            {
+
+                // get next vertex in list
+                // if we've hit the end, wrap around to 0
+                next = current + 1;
+                if (next == Vertices.Length) next = 0;
+
+                // get the Vectors at our current position
+                // this makes our if statement a little cleaner
+                var vc = Vertices[current] * polygonScale;    // c for "current"
+                var vn = Vertices[next] * polygonScale;       // n for "next"
+
+                // check for collision between the rect and
+                // a line formed between the two vertices
+                var line = new Line2(vc, vn);
+                if (line.TryGetIntersectingPoint(line2, out var currentHitPoint))
+                {
+                    intersects = true;
+                    if ((line2.Start - currentHitPoint).LengthSquared() < (line2.Start - hitPoint).LengthSquared())
+                    {
+                        hitPoint = currentHitPoint;
+                    }
+                }
+            }
+
+            // the above algorithm only checks if the rectangle
+            // is touching the edges of the polygon
+
+            if (Contains(line2.Start, polygonScale))
+            {
+                hitPoint = line2.Start;
+                return true;
+            }
+
+            return intersects;
         }
 
         /// <summary>
@@ -380,6 +553,45 @@ namespace Murder.Core.Geometry
             // is touching the edges of the polygon
 
             if (Contains(polygon.Vertices[0]))
+                return true;
+
+            return false;
+        }
+
+
+        internal bool CheckOverlapAt(Polygon other, Vector2 otherScale, Vector2 offset, Vector2 myScale)
+        {
+            if (!other.GetBoundingBox().Intersects(GetBoundingBox(), -offset))
+            {
+                return false; // Early exit if bounding boxes don't touch
+            }
+
+            // go through each of the vertices, plus
+            // the next vertex in the list
+            int next = 0;
+            for (int current = 0; current < Vertices.Length; current++)
+            {
+                // get next vertex in list
+                // if we've hit the end, wrap around to 0
+                next = current + 1;
+                if (next == Vertices.Length) next = 0;
+
+                // get the Vectors at our current position
+                // this makes our if statement a little cleaner
+                var vc = Vertices[current] * myScale + offset;    // c for "current"
+                var vn = Vertices[next] * myScale + offset;       // n for "next"
+
+                // check for collision between the rect and
+                // a line formed between the two vertices
+                var line = new Line2(vc, vn);
+                if (other.Intersects(line, out _))
+                    return true;
+            }
+
+            // the above algorithm only checks if the rectangle
+            // is touching the edges of the polygon
+
+            if (Contains(other.Vertices[0] * otherScale - offset))
                 return true;
 
             return false;

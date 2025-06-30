@@ -74,7 +74,7 @@ public class TilemapNoFloorRenderSystem : IMurderRenderSystem
                                         rectangle.X - Grid.HalfCellSize, rectangle.Y - Grid.HalfCellSize,
                                         tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
                                     1f, Color.White,
-                                    RenderServices.BLEND_NORMAL, tile.sortAdjust - 1);
+                                    RenderServices.BLEND_NORMAL, tile.sortAdjust);
                             }
 
                             for (int j = 0; j < asset.AdditionalTiles.Length; j++)

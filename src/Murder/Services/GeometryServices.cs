@@ -42,6 +42,10 @@ namespace Murder.Services
             return result;
         }
 
+
+        public static ImmutableArray<Vector2> CreateOrGetCircle(float size, int sides)=>
+            CreateOrGetCircle(new Vector2(size, size), sides);
+
         /// <summary>
         /// Gets or creates a list of vectors that represents a circle using a rectangle as a base
         /// </summary>

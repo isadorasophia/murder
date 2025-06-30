@@ -449,40 +449,20 @@ public static partial class RenderServices
     /// <param name="position">Where to position the points</param>
     /// <param name="points">The points to connect with lines</param>
     /// <param name="color">The color to use</param>
-    /// <param name="thickness">The thickness of the lines</param>
-    public static void DrawPoints(this Batch2D spriteBatch, Vector2 position, IList<Vector2> points, Color color, float thickness)
-    {
-        if (points.Count < 2)
-            return;
-
-        for (int i = 1; i < points.Count; i++)
-        {
-            DrawLine(spriteBatch, points[i - 1] + position, points[i] + position, color, thickness);
-        }
-
-        DrawLine(spriteBatch, points[points.Count - 1] + position, points[0] + position, color, thickness);
-    }
-
-    /// <summary>
-    /// Draws a list of connecting points
-    /// </summary>
-    /// <param name="spriteBatch">The destination drawing surface</param>
-    /// <param name="position">Where to position the points</param>
-    /// <param name="points">The points to connect with lines</param>
-    /// <param name="color">The color to use</param>
+    /// <param name="scale">The scale factor for the points</param>
     /// <param name="thickness">The thickness of the lines</param>
     /// <param name="sort">Sorting offset</param>
-    public static void DrawPoints(this Batch2D spriteBatch, Vector2 position, ImmutableArray<Vector2> points, Color color, float thickness, float sort)
+    public static void DrawPoints(this Batch2D spriteBatch, Vector2 position, Vector2 scale, ImmutableArray<Vector2> points, Color color, float thickness, float sort)
     {
         if (points.Length < 2)
             return;
 
         for (int i = 1; i < points.Length; i++)
         {
-            DrawLine(spriteBatch, (points[i - 1] + position).Round(), (points[i] + position).Round(), color, thickness, sort);
+            DrawLine(spriteBatch, (points[i - 1] * scale + position).Round(), (points[i] * scale + position).Round(), color, thickness, sort);
         }
 
-        DrawLine(spriteBatch, (points[points.Length - 1] + position).Round(), (points[0] + position).Round(), color, thickness, sort);
+        DrawLine(spriteBatch, (points[points.Length - 1] * scale + position).Round(), (points[0] * scale + position).Round(), color, thickness, sort);
     }
 
     /// <summary>
@@ -491,18 +471,19 @@ public static partial class RenderServices
     /// <param name="spriteBatch">The destination drawing surface</param>
     /// /// <param name="position">Where to position the points</param>
     /// <param name="points">The points to connect with lines</param>
+    /// <param name="scale">The scale factor for the points</param>
     /// <param name="color">The color to use</param>
     /// <param name="thickness">The thickness of the lines</param>
-    public static void DrawPoints(this Batch2D spriteBatch, Vector2 position, ReadOnlySpan<Vector2> points, Color color, float thickness)
+    public static void DrawPoints(this Batch2D spriteBatch, Vector2 position, Vector2 scale, ImmutableArray<Vector2> points, Color color, float thickness)
     {
         if (points.Length < 2)
             return;
 
         for (int i = 1; i < points.Length; i++)
         {
-            DrawLine(spriteBatch, points[i - 1] + position, points[i] + position, color, thickness);
+            DrawLine(spriteBatch, points[i - 1] * scale + position, points[i] * scale + position, color, thickness);
         }
-        DrawLine(spriteBatch, points[points.Length - 1] + position, points[0] + position, color, thickness);
+        DrawLine(spriteBatch, points[points.Length - 1] * scale + position, points[0] * scale + position, color, thickness);
     }
 
     public static void DrawRectangleOutline(this Batch2D spriteBatch, Rectangle rectangle, Color color) =>
@@ -694,12 +675,12 @@ public static partial class RenderServices
     /// <param name="sort">The sorting value</param>
     public static void DrawCircleOutline(this Batch2D spriteBatch, Vector2 center, float radius, int sides, Color color, float sort = 1f)
     {
-        DrawPoints(spriteBatch, center, GeometryServices.CreateCircle(radius, sides), color, sort);
+        DrawPoints(spriteBatch, center, Vector2.One * radius, GeometryServices.CreateOrGetCircle(1, sides), color, sort);
     }
 
     public static void DrawCircleOutline(this Batch2D spriteBatch, Rectangle rectangle, int sides, Color color)
     {
-        DrawPoints(spriteBatch, rectangle.TopLeft, GeometryServices.CreateOrGetCircle(rectangle.Size, sides), color, 1.0f);
+        DrawPoints(spriteBatch, rectangle.TopLeft, rectangle.Size, GeometryServices.CreateOrGetCircle(1, sides), color, 1.0f);
     }
 
     public static void DrawPoint(this Batch2D spriteBatch, Point pos, Color color, float sorting = 0)

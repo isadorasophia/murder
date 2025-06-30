@@ -283,7 +283,7 @@ namespace Murder.Editor.Services
             return false;
         }
 
-        public static bool PolyHandle(string id, RenderContext render, Vector2 basePosition, Vector2 cursorPosition, Polygon polygon, Color outline, Color color, out Polygon newPolygon, out bool isShapeHovered)
+        public static bool PolyHandle(string id, RenderContext render, Vector2 basePosition, Vector2 scale, Vector2 cursorPosition, Polygon polygon, Color outline, Color color, out Polygon newPolygon, out bool isShapeHovered)
         {
             isShapeHovered = false;
             newPolygon = polygon;
@@ -308,7 +308,7 @@ namespace Murder.Editor.Services
                 }
                 else
                 {
-                    RenderServices.DrawPoints(render.DebugBatch, Vector2.Zero, polygonWorld.Vertices.AsSpan(), outline, 1);
+                    RenderServices.DrawPoints(render.DebugBatch, basePosition, scale, polygon.Vertices, outline, 1);
                     RenderServices.DrawPolygon(render.DebugFxBatch, polygonWorld.Vertices, new DrawInfo(color * 0.45f, 0.8f));
 
                     if (_draggingAnchor < 0)

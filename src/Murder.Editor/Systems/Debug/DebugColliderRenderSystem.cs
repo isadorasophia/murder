@@ -76,7 +76,8 @@ namespace Murder.Editor.Systems
                 }
 
                 ColliderComponent collider = e.GetCollider();
-                IMurderTransformComponent globalPosition = e.GetGlobalTransform();
+                Vector2 globalPosition = e.GetGlobalTransform().Vector2;
+                Vector2 scale = e.FetchScale();
 
                 Color color = collider.DebugColor * .6f;
                 ImmutableArray<IShape> newShapes = [];
@@ -100,7 +101,7 @@ namespace Murder.Editor.Systems
                     IShape? newShape;
 
                     // Don't draw out of bounds!
-                    if (!shape.GetBoundingBox().AddPosition(globalPosition.Point).Touches(render.Camera.SafeBounds))
+                    if (!shape.GetBoundingBox().AddPosition(globalPosition.Point()).Touches(render.Camera.SafeBounds))
                         continue;
 
                     // Draw bounding box
@@ -108,6 +109,7 @@ namespace Murder.Editor.Systems
                         shape,
                         $"offset_{e.EntityId}_{shapeIndex}",
                         globalPosition,
+                        scale,
                         render,
                         editor.EditorHook,
                         showHandles,
@@ -169,7 +171,8 @@ namespace Murder.Editor.Systems
         private static bool DrawOriginalHandles(
             IShape shape,
             string id,
-            IMurderTransformComponent globalPosition,
+            Vector2 globalPosition,
+            Vector2 scale,
             RenderContext render,
             EditorHook hook,
             bool showHandles,
@@ -196,7 +199,7 @@ namespace Murder.Editor.Systems
 
                     if (showHandles)
                     {
-                        if (EditorServices.PolyHandle(id, render, globalPosition.Vector2, cursorPosition, poly, Color.White, color, out var newPolygonResult, out hovered))
+                        if (EditorServices.PolyHandle(id, render, globalPosition, scale, cursorPosition, poly, Color.White, color, out var newPolygonResult, out hovered))
                         {
 
                             if (!isReadonly)
@@ -208,24 +211,24 @@ namespace Murder.Editor.Systems
                     }
                     else
                     {
-                        RenderServices.DrawPoints(batch, globalPosition.Point, poly.Vertices.AsSpan(), color, 1);
+                        RenderServices.DrawPoints(batch, globalPosition.Point(), scale, poly.Vertices, color, 1);
                     }
                     break;
 
                 case LineShape line:
-                    RenderServices.DrawLine(batch, line.Start + globalPosition.Vector2, line.End + globalPosition.Vector2, color);
+                    RenderServices.DrawLine(batch, line.Start + globalPosition, line.End + globalPosition, color);
                     break;
                 case BoxShape box:
-                    RenderServices.DrawRectangleOutline(batch, box.Rectangle.AddPosition(globalPosition.ToVector2()), color);
+                    RenderServices.DrawRectangleOutline(batch, box.Rectangle.AddPosition(globalPosition), color);
 
                     if (showHandles)
                     {
                         if (EditorServices.BoxHandle(id, render,
-                            cursorPosition, box.Rectangle + globalPosition.Point, color, out IntRectangle newRectangle, false, out hovered))
+                            cursorPosition, box.Rectangle + globalPosition.Point(), color, out IntRectangle newRectangle, false, out hovered))
                         {
                             if (!isReadonly)
                             {
-                                newShape = new BoxShape(box.Origin, (newRectangle.TopLeft - globalPosition.Vector2).Point(), newRectangle.Width, newRectangle.Height);
+                                newShape = new BoxShape(box.Origin, (newRectangle.TopLeft - globalPosition).Point(), newRectangle.Width, newRectangle.Height);
                                 bool hasChanges = !newShape.Equals(shape);
                                 return true;
                             }
@@ -233,11 +236,11 @@ namespace Murder.Editor.Systems
                     }
                     break;
                 case CircleShape circle:
-                    RenderServices.DrawCircleOutline(batch, circle.Offset + globalPosition.Vector2, circle.Radius, 24, color);
+                    RenderServices.DrawCircleOutline(batch, circle.Offset + globalPosition, circle.Radius, 24, color);
                     break;
 
                 case LazyShape lazy:
-                    RenderServices.DrawCircleOutline(batch, lazy.Offset + globalPosition.Vector2, lazy.Radius, 6, color);
+                    RenderServices.DrawCircleOutline(batch, lazy.Offset + globalPosition, lazy.Radius, 6, color);
                     break;
             }
 

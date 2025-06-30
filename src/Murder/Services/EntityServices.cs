@@ -19,6 +19,10 @@ namespace Murder.Services;
 
 public static class EntityServices
 {
+    public static Vector2 FetchScale(this Entity entity)
+    {
+        return entity.TryGetScale()?.Scale ?? Vector2.One;
+    }
     public static Vector2? GetGlobalPositionIfValid(this Entity? entity)
     {
         if (entity is null || !entity.IsActive || entity.IsDestroyed || !entity.HasTransform())

@@ -17,6 +17,8 @@ namespace Murder.Systems
     [Filter(typeof(ITransformComponent), typeof(MoveToPerfectComponent))]
     public class MoveToPerfectSystem : IFixedUpdateSystem, IStartupSystem
     {
+        ImmutableArray<PhysicsServices.PhysicEntityCachedInfo>? _actorsCache = null;
+
         public void Start(Context context)
         {
             foreach (Entity e in context.Entities)
@@ -33,16 +35,19 @@ namespace Murder.Systems
         {
             bool anyActorAvoidant = false;
 
-            ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)>? actors = null;
             foreach (Entity e in context.Entities)
             {
                 MoveToPerfectComponent moveToPerfect = e.GetMoveToPerfect();
                 if (moveToPerfect.AvoidActors)
                 {
                     anyActorAvoidant = true;
-                    actors = PhysicsServices.FilterPositionAndColliderEntities(context.World, CollisionLayersBase.ACTOR);
+                    _actorsCache = PhysicsServices.FilterPositionAndColliderEntities(context.World, CollisionLayersBase.ACTOR);
                     break;
                 }
+            }
+            if (!anyActorAvoidant)
+            {
+                _actorsCache = null;
             }
 
             foreach (Entity e in context.Entities)
@@ -60,12 +65,12 @@ namespace Murder.Systems
                 Vector2 current = Vector2Helper.LerpSnap(startPosition, moveToPerfect.Target, easedDelta);
                 e.SetGlobalTransform(e.GetMurderTransform().With(current.Point()));
 
-                if (anyActorAvoidant && moveToPerfect.AvoidActors && actors != null && e.TryGetCollider() is ColliderComponent collider)
+                if (anyActorAvoidant && moveToPerfect.AvoidActors && _actorsCache != null && e.TryGetCollider() is ColliderComponent collider)
                 {
                     Vector2 position = e.GetGlobalTransform().Vector2;
 
                     // Avoid actors
-                    if (PhysicsServices.GetFirstMtv(e.EntityId, collider, position, actors, out int hit) is Vector2 mtv)
+                    if (PhysicsServices.GetFirstMtv(e.EntityId, collider, position, _actorsCache, out int hit) is Vector2 mtv)
                     {
                         if (context.World.TryGetEntity(hit) is Entity actor)
                         {

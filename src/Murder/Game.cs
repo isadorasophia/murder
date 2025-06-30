@@ -117,7 +117,7 @@ namespace Murder
         /// <summary>
         /// Gets the fixed delta time in seconds.
         /// </summary>
-        public static float FixedDeltaTime => Instance._fixedUpdateDelta * Instance.TimeScale;
+        public static float FixedDeltaTime => Instance._fixedUpdateDelta;
 
         public static bool IsRunningSlowly { get; private set; } = false;
         /// <summary>
