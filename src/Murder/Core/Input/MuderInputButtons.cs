@@ -22,5 +22,6 @@
         public const int Delete = 110;
         public const int Ctrl = 111;
         public const int Space = 112;
+        public const int Backspace = 112;
     }
 }

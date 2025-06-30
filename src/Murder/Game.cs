@@ -412,10 +412,14 @@ namespace Murder
             _playerInput.RegisterButton(MurderInputButtons.Delete, Keys.Delete);
             _playerInput.RegisterButton(MurderInputButtons.Ctrl, Keys.LeftControl, Keys.RightControl);
             _playerInput.RegisterButton(MurderInputButtons.Space, Keys.Space);
+            _playerInput.RegisterButton(MurderInputButtons.Space, Buttons.Y);
+
+            _playerInput.RegisterButton(MurderInputButtons.Backspace, Keys.Back, Keys.BrowserBack);
+            _playerInput.RegisterButton(MurderInputButtons.Backspace, Buttons.X);
 
             // Navigation input
             _playerInput.RegisterButton(MurderInputButtons.Submit, Keys.Space, Keys.Enter);
-            _playerInput.RegisterButton(MurderInputButtons.Submit, Buttons.A, Buttons.Y);
+            _playerInput.RegisterButton(MurderInputButtons.Submit, Buttons.A);
 
             _playerInput.RegisterButton(MurderInputButtons.Cancel, Buttons.B, Buttons.Back, Buttons.Start);
 
