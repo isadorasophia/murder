@@ -1138,12 +1138,12 @@ namespace Murder.Services
                     if (shape1 is PolygonShape)
                     {
                         polygon = ((PolygonShape)shape1).Polygon;
-                        circle = ((LazyShape)shape2).Rectangle(position1 - position2);
+                        circle = ((LazyShape)shape2).Rectangle(position2 - position1);
                     }
                     else
                     {
                         polygon = ((PolygonShape)shape2).Polygon;
-                        circle = ((LazyShape)shape1).Rectangle(position2 - position1);
+                        circle = ((LazyShape)shape1).Rectangle(position1 - position2);
                     }
 
                     return polygon.Intersect(circle);
