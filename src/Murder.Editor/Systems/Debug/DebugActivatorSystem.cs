@@ -76,6 +76,7 @@ namespace Murder.Editor.Systems
             }
 
             GameLogger.Toggle(_showConsole);
+            UpdateEditorInput();
         }
 
         private void UpdateEditorSystems(Context context)
@@ -93,6 +94,20 @@ namespace Murder.Editor.Systems
                 {
                     context.World.DeactivateSystem(s);
                 }
+            }
+
+            UpdateEditorInput();
+        }
+
+        private void UpdateEditorInput()
+        {
+            if (_showConsole || _showEditorSystems)
+            {
+                TextInputEXT.StartTextInput();
+            }
+            else
+            {
+                TextInputEXT.StopTextInput();
             }
         }
     }
