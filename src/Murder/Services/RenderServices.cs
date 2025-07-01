@@ -932,25 +932,26 @@ public static partial class RenderServices
         }
     }
 
-    public static void DrawPolygon(this Batch2D batch, ImmutableArray<Vector2> vertices, DrawInfo? drawInfo = default)
+    public static void DrawPolygon(this Batch2D batch, Vector2 position, ImmutableArray<Vector2> vertices, DrawInfo? drawInfo = default)
     {
-        batch.DrawPolygon(SharedResources.GetOrCreatePixel(), vertices, drawInfo ?? DrawInfo.Default);
+        batch.DrawPolygon(SharedResources.GetOrCreatePixel(), position, vertices, drawInfo ?? DrawInfo.Default);
     }
 
+    private readonly static ImmutableArray<Vector2>.Builder _cachedCircleVertices = ImmutableArray.CreateBuilder<Vector2>();
     public static void DrawFilledCircle(this Batch2D batch, Vector2 center, float radius, int steps, DrawInfo? drawInfo = default)
     {
         ImmutableArray<Vector2> circleVertices = GeometryServices.CreateOrGetFlattenedCircle(1f, 1f, steps);
 
-        // perf: don't allocate this every call...
         // Scale and translate the vertices
-        Vector2[] scaled = new Vector2[circleVertices.Length];
+        _cachedCircleVertices.Clear();
         for (int i = 0; i < circleVertices.Length; ++i)
         {
             Vector2 p = circleVertices[i];
-            scaled[i] = new Vector2(p.X * radius + center.X, p.Y * radius + center.Y);
+            _cachedCircleVertices.Add(new Vector2(p.X * radius, p.Y * radius));
         }
 
-        batch.DrawPolygon(SharedResources.GetOrCreatePixel(), scaled, drawInfo ?? DrawInfo.Default);
+        // perf: don't allocate this every call...
+        batch.DrawPolygon(SharedResources.GetOrCreatePixel(), center, _cachedCircleVertices.ToImmutable(), drawInfo ?? DrawInfo.Default);
     }
 
     public static void DrawFilledCircle(this Batch2D batch, Rectangle circleRect, int steps, DrawInfo drawInfo)
@@ -958,7 +959,7 @@ public static partial class RenderServices
         ImmutableArray<Vector2> circleVertices = GeometryServices.CreateOrGetFlattenedCircle(1f, 1f, steps);
 
         // Scale and translate the vertices
-        batch.DrawPolygon(SharedResources.GetOrCreatePixel(), circleVertices, drawInfo.WithScale(circleRect.Size).WithOffset(circleRect.Center));
+        batch.DrawPolygon(SharedResources.GetOrCreatePixel(), circleRect.Center, circleVertices, drawInfo with { Scale = circleRect.Size });
     }
     public static void DrawPieChart(this Batch2D batch, Vector2 center, float radius, float startAngle, float endAngle, int steps, DrawInfo? drawInfo = default)
     {
@@ -973,7 +974,7 @@ public static partial class RenderServices
         // Scale and translate the vertices
         for (int i = 0; i <= steps; i++)
         {
-            _cachedPieChartVertices[i + 1] = new Vector2(circleVertices[i].X * radius + center.X, circleVertices[i].Y * radius + center.Y);
+            _cachedPieChartVertices[i + 1] = new Vector2(circleVertices[i].X * radius, circleVertices[i].Y * radius);
         }
 
         // Calculate the angle between each step
@@ -991,7 +992,7 @@ public static partial class RenderServices
         _cachedPieChartVertices[startIndex] = center;
 
         // Draw the pie chart
-        batch.DrawPolygon(SharedResources.GetOrCreatePixel(), _cachedPieChartVertices[startIndex..(endIndex + 1)], drawInfo ?? DrawInfo.Default);
+        batch.DrawPolygon(SharedResources.GetOrCreatePixel(), center, _cachedPieChartVertices[startIndex..(endIndex + 1)].ToImmutableArray(), drawInfo ?? DrawInfo.Default);
     }
 
     public static Point DrawText(this Batch2D uiBatch, int font, string text, Vector2 position, DrawInfo? drawInfo = default)

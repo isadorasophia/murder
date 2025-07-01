@@ -3,6 +3,7 @@ using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Numerics;
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace Murder.Core.Geometry
@@ -274,7 +275,7 @@ namespace Murder.Core.Geometry
             // is touching the edges of the polygon
 
             // Now check if the rectangle is fully contained within the polygon without touching the edges
-            if (Contains(rect.TopLeft))
+            if (Contains(rect.TopLeft, polygonScale))
                 return true;
 
             return false;
@@ -597,9 +598,28 @@ namespace Murder.Core.Geometry
             return false;
         }
 
+        private string ToDebuggerString()
+        {
+            StringBuilder result = new();
+            result.Append("[");
+            for (int i = 0; i < Vertices.Length; ++i)
+            {
+                Vector2 v = Vertices[i];
+
+                result.Append($"new({v.X}, {v.Y})");
+                if (i < Vertices.Length - 1)
+                {
+                    result.Append(", ");
+                }
+            }
+
+            result.Append("]");
+            return result.ToString();
+        }
+
         internal bool CheckOverlapAt(Polygon polygon, Vector2 offset)
         {
-            if (!polygon.GetBoundingBox().Intersects(GetBoundingBox(), -offset))
+            if (!polygon.GetBoundingBox().Intersects(GetBoundingBox(), offset))
             {
                 return false; // Early exit if bounding boxes don't touch
             }

@@ -181,23 +181,7 @@ public class Batch2D
         Transform = Matrix.CreateScale(scale.X, scale.Y, 1) * Matrix.CreateTranslation(position.X, position.Y, 0f);
     }
 
-    public void DrawPolygon(Texture2D texture, System.Numerics.Vector2[] vertices, DrawInfo drawInfo)
-    {
-        if (!IsBatching)
-        {
-            throw new InvalidOperationException("Begin() must be called before any Draw() operation.");
-        }
-
-        ref SpriteBatchItem batchItem = ref GetBatchItem();
-        batchItem.SetPolygon(texture, vertices, drawInfo);
-
-        if (BatchMode == BatchMode.Immediate)
-        {
-            Flush();
-        }
-    }
-
-    public void DrawPolygon(Texture2D texture, ImmutableArray<System.Numerics.Vector2> vertices, DrawInfo drawInfo)
+    public void DrawPolygon(Texture2D texture, System.Numerics.Vector2 position, ImmutableArray<System.Numerics.Vector2> vertices, DrawInfo drawInfo)
     {
         if (!IsBatching)
         {
@@ -206,7 +190,7 @@ public class Batch2D
 
         ref SpriteBatchItem batchItem = ref GetBatchItem();
 
-        batchItem.SetPolygon(texture, vertices.AsSpan(), drawInfo);
+        batchItem.SetPolygon(texture, position, vertices, drawInfo);
 
         if (BatchMode == BatchMode.Immediate)
         {
@@ -237,7 +221,7 @@ public class Batch2D
     }
 
     private ref SpriteBatchItem GetBatchItem()
-    { 
+    {
         if (_nextItemIndex >= _batchItems.Length)
         {
             SetBuffersCapacity(_batchItems.Length * 2);
@@ -355,7 +339,7 @@ public class Batch2D
         int indicesIndex = 0;
 
         Effect?.Parameters["MatrixTransform"]?.SetValue(matrix);
-        
+
         for (int i = 0; i < itemsCount; i++)
         {
             batchItem = batchItems[i];

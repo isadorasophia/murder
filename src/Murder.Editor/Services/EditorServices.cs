@@ -288,15 +288,14 @@ namespace Murder.Editor.Services
             isShapeHovered = false;
             newPolygon = polygon;
             cursorPosition -= basePosition;
-            var polygonWorld = polygon.AddPosition(basePosition.Point());
             if (!polygon.IsConvex())
             {
                 if (Calculator.Blink(10, false))
-                    RenderServices.DrawPolygon(render.DebugFxBatch, polygonWorld.Vertices, new DrawInfo(color * 0.45f, 0.8f));
+                    RenderServices.DrawPolygon(render.DebugFxBatch, basePosition, polygon.Vertices, new DrawInfo(color * 0.45f, 0.8f));
             }
             else
             {
-                RenderServices.DrawPolygon(render.DebugFxBatch, polygonWorld.Vertices, new DrawInfo(color * (0.45f + 0.2f * MathF.Sin(Game.NowUnscaled)), 0.8f));
+                RenderServices.DrawPolygon(render.DebugFxBatch, basePosition, polygon.Vertices, new DrawInfo(color * (0.45f + 0.2f * MathF.Sin(Game.NowUnscaled)), 0.8f));
             }
 
             if (_draggingHandle == id)
@@ -309,7 +308,7 @@ namespace Murder.Editor.Services
                 else
                 {
                     RenderServices.DrawPoints(render.DebugBatch, basePosition, scale, polygon.Vertices, outline, 1);
-                    RenderServices.DrawPolygon(render.DebugFxBatch, polygonWorld.Vertices, new DrawInfo(color * 0.45f, 0.8f));
+                    RenderServices.DrawPolygon(render.DebugFxBatch, basePosition, polygon.Vertices, new DrawInfo(color * 0.45f, 0.8f));
 
                     if (_draggingAnchor < 0)
                     {
@@ -397,7 +396,7 @@ namespace Murder.Editor.Services
 
             if (string.IsNullOrEmpty(_draggingHandle) && polygon.Contains(cursor))
             {
-                RenderServices.DrawPolygon(render.DebugFxBatch, polygon.Vertices, new DrawInfo(color * 0.25f, 0.8f));
+                RenderServices.DrawPolygon(render.DebugFxBatch, basePosition, polygon.Vertices, new DrawInfo(color * 0.25f, 0.8f));
 
                 if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                 {

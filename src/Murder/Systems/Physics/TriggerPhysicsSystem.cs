@@ -221,6 +221,7 @@ namespace Murder.Systems.Physics
                 // Check if there's a previous collision happening here
                 if (!collisionCache.HasId(other.EntityId))
                 {
+
                     if (PhysicsServices.CollidesWith(e, other)) // This is the actual physics check
                     {
 

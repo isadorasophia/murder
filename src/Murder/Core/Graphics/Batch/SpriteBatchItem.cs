@@ -3,6 +3,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Murder.Core.Geometry;
 using Murder.Utilities;
+using System.Collections.Immutable;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 
@@ -118,7 +119,7 @@ public class SpriteBatchItem
             VertexData[0].TextureCoordinate = texCoord;
         }
     }
-    public void SetPolygon(Texture2D texture, ReadOnlySpan<System.Numerics.Vector2> vertices, DrawInfo drawInfo)
+    public void SetPolygon(Texture2D texture, System.Numerics.Vector2 position, ImmutableArray<System.Numerics.Vector2> vertices, DrawInfo drawInfo)
     {
         Texture = texture;
         VertexCount = (short)vertices.Length;
@@ -142,7 +143,7 @@ public class SpriteBatchItem
         for (int i = 0; i < VertexCount; i++)
         {
             // Apply scale and subtract the origin
-            Vector2 transformedVertex = ((vertices[i] * drawInfo.Scale) - origin).ToXnaVector2();
+            Vector2 transformedVertex = ((vertices[i] * drawInfo.Scale) - origin + position).ToXnaVector2();
 
             // Apply rotation if necessary
             if (drawInfo.Rotation != 0)
