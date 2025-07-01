@@ -536,7 +536,7 @@ public class PixelFontSize
             if (overflow)
             {
                 bool applyLineBreak = true;
-                if (!lineBreakOnSpace && IsPonctuation(text[cursor]))
+                if (!lineBreakOnSpace && TextDataServices.IsPonctuation(text[cursor]))
                 {
                     // If this is a ponctuation right at the end of the sentence or before a new line,
                     // we should be okay overflowing. It's better than the alternative.
@@ -587,15 +587,6 @@ public class PixelFontSize
         }
 
         return wrappedText.ToString();
-    }
-
-    private static bool IsPonctuation(char c)
-    {
-        return c switch
-        {
-            '!' or '！' or ':' or '?' or '？' or '、' or '.' or '。' or '…' => true,
-            _ => false,
-        };
     }
 }
 

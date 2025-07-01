@@ -510,7 +510,9 @@ public static partial class TextDataServices
         for (int i = 0; i < parsedText.Length - 1; ++i)
         {
             // For now, do this weird heuristic of not applying pause if the last character was uppercase.
-            bool shouldSkipPause = i != 0 && char.IsUpper(parsedText[i - 1]);
+            bool shouldSkipPause = i != 0 && 
+                (char.IsUpper(parsedText[i - 1]) || IsPonctuationToIgnorePreviousPause(parsedText[i - 1]));
+
             if (shouldSkipPause)
             {
                 continue;
@@ -566,6 +568,24 @@ public static partial class TextDataServices
 
         _cache[key] = data;
         return data;
+    }
+
+    public static bool IsPonctuation(char c)
+    {
+        return c switch
+        {
+            '!' or '！' or ':' or '?' or '？' or '、' or '.' or '。' or '…' => true,
+            _ => false,
+        };
+    }
+
+    public static bool IsPonctuationToIgnorePreviousPause(char c)
+    {
+        return c switch
+        {
+            '!' or '！' or ':' or '?' or '？' => true,
+            _ => false,
+        };
     }
 
     [GeneratedRegex("(?<!\n)\n(?!\n)")]
