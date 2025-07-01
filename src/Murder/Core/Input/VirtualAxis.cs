@@ -260,8 +260,7 @@ namespace Murder.Core.Input
 
         internal void DeregisterAll()
         {
-            _buttonAxis = ImmutableArray<InputButtonAxis>.Empty;
-
+            _buttonAxis = [];
         }
 
         internal void Register(AxisBindingsInfo info)

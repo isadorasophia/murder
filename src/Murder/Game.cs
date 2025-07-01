@@ -403,6 +403,7 @@ namespace Murder
             // Editor input
             _playerInput.RegisterButton(MurderInputButtons.Debug, Keys.F1);
             _playerInput.RegisterButton(MurderInputButtons.PlayGame, Keys.F5);
+
             _playerInput.Register(MurderInputButtons.LeftClick, MouseButtons.Left);
             _playerInput.Register(MurderInputButtons.RightClick, MouseButtons.Right);
             _playerInput.Register(MurderInputButtons.MiddleClick, MouseButtons.Middle);
@@ -412,24 +413,11 @@ namespace Murder
             _playerInput.RegisterButton(MurderInputButtons.Delete, Keys.Delete);
             _playerInput.RegisterButton(MurderInputButtons.Ctrl, Keys.LeftControl, Keys.RightControl);
             _playerInput.RegisterButton(MurderInputButtons.Space, Keys.Space);
-            _playerInput.RegisterButton(MurderInputButtons.Space, Buttons.Y);
-
             _playerInput.RegisterButton(MurderInputButtons.Backspace, Keys.Back, Keys.BrowserBack);
-            _playerInput.RegisterButton(MurderInputButtons.Backspace, Buttons.X);
 
             // Navigation input
-            _playerInput.RegisterButton(MurderInputButtons.Submit, Keys.Space, Keys.Enter);
-            _playerInput.RegisterButton(MurderInputButtons.Submit, Buttons.A);
-
-            _playerInput.RegisterButton(MurderInputButtons.Cancel, Buttons.B, Buttons.Back, Buttons.Start);
-
-            _playerInput.RegisterButton(MurderInputButtons.Pause, Keys.Escape, Keys.P);
-            _playerInput.RegisterButton(MurderInputButtons.Pause, Buttons.Start);
-
-            _playerInput.RegisterAxes(MurderInputAxis.Ui, GamepadAxis.LeftThumb, GamepadAxis.RightThumb, GamepadAxis.Dpad);
-            _playerInput.Register(MurderInputAxis.Ui,
-                new InputButtonAxis(Keys.W, Keys.A, Keys.S, Keys.D),
-                new InputButtonAxis(Keys.Up, Keys.Left, Keys.Down, Keys.Right));
+            _playerInput.RegisterAxes(MurderInputAxis.Ui, 
+                GamepadAxis.LeftThumb, GamepadAxis.RightThumb, GamepadAxis.Dpad);
 
             base.Initialize(); // Content is loaded here
 

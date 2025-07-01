@@ -127,13 +127,22 @@ public class PlayerInput
 
     public VirtualAxis GetOrCreateAxis(int axis)
     {
-        if (!_axis.ContainsKey(axis) || _axis[axis] == null)
+        if (!_axis.TryGetValue(axis, out VirtualAxis? value) || value is null)
         {
-            _axis[axis] = new VirtualAxis();
-            //GameDebugger.Log($"Creating a VirtualButton called '{button}'");
+            value = new VirtualAxis();
+            _axis[axis] = value;
         }
 
-        return _axis[axis];
+        return value;
+    }
+
+    /// <summary>
+    /// Registers input axes
+    /// </summary>
+    public void DeregisterAll(int axis)
+    {
+        VirtualAxis a = GetOrCreateAxis(axis);
+        a.DeregisterAll();
     }
 
     /// <summary>
