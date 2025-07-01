@@ -73,16 +73,17 @@ namespace Murder.Systems
                 }
             }
 
-            float speed, accel;
-            if (entity.TryGetAgentSpeedOverride() is AgentSpeedOverride speedOverride)
+            float speed = agent.Speed;
+            float accel = agent.Acceleration;
+
+            if (entity.TryGetOverrideAgentSpeed() is OverrideAgentSpeedComponent speedOverride)
             {
                 speed = speedOverride.MaxSpeed;
-                accel = speedOverride.Acceleration;
-            }
-            else
-            {
-                speed = agent.Speed;
-                accel = agent.Acceleration;
+
+                if (speedOverride.Acceleration != -1)
+                {
+                    accel = speedOverride.Acceleration;
+                }
             }
 
             Vector2 finalImpulse = impulse.Impulse;
