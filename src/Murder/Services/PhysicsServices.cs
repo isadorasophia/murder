@@ -174,42 +174,56 @@ public static class PhysicsServices
         // Distance to cross one whole cell in X / Y
         float tDeltaX = (stepX != 0) ? 1f / MathF.Abs(endGrid.X - startGrid.X) : float.PositiveInfinity;
         float tDeltaY = (stepY != 0) ? 1f / MathF.Abs(endGrid.Y - startGrid.Y) : float.PositiveInfinity;
+        Vector2 dir = endPos - startPos;
 
-        // Traverse
+        // handle start cell
+        if (map.IsInsideGrid(x, y) && map.At(x, y).HasFlag(flags))
+        {
+            hit = new RaycastHit(new Point(x, y), startPos);
+            return true;                                     // hit at t = 0
+        }
+
+        // DDA traversal
         while (true)
         {
-            if (!map.IsInsideGrid(x, y)) break;
+            // Decide which grid line we cross first
+            bool stepInX = tMaxX < tMaxY;
 
-            int tile = map.At(x, y);
-
-            // Uncomment this to debug the raycast tiles
-            //DebugServices.DrawText(world, tile.ToString(), (new Vector2(x, y) + Vector2.One * 0.45f) * Grid.CellSize , 0.2f, Color.Red);
-
-            if (tile.HasFlag(flags))
-            {
-                Vector2 hitPoint = startPos + (endPos - startPos) *
-                                   MathF.Min(tMaxX, tMaxY);
-                hit = new RaycastHit(new Point(x, y), hitPoint);
-                return true;
-            }
-
-            // step to next cell
-            if (tMaxX < tMaxY)
+            if (stepInX)
             {
                 x += stepX;
-                tMaxX += tDeltaX;
+                float tEntry = tMaxX;        // entry-time for the *new* cell
+                tMaxX += tDeltaX;            // prepare next crossing
+
+                if (!map.IsInsideGrid(x, y)) break;
+
+                if (map.At(x, y).HasFlag(flags))
+                {
+                    hit = new RaycastHit(new Point(x, y), startPos + dir * tEntry);
+                    return true;
+                }
             }
             else
             {
                 y += stepY;
+                float tEntry = tMaxY;        // entry-time for the *new* cell
                 tMaxY += tDeltaY;
+
+                if (!map.IsInsideGrid(x, y)) break;
+
+                if (map.At(x, y).HasFlag(flags))
+                {
+                    hit = new RaycastHit(new Point(x, y), startPos + dir * tEntry);
+                    return true;
+                }
             }
 
-            if (x == endX && y == endY) break;
+            if (x == endX && y == endY) break;   // reached destination cell
         }
 
         hit = default;
         return false;
+
     }
 
 

@@ -19,7 +19,7 @@ public class Clue
     }
 
     [TestMethod]
-    public void TestPolygonVsPolygon1()
+    public void TestPolygonVsPolygon()
     {
         // Polygon inside another
         PolygonShape p1 = new(new([new(0, -5), new(7, 1), new(0, 6), new(-7, 1)]));
@@ -32,10 +32,10 @@ public class Clue
     }
 
     [TestMethod]
-    public void TestPolygonVsCircle()
+    public void TestPolygonVsLazy()
     {
         PolygonShape p1 = new(new([new(3, -19), new(22, -19), new(37, -7), new(28, 8), new(11, 13), new(1, 7)]));
-        CircleShape c1 = new(10, Point.Zero);
+        LazyShape c1 = new(10, Point.Zero);
 
         bool collides = PhysicsServices.CollidesWith(
             p1, position1: new(493.3392f, 180.49214f), new Vector2(-1, 1),
