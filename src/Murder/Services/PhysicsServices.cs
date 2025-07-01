@@ -39,9 +39,9 @@ public static class PhysicsServices
         return world.TryGetUniqueMap()?.Map;
     }
 
-    public static IntRectangle GetCarveBoundingBox(this ColliderComponent collider, Vector2 position)
+    public static IntRectangle GetCarveBoundingBox(this ColliderComponent collider, Vector2 position, Vector2 scale)
     {
-        Rectangle rect = collider.GetBoundingBox(position);
+        Rectangle rect = collider.GetBoundingBox(position, scale);
         return rect.GetCarveBoundingBox(occupiedThreshold: .75f);
     }
 
@@ -71,7 +71,7 @@ public static class PhysicsServices
         return result;
     }
 
-    public static Rectangle GetBoundingBox(this ColliderComponent collider, Vector2 position)
+    public static Rectangle GetBoundingBox(this ColliderComponent collider, Vector2 position, Vector2 scale)
     {
         if (collider.Shapes.Length == 0)
         {
@@ -91,7 +91,7 @@ public static class PhysicsServices
             bottom = Math.Max(bottom, rect.Bottom);
         }
 
-        return new(left + position.X, top + position.Y, right - left, bottom - top);
+        return new(left * scale.X + position.X, top * scale.Y + position.Y, (right - left) * scale.X, (bottom - top) * scale.Y);
     }
 
     /// <summary>
@@ -108,7 +108,7 @@ public static class PhysicsServices
         ColliderComponent collider = target.GetCollider();
         Vector2 position = target.GetGlobalTransform().Vector2;
 
-        return collider.GetBoundingBox(position.Point());
+        return collider.GetBoundingBox(position.Point(), target.FetchScale());
     }
 
     public readonly struct RaycastHit
@@ -699,7 +699,7 @@ public static class PhysicsServices
 
         // Now, check against other entities.
         Quadtree qt = world.GetUniqueQuadtree().Quadtree;
-        qt.GetCollisionEntitiesAt(GetBoundingBox(collider, position), _cachedCollisions);
+        qt.GetCollisionEntitiesAt(GetBoundingBox(collider, position, scale), _cachedCollisions);
 
         foreach (var other in _cachedCollisions)
         {
@@ -1022,8 +1022,8 @@ public static class PhysicsServices
             && entityB.TryGetCollider() is ColliderComponent colliderB
             && entityB.GetGlobalPositionIfValid() is Vector2 positionB)
         {
-            Vector2 scaleA = entityA.TryGetScale()?.Scale ?? Vector2.One;
-            Vector2 scaleB = entityB.TryGetScale()?.Scale ?? Vector2.One;
+            Vector2 scaleA = entityA.FetchScale();
+            Vector2 scaleB = entityB.FetchScale();
 
             foreach (var shapeA in colliderA.Shapes)
             {

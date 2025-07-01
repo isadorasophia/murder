@@ -204,7 +204,7 @@ namespace Murder.Core.Geometry
             // the above algorithm only checks if the circle
             // is touching the edges of the polygon
 
-            if (Contains(circle.Center))
+            if (Contains(circle.Center, polygonScale))
                 return true;
 
             return false;
