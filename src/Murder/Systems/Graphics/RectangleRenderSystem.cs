@@ -35,7 +35,7 @@ namespace Murder.Systems.Graphics
 
                 if (e.TryGetCollider() is ColliderComponent collider)
                 {
-                    box = collider.GetBoundingBox(position);
+                    box = collider.GetBoundingBox(position, e.FetchScale());
                 }
                 else
                 {

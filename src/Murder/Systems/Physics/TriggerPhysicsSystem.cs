@@ -152,7 +152,7 @@ namespace Murder.Systems.Physics
             bool thisIsAnActor = (collider.Layer & (CollisionLayersBase.ACTOR)) != 0;
 
             _others.Clear();
-            qt.Collision.Retrieve(collider.GetBoundingBox(e.GetGlobalTransform().Point), _others);
+            qt.Collision.Retrieve(collider.GetBoundingBox(e.GetGlobalTransform().Point, e.FetchScale()), _others);
 
             CollisionCacheComponent collisionCache = e.TryGetCollisionCache() ?? new CollisionCacheComponent();
 

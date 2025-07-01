@@ -39,7 +39,7 @@ namespace Murder.Core.Physics
             IMurderTransformComponent pos = entity.GetGlobalTransform();
             if (entity.TryGetCollider() is ColliderComponent collider)
             {
-                Collision.Insert(entity.EntityId, entity, collider.GetBoundingBox(pos.Vector2));
+                Collision.Insert(entity.EntityId, entity, collider.GetBoundingBox(pos.Vector2, entity.FetchScale()));
             }
 
             if (entity.TryGetPushAway() is PushAwayComponent pushAway)
@@ -88,7 +88,7 @@ namespace Murder.Core.Physics
                 IMurderTransformComponent pos = e.GetGlobalTransform();
                 if (e.TryGetCollider() is ColliderComponent collider)
                 {
-                    Collision.Insert(e.EntityId, e, collider.GetBoundingBox(pos.Point));
+                    Collision.Insert(e.EntityId, e, collider.GetBoundingBox(pos.Point, e.FetchScale()));
                 }
 
                 if (e.TryGetPushAway() is PushAwayComponent pushAway)

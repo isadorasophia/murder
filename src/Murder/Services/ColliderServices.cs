@@ -26,7 +26,7 @@ namespace Murder.Services
                 return IntRectangle.Empty;
             }
 
-            return collider.GetBoundingBox(position);
+            return collider.GetBoundingBox(position, e.FetchScale());
         }
 
         public static Vector2 SnapToGrid(Vector2 positive)
@@ -71,7 +71,7 @@ namespace Murder.Services
 
             if (e.TryGetCollider() is ColliderComponent collider)
             {
-                Rectangle rectangle = PhysicsServices.GetBoundingBox(collider, position);
+                Rectangle rectangle = PhysicsServices.GetBoundingBox(collider, position, e.FetchScale());
 
                 Vector2 offset = position - rectangle.TopLeft;
                 position += rectangle.Size / 2f - offset;

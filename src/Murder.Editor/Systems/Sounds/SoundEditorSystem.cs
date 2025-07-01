@@ -58,7 +58,7 @@ namespace Murder.Editor.Systems.Sounds
                 Vector2 position = e.GetGlobalTransform().Vector2;
                 if (e.TryGetCollider() is ColliderComponent collider)
                 {
-                    position = collider.GetBoundingBox(position).CenterPoint;
+                    position = collider.GetBoundingBox(position, Vector2.One).CenterPoint;
                 }
 
                 if (e.HasSoundParameter())
@@ -99,7 +99,7 @@ namespace Murder.Editor.Systems.Sounds
                 Vector2 position = e.GetGlobalTransform().Vector2;
                 if (e.TryGetCollider() is ColliderComponent collider)
                 {
-                    position = collider.GetBoundingBox(position).CenterPoint;
+                    position = collider.GetBoundingBox(position, Vector2.One).CenterPoint;
                 }
 
                 if (!isSelected)

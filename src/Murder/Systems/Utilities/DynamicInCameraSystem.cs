@@ -141,7 +141,7 @@ public sealed class DynamicInCameraSystem : IMonoPreRenderSystem
             // ------------ Collider ---------------------------------------------
             if (e.TryGetCollider() is ColliderComponent col)
             {
-                Rectangle worldBox = col.GetBoundingBox(pos);
+                Rectangle worldBox = col.GetBoundingBox(pos, e.FetchScale());
 
                 // Cache once for static colliders
                 if (e.HasStatic())

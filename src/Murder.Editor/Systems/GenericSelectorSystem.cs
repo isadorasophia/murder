@@ -629,7 +629,7 @@ public class GenericSelectorSystem
     {
         if (e.TryGetCollider() is ColliderComponent colliderComponent)
         {
-            var rect = colliderComponent.GetBoundingBox(position);
+            var rect = colliderComponent.GetBoundingBox(position, Vector2.One);
             if (!rect.IsEmpty)
             {
                 HasBox = true;

@@ -675,7 +675,7 @@ public static partial class RenderServices
     /// <param name="sort">The sorting value</param>
     public static void DrawCircleOutline(this Batch2D spriteBatch, Vector2 center, float radius, int sides, Color color, float sort = 1f)
     {
-        DrawPoints(spriteBatch, center, Vector2.One * radius, GeometryServices.CreateOrGetCircle(1, sides), color, sort);
+        DrawPoints(spriteBatch, center, Vector2.One * (radius * 2), GeometryServices.CreateOrGetCircle(1, sides), color, sort);
     }
 
     public static void DrawCircleOutline(this Batch2D spriteBatch, Rectangle rectangle, int sides, Color color)

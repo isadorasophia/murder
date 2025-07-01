@@ -119,7 +119,7 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                     _entityList.Clear();
                     _hitCounter.Clear();
 
-                    IntRectangle boundingBox = collider!.Value.GetBoundingBox(startPosition + velocity);
+                    IntRectangle boundingBox = collider!.Value.GetBoundingBox(startPosition + velocity, e.FetchScale());
 
                     qt.GetCollisionEntitiesAt(boundingBox, _entityList);
                     var collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(_entityList, _ignore, mask);

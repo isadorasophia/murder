@@ -135,7 +135,7 @@ namespace Murder.Systems
             Vector2 position = e.GetGlobalTransform().Vector2;
 
             ColliderComponent collider = e.GetCollider();
-            IntRectangle updatedRectangle = collider.GetCarveBoundingBox(position);
+            IntRectangle updatedRectangle = collider.GetCarveBoundingBox(position, e.FetchScale());
 
             return updatedRectangle;
         }
