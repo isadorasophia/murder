@@ -2,13 +2,31 @@
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
+using Murder.Diagnostics;
 using System.Numerics;
 
 namespace Murder.Utilities
 {
     public static class PositionExtensions
     {
-        public static IMurderTransformComponent GetGlobalTransform(this Entity entity) => entity.GetMurderTransform().GetGlobal();
+        public static IMurderTransformComponent GetGlobalTransform(this Entity entity)
+        {
+            if (entity.TryGetMurderTransform() is not IMurderTransformComponent transform)
+            {
+                if (!entity.IsActive)
+                {
+                    GameLogger.Error($"Tried to retrieve position of a dead entity: {entity.EntityId}! Expect things to fall apart.");
+                }
+                else
+                {
+                    GameLogger.Error($"Tried to retrieve position of an entity without position: {entity.EntityId}! Expect things to fall apart.");
+                }
+
+                return new PositionComponent();
+            }
+
+            return transform.GetGlobal();
+        }
 
         public static void SetGlobalTransform<T>(this Entity entity, T transform) where T : IMurderTransformComponent
         {
