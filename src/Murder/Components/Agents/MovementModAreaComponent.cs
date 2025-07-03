@@ -69,7 +69,7 @@ public readonly struct InsideMovementModAreaComponent : IComponent
     public InsideMovementModAreaComponent? RemoveArea(AreaInfo info)
     {
         var index = Areas.IndexOf(info);
-        if (index <= 0)
+        if (index < 0 || index >= Areas.Length)
         {
             return null;
         }

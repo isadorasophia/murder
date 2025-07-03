@@ -39,6 +39,23 @@ namespace Murder.Editor.Importers
 
                 // Otherwise, this will process all files if no descriptor has been created before.
                 string path = GetSourcePackedAtlasDescriptorPath();
+                string sourceResourcesSubPath = GetSourceResourcesPath();
+
+                string subPath = GetRelativeSubAtlasPath();
+                if (!string.IsNullOrEmpty(subPath))
+                {
+                    sourceResourcesSubPath = Path.Join(sourceResourcesSubPath, subPath);
+                }
+                else
+                {
+                    sourceResourcesSubPath = Path.Join(sourceResourcesSubPath, RelativeSourcePath);
+                }
+
+                if (!Directory.Exists(sourceResourcesSubPath) || !Directory.EnumerateFiles(sourceResourcesSubPath).Any())
+                {
+                    return true;
+                }
+
                 if (!string.IsNullOrEmpty(path) && !File.Exists(path))
                 {
                     return true;
@@ -99,6 +116,8 @@ namespace Murder.Editor.Importers
 
         public string GetBinPackedPath() => FileHelper.GetPath(_editorSettings.BinResourcesPath, RelativeOutputPath);
 
+        protected virtual string GetRelativeSubAtlasPath() => string.Empty;
+
         protected readonly EditorSettingsAsset _editorSettings;
 
         public ResourceImporter(EditorSettingsAsset editorSettings)
@@ -134,6 +153,11 @@ namespace Murder.Editor.Importers
 
         public bool ShouldRecalculate()
         {
+            if (HasChanges)
+            {
+                return true;
+            }
+
             string atlasPath = GetSourcePackedAtlasDescriptorPath();
             if (string.IsNullOrEmpty(atlasPath))
             {

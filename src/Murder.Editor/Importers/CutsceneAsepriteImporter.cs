@@ -36,20 +36,8 @@ internal class CutsceneAsepriteImporter(EditorSettingsAsset editorSettings) : Re
             return;
         }
 
-        bool clear = true;
-
         foreach (AsepriteImporter importer in _importers.Values)
         {
-            if (clear)
-            {
-                clear = false;
-            }
-            else
-            {
-                // Make sure the next importers do not delete our previous hard work.
-                importer.ClearBeforeSaving = false;
-            }
-
             if (skipIfNoChangesFound && !importer.HasChanges)
             {
                 continue;
