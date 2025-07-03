@@ -304,7 +304,7 @@ namespace Murder
 
         // Update properties.
         private float _fixedUpdateDelta;
-        private double _targetFixedUpdateTime = 0;
+        private double _previousFixedUpdateTime = 0;
 
         private double _scaledElapsedTime = 0;
         private double _unscaledElapsedTime = 0;
@@ -416,7 +416,7 @@ namespace Murder
             _playerInput.RegisterButton(MurderInputButtons.Backspace, Keys.Back, Keys.BrowserBack);
 
             // Navigation input
-            _playerInput.RegisterAxes(MurderInputAxis.Ui, 
+            _playerInput.RegisterAxes(MurderInputAxis.Ui,
                 GamepadAxis.LeftThumb, GamepadAxis.RightThumb, GamepadAxis.Dpad);
 
             base.Initialize(); // Content is loaded here
@@ -646,13 +646,12 @@ namespace Murder
         /// </summary>
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            LastFrameDuration = Math.Clamp((float)_lastFrameStopwatch.Elapsed.TotalSeconds,0, FixedDeltaTime * 2);
+            LastFrameDuration = Math.Clamp((float)_lastFrameStopwatch.Elapsed.TotalSeconds, 0, FixedDeltaTime * 2);
             _lastFrameStopwatch.Restart();
 
             if (_waitForSaveComplete && !CanResumeAfterSaveComplete())
             {
                 UpdateUnscaledDeltaTime(gameTime.ElapsedGameTime.TotalSeconds);
-                _targetFixedUpdateTime = _unscaledElapsedTime;
 
                 // Don't do any logic operation yet, we are waiting for the save to complete.
                 return;
@@ -756,24 +755,21 @@ namespace Murder
             UpdateScaledDeltaTime(scaledDeltaTime);
             UpdateInputAndScene();
 
-            // Check for fixed updates as well! TODO: Do we need to recover from lost frames?
-            // See https://github.com/amzeratul/halley/blob/41cd76c927ce59cfcc400f8cdf5f1465e167341a/src/engine/core/src/game/main_loop.cpp
             int maxRecoverFrames = 3;
-            while (_unscaledElapsedTime >= _targetFixedUpdateTime)
+            double timeSinceLastFixedUpdate = _scaledElapsedTime - _previousFixedUpdateTime;
+            int fixedUpdatesRequired = (int)Math.Floor(timeSinceLastFixedUpdate / _fixedUpdateDelta);
+            if (fixedUpdatesRequired > maxRecoverFrames)
+            {
+                fixedUpdatesRequired = maxRecoverFrames; // Don't run too many fixed updates, just slow down the game.
+            }
+            double remainingTime = timeSinceLastFixedUpdate - fixedUpdatesRequired * _fixedUpdateDelta;
+            _previousFixedUpdateTime = _scaledElapsedTime - remainingTime;
+
+            for (int fixedUpdateCount = 0; fixedUpdateCount < fixedUpdatesRequired; fixedUpdateCount++)
             {
                 ActiveScene.FixedUpdate(); // <==== Update all FixedUpdate systems
 
-                // Update previous time after fixed update
-                _unscaledPreviousElapsedTime = _unscaledElapsedTime;
-                _scaledPreviousElapsedTime = _scaledElapsedTime;
-
-                _targetFixedUpdateTime += _fixedUpdateDelta / TimeScale;
-
-                if (maxRecoverFrames-- == 0)
-                {
-                    _targetFixedUpdateTime = (float)_unscaledElapsedTime; // Just slow down the game at this point, sorry.
-                }
-                else if (AlwaysUpdateBeforeFixed)
+                if (AlwaysUpdateBeforeFixed)
                 {
                     // Update must always run before FixedUpdate
                     // Since we are running update again we must reset delta time to zero (no time passed since that update)
@@ -782,6 +778,11 @@ namespace Murder
                     UpdateInputAndScene(); // <==== Update all Update systems (and input
                 }
             }
+
+            // Update previous time after fixed update
+            _unscaledPreviousElapsedTime = _unscaledElapsedTime;
+            _scaledPreviousElapsedTime = _scaledElapsedTime;
+
 
             base.Update(gameTime); // Monogame/XNA internal Update
 
