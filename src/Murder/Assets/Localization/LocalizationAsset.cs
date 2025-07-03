@@ -1,4 +1,5 @@
-﻿using Murder.Utilities;
+﻿using Murder.Diagnostics;
+using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Numerics;
 
@@ -42,7 +43,14 @@ public class LocalizationAsset : GameAsset
             var builder = ImmutableDictionary.CreateBuilder<Guid, int>();
             for (int i = 0; i < _resources.Length; i++) 
             {
-                builder.Add(_resources[i].Guid, i);
+#if DEBUG
+                if (builder.TryGetValue(_resources[i].Guid, out int value))
+                {
+                    GameLogger.Warning($"Replacing {_resources[i].Guid} of {_resources[value].String} with {_resources[i].String}");
+                }
+#endif
+
+                builder[_resources[i].Guid] = i;
             }
 
             _guidToIndexCache = builder.ToImmutable();
@@ -110,9 +118,20 @@ public class LocalizationAsset : GameAsset
         _resources = _resources.SetItem(index, value);
     }
 
-    public void UpdateOrSetResource(Guid id, string translated, string? notes)
+    public bool UpdateOrSetResource(Guid id, string translated, string? notes)
     {
         LocalizedStringData value;
+
+        LocalizationAsset @default = Game.Data.GetDefaultLocalization();
+        if (@default.TryGetResource(id) is not LocalizedStringData defaultData)
+        {
+            return false;
+        }
+
+        if (string.IsNullOrEmpty(translated))
+        {
+            translated = defaultData.String;
+        }
 
         if (!GuidToResourceIndex.TryGetValue(id, out int index))
         {
@@ -121,10 +140,9 @@ public class LocalizationAsset : GameAsset
 
             _guidToIndexCache = null;
 
-            return;
+            return true;
         }
 
-        LocalizationAsset @default = Game.Data.GetDefaultLocalization();
         if (!string.IsNullOrEmpty(notes) && @default.Guid != Guid)
         {
             @default.UpdateOrSetNotes(id, notes);
@@ -132,6 +150,7 @@ public class LocalizationAsset : GameAsset
 
         value = _resources[index] with { String = translated, Notes = string.IsNullOrEmpty(notes) ? null : notes };
         _resources = _resources.SetItem(index, value);
+        return true;
     }
 
     public bool UpdateOrSetNotes(Guid id, string? notes)

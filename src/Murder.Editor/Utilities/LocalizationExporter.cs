@@ -189,7 +189,13 @@ internal static class LocalizationExporter
 
                 string translated = tokens.Length > 3 ? tokens[3] : string.Empty;
                 string? notes = tokens.Length > 4 ? tokens[4] : null;
-                asset.UpdateOrSetResource(guid, translated, notes);
+
+                bool updated = asset.UpdateOrSetResource(guid, translated, notes);
+                if (!updated && !string.IsNullOrEmpty(translated))
+                {
+                    string reference = tokens.Length > 2 ? tokens[2] : string.Empty;
+                    GameLogger.Error($"Unable to find {guid} string for '{reference}'.");
+                }
             }
         }
         catch (IOException)
