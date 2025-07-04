@@ -17,6 +17,7 @@ public class VirtualButton : IVirtualInput
 
     public float LastPressed = 0f;
     public float LastReleased = 0f;
+    public float HeldTime = 0f;
     public event Action<InputState>? OnPress;
 
     public void Update(InputState inputState)
@@ -45,12 +46,20 @@ public class VirtualButton : IVirtualInput
         if (!Down)
         {
             Consumed = false;
+            HeldTime = 0;
+        }
+        else
+        {
+            HeldTime += Game.NowUnscaled - LastPressed;
+            if (HeldTime < 0)
+                HeldTime = 0;
         }
 
         if (Pressed)
         {
             OnPress?.Invoke(inputState);
             LastPressed = Game.NowUnscaled;
+            HeldTime = 0;
         }
 
         if (Released)
