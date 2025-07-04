@@ -275,16 +275,21 @@ namespace Murder.Editor.Importers
             {
                 if (SubAtlasId is not null)
                 {
-                    if (Path.GetDirectoryName(sourceFilePath) is string sourceAtlasSubAtlasPath)
+                    string? sourceAtlasSubAtlasPath = Path.GetDirectoryName(sourceFilePath);
+                    string? binAtlasSubAtlasPath = Path.GetDirectoryName(binFilePath);
+
+                    if (sourceAtlasSubAtlasPath is not null)
                     {
                         FileManager.DeleteDirectoryIfExists(sourceAtlasSubAtlasPath);
                     }
 
-                    if (Path.GetDirectoryName(binFilePath) is string binAtlasSubAtlasPath)
+                    if (binAtlasSubAtlasPath is not null)
                     {
                         FileManager.DeleteDirectoryIfExists(binAtlasSubAtlasPath);
                         Architect.EditorData.SkipLoadingAssetsAt(binAtlasSubAtlasPath);
                     }
+
+                    GameLogger.Log($"Cleaning up ${sourceAtlasSubAtlasPath} and ${binAtlasSubAtlasPath} prior to atlas.");
                 }
                 else
                 {
@@ -292,6 +297,8 @@ namespace Murder.Editor.Importers
                     FileManager.DeleteDirectoryIfExists(binAtlasAssetPath);
 
                     Architect.EditorData.SkipLoadingAssetsAt(binAtlasAssetPath);
+
+                    GameLogger.Log($"Cleaning up ${sourceAtlasAssetPath} and ${binAtlasAssetPath} prior to atlas.");
                 }
             }
 
