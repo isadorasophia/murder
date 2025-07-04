@@ -31,6 +31,7 @@ public struct Rectangle : IEquatable<Rectangle>
     public Vector2 BottomCenter => new(X + (Width / 2f), Y + Height);
     public Vector2 BottomLeft => new(X, Y + Height);
     public Vector2 CenterLeft => new(X, Y + (Height / 2f));
+    public Vector2 CenterRight => new(X + Width, Y + (Height / 2f));
     public Point CenterPoint => new(X + Calculator.RoundToInt(Width / 2f), Y + Calculator.RoundToInt(Height / 2f));
     public Vector2 Center => new(X + (Width / 2f), Y + (Height / 2f));
 

@@ -462,7 +462,7 @@ public partial class Aseprite
                     }
                     else
                     {
-                        GameLogger.Log($"Aseprite file {file} has an unknown chunk type");
+                        GameLogger.Log($"Aseprite file {file} has an unknown chunk type ({chunkType})");
                     }
 
 
@@ -947,53 +947,6 @@ public partial class Aseprite
         }
     }
 
-    private Guid GetGuidLegacy(int layerIndex, int sliceIndex)
-    {
-        if (layerIndex >= 0)
-        {
-            using var md5 = MD5.Create();
-            // TODO: Shouldn't this take the file path instead on the file name?
-            byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes($"{Name}_{Layers[layerIndex].Name}"));
-            GameLogger.Warning($"Aseprite file {Source} doesn't have a baked GUID. Consider baking one on it for safety.");
-            return new Guid(hash);
-        }
-        else
-        {
-            string keyword = "guid:";
-            int keywordLength = keyword.Length;
-
-            foreach (var layer in Layers)
-            {
-                if (layer.UserData.Text != null && layer.UserData.Text.StartsWith(keyword, StringComparison.OrdinalIgnoreCase))
-                {
-                    return new Guid(layer.UserData.Text.Substring(keywordLength));
-                }
-            }
-
-            using var md5 = MD5.Create();
-            if (Slices.Count > 1)
-            {
-                var slice = Slices[sliceIndex];
-                if (slice.UserData.Text != null && slice.UserData.Text.StartsWith(keyword, StringComparison.OrdinalIgnoreCase))
-                {
-                    return new Guid(slice.UserData.Text.Substring(keywordLength));
-                }
-                // TODO: Remove this and always serialize using slice index.
-                // I'm doing this here so we don't have to relink EVERYTING in road to ghoulcrest
-                // Idealy we just add everything to the name and generate the GUID from that (even layers).
-                byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes($"{Name}_{Slices[sliceIndex].Name}"));
-                GameLogger.Warning($"Aseprite file {Source} doesn't have a baked GUID. Consider baking one on it for safety.");
-                return new Guid(hash);
-            }
-            else
-            {
-                byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes($"{Name}"));
-                GameLogger.Warning($"Aseprite file {Source} doesn't have a baked GUID. Consider baking one on it for safety.");
-                return new Guid(hash);
-            }
-        }
-    }
-
     private (bool baked, Guid guid) GetGuid(int layerIndex, int sliceIndex)
     {
         string keyword = "guid:";
@@ -1047,7 +1000,7 @@ public partial class Aseprite
         // No baked guids were found. Create one on the fly based on the file name.
         using var md5 = MD5.Create();
         Guid guid = new Guid(md5.ComputeHash(Encoding.Default.GetBytes($"{EditorFileHelper.Normalize(Source)}_{Slices[sliceIndex].Name}")));
-        GameLogger.Log($"Aseprite file {Source} doesn't have a baked GUID. Consider baking one on it for safety.");
+        GameLogger.Log($"Aseprite file {Source} slice {Slices[sliceIndex].Name}, ({sliceIndex+1}/{Slices.Count}), has no GUID. Consider baking: {guid}");
         return (false, guid);
     }
 
