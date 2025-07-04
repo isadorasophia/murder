@@ -100,8 +100,8 @@ namespace Murder.Editor.CustomEditors
         /// </summary>
         protected virtual void DrawEntityGroups(Stage stage)
         {
-            ImmutableDictionary<string, ImmutableArray<Guid>> folders = _world?.FetchFolders() ??
-                ImmutableDictionary<string, ImmutableArray<Guid>>.Empty;
+            ImmutableSortedDictionary<string, ImmutableArray<Guid>> folders = _world?.FetchFolders().ToImmutableSortedDictionary() ??
+                ImmutableSortedDictionary<string, ImmutableArray<Guid>>.Empty;
 
             string? hoveredGroup = stage.EditorHook.HoveringGroup;
             
