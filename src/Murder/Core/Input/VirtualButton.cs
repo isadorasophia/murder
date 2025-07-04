@@ -29,7 +29,14 @@ public class VirtualButton : IVirtualInput
             if (button.Check(inputState))
             {
                 Down = true;
-                Game.Input.UsingKeyboard = (button.Source == InputSource.Keyboard || button.Source == InputSource.Mouse);
+
+                bool usingKeyboard = (button.Source == InputSource.Keyboard || button.Source == InputSource.Mouse);
+                if (usingKeyboard != Game.Input.UsingKeyboard)
+                {
+                    Game.Input.ControlChange = Game.NowUnscaled;
+                    Game.Input.UsingKeyboard = usingKeyboard;
+                }
+
                 _lastPressedButton[Game.Input.UsingKeyboard ? 1 : 0] = button;
                 break;
             }

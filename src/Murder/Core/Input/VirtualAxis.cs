@@ -72,7 +72,13 @@ namespace Murder.Core.Input
                 if (vector.HasValue())
                 {
                     Down = true;
-                    Game.Input.UsingKeyboard = (axis.Source == InputSource.Keyboard || axis.Source == InputSource.Mouse);
+                    bool usingKeyboard = (axis.Source == InputSource.Keyboard || axis.Source == InputSource.Mouse);
+                    if (usingKeyboard != Game.Input.UsingKeyboard)
+                    {
+                        Game.Input.ControlChange = Game.NowUnscaled;
+                        Game.Input.UsingKeyboard = usingKeyboard;
+                    }
+
                     _lastPressedButton[Game.Input.UsingKeyboard ? 1 : 0] = axis;
                     Value += vector;
                 }

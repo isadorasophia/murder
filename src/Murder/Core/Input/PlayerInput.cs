@@ -41,6 +41,7 @@ public class PlayerInput
     /// If true player is using the keyboard, false means the player is using a game controller
     /// </summary>
     public bool UsingKeyboard = false;
+    public float ControlChange = 0;
 
     /// <summary>
     /// Keyboard ignored because the player is probably typing something on ImGui
