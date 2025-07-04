@@ -194,7 +194,7 @@ internal static class LocalizationExporter
                 if (!updated && !string.IsNullOrEmpty(translated))
                 {
                     string reference = tokens.Length > 2 ? tokens[2] : string.Empty;
-                    GameLogger.Error($"Unable to find {guid} string for '{reference}'.");
+                    GameLogger.Warning($"Unable to find {guid} string for '{reference}'.");
                 }
             }
         }
