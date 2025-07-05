@@ -378,7 +378,7 @@ namespace Murder.Data
         /// </summary>
         private void PreloadFontTextures()
         {
-            using PerfTimeRecorder recorder = new($"Loading Fonts and Atlas");
+            using PerfTimeRecorder recorder = new($"Loading fonts");
 
             lock (_fonts)
             {

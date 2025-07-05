@@ -870,10 +870,6 @@ namespace Murder.Editor.Data
         /// </summary>
         public void AfterContentLoaded()
         {
-            ApplyEventManagerChangesIfNeeded();
-
-            FlushResourceImporters();
-
             InitializeShaderFileSystemWather();
             InitializeLocalizationFileSystemWather();
 
@@ -892,6 +888,9 @@ namespace Murder.Editor.Data
             {
                 return;
             }
+
+            ApplyEventManagerChangesIfNeeded();
+            FlushResourceImporters();
 
             base.AfterContentLoadedFromMainThread();
         }
