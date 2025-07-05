@@ -28,6 +28,7 @@ namespace Murder.Core.Geometry
         public int Right => X + Width;
         public int Top => Y;
         public int Bottom => Y + Height;
+        public Point BottomCenter => new Point(X + Calculator.RoundToInt(Width / 2f), Y + Height);
 
         [JsonIgnore]
         public Point Size
