@@ -230,7 +230,7 @@ public static partial class RenderServices
     {
         if (!asset.Animations.TryGetValue(animationId, out var animation))
         {
-            GameLogger.Log($"Couldn't find animation {animationId}.");
+            GameLogger.Log($"Couldn't find animation {animationId} for {asset.Guid}.");
             return FrameInfo.Fail;
         }
 
