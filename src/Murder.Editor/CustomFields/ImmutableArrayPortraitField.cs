@@ -64,7 +64,7 @@ namespace Murder.Editor.CustomFields
             Portrait portrait = element.Portrait;
             if (DrawValue(ref portrait, nameof(Portrait.Sprite)))
             {
-                element = element with { Portrait = element.Portrait.WithSprite(portrait.Sprite) };
+                element = element with { Portrait = element.Portrait with { Sprite = portrait.Sprite } };
                 modified = true;
             }
 
@@ -72,7 +72,7 @@ namespace Murder.Editor.CustomFields
             string animation = element.Portrait.AnimationId;
             if (EditorAssetHelpers.DrawComboBoxFor(element.Portrait.Sprite, ref animation))
             {
-                element = element with { Portrait = element.Portrait.WithAnimationId(animation) };
+                element = element with { Portrait = element.Portrait with { AnimationId = animation } };
                 modified = true;
             }
             ImGui.PopItemWidth();
