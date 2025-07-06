@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework.Input;
-using Murder.Core.Geometry;
+﻿using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Services;
@@ -130,7 +129,7 @@ namespace Murder.Editor.Services
                 }
 
                 var target = (cursorPosition + _dragOffset).Point();
-                if (Game.Input.Down(Keys.LeftControl))
+                if (Game.Input.Down(InputHelpers.OSActionModifier))
                 {
                     target = target.SnapToGridDelta();
                 }
@@ -307,7 +306,7 @@ namespace Murder.Editor.Services
             if (_draggingHandle == id)
             {
                 var target = (cursorPosition + _dragOffset).Point();
-                if (Game.Input.Down(Keys.LeftControl))
+                if (Game.Input.Down(InputHelpers.OSActionModifier))
                 {
                     target = target.SnapToGridDelta();
                 }
