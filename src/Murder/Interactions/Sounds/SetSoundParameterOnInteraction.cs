@@ -17,17 +17,17 @@ namespace Murder.Interactions
     [Requires(typeof(SoundParameterComponent))]
     public readonly struct SetSoundParameterOnInteraction : IInteraction
     {
-        [Tooltip("Blackboard variables")]
-        public readonly ImmutableArray<SoundRuleAction> Triggers = ImmutableArray<SoundRuleAction>.Empty;
+        [Tooltip("Sets a SoundBlackboard.cs field")]
+        public readonly ImmutableArray<SoundRuleAction> BlackboardTriggers = ImmutableArray<SoundRuleAction>.Empty;
 
-        [Tooltip("Global parameters")]
-        public readonly ImmutableArray<ParameterRuleAction> Parameters = ImmutableArray<ParameterRuleAction>.Empty;
+        [Tooltip("Set a parameter directly in the middleware, bypassing any blackboard fields")]
+        public readonly ImmutableArray<ParameterRuleAction> MiddlewareParameterTriggers = ImmutableArray<ParameterRuleAction>.Empty;
 
         public SetSoundParameterOnInteraction() { }
 
         public void Interact(World world, Entity interactor, Entity? interacted)
         {
-            foreach (SoundRuleAction action in Triggers)
+            foreach (SoundRuleAction action in BlackboardTriggers)
             {
                 if (string.IsNullOrEmpty(action.Fact.Name))
                 {
@@ -57,7 +57,7 @@ namespace Murder.Interactions
                 }
             }
 
-            foreach (ParameterRuleAction p in Parameters)
+            foreach (ParameterRuleAction p in MiddlewareParameterTriggers)
             {
                 if (p.Parameter.IsGuidEmpty)
                 {
