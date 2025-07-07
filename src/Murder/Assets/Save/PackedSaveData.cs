@@ -14,14 +14,14 @@ public class SaveDataInfo
         Name = name;
     }
 
-    public static string GetFullPackedSavePath(int slot) => 
-        Path.Join(Game.Data.SaveBasePath, slot.ToString(), PackedSaveData.Name);
+    public static string GetFullPackedSavePath(int slot, string? basepath = null) => 
+        Path.Join(basepath ?? Game.Data.SaveBasePath, slot.ToString(), PackedSaveData.Name);
 
-    public static string GetFullPackedAssetsSavePath(int slot) =>
-        Path.Join(Game.Data.SaveBasePath, slot.ToString(), PackedSaveAssetsData.Name);
+    public static string GetFullPackedAssetsSavePath(int slot, string? basepath = null) =>
+        Path.Join(basepath ?? Game.Data.SaveBasePath, slot.ToString(), PackedSaveAssetsData.Name);
 
-    public static string GetFullPackedSaveDirectory(int slot) =>
-        Path.Join(Game.Data.SaveBasePath, slot.ToString());
+    public static string GetFullPackedSaveDirectory(int slot, string? basePath = null) =>
+        Path.Join(basePath ?? Game.Data.SaveBasePath, slot.ToString());
 
     public static string GetFullPackedSaveBackupDirectory(int slot) =>
         Path.Join(Game.Data.SaveBasePath, slot.ToString(), "backup");

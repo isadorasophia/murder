@@ -137,7 +137,7 @@ namespace Murder.Assets
             SaveName = name;
         }
 
-        public virtual void OnBeforeSave() { }
+        public virtual void OnBeforeSave(string? overridePath) { }
 
         /// <summary>
         /// Get a world asset to instantiate in the game.

@@ -437,7 +437,7 @@ namespace Murder.Editor.Data
 
                 if (match)
                 {
-                    PendingSave = SerializeSaveAsync();
+                    PendingSave = SerializeSaveAsync(overridePath: null);
                     await PendingSave.Value;
 
                     asset.FileChanged = false;

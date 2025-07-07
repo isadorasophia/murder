@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets;
 using Murder.Diagnostics;
+using Murder.Serialization;
 using Murder.Utilities;
 using System.IO.Compression;
 using System.Net.NetworkInformation;
@@ -50,9 +51,52 @@ public static class FeedbackServices
         return new FileWrapper(buffer, $"{save.Name}_save.zip");
     }
 
+    private static async Task<FileWrapper?> CreateTemporarySaveAndZipAsync()
+    {
+        SaveData? save = Game.Data.TryGetActiveSaveData();
+        if (save is null)
+        {
+            return null;
+        }
+
+        string temporaryPath = Path.Combine(Path.GetTempPath(), $"nv_save_{Path.GetRandomFileName()}");
+        _ = FileManager.GetOrCreateDirectory(temporaryPath);
+
+        bool succeeded = await Game.Data.CreateTemporarySaveAsync(temporaryPath);
+        if (!succeeded)
+        {
+            return null;
+        }
+
+        // send the same file formats as the actual save.
+        temporaryPath = Path.Join(temporaryPath, $"{save.SaveSlot}");
+
+        using Stream stream = new MemoryStream();
+        try
+        {
+            ZipFile.CreateFromDirectory(temporaryPath, stream);
+        }
+        catch
+        {
+            return null;
+        }
+
+        byte[] buffer = new byte[stream.Length];
+        stream.Position = 0;
+        await stream.ReadAsync(buffer);
+
+        return new FileWrapper(buffer, $"{save.Name}_save.zip");
+    }
+
     public static async Task<bool> SendSaveDataFeedbackAsync(string name, string description, int machineId, params (string id, string text)[] extraText)
     {
         List<(string name, FileWrapper file)> files = new();
+
+        FileWrapper? currentSaveData = await CreateTemporarySaveAndZipAsync();
+        if (currentSaveData is not null)
+        {
+            files.Add(("c_save", currentSaveData.Value));
+        }
 
         FileWrapper? zippedSaveData = await TryZipActiveSaveAsync();
         if (zippedSaveData is not null)

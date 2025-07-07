@@ -312,10 +312,23 @@ namespace Murder.Data
         /// </summary>
         public void QuickSave()
         {
-            PendingSave = SerializeSaveAsync();
+            if (PendingSave is not null && !PendingSave.Value.IsCompleted)
+            {
+                return;
+            }
+
+            PendingSave = SerializeSaveAsync(overridePath: null);
         }
 
-        protected async ValueTask<bool> SerializeSaveAsync()
+        /// <summary>
+        /// Quickly serialize our save assets.
+        /// </summary>
+        public async ValueTask<bool> CreateTemporarySaveAsync(string path)
+        {
+            return await SerializeSaveAsync(path);
+        }
+
+        protected async ValueTask<bool> SerializeSaveAsync(string? overridePath)
         {
             if (PendingSave is not null && !PendingSave.Value.IsCompleted)
             {
@@ -340,7 +353,7 @@ namespace Murder.Data
                 PerfTimeRecorder saveToJsonRecorder = new("Serializing save");
 
                 // make sure we do any last minute changes...
-                _activeSaveData.OnBeforeSave();
+                _activeSaveData.OnBeforeSave(overridePath);
 
                 SaveDataTracker tracker = new(_allSavedData);
                 string trackerJson = FileManager.SerializeToJson(tracker);
@@ -363,8 +376,8 @@ namespace Murder.Data
                 PackedSaveAssetsData packedAssetsData = new([.. _currentSaveAssets.Values]);
                 string packedAssetsDataJson = FileManager.SerializeToJson(packedAssetsData);
 
-                string packedSavePath = SaveDataInfo.GetFullPackedSavePath(slot);
-                string packedSaveAssetsPath = SaveDataInfo.GetFullPackedAssetsSavePath(slot);
+                string packedSavePath = SaveDataInfo.GetFullPackedSavePath(slot, overridePath);
+                string packedSaveAssetsPath = SaveDataInfo.GetFullPackedAssetsSavePath(slot, overridePath);
 
                 // before doing anything, let's save a backup, shall we?
                 if (File.Exists(packedSavePath) && File.Exists(packedSaveAssetsPath))
