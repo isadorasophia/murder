@@ -60,21 +60,24 @@ public static class FeedbackServices
             files.Add(("save", zippedSaveData.Value));
         }
 
-        FileWrapper? screenshot = TryGetScreenshot(name);
-        if (screenshot is not null)
+        var screenshot = TryGetScreenshot(name);
+        if (screenshot is not null && screenshot?.file != null)
         {
-            files.Add(("screenshot", screenshot.Value));
+            files.Add(("screenshot", screenshot.Value.file.Value));
         }
 
-        FileWrapper? gameplayScreenshot = TryGetGameplayScreenshot(name);
-        if (gameplayScreenshot is not null)
+        var gameplayScreenshot = TryGetGameplayScreenshot(name);
+        if (gameplayScreenshot is not null && gameplayScreenshot.Value.file != null)
         {
-            files.Add(("g_screenshot", gameplayScreenshot.Value));
+            files.Add(("g_screenshot", gameplayScreenshot.Value.file.Value));
         }
 
         string computerName = GenerateFunnyName(machineId);
-        
+
         await SendFeedbackAsync(Game.Profile.FeedbackUrl, $"{StringHelper.CapitalizeFirstLetter(computerName)}: {name}", description, files, extraText);
+
+        gameplayScreenshot?.texture.Dispose();
+        screenshot?.texture.Dispose();
         return true;
     }
 
@@ -121,7 +124,7 @@ public static class FeedbackServices
         }
     }
 
-    private static FileWrapper? TryGetGameplayScreenshot(string name)
+    private static (FileWrapper? file, Texture texture)? TryGetGameplayScreenshot(string name)
     {
         // Step 1: Capture the screenshot
         using Texture2D? screenshotTexture = RenderServices.CreateGameplayScreenshot();
@@ -130,10 +133,10 @@ public static class FeedbackServices
             return null;
         }
 
-        return TryGetScreenshotFromTexture(screenshotTexture, $"{name}_gameplay_screenshot");
+        return (file: TryGetScreenshotFromTexture(screenshotTexture, $"{name}_gameplay_screenshot"), texture: screenshotTexture);
     }
 
-    private static FileWrapper? TryGetScreenshot(string name)
+    private static (FileWrapper? file, Texture texture)? TryGetScreenshot(string name)
     {
         // Step 1: Capture the screenshot
         using Texture2D? screenshotTexture = RenderServices.CreateScreenshot();
@@ -142,7 +145,7 @@ public static class FeedbackServices
             return null;
         }
 
-        return TryGetScreenshotFromTexture(screenshotTexture, $"{name}_screenshot");
+        return (file: TryGetScreenshotFromTexture(screenshotTexture, $"{name}_screenshot"), texture: screenshotTexture);
     }
 
     private static FileWrapper? TryGetScreenshotFromTexture(Texture2D texture, string name)
@@ -158,8 +161,6 @@ public static class FeedbackServices
             }
 
             // Step 2: Return the FileWrapper containing the PNG file data
-            texture.Dispose(); // Dispose of the texture to free resources
-
             return new FileWrapper(imageBytes, $"{name}.png");
         }
         catch (Exception ex)
