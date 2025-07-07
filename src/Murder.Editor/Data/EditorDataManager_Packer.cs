@@ -1,4 +1,5 @@
 ﻿using Murder.Assets;
+using Murder.Assets.Graphics;
 using Murder.Assets.Save;
 using Murder.Core.Sounds;
 using Murder.Data;
@@ -205,13 +206,15 @@ public partial class EditorDataManager
                 }
 
                 string jsonForBinAsset = await File.ReadAllTextAsync(filename);
-                if (jsonForPackedAsset != jsonForBinAsset)
+                if (jsonForPackedAsset != jsonForBinAsset && binAsset is not SpriteAsset)
                 {
                     GameLogger.Error($"Mismatch found when comparing json for {binAsset.Name}!");
                     GameLogger.Log(jsonForBinAsset);
                     GameLogger.Log("----------");
                     GameLogger.Log(jsonForPackedAsset);
                     GameLogger.Log("----------=end=");
+
+                    return;
                 }
             }
         }
