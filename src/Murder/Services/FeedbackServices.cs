@@ -158,6 +158,8 @@ public static class FeedbackServices
             }
 
             // Step 2: Return the FileWrapper containing the PNG file data
+            texture.Dispose(); // Dispose of the texture to free resources
+
             return new FileWrapper(imageBytes, $"{name}.png");
         }
         catch (Exception ex)
