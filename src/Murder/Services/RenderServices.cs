@@ -1068,13 +1068,12 @@ public static partial class RenderServices
         var gd = Game.GraphicsDevice;
 
         RenderTarget2D rt = new(gd, mainTarget.Width, mainTarget.Height, false, mainTarget.Format, mainTarget.DepthStencilFormat, mainTarget.MultiSampleCount, RenderTargetUsage.DiscardContents);
-        RenderTarget2D? previousRenderTarget = (RenderTarget2D)Game.GraphicsDevice.GetRenderTargets().FirstOrDefault().RenderTarget;
 
         gd.SetRenderTarget(rt);
         gd.Clear(Color.Transparent);
         DrawTextureQuad(mainTarget, mainTarget.Bounds, rt.Bounds, Matrix.Identity, Color.White, BlendState.Opaque);
 
-        gd.SetRenderTarget(previousRenderTarget);
+        gd.SetRenderTarget(null);
         return rt;
     }
 
