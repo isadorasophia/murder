@@ -213,6 +213,9 @@ public class EditorSettingsAsset : GameAsset
     [Tooltip("Requires editor restart")]
     public bool LockFramerate = false;
 
+    [Serialize]
+    public bool CheckForPackedAssetsIntegrity = false;
+
     public void FavoriteAsset(Guid guid)
     {
         _favoriteAssets.Add(guid);

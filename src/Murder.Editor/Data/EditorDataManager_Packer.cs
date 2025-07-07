@@ -1,4 +1,5 @@
 ﻿using Murder.Assets;
+using Murder.Assets.Save;
 using Murder.Core.Sounds;
 using Murder.Data;
 using Murder.Diagnostics;
@@ -113,7 +114,56 @@ public partial class EditorDataManager
             }
 
             GameLogger.Log($"Published game content with {preloadAssets.Count} (preload) and {totalAssets} (gameplay) assets at '{PublishedPackedAssetsFullPath}'.");
+
+            if (EditorSettings.CheckForPackedAssetsIntegrity)
+            {
+                CheckForPackedAssetsIntegrity(packedGameData.Length);
+            }
         });
+    }
+
+    private void CheckForPackedAssetsIntegrity(int total)
+    {
+        GameLogger.Log($"Checking for files integrity after publishing...");
+
+        for (int i = 0; i < total; i++)
+        {
+            string packedGameDataPath = Path.Join(PublishedPackedAssetsFullPath, string.Format(PackedGameData.Name, i));
+            PackedGameData? data = FileManager.UnpackContent<PackedGameData>(packedGameDataPath);
+            if (data is null)
+            {
+                GameLogger.Error($"Unable to unpack data file {i}!");
+                return;
+            }
+
+            foreach (GameAsset packedAsset in data.Assets)
+            {
+                if (Game.Data.TryGetAsset(packedAsset.Guid) is not GameAsset asset)
+                {
+                    GameLogger.Error($"Unable to find matching asset {packedAsset.Name}!");
+                    return;
+                }
+
+                string jsonForAsset = FileManager.SerializeToJson(asset);
+                string jsonForPackedAsset = FileManager.SerializeToJson(packedAsset);
+                if (jsonForAsset != jsonForPackedAsset)
+                {
+                    GameLogger.Error($"Mismatch found when comparing json for {packedAsset.Name}!");
+                    GameLogger.Log(jsonForAsset);
+                    GameLogger.Log("----------");
+                    GameLogger.Log(jsonForPackedAsset);
+                    return;
+                }
+
+                if (asset.Equals(packedAsset))
+                {
+                    GameLogger.Error($"Mismatch found when comparing assets for {packedAsset.Name}!");
+                    return;
+                }
+            }
+        }
+
+        GameLogger.Log($"Everything looks good!");
     }
 
     private bool IsPathAtPreload(string path)
