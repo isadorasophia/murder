@@ -1070,6 +1070,7 @@ public static partial class RenderServices
         RenderTarget2D rt = new(gd, mainTarget.Width, mainTarget.Height, false, mainTarget.Format, mainTarget.DepthStencilFormat, mainTarget.MultiSampleCount, RenderTargetUsage.DiscardContents);
         gd.SetRenderTarget(rt);
         gd.Clear(Color.Transparent);
+        gd.SetRenderTarget(null);
 
         DrawTextureQuad(mainTarget, mainTarget.Bounds, rt.Bounds, Matrix.Identity, Color.White, BlendState.Opaque);
         return rt;
