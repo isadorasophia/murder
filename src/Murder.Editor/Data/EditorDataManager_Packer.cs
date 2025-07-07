@@ -6,6 +6,7 @@ using Murder.Diagnostics;
 using Murder.Editor.Utilities;
 using Murder.Serialization;
 using Murder.Utilities;
+using System.Collections.Generic;
 
 namespace Murder.Editor.Data;
 
@@ -15,7 +16,7 @@ namespace Murder.Editor.Data;
 public partial class EditorDataManager
 {
     /// <summary>
-    /// File path of the packed contents for the released game.
+    /// File relativePath of the packed contents for the released game.
     /// </summary>
     public override string PublishedPackedAssetsFullPath => FileHelper.GetPath(Architect.EditorData.PackedSourceDirectoryPath, _packedGameDataDirectory);
 
@@ -117,15 +118,16 @@ public partial class EditorDataManager
 
             if (EditorSettings.CheckForPackedAssetsIntegrity)
             {
-                CheckForPackedAssetsIntegrity(packedGameData.Length);
+                await CheckForPackedAssetsIntegrity(packedGameData.Length);
             }
         });
     }
 
-    private void CheckForPackedAssetsIntegrity(int total)
+    private async Task CheckForPackedAssetsIntegrity(int total)
     {
         GameLogger.Log($"Checking for files integrity after publishing...");
 
+        Dictionary<Guid, string> packedJsonContent = [];
         for (int i = 0; i < total; i++)
         {
             string packedGameDataPath = Path.Join(PublishedPackedAssetsFullPath, string.Format(PackedGameData.Name, i));
@@ -159,6 +161,57 @@ public partial class EditorDataManager
                 {
                     GameLogger.Error($"Mismatch found when comparing assets for {packedAsset.Name}!");
                     return;
+                }
+
+                packedJsonContent[packedAsset.Guid] = jsonForPackedAsset;
+            }
+        }
+
+        GameLogger.Log($"Loaded assets look good so far, now we'll check for all json assets in the bin...");
+
+        string[] relativePaths =
+        {
+            Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath),
+            Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.ContentECSPath)
+        };
+
+        foreach (string relativePath in relativePaths)
+        {
+            string fullPath = FileHelper.GetPath(relativePath);
+
+            foreach (string filename in EditorFileManager.GetAllFilesInFolder(fullPath, "*.json", recursive: true))
+            {
+                if (ShouldSkipAsset(filename))
+                {
+                    continue;
+                }
+
+                GameAsset? binAsset = TryLoadAsset(filename, fullPath, skipFailures: true, hasEditorPath: false);
+                if (binAsset == null)
+                {
+                    GameLogger.Error($"Unable to find asset at {filename}!");
+                    return;
+                }
+
+                if (binAsset.Name.StartsWith('_'))
+                {
+                    continue;
+                }
+
+                if (!packedJsonContent.TryGetValue(binAsset.Guid, out string? jsonForPackedAsset))
+                {
+                    GameLogger.Error($"We did not pack {binAsset.Name}?");
+                    return;
+                }
+
+                string jsonForBinAsset = await File.ReadAllTextAsync(filename);
+                if (jsonForPackedAsset != jsonForBinAsset)
+                {
+                    GameLogger.Error($"Mismatch found when comparing json for {binAsset.Name}!");
+                    GameLogger.Log(jsonForBinAsset);
+                    GameLogger.Log("----------");
+                    GameLogger.Log(jsonForPackedAsset);
+                    GameLogger.Log("----------=end=");
                 }
             }
         }
