@@ -1022,9 +1022,9 @@ public static partial class RenderServices
     }
 
     /// <summary>
+    /// This should only be called on the main thread, since it requires the graphics device.
     /// Don't forget to dispose this!
     /// </summary>
-    /// <returns></returns>
     public static Texture2D? CreateGameplayScreenshot()
     {
         if (Game.Instance.ActiveScene?.RenderContext is not RenderContext render)
@@ -1060,9 +1060,9 @@ public static partial class RenderServices
     }
 
     /// <summary>
+    /// This should only be called on the main thread, since it requires the graphics device.
     /// Don't forget to dispose this!
     /// </summary>
-    /// <returns></returns>
     public static Texture2D? CreateScreenshotFromTarget(RenderTarget2D mainTarget)
     {
         var gd = Game.GraphicsDevice;

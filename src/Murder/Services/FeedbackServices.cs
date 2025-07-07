@@ -88,9 +88,34 @@ public static class FeedbackServices
         return new FileWrapper(buffer, $"{save.Name}_save.zip");
     }
 
-    public static async Task<bool> SendSaveDataFeedbackAsync(string name, string description, int machineId, params (string id, string text)[] extraText)
+    public readonly struct ScreenshotFeedbackData
     {
-        List<(string name, FileWrapper file)> files = new();
+        public readonly string Identifier;
+        public readonly FileWrapper File;
+        public readonly Texture Texture;
+
+        public ScreenshotFeedbackData(string identifier, FileWrapper file, Texture texture)
+        {
+            Identifier = identifier;
+            File = file;
+            Texture = texture;
+        }
+    }
+
+    public readonly struct FeedbackData
+    {
+        public readonly string Name { get; init; } = string.Empty;
+        public readonly string Description { get; init; } = string.Empty;
+        public readonly int MachineId { get; init; } = 0;
+
+        public readonly ScreenshotFeedbackData?[]? Screenshots { get; init; } = null;
+
+        public FeedbackData() { }
+    }
+
+    public static async Task<bool> SendSaveDataFeedbackAsync(FeedbackData data)
+    {
+        List<(string name, FileWrapper file)> files = [];
 
         FileWrapper? currentSaveData = await CreateTemporarySaveAndZipAsync();
         if (currentSaveData is not null)
@@ -104,28 +129,35 @@ public static class FeedbackServices
             files.Add(("save", zippedSaveData.Value));
         }
 
-        var screenshot = TryGetScreenshot(name);
-        if (screenshot is not null && screenshot?.file != null)
+        if (data.Screenshots is not null)
         {
-            files.Add(("screenshot", screenshot.Value.file.Value));
+            foreach (ScreenshotFeedbackData? screenshot in data.Screenshots)
+            {
+                if (screenshot is null)
+                {
+                    continue;
+                }
+
+                files.Add((screenshot.Value.Identifier, screenshot.Value.File));
+            }
         }
 
-        var gameplayScreenshot = TryGetGameplayScreenshot(name);
-        if (gameplayScreenshot is not null && gameplayScreenshot.Value.file != null)
+        string computerName = GenerateFunnyName(data.MachineId);
+
+        await SendFeedbackAsync(Game.Profile.FeedbackUrl, $"{StringHelper.CapitalizeFirstLetter(computerName)}: {data.Name}", data.Description, files);
+
+        if (data.Screenshots is not null)
         {
-            files.Add(("g_screenshot", gameplayScreenshot.Value.file.Value));
+            foreach (ScreenshotFeedbackData? screenshot in data.Screenshots)
+            {
+                screenshot?.Texture.Dispose();
+            }
         }
 
-        string computerName = GenerateFunnyName(machineId);
-
-        await SendFeedbackAsync(Game.Profile.FeedbackUrl, $"{StringHelper.CapitalizeFirstLetter(computerName)}: {name}", description, files, extraText);
-
-        gameplayScreenshot?.texture.Dispose();
-        screenshot?.texture.Dispose();
         return true;
     }
 
-    public static async Task SendFeedbackAsync(string url, string title, string description, IEnumerable<(string name, FileWrapper file)> files, (string id, string text)[] extraText)
+    public static async Task SendFeedbackAsync(string url, string title, string description, IEnumerable<(string name, FileWrapper file)> files)
     {
         if (string.IsNullOrWhiteSpace(url))
         {
@@ -140,11 +172,6 @@ public static class FeedbackServices
             content.Add(new StringContent(title, Encoding.UTF8), "Title");
             content.Add(new StringContent(description, Encoding.UTF8), "Description");
             content.Add(new StringContent(GameLogger.GetCurrentLog(), Encoding.UTF8), "Log");
-
-            foreach (var text in extraText)
-            {
-                content.Add(new StringContent(text.text, Encoding.UTF8), text.id);
-            }
 
             foreach (var f in files)
             {
@@ -168,7 +195,7 @@ public static class FeedbackServices
         }
     }
 
-    private static (FileWrapper? file, Texture texture)? TryGetGameplayScreenshot(string name)
+    public static ScreenshotFeedbackData? TryGetGameplayScreenshot(string name)
     {
         // Step 1: Capture the screenshot
         using Texture2D? screenshotTexture = RenderServices.CreateGameplayScreenshot();
@@ -177,10 +204,21 @@ public static class FeedbackServices
             return null;
         }
 
-        return (file: TryGetScreenshotFromTexture(screenshotTexture, $"{name}_gameplay_screenshot"), texture: screenshotTexture);
+        if (TryGetScreenshotFromTexture(screenshotTexture, $"{name}_gameplay_screenshot") is not FileWrapper fw)
+        {
+            return null;
+        }
+
+        return new(
+            identifier: "g_screenshot",
+            file: fw,
+            texture: screenshotTexture);
     }
 
-    private static (FileWrapper? file, Texture texture)? TryGetScreenshot(string name)
+    /// <summary>
+    /// Should only be called on the main thread! This required the graphics device!
+    /// </summary>
+    public static ScreenshotFeedbackData? TryGetScreenshot(string name)
     {
         // Step 1: Capture the screenshot
         using Texture2D? screenshotTexture = RenderServices.CreateScreenshot();
@@ -189,9 +227,20 @@ public static class FeedbackServices
             return null;
         }
 
-        return (file: TryGetScreenshotFromTexture(screenshotTexture, $"{name}_screenshot"), texture: screenshotTexture);
+        if (TryGetScreenshotFromTexture(screenshotTexture, $"{name}_screenshot") is not FileWrapper fw)
+        {
+            return null;
+        }
+
+        return new(
+            identifier: "screenshot",
+            file: fw, 
+            texture: screenshotTexture);
     }
 
+    /// <summary>
+    /// Should only be called on the main thread! This required the graphics device!
+    /// </summary>
     private static FileWrapper? TryGetScreenshotFromTexture(Texture2D texture, string name)
     {
         try
