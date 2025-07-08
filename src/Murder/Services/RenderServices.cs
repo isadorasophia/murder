@@ -1220,11 +1220,5 @@ public static partial class RenderServices
         return null;
     }
 
-    public static Point MeasureText(int font, string text)
-    {
-        PixelFont pixelFont = Game.Data.GetFont(font);
-        return new Point(pixelFont.GetLineWidth(text), pixelFont.LineHeight);
-    }
-
     #endregion
 }
