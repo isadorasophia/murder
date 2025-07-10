@@ -613,12 +613,29 @@ namespace Murder.Utilities
 
         public static int RoundToInt(double v) => RoundToInt((float)v);
 
+        public static int CeilingToInt(float v) => (int)MathF.Ceiling(v);
+
         /// <summary>
         /// Rounds and converts a number to integer with <see cref="MathF.Round(float)"/>.
         /// </summary>
         public static int RoundToInt(float v) => (int)MathF.Round(v);
 
         public static int RoundToEven(float v) => (int)MathF.Round(v / 2, MidpointRounding.AwayFromZero) * 2;
+
+        public static int FloorOrCeilFromThreshold(float v, float threshold)
+        {
+            if (v <= 0)
+            {
+                return 0;
+            }
+
+            if (v < threshold)
+            {
+                return Calculator.CeilingToInt(v);
+            }
+
+            return Calculator.FloorToInt(v);
+        }
 
         public static int ManhattanDistance(Point point1, Point point2)
         {
