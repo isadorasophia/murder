@@ -129,6 +129,11 @@ namespace Murder.Editor.Services
                 }
 
                 var target = (cursorPosition + _dragOffset).Point();
+                if (Game.Input.Down(InputHelpers.OSActionModifier))
+                {
+                    target = target.SnapToGridDelta();
+                }
+                
                 switch (_draggingStyle)
                 {
                     case DragStyle.Move:
@@ -301,6 +306,11 @@ namespace Murder.Editor.Services
             if (_draggingHandle == id)
             {
                 var target = (cursorPosition + _dragOffset).Point();
+                if (Game.Input.Down(InputHelpers.OSActionModifier))
+                {
+                    target = target.SnapToGridDelta();
+                }
+
                 if (!Game.Input.Down(MurderInputButtons.LeftClick))
                 {
                     _draggingHandle = String.Empty;
