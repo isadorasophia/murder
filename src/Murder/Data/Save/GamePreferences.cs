@@ -23,10 +23,7 @@ namespace Murder.Save
         protected float _musicVolume = 1;
 
         [Bang.Serialize]
-        protected bool _bloom = false;
-
-        [Bang.Serialize]
-        protected bool _downscale = false;
+        protected bool _showFps = false;
 
         [Bang.Serialize]
         protected LanguageId _language = LanguageId.English;
@@ -73,6 +70,8 @@ namespace Murder.Save
 
         public LanguageId Language => _language;
 
+        public bool ShowFps => _showFps;
+
         public void SetButtonBindingsInfos(ImmutableArray<ButtonBindingsInfo> buttonBindingsInfos)
         {
             this.buttonBindingsInfos = buttonBindingsInfos;
@@ -105,26 +104,18 @@ namespace Murder.Save
             return SetMusicVolume(_musicVolume == 1 ? 0 : 1);
         }
 
+        public bool ToggleShowFps()
+        {
+            SetShowFps(!_showFps);
+            return _showFps;
+        }
+
         public float SetMusicVolume(float value)
         {
             _musicVolume = value;
 
             OnPreferencesChanged();
             return _musicVolume;
-        }
-
-        public bool ToggleBloomAndSave()
-        {
-            _bloom = !_bloom;
-            OnPreferencesChanged();
-            return _bloom;
-        }
-
-        public bool ToggleDownscaleAndSave()
-        {
-            _downscale = !_downscale;
-            OnPreferencesChanged();
-            return _downscale;
         }
 
         public void SetLanguage(LanguageId id)
@@ -144,6 +135,17 @@ namespace Murder.Save
             OnPreferencesChanged();
 
             return _fullscreen;
+        }
+
+        private void SetShowFps(bool showFps)
+        {
+            if (_showFps == showFps)
+            {
+                return;
+            }
+
+            _showFps = showFps;
+            OnPreferencesChanged();
         }
 
         public void OnPreferencesChanged()
