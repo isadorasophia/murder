@@ -172,11 +172,15 @@ public readonly struct Viewport
                         );
 
 
-                    bool failedMinimumConstraint = false;
                     if (newNativeResolution.X < minRes.X || newNativeResolution.Y < minRes.Y)
                     {
                         targetScale--;
-                        
+                        if (targetScale < 1)
+                        {
+                            targetScale = 1;
+                            FailedConstraints = true;
+                        }
+
                         outputSize = nativeResolution.ToVector2() * targetScale;
                         missingPixels = (viewportSize.ToVector2() - outputSize) / targetScale;
 
@@ -185,13 +189,6 @@ public readonly struct Viewport
                             Calculator.RoundToInt(nativeResolution.X + missingPixels.X),
                             Calculator.RoundToInt(nativeResolution.Y + missingPixels.Y)
                             );
-
-                        if (newNativeResolution.X < minRes.X || newNativeResolution.Y < minRes.Y)
-                        {
-                            FailedConstraints = true;
-                        }
-
-                        failedMinimumConstraint = true;
                     }
 
 
