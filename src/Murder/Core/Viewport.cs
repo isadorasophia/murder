@@ -35,6 +35,8 @@ public readonly struct Viewport
 
     public readonly Vector2 Center;
 
+    public readonly bool FailedConstraints;
+
     public Viewport(Point viewportSize, Point nativeResolution, ViewportResizeStyle resizeStyle)
     {
         Size = viewportSize;
@@ -99,13 +101,13 @@ public readonly struct Viewport
                     Point adjustedNativeResolution = new Point(
                         Math.Min(nativeResolution.X, Calculator.RoundToInt(nativeResolution.Y * targetAspectRatio)),
                         Math.Min(nativeResolution.Y, Calculator.RoundToInt(nativeResolution.X / targetAspectRatio))
-                        );  
+                        );
 
                     //Scale the game to fit the window, keeping aspect ratio.
                     Vector2 stretchScale = new Vector2(viewportSize.X / (float)adjustedNativeResolution.X, viewportSize.Y / (float)adjustedNativeResolution.Y);
                     float minScale = Math.Min(stretchScale.X, stretchScale.Y);
                     float snappedScale = SnapToInt(minScale, resizeStyle.SnapToInteger, resizeStyle.RoundingMode);
-                    if (snappedScale - (Math.Truncate(snappedScale))>0.5f )
+                    if (snappedScale - (Math.Truncate(snappedScale)) > 0.5f)
                     {
                         snappedScale = MathF.Ceiling(snappedScale);
                     }
@@ -126,37 +128,86 @@ public readonly struct Viewport
                 break;
 
             case ViewportResizeMode.Grow:
-                Vector2 stretchedScale = new Vector2(viewportSize.X / (float)nativeResolution.X, viewportSize.Y / (float)nativeResolution.Y);
-                float ceiledYScale;
-                ceiledYScale = MathF.Ceiling(Math.Max(stretchedScale.Y, 1));
-
-                Vector2 outputSize = nativeResolution.ToVector2() * ceiledYScale;
-
-                // Now we see how many pixels are missing from the viewport and adjust the native resolution to fill the gap
-                Vector2 missingPixels = (viewportSize.ToVector2() - outputSize) / ceiledYScale;
-                missingPixels.X = Math.Min(missingPixels.X, nativeResolution.X * 0.2f);
-
-                // This means we are streaching too much and we will need to add bars to the top and bottom
-                if (missingPixels.X < -nativeResolution.X * 0.4f)
                 {
-                    ceiledYScale = Math.Max(1, ceiledYScale - 1);
-                    outputSize = nativeResolution.ToVector2() * ceiledYScale;
-                    missingPixels = (viewportSize.ToVector2() - outputSize) / ceiledYScale;
-                    missingPixels.X = Math.Min(missingPixels.X, nativeResolution.X * 0.2f);
+                    Vector2 stretchedScale = new Vector2(viewportSize.X / (float)nativeResolution.X, viewportSize.Y / (float)nativeResolution.Y);
+                    float ceiledYScale;
+                    ceiledYScale = MathF.Ceiling(Math.Max(stretchedScale.Y - 0.1f, 1));
+
+                    Vector2 outputSize = nativeResolution.ToVector2() * ceiledYScale;
+
+                    // Now we see how many pixels are missing from the viewport and adjust the native resolution to fill the gap
+                    Vector2 missingPixels = (viewportSize.ToVector2() - outputSize) / ceiledYScale;
+
+                    NativeResolution = new Point(
+                        Calculator.RoundToInt(nativeResolution.X + missingPixels.X),
+                        Calculator.RoundToInt(nativeResolution.Y + missingPixels.Y)
+                        );
+
+                    OutputRectangle = CenterOutput(NativeResolution * ceiledYScale, viewportSize);
+                    Scale = new Vector2(ceiledYScale);
                 }
-
-                missingPixels.Y = Math.Min(missingPixels.Y, nativeResolution.Y * 0.5f);
-
-                NativeResolution = new Point(
-                    Calculator.RoundToInt(nativeResolution.X + missingPixels.X),
-                    Calculator.RoundToInt(nativeResolution.Y + missingPixels.Y)
-                    );
-
-
-                OutputRectangle = CenterOutput(NativeResolution * ceiledYScale, viewportSize);
-                Scale = new Vector2(ceiledYScale);
-
                 break;
+            case ViewportResizeMode.ConstrainedGrow:
+                {
+                    // Get min / max constraints, defaulting to sensible values if not provided
+                    Point minRes = resizeStyle.MinNativeResolution ?? new Point(
+                        Calculator.RoundToInt(nativeResolution.X * 0.8f),
+                        Calculator.RoundToInt(nativeResolution.Y * 0.8f)
+                    );
+                    Point maxRes = resizeStyle.MaxNativeResolution ?? new Point(
+                        Calculator.RoundToInt(nativeResolution.X * 1.2f),
+                        Calculator.RoundToInt(nativeResolution.Y * 1.2f)
+                    );
+                    Vector2 stretchedScale = new Vector2(viewportSize.X / (float)nativeResolution.X, viewportSize.Y / (float)nativeResolution.Y);
+                    int targetScale = (int)Math.Ceiling(Math.Max(stretchedScale.Y - 0.1f, 1));
+                    Vector2 outputSize = nativeResolution.ToVector2() * targetScale;
+
+                    // Now we see how many pixels are missing from the viewport and adjust the native resolution to fill the gap
+                    Vector2 missingPixels = (viewportSize.ToVector2() - outputSize) / targetScale;
+
+                    // Calculate the new native resolution based on the target scale
+                    Point newNativeResolution = new Point(
+                        Calculator.RoundToInt(nativeResolution.X + missingPixels.X),
+                        Calculator.RoundToInt(nativeResolution.Y + missingPixels.Y)
+                        );
+
+
+                    bool failedMinimumConstraint = false;
+                    if (newNativeResolution.X < minRes.X || newNativeResolution.Y < minRes.Y)
+                    {
+                        targetScale--;
+                        
+                        outputSize = nativeResolution.ToVector2() * targetScale;
+                        missingPixels = (viewportSize.ToVector2() - outputSize) / targetScale;
+
+                        // Calculate the new native resolution based on the target scale
+                        newNativeResolution = new Point(
+                            Calculator.RoundToInt(nativeResolution.X + missingPixels.X),
+                            Calculator.RoundToInt(nativeResolution.Y + missingPixels.Y)
+                            );
+
+                        if (newNativeResolution.X < minRes.X || newNativeResolution.Y < minRes.Y)
+                        {
+                            FailedConstraints = true;
+                        }
+
+                        failedMinimumConstraint = true;
+                    }
+
+
+                    if (newNativeResolution.X > maxRes.X || newNativeResolution.Y > maxRes.Y)
+                    {
+                        newNativeResolution = new Point(
+                            Math.Min(maxRes.X, newNativeResolution.X),
+                            Math.Min(maxRes.Y, newNativeResolution.Y));
+                    }
+
+                    // Set the scale and output rectangle based on the new native resolution
+                    Scale = new Vector2(targetScale);
+                    OutputRectangle = CenterOutput(newNativeResolution.ToVector2() * (Scale), viewportSize);
+                    NativeResolution = newNativeResolution;
+                    break;
+                }
             case ViewportResizeMode.Crop:
                 // Center the game in the window, keeping everything else;
                 Scale = Vector2.One;
@@ -165,7 +216,7 @@ public readonly struct Viewport
             case ViewportResizeMode.AbsoluteScale:
                 // Ignore the window size, use the game size from settings.
                 Scale = Vector2.One * (resizeStyle.AbsoluteScale ?? 1);
-                NativeResolution = (viewportSize/Scale).Point();
+                NativeResolution = (viewportSize / Scale).Point();
                 OutputRectangle = new IntRectangle(0, 0, viewportSize.X, viewportSize.Y);
                 break;
             default:
@@ -217,14 +268,14 @@ public readonly struct Viewport
     }
 
     private static IntRectangle CenterOutput(Vector2 targetSize, Vector2 viewportSize)
-        {
-            return new IntRectangle(
-                Calculator.RoundToInt((viewportSize.X - targetSize.X) / 2f),
-                Calculator.RoundToInt((viewportSize.Y - targetSize.Y) / 2f),
-                targetSize.X,
-                targetSize.Y);
-        }
-    public bool HasChanges (Point size, Vector2 scale)
+    {
+        return new IntRectangle(
+            Calculator.RoundToInt((viewportSize.X - targetSize.X) / 2f),
+            Calculator.RoundToInt((viewportSize.Y - targetSize.Y) / 2f),
+            targetSize.X,
+            targetSize.Y);
+    }
+    public bool HasChanges(Point size, Vector2 scale)
     {
         return Size != size || Scale != scale;
     }

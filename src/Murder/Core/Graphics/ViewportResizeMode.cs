@@ -1,4 +1,5 @@
 ﻿using Murder.Attributes;
+using Murder.Core.Geometry;
 
 namespace Murder.Core.Graphics;
 public enum ViewportResizeMode
@@ -8,13 +9,13 @@ public enum ViewportResizeMode
     KeepRatio,
     AdaptiveLetterbox,
     Grow,
+    ConstrainedGrow,
     Crop,
     AbsoluteScale
 }
 public readonly struct ViewportResizeStyle
 {
     public readonly ViewportResizeMode ResizeMode = ViewportResizeMode.Stretch;
-
 
     [Tooltip("Used on letterbox and stretch modes only")]
     public readonly float SnapToInteger = 0.25f;
@@ -27,7 +28,12 @@ public readonly struct ViewportResizeStyle
     [Tooltip("Used on letterbox and stretch modes only")]
     public readonly float NegativeApectRatioAllowance = 0.1f;
 
+    [Tooltip("Minimum allowed native resolution (used in ConstrainedGrow mode)")]
+    public readonly Point? MinNativeResolution { get; init; } = null;
+    [Tooltip("Maximum allowed native resolution (used in ConstrainedGrow mode)")]
+    public readonly Point? MaxNativeResolution { get; init; } = null;
     public readonly float? AbsoluteScale { get; init; } = null;
+
     public ViewportResizeStyle()
     {
         
