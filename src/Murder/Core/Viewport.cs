@@ -167,8 +167,8 @@ public readonly struct Viewport
 
                     // Calculate the new native resolution based on the target scale
                     Point newNativeResolution = new Point(
-                        Calculator.RoundToInt(nativeResolution.X + missingPixels.X),
-                        Calculator.RoundToInt(nativeResolution.Y + missingPixels.Y)
+                        Calculator.CeilingToInt(nativeResolution.X + missingPixels.X),
+                        Calculator.CeilingToInt(nativeResolution.Y + missingPixels.Y)
                         );
 
 
@@ -186,8 +186,8 @@ public readonly struct Viewport
 
                         // Calculate the new native resolution based on the target scale
                         newNativeResolution = new Point(
-                            Calculator.RoundToInt(nativeResolution.X + missingPixels.X),
-                            Calculator.RoundToInt(nativeResolution.Y + missingPixels.Y)
+                            Calculator.CeilingToInt(nativeResolution.X + missingPixels.X),
+                            Calculator.CeilingToInt(nativeResolution.Y + missingPixels.Y)
                             );
                     }
 
