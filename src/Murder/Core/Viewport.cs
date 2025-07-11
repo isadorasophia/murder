@@ -159,7 +159,7 @@ public readonly struct Viewport
                         Calculator.RoundToInt(nativeResolution.Y * 1.2f)
                     );
                     Vector2 stretchedScale = new Vector2(viewportSize.X / (float)nativeResolution.X, viewportSize.Y / (float)nativeResolution.Y);
-                    int targetScale = (int)Math.Ceiling(Math.Max(stretchedScale.Y - 0.1f, 1));
+                    int targetScale = (int)Math.Ceiling(Math.Max(stretchedScale.Y - 0.05f, 1));
                     Vector2 outputSize = nativeResolution.ToVector2() * targetScale;
 
                     // Now we see how many pixels are missing from the viewport and adjust the native resolution to fill the gap
