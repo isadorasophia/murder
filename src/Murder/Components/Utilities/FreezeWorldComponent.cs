@@ -24,7 +24,11 @@ namespace Murder.Components
 
         public FreezeWorldComponent(float startTime, bool show) : this(startTime)
         {
-            StartTime = startTime;
+            ShowUi = show;
+        }
+
+        public FreezeWorldComponent(float startTime, int count, bool show) : this(startTime, count)
+        {
             ShowUi = show;
         }
     }
