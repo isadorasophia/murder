@@ -40,7 +40,6 @@ public static class DebugServices
         return File.AppendAllTextAsync(fullpath, content.ToString());
     }
 
-
     public static void DrawText(World world, string ev, Vector2 position, float duration, Color color)
     {
 #if DEBUG

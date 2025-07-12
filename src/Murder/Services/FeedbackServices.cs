@@ -51,7 +51,7 @@ public static class FeedbackServices
         return new FileWrapper(buffer, $"{save.Name}_save.zip");
     }
 
-    private static async Task<FileWrapper?> CreateTemporarySaveAndZipAsync()
+    public static async Task<FileWrapper?> CreateTemporarySaveAndZipAsync()
     {
         SaveData? save = Game.Data.TryGetActiveSaveData();
         if (save is null)
