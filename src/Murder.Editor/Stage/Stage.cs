@@ -275,7 +275,8 @@ namespace Murder.Editor.Stages
                                     isActive = true;
                                 }
                             }
-                            
+                            ImGuiHelpers.HelpTooltip(isActive ? "Hide Sound Editor" : "Show Sound Editor");
+
                             ImGui.SameLine();
                             isActive = EditorHook.StageSettings.HasFlag(StageSetting.ShowSprite);
                             if (ImGuiHelpers.ColoredIconButton('\uf03e', "##modify_sprite_editor_enabled", isActive))
@@ -291,6 +292,7 @@ namespace Murder.Editor.Stages
                                     isActive = true;
                                 }
                             }
+                            ImGuiHelpers.HelpTooltip(isActive ? "Hide YSort Editor" : "Show YSort Editor");
 
                             ImGui.SameLine();
                             isActive = EditorHook.StageSettings.HasFlag(StageSetting.ShowCollider);
@@ -308,7 +310,7 @@ namespace Murder.Editor.Stages
                                 }
                             }
 
-                            ImGuiHelpers.HelpTooltip(isActive ? "Hide Sound Editor" : "Show Sound Editor");
+                            ImGuiHelpers.HelpTooltip(isActive ? "Hide Collider Editor" : "Show Collider Editor");
                         }
                         ImGui.Separator();
                         foreach (var entity in EditorHook.AllSelectedEntities)
