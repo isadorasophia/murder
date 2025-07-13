@@ -11,6 +11,7 @@ using Murder.Editor.Assets;
 using Murder.Editor.Components;
 using Murder.Editor.Core;
 using Murder.Editor.CustomComponents;
+using Murder.Editor.CustomDiagnostics;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Stages;
 using Murder.Editor.Utilities;

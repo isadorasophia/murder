@@ -1,4 +1,5 @@
 ﻿using Bang;
+using Bang.Components;
 using ImGuiNET;
 using Murder.Assets;
 using Murder.Core.Graphics;
@@ -6,11 +7,13 @@ using Murder.Diagnostics;
 using Murder.Editor;
 using Murder.Editor.Attributes;
 using Murder.Editor.CustomComponents;
+using Murder.Editor.CustomDiagnostics;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Stages;
 using Murder.Editor.Utilities;
 using Murder.Prefabs;
+using System.Collections.Immutable;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -137,6 +140,25 @@ namespace Murder.Editor.CustomEditors
             }
 
             ImGui.PopStyleColor();
+        }
+
+        public override bool RunDiagnostics(Guid guid)
+        {
+            PrefabAsset? asset = Game.Data.TryGetAsset<PrefabAsset>(guid);
+            if (asset is null)
+            {
+                GameLogger.Warning($"Unable to retrieve asset {guid}.");
+                return false;
+            }
+
+            bool isValid = true;
+
+            foreach (IComponent c in asset.Components)
+            {
+                isValid |= CustomDiagnostic.ScanAllMembers(asset.GetSimplifiedName(), c, outputResult: true);
+            }
+
+            return isValid;
         }
     }
 }

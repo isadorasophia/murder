@@ -318,6 +318,8 @@ public partial class EditorScene
                     GameLogger.Log($"\uf00d Issue found while running diagnostics on {otherAsset.Name}.");
                 }
             }
+
+            GameLogger.Log($"Finished running all diagnostics on assets of type {asset.GetType().Name}.");
         }
     }
 
