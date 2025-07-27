@@ -578,6 +578,11 @@ namespace Murder.Editor
                 }
             }
 
+            if (ImGuiHelpers.FadedSelectableWithIcon($"Reset preferences", '\uf71e', false))
+            {
+                Architect.EditorData.ResetPreferences();
+            }
+
             ImGui.PopStyleColor();
         }
 

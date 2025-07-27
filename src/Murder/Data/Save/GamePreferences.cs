@@ -62,6 +62,11 @@ namespace Murder.Save
             }
         }
 
+        internal static void ResetPreferences()
+        {
+            Game.Data.FileManager.DeleteFileIfExists(_path);
+        }
+
         public bool FullScreen => _fullscreen;
 
         public float SoundVolume => _soundVolume;
@@ -150,8 +155,8 @@ namespace Murder.Save
 
         public void OnPreferencesChanged()
         {
-            SaveSettings();
             OnPreferencesChangedImpl();
+            SaveSettings();
         }
 
         public virtual void OnPreferencesChangedImpl()

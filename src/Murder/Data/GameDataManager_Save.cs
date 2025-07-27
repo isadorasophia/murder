@@ -121,6 +121,12 @@ namespace Murder.Data
             }
         }
 
+        public void ResetPreferences()
+        {
+            GamePreferences.ResetPreferences();
+            _preferences = null;
+        }
+
         /// <summary>
         /// Active saved run in the game.
         /// </summary>
