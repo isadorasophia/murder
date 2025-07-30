@@ -314,20 +314,33 @@ public static partial class RenderServices
     }
     public static void DrawTexture(this Batch2D batch, Texture2D texture, Vector2 position, DrawInfo drawInfo)
     {
-        batch.Draw(
-            texture,
-            position.ToXnaVector2(),
-            texture.Bounds.Size(),
-            texture.Bounds,
-            drawInfo.Sort,
-            drawInfo.Rotation,
-            drawInfo.Scale.ToXnaVector2(),
-            drawInfo.ImageFlip,
-            drawInfo.Color,
-            drawInfo.Origin.ToXnaVector2(),
-            BLEND_NORMAL,
-            drawInfo.BlendState
-            );
+        void DrawAt(Vector2 position, Color color, Vector3 blendMode, float sort)
+        {
+            batch.Draw(
+                texture,
+                position.ToXnaVector2(),
+                texture.Bounds.Size(),
+                texture.Bounds,
+                sort,
+                drawInfo.Rotation,
+                drawInfo.Scale.ToXnaVector2(),
+                drawInfo.ImageFlip,
+                color,
+                drawInfo.Origin.ToXnaVector2(),
+                blendMode,
+                drawInfo.BlendState
+                );
+        }
+
+        if (drawInfo.Outline != null)
+        {
+            DrawAt(position + new Vector2(-1, 0), drawInfo.Outline.Value, BLEND_WASH, drawInfo.Sort + 0.0001f);
+            DrawAt(position + new Vector2(0, 1), drawInfo.Outline.Value, BLEND_WASH, drawInfo.Sort + 0.0001f);
+            DrawAt(position + new Vector2(0, -1), drawInfo.Outline.Value, BLEND_WASH, drawInfo.Sort + 0.0001f);
+            DrawAt(position + new Vector2(1, 0), drawInfo.Outline.Value, BLEND_WASH, drawInfo.Sort + 0.0001f);
+        }
+
+        DrawAt(position, drawInfo.Color, BLEND_NORMAL, drawInfo.Sort);
     }
 
     public static FrameInfo DrawPortrait(this Batch2D batch, Portrait portrait, Vector2 position, DrawInfo drawInfo)
