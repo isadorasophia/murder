@@ -202,6 +202,7 @@ public static class DirectionHelper
                 throw new Exception("This can't happen!");
         }
     }
+
     public static Direction RandomCardinal()
     {
         Random random = new Random();
@@ -216,6 +217,22 @@ public static class DirectionHelper
         }
     }
 
+    public static Direction Flip(Direction d)
+    {
+        switch (d)
+        {
+            case Direction.Down: return Direction.Up;
+            case Direction.Up: return Direction.Down;
+            case Direction.Right: return Direction.Left;
+            case Direction.Left: return Direction.Right;
+            case Direction.UpLeft: return Direction.DownRight;
+            case Direction.DownRight: return Direction.UpLeft;
+            case Direction.UpRight: return Direction.DownLeft;
+            case Direction.DownLeft: return Direction.UpRight;
+        }
+
+        return d;
+    }
     /// <summary>
     /// Converts an angle (in radians) to a Direction enum.
     /// </summary>
