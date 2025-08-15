@@ -163,5 +163,10 @@ namespace Murder.Core.Geometry
                 bottom - top
                 );
         }
+
+        public Rectangle AtZero()
+        {
+            return new Rectangle(0, 0, Width, Height);
+        }
     }
 }
