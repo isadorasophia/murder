@@ -318,7 +318,7 @@ public static partial class RenderServices
         {
             batch.Draw(
                 texture,
-                position.ToXnaVector2(),
+                position.ToXnaVector2() - (drawInfo.Origin * texture.Bounds.Size()).ToPoint(),
                 texture.Bounds.Size(),
                 texture.Bounds,
                 sort,
