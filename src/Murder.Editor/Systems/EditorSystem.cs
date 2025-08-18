@@ -133,18 +133,23 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                         ResizeWindow(4, render);
                     }
 
-                    ImGui.SameLine();
                     if (ImGui.Button("1080p"))
                     {
                         ResizeWindow(render, new Point(1920, 1080));
                     }
-
 
                     ImGui.SameLine();
                     if (ImGui.Button("1440p"))
                     {
                         ResizeWindow(render, new Point(2560, 1440));
                     }
+
+                    ImGui.SameLine();
+                    if (ImGui.Button("vertical"))
+                    {
+                        ResizeWindow(render, new Point(1080, 1920));
+                    }
+
 
                     ImGui.SeparatorText("Time");
 
