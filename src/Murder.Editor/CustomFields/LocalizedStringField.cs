@@ -113,11 +113,13 @@ internal class LocalizedStringField : CustomField
         }
         else
         {
-            if (text == null)
+            if (text is null)
             {
+                modified = true;
                 text = string.Empty;
             }
-            modified = ImGui.InputText($"##{data.Guid}", ref text, 2048);
+
+            modified |= ImGui.InputText($"##{data.Guid}", ref text, 2048);
         }
 
         if (modified)
