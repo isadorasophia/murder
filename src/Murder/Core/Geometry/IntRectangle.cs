@@ -56,6 +56,7 @@ namespace Murder.Core.Geometry
         public static IntRectangle operator *(IntRectangle p, float v) => new(p.X * v, p.Y * v, p.Width * v, p.Height * v);
         public static IntRectangle operator /(IntRectangle p, float v) => new(p.X / v, p.Y / v, p.Width / v, p.Height / v);
 
+        public IntRectangle AddPosition(int x, int y) => new IntRectangle(X + Calculator.RoundToInt(x), Y + Calculator.RoundToInt(y), Width, Height);
         public IntRectangle AddPosition(Vector2 position) => new IntRectangle(X + Calculator.RoundToInt(position.X), Y + Calculator.RoundToInt(position.Y), Width, Height);
         public IntRectangle AddPosition(Point position) => new IntRectangle(X + position.X, Y + position.Y, Width, Height);
         public IntRectangle Expand(int value) => new IntRectangle(X - value, Y - value, Width + value * 2, Height + value * 2);
