@@ -10,7 +10,6 @@ using Murder.Core.Graphics;
 using Murder.Core.Physics;
 using Murder.Diagnostics;
 using Murder.Helpers;
-using Murder.Prefabs;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Numerics;
