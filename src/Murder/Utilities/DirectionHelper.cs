@@ -3,6 +3,7 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Utilities;
+using System;
 using System.Collections.Immutable;
 using System.Numerics;
 
@@ -13,7 +14,7 @@ namespace Murder.Helpers;
 /// </summary>
 public enum Direction
 {
-    Right,
+    Right = 0,
     DownRight,
     Down,
     DownLeft,
@@ -443,5 +444,39 @@ public static class DirectionHelper
         int closestStep = (int)MathF.Round(normalizedAngle * 8);
 
         return closestStep * (2 * MathF.PI) * step;
+    }
+
+    internal static Direction Lerp(Direction from, Direction to, float delta)
+    {
+        delta = Calculator.Clamp01(delta);
+
+        // Convert enum values to integers
+        int fromInt = (int)from;
+        int toInt = (int)to;
+
+        // Calculate the difference between directions
+        int diff = toInt - fromInt;
+
+        // Handle wrapping around the circle (find shortest path)
+        // If the absolute difference is greater than 4, go the other way
+        if (diff > 4)
+        {
+            diff -= 8; // Go counter-clockwise instead
+        }
+        else if (diff < -4)
+        {
+            diff += 8; // Go clockwise instead
+        }
+
+        // Calculate the interpolated value
+        float interpolated = fromInt + (diff * delta);
+
+        // Handle wrapping and convert back to Direction
+        int result = Calculator.RoundToInt(interpolated);
+
+        // Ensure the result stays within bounds [0, 7]
+        result = ((result % 8) + 8) % 8;
+
+        return (Direction)result;
     }
 }

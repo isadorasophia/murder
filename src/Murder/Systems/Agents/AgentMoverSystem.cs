@@ -30,7 +30,11 @@ namespace Murder.Systems
                 var agent = e.GetAgent();
                 var impulse = e.GetAgentImpulse();
 
-                if (!e.HasStrafing() && impulse.Direction != null && !impulse.Flags.HasFlag(AgentImpulseFlags.IgnoreFacing))
+                if (
+                    !e.HasStrafing() && 
+                    !e.HasFacingTurn() &&
+                    impulse.Direction != null && 
+                    !impulse.Flags.HasFlag(AgentImpulseFlags.IgnoreFacing))
                 {
                     e.SetFacing(impulse.Impulse.Angle());
                 }

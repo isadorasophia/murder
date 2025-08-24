@@ -370,14 +370,14 @@ namespace Murder.Utilities
         /// Normalizes the given elapsed time to a range of 0 to 1 based on the specified maximum time.
         /// </summary>
         /// <param name="elapsed">The elapsed time to normalize. Typically Game.Now - startTime.</param>
-        /// <param name="maxTime">The maximum time value that represents the upper bound of the normalization range. Must be greater than 0 to avoid division by zero errors.</param>
-        /// <returns>A normalized time value between 0 and 1. If <paramref name="elapsed"/> is greater than <paramref name="maxTime"/>, the return value is clamped to 1. If <paramref name="elapsed"/> is less than 0, the return value is clamped to 0.</returns>
+        /// <param name="duration">The maximum time value that represents the upper bound of the normalization range. Must be greater than 0 to avoid division by zero errors.</param>
+        /// <returns>A normalized time value between 0 and 1. If <paramref name="elapsed"/> is greater than <paramref name="duration"/>, the return value is clamped to 1. If <paramref name="elapsed"/> is less than 0, the return value is clamped to 0.</returns>
         /// <remarks>
         /// This method is useful for converting an absolute time value into a relative progress percentage. It's particularly handy for animations, transitions, or any scenario where you need to express elapsed time as a fraction of a total duration.
         /// </remarks>
-        public static float ClampTime(float elapsed, float maxTime)
+        public static float ClampTime(float elapsed, float duration)
         {
-            return Calculator.Clamp01(Math.Clamp(elapsed, 0, Math.Max(0, maxTime)) / maxTime);
+            return Calculator.Clamp01(Math.Clamp(elapsed, 0, Math.Max(0, duration)) / duration);
         }
 
         /// <summary>
