@@ -240,7 +240,14 @@ namespace Murder.Core.Geometry
         /// <param name="maxX">The largest possible value for X, inclusive</param>
         /// <param name="maxY">The largest possible value for Y, inclusive</param>
         /// <returns>A new point that is guaranteed to satisfy the supplied constraints.</returns>
-        internal Point Clamp(int minX, int minY, int maxX, int maxY) => new(Math.Clamp(X, minX, maxX), Math.Clamp(Y, minY, maxY));
+        public Point Clamp(int minX, int minY, int maxX, int maxY) => new(Math.Clamp(X, minX, maxX), Math.Clamp(Y, minY, maxY));
+        /// <summary>
+        /// Restricts the current point's coordinates to be within the specified minimum and maximum bounds.
+        /// </summary>
+        /// <param name="min">The point representing the minimum allowed values for the X and Y coordinates.</param>
+        /// <param name="max">The point representing the maximum allowed values for the X and Y coordinates.</param>
+        /// <returns>A new <see cref="Point"/> instance with its X and Y coordinates clamped to the specified bounds.</returns>
+        public Point Clamp(Point min, Point max) => Clamp(min.X, min.Y, max.X, max.Y);
         public Point Max(Point other) => new(Math.Max(X, other.X), Math.Max(Y, other.Y));
         public Point Min(Point other) => new(Math.Min(X, other.X), Math.Min(Y, other.Y));
 

@@ -141,14 +141,28 @@ namespace Murder.Editor
 
             if (!IsMaximized() && EditorSettings.WindowStartPosition.X > 0 && EditorSettings.WindowStartPosition.Y > 0)
             {
-                Point size = EditorSettings.WindowStartPosition;
-                SetWindowPosition(size);
+                Point startPos = EditorSettings.WindowStartPosition;
+                SetWindowPosition(startPos);
             }
 
             if (EditorSettings.WindowSize.X > 0 && EditorSettings.WindowSize.Y > 0)
             {
-                _graphics.PreferredBackBufferWidth = EditorSettings.WindowSize.X;
-                _graphics.PreferredBackBufferHeight = EditorSettings.WindowSize.Y;
+                Point displaySize = _graphics.GraphicsDevice.Adapter.CurrentDisplayMode.TitleSafeArea.Size();
+                Point diffToMaxSize = displaySize - EditorSettings.WindowSize;
+
+                if (diffToMaxSize.Y < 80)
+                {
+                    // This is too big, the user probably just wants the screen to be maximized.
+                    MaximizeWindow();
+                }
+                else
+                {
+                    // Clamp to the current display size with a small margin.
+                    screenSize = EditorSettings.WindowSize.Clamp(new Point(800, 600), diffToMaxSize - new Point(100, 100));
+
+                    _graphics.PreferredBackBufferWidth = screenSize.X;
+                    _graphics.PreferredBackBufferHeight = screenSize.Y;
+                }
             }
 
             if (EditorSettings.StartMaximized)
@@ -195,6 +209,8 @@ namespace Murder.Editor
             (_gameData as EditorDataManager)?.RefreshAfterSave();
 
             _playerInput.ClearBinds(MurderInputButtons.PlayGame);
+
+            Fullscreen = false;
         }
 
         /// <summary>
