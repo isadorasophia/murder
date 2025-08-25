@@ -210,7 +210,10 @@ namespace Murder.Editor
 
             _playerInput.ClearBinds(MurderInputButtons.PlayGame);
 
-            Fullscreen = false;
+            if (Fullscreen)
+            {
+                Fullscreen = false;
+            }
         }
 
         /// <summary>
