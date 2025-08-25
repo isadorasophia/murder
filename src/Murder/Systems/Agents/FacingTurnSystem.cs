@@ -19,7 +19,8 @@ internal class FacingTurnSystem : IUpdateSystem
             float duration = facingTurn.EndTurnTime - facingTurn.StartTurnTime;
             float delta = Calculator.ClampTime(Game.Now - facingTurn.StartTurnTime, duration);
 
-            DirectionHelper.Lerp(facingTurn.From, facingTurn.To, delta);
+            Direction result = DirectionHelper.Lerp(facingTurn.From, facingTurn.To, delta);
+            e.SetFacing(result);
 
             if (delta >= 1)
             {

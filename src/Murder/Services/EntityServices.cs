@@ -24,6 +24,14 @@ public static class EntityServices
         entity.SetFacingTurn(Game.Now, Game.Now + duration, currentFacing, targetDirection);
     }
 
+    public static void TurnFaceTowards(this Entity entity, Direction fromDirection, Direction targetDirection, float duration)
+    {
+        entity.SetFacing(fromDirection);
+
+        Direction currentFacing = entity.TryGetFacing()?.Direction ?? Direction.Up;
+        entity.SetFacingTurn(Game.Now, Game.Now + duration, currentFacing, targetDirection);
+    }
+
     public static Vector2 FetchScale(this Entity entity)
     {
         return entity.TryGetScale()?.Scale ?? Vector2.One;
