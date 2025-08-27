@@ -103,7 +103,7 @@ namespace Murder.Core.Input
 
             // Pick a dominant axis for 4 - way menus
             // Int value has a big deadzone
-            float deadzone = 0.25f;
+            float deadzone = 0.65f;
             if (lengthSq > deadzone * deadzone)
             {
                 float absX = MathF.Abs(Value.X);

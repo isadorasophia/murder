@@ -377,6 +377,8 @@ namespace Murder.Utilities
         /// </remarks>
         public static float ClampTime(float elapsed, float duration)
         {
+            if (duration==0)
+                return 1;
             return Calculator.Clamp01(Math.Clamp(elapsed, 0, Math.Max(0, duration)) / duration);
         }
 
