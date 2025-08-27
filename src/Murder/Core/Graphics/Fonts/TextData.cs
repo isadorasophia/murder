@@ -510,8 +510,8 @@ public static partial class TextDataServices
         for (int i = 0; i < parsedText.Length - 1; ++i)
         {
             // For now, do this weird heuristic of not applying pause if the last character was uppercase.
-            bool shouldSkipPause = i != 0 && 
-                (char.IsUpper(parsedText[i - 1]) || IsPonctuationToIgnorePreviousPause(parsedText[i - 1]));
+            bool shouldSkipPause = (i != 0 && (char.IsUpper(parsedText[i - 1])) || 
+                (i != parsedText.Length - 1 && IsPonctuationToIgnorePreviousPause(parsedText[i + 1])));
 
             if (shouldSkipPause)
             {
