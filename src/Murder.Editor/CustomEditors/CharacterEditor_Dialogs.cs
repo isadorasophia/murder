@@ -374,7 +374,8 @@ namespace Murder.Editor.CustomEditors
 
                         if (_script is not null &&
                             GetPortraitName(speaker, line) is string targetPortrait &&
-                            speaker.Portraits[targetPortrait].Sound is SoundEventId portraitSound)
+                            speaker.Portraits.TryGetValue(targetPortrait, out PortraitInfo portaitInfo) &&
+                            portaitInfo.Sound is SoundEventId portraitSound)
                         {
                             if (!_script.GetEventInfoFlags(id).HasFlag(LineInfoProperties.SkipDefaultPortraitSound))
                             {
