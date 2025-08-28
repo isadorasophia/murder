@@ -72,7 +72,7 @@ namespace Murder.Interactions
                 return null;
             }
 
-            Entity? childDialogue = interacted?.TryFetchChild(DIALOGUE_CHILD);
+            Entity? childDialogue = interacted.TryFetchChild(DIALOGUE_CHILD);
             if (childDialogue is not null && childDialogue.HasStateMachine())
             {
                 // Already in progress.
@@ -80,7 +80,7 @@ namespace Murder.Interactions
             }
 
             childDialogue ??= world.AddEntity();
-            interacted?.AddChild(childDialogue.EntityId, DIALOGUE_CHILD);
+            interacted.AddChild(childDialogue.EntityId, DIALOGUE_CHILD);
 
             return childDialogue;
         }
