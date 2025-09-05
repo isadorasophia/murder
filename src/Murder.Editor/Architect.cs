@@ -159,7 +159,7 @@ namespace Murder.Editor
                 {
                     // Clamp to the current display size with a small margin.
                     Point minSize = new(800, 600);
-                    Point maxSize = (diffToMaxSize - new Point(100, 100)).Min(minSize);
+                    Point maxSize = (diffToMaxSize - new Point(100, 100)).Max(minSize);
                     screenSize = EditorSettings.WindowSize.Clamp(minSize, maxSize);
 
                     _graphics.PreferredBackBufferWidth = screenSize.X;
