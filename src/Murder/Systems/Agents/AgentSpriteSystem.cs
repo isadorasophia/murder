@@ -15,6 +15,7 @@ using Murder.Helpers;
 using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
+using System;
 using System.Diagnostics;
 using System.Numerics;
 
@@ -175,13 +176,12 @@ namespace Murder.Systems
                 if (e.TryGetCustomTargetSpriteBatch() is CustomTargetSpriteBatchComponent renderTarget)
                     target = renderTarget.TargetBatch;
 
-
                 if (impulse.HasValue() && spriteAsset.Animations.TryGetValue(prefix + sprite.WalkPrefix + suffix, out _) && !e.HasDisableAgent() && !e.HasAgentPause())
                 {
                     prefix += sprite.WalkPrefix;
                 }
 
-                AnimationInfo animationInfo = new AnimationInfo()
+                AnimationInfo animationInfo = new()
                 {
                     Name = prefix + suffix,
                     Start = start,
@@ -190,6 +190,36 @@ namespace Murder.Systems
                     UseScaledTime = true
                 };
 
+                if (e.TryGetForceAnimationOnChance() is ForceAnimationOnChanceComponent forceAnimationOnChance)
+                {
+                    // only apply after the animation changed
+                    if (e.TryGetRenderedSpriteCache()?.AnimInfo.Name is not string lastAnimation || 
+                        !lastAnimation.StartsWith(animationInfo.Name))
+                    {
+                        bool activeForceAnimation;
+
+                        if (forceAnimationOnChance.Animations.Contains(prefix))
+                        {
+                            activeForceAnimation = Game.Random.TryWithChanceOf(forceAnimationOnChance.Chance);
+                        }
+                        else
+                        {
+                            activeForceAnimation = false;
+                        }
+
+                        if (activeForceAnimation != forceAnimationOnChance.Active)
+                        {
+                            forceAnimationOnChance = forceAnimationOnChance with { Active = activeForceAnimation };
+                            e.SetForceAnimationOnChance(forceAnimationOnChance);
+                        }
+                    }
+
+                    if (forceAnimationOnChance.Active &&
+                        Game.Data.GetAsset<SpriteAsset>(forceAnimationOnChance.Sprite) is SpriteAsset forceSpriteAsset)
+                    {
+                        spriteAsset = forceSpriteAsset;
+                    }
+                }
 
                 Rectangle clip = Rectangle.Empty;
                 if (e.TryGetSpriteClippingRect() is SpriteClippingRectComponent spriteClippingRect)
