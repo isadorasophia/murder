@@ -18,6 +18,12 @@ namespace Murder.Services;
 
 public static class EntityServices
 {
+    public static void TurnFaceTowards(this Entity entity, Entity otherEntity, float duration)
+    {
+        Direction targetFacing = DirectionHelper.LookAtEntity(entity, otherEntity);
+        TurnFaceTowards(entity, targetFacing, duration);
+    }
+
     public static void TurnFaceTowards(this Entity entity, Direction targetDirection, float duration)
     {
         Direction currentFacing = entity.TryGetFacing()?.Direction ?? Direction.Up;
