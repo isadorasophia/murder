@@ -121,6 +121,7 @@ namespace Murder.Core.Input
         public Portrait[] Icons = [];
 
         public bool HasOptions => Options != null && Options.Length > 0;
+        public bool HasAvailableOptions => HasOptions && Options.Any(o => o.Enabled);
 
         public float LargestOptionText
         {

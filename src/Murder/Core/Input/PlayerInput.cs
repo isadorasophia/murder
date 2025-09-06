@@ -719,7 +719,6 @@ public class PlayerInput
             {
                 // Select the last option
                 selectedOptionY = currentHeight - 1;
-                selectedOptionX = currentWidth;
             }
 
             selectedOptionY = Calculator.WrapAround(selectedOptionY, 0, currentHeight - 1);
