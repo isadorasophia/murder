@@ -7,6 +7,7 @@
         Interactor,
         Target,
         CreateNewEntity,
-        Child
+        Child,
+        Player
     }
 }
