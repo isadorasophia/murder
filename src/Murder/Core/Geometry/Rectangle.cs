@@ -96,6 +96,7 @@ public struct Rectangle : IEquatable<Rectangle>
 
     public Rectangle AddPosition(float x, float y) => new Rectangle(X + Calculator.RoundToInt(x), Y + Calculator.RoundToInt(y), Width, Height);
     public Rectangle AddPosition(Vector2 position) => new Rectangle(X + Calculator.RoundToInt(position.X), Y + Calculator.RoundToInt(position.Y), Width, Height);
+    public Rectangle AtPosition(Vector2 position) => new Rectangle(position.X, position.Y, Width, Height);
     public Rectangle AddPosition(Point position) => new Rectangle(X + position.X, Y + position.Y, Width, Height);
     public Rectangle SetPosition(Vector2 position) => new Rectangle(position.X, position.Y, Width, Height);
     public Rectangle Expand(int value) => new Rectangle(X - value, Y - value, Width + value * 2, Height + value * 2);
