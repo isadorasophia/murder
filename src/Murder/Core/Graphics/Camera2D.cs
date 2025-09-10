@@ -85,10 +85,14 @@ namespace Murder.Core.Graphics
             }
         }
 
+        /// <summary>
+        /// The top left position of the camera in world space.
+        /// </summary>
         public Vector2 Position
         {
             get
             {
+                // [PERF] This could be cached
                 float bump = 0;
                 if (_bumpStart > 0)
                 {
@@ -120,6 +124,7 @@ namespace Murder.Core.Graphics
             }
         }
 
+        public Vector2 Center => Position + new Vector2(Size.X / 2, Size.Y / 2);
         public int HalfWidth => Calculator.RoundToInt(Width / 2f);
 
         public Point Size => new Point(Width, Height);
