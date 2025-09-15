@@ -145,15 +145,18 @@ namespace Murder.Editor
                 SetWindowPosition(startPos);
             }
 
+            Point displaySize = _graphics.GraphicsDevice.Adapter.CurrentDisplayMode.TitleSafeArea.Size();
+            
             if (EditorSettings.WindowSize.X > 0 && EditorSettings.WindowSize.Y > 0)
             {
-                Point displaySize = _graphics.GraphicsDevice.Adapter.CurrentDisplayMode.TitleSafeArea.Size();
                 Point diffToMaxSize = displaySize - EditorSettings.WindowSize;
 
                 if (diffToMaxSize.Y < 80)
                 {
                     // This is too big, the user probably just wants the screen to be maximized.
                     MaximizeWindow();
+                    _graphics.PreferredBackBufferWidth = displaySize.X;
+                    _graphics.PreferredBackBufferHeight = displaySize.Y;
                 }
                 else
                 {
@@ -175,6 +178,8 @@ namespace Murder.Editor
                 }
 
                 MaximizeWindow();
+                _graphics.PreferredBackBufferWidth = displaySize.X;
+                _graphics.PreferredBackBufferHeight = displaySize.Y;
             }
         }
 
