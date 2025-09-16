@@ -16,8 +16,11 @@ public class FadeSpriteSystem : IMonoPreRenderSystem
         {
             var fade = e.GetFadeSprite();
 
-            float delta = Calculator.ClampTime(Game.Now - fade.FadeStart, fade.FadeEnd - fade.FadeStart);
-            e.SetTint(Color.White * (1 - delta) * fade.MaxAlpha);
+            float delta = Calculator.ClampTime(Game.Now - fade.FadeStartTime, fade.FadeEndTime - fade.FadeStartTime);
+
+            float alpha = Calculator.Lerp(fade.StartAlpha, fade.EndAlpha, delta);
+
+            e.SetTint(Color.White * alpha);
 
             if (delta >= 1)
             {
