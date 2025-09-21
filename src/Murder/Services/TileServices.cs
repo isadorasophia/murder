@@ -1,14 +1,7 @@
 ﻿using Bang.Entities;
 using Murder.Core;
-using Murder.Core.Graphics;
 using Murder.Utilities;
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Murder.Services
 {
