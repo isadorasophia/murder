@@ -12,6 +12,7 @@ using Murder.Diagnostics;
 using Murder.Helpers;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
 namespace Murder.Services;
@@ -150,34 +151,41 @@ public static class EntityServices
         return FindRootEntity(parent);
     }
 
-    public static SpriteComponent? PlaySpriteAnimationNext(this Entity entity, string animationName)
+    public static bool TryPlayAfterWhenDifferent(this Entity e, string id)
     {
-        if (TryPlaySpriteAnimationNext(entity, animationName) is SpriteComponent result)
+        if (e.TryGetSprite() is not SpriteComponent sprite)
         {
-            return result;
+            return false;
         }
 
-        GameLogger.Error($"Entity {entity.EntityId} doesn's have an Seprite component ({entity.Components.Count()} components, trying to play '{animationName}')");
-        return null;
+        if (id == sprite.CurrentAnimation)
+        {
+            return false;
+        }
+
+        if (sprite.NextAnimations.Length != 0 && sprite.NextAnimations[^1] == id)
+        {
+            return false;
+        }
+
+        e.SetSprite(sprite with { NextAnimations = sprite.NextAnimations.Add(id) });
+        return true;
     }
 
-    public static SpriteComponent? TryPlaySpriteAnimationNext(this Entity entity, string animationName)
+    public static bool TryPlaySpriteAnimationNext(this Entity entity, string animationName)
     {
-        if (entity.TryGetSprite() is SpriteComponent aseprite)
+        if (TryPlayAfterWhenDifferent(entity, animationName))
         {
-            SpriteComponent result = aseprite.PlayAfter(animationName);
-            entity.SetSprite(result);
-
             entity.RemoveAnimationComplete();
             entity.RemoveAnimationCompleteMessage();
 
-            return result;
+            return true;
         }
 
-        return null;
+        return false;
     }
 
-    public static SpriteComponent? PlaySpriteAnimationNext(this Entity entity, params string[] animations)
+    public static bool TryPlaySpriteAnimationNext(this Entity entity, params string[] animations)
     {
         if (entity.TryGetSprite() is SpriteComponent aseprite)
         {
@@ -187,10 +195,10 @@ public static class EntityServices
             entity.RemoveAnimationComplete();
             entity.RemoveAnimationCompleteMessage();
 
-            return result;
+            return true;
         }
 
-        return null;
+        return false;
     }
 
     public static SpriteComponent? PlaySpriteAnimationNext(this Entity entity, ImmutableArray<string> animations)

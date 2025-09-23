@@ -38,7 +38,7 @@ namespace Murder.Components
         /// </summary>
         public readonly string CurrentAnimation => NextAnimations.FirstOrDefault() ?? string.Empty;
 
-        public readonly ImmutableArray<string> NextAnimations { get; init; } = ImmutableArray<string>.Empty;
+        public readonly ImmutableArray<string> NextAnimations { get; init; } = [];
 
         public bool HasAnimation(string animationName)
         {
@@ -57,6 +57,7 @@ namespace Murder.Components
         public SpriteComponent(Guid guid) :
             this(guid, Vector2.Zero, [], 0, false, OutlineStyle.Full, Batches2D.GameplayBatchId)
         { }
+
         public SpriteComponent(Portrait portrait, int batchId) :
             this(portrait.Sprite, Vector2.Zero, [portrait.AnimationId], 0, false, OutlineStyle.Full, batchId)
         { }
@@ -86,51 +87,19 @@ namespace Murder.Components
             return NextAnimations.SequenceEqual(animations);
         }
 
-        public SpriteComponent PlayAfter(string id)
+        public SpriteComponent ClearAllNext() => this with
         {
-            if (id != CurrentAnimation && !NextAnimations.Contains(id))
-            {
-                return new SpriteComponent(
-                    AnimationGuid,
-                    Offset,
-                    NextAnimations.Add(id),
-                    YSortOffset,
-                    RotateWithFacing,
-                    HighlightStyle,
-                    TargetSpriteBatch);
-            }
-            else
-            {
-                return this;
-            }
-        }
+            NextAnimations = [CurrentAnimation]
+        };
 
-        public SpriteComponent ClearAllNext()
+        public SpriteComponent PlayAfter(IList<string> ids) => this with
         {
-            return new SpriteComponent(
-                AnimationGuid,
-                Offset,
-                [CurrentAnimation],
-                YSortOffset,
-                RotateWithFacing,
-                HighlightStyle,
-                TargetSpriteBatch);
-        }
+            NextAnimations = NextAnimations.AddRange(ids)
+        };
 
-        public SpriteComponent PlayAfter(IList<string> ids)
+        public SpriteComponent Play(params string[] id) => this with 
         {
-            return new SpriteComponent(
-                AnimationGuid,
-                Offset,
-                NextAnimations.AddRange(ids),
-                YSortOffset,
-                RotateWithFacing,
-                HighlightStyle,
-                TargetSpriteBatch);
-        }
-
-        public SpriteComponent Play(params string[] id) => this with {
-            NextAnimations = id.ToImmutableArray()
+            NextAnimations = [.. id]
         };
 
         public SpriteComponent Play(ImmutableArray<string> id) => this with
@@ -144,14 +113,10 @@ namespace Murder.Components
             AnimationGuid = sprite ?? AnimationGuid
         };
 
-        public SpriteComponent SetBatch(int batch) => new SpriteComponent(
-            AnimationGuid,
-            Offset,
-            NextAnimations,
-            YSortOffset,
-            RotateWithFacing,
-            HighlightStyle,
-            batch);
+        public SpriteComponent SetBatch(int batch) => this with
+        {
+            TargetSpriteBatch = batch
+        };
 
         public SpriteComponent WithSort(int sort) => this with { YSortOffset = sort };
 
