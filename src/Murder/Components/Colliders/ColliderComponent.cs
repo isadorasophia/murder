@@ -65,6 +65,11 @@ public readonly struct ColliderComponent : IComponent, IEquatable<IComponent>
     }
 
     /// <summary>
+    /// Whether a layer from <see cref="CollisionLayersBase"/> is present.
+    /// </summary>
+    public bool HasLayer(int layer) => (Layer & layer) != 0;
+
+    /// <summary>
     /// Set layer according to <see cref="CollisionLayersBase"/>.
     /// </summary>
     public ColliderComponent SetLayer(int layer) => new ColliderComponent(Shapes, layer, DebugColor);
