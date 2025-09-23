@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using Murder.Assets;
 using Murder.Core.Graphics;
 using Murder.Editor.Reflection;
 using Murder.Utilities;
@@ -948,5 +949,25 @@ public static class ImGuiHelpers
             drawList.AddRectFilled(barPosition, new Vector2(barPosition.X + barSize, end.Y), Color.ToUint(ColorHelper.ColorFromIndex(i, entries.Length).ToSysVector4()), 4f);
             currentRatio += stepRatio;
         }
+    }
+
+    public static void AssetButton(GameAsset asset, Vector4 buttonColor)
+    {
+        ImGui.PushStyleColor(ImGuiCol.Button, buttonColor);
+        AssetButton(asset);
+        ImGui.PopStyleColor();
+    }
+
+    public static void AssetButton(GameAsset asset)
+    {
+        if (ImGuiHelpers.IconButton('', $"go_to_{asset.Guid}"))
+        {
+            if (Architect.Instance?.ActiveScene is EditorScene editorScene)
+            {
+                editorScene.OpenAssetEditor(asset, false);
+            }
+        }
+
+        ImGuiHelpers.HelpTooltip("Open asset");
     }
 }

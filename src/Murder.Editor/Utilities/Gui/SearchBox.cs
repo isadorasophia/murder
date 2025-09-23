@@ -512,15 +512,7 @@ namespace Murder.Editor.ImGuiExtended
 
                     if (settings.Selected is GameAsset asset)
                     {
-                        if (ImGuiHelpers.IconButton('', $"search_{id}"))
-                        {
-                            if (Architect.Instance?.ActiveScene is EditorScene editorScene)
-                            {
-                                editorScene.OpenAssetEditor(asset, false);
-                            }
-                        }
-                        ImGuiHelpers.HelpTooltip("Open asset");
-
+                        ImGuiHelpers.AssetButton(asset);
                         ImGui.SameLine();
                     }
                 }
