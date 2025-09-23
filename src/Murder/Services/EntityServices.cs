@@ -172,7 +172,7 @@ public static class EntityServices
         return true;
     }
 
-    public static bool TryPlaySpriteAnimationNext(this Entity entity, string animationName)
+    public static bool PlaySpriteAnimationNext(this Entity entity, string animationName)
     {
         if (TryPlayAfterWhenDifferent(entity, animationName))
         {
@@ -185,7 +185,7 @@ public static class EntityServices
         return false;
     }
 
-    public static bool TryPlaySpriteAnimationNext(this Entity entity, params string[] animations)
+    public static bool PlaySpriteAnimationNext(this Entity entity, params string[] animations)
     {
         if (entity.TryGetSprite() is SpriteComponent aseprite)
         {
