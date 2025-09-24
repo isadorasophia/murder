@@ -314,13 +314,28 @@ public static partial class RenderServices
     }
     public static void DrawTexture(this Batch2D batch, Texture2D texture, Vector2 position, DrawInfo drawInfo)
     {
+        Microsoft.Xna.Framework.Rectangle bounds;
+        if (drawInfo.Clip != Rectangle.Empty)
+        {
+            bounds = new Rectangle(
+                drawInfo.Clip.X,
+                drawInfo.Clip.Y,
+                MathF.Max(1, MathF.Min(drawInfo.Clip.Width, texture.Bounds.Width - drawInfo.Clip.X)),
+                MathF.Max(1, MathF.Min(drawInfo.Clip.Height, texture.Bounds.Height - drawInfo.Clip.Y))
+                );
+        }
+        else
+        {
+            bounds = texture.Bounds;
+        }
+
         void DrawAt(Vector2 position, Color color, Vector3 blendMode, float sort)
         {
             batch.Draw(
                 texture,
                 position.ToXnaVector2() - (drawInfo.Origin * texture.Bounds.Size()).ToPoint(),
-                texture.Bounds.Size(),
-                texture.Bounds,
+                bounds.Size(),
+                bounds,
                 sort,
                 drawInfo.Rotation,
                 drawInfo.Scale.ToXnaVector2(),
