@@ -1,5 +1,6 @@
 ﻿using Murder.Assets;
 using Murder.Attributes;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Murder.Core.Dialogs
 {
@@ -59,6 +60,7 @@ namespace Murder.Core.Dialogs
 
         public Line WithEvent(string? @event) => new(Speaker, Portrait, Text, Delay, @event);
 
+        [MemberNotNullWhen(true, nameof(Text))]
         public bool IsText => Text is not null;
     }
 }
