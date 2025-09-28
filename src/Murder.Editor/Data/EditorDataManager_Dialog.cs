@@ -24,6 +24,12 @@ namespace Murder.Editor.Data
                 return false;
             }
 
+            if (LoadContentProgress is not null && !LoadContentProgress.IsCompleted)
+            {
+                // absolutely do not hot reload while loading.
+                return false;
+            }
+
             string fullRawResourcesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath);
             if (!Directory.Exists(fullRawResourcesPath))
             {
