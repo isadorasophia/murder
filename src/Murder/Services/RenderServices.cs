@@ -602,6 +602,13 @@ public static partial class RenderServices
         }
     }
 
+    public static bool CanPlayAnimationId(Entity e, string animationId)
+    {
+        return e.TryGetSprite()?.AnimationGuid is Guid animationGuid &&
+            Game.Data.TryGetAsset<SpriteAsset>(animationGuid) is SpriteAsset sprite &&
+            sprite.Animations.ContainsKey(animationId);
+    }
+
     #region Lines
     public static void DrawLine(this Batch2D spriteBatch, Point point1, Point point2, Color color, float sort = 1f) =>
         DrawLine(spriteBatch, point1.ToVector2(), point2.ToVector2(), color, 1.0f, sort);
