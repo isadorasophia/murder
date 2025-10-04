@@ -143,7 +143,12 @@ namespace Murder.Core.Geometry
         /// Multiplies both the X and Y values of the point <paramref name="l"/> by <paramref name="r"/> and creates a new point with the results.
         /// </summary>
         public static Point operator *(int r, Point l) => new(l.X * r, l.Y * r);
-        
+
+        /// <summary>
+        /// Divides both the X and Y values of the point <paramref name="l"/> by the X and Y values of the point <paramref name="point"/>.
+        /// </summary>
+        public static Point operator /(Point l, Point point) => new(l.X / point.X, l.Y / point.Y);
+
         /// <summary>
         /// Divides both the X and Y values of the point <paramref name="l"/> by <paramref name="r"/> and creates a new point by rounding the results.
         /// </summary>
