@@ -3,6 +3,7 @@ using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Components.Utilities;
+using Murder.Core;
 
 namespace Murder.Systems;
 
@@ -14,6 +15,13 @@ public class ActivateOnStartSystem : IStartupSystem
         foreach (Entity e in context.Entities)
         {
             ActivateOnStartComponent activate = e.GetActivateOnStart();
+
+            if (activate.OnlyWhen is ICondition condition &&
+                !condition.IsSatisfiedBy(context.World))
+            {
+                return;
+            }
+
             if (activate.DeactivateInstead)
             {
                 e.Deactivate();
