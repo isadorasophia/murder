@@ -285,6 +285,17 @@ public static class EntityServices
     }
 
     /// <summary>
+    /// Plays an animation and loops.
+    /// </summary>
+    public static void PlaySpriteAnimationWithOffset(this Entity entity, int sortOffset, params string[] nextAnimations)
+    {
+        if (TryPlaySpriteAnimation(entity, nextAnimations) is SpriteComponent sprite)
+        {
+            entity.SetSprite(sprite.WithSort(sortOffset));
+        }
+    }
+
+    /// <summary>
     /// Plays an animation or animation sequence. Loops the last animation.
     /// </summary>
     /// <param name="entity"></param>
