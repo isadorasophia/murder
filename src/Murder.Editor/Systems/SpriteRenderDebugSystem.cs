@@ -191,6 +191,14 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
                 }
             }
 
+            if (overload is not null)
+            {
+                if (overload.Value.Flip != ImageFlip.None)
+                {
+                    flip = overload.Value.Flip;
+                }
+            }
+
             float ySort = RenderServices.YSort(ySortOffsetRaw + 0.01f * (e.EntityId % 20));
 
             Color baseColor = e.TryGetTint()?.TintColor ?? Color.White;

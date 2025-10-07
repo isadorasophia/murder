@@ -28,6 +28,11 @@ public static class EntityServices
     public static void TurnFaceTowards(this Entity entity, Direction targetDirection, float duration)
     {
         Direction currentFacing = entity.TryGetFacing()?.Direction ?? Direction.Up;
+        if (currentFacing == targetDirection)
+        {
+            return;
+        }
+
         entity.SetFacingTurn(Game.Now, Game.Now + duration, currentFacing, targetDirection);
     }
 
