@@ -9,6 +9,7 @@ using Murder.Core.Geometry;
 using Murder.Core.Physics;
 using Murder.Editor.Assets;
 using Murder.Editor.Core;
+using Murder.Prefabs;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 using System.Numerics;
@@ -45,7 +46,8 @@ namespace Murder.Editor.Utilities
         /// <summary>
         /// Duplicate a group of entities from a certain position.
         /// </summary>
-        public Action<int[], Vector2>? DuplicateEntitiesAt;
+        public Action<EntityInstance[], Vector2>? DuplicateEntitiesAt;
+        public Func<int[], EntityInstance[]>? GetInstancesForEntities;
 
         // == Helper fields for the WorldAsset ==
         public Action<string, IEnumerable<int>>? MoveEntitiesToFolder;

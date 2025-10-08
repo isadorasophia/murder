@@ -18,6 +18,7 @@ using System.Collections.Immutable;
 using System.Numerics;
 using Microsoft.Xna.Framework.Input;
 using Murder.Editor.Messages;
+using Murder.Prefabs;
 
 namespace Murder.Editor.Systems;
 
@@ -47,7 +48,10 @@ public class GenericSelectorSystem
 
     int _previousSelection = -1;
 
-    private int[]? _copiedEntities = null;
+    /// <summary>
+    /// Share this across world instances.
+    /// </summary>
+    private static EntityInstance[]? _copiedEntities = null;
 
     public void StartImpl(World world)
     {
@@ -286,9 +290,9 @@ public class GenericSelectorSystem
         // Support copying and pasting entities.
         // ======
         bool copied = Game.Input.Shortcut(EditorInputHelpers.CTRL_C);
-        if (copied && hook.AllSelectedEntities.Count != 0)
+        if (copied && hook.GetInstancesForEntities is not null && hook.AllSelectedEntities.Count != 0)
         {
-            _copiedEntities = [.. hook.AllSelectedEntities.Keys];
+            _copiedEntities = hook.GetInstancesForEntities([.. hook.AllSelectedEntities.Keys]);
         }
 
         bool pasted = Game.Input.Shortcut(EditorInputHelpers.CTRL_V);
@@ -665,7 +669,7 @@ public class GenericSelectorSystem
         return new(position - _selectionBox / 2f, _selectionBox);
     }
 
-    private static Vector2 GetTopLeftOrigin(World world, int[] selectedEntities)
+    private static Vector2 GetTopLeftOrigin(World world, EntityInstance[] selectedEntities)
     {
         if (selectedEntities.Length == 0)
         {
@@ -673,23 +677,22 @@ public class GenericSelectorSystem
         }
 
         Vector2 result = new(float.MaxValue, float.MaxValue);
-        foreach (int entityId in selectedEntities)
+        foreach (EntityInstance instance in selectedEntities)
         {
-            Entity e = world.GetEntity(entityId);
-            if (e.Parent is not null || e.TryGetTransform() is not IMurderTransformComponent transform)
+            if (!instance.HasComponent(typeof(PositionComponent)))
             {
-                // ignore parents or entities without a position.
                 continue;
             }
 
-            if (transform.Vector2.X < result.X)
+            PositionComponent position = (PositionComponent)instance.GetComponent(typeof(PositionComponent));
+            if (position.X < result.X)
             {
-                result = result with { X = transform.Vector2.X };
+                result = result with { X = position.X };
             }
 
-            if (transform.Vector2.Y < result.Y)
+            if (position.Y < result.Y)
             {
-                result = result with { Y = transform.Vector2.Y };
+                result = result with { Y = position.Y };
             }
         }
 

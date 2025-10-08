@@ -95,6 +95,7 @@ namespace Murder.Editor.CustomEditors
             Stages[guid].EditorHook.GetAvailableFolders = GetAvailableGroups;
 
             Stages[guid].EditorHook.DuplicateEntitiesAt += DuplicateAndSelectEntitiesAt;
+            Stages[guid].EditorHook.GetInstancesForEntities = GetInstancesForEntities;
 
             if (Architect.EditorSettings.WorldAssetInfo.TryGetValue(guid, out PersistWorldStageInfo info))
             {
@@ -533,7 +534,30 @@ namespace Murder.Editor.CustomEditors
             empty.SetName(name);
         }
 
-        protected void DuplicateAndSelectEntitiesAt(int[] entities, Vector2 offset)
+        protected EntityInstance[] GetInstancesForEntities(int[] entities)
+        {
+            GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
+
+            EntityInstance[] result = new EntityInstance[entities.Length];
+            Stage stage = Stages[_asset.Guid];
+
+            for (int i = 0; i < entities.Length; ++i)
+            {
+                int entityId = entities[i];
+
+                if (stage.FindInstance(entityId) is not EntityInstance instance)
+                {
+                    GameLogger.Error($"Unable to copy entity {entityId}.");
+                    continue;
+                }
+
+                result[i] = instance;
+            }
+
+            return result;
+        }
+
+        protected void DuplicateAndSelectEntitiesAt(EntityInstance[] entities, Vector2 offset)
         {
             GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
 
@@ -545,14 +569,8 @@ namespace Murder.Editor.CustomEditors
                     Stage stage = Stages[_asset.Guid];
                     stage.EditorHook.UnselectAll();
 
-                    foreach (int entityId in entities)
+                    foreach (EntityInstance instance in entities)
                     {
-                        if (stage.FindInstance(entityId) is not EntityInstance instance)
-                        {
-                            GameLogger.Error($"Unable to copy entity {entityId}.");
-                            continue;
-                        }
-
                         EntityInstance copy = SerializationHelper.DeepCopy(instance);
                         if (copy.HasComponent(typeof(PositionComponent)))
                         {
