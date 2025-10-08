@@ -39,7 +39,7 @@ namespace Murder.Services
 
             if (data is null)
             {
-                GameLogger.Error($"Unable to acquire resource for {localized.Id}.");
+                GameLogger.Warning($"Unable to acquire resource for {localized.Id}.");
                 return string.Empty;
             }
 
