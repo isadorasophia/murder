@@ -82,6 +82,7 @@ public static class PhysicsServices
         float right = int.MinValue;
         float top = int.MaxValue;
         float bottom = int.MinValue;
+
         foreach (var shape in collider.Shapes)
         {
             var rect = shape.GetBoundingBox();
@@ -91,7 +92,13 @@ public static class PhysicsServices
             bottom = Math.Max(bottom, rect.Bottom);
         }
 
-        return new(left * scale.X + position.X, top * scale.Y + position.Y, (right - left) * scale.X, (bottom - top) * scale.Y);
+        // Handle negative scales (flipping)
+        float scaledLeft = (scale.X < 0 ? right : left) * scale.X;
+        float scaledTop = (scale.Y < 0 ? bottom : top) * scale.Y;
+        float width = Math.Abs((right - left) * scale.X);
+        float height = Math.Abs((bottom - top) * scale.Y);
+
+        return new Rectangle(scaledLeft + position.X, scaledTop + position.Y, width, height);
     }
 
     /// <summary>
