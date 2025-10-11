@@ -19,7 +19,7 @@ public class ActivateOnStartSystem : IStartupSystem
             if (activate.OnlyWhen is ICondition condition &&
                 !condition.IsSatisfiedBy(context.World))
             {
-                return;
+                continue;
             }
 
             if (activate.DeactivateInstead)
