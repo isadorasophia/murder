@@ -170,7 +170,7 @@ namespace Murder.Editor.Systems
                         prefabGuid,
                         [
                             new PositionComponent(cursorWorldPosition),
-                        ], prefab?.Name ?? "Unknown Prefab");
+                        ], targetGroup);
 
                     ImGui.CloseCurrentPopup();
                 }
