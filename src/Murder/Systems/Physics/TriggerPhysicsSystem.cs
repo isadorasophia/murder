@@ -4,6 +4,7 @@ using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
+using Murder.Core.Geometry;
 using Murder.Core.Physics;
 using Murder.Services;
 using Murder.Utilities;
@@ -152,7 +153,8 @@ namespace Murder.Systems.Physics
             bool thisIsAnActor = (collider.Layer & (CollisionLayersBase.ACTOR)) != 0;
 
             _others.Clear();
-            qt.Collision.Retrieve(collider.GetBoundingBox(e.GetGlobalTransform().Point, e.FetchScale()), _others);
+            Rectangle boundingBox = collider.GetBoundingBox(e.GetGlobalTransform().Point, e.FetchScale());
+            qt.Collision.Retrieve(boundingBox, _others);
 
             CollisionCacheComponent collisionCache = e.TryGetCollisionCache() ?? new CollisionCacheComponent();
 

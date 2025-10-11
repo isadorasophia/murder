@@ -3,6 +3,7 @@ using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -560,42 +561,104 @@ namespace Murder.Core.Geometry
         }
 
 
-        internal bool CheckOverlapAt(Polygon other, Vector2 otherScale, Vector2 offset, Vector2 myScale)
+        internal bool CheckOverlapAt(Polygon other, Vector2 offset, Vector2 myScale, Vector2 otherScale)
         {
-            if (!other.GetBoundingBox().Intersects(GetBoundingBox(), -offset))
+            // Early exit: Zero scale means collapsed polygon (no area = no collision)
+            const float SCALE_EPSILON = 0.0001f;
+
+            if (Math.Abs(myScale.X) < SCALE_EPSILON || Math.Abs(myScale.Y) < SCALE_EPSILON ||
+                Math.Abs(otherScale.X) < SCALE_EPSILON || Math.Abs(otherScale.Y) < SCALE_EPSILON)
             {
-                return false; // Early exit if bounding boxes don't touch
+                return false;
             }
 
-            // go through each of the vertices, plus
-            // the next vertex in the list
-            int next = 0;
-            for (int current = 0; current < Vertices.Length; current++)
+            // Bounding box check
+            Rectangle myBoundingBox = GetBoundingBox().Scale(myScale);
+            Rectangle otherBoundingBox = other.GetBoundingBox().Scale(otherScale);
+            if (!myBoundingBox.Intersects(otherBoundingBox, -offset))
             {
-                // get next vertex in list
-                // if we've hit the end, wrap around to 0
-                next = current + 1;
-                if (next == Vertices.Length) next = 0;
+                return false;
+            }
 
-                // get the Vectors at our current position
-                // this makes our if statement a little cleaner
-                var vc = Vertices[current] * myScale + offset;    // c for "current"
-                var vn = Vertices[next] * myScale + offset;       // n for "next"
+            // Cache inverse scales (safe now after zero-check)
+            Vector2 myScaleInv = new Vector2(1f / myScale.X, 1f / myScale.Y);
+            Vector2 otherScaleInv = new Vector2(1f / otherScale.X, 1f / otherScale.Y);
 
-                // check for collision between the rect and
-                // a line formed between the two vertices
-                var line = new Line2(vc, vn);
-                if (other.Intersects(line, out _))
+            // Edge intersection
+            int vertexCount = Vertices.Length;
+            for (int current = 0; current < vertexCount; current++)
+            {
+                int next = (current + 1) % vertexCount;
+
+                Vector2 vc = Vertices[current] * myScale + offset;
+                Vector2 vn = Vertices[next] * myScale + offset;
+
+                if (other.IntersectsLineSegment(vc, vn, otherScale))
                     return true;
             }
 
-            // the above algorithm only checks if the rectangle
-            // is touching the edges of the polygon
+            // Containment checks
+            Vector2 otherWorldPoint = other.Vertices[0] * otherScale;
+            Vector2 otherPointInMySpace = (otherWorldPoint - offset) * myScaleInv;
+            if (Contains(otherPointInMySpace))
+                return true;
 
-            if (Contains(other.Vertices[0] * otherScale - offset))
+            Vector2 myWorldPoint = Vertices[0] * myScale + offset;
+            Vector2 myPointInOtherSpace = myWorldPoint * otherScaleInv;
+            if (other.Contains(myPointInOtherSpace))
                 return true;
 
             return false;
+        }
+
+        /// <summary>
+        /// Checks if a line segment intersects with the polygon with a given scale.
+        /// </summary>
+        internal bool IntersectsLineSegment(Vector2 p1, Vector2 p2, Vector2 scale)
+        {
+            int vertexCount = Vertices.Length;
+
+            for (int current = 0; current < vertexCount; current++)
+            {
+                int next = (current + 1) % vertexCount;
+
+                // Get scaled polygon edge
+                Vector2 v1 = Vertices[current] * scale;
+                Vector2 v2 = Vertices[next] * scale;
+
+                // Check if line segments intersect
+                if (LineSegmentsIntersect(p1, p2, v1, v2))
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Helper method that checks if two line segments intersect, this is similar to the one in Line2 but avoids allocations.
+        /// </summary>
+        private static bool LineSegmentsIntersect(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4)
+        {
+            // Calculate direction vectors
+            Vector2 d1 = p2 - p1;  // Direction of segment 1
+            Vector2 d2 = p4 - p3;  // Direction of segment 2
+
+            // Cross product to find if lines are parallel
+            float cross = d1.X * d2.Y - d1.Y * d2.X;
+
+            // If cross product is zero, lines are parallel (or collinear)
+            if (Math.Abs(cross) < 1e-6f)
+            {
+                return false; // Skip collinear case for performance (rare in games)
+            }
+
+            // Calculate intersection parameters
+            Vector2 diff = p3 - p1;
+            float t = (diff.X * d2.Y - diff.Y * d2.X) / cross;
+            float u = (diff.X * d1.Y - diff.Y * d1.X) / cross;
+
+            // Check if intersection point lies on both segments
+            return t >= 0f && t <= 1f && u >= 0f && u <= 1f;
         }
 
         private string ToDebuggerString()

@@ -1139,6 +1139,13 @@ public static class PhysicsServices
             }
         }
 
+        { // Polygon vs. Polygon
+            if (shape1 is PolygonShape poly1 && shape2 is PolygonShape poly2)
+            {
+                return poly1.Polygon.CheckOverlapAt(poly2.Polygon, position1 - position2, scale1, scale2);
+            }
+        }
+
         { // Lazy vs. Point
             if ((shape1 is PointShape && shape2 is LazyShape) || (shape2 is PointShape && shape1 is LazyShape))
             {
@@ -1525,14 +1532,6 @@ public static class PhysicsServices
                 return polygon.Intersect(rectangle, polygonScale);
             }
         }
-
-        { // Polygon vs. Polygon
-            if (shape1 is PolygonShape poly1 && shape2 is PolygonShape poly2)
-            {
-                return poly1.Polygon.CheckOverlapAt(poly2.Polygon, position1 - position2);
-            }
-        }
-
         GameLogger.Fail($"Invalid collision check {shape1.GetType()} & {shape2.GetType()}");
 
         return false;

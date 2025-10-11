@@ -342,4 +342,32 @@ public struct Rectangle : IEquatable<Rectangle>
         return ox < Right && oright > Left &&
                oy < Bottom && obottom > Top;
     }
+
+    /// <summary>
+    /// Returns a new rectangle scaled by the given vector. If the scale is negative, it will flip the rectangle accordingly.
+    /// </summary>
+    internal Rectangle Scale(Vector2 scale)
+    {
+        Rectangle scaled = new Rectangle(X, Y, Width, Height);
+
+        if (scale.X < 0)
+        {
+            scaled.X = X + Width * scale.X;
+            scaled.Width = -Width * scale.X;
+        }
+        else
+        {
+            scaled.Width = Width * scale.X;
+        }
+        if (scale.Y < 0)
+        {
+            scaled.Y = Y + Height * scale.Y;
+            scaled.Height = -Height * scale.Y;
+        }
+        else
+        {
+            scaled.Height = Height * scale.Y;
+        }
+        return scaled;
+    }
 }
