@@ -28,6 +28,7 @@ public enum ListenerKind
 /// ambience sounds.
 /// </summary>
 [CustomName("\uf186 Ambience component")]
+[Sound]
 public readonly struct AmbienceComponent : IComponent
 {
     public readonly ListenerKind Listener = ListenerKind.Camera;
