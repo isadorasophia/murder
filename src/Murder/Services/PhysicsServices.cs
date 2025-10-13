@@ -12,6 +12,7 @@ using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace Murder.Services;
 
@@ -1060,481 +1061,308 @@ public static class PhysicsServices
     }
     public static bool CollidesWith(IShape shape1, Point position1, Vector2 scale1, IShape shape2, Point position2, Vector2 scale2)
     {
+        // Use local variables for common calculations
+        Point relativePos12 = position1 - position2;
+        Point relativePos21 = position2 - position1;
 
-        { // Lazy vs. Box
-            if ((shape1 is BoxShape && shape2 is LazyShape) || (shape2 is BoxShape && shape1 is LazyShape))
-            {
-                // Code is very ugly, but it's this way for maximum performance
-                LazyShape lazy;
-                BoxShape box;
-
-                int boxLeft, boxRight, boxTop, boxBottom;
-                int lazyLeft, lazyRight, lazyTop, lazyBottom;
-
-                if (shape1 is BoxShape)
-                {
-                    box = ((BoxShape)shape1);
-                    lazy = ((LazyShape)shape2);
-
-                    boxLeft = box.Offset.X + position1.X - Calculator.RoundToInt(box.Origin.X * box.Width);
-                    boxRight = boxLeft + box.Width;
-                    boxTop = box.Offset.Y + position1.Y - Calculator.RoundToInt(box.Origin.Y * box.Height);
-                    boxBottom = boxTop + box.Height;
-
-                    int size = Calculator.RoundToInt(LazyShape.SQUARE_ROOT_OF_TWO * lazy.Radius / 2f);
-                    lazyLeft = lazy.Offset.X + position2.X - size + 1;
-                    lazyRight = lazyLeft + size * 2 - 1;
-                    lazyTop = lazy.Offset.Y + position2.Y - size;
-                    lazyBottom = lazyTop + size * 2;
-                }
-                else
-                {
-                    box = ((BoxShape)shape2);
-                    lazy = ((LazyShape)shape1);
-
-                    boxLeft = box.Offset.X + position2.X - Calculator.RoundToInt(box.Origin.X * box.Width);
-                    boxRight = boxLeft + box.Width;
-                    boxTop = box.Offset.Y + position2.Y - Calculator.RoundToInt(box.Origin.Y * box.Height);
-                    boxBottom = boxTop + box.Height;
-
-                    int size = Calculator.RoundToInt(LazyShape.SQUARE_ROOT_OF_TWO * lazy.Radius / 2f);
-                    lazyLeft = lazy.Offset.X + position1.X - size + 1;
-                    lazyRight = lazyLeft + size * 2 - 1;
-                    lazyTop = lazy.Offset.Y + position1.Y - size;
-                    lazyBottom = lazyTop + size * 2;
-                }
-
-                return boxLeft <= lazyRight &&
-                        lazyLeft <= boxRight &&
-                        boxTop <= lazyBottom &&
-                        lazyTop <= boxBottom;
-            }
+        // Polygon vs. Polygon - Most common case
+        if (shape1 is PolygonShape poly1 && shape2 is PolygonShape poly2)
+        {
+            return poly1.Polygon.CheckOverlapAt(poly2.Polygon, relativePos12, scale1, scale2);
         }
 
-        { // Lazy vs. Lazy
-            if (shape1 is LazyShape lazy1 && shape2 is LazyShape lazy2)
-            {
-                return lazy1.Touches(lazy2, position1, position2);
-            }
+        // Polygon vs. Rectangle - Also very common
+        if (shape1 is PolygonShape polyI && shape2 is BoxShape boxI)
+        {
+            return polyI.Polygon.Intersect(boxI.Rectangle.AddPosition(relativePos21), scale1);
+        }
+        if (shape1 is BoxShape boxJ && shape2 is PolygonShape polyJ)
+        {
+            return polyJ.Polygon.Intersect(boxJ.Rectangle.AddPosition(relativePos12), scale2);
         }
 
-        { // Lazy vs. Circle
-            if ((shape1 is CircleShape && shape2 is LazyShape) || (shape2 is CircleShape && shape1 is LazyShape))
-            {
-                Circle circle;
-                LazyShape lazy;
-
-                if (shape1 is CircleShape)
-                {
-                    circle = ((CircleShape)shape1).Circle;
-                    lazy = ((LazyShape)shape2);
-                }
-                else
-                {
-                    circle = ((CircleShape)shape2).Circle;
-                    lazy = ((LazyShape)shape1);
-                }
-
-                return lazy.Touches(circle, position1, position2);
-            }
+        // Lazy vs. Lazy - Fast check
+        if (shape1 is LazyShape lazy1 && shape2 is LazyShape lazy2)
+        {
+            return lazy1.Touches(lazy2, position1, position2);
         }
 
-        { // Polygon vs. Polygon
-            if (shape1 is PolygonShape poly1 && shape2 is PolygonShape poly2)
-            {
-                return poly1.Polygon.CheckOverlapAt(poly2.Polygon, position1 - position2, scale1, scale2);
-            }
+        // Circle vs. Circle - Fast check
+        if (shape1 is CircleShape circle1 && shape2 is CircleShape circle2)
+        {
+            var center1 = position1 + circle1.Offset;
+            var center2 = position2 + circle2.Offset;
+            float radiusSum = circle1.Radius + circle2.Radius;
+            return (center1 - center2).LengthSquared() <= radiusSum * radiusSum;
         }
 
-        { // Lazy vs. Point
-            if ((shape1 is PointShape && shape2 is LazyShape) || (shape2 is PointShape && shape1 is LazyShape))
-            {
-                Point point;
-                LazyShape lazy;
-
-                if (shape1 is PointShape)
-                {
-                    point = ((PointShape)shape1).Point + position1 - position2;
-                    lazy = ((LazyShape)shape2);
-
-                    return lazy.Touches(point);
-                }
-                else
-                {
-                    point = ((PointShape)shape2).Point + position2 - position1;
-                    lazy = ((LazyShape)shape1);
-
-                    return lazy.Touches(point);
-                }
-
-            }
+        // Point vs. Point - Trivial check
+        if (shape1 is PointShape point1 && shape2 is PointShape point2)
+        {
+            return point1.Point + position1 == point2.Point + position2;
         }
 
-        { // Lazy vs. Line
-            if ((shape1 is LineShape && shape2 is LazyShape) || (shape2 is LineShape && shape1 is LazyShape))
-            {
-                Rectangle rect;
-                Line2 line;
-
-                if (shape1 is LineShape)
-                {
-                    line = ((LineShape)shape1).LineAtPosition(position1);
-                    rect = ((LazyShape)shape2).Rectangle(position2);
-                }
-                else
-                {
-                    line = ((LineShape)shape1).LineAtPosition(position2);
-                    rect = ((LazyShape)shape1).Rectangle(position1);
-                }
-
-                return line.IntersectsRect(rect);
-            }
+        // Box vs. Box - Fast AABB check
+        if (shape1 is BoxShape box1 && shape2 is BoxShape box2)
+        {
+            Rectangle rect1 = box1.Rectangle.AddPosition(position1);
+            Rectangle rect2 = box2.Rectangle.AddPosition(position2);
+            return rect1.Touches(rect2);
         }
 
-        { // Lazy vs. Polygon
-            if ((shape1 is PolygonShape && shape2 is LazyShape) || (shape2 is PolygonShape && shape1 is LazyShape))
-            {
-                Rectangle circle;
-                Polygon polygon;
-                Vector2 polygonScale;
-                if (shape1 is PolygonShape)
-                {
-                    polygon = ((PolygonShape)shape1).Polygon;
-                    polygonScale = scale1;
-
-                    circle = ((LazyShape)shape2).Rectangle(position2 - position1);
-                }
-                else
-                {
-                    polygon = ((PolygonShape)shape2).Polygon;
-                    polygonScale = scale2;
-
-                    circle = ((LazyShape)shape1).Rectangle(position1 - position2);
-                }
-
-                return polygon.Intersect(circle, polygonScale);
-            }
+        // Lazy vs. Box
+        if (shape1 is BoxShape boxA && shape2 is LazyShape lazyA)
+        {
+            return CheckLazyBoxCollision(lazyA, position2, boxA, position1);
+        }
+        if (shape1 is LazyShape lazyB && shape2 is BoxShape boxB)
+        {
+            return CheckLazyBoxCollision(lazyB, position1, boxB, position2);
         }
 
-        { // Point vs. Point
-            if (shape1 is PointShape point1 && shape2 is PointShape point2)
-            {
-                return point1.Point + position1 == point2.Point + position2;
-            }
+        // Lazy vs. Circle
+        if (shape1 is CircleShape circleA && shape2 is LazyShape lazyC)
+        {
+            return lazyC.Touches(circleA.Circle, position2, position1);
+        }
+        if (shape1 is LazyShape lazyD && shape2 is CircleShape circleB)
+        {
+            return lazyD.Touches(circleB.Circle, position1, position2);
         }
 
-        { // Point vs. Box
-            if ((shape1 is BoxShape && shape2 is PointShape) || (shape2 is BoxShape && shape1 is PointShape))
-            {
-                Point point;
-                Rectangle box;
-
-                if (shape1 is BoxShape)
-                {
-                    box = ((BoxShape)shape1).Rectangle.AddPosition(position1);
-                    point = ((PointShape)shape2).Point + position2;
-                }
-                else
-                {
-                    box = ((BoxShape)shape2).Rectangle.AddPosition(position2);
-                    point = ((PointShape)shape1).Point + position1;
-                }
-
-                return box.Contains(point);
-            }
+        // Lazy vs. Point
+        if (shape1 is PointShape pointA && shape2 is LazyShape lazyE)
+        {
+            return lazyE.Touches(pointA.Point + relativePos12);
+        }
+        if (shape1 is LazyShape lazyF && shape2 is PointShape pointB)
+        {
+            return lazyF.Touches(pointB.Point + relativePos21);
         }
 
-        { // Point vs. Circle
-            if ((shape1 is CircleShape && shape2 is PointShape) || (shape2 is CircleShape && shape1 is PointShape))
-            {
-                Point point;
-                Circle circle;
-
-                if (shape1 is CircleShape)
-                {
-                    circle = ((CircleShape)shape1).Circle.AddPosition(position1);
-                    point = ((PointShape)shape2).Point + position2;
-                }
-                else
-                {
-                    circle = ((CircleShape)shape2).Circle.AddPosition(position2);
-                    point = ((PointShape)shape1).Point + position1;
-                }
-
-                return circle.Contains(point);
-            }
+        // Lazy vs. Line
+        if (shape1 is LineShape lineA && shape2 is LazyShape lazyG)
+        {
+            return lineA.LineAtPosition(position1).IntersectsRect(lazyG.Rectangle(position2));
+        }
+        if (shape1 is LazyShape lazyH && shape2 is LineShape lineB)
+        {
+            return lineB.LineAtPosition(position2).IntersectsRect(lazyH.Rectangle(position1));
         }
 
-        { // Point vs. Line
-            if ((shape1 is LineShape && shape2 is PointShape) || (shape2 is LineShape && shape1 is PointShape))
-            {
-                Point point;
-                Line2 line;
-
-                if (shape1 is BoxShape)
-                {
-                    line = ((LineShape)shape1).LineAtPosition(position1);
-                    point = ((PointShape)shape2).Point + position2;
-                }
-                else
-                {
-                    line = ((LineShape)shape2).LineAtPosition(position2);
-                    point = ((PointShape)shape1).Point + position1;
-                }
-                return line.HasPoint(point);
-            }
+        // Lazy vs. Polygon
+        if (shape1 is PolygonShape polyA && shape2 is LazyShape lazyI)
+        {
+            return polyA.Polygon.Intersect(lazyI.Rectangle(relativePos21), scale1);
+        }
+        if (shape1 is LazyShape lazyJ && shape2 is PolygonShape polyB)
+        {
+            return polyB.Polygon.Intersect(lazyJ.Rectangle(relativePos12), scale2);
         }
 
-        { // Line vs Circle
-            if ((shape1 is LineShape && shape2 is CircleShape) || (shape2 is LineShape && shape1 is CircleShape))
-            {
-                Circle circle;
-                Line2 line;
-
-                if (shape1 is LineShape)
-                {
-                    line = ((LineShape)shape1).LineAtPosition(position1);
-                    circle = ((CircleShape)shape2).Circle.AddPosition(position2);
-                }
-                else
-                {
-                    line = ((LineShape)shape2).LineAtPosition(position2);
-                    circle = ((CircleShape)shape1).Circle.AddPosition(position1);
-                }
-
-                return line.IntersectsCircle(circle);
-            }
+        // Point vs. Box
+        if (shape1 is BoxShape boxC && shape2 is PointShape pointC)
+        {
+            return boxC.Rectangle.AddPosition(position1).Contains(pointC.Point + position2);
+        }
+        if (shape1 is PointShape pointD && shape2 is BoxShape boxD)
+        {
+            return boxD.Rectangle.AddPosition(position2).Contains(pointD.Point + position1);
         }
 
-
-        { // Line vs Line
-            if ((shape1 is LineShape line1 && shape2 is LineShape line2))
-            {
-                var lineA = line1.LineAtPosition(position1);
-                var lineB = line2.LineAtPosition(position2);
-                return lineA.Intersects(lineB);
-            }
+        // Point vs. Circle
+        if (shape1 is CircleShape circleC && shape2 is PointShape pointE)
+        {
+            return circleC.Circle.AddPosition(position1).Contains(pointE.Point + position2);
+        }
+        if (shape1 is PointShape pointF && shape2 is CircleShape circleD)
+        {
+            return circleD.Circle.AddPosition(position2).Contains(pointF.Point + position1);
         }
 
-
-
-        { // Line vs. Box
-            if ((shape1 is BoxShape && shape2 is LineShape) || (shape2 is BoxShape && shape1 is LineShape))
-            {
-                Line2 line;
-                Rectangle box;
-
-                if (shape1 is BoxShape)
-                {
-                    box = ((BoxShape)shape1).Rectangle.AddPosition(position1);
-                    line = ((LineShape)shape2).LineAtPosition(position2);
-                }
-                else
-                {
-                    box = ((BoxShape)shape2).Rectangle.AddPosition(position2);
-                    line = ((LineShape)shape1).LineAtPosition(position1);
-                }
-
-                //check to see if any lines on the box intersect the line
-                Line2 boxLine;
-
-                boxLine = new Line2(box.Left + 1, box.Top + 1, box.Right, box.Top);
-                if (boxLine.Intersects(line))
-                    return true;
-
-                boxLine = new Line2(box.Right, box.Top + 1, box.Right, box.Bottom);
-                if (boxLine.Intersects(line))
-                    return true;
-
-                boxLine = new Line2(box.Right, box.Bottom, box.Left + 1, box.Bottom);
-                if (boxLine.Intersects(line))
-                    return true;
-
-                boxLine = new Line2(box.Left + 1, box.Bottom, box.Left + 1, box.Top + 1);
-                if (boxLine.Intersects(line))
-                    return true;
-
-                return false;
-            }
+        // Box vs. Circle
+        if (shape1 is BoxShape boxG && shape2 is CircleShape circleG)
+        {
+            return CheckBoxCircleCollision(boxG.Rectangle.AddPosition(position1), circleG.Circle.AddPosition(position2));
+        }
+        if (shape1 is CircleShape circleH && shape2 is BoxShape boxH)
+        {
+            return CheckBoxCircleCollision(boxH.Rectangle.AddPosition(position2), circleH.Circle.AddPosition(position1));
         }
 
-
-        { // Box vs. Box
-            if (shape1 is BoxShape box1 && shape2 is BoxShape box2)
-            {
-                Rectangle rect1 = box1.Rectangle.AddPosition(position1);
-                Rectangle rect2 = box2.Rectangle.AddPosition(position2);
-
-                if (rect1.Touches(rect2))
-                {
-                    return true;
-                }
-
-                return false;
-            }
+        // Polygon vs. Point
+        if (shape1 is PolygonShape polyC && shape2 is PointShape pointI)
+        {
+            return polyC.Polygon.Contains(pointI.Point + relativePos21, scale1);
+        }
+        if (shape1 is PointShape pointJ && shape2 is PolygonShape polyD)
+        {
+            return polyD.Polygon.Contains(pointJ.Point + relativePos12, scale2);
         }
 
-        { // Box vs. Circle
-            if ((shape1 is BoxShape && shape2 is CircleShape) || (shape2 is BoxShape && shape1 is CircleShape))
-            {
-                Circle circle;
-                Rectangle box;
-
-                if (shape1 is BoxShape)
-                {
-                    box = ((BoxShape)shape1).Rectangle.AddPosition(position1);
-                    circle = ((CircleShape)shape2).Circle.AddPosition(position2);
-                }
-                else
-                {
-                    box = ((BoxShape)shape2).Rectangle.AddPosition(position2);
-                    circle = ((CircleShape)shape1).Circle.AddPosition(position1);
-                }
-
-                //check is c center point is in the rect
-                if (box.Contains(circle.X, circle.Y))
-                {
-                    return true;
-                }
-
-                //check to see if any corners are in the circle
-                if (GeometryServices.DistanceRectPoint(circle.X, circle.Y + 1, box.Left, box.Top + 1, box.Width, box.Height) < circle.Radius)
-                {
-                    return true;
-                }
-
-                //check to see if any lines on the box intersect the circle
-                Line2 boxLine;
-
-                boxLine = new Line2(box.Left, box.Top + 1, box.Right, box.Top);
-                if (boxLine.IntersectsCircle(circle))
-                    return true;
-
-                boxLine = new Line2(box.Right, box.Top + 1, box.Right, box.Bottom);
-                if (boxLine.IntersectsCircle(circle))
-                    return true;
-
-                boxLine = new Line2(box.Right, box.Bottom, box.Left, box.Bottom);
-                if (boxLine.IntersectsCircle(circle))
-                    return true;
-
-                boxLine = new Line2(box.Left, box.Bottom, box.Left, box.Top + 1);
-                if (boxLine.IntersectsCircle(circle))
-                    return true;
-
-                return false;
-            }
+        // Polygon vs. Circle
+        if (shape1 is PolygonShape polyE && shape2 is CircleShape circleI)
+        {
+            return polyE.Polygon.Intersect(circleI.Circle.AddPosition(relativePos21), scale1);
+        }
+        if (shape1 is CircleShape circleJ && shape2 is PolygonShape polyF)
+        {
+            return polyF.Polygon.Intersect(circleJ.Circle.AddPosition(relativePos12), scale2);
         }
 
-        { // Circle vs. Circle
-            if ((shape1 is CircleShape circle1 && shape2 is CircleShape circle2))
-            {
-                var center1 = position1 + circle1.Offset;
-                var center2 = position2 + circle2.Offset;
-
-                return (center1 - center2).LengthSquared() <= MathF.Pow(circle1.Radius + circle2.Radius, 2);
-            }
+        // Anything line related is not super common, so we put it at the end.
+        // Polygon vs. Line
+        if (shape1 is PolygonShape polyG && shape2 is LineShape lineK)
+        {
+            return polyG.Polygon.Intersects(lineK.LineAtPosition(relativePos21), scale1, out _);
+        }
+        if (shape1 is LineShape lineL && shape2 is PolygonShape polyH)
+        {
+            return polyH.Polygon.Intersects(lineL.LineAtPosition(relativePos12), scale2, out _);
+        }
+        // Point vs. Line
+        if (shape1 is LineShape lineC && shape2 is PointShape pointG)
+        {
+            return lineC.LineAtPosition(position1).HasPoint(pointG.Point + position2);
+        }
+        if (shape1 is PointShape pointH && shape2 is LineShape lineD)
+        {
+            return lineD.LineAtPosition(position2).HasPoint(pointH.Point + position1);
         }
 
-        { // Polygon vs. Point
-            if ((shape1 is PolygonShape && shape2 is PointShape) || (shape2 is PolygonShape && shape1 is PointShape))
-            {
-                Point point;
-                Polygon polygon;
-                Vector2 polygonScale;
-
-                if (shape1 is PolygonShape)
-                {
-                    polygon = ((PolygonShape)shape1).Polygon;
-                    polygonScale = scale1;
-                    point = ((PointShape)shape2).Point + position2 - position1;
-                }
-                else
-                {
-                    polygon = ((PolygonShape)shape2).Polygon;
-                    polygonScale = scale2;
-                    point = ((PointShape)shape1).Point + position1 - position2;
-                }
-                return polygon.Contains(point, polygonScale);
-            }
+        // Line vs Circle
+        if (shape1 is LineShape lineE && shape2 is CircleShape circleE)
+        {
+            return lineE.LineAtPosition(position1).IntersectsCircle(circleE.Circle.AddPosition(position2));
+        }
+        if (shape1 is CircleShape circleF && shape2 is LineShape lineF)
+        {
+            return lineF.LineAtPosition(position2).IntersectsCircle(circleF.Circle.AddPosition(position1));
         }
 
-        { // Polygon vs. Circle
-            if ((shape1 is PolygonShape && shape2 is CircleShape) || (shape2 is PolygonShape && shape1 is CircleShape))
-            {
-                Circle circle;
-                Polygon polygon;
-                Vector2 polygonScale;
-
-                if (shape1 is PolygonShape)
-                {
-                    polygon = ((PolygonShape)shape1).Polygon;
-                    polygonScale = scale1;
-                    circle = ((CircleShape)shape2).Circle.AddPosition(position2 - position1);
-                }
-                else
-                {
-                    polygon = ((PolygonShape)shape2).Polygon;
-                    polygonScale = scale2;
-                    circle = ((CircleShape)shape1).Circle.AddPosition(position1 - position2);
-                }
-
-                return polygon.Intersect(circle, polygonScale);
-
-            }
+        // Line vs Line
+        if (shape1 is LineShape lineG && shape2 is LineShape lineH)
+        {
+            return lineG.LineAtPosition(position1).Intersects(lineH.LineAtPosition(position2));
         }
 
-
-        { // Polygon vs. Line
-            if ((shape1 is PolygonShape && shape2 is LineShape) || (shape2 is PolygonShape && shape1 is LineShape))
-            {
-                Line2 line;
-                Polygon polygon;
-                Vector2 polygonScale;
-
-                if (shape1 is PolygonShape)
-                {
-                    polygon = ((PolygonShape)shape1).Polygon;
-                    polygonScale = scale1;
-                    line = ((LineShape)shape2).LineAtPosition(position2 - position1);
-                }
-                else
-                {
-                    polygon = ((PolygonShape)shape2).Polygon;
-                    polygonScale = scale2;
-                    line = ((LineShape)shape1).LineAtPosition(position1 - position2);
-                }
-
-                return polygon.Intersects(line, polygonScale, out _);
-            }
+        // Line vs. Box
+        if (shape1 is BoxShape boxE && shape2 is LineShape lineI)
+        {
+            return CheckLineBoxCollision(lineI.LineAtPosition(position2), boxE.Rectangle.AddPosition(position1));
+        }
+        if (shape1 is LineShape lineJ && shape2 is BoxShape boxF)
+        {
+            return CheckLineBoxCollision(lineJ.LineAtPosition(position1), boxF.Rectangle.AddPosition(position2));
         }
 
-        { // Polygon vs. Rectangle
-            if ((shape1 is PolygonShape && shape2 is BoxShape) || (shape2 is PolygonShape && shape1 is BoxShape))
-            {
-                Rectangle rectangle;
-                Polygon polygon;
-                Vector2 polygonScale;
-
-                if (shape1 is PolygonShape)
-                {
-                    polygon = ((PolygonShape)shape1).Polygon;
-                    polygonScale = scale1;
-                    rectangle = ((BoxShape)shape2).Rectangle.AddPosition(position2 - position1);
-                }
-                else
-                {
-                    polygon = ((PolygonShape)shape2).Polygon;
-                    polygonScale = scale2;
-                    rectangle = ((BoxShape)shape1).Rectangle.AddPosition(position1 - position2);
-                }
-
-                return polygon.Intersect(rectangle, polygonScale);
-            }
-        }
         GameLogger.Fail($"Invalid collision check {shape1.GetType()} & {shape2.GetType()}");
+        return false;
+    }
+
+    private static bool CheckLazyBoxCollision(LazyShape lazy, Point lazyPos, BoxShape box, Point boxPos)
+    {
+        int boxLeft = box.Offset.X + boxPos.X - Calculator.RoundToInt(box.Origin.X * box.Width);
+        int boxRight = boxLeft + box.Width;
+        int boxTop = box.Offset.Y + boxPos.Y - Calculator.RoundToInt(box.Origin.Y * box.Height);
+        int boxBottom = boxTop + box.Height;
+
+        int size = Calculator.RoundToInt(LazyShape.SQUARE_ROOT_OF_TWO * lazy.Radius / 2f);
+        int lazyLeft = lazy.Offset.X + lazyPos.X - size + 1;
+        int lazyRight = lazyLeft + size * 2 - 1;
+        int lazyTop = lazy.Offset.Y + lazyPos.Y - size;
+        int lazyBottom = lazyTop + size * 2;
+
+        return boxLeft <= lazyRight && lazyLeft <= boxRight && boxTop <= lazyBottom && lazyTop <= boxBottom;
+    }
+    private static bool CheckLineBoxCollision(Line2 line, Rectangle box)
+    {
+        // Get line endpoints
+        Vector2 p1 = line.Start;
+        Vector2 p2 = line.End;
+
+        // Check all 4 edges of the box without allocating Line2 objects
+        // Top edge
+        if (Calculator.LineSegmentsIntersect(p1, p2, new Vector2(box.Left + 1, box.Top + 1), new Vector2(box.Right, box.Top)))
+            return true;
+
+        // Right edge
+        if (Calculator.LineSegmentsIntersect(p1, p2, new Vector2(box.Right, box.Top + 1), new Vector2(box.Right, box.Bottom)))
+            return true;
+
+        // Bottom edge
+        if (Calculator.LineSegmentsIntersect(p1, p2, new Vector2(box.Right, box.Bottom), new Vector2(box.Left + 1, box.Bottom)))
+            return true;
+
+        // Left edge
+        if (Calculator.LineSegmentsIntersect(p1, p2, new Vector2(box.Left + 1, box.Bottom), new Vector2(box.Left + 1, box.Top + 1)))
+            return true;
 
         return false;
+    }
+    private static bool CheckBoxCircleCollision(Rectangle box, Circle circle)
+    {
+        // Check if circle center is in the rect
+        if (box.Contains(circle.X, circle.Y))
+            return true;
+
+        // Check if any corners are in the circle
+        if (GeometryServices.DistanceRectPoint(circle.X, circle.Y + 1, box.Left, box.Top + 1, box.Width, box.Height) < circle.Radius)
+            return true;
+
+        float cx = circle.X;
+        float cy = circle.Y;
+        float r = circle.Radius;
+
+        // Check all 4 edges without allocating Line2 objects
+        // Top edge
+        if (LineSegmentIntersectsCircle(box.Left, box.Top + 1, box.Right, box.Top, cx, cy, r))
+            return true;
+
+        // Right edge
+        if (LineSegmentIntersectsCircle(box.Right, box.Top + 1, box.Right, box.Bottom, cx, cy, r))
+            return true;
+
+        // Bottom edge
+        if (LineSegmentIntersectsCircle(box.Right, box.Bottom, box.Left, box.Bottom, cx, cy, r))
+            return true;
+
+        // Left edge
+        if (LineSegmentIntersectsCircle(box.Left, box.Bottom, box.Left, box.Top + 1, cx, cy, r))
+            return true;
+
+        return false;
+    }
+
+    private static bool LineSegmentIntersectsCircle(float x1, float y1, float x2, float y2, float cx, float cy, float radius)
+    {
+        // Vector from line start to circle center
+        float dx = cx - x1;
+        float dy = cy - y1;
+
+        // Line direction vector
+        float lx = x2 - x1;
+        float ly = y2 - y1;
+
+        // Length squared of line segment
+        float lenSq = lx * lx + ly * ly;
+
+        // Project circle center onto line
+        float t = (dx * lx + dy * ly) / lenSq;
+
+        // Clamp to segment
+        t = Math.Max(0f, Math.Min(1f, t));
+
+        // Closest point on segment
+        float closestX = x1 + t * lx;
+        float closestY = y1 + t * ly;
+
+        // Distance from closest point to circle center
+        float distX = cx - closestX;
+        float distY = cy - closestY;
+        float distSq = distX * distX + distY * distY;
+
+        return distSq <= radius * radius;
     }
 
     public static bool ContainsPoint(Entity entity, Point point)

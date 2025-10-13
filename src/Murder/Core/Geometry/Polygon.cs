@@ -560,7 +560,6 @@ namespace Murder.Core.Geometry
             return false;
         }
 
-
         internal bool CheckOverlapAt(Polygon other, Vector2 offset, Vector2 myScale, Vector2 otherScale)
         {
             // Early exit: Zero scale means collapsed polygon (no area = no collision)
@@ -627,38 +626,11 @@ namespace Murder.Core.Geometry
                 Vector2 v2 = Vertices[next] * scale;
 
                 // Check if line segments intersect
-                if (LineSegmentsIntersect(p1, p2, v1, v2))
+                if (Calculator.LineSegmentsIntersect(p1, p2, v1, v2))
                     return true;
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Helper method that checks if two line segments intersect, this is similar to the one in Line2 but avoids allocations.
-        /// </summary>
-        private static bool LineSegmentsIntersect(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4)
-        {
-            // Calculate direction vectors
-            Vector2 d1 = p2 - p1;  // Direction of segment 1
-            Vector2 d2 = p4 - p3;  // Direction of segment 2
-
-            // Cross product to find if lines are parallel
-            float cross = d1.X * d2.Y - d1.Y * d2.X;
-
-            // If cross product is zero, lines are parallel (or collinear)
-            if (Math.Abs(cross) < 1e-6f)
-            {
-                return false; // Skip collinear case for performance (rare in games)
-            }
-
-            // Calculate intersection parameters
-            Vector2 diff = p3 - p1;
-            float t = (diff.X * d2.Y - diff.Y * d2.X) / cross;
-            float u = (diff.X * d1.Y - diff.Y * d1.X) / cross;
-
-            // Check if intersection point lies on both segments
-            return t >= 0f && t <= 1f && u >= 0f && u <= 1f;
         }
 
         private string ToDebuggerString()
