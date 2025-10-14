@@ -32,7 +32,7 @@ namespace Murder.Editor.CustomFields
 
         protected override bool DrawElement(ref CriterionNode node, EditorMember member, int index)
         {
-            using TableMultipleColumns table = new($"criteria_{member.Name}", flags: ImGuiTableFlags.SizingStretchSame, 150, 70, 140);
+            using TableMultipleColumns table = new($"criteria_{member.Name}", flags: ImGuiTableFlags.SizingStretchSame, 200, 70, 140);
 
             ImGui.TableNextRow();
             ImGui.TableNextColumn();

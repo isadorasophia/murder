@@ -290,6 +290,11 @@ namespace Murder.Editor.ImGuiExtended
                 return chosen;
             }
 
+            if (current is Fact fact)
+            {
+                ImGuiHelpers.HelpTooltip($"{fact.EditorName}");
+            }
+
             return default;
         }
 
