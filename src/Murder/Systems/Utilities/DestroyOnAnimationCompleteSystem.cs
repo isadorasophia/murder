@@ -58,7 +58,7 @@ namespace Murder.Systems.Util
                     return;
 
                 case DestroyOnAnimationCompleteFlags.AlphaZero:
-                    entity.SetAlpha(AlphaSources.Alpha, 0);
+                    entity.SetAlpha(0);
                     return;
 
                 case DestroyOnAnimationCompleteFlags.None:

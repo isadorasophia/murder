@@ -23,9 +23,9 @@ namespace Murder.Systems
                 var fadeout = e.GetFadeTransition();
                 if (fadeout.StartTime == 0)
                 {
-                    if (e.TryGetComponent<AlphaComponent>() is AlphaComponent alpha)
+                    if (e.TryGetAlpha() is AlphaComponent alpha)
                     {
-                        e.SetFadeTransition(fadeout.Duration, alpha.Get(AlphaSources.Fade), fadeout.TargetAlpha, fadeout.DestroyEntityOnEnd);
+                        e.SetFadeTransition(fadeout.Duration, alpha.Alpha, fadeout.TargetAlpha, fadeout.DestroyEntityOnEnd);
                     }
                     else
                     {
@@ -64,7 +64,7 @@ namespace Murder.Systems
                 float percentage = Calculator.Clamp01((Game.NowUnscaled - fade.StartTime) / fade.Duration);
                 float alpha = Calculator.Lerp(fade.StartAlpha, fade.TargetAlpha, Ease.CubeOut(percentage));
 
-                e.SetAlpha(AlphaSources.Fade, alpha);
+                e.SetAlpha(alpha);
             }
         }
     }
