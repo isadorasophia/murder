@@ -84,6 +84,12 @@ namespace Murder.Utilities
 
         #region Math
 
+        public static int Digits(int number)
+        {
+            if (number == 0) return 1;
+            return (int)Math.Floor(Math.Log10(Math.Abs(number))) + 1;
+        }
+
         /// <summary>
         /// Helper method that checks if two line segments intersect, this is similar to the one in Line2 but avoids allocations.
         /// </summary>
