@@ -323,6 +323,10 @@ public class GenericSelectorSystem
         hook.ClearHoveringEntities();
         foreach (Entity e in entities)
         {
+            if (Architect.Instance.IsPlayingGame)
+            {
+                if (!e.HasInCamera()) continue;
+            }
             if (!e.HasTransform()) continue;
 
             Vector2 position = e.GetGlobalTransform().Vector2;

@@ -7,6 +7,7 @@ using Murder.Core.Input;
 using Murder.Diagnostics;
 using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Utilities.Serialization;
 using Murder.Prefabs;
 using Murder.Services;
 using Murder.Utilities;
@@ -38,7 +39,6 @@ namespace Murder.Editor.Utilities
             return isOpen;
         }
 
-        private static readonly HashSet<Type> _failedComponentTypesCache = new();
         private static void DrawInspectorCore(World world, Entity entity)
         {
             foreach (IComponent c in entity.Components)
@@ -54,39 +54,38 @@ namespace Murder.Editor.Utilities
                     else
                     {
                         bool succeededCopy = true;
-                        if (_failedComponentTypesCache.Contains(c.GetType()))
+                        // This is modifying the memory of all readonly structs, so only create a copy if this 
+                        // is not a modifiable component.
+                        IComponent copy;
+                        try
                         {
-                            // We already know we can't copy this type.
+                            if (c is not IModifiableComponent && EditorSerializationHelper.TryDeepCopy(c) is IComponent deepCopy)
+                            {
+                                copy = deepCopy;
+                            }
+                            else
+                            {
+                                // Just use the original since we can modify it.
+                                copy = c;
+                            }
+                        }
+                        catch (NotSupportedException)
+                        {
+                            // We might not support deep copying some runtime fields.
+                            // This is probably okay because we won't serialize this anyway in real world.
+                            copy = c;
                             succeededCopy = false;
                         }
-                        else
+
+                        if (CustomComponent.ShowEditorOf(ref copy))
                         {
-                            // This is modifying the memory of all readonly structs, so only create a copy if this 
-                            // is not a modifiable component.
-                            IComponent copy;
-                            try
+                            if (!succeededCopy)
                             {
-                                copy = c is IModifiableComponent ? c : SerializationHelper.DeepCopy(c);
-                            }
-                            catch (NotSupportedException)
-                            {
-                                // We might not support deep copying some runtime fields.
-                                // This is probably okay because we won't serialize this anyway in real world.
-                                copy = c;
-                                succeededCopy = false;
-                                _failedComponentTypesCache.Add(c.GetType());
+                                GameLogger.Warning("Modifying field that is not supported to be serialized!");
                             }
 
-                            if (CustomComponent.ShowEditorOf(ref copy))
-                            {
-                                if (!succeededCopy)
-                                {
-                                    GameLogger.Warning("Modifying field that is not supported to be serialized!");
-                                }
-
-                                // This will trigger reactive systems.
-                                entity.ReplaceComponent(copy, copy.GetType());
-                            }
+                            // This will trigger reactive systems.
+                            entity.ReplaceComponent(copy, copy.GetType());
                         }
                     }
 

@@ -20,7 +20,7 @@ namespace Murder.Editor.Systems;
 [OnlyShowOnDebugView]
 [Requires(typeof(CursorSystem), typeof(EditorSystem))]
 [WorldEditor(startActive: true)]
-[Filter(ContextAccessorFilter.AllOf, ContextAccessorKind.Read, typeof(ITransformComponent), typeof(InCameraComponent))]
+[Filter(ContextAccessorFilter.AllOf, ContextAccessorKind.Read, typeof(ITransformComponent))]
 [Filter(ContextAccessorFilter.NoneOf, typeof(SoundParameterComponent), typeof(SkipComponent))] // Skip cutscene and sounds.
 public class EntitiesSelectorSystem : GenericSelectorSystem, IStartupSystem, IUpdateSystem, IGuiSystem, IMurderRenderSystem
 {
