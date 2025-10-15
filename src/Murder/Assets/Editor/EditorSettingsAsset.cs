@@ -138,6 +138,8 @@ public class EditorSettingsAsset : GameAsset
 
     public ImmutableHashSet<Guid> FavoriteAssets => [.. _favoriteAssets];
 
+    public Guid LastPlayedGameMode = Guid.Empty;
+
     private readonly List<GameAsset> _cachedFavoriteAssets = new();
 
     public List<GameAsset> CachedFavoriteAssets

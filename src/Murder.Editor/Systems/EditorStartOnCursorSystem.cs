@@ -3,6 +3,7 @@ using Bang.Components;
 using Bang.Contexts;
 using Bang.Systems;
 using ImGuiNET;
+using Murder.Assets.Save;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
@@ -139,6 +140,48 @@ namespace Murder.Editor.Systems
                     }
                 }
 
+                _saveStateInfo ??= Architect.EditorData.GetAllAvailableStartGameFrom();
+
+                if (Architect.EditorSettings.LastPlayedGameMode != Guid.Empty)
+                {
+                    string lastPlayedName = "Unknown";
+                    bool found = false;
+                    // Find the name of the last played game mode.
+                    for (int i = 0; i < _saveStateInfo.Length; i++)
+                    {
+                        if (_saveStateInfo[i].Guid == Architect.EditorSettings.LastPlayedGameMode)
+                        {
+                            lastPlayedName = _saveStateInfo[i].Name;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found)
+                    {
+                        ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Accent);
+
+                        if (ImGui.Selectable($" {lastPlayedName}"))
+                        {
+                            hook.Cursor = CursorStyle.Normal;
+                            Architect.EditorSettings.TestWorldPosition = hook.LastCursorWorldPosition;
+                            Architect.Instance.QueueStartPlayingGame(new StartPlayGameInfo
+                            {
+                                IsQuickplay = false,
+                                SaveSlot = Game.Data.GetNextAvailableSlot(),
+                                StartingScene = world.Guid(),
+                                LoadStateFrom = Architect.EditorSettings.LastPlayedGameMode
+                            });
+                        }
+                        ImGui.PopStyleColor();
+                    }
+                    else
+                    {
+                        // This means the last played game mode is invalid, reset it.
+                        Architect.EditorSettings.LastPlayedGameMode = Guid.Empty;
+                    }
+                }
+
+
                 if (ImGui.BeginMenu("Start playing with save"))
                 {
                     ImGui.Text("Select a save to start playing with");
@@ -163,8 +206,6 @@ namespace Murder.Editor.Systems
                             }
                         }
                     }
-                    
-                    _saveStateInfo ??= Architect.EditorData.GetAllAvailableStartGameFrom();
 
                     if (_saveStateInfo.Length > 0)
                     {
@@ -178,7 +219,7 @@ namespace Murder.Editor.Systems
                                 ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Yellow);
                             }
 
-                            if (ImGui.MenuItem((isFavorite? " " : "") + name))
+                            if (ImGui.MenuItem((isFavorite ? " " : "") + name))
                             {
                                 hook.Cursor = CursorStyle.Normal;
 
@@ -190,6 +231,8 @@ namespace Murder.Editor.Systems
                                     StartingScene = world.Guid(),
                                     LoadStateFrom = g
                                 });
+
+                                Architect.EditorSettings.LastPlayedGameMode = g;
                             }
 
                             if (isFavorite)
@@ -205,7 +248,7 @@ namespace Murder.Editor.Systems
                             }
                         }
                     }
-                    
+
                     ImGui.EndMenu();
                 }
 

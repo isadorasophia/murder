@@ -80,14 +80,14 @@ namespace Murder.Systems.Graphics
                     blend = BlendStyle.Normal;
                 }
 
-                Core.Graphics.MurderBlendState blendState;
+                MurderBlendState blendState;
                 if (e.TryGetSpriteBlend() is SpriteBlendComponent spriteBlend)
                 {
                     blendState = spriteBlend.BlendState;
                 }
                 else
                 {
-                    blendState = Core.Graphics.MurderBlendState.AlphaBlend;
+                    blendState = MurderBlendState.AlphaBlend;
                 }
 
                 float ySortOffsetRaw = 0;
