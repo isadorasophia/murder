@@ -144,7 +144,8 @@ namespace Murder.Assets
         /// </summary>
         /// <param name="camera">Camera which will be used for this world.</param>
         /// <param name="startingSystems">List of default starting assets, if any. This will be used for diagnostics systems, for example.</param>
-        public MonoWorld CreateInstance(Camera2D camera, ImmutableArray<(Type, bool)> startingSystems) => CreateInstance(camera, FetchInstances(), startingSystems);
+        public MonoWorld CreateInstance(Camera2D camera, ImmutableArray<(Type, bool)> startingSystems) => 
+            CreateInstance(camera, FetchInstances(), startingSystems, CreateWorldFlags.FirstTimeLoaded);
 
         /// <summary>
         /// Create a new instance of the world based on this world asset.
@@ -152,9 +153,10 @@ namespace Murder.Assets
         /// <param name="savedInstance">Saved world instance to start from.</param>
         /// <param name="camera">Camera which will be used for this world.</param>
         /// <param name="startingSystems">List of default starting assets, if any. This will be used for diagnostics systems, for example.</param>
-        public MonoWorld CreateInstanceFromSave(SavedWorld savedInstance, Camera2D camera, ImmutableArray<(Type, bool)> startingSystems) => CreateInstance(camera, savedInstance.FetchInstances(), startingSystems);
+        public MonoWorld CreateInstanceFromSave(SavedWorld savedInstance, Camera2D camera, ImmutableArray<(Type, bool)> startingSystems) => 
+            CreateInstance(camera, savedInstance.FetchInstances(), startingSystems, CreateWorldFlags.None);
 
-        private MonoWorld CreateInstance(Camera2D camera, ImmutableArray<EntityInstance> instances, ImmutableArray<(Type, bool)> startingSystems)
+        private MonoWorld CreateInstance(Camera2D camera, ImmutableArray<EntityInstance> instances, ImmutableArray<(Type, bool)> startingSystems, CreateWorldFlags flags)
         {
             List<(ISystem, bool)> systemInstances = new();
 
@@ -179,7 +181,7 @@ namespace Murder.Assets
             }
 
             MonoWorld world = new(systemInstances, camera, worldAssetGuid: Guid);
-            CreateAllEntities(world, instances);
+            CreateAllEntities(world, instances, flags);
 
             return world;
         }
@@ -214,7 +216,7 @@ namespace Murder.Assets
         /// <returns>
         /// Id of all the created entities.
         /// </returns>
-        private static void CreateAllEntities(World world, ImmutableArray<EntityInstance> instances)
+        private static void CreateAllEntities(World world, ImmutableArray<EntityInstance> instances, CreateWorldFlags flags)
         {
             // As of today, this only tracks *parent* entities.
             Dictionary<Guid, int> instancesToEntities = new();
@@ -225,7 +227,7 @@ namespace Murder.Assets
                 instancesToEntities.Add(e.Guid, id);
             }
 
-            PostProcessEntities(world, instancesToEntities);
+            PostProcessEntities(world, instancesToEntities, flags);
         }
 
         /// <summary>
@@ -234,14 +236,19 @@ namespace Murder.Assets
         /// </summary>
         /// <param name="world">World that entities were created.</param>
         /// <param name="instancesToEntities">A map of each serialized guid to an entity id in the world.</param>
-        protected static void PostProcessEntities(World world, Dictionary<Guid, int> instancesToEntities)
+        /// <param name="flags">Properties of the world.</param>
+        protected static void PostProcessEntities(World world, Dictionary<Guid, int> instancesToEntities, CreateWorldFlags flags)
         {
-            if (world.TryGetUniqueEntityInstanceToEntityLookup() is not null)
+            if (flags.HasFlag(CreateWorldFlags.FirstTimeLoaded))
             {
-                // Most likely, we are reloading a saved world. Do not post process this.
-                return;
+                PostProcessEntitiesFirstTime(world, instancesToEntities);
             }
 
+            WorldEventsTracker.PreprocessWorldEvents(world, flags);
+        }
+
+        private static void PostProcessEntitiesFirstTime(World world, Dictionary<Guid, int> instancesToEntities)
+        {
             ImmutableArray<Entity> entities = world.GetActivatedAndDeactivatedEntitiesWith(typeof(GuidToIdTargetComponent));
             foreach (Entity e in entities)
             {
@@ -281,33 +288,6 @@ namespace Murder.Assets
                 }
 
                 e.SetIdTargetCollection(builder.ToImmutable());
-            }
-
-            // Preprocess the quest tracker
-            ImmutableArray<Entity> quests = world.GetActivatedAndDeactivatedEntitiesWith(typeof(QuestTrackerComponent));
-            foreach (Entity e in quests)
-            {
-                var questsStages = ImmutableArray.CreateBuilder<QuestStageRuntime>();
-
-                foreach (var quest in e.GetQuestTracker().QuestStages)
-                {
-                    var actions = ImmutableArray.CreateBuilder<MurderTargetedRuntimeAction>();
-                    foreach (var action in quest.Actions)
-                    {
-                        if (!instancesToEntities.TryGetValue(action.Target, out int actionId))
-                        {
-                            GameLogger.Error($"Tried to reference an entity with guid '{action.Target}' that is not available in world. " +
-                                "Are you trying to access a child entity, which is not supported yet?");
-
-                            continue;
-                        }
-                        actions.Add(action.Bake(actionId));
-                    }
-                    questsStages.Add(new QuestStageRuntime(quest.Requirements, actions.ToImmutable()));
-                }
-
-                e.SetQuestTrackerRuntime(questsStages.ToImmutable());
-                e.RemoveQuestTracker();
             }
 
             // Preprocess cutscenes so we can use efficient dictionaries instead of arrays.

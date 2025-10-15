@@ -205,6 +205,8 @@ namespace Murder.Editor.Utilities
 
             _soundBlackboards = null;
             _soundBlackboardsTypes = null;
+
+            WorldEventsTracker.ClearCache();
         }
 
         private static ImmutableArray<Type>? _soundBlackboardsTypes;
