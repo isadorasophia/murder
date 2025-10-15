@@ -155,6 +155,7 @@ namespace Murder.Editor.Diagnostics
             if (_resetInputFocus)
             {
                 ImGui.SetKeyboardFocusHere(0);
+                _resetInputFocus = false;
             }
             ImGui.PushItemWidth(-1);
             if (ImGui.InputTextWithHint($"##{id}", "help", ref current, maxLength: 256, ImGuiInputTextFlags.EnterReturnsTrue))
@@ -171,11 +172,6 @@ namespace Murder.Editor.Diagnostics
                 current = string.Empty;
 
                 _pressedBackCount = 0;
-            }
-
-            if (ImGui.IsItemFocused())
-            {
-                _resetInputFocus = false;
             }
             ImGui.PopItemWidth();
 
