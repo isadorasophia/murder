@@ -3,6 +3,7 @@ using Bang.Entities;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Core.Geometry;
+using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Services;
 using Murder.Utilities;
@@ -128,13 +129,18 @@ namespace Murder.Core.Physics
                 // This is a greedy size, it will include the object even if it's rotated
                 float diameter = (float)Math.Sqrt(spriteAsset.Size.X * spriteAsset.Size.X + spriteAsset.Size.Y * spriteAsset.Size.Y);
 
+                Rectangle boundingBox = new(
+                    position.X - spriteAsset.Origin.X - spriteComponent.Offset.X * spriteAsset.Size.X - (diameter - spriteAsset.Size.X) / 2f,
+                    position.Y - spriteAsset.Origin.Y - spriteComponent.Offset.Y * spriteAsset.Size.Y - (diameter - spriteAsset.Size.Y) / 2f,
+                    diameter, diameter);
 
-                StaticRender.Insert(
-                    e.EntityId,
-                    (e, spriteComponent, position), new Rectangle(
-                        position.X - spriteAsset.Origin.X - spriteComponent.Offset.X * spriteAsset.Size.X - (diameter - spriteAsset.Size.X) / 2f,
-                        position.Y - spriteAsset.Origin.Y - spriteComponent.Offset.Y * spriteAsset.Size.Y - (diameter - spriteAsset.Size.Y) / 2f,
-                        diameter, diameter));
+                StaticRender.Insert(e.EntityId, (e, spriteComponent, position), boundingBox);
+
+                // If you are panicking, turn this on
+                //e.SetCustomDraw(render =>
+                //{
+                //    RenderServices.DrawRectangleOutline(render.DebugBatch, boundingBox, Color.Cyan);
+                //});
             }
         }
 
