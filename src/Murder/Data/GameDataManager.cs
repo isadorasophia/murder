@@ -65,7 +65,7 @@ namespace Murder.Data
         /// <summary>
         /// Custom optional game shaders, provided by <see cref="_game"/>.
         /// </summary>
-        public Effect?[] CustomGameShaders = [];
+        public Effect[] CustomGameShaders = [];
 
         /// <summary>
         /// Current localization data.
@@ -935,6 +935,9 @@ namespace Murder.Data
 
         public virtual void UntrackOnHotReloadSprite(Action action) { }
 
+        /// <summary>
+        /// Creates or fetches a unique texture from a path.
+        /// </summary>
         public Texture2D FetchTexture(string path)
         {
             if (CachedUniqueTextures.TryGetValue(path, out Texture2D? value))
