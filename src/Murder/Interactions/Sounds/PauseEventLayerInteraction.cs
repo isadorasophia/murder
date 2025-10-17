@@ -8,7 +8,7 @@ using System.Collections.Immutable;
 
 namespace Murder.Interactions;
 
-[CustomName("\uf2a2 Pause events on interaction")]
+[CustomName($"\uf2a2 {nameof(PauseEventLayerInteraction)}")]
 public readonly struct PauseEventLayerInteraction : IInteraction
 {
     public readonly ImmutableArray<SoundLayer> Layers = [];

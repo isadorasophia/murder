@@ -14,7 +14,7 @@ public enum OnEnterOnExitKind
     Actors = 0x10
 }
 
-[CustomName("\uf70c On enter/exit interaction")]
+[CustomName($"\uf70c {nameof(OnEnterOnExitComponent)}")]
 public readonly struct OnEnterOnExitComponent : IComponent
 {
     public readonly TargetEntity Target = TargetEntity.Interactor;

@@ -13,7 +13,7 @@ using System.Collections.Immutable;
 
 namespace Murder.Interactions
 {
-    [CustomName("\uf2a2 Set Parameter On Interaction")]
+    [CustomName($"\uf2a2 {nameof(SetSoundParameterOnInteraction)}")]
     [Requires(typeof(SoundParameterComponent))]
     public readonly struct SetSoundParameterOnInteraction : IInteraction
     {

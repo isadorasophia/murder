@@ -5,7 +5,7 @@ using System.Collections.Immutable;
 
 namespace Murder.Components;
 
-[CustomName($" Anim. Event Broadcaster")]
+[CustomName($" AnimationEventBroadcaster")]
 [RuntimeOnly]
 [PersistOnSave]
 public readonly struct AnimationEventBroadcasterComponent : IComponent

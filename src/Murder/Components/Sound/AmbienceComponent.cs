@@ -27,7 +27,7 @@ public enum ListenerKind
 /// Component that will listen to interaction Areas for starting and stopping
 /// ambience sounds.
 /// </summary>
-[CustomName("\uf186 Ambience component")]
+[CustomName($"\uf186 {nameof(AmbienceComponent)}")]
 [Sound]
 public readonly struct AmbienceComponent : IComponent
 {

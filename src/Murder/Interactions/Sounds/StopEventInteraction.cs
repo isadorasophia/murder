@@ -8,7 +8,7 @@ using Murder.Utilities.Attributes;
 
 namespace Murder.Interactions
 {
-    [CustomName("\uf2a2 Stop Event On Interaction")]
+    [CustomName($"\uf2a2 {nameof(StopEventInteraction)}")]
     public readonly struct StopEventInteraction : IInteraction
     {
         public readonly bool FadeOut = true;
