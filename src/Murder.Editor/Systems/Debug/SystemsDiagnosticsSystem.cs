@@ -164,6 +164,10 @@ public class SystemsDiagnosticsSystem : IGuiSystem
                     ImGui.SameLine();
                     ImGui.Text(batch.ItemsQueued.ToString());
 
+                    ImGui.TextColored(Game.Profile.Theme.Faded, "Max texture swaps");
+                    ImGui.SameLine();
+                    ImGui.Text(batch.MaxTextureSwaps.ToString());
+
                     ImGui.Separator();
                 }
             }

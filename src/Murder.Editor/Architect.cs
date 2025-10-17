@@ -73,12 +73,6 @@ namespace Murder.Editor
 
         public CursorStyle Cursor { get; set; } = CursorStyle.Normal;
 
-        /// <summary>
-        /// Last asset opened in the editor.
-        /// </summary>
-        [HideInEditor]
-        public Guid LastOpenedAsset = Guid.Empty;
-
         protected override bool HasCursor => true;
 
         public Architect(IMurderArchitect? game = null, EditorDataManager? editorDataManager = null) : base(game, editorDataManager ?? new EditorDataManager(game)) { }
@@ -205,7 +199,8 @@ namespace Murder.Editor
                 // Manually set things up in the editor scene.
                 _editorScene.Reload();
 
-                // RefreshWindow();
+                // This is important otherwise the editor will inherit the shader values from the game!
+                _editorScene.UpdateViewportSizes();
             }
 
             // Here, let's mock what a real "quit" would do.

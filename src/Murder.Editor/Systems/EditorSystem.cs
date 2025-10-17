@@ -209,29 +209,6 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                     }
                     ImGui.Checkbox("Stretch", ref render.PreviewStretch);
 
-                    if (_showRenderInspector && ImGui.Begin("Render Inspector", ref _showRenderInspector, ImGuiWindowFlags.None))
-                    {
-                        (bool mod, _inspectingRenderTarget) = ImGuiHelpers.DrawEnumField("Render Target", typeof(RenderContext.RenderTargets), _inspectingRenderTarget);
-                        var image = render.GetRenderTargetFromEnum((RenderContext.RenderTargets)_inspectingRenderTarget);
-                        Architect.Instance.ImGuiRenderer.BindTexture(_renderInspectorPtr, image, false);
-                        ImGui.Text($"{image.Width}x{image.Height}");
-                        var size = ImGui.GetContentRegionAvail();
-                        var aspect = (float)image.Height / image.Width;
-                        ImGui.Image(_renderInspectorPtr, new Vector2(size.X, size.X * aspect));
-
-                        if (ImGui.SmallButton("Save As Png"))
-                        {
-                            var folder = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "\\Screenshots\\");
-                            var directory = Directory.CreateDirectory(folder);
-                            Stream stream = File.Create(Path.Join(folder, "BufferOutput.png"));
-                            image.SaveAsPng(stream, image.Width, image.Height);
-                            stream.Dispose();
-
-                            System.Diagnostics.Process.Start("explorer.exe", directory.FullName);
-                        }
-                        ImGui.End();
-                    }
-
                     ImGui.EndTabItem();
                 }
 
@@ -411,6 +388,28 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
             ImGui.PopStyleVar();
         }
 
+        if (_showRenderInspector && ImGui.Begin("Render Inspector", ref _showRenderInspector, ImGuiWindowFlags.None))
+        {
+            (bool mod, _inspectingRenderTarget) = ImGuiHelpers.DrawEnumField("Render Target", typeof(RenderContext.RenderTargets), _inspectingRenderTarget);
+            var image = render.GetRenderTargetFromEnum((RenderContext.RenderTargets)_inspectingRenderTarget);
+            Architect.Instance.ImGuiRenderer.BindTexture(_renderInspectorPtr, image, false);
+            ImGui.Text($"{image.Width}x{image.Height}");
+            var size = ImGui.GetContentRegionAvail();
+            var aspect = (float)image.Height / image.Width;
+            ImGui.Image(_renderInspectorPtr, new Vector2(size.X, size.X * aspect));
+
+            if (ImGui.SmallButton("Save As Png"))
+            {
+                var folder = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "\\Screenshots\\");
+                var directory = Directory.CreateDirectory(folder);
+                Stream stream = File.Create(Path.Join(folder, "BufferOutput.png"));
+                image.SaveAsPng(stream, image.Width, image.Height);
+                stream.Dispose();
+
+                System.Diagnostics.Process.Start("explorer.exe", directory.FullName);
+            }
+            ImGui.End();
+        }
     }
 
     public static void ResizeWindow(RenderContext render, Point windowSize)

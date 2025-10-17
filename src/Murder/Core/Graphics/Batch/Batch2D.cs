@@ -16,8 +16,10 @@ public class Batch2D
     public const int StartBatchItemsCount = 128;
     public int TotalItemCount => _batchItems.Length;
     private int _lastQueue = 0;
+
+    public int MaxTextureSwaps { get; private set; } = 0;
+    private int _currentTextureSwitches = 0;
     public int ItemsQueued => _lastQueue;
-    public int TotalTransparentItemCount => _transparencyBatchItems?.Length ?? 0;
 
     private VertexInfo[] _vertices = new VertexInfo[StartBatchItemsCount * 4];
     private int[] _indices = new int[StartBatchItemsCount * 4];
@@ -26,9 +28,11 @@ public class Batch2D
     private int[] _indexBuffer = new int[StartBatchItemsCount * 6];
 
     private SpriteBatchItem[] _batchItems = new SpriteBatchItem[StartBatchItemsCount];
-    private SpriteBatchItem[]? _transparencyBatchItems;
 
     private int _nextItemIndex;
+
+    private static readonly BatchModeComparer.DepthAscending _depthAscendingComparer = new();
+    private static readonly BatchModeComparer.DepthDescending _depthDescendingComparer = new();
 
     public GraphicsDevice GraphicsDevice { get; set; }
     public readonly BatchMode BatchMode;
@@ -36,6 +40,12 @@ public class Batch2D
     public readonly SamplerState SamplerState;
     public readonly DepthStencilState DepthStencilState;
     public readonly RasterizerState RasterizerState;
+
+    private bool _matrixDirty = true;
+    private Matrix _lastMatrix = Matrix.Identity;
+
+    private readonly List<EffectPass> _cachedEffectPasses = new();
+    private int _cachedEffectPassCount;
 
     public Batch2D(string name,
         GraphicsDevice graphicsDevice,
@@ -101,6 +111,7 @@ public class Batch2D
     {
         Transform = _followCamera ? cameraMatrix : Matrix.Identity;
         IsBatching = true;
+        _matrixDirty = true;
     }
 
     /// <summary>
@@ -174,11 +185,13 @@ public class Batch2D
     public void SetTransform(Vector2 position)
     {
         Transform = Matrix.CreateTranslation(position.X, position.Y, 0f);
+        _matrixDirty = true;
     }
 
     public void SetTransform(Vector2 position, Vector2 scale)
     {
         Transform = Matrix.CreateScale(scale.X, scale.Y, 1) * Matrix.CreateTranslation(position.X, position.Y, 0f);
+        _matrixDirty = true;
     }
 
     public void DrawPolygon(Texture2D texture, System.Numerics.Vector2 position, ImmutableArray<System.Numerics.Vector2> vertices, DrawInfo drawInfo)
@@ -248,20 +261,6 @@ public class Batch2D
         Initialize(previousSize);
     }
 
-    private void SetTransparencyBuffersCapacity(int newBatchItemsCapacity)
-    {
-        GameLogger.Verify(_transparencyBatchItems is not null);
-
-        if (_transparencyBatchItems.Length >= newBatchItemsCapacity)
-        {
-            return;
-        }
-
-        int previousTransparencyItemsBatchSize = _transparencyBatchItems.Length;
-        System.Array.Resize(ref _transparencyBatchItems, newBatchItemsCapacity);
-
-        InitializeTransparencyItemsBuffers(previousTransparencyItemsBatchSize);
-    }
 
     private void Initialize(int startIndex = 0)
     {
@@ -279,16 +278,6 @@ public class Batch2D
         }
     }
 
-    private void InitializeTransparencyItemsBuffers(int startIndex = 0)
-    {
-        GameLogger.Verify(_transparencyBatchItems is not null);
-
-        for (int i = startIndex; i < _transparencyBatchItems.Length; i++)
-        {
-            _transparencyBatchItems[i] = new SpriteBatchItem();
-        }
-    }
-
     private void Render(ref SpriteBatchItem[] batchItems, int itemsCount, DepthStencilState depthStencilState)
     {
         if (itemsCount == 0)
@@ -300,11 +289,11 @@ public class Batch2D
         switch (BatchMode)
         {
             case BatchMode.DepthSortAscending:
-                System.Array.Sort(batchItems, 0, itemsCount, new BatchModeComparer.DepthAscending());
+                System.Array.Sort(batchItems, 0, itemsCount, _depthAscendingComparer);
                 break;
 
             case BatchMode.DepthSortDescending:
-                System.Array.Sort(batchItems, 0, itemsCount, new BatchModeComparer.DepthDescending());
+                System.Array.Sort(batchItems, 0, itemsCount, _depthDescendingComparer);
                 break;
 
             //case BatchMode.DepthBuffer:
@@ -319,6 +308,7 @@ public class Batch2D
                 throw new System.NotImplementedException($"SpriteBatch doesn't implements BatchMode '{BatchMode}'.");
         }
 
+        _currentTextureSwitches = 0;
         SpriteBatchItem batchItem = batchItems[0];
         Texture? texture = batchItem.Texture != null ? batchItem.Texture : null;
         MurderBlendState blendState = batchItem.BlendState;
@@ -338,7 +328,31 @@ public class Batch2D
         int verticesIndex = 0;
         int indicesIndex = 0;
 
-        Effect?.Parameters["MatrixTransform"]?.SetValue(matrix);
+        // Cache the matrix to avoid setting it multiple times
+        if (_matrixDirty || matrix != _lastMatrix)
+        {
+            Effect?.Parameters["MatrixTransform"]?.SetValue(matrix);
+            _lastMatrix = matrix;
+            _matrixDirty = false;
+        }
+
+        // Cache effect passes to avoid allocating them multiple times
+        if (Effect != null)
+        {
+            _cachedEffectPassCount = 0;
+            foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
+            {
+                if (_cachedEffectPasses.Count <= _cachedEffectPassCount)
+                {
+                    _cachedEffectPasses.Add(pass);
+                }
+                else
+                {
+                    _cachedEffectPasses[_cachedEffectPassCount] = pass;
+                }
+                _cachedEffectPassCount++;
+            }
+        }
 
         for (int i = 0; i < itemsCount; i++)
         {
@@ -360,6 +374,7 @@ public class Batch2D
 
                 verticesIndex = 0;
                 indicesIndex = 0;
+                _currentTextureSwitches++;
             }
 
             if (blendState != batchItem.BlendState)
@@ -399,6 +414,8 @@ public class Batch2D
 
         Effect?.Parameters["MatrixTransform"]?.SetValue(matrix);
         DrawQuads(_vertices, verticesIndex, _indices, indicesIndex, texture, depthStencilState, matrix);
+        
+        MaxTextureSwaps = Math.Max(MaxTextureSwaps, _currentTextureSwitches);
     }
 
     private void SetBlendState(MurderBlendState blendState)
@@ -439,10 +456,11 @@ public class Batch2D
 
         if (Effect is not null)
         {
-            foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
+            int primitiveCount = indicesLength / 3;
+            for (int i = 0; i < _cachedEffectPassCount; i++)
             {
                 GraphicsDevice.Textures[0] = texture;
-                pass.Apply();
+                _cachedEffectPasses[i].Apply();
 
                 // This is where we finally draw the vertices too the screen
                 GraphicsDevice.DrawUserIndexedPrimitives(
@@ -452,7 +470,7 @@ public class Batch2D
                     numVertices: verticesLength,
                     indexData: indices,
                     indexOffset: 0,
-                    primitiveCount: indicesLength / 3
+                    primitiveCount: primitiveCount
                 );
             }
         }

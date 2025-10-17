@@ -394,5 +394,10 @@ namespace Murder.Editor
 
             return asset.Guid;
         }
+
+        public void UpdateViewportSizes()
+        {
+            _lastActiveEditorInstance?.SharedRenderContext.UpdateViewport();
+        }
     }
 }
