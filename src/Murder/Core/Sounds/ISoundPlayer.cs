@@ -84,6 +84,13 @@ namespace Murder.Core.Sounds
         public bool Pause(SoundLayer layer);
 
         /// <summary>
+        /// Whether an event is being played.
+        /// </summary>
+        /// <param name="id">Event event instance id.</param>
+        /// <param name="entityId">Entity id associated with this event.</param>
+        public bool IsEventPlaying(SoundEventId id, int entityId);
+
+        /// <summary>
         /// Stop all sounds tied to <paramref name="layer"/>.
         /// </summary>
         /// <param name="layer">The target sound layer.</param>

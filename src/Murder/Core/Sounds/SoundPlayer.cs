@@ -50,5 +50,7 @@ namespace Murder.Core.Sounds
         public ImmutableDictionary<string, List<string>> FetchAllBanks() => ImmutableDictionary<string, List<string>>.Empty;
 
         public ImmutableArray<string> FetchAllPlugins() => [];
+
+        public bool IsEventPlaying(SoundEventId id, int entityId) => false;
     }
 }

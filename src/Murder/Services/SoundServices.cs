@@ -113,6 +113,11 @@ public static class SoundServices
         Game.Sound.UpdateEvent(eventId, entityId, attributes);
     }
 
+    public static bool IsPlaying(SoundEventId eventId, int entityId)
+    {
+        return Game.Sound.IsEventPlaying(eventId, entityId);
+    }
+
     /// <summary>
     /// Return the spatial attributes for playing a sound from <paramref name="target"/>.
     /// </summary>
