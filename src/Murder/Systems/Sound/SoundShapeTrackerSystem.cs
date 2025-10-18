@@ -37,8 +37,6 @@ public abstract class SoundShapeTrackerSystem : IFixedUpdateSystem, IReactiveSys
 
         foreach (Entity e in entities)
         {
-            SoundShapeComponent soundShape = e.GetSoundShape();
-
             if (e.TryGetOnlyApplyOnRule() is OnlyApplyOnRuleComponent onlyApplyOn)
             {
                 if (!BlackboardHelpers.Match(world, onlyApplyOn))
