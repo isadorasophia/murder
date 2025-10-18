@@ -37,6 +37,12 @@ public abstract class SoundShapeTrackerSystem : IFixedUpdateSystem, IReactiveSys
 
         foreach (Entity e in entities)
         {
+            if (e.HasCollider())
+            {
+                // this event will start playing once the player enters the area.
+                continue;
+            }
+
             if (e.TryGetOnlyApplyOnRule() is OnlyApplyOnRuleComponent onlyApplyOn)
             {
                 if (!BlackboardHelpers.Match(world, onlyApplyOn))
