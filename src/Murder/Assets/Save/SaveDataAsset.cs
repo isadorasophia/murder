@@ -274,5 +274,7 @@ namespace Murder.Assets
 
             return guid;
         }
+
+        public virtual void OnBeforeMapSwitch(Guid nextWorld) { }
     }
 }

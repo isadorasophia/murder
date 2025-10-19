@@ -1,5 +1,6 @@
 ﻿using Bang;
 using Bang.StateMachines;
+using Murder.Assets;
 using Murder.Core.Sounds;
 
 namespace Murder.Services
@@ -10,6 +11,9 @@ namespace Murder.Services
         {
             // TODO: Do something fancier?
             Game.Instance.QueueWorldTransition(nextWorldGuid);
+
+            SaveData? save = MurderSaveServices.TryGetSave();
+            save?.OnBeforeMapSwitch(nextWorldGuid);
 
             return default;
         }
