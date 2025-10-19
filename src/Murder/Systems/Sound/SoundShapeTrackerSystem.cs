@@ -43,30 +43,38 @@ public abstract class SoundShapeTrackerSystem : IFixedUpdateSystem, IReactiveSys
                 continue;
             }
 
-            if (e.TryGetOnlyApplyOnRule() is OnlyApplyOnRuleComponent onlyApplyOn)
+            if (e.TryGetAmbience() is not AmbienceComponent ambience)
             {
-                if (!BlackboardHelpers.Match(world, onlyApplyOn))
-                {
-                    continue;
-                }
+                continue;
             }
 
-            if (e.TryGetAmbience() is AmbienceComponent ambience)
+            foreach (SoundEventIdInfo info in ambience.Events)
             {
-                foreach (SoundEventIdInfo info in ambience.Events)
+                bool isPlaying = SoundServices.IsPlaying(info.Id, e.EntityId);
+                if (info.OnlyWhen is not null && !BlackboardHelpers.Match(world, info.OnlyWhen.Value))
+                {
+                    if (isPlaying)
+                    {
+                        SoundServices.Stop(info.Id, fadeOut: true, e.EntityId);
+                    }
+
+                    continue;
+                }
+
+                if (!isPlaying)
                 {
                     SoundServices.Play(info.Id, e, info.Layer, properties: SoundProperties.Persist);
+                }
 
-                    if (ambience.Listener == ListenerKind.Player)
-                    {
-                        // If the listener is actually the player, we'll have to be creative so fmod can use the relative position
-                        // of the player instead of the camera.
-                        UpdateEmitterPosition(e, playerPosition, cameraPosition);
-                    }
-                    else
-                    {
-                        UpdateEmitterPosition(e, cameraPosition);
-                    }
+                if (ambience.Listener == ListenerKind.Player)
+                {
+                    // If the listener is actually the player, we'll have to be creative so fmod can use the relative position
+                    // of the player instead of the camera.
+                    UpdateEmitterPosition(e, playerPosition, cameraPosition);
+                }
+                else
+                {
+                    UpdateEmitterPosition(e, cameraPosition);
                 }
             }
         }
@@ -146,23 +154,22 @@ public abstract class SoundShapeTrackerSystem : IFixedUpdateSystem, IReactiveSys
             return;
         }
 
-        if (e.HasOnlyApplyOnRule())
+        Vector2? soundOrigin = null;
+
+        foreach (SoundEventIdInfo info in ambience.Events)
         {
-            bool isPlaying = false;
-            foreach (SoundEventIdInfo info in ambience.Events)
+            if (!SoundServices.IsPlaying(info.Id, e.EntityId))
             {
-                if (SoundServices.IsPlaying(info.Id, e.EntityId))
-                {
-                    isPlaying = true;
-                }
+                continue;
             }
 
-            if (!isPlaying)
-            {
-                return;
-            }
+            soundOrigin ??= CalculateSoundOrigin(e, listenerPosition, relativeToGlobalListenerAt);
+            SoundServices.TrackEventSourcePosition(info.Id, e.EntityId, soundOrigin.Value);
         }
+    }
 
+    private static Vector2 CalculateSoundOrigin(Entity e, Vector2 listenerPosition, Vector2? relativeToGlobalListenerAt = null)
+    {
         SoundShapeComponent soundShape = e.GetSoundShape();
         Vector2 position = e.GetGlobalTransform().Vector2;
 
@@ -181,10 +188,7 @@ public abstract class SoundShapeTrackerSystem : IFixedUpdateSystem, IReactiveSys
             soundOrigin = soundOrigin - listenerPosition + relativeToGlobalListenerAt.Value;
         }
 
-        foreach (SoundEventIdInfo info in ambience.Events)
-        {
-            SoundServices.TrackEventSourcePosition(info.Id, e.EntityId, soundOrigin);
-        }
+        return soundOrigin;
     }
 
     public abstract Vector2? GetListenerPosition(World world, ListenerKind listener);

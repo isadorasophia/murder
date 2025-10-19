@@ -1,4 +1,6 @@
 ﻿using Bang.Components;
+using Murder.Attributes;
+using Murder.Core.Dialogs;
 using Murder.Core.Sounds;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
@@ -13,6 +15,9 @@ public readonly struct SoundEventIdInfo
     /// This is useful if this is actually a snapshot, for example.
     /// </summary>
     public readonly SoundLayer Layer = SoundLayer.Ambience;
+
+    [Tooltip("Plays event when following conditions are met. Checks every map reload or time slot change.")]
+    public readonly ImmutableArray<CriterionNode>? OnlyWhen = null;
 
     public SoundEventIdInfo() { }
 }

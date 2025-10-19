@@ -31,12 +31,12 @@ public class AmbienceTrackerSystem : IMessagerSystem, IReactiveSystem
             return;
         }
 
-        if (interactedEntity.IsDestroyed || interactorEntity.HasIgnoreUntil())
+        if (interactedEntity.IsDestroyed || interactedEntity.HasIgnoreUntil())
         {
             return;
         }
 
-        if (!IsInteractAllowed(interactorEntity))
+        if (!IsInteractorAllowed(interactorEntity))
         {
             return;
         }
@@ -44,16 +44,13 @@ public class AmbienceTrackerSystem : IMessagerSystem, IReactiveSystem
         AmbienceComponent ambience = interactedEntity.GetAmbience();
         if (message.Movement == CollisionDirection.Enter)
         {
-            if (interactedEntity.TryGetOnlyApplyOnRule() is OnlyApplyOnRuleComponent onlyApplyOn)
+            foreach (SoundEventIdInfo info in ambience.Events)
             {
-                if (!BlackboardHelpers.Match(world, onlyApplyOn))
+                if (info.OnlyWhen is not null && !BlackboardHelpers.Match(world, info.OnlyWhen.Value))
                 {
                     return;
                 }
-            }
 
-            foreach (SoundEventIdInfo info in ambience.Events)
-            {
                 if (interactedEntity.HasSoundShape())
                 {
                     // make sure we track the interacted entity with the spatial properties.
@@ -74,11 +71,6 @@ public class AmbienceTrackerSystem : IMessagerSystem, IReactiveSystem
         }
     }
 
-    protected virtual bool IsInteractAllowed(Entity interactor)
-    {
-        return true;
-    }
-
     public void OnAdded(World world, ImmutableArray<Entity> entities) { }
 
     public void OnModified(World world, ImmutableArray<Entity> entities) { }
@@ -89,9 +81,19 @@ public class AmbienceTrackerSystem : IMessagerSystem, IReactiveSystem
     {
         foreach (Entity e in entities)
         {
+            if (!IsInteractAllowedOnAmbience(e))
+            {
+                continue;
+            }
+
             AmbienceComponent ambience = e.GetAmbience();
             foreach (SoundEventIdInfo info in ambience.Events)
             {
+                if (info.OnlyWhen is not null && !BlackboardHelpers.Match(world, info.OnlyWhen.Value))
+                {
+                    return;
+                }
+
                 _ = SoundServices.Play(info.Id, info.Layer, SoundProperties.Persist, entityId: e.EntityId);
             }
         }
@@ -107,5 +109,15 @@ public class AmbienceTrackerSystem : IMessagerSystem, IReactiveSystem
                 SoundServices.Stop(info.Id, fadeOut: true, entityId: e.EntityId);
             }
         }
+    }
+
+    protected virtual bool IsInteractorAllowed(Entity interactor)
+    {
+        return true;
+    }
+
+    protected virtual bool IsInteractAllowedOnAmbience(Entity ambience)
+    {
+        return true;
     }
 }
