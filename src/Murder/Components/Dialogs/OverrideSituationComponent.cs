@@ -58,4 +58,22 @@ public readonly struct OverrideSituationComponent : IComponent
             return null;
         }
     }
+
+    public SituationComponent? PeekWithout(ImmutableHashSet<SituationOrigin>? exceptions)
+    {
+        foreach (SituationOrigin origin in _origins)
+        {
+            if (exceptions is not null && exceptions.Contains(origin))
+            {
+                continue;
+            }
+
+            if (Situations.TryGetValue(origin, out SituationComponent result))
+            {
+                return result;
+            }
+        }
+
+        return null;
+    }
 }
