@@ -19,13 +19,17 @@ namespace Murder.Interactions
         [Tooltip("Only used if event is not specified and it should be applied to the layer instead")]
         public readonly SoundLayer? TargetLayer = null;
 
+        public readonly PlayEventSettings Settings = PlayEventSettings.None;
+
         public StopEventInteraction() { }
 
         public void Interact(World world, Entity interactor, Entity? interacted)
         {
+            int entityId = Settings.HasFlag(PlayEventSettings.IgnoreEntitySource) ? -1 : interactor.EntityId;
+
             if (Event is not null)
             {
-                SoundServices.Stop(Event, FadeOut, interactor.EntityId);
+                SoundServices.Stop(Event, FadeOut, entityId);
             }
             else if (TargetLayer is not null)
             {

@@ -5,40 +5,56 @@ using Murder.Core.Sounds;
 using Murder.Services;
 using Murder.Utilities.Attributes;
 
-namespace Murder.Interactions
+namespace Murder.Interactions;
+
+[Flags]
+public enum PlayEventSettings
 {
-    [Sound]
-    [CustomName($"\uf2a2 {nameof(PlayEventInteraction)}")]
-    public readonly struct PlayEventInteraction : IInteraction
+    None = 0,
+    IgnoreEntitySource = 1
+}
+
+[Sound]
+[CustomName($"\uf2a2 {nameof(PlayEventInteraction)}")]
+public readonly struct PlayEventInteraction : IInteraction
+{
+    public readonly SoundEventId? Event = null;
+
+    public readonly SoundProperties Properties = SoundProperties.Persist;
+    public readonly SoundLayer Layer = SoundLayer.Ambience;
+    public readonly PlayEventSettings Settings = PlayEventSettings.None;
+
+    public PlayEventInteraction() { }
+
+    public void Interact(World world, Entity interactor, Entity? interacted)
     {
-        public readonly SoundEventId? Event = null;
-
-        public readonly SoundProperties Properties = SoundProperties.Persist;
-        public readonly SoundLayer Layer = SoundLayer.Ambience;
-
-        public PlayEventInteraction() { }
-
-        public void Interact(World world, Entity interactor, Entity? interacted)
+        if (Event is null)
         {
-            if (Event is null)
-            {
-                return;
-            }
+            return;
+        }
 
-            if (Properties.HasFlag(SoundProperties.StopOtherEventsInLayer))
-            {
-                SoundServices.Stop(id: null, fadeOut: true);
-            }
+        int entityId = Settings.HasFlag(PlayEventSettings.IgnoreEntitySource) ? -1 : interactor.EntityId;
 
-            SoundProperties properties = Properties;
-            if (Properties.HasFlag(SoundProperties.Persist))
-            {
-                properties |= SoundProperties.SkipIfAlreadyPlaying;
-            }
+        if (Properties.HasFlag(SoundProperties.StopOtherEventsInLayer))
+        {
+            SoundServices.Stop(id: null, fadeOut: true);
+        }
 
-            if (interactor.HasOnExitMessage())
+        SoundProperties properties = Properties;
+        if (Properties.HasFlag(SoundProperties.Persist))
+        {
+            properties |= SoundProperties.SkipIfAlreadyPlaying;
+        }
+
+        if (interactor.HasOnExitMessage())
+        {
+            SoundServices.Stop(Event.Value, fadeOut: true, entityId);
+        }
+        else
+        {
+            if (entityId == -1)
             {
-                SoundServices.Stop(Event.Value, fadeOut: true, interactor.EntityId);
+                _ = SoundServices.Play(Event.Value, Layer, properties);
             }
             else
             {
