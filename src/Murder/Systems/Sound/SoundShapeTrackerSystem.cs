@@ -4,6 +4,7 @@ using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Core.Geometry;
+using Murder.Core.Physics;
 using Murder.Core.Sounds;
 using Murder.Services;
 using Murder.Utilities;
@@ -37,7 +38,7 @@ public abstract class SoundShapeTrackerSystem : IFixedUpdateSystem, IReactiveSys
 
         foreach (Entity e in entities)
         {
-            if (e.HasCollider())
+            if (e.TryGetCollider() is ColliderComponent collider && collider.HasLayer(CollisionLayersBase.TRIGGER))
             {
                 // this event will start playing once the player enters the area.
                 continue;
