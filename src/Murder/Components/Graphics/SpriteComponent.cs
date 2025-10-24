@@ -120,6 +120,8 @@ namespace Murder.Components
 
         public SpriteComponent WithSort(int sort) => this with { YSortOffset = sort };
 
+        public SpriteComponent WithBatch(int batch) => this with { TargetSpriteBatch = batch };
+
         public SpriteComponent WithPortrait(Portrait portrait) => this with
         {
             AnimationGuid = portrait.Sprite,

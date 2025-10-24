@@ -281,6 +281,17 @@ public static class EntityServices
     /// <summary>
     /// Plays an animation and loops.
     /// </summary>
+    public static void PlaySpriteAnimationWithOffsetAndBatch(this Entity entity, string animation, int sortOffset, int batch)
+    {
+        if (TryPlaySpriteAnimation(entity, animation) is SpriteComponent sprite)
+        {
+            entity.SetSprite(sprite.WithSort(sortOffset).WithBatch(batch));
+        }
+    }
+
+    /// <summary>
+    /// Plays an animation and loops.
+    /// </summary>
     public static void PlaySpriteAnimationWithOffset(this Entity entity, string animation, int sortOffset)
     {
         if (TryPlaySpriteAnimation(entity, animation) is SpriteComponent sprite)
