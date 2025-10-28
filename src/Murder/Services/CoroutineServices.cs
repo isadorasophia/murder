@@ -1,6 +1,8 @@
 ﻿using Bang;
 using Bang.Entities;
 using Bang.StateMachines;
+using Murder.Core;
+using Murder.Diagnostics;
 using Murder.StateMachines;
 
 namespace Murder.Services;
@@ -13,24 +15,20 @@ public enum CoroutineFlags
 
 public static class CoroutineServices
 {
-    public static void RunCoroutine(this World world, IEnumerator<Wait> routine, CoroutineFlags flags = CoroutineFlags.None)
+    public static Coroutine RunCoroutine(this World world, IEnumerator<Wait> routine, CoroutineFlags flags = CoroutineFlags.None)
     {
-        // TODO: Figure out object pulling of entities here.
-        Entity e = world.AddEntity(
-            new StateMachineComponent<Coroutine>(new Coroutine(routine)));
-
-        if (flags.HasFlag(CoroutineFlags.DoNotPause))
+        if (world is not MonoWorld murderWorld)
         {
-            e.SetDoNotPause();
+            GameLogger.Warning("Unable to run coroutine on a world that is not MonoWorld.");
+            return new();
         }
 
-        // Immediately run the first tick!
-        e.GetStateMachine().Tick(Game.DeltaTime);
+        return murderWorld.RunCoroutine(routine, flags);
     }
 
     public static void RunCoroutine(this Entity e, IEnumerator<Wait> routine)
     {
-        e.SetStateMachine(new StateMachineComponent<Coroutine>(new Coroutine(routine)));
+        e.SetStateMachine(new StateMachineComponent<CoroutineStateMachine>(new CoroutineStateMachine(routine)));
 
         // Immediately run the first tick!
         e.GetStateMachine().Tick(Game.DeltaTime);
