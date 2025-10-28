@@ -8,7 +8,6 @@ namespace Murder.StateMachines;
 /// This CANNOT and WONT be serialized it is just a bad idea. Remember, we can't (or don't want to) serialize lambdas.
 /// </summary>
 [RuntimeOnly]
-[DoNotPersistEntityOnSave]
 public class CoroutineStateMachine : StateMachine
 {
     private readonly IEnumerator<Wait> _routine;

@@ -207,7 +207,9 @@ public partial class MonoWorld : World
             }
         }
 
-        Entity e = AddEntity();
+        Entity e = AddEntity(
+            new DoNotPersistEntityOnSaveComponent());
+
         _effectEntities.Add(e.EntityId);
         coroutine = new(_nextFreeEffectEntityIndex);
 
