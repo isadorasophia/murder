@@ -26,12 +26,13 @@ public static class CoroutineServices
         return murderWorld.RunCoroutine(routine, flags);
     }
 
-    public static void RunCoroutine(this Entity e, IEnumerator<Wait> routine)
+    public static Entity RunCoroutine(this Entity e, IEnumerator<Wait> routine)
     {
         e.SetStateMachine(new StateMachineComponent<CoroutineStateMachine>(new CoroutineStateMachine(routine)));
 
         // Immediately run the first tick!
         e.GetStateMachine().Tick(Game.DeltaTime);
+        return e;
     }
 
     public static void FireAfter(this World world, float seconds, Action action)

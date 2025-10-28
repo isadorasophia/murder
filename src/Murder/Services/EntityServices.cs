@@ -265,6 +265,22 @@ public static class EntityServices
     }
 
     /// <summary>
+    /// Plays an animation or animation sequence. Loops the last animation. If the animation is already playing, continue it.
+    /// </summary>
+    public static SpriteComponent? PlayOrContinueAnimation(this Entity entity, string animation)
+    {
+        if (entity.TryGetSprite() is SpriteComponent sprite)
+        {
+            // Check if we are already playing this animation.
+            if (sprite.CurrentAnimation == animation)
+            {
+                return sprite;
+            }
+        }
+        return PlaySpriteAnimation(entity, animation);
+    }
+
+    /// <summary>
     /// Plays an animation or animation sequence. Loops the last animation.
     /// </summary>
     public static SpriteComponent? PlaySpriteAnimation(this Entity entity, ImmutableArray<string> animations, Guid? replaceSpriteGuid = null)

@@ -13,20 +13,26 @@ namespace Murder.Services
     public static class EffectsServices
     {
         private static int _quickSpriteCount = 0;
-        public static void CreateQuickSprite(World world, QuickSpriteInfo info, Entity? parent)
+        public static Entity CreateQuickSprite(World world, QuickSpriteInfo info, Entity? parent = null, bool destroyAfter = true)
         {
-            var e = world.AddEntity(
+            Entity e = world.AddEntity(
                 new SpriteComponent(info.Sprite, Vector2.Zero, info.Animations, info.YSortOffset, false, OutlineStyle.None, info.TargetSpriteBatch),
-                new DestroyOnAnimationCompleteComponent(),
                 new PositionComponent(info.Offset),
                 new DoNotPersistEntityOnSaveComponent(),
                 new FlipSpriteComponent(info.Flip)
             );
 
+            if (destroyAfter)
+            {
+                e.SetDestroyOnAnimationComplete();
+            }
+
             if (parent != null)
             {
                 parent.AddChild(e.EntityId, $"quick_sprite_{_quickSpriteCount++}");
             }
+
+            return e;
         }
 
         /// <summary>

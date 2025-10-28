@@ -22,7 +22,11 @@ namespace Murder.Core.Geometry
         {
             return new(Offset.X - Radius * 1.25f, Offset.Y - Radius, Radius * 2.5f, Radius * 2);
         }
-
+        public LazyShape(float radius)
+        {
+            Radius = radius;
+            Offset = Point.Zero;
+        }
         public LazyShape(float radius, Point offset)
         {
             Radius = radius;
