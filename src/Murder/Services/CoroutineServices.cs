@@ -13,7 +13,7 @@ public enum CoroutineFlags
 
 public static class CoroutineServices
 {
-    public static Entity RunCoroutine(this World world, IEnumerator<Wait> routine, CoroutineFlags flags = CoroutineFlags.None)
+    public static void RunCoroutine(this World world, IEnumerator<Wait> routine, CoroutineFlags flags = CoroutineFlags.None)
     {
         // TODO: Figure out object pulling of entities here.
         Entity e = world.AddEntity(
@@ -26,8 +26,6 @@ public static class CoroutineServices
 
         // Immediately run the first tick!
         e.GetStateMachine().Tick(Game.DeltaTime);
-
-        return e;
     }
 
     public static void RunCoroutine(this Entity e, IEnumerator<Wait> routine)
