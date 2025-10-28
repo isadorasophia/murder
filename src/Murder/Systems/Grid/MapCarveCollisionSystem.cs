@@ -51,7 +51,7 @@ namespace Murder.Systems
 
                 if (!_trackEntitiesPreviousPosition.TryGetValue(e.EntityId, out IntRectangle previousRectangle))
                 {
-                    GameLogger.Error($"How did entity {e.EntityId} was not tracked by the map carve system?");
+                    GameLogger.Warning($"How did entity {e.EntityId} was not tracked by the map carve system?");
                     previousRectangle = updatedRectangle;
                 }
 

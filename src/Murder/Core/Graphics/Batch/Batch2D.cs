@@ -320,11 +320,6 @@ public class Batch2D
         matrix *= Matrix.CreateScale((1f / size.X) * 2, -(1f / size.Y) * 2, 1f); // scale to relative points
         matrix *= Matrix.CreateTranslation(-1f, 1f, 0); // translate to relative points
 
-        void Resize<T>(ref T[] array)
-        {
-            Array.Resize(ref array, array.Length * 2);
-        }
-
         int verticesIndex = 0;
         int indicesIndex = 0;
 
@@ -386,36 +381,53 @@ public class Batch2D
                 indicesIndex = 0;
             }
 
-            int vertexOffset = verticesIndex;
-            for (int v = 0; v < batchItem.VertexCount; v++)
-            {
-                // Copy the vertex data to the vertex buffer
-                _vertices[verticesIndex++] = batchItem.VertexData[v];
-
-                if (verticesIndex >= _vertices.Length)
-                {
-                    // Resize the vertex buffer if we've run out of space
-                    Resize(ref _vertices);
-                }
-            }
-
-            for (int v = 0; v < (batchItem.VertexCount - 2) * 3; v++)
-            {
-                // Copy the index data to the index buffer
-                _indices[indicesIndex++] = batchItem.IndexData[v] + vertexOffset;
-
-                if (indicesIndex >= _indices.Length)
-                {
-                    // Resize the index buffer if we've run out of space
-                    Resize(ref _indices);
-                }
-            }
+            WriteBatchItemToBuffers(batchItem, ref verticesIndex, ref indicesIndex);
         }
 
         Effect?.Parameters["MatrixTransform"]?.SetValue(matrix);
         DrawQuads(_vertices, verticesIndex, _indices, indicesIndex, texture, depthStencilState, matrix);
-        
+
         MaxTextureSwaps = Math.Max(MaxTextureSwaps, _currentTextureSwitches);
+
+        void WriteBatchItemToBuffers(SpriteBatchItem batchItem, ref int verticesIndex, ref int indicesIndex)
+        {
+            int vertexOffset = verticesIndex;
+
+            // Pre-check and resize
+            int requiredVertexCapacity = verticesIndex + batchItem.VertexCount;
+            if (requiredVertexCapacity > _vertices.Length)
+            {
+                int newSize = Math.Max(_vertices.Length * 2, requiredVertexCapacity);
+                Array.Resize(ref _vertices, _vertices.Length * 2);
+            }
+
+            // Use Span to avoid extra allocations
+            Span<VertexInfo> verticesSource = batchItem.VertexData.AsSpan(0, batchItem.VertexCount);
+            Span<VertexInfo> verticesDestination = _vertices.AsSpan(verticesIndex, batchItem.VertexCount);
+
+            verticesSource.CopyTo(verticesDestination);
+            verticesIndex += batchItem.VertexCount;
+
+
+            // Indices
+            int indexCount = (batchItem.VertexCount - 2) * 3;
+            int requiredIndexCapacity = indicesIndex + indexCount;
+            if (requiredIndexCapacity > _indices.Length)
+            {
+                int newSize = Math.Max(_indices.Length * 2, requiredIndexCapacity);
+                Array.Resize(ref _indices, _indices.Length * 2);
+            }
+
+            // Optimized index copy
+            var sourceIndices = batchItem.IndexData.AsSpan(0, indexCount);
+            var destIndices = _indices.AsSpan(indicesIndex, indexCount);
+            for (int v = 0; v < indexCount; v++)
+            {
+                destIndices[v] = sourceIndices[v] + vertexOffset;
+            }
+            indicesIndex += indexCount;
+        }
+
     }
 
     private void SetBlendState(MurderBlendState blendState)
