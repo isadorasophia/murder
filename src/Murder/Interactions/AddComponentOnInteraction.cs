@@ -23,7 +23,11 @@ namespace Murder.Interactions
 
         public void Interact(World world, Entity interactor, Entity? interacted)
         {
-            GameLogger.Verify(interacted is not null);
+            if (Component is null || interacted is null)
+            {
+                GameLogger.Warning($"AddComponentOnInteraction on {interacted?.EntityId} is invalid!");
+                return;
+            }
 
             // We need to guarantee that any modifiable components added here are safe.
             IComponent c = Component is IModifiableComponent ? SerializationHelper.DeepCopy(Component) : Component;

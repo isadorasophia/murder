@@ -16,7 +16,7 @@ namespace Murder.StateMachines
     [RuntimeOnly]
     public class DialogStateMachine : StateMachine
     {
-        private CharacterRuntime? _character;
+        protected CharacterRuntime? _character;
 
         private int? _choice = null;
 
@@ -37,7 +37,7 @@ namespace Murder.StateMachines
         {
             if (Entity.TryGetSituation() is not SituationComponent situation)
             {
-                throw new ArgumentNullException(nameof(LineComponent));
+                throw new InvalidStateMachineException(nameof(LineComponent));
             }
 
             _character = DialogueServices.CreateCharacterFrom(situation.Character, situation.Situation);
