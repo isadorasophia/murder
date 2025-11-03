@@ -64,6 +64,10 @@ namespace Murder.Editor.CustomFields
 
                 ImGui.BeginGroup();
                 {
+                    ImGui.TextDisabled($"{index}");
+                    ImGui.SameLine();
+                    ImGui.SetCursorPos(ImGui.GetCursorPos() + new System.Numerics.Vector2(-4, 0));
+
                     ImGuiHelpers.IconButton('\uf0c9', $"{member.Name}_alter", Game.Data.GameProfile.Theme.Bg);
 
                     if (ImGui.IsItemHovered())
@@ -72,6 +76,7 @@ namespace Murder.Editor.CustomFields
                         ImGui.SetNextWindowPos(ImGui.GetItemRectMin() + new System.Numerics.Vector2(-12, -2));
                     }
                     ImGui.SameLine();
+                    ImGui.SetCursorPos(ImGui.GetCursorPos() + new System.Numerics.Vector2(-8, 0));
 
                     DrawDragHandle(ref modified, ref elements, id, index);
 
