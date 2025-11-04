@@ -690,7 +690,7 @@ namespace Murder.Editor.Data
             // Find left
             for (int x = startingCrop.Left; x < Math.Max(xHeadstart1, xHeadstart2); x++)
             {
-                for (int y = cropArea.Top; y < cropArea.Bottom - 1; y++)
+                for (int y = cropArea.Top; y < cropArea.Bottom; y++)
                 {
                     int pixelCoord = Calculator.OneD(x, y, totalSize.X);
                     if (pixelCoord < 0 || pixelCoord >= pixels.Length)
