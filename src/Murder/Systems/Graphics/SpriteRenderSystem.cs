@@ -220,7 +220,7 @@ namespace Murder.Systems.Graphics
 
                 if (frameInfo.Failed)
                 {
-                    GameLogger.Error($"Sprite render failed!");
+                    GameLogger.Warning($"Sprite render failed!");
                     continue;
                 }
 
