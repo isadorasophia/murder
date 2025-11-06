@@ -90,6 +90,15 @@ namespace Murder.Systems
             Point initialCell = new(position.Cx, position.Cy);
             Point targetCell = pathfind.Target.ToGridPoint();
 
+            if (initialCell == targetCell)
+            {
+                e.RemovePathfind();
+                e.SetPathfindStatus( PathfindStatusFlags.PathComplete);
+                e.SetMoveTo(pathfind.Target);
+
+                return;
+            }
+
             int collisionMask;
             if (e.TryGetCustomCollisionMask() is CustomCollisionMask customCollisionMaskComponent)
             {
