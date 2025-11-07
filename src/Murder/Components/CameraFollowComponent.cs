@@ -1,5 +1,6 @@
 ﻿using Bang.Components;
 using Bang.Entities;
+using Murder.Attributes;
 using Murder.Core.Geometry;
 using System.Text.Json.Serialization;
 
@@ -31,6 +32,9 @@ public readonly struct CameraFollowComponent : IComponent
     /// Force to centralize the camera without a dead zone.
     /// </summary>
     public readonly CameraStyle Style = CameraStyle.DeadZone;
+
+    [HideInEditor]
+    public readonly float Speed { get; init; } = 1;
 
     public CameraFollowComponent() { }
 
