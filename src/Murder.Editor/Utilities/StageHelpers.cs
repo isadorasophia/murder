@@ -69,6 +69,11 @@ public static class StageHelpers
 
         foreach (Type t in ReflectionHelper.GetAllTypesWithAttributeDefinedOfType<DefaultEditorSystemAttribute>(typeof(ISystem)))
         {
+            if (Attribute.IsDefined(t, typeof(IgnoreFromEditorAttribute)))
+            {
+                continue;
+            }
+
             DefaultEditorSystemAttribute attribute = (DefaultEditorSystemAttribute)t.GetCustomAttribute(typeof(DefaultEditorSystemAttribute))!;
             bool isActive = attribute.StartActive;
 

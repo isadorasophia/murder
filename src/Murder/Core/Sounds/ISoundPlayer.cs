@@ -23,12 +23,26 @@ namespace Murder.Core.Sounds
 
         public SoundSpatialAttributes? Attributes { get; init; } = null;
 
+        public ParameterValue? Parameter { get; init; } = null;
+
         /// <summary>
         /// Entity id that is tied to this event.
         /// </summary>
         public int EntityId { get; init; } = -1;
 
         public PlayEventInfo() { }
+    }
+
+    public struct ParameterValue
+    {
+        public readonly ParameterId Id = new();
+        public readonly float Value = 0;
+
+        public ParameterValue(ParameterId id, float value)
+        {
+            Id = id;
+            Value = value;
+        }
     }
 
     public interface ISoundPlayer

@@ -10,11 +10,44 @@ namespace Murder.Services;
 
 public static class SoundServices
 {
+    public static ValueTask PlayWithParameter<T>(
+        SoundEventId id,
+        Entity? target,
+        SoundLayer layer,
+        SoundProperties properties,
+        ParameterId parameter,
+        T value)
+    {
+        ParameterValue? parameterValue;
+
+        try
+        {
+            parameterValue = new(parameter, Convert.ToSingle(value));
+        }
+        catch (Exception e) when (e is FormatException or OverflowException)
+        {
+            GameLogger.Warning($"{value} is not a valid float.");
+            parameterValue = null;
+        }
+
+        return Play(id, target, layer, properties, parameterValue);
+    }
+
     public static ValueTask Play(
         SoundEventId id, 
         Entity? target, 
         SoundLayer layer = SoundLayer.Any, 
         SoundProperties properties = SoundProperties.None)
+    {
+        return Play(id, target, layer, properties, parameter: null);
+    }
+
+    private static ValueTask Play(
+        SoundEventId id,
+        Entity? target,
+        SoundLayer layer,
+        SoundProperties properties,
+        ParameterValue? parameter)
     {
         if (id.IsGuidEmpty || Game.Instance.IsSkippingDeltaTimeOnUpdate)
         {
@@ -22,7 +55,7 @@ public static class SoundServices
         }
 
         SoundSpatialAttributes? attributes = GetSpatialAttributes(target);
-        return Play(id, layer, properties, attributes, target?.EntityId ?? -1);
+        return Play(id, layer, properties, attributes, target?.EntityId ?? -1, parameter);
     }
 
     public static async ValueTask Play(
@@ -30,23 +63,33 @@ public static class SoundServices
         SoundLayer layer = SoundLayer.Any, 
         SoundProperties properties = SoundProperties.None, 
         SoundSpatialAttributes? attributes = null,
-        int entityId = -1)
+        int entityId = -1,
+        ParameterValue? parameter = null)
     {
-        if (Game.Instance.IsSkippingDeltaTimeOnUpdate)
+        if (id.IsGuidEmpty || Game.Instance.IsSkippingDeltaTimeOnUpdate)
         {
             // Do not play sounds if we are currently skipping... I think?
             return;
         }
 
-        if (!id.IsGuidEmpty)
-        {
-            await Game.Sound.PlayEvent(id, new PlayEventInfo { Layer = layer, Properties = properties, Attributes = attributes, EntityId = entityId });
-        }
+        await Game.Sound.PlayEvent(id, new PlayEventInfo { Layer = layer, Properties = properties, Attributes = attributes, EntityId = entityId, Parameter = parameter });
     }
 
     public static async ValueTask PlayMusic(SoundEventId id)
     {
         await Game.Sound.PlayEvent(id, new PlayEventInfo { Layer = SoundLayer.Music, Properties = SoundProperties.Persist });
+    }
+
+    public static void SetParameter<T>(ParameterId id, SoundEventId sound, T value)
+    {
+        try
+        {
+            Game.Sound.SetParameter(sound, id, Convert.ToSingle(value));
+        }
+        catch (Exception e) when (e is FormatException || e is OverflowException)
+        {
+            GameLogger.Warning($"{value} is not a valid float.");
+        }
     }
 
     public static float GetGlobalParameter(ParameterId id)
