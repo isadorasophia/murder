@@ -152,6 +152,11 @@ namespace Murder.Systems.Physics
             // Triggers don't touch other triggers, and so on.
             bool thisIsAnActor = (collider.Layer & (CollisionLayersBase.ACTOR)) != 0;
 
+            if (e.HasFollowPosition() || e.HasMoveToPerfect())
+            {
+                return;
+            }
+
             _others.Clear();
             Rectangle boundingBox = collider.GetBoundingBox(e.GetGlobalTransform().Point, e.FetchScale());
             qt.Collision.Retrieve(boundingBox, _others);
