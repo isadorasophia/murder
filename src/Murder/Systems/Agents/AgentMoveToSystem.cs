@@ -20,6 +20,11 @@ namespace Murder.Systems.Agents
         {
             foreach (Entity e in context.Entities)
             {
+                if (e.HasDoNotMoveWhenOutOfCamera() && !e.HasInCamera())
+                {
+                    continue;
+                }
+
                 if (e.TryGetMoveToMaxTime() is MoveToMaxTimeComponent moveToMaxTime &&
                     Game.Now > moveToMaxTime.RemoveAt)
                 {
