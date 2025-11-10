@@ -1,8 +1,6 @@
 ﻿using Murder.Core.Sounds;
-using Murder.Diagnostics;
 using Murder.Services;
 using Murder.Utilities;
-using static Murder.Core.Input.PlayerInput;
 
 namespace Murder.Core.Input
 {
@@ -93,6 +91,8 @@ namespace Murder.Core.Input
         public int OverflowY = 0;
         public bool JustMoved = false;
         public int Scroll = 0;
+
+        public bool AcceptPressInputFeedback = true;
 
         public float SmoothScroll = 0;
 
@@ -388,6 +388,11 @@ namespace Murder.Core.Input
 
         public void Press(float now)
         {
+            if (!AcceptPressInputFeedback)
+            {
+                return;
+            }
+
             if (Options[Selection].SoundOnClick)
             {
                 _ = SoundServices.Play(Sounds.MenuSubmit);

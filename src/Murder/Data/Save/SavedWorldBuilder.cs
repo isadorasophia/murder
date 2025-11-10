@@ -58,7 +58,8 @@ namespace Murder.Save
             return ToSavedWorld();
         }
 
-        private SavedWorld ToSavedWorld() => new(_worldEntities.Values.ToImmutableDictionary(e => e.Guid, e => e));
+        private SavedWorld ToSavedWorld() => 
+            new(_worldEntities.Values.ToImmutableDictionary(e => e.Guid, e => e), _world.NextEligibleEntityId);
 
         /// <summary>
         /// Convert this entity to a an instance which has not been placed in the world.

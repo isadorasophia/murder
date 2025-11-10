@@ -423,7 +423,6 @@ public class PlayerInput
         Clamp
     }
 
-
     public bool HorizontalMenu(ref int selectedOption, int length)
     {
         int move = 0;

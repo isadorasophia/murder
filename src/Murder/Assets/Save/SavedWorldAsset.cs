@@ -18,8 +18,11 @@ namespace Murder.Assets
         public override bool IsStoredInSaveData => true;
         public override bool IsSavePacked => true;
 
-        [Bang.Serialize]
+        [Serialize]
         private readonly ImmutableDictionary<Guid, EntityInstance> _instances;
+
+        [Serialize]
+        private readonly int _nextEntityId = 0;
 
         private ImmutableArray<EntityInstance>? _cachedInstances;
 
@@ -34,7 +37,11 @@ namespace Murder.Assets
         internal SavedWorld() => _instances = ImmutableDictionary<Guid, EntityInstance>.Empty;
 
         [JsonConstructor]
-        internal SavedWorld(ImmutableDictionary<Guid, EntityInstance> instances) => _instances = instances;
+        internal SavedWorld(ImmutableDictionary<Guid, EntityInstance> instances, int nextEntityId)
+        {
+            _instances = instances;
+            _nextEntityId = nextEntityId;
+        }
 
         public static ValueTask<SavedWorld> CreateAsync(World world, ImmutableArray<Entity> entitiesOnSaveRequested)
         {
@@ -46,6 +53,8 @@ namespace Murder.Assets
 
         public ImmutableArray<Guid> Instances => _instances.Keys.ToImmutableArray();
 
+        public int NextEligibleEntityId => _nextEntityId;
+
         public EntityInstance? TryGetInstance(Guid instanceGuid)
         {
             if (_instances.TryGetValue(instanceGuid, out var entity))
@@ -55,6 +64,5 @@ namespace Murder.Assets
 
             return null;
         }
-
     }
 }

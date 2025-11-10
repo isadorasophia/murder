@@ -153,8 +153,13 @@ namespace Murder.Assets
         /// <param name="savedInstance">Saved world instance to start from.</param>
         /// <param name="camera">Camera which will be used for this world.</param>
         /// <param name="startingSystems">List of default starting assets, if any. This will be used for diagnostics systems, for example.</param>
-        public MonoWorld CreateInstanceFromSave(SavedWorld savedInstance, Camera2D camera, ImmutableArray<(Type, bool)> startingSystems) => 
-            CreateInstance(camera, savedInstance.FetchInstances(), startingSystems, CreateWorldFlags.None);
+        public MonoWorld CreateInstanceFromSave(SavedWorld savedInstance, Camera2D camera, ImmutableArray<(Type, bool)> startingSystems)
+        {
+            MonoWorld world = CreateInstance(camera, savedInstance.FetchInstances(), startingSystems, CreateWorldFlags.None);
+            world.NextEligibleEntityId = savedInstance.NextEligibleEntityId;
+
+            return world;
+        }
 
         private MonoWorld CreateInstance(Camera2D camera, ImmutableArray<EntityInstance> instances, ImmutableArray<(Type, bool)> startingSystems, CreateWorldFlags flags)
         {
