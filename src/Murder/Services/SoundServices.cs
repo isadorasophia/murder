@@ -58,6 +58,16 @@ public static class SoundServices
         return Play(id, layer, properties, attributes, target?.EntityId ?? -1, parameter);
     }
 
+    public static ValueTask TryPlay(SoundEventId? id)
+    {
+        if (id is null)
+        {
+            return ValueTask.CompletedTask;
+        }
+
+        return Play(id.Value);
+    }
+
     public static async ValueTask Play(
         SoundEventId id, 
         SoundLayer layer = SoundLayer.Any, 
