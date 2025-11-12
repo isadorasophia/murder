@@ -82,6 +82,11 @@ public static class SoundServices
             return;
         }
 
+        if (layer.HasFlag(SoundLayer.Music))
+        {
+            properties |= SoundProperties.Persist;
+        }
+
         await Game.Sound.PlayEvent(id, new PlayEventInfo { Layer = layer, Properties = properties, Attributes = attributes, EntityId = entityId, Parameter = parameter });
     }
 
