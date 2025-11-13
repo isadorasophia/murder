@@ -10,6 +10,7 @@ using Murder.Editor.Utilities;
 using Murder.Serialization;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.IO;
 using System.Numerics;
 
 namespace Murder.Editor
@@ -234,6 +235,21 @@ namespace Murder.Editor
                     else
                     {
                         GameLogger.Error($"Couldn't parse the path for {asset.Name}");
+                    }
+                }
+
+                if (asset.IsSavePacked)
+                {
+                    ImGui.SameLine();
+                    if (ImGui.Button("Save as Text"))
+                    {
+                        string outputPath = Path.GetTempPath();
+                        string outputFile = Path.Combine(Path.GetTempPath(), "save.json");
+
+                        _ = Game.Data.FileManager.SaveSerializedAsync(asset, outputFile);
+
+                        GameLogger.Log($"Saved asset at {outputFile}.");
+                        EditorFileManager.OpenFolder(outputPath);
                     }
                 }
 
