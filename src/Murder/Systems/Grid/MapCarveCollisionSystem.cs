@@ -100,12 +100,12 @@ namespace Murder.Systems
 
         protected void TrackEntityOnGrid(Map map, Entity e, IntRectangle rect)
         {
-            ColliderComponent collider = e.GetCollider();
-            if (e.TryGetCarve() is not CarveComponent carve)
+            if (e.TryGetCollider() is not ColliderComponent collider ||
+                e.TryGetCarve() is not CarveComponent carve)
             {
                 return;
             }
-            
+
             if (IsValidCarve(e, collider, carve))
             {
                 map.SetOccupiedAsCarve(rect, carve.BlockVision, carve.Obstacle, carve.ClearPath, carve.Weight);
@@ -114,8 +114,8 @@ namespace Murder.Systems
 
         protected void UntrackEntityOnGrid(Map map, Entity e, IntRectangle rect, bool force)
         {
-            ColliderComponent collider = e.GetCollider();
-            if (e.TryGetCarve() is not CarveComponent carve)
+            if (e.TryGetCollider() is not ColliderComponent collider || 
+                e.TryGetCarve() is not CarveComponent carve)
             {
                 return;
             }
@@ -134,8 +134,15 @@ namespace Murder.Systems
         {
             Vector2 position = e.GetGlobalTransform().Vector2;
 
-            ColliderComponent collider = e.GetCollider();
-            IntRectangle updatedRectangle = collider.GetCarveBoundingBox(position, e.FetchScale());
+            IntRectangle updatedRectangle;
+            if (e.TryGetCollider() is ColliderComponent collider)
+            {
+                updatedRectangle = collider.GetCarveBoundingBox(position, e.FetchScale());
+            }
+            else
+            {
+                updatedRectangle = new IntRectangle(position.ToCellPoint(), Point.One);
+            }
 
             return updatedRectangle;
         }
