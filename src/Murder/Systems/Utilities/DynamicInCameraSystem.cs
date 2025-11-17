@@ -69,7 +69,7 @@ public sealed class DynamicInCameraSystem : IMonoPreRenderSystem
         Vector2 cameraPos = camera.Position; // This avoids multiple property accesses
 
         // Respect scene-override camera
-        if (context.World.TryGetUniqueDisableSceneTransitionEffects()?.OverrideCameraPosition
+        if (context.World.TryGetUniqueDisableSceneTransitionEffects()?.ForceCameraPosition
             is Vector2 overridePos)
         {
             cameraPos = overridePos;

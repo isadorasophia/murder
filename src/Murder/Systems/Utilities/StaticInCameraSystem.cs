@@ -48,7 +48,7 @@ internal class StaticInCameraSystem : IMonoPreRenderSystem
         Rectangle safeBounds = camera.SafeBounds;
 
         if (context.HasAnyEntity &&
-            context.Entity.GetDisableSceneTransitionEffects().OverrideCameraPosition is Vector2 position)
+            context.Entity.GetDisableSceneTransitionEffects().ForceCameraPosition is Vector2 position)
         {
             bounds = bounds.SetPosition(position);
             safeBounds = safeBounds.SetPosition(position);
