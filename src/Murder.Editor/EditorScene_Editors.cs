@@ -57,12 +57,12 @@ namespace Murder.Editor
 
         private void UpdateSelectedEditor()
         {
-            if (_lastActiveEditorInstance is null)
+            if (_selectedTab != Guid.Empty && Game.Data.TryGetAsset<GameAsset>(_selectedTab) is GameAsset asset)
             {
-                return;
+                UpdateSelectedAsset(asset);
             }
 
-            _lastActiveEditorInstance.Editor.UpdateEditor();
+            _lastActiveEditorInstance?.Editor.UpdateEditor();
         }
 
         private void DrawAssetEditors()
@@ -112,6 +112,25 @@ namespace Murder.Editor
                 DeleteAssetEditor(closeTab.Guid);
                 _selectedAssets.Remove(closeTab.Guid);
                 _selectedTab = Guid.Empty;
+            }
+        }
+
+        private void UpdateSelectedAsset(GameAsset asset)
+        {
+            CustomEditor? editor = _lastActiveEditorInstance?.Editor;
+
+            if (asset.CanBeSaved && Architect.Input.Shortcut(Keys.S, InputHelpers.OSActionModifier))
+            {
+                editor?.PrepareForSaveAsset();
+
+                try
+                {
+                    Architect.EditorData.SaveAsset(asset);
+                }
+                catch
+                {
+                    GameLogger.Error($"Sorry, I was unable to save asset: {asset.Name} :(");
+                }
             }
         }
 
@@ -191,7 +210,7 @@ namespace Murder.Editor
                 ImGui.TextColored(Microsoft.Xna.Framework.Color.DarkGray.ToSysVector4(), $"({asset.GetType().Name})");
                 ImGui.SameLine();
 
-                if (asset.CanBeSaved && (ImGui.Button("Save Asset") || Architect.Input.Shortcut(Keys.S, InputHelpers.OSActionModifier)))
+                if (asset.CanBeSaved && (ImGui.Button("Save Asset")))
                 {
                     customEditor?.Editor.PrepareForSaveAsset();
 
