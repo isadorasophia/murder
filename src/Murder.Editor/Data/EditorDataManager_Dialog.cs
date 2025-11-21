@@ -73,7 +73,15 @@ namespace Murder.Editor.Data
             FileManager.CreateDirectoryPathIfNotExists(descriptorPath);
 
             // Create descriptor file to refresh the cache.
-            File.Create(descriptorPath);
+            try
+            {
+                File.Create(descriptorPath);
+            }
+            catch (Exception ex)
+            {
+                GameLogger.Error($"Unable to convert *.gum dialogs: {ex.Message}");
+                return false;
+            }
 
             return true;
         }
