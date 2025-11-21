@@ -42,6 +42,8 @@ namespace Murder.Editor.Systems
         /// </summary>
         private (Guid Guid, string Name)[]? _saveStateInfo = null;
 
+        private string _newSaveFilter = string.Empty;
+
         public void Start(Context context)
         {
             Guid guid = context.World.Guid();
@@ -188,6 +190,7 @@ namespace Murder.Editor.Systems
 
                     if (allSaves.Count > 0)
                     {
+                        ImGui.Dummy(new Vector2(400, 0));
                         ImGui.Separator();
 
                         foreach (var save in allSaves.Keys)
@@ -210,9 +213,16 @@ namespace Murder.Editor.Systems
                     if (_saveStateInfo.Length > 0)
                     {
                         ImGui.Separator();
-
+                        ImGui.SetNextItemWidth(-1);
+                        ImGui.InputTextWithHint("##searchsavestates", "Search...", ref _newSaveFilter, 256);
+                        ImGui.BeginChild("searchChild", new Vector2(-1, 500));
                         foreach ((Guid g, string name) in _saveStateInfo)
                         {
+                            if (!string.IsNullOrWhiteSpace(_newSaveFilter) &&
+                                !StringHelper.FuzzyMatch(_newSaveFilter, name))
+                            {
+                                continue;
+                            }
                             bool isFavorite = Architect.EditorSettings.FavoriteAssets.Contains(g);
                             if (isFavorite)
                             {
@@ -239,7 +249,7 @@ namespace Murder.Editor.Systems
                             {
                                 Vector2 min = ImGui.GetItemRectMin();
                                 Vector2 max = ImGui.GetItemRectMax();
-                                var dl = ImGui.GetForegroundDrawList();
+                                var dl = ImGui.GetWindowDrawList();
 
                                 dl.AddRect(min, max, Color.ToUint(Game.Profile.Theme.Yellow), 0, ImDrawFlags.RoundCornersAll);
 
@@ -247,6 +257,7 @@ namespace Murder.Editor.Systems
                                 ImGui.PopStyleColor();
                             }
                         }
+                        ImGui.EndChild();
                     }
 
                     ImGui.EndMenu();

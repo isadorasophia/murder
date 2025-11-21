@@ -39,7 +39,7 @@ namespace Murder.Editor.Systems
             // Only when hovered
             if (!Game.Input.MouseConsumed && hook.IsMouseOnStage)
             {
-                if (Game.Input.ScrollWheel != 0)
+                if (Game.Input.ScrollWheel != 0 && !hook.UsingGui)
                 {
                     hook.CurrentZoomLevel = Math.Clamp(hook.CurrentZoomLevel + MathF.Sign(-Game.Input.ScrollWheel), 0, hook.ScrollPositions.Length - 1);
                 }
