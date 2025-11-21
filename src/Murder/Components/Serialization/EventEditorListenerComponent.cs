@@ -22,6 +22,12 @@ namespace Murder.Components
 
         public SpriteEventInfo(string id) => Id = id;
 
+        public SpriteEventInfo(string id, SoundEventId sound)
+        {
+            Id = id;
+            Sound = sound;
+        }
+
         public SpriteEventInfo(string id, SoundEventId? sound, SoundLayer? persisted, ImmutableArray<IInteractiveComponent>? interactions)
         {
             Id = id;
