@@ -3,6 +3,7 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Serialization;
 using Murder.Services;
+using System;
 using System.Collections.Immutable;
 using System.Numerics;
 
@@ -251,6 +252,78 @@ namespace Murder.Utilities
             }
 
             return result.Slice(0, index);
+        }
+
+        public static bool IsNeighbour(this Point p, Point otherP, bool includeDiagonals = true)
+        {
+            // [ ] [x] [ ]
+            // [ ]  x  [ ]
+            // [ ] [ ] [ ]
+            if (otherP.Y == p.Y - 1 && otherP.X == p.X)
+            {
+                return true;
+            }
+
+            // [ ] [ ] [ ]
+            // [x]  x  [ ]
+            // [ ] [ ] [ ]
+            if (otherP.Y == p.Y && otherP.X == p.X - 1)
+            {
+                return true;
+            }
+
+            // [ ] [ ] [ ]
+            // [ ]  x  [x]
+            // [ ] [ ] [ ]
+            if (otherP.Y == p.Y && otherP.X == p.X + 1)
+            {
+                return true;
+            }
+
+            // [ ] [ ] [ ]
+            // [ ]  x  [ ]
+            // [ ] [x] [ ]
+            if (otherP.Y == p.Y + 1 && otherP.X == p.X)
+            {
+                return true;
+            }
+
+            if (includeDiagonals)
+            {
+                // [x] [ ] [ ]
+                // [ ]  x  [ ]
+                // [ ] [ ] [ ]
+                if (otherP.Y == p.Y - 1 && otherP.X == p.X - 1)
+                {
+                    return true;
+                }
+
+                // [ ] [ ] [x]
+                // [ ]  x  [ ]
+                // [ ] [ ] [ ]
+                if (otherP.Y == p.Y - 1 && otherP.X == p.X + 1)
+                {
+                    return true;
+                }
+
+                // [ ] [ ] [ ]
+                // [ ]  x  [ ]
+                // [x] [ ] [ ]
+                if (otherP.Y == p.Y + 1 && otherP.X == p.X - 1)
+                {
+                    return true;
+                }
+
+                // [ ] [ ] [ ]
+                // [ ]  x  [ ]
+                // [ ] [ ] [x]
+                if (otherP.Y == p.Y + 1 && otherP.X == p.X + 1)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
