@@ -49,7 +49,7 @@ namespace Murder.Editor.CustomFields
                 return (modified, elements);
             }
 
-            int maxLength = 128;
+            int maxLength = 1024;
             string id = $"{member.Member.ReflectedType}";
             ImGui.BeginGroup();
             ImGui.Dummy(new System.Numerics.Vector2(2, 2));
