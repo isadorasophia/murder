@@ -228,24 +228,27 @@ namespace Murder.Systems.Graphics
                 if (frameInfo.Complete)
                 {
                     // Handle animation sequences imported by Aseprite and baked into the asset
-                    if (frameInfo.Animation.NextAnimation is AnimationSequence sequence)
+                    bool foundNext = false;
+                    foreach (AnimationSequence possibleSequence in frameInfo.Animation.NextAnimation)
                     {
-                        if (Game.Random.TryWithChanceOf(sequence.Chance))
-                        {
-                            if (!string.IsNullOrWhiteSpace(sequence.Next))
-                                e.PlaySpriteAnimation(sequence.Next);
-                        }
-                        else
-                        {
-                            e.PlaySpriteAnimation(animation);
-                        }
-                    }
-                    else
-                    {
-                        RenderServices.DealWithCompleteAnimations(e, s);
-                    }
-                }
 
+                        if (Game.Random.TryWithChanceOf(possibleSequence.Chance))
+                        {
+                            if (!string.IsNullOrWhiteSpace(possibleSequence.Next))
+                            {
+                                e.PlaySpriteAnimation(possibleSequence.Next);
+                                foundNext = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!foundNext)
+                    {
+                        e.PlaySpriteAnimation(animation);
+                    }
+                    RenderServices.DealWithCompleteAnimations(e, s);
+                }
             }
 
             if (issueSlowdownWarning)

@@ -86,7 +86,7 @@ namespace Murder.Systems
                     }
 
                     ySortOffsetRaw += o.SortOffset;
-                    
+
                     // todo: support more directions?
                     if (o.SupportedDirections is int supportedOverloadDirections &&
                         supportedOverloadDirections == 4)
@@ -158,7 +158,7 @@ namespace Murder.Systems
                 {
                     color = Color.White;
                 }
-                
+
                 // Handle tint
                 if (e.TryGetTint() is TintComponent tint)
                 {
@@ -193,7 +193,7 @@ namespace Murder.Systems
                 if (e.TryGetForceAnimationOnChance() is ForceAnimationOnChanceComponent forceAnimationOnChance)
                 {
                     // only apply after the animation changed
-                    if (e.TryGetRenderedSpriteCache()?.AnimInfo.Name is not string lastAnimation || 
+                    if (e.TryGetRenderedSpriteCache()?.AnimInfo.Name is not string lastAnimation ||
                         !lastAnimation.StartsWith(animationInfo.Name))
                     {
                         bool activeForceAnimation;
@@ -233,7 +233,7 @@ namespace Murder.Systems
                     renderPosition += offset.Offset;
                 }
 
-                Color? outlineColor = e.HasDeactivateHighlightSprite() ? null : 
+                Color? outlineColor = e.HasDeactivateHighlightSprite() ? null :
                     e.TryGetHighlightSprite()?.Color;
 
                 // Draw to the sprite batch
@@ -284,6 +284,16 @@ namespace Murder.Systems
                         {
                             e.SendAnimationCompleteMessage();
                             e.SetAnimationComplete();
+                        }
+                    }
+                    else if (!frameInfo.Animation.NextAnimation.IsEmpty)
+                    {
+                        // This is a chained animation, e send the complete message and try to play the next one.
+                        e.SendAnimationCompleteMessage(AnimationCompleteStyle.Sequence);
+                        e.SetAnimationComplete();
+                        if (frameInfo.Animation.GetNextAnimation(Game.Random, out string next))
+                        {
+                            e.SetAnimationOverload(new AnimationOverloadComponent(next, 0f, overload.Value.Loop, overload.Value.IgnoreFacing));
                         }
                     }
                     else if (!overload.Value.Loop)

@@ -15,23 +15,32 @@ public readonly struct AnimationSequence
         Chance = chance;
     }
 
-    public static AnimationSequence? CreateIfPossible(string userData)
+    public static ImmutableArray<AnimationSequence> CreateIfPossible(string userData)
     {
         if (string.IsNullOrWhiteSpace(userData))
         {
-            return null;
+            return ImmutableArray<AnimationSequence>.Empty;
         }
 
-        var split = userData.Split(':');
-        if (split.Length == 2)
+        var builder = ImmutableArray.CreateBuilder<AnimationSequence>();
+
+        var items = userData.Split(',');
+        foreach (var item in items)
         {
-            float.TryParse(split[1], out float chance);
-            return new AnimationSequence(split[0], chance);
+
+            var split = item.Split(':');
+            if (split.Length == 2)
+            {
+                float.TryParse(split[1].Trim('\n'), out float chance);
+                builder.Add(new AnimationSequence(split[0].Trim('\n'), chance));
+            }
+            else
+            {
+                builder.Add(new AnimationSequence(item, 1));
+            }
         }
-        else
-        {
-            return new AnimationSequence(userData, 1);
-        }
+
+        return builder.ToImmutableArray();
     }
 }
 public readonly struct Animation
@@ -41,7 +50,7 @@ public readonly struct Animation
         [0f],
         ImmutableDictionary<int, string>.Empty,
         animationDuration: 0,
-        null
+        ImmutableArray<AnimationSequence>.Empty
         );
 
     /// <summary>
@@ -64,17 +73,17 @@ public readonly struct Animation
     /// </summary>
     public readonly float AnimationDuration = 1;
 
-    public readonly AnimationSequence? NextAnimation;
+    public readonly ImmutableArray<AnimationSequence> NextAnimation;
 
     public Animation()
     {
         Frames = ImmutableArray<int>.Empty;
         FramesDuration = ImmutableArray<float>.Empty;
         Events = ImmutableDictionary<int, string>.Empty;
-        NextAnimation = null;
+        NextAnimation = ImmutableArray<AnimationSequence>.Empty;
     }
 
-    public Animation(ImmutableArray<int> frames, ImmutableArray<float> framesDuration, ImmutableDictionary<int, string> events, float animationDuration, AnimationSequence? sequence)
+    public Animation(ImmutableArray<int> frames, ImmutableArray<float> framesDuration, ImmutableDictionary<int, string> events, float animationDuration, ImmutableArray<AnimationSequence> sequence)
     {
         Frames = frames;
         FramesDuration = framesDuration;
@@ -83,7 +92,7 @@ public readonly struct Animation
         NextAnimation = sequence;
     }
 
-    public Animation(int[] frames, float[] framesDuration, Dictionary<int, string> events, AnimationSequence? sequence)
+    public Animation(int[] frames, float[] framesDuration, Dictionary<int, string> events, ImmutableArray<AnimationSequence> sequence)
     {
         Frames = frames.ToImmutableArray();
         FramesDuration = framesDuration.ToImmutableArray();
@@ -161,7 +170,7 @@ public readonly struct Animation
         {
             return FramesDuration.Length - 1;
         }
-        
+
         // Animation frames are stored in milisseconds
         scaledTime *= 1000;
 
@@ -233,4 +242,19 @@ public readonly struct Animation
     /// Used by the editor when applying custom messages to an animation.
     /// </summary>
     public Animation WithoutMessageAt(int frame) => new(Frames, FramesDuration, Events.Remove(frame), AnimationDuration, NextAnimation);
+
+    public bool GetNextAnimation(Random random, out string nextAnimation)
+    {
+        for (int i = 0; i < NextAnimation.Length; i++)
+        {
+            if (random.NextFloat() <= NextAnimation[i].Chance)
+            {
+                nextAnimation = NextAnimation[i].Next;
+                return true;
+            }
+        }
+
+        nextAnimation = string.Empty;
+        return false;
+    }
 }

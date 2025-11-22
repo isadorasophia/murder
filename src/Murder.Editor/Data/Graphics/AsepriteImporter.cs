@@ -621,7 +621,7 @@ public partial class Aseprite
 
             tile.Id = (int)(tileInfo & bitmaskId);
             tile.FlipX = (tileInfo & bitmaskFlipX) == 1;
-            tile.FlipY = (tileInfo & bitmaskFlipX) == 1;
+            tile.FlipY = (tileInfo & bitmaskFlipY) == 1;
             tile.Rotate = (tileInfo & bitmaskRotate) == 1;
 
             tiles[p / bitsPerTile] = tile;
@@ -721,14 +721,17 @@ public partial class Aseprite
         target.Height = height;
     }
 
-    private void Blit(Color[] destination, int destinationWidth, Color[] source, int sourceWidth, int destX, int destY, int srcX, int srcY, int w, int h)
+    private void Blit(Color[] destination, int destinationWidth, Color[] source, int sourceWidth,
+                  int destX, int destY, int srcX, int srcY, int w, int h)
     {
-        for (int x = 0; x < w; x++)
+        for (int y = 0; y < h; y++)
         {
-            for (int y = 0; y < h; y++)
+            int srcOffset = (srcY + y) * sourceWidth + srcX;
+            int dstOffset = (destY + y) * destinationWidth + destX;
+
+            for (int x = 0; x < w; x++)
             {
-                var pixelToPlot = source[(x + srcX) % sourceWidth + (int)MathF.Floor((y + srcY) * sourceWidth)];
-                destination[(x + destX) % destinationWidth + (int)MathF.Floor((y + destY) * destinationWidth)] = pixelToPlot;
+                destination[dstOffset + x] = source[srcOffset + x];
             }
         }
     }
@@ -818,7 +821,7 @@ public partial class Aseprite
                 durations = [Frames[0].Duration];
             }
 
-            dictBuilder[string.Empty] = new Animation(frames, durations, events, null);
+            dictBuilder[string.Empty] = new Animation(frames, durations, events, ImmutableArray<AnimationSequence>.Empty);
 
             // Now that we have a guid, make sure if there are any extra events we need to pull.
             if (spriteEventData is not null)
@@ -1000,7 +1003,7 @@ public partial class Aseprite
         // No baked guids were found. Create one on the fly based on the file name.
         using var md5 = MD5.Create();
         Guid guid = new Guid(md5.ComputeHash(Encoding.Default.GetBytes($"{EditorFileHelper.Normalize(Source)}_{Slices[sliceIndex].Name}")));
-        GameLogger.Log($"Aseprite file {Source} slice {Slices[sliceIndex].Name}, ({sliceIndex+1}/{Slices.Count}), has no GUID. Consider baking: {guid}");
+        GameLogger.Log($"Aseprite file {Source} slice {Slices[sliceIndex].Name}, ({sliceIndex + 1}/{Slices.Count}), has no GUID. Consider baking: {guid}");
         return (false, guid);
     }
 
