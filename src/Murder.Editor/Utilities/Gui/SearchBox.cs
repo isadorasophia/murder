@@ -511,7 +511,7 @@ namespace Murder.Editor.ImGuiExtended
                             ImGui.EndGroup();
                             ImGuiHelpers.HelpTooltip("Open this in an external editor");
                         }
-                            
+
                         ImGui.SameLine();
                     }
 
@@ -588,6 +588,8 @@ namespace Murder.Editor.ImGuiExtended
                 ImGui.SetNextItemWidth(-1);
                 bool enterPressed = ImGui.InputText("##ComboWithFilter_inputText", ref _tempSearchText, 256, ImGuiInputTextFlags.EnterReturnsTrue);
 
+                var itemsAvailableSize = ImGui.GetContentRegionAvail();
+                ImGui.BeginChild("##Searchbox_containter_items", itemsAvailableSize, ImGuiChildFlags.None);
                 if (settings.DefaultInitialization is (string defaultValueName, T value) && ImGui.Button(defaultValueName))
                 {
                     modified = true;
@@ -672,6 +674,7 @@ namespace Murder.Editor.ImGuiExtended
                     _searchBoxSelection = 0;
                 }
 
+                ImGui.EndChild();
                 ImGui.EndChild();
 
                 if (isUnfolded)
