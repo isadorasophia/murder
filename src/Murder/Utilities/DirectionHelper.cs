@@ -427,10 +427,12 @@ public static class DirectionHelper
         }
     }
 
-    public static void Face(Entity from, Entity to)
+    public static Direction Face(Entity from, Entity to)
     {
         Direction direction = LookAtEntity(from, to);
         from.SetFacing(direction);
+
+        return direction;
     }
 
     internal static float SnapTo8Directions(float angle)
