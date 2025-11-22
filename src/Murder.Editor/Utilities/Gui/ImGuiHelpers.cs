@@ -45,7 +45,7 @@ public static class ImGuiHelpers
                     StringHelper.FuzzyMatch(_genericComboFilter, findItemName(item, 0)));
             }
 
-            float minHeight = Math.Max(100f, estimatedItemCount * ImGui.GetTextLineHeightWithSpacing());
+            float minHeight = Math.Clamp(estimatedItemCount * ImGui.GetTextLineHeightWithSpacing(), 60, 300);
 
             ImGui.BeginChild($"###Child{id}", new Vector2(0, minHeight), ImGuiChildFlags.None);
             var drawList = ImGui.GetWindowDrawList();
