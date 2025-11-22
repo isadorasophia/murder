@@ -9,17 +9,48 @@ namespace Murder.Utilities
     {
         public static bool FuzzyMatch(string searchTerm, string target)
         {
-            int searchTermIndex = 0;
+            if (string.IsNullOrWhiteSpace(searchTerm))
+                return true;
 
-            foreach (char targetChar in target)
+            if (string.IsNullOrWhiteSpace(target))
+                return false;
+
+            // Split search term into separate words
+            var words = searchTerm.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            int targetIndex = 0;
+
+            foreach (var word in words)
             {
-                if (searchTermIndex < searchTerm.Length && char.ToLowerInvariant(targetChar) == char.ToLowerInvariant(searchTerm[searchTermIndex]))
+                int wordCharIndex = 0;
+
+                // Try to fuzzy match this word starting from current position in target
+                while (targetIndex < target.Length)
                 {
-                    searchTermIndex++;
+                    if (char.ToLowerInvariant(target[targetIndex]) == char.ToLowerInvariant(word[wordCharIndex]))
+                    {
+                        wordCharIndex++;
+
+                        if (wordCharIndex == word.Length)
+                        {
+                            // Entire word matched
+                            targetIndex++; // Move past this match for next word
+                            break;
+                        }
+                    }
+                    else if (wordCharIndex > 0)
+                    {
+                        wordCharIndex = 0; // Reset if a mismatch occurs after some matches
+                    }
+
+                    targetIndex++;
                 }
+
+                if (wordCharIndex != word.Length)
+                    return false;
             }
 
-            return searchTermIndex == searchTerm.Length;
+            return true; // All words matched in order
         }
 
         public static int LevenshteinDistance(string s, string t)

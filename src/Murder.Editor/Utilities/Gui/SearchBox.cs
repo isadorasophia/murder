@@ -604,7 +604,7 @@ namespace Murder.Editor.ImGuiExtended
                 int count = 0;
                 foreach ((string name, T asset) in orderedKeyAndValue)
                 {
-                    if (name.Contains(_tempSearchText, StringComparison.InvariantCultureIgnoreCase))
+                    if (StringHelper.FuzzyMatch(_tempSearchText, name))
                     {
                         bool item_selected = count++ == _searchBoxSelection;
                         ImGui.PushID("comboItem" + name);
