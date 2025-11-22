@@ -509,14 +509,14 @@ namespace Murder.Editor.CustomEditors
 
             name ??= "Instance";
 
-            // If this is a tile grid, create a new room for it.
-            if (isTilegrid && AddGroup("Room") is string roomName)
+            // TODO: We sued to create a layer for every new grid room entity.
+            // We changed our minds, this is no longer the case.
+            if (isTilegrid)
             {
-                name = roomName;
-
-                MoveToGroup(roomName, empty.Guid);
+                name = "Room";
             }
-            else if (group is not null)
+
+            if (group is not null)
             {
                 MoveToGroup(group, empty.Guid);
             }

@@ -325,7 +325,7 @@ namespace Murder.Editor.Systems
                     Color.White * .5f);
 
                 Point center = gridRectangle.CenterPoint * Grid.CellSize;
-                string name = editor.EditorHook.TryGetGroupNameForEntity(id) ?? "Room";
+                string name = editor.EditorHook.GetNameForEntityId?.Invoke(id) ?? "Room";
 
                 RenderServices.DrawText(render.DebugBatch, MurderFonts.LargeFont, name, center, new DrawInfo(0f)
                 {
@@ -483,7 +483,7 @@ namespace Murder.Editor.Systems
                             new RoomComponent(defaultFloor),
                             new TileGridComponent(cursorGridPosition, 6, 6)
                         ],
-                        /* group */ null,
+                        /* group */ "Tileset entities",
                         /* name */ null);
                 }
 

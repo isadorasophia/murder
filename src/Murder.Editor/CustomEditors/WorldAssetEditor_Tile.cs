@@ -58,7 +58,7 @@ namespace Murder.Editor.CustomEditors
                         ImGui.OpenPopup($"Rename#{room.Guid}");
                     }
 
-                    string? name = _world?.GetGroupOf(room.Guid);
+                    string? name = room.Name;
 
                     if (ImGui.BeginPopup($"Rename#{room.Guid}"))
                     {
@@ -66,10 +66,7 @@ namespace Murder.Editor.CustomEditors
                         {
                             if (name is not null)
                             {
-                                RenameGroup(name, newName: room.Name);
-
-                                // Update so the number of the room matches the group.
-                                name = room.Name;
+                                room.SetName(name);
                             }
 
                             ImGui.CloseCurrentPopup();
@@ -116,6 +113,21 @@ namespace Murder.Editor.CustomEditors
             }
 
             DeleteGroupWithEntities(group);
+        }
+
+        /// <summary>
+        /// Delete group, while keeping all entities.
+        /// </summary>
+        private void DeleteGroupWithoutEntities(string name)
+        {
+            GameLogger.Verify(_world is not null);
+
+            foreach (Guid guid in _world.FetchEntitiesOfGroup(name))
+            {
+                MoveToGroup(null, guid);
+            }
+
+            _world.DeleteGroup(name);
         }
 
         /// <summary>

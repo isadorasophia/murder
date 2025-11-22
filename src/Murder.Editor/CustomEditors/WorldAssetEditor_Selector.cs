@@ -122,6 +122,14 @@ namespace Murder.Editor.CustomEditors
 
                     ImGui.SameLine();
 
+                    if (ImGuiHelpers.IconButton('\uf127', $"break_off_group_{name}"))
+                    {
+                        DeleteGroupWithoutEntities(name);
+                    }
+
+                    ImGuiHelpers.HelpTooltip("Break off group");
+                    ImGui.SameLine();
+
                     string addEntityPopup = $"Add entity_{name}";
                     if (CanAddInstance && ImGuiHelpers.IconButton('\uf234', $"add_entity_world_{name}"))
                     {
@@ -138,6 +146,8 @@ namespace Murder.Editor.CustomEditors
 
                         ImGui.OpenPopup(popupName);
                     }
+
+                    ImGuiHelpers.HelpTooltip("Rename");
 
                     DrawAddEntityPopup(addEntityPopup, name);
                     DrawCreateOrRenameGroupPopup(popupName, previousName: name);

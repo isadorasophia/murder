@@ -271,8 +271,6 @@ namespace Murder.Editor.Utilities
         /// </summary>
         public readonly Dictionary<int, string> Groups = new();
 
-        public string? TryGetGroupNameForEntity(int id) => Groups.TryGetValue(id, out string? name) ? name : null;
-
         /// <summary>
         /// Bound rectangles which will be displayed in the world.
         /// </summary>

@@ -430,6 +430,8 @@ namespace Murder.Assets
             }
 
             _folders[name] = ImmutableArray<Guid>.Empty;
+
+            FileChanged = true;
             return true;
         }
 
@@ -446,6 +448,8 @@ namespace Murder.Assets
             }
 
             _folders.Remove(name);
+
+            FileChanged = true;
             return true;
         }
 
@@ -486,6 +490,7 @@ namespace Murder.Assets
                 _entitiesToFolder[instance] = targetGroup;
             }
 
+            FileChanged = true;
             return true;
         }
 
@@ -583,6 +588,7 @@ namespace Murder.Assets
             }
 
             _entitiesToFilter[instance] = targetFilter;
+            FileChanged = true;
         }
 
         public ImmutableArray<Guid> FetchEntitiesGuidInFilter(string targetFilter)
@@ -592,7 +598,7 @@ namespace Murder.Assets
                 return entitiesGuid;
             }
 
-            return ImmutableArray<Guid>.Empty;
+            return [];
         }
 
         public List<IEntity> FetchEntitiesInFilter(string targetFilter)

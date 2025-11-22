@@ -159,7 +159,7 @@ namespace Murder.Editor.Systems
                 ImGui.Separator();
 
                 Guid prefabGuid = Guid.Empty;
-                ImGui.PushID("add Prefab");
+                ImGui.PushID("add_prefab");
                 if (SearchBox.SearchAsset(ref prefabGuid, typeof(PrefabAsset), SearchBoxFlags.None, null, "Add a prefab"))
                 {
                     Point cursorWorldPosition = hook.LastCursorWorldPosition;
@@ -170,7 +170,8 @@ namespace Murder.Editor.Systems
                         prefabGuid,
                         [
                             new PositionComponent(cursorWorldPosition),
-                        ], prefab?.Name ?? "Unknown Prefab");
+                        ],
+                        /* group: */ null);
 
                     ImGui.CloseCurrentPopup();
                 }
