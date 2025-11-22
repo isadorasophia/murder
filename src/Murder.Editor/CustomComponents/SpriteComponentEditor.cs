@@ -2,6 +2,7 @@
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Editor.Attributes;
+using Murder.Editor.ImGuiExtended;
 using System.Collections.Immutable;
 using System.Reflection.Emit;
 
@@ -31,20 +32,11 @@ internal class SpriteComponentEditor : CustomComponent
             if (Game.Data.TryGetAsset<SpriteAsset>(component.AnimationGuid) is SpriteAsset ase)
             {
                 ImGui.SetNextItemWidth(-1);
-                if (ImGui.BeginCombo($"##AnimationID", component.CurrentAnimation))
+
+                if (ImGuiHelpers.FilteredCombo($"##AnimationID", component.CurrentAnimation, ase.Animations.Keys.Order(), (name, index) => name, out string selectedAnimation))
                 {
-                    foreach (string value in ase.Animations.Keys.Order())
-                    {
-                        if (string.IsNullOrWhiteSpace(value))
-                        {
-                            continue;
-                        }
-
-                        fileChanged = DrawAnimationOption(target, fileChanged, component, value, value);
-                    }
-
-                    fileChanged = DrawAnimationOption(target, fileChanged, component, "-empty-", string.Empty);
-                    ImGui.EndCombo();
+                    SelectAnimation(target, component, selectedAnimation);
+                    fileChanged = true;
                 }
             }
 
@@ -54,24 +46,18 @@ internal class SpriteComponentEditor : CustomComponent
         return fileChanged;
     }
 
-    private static bool DrawAnimationOption(object target, bool fileChanged, SpriteComponent component, string label, string value)
+    private static void SelectAnimation(object target, SpriteComponent component, string selectedAnimation)
     {
-        if (ImGui.MenuItem(label))
+        ImmutableArray<string> nextAnimations;
+        if (component.NextAnimations.Length == 0)
         {
-            ImmutableArray<string> nextAnimations;
-            if (component.NextAnimations.Length == 0)
-            {
-                nextAnimations = [value];
-            }
-            else
-            {
-                nextAnimations = component.NextAnimations.SetItem(0, value);
-            }
-
-            target.GetType().GetProperty("NextAnimations")!.SetValue(target, nextAnimations);
-            fileChanged = true;
+            nextAnimations = [selectedAnimation];
+        }
+        else
+        {
+            nextAnimations = component.NextAnimations.SetItem(0, selectedAnimation);
         }
 
-        return fileChanged;
+        target.GetType().GetProperty("NextAnimations")!.SetValue(target, nextAnimations);
     }
 }

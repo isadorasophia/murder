@@ -1,8 +1,10 @@
 ﻿using ImGuiNET;
 using Murder.Attributes;
 using Murder.Data;
+using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
+using Murder.Utilities;
 using Murder.Utilities.Attributes;
 
 namespace Murder.Editor.CustomFields
@@ -213,18 +215,10 @@ namespace Murder.Editor.CustomFields
         {
             bool modified = false;
 
-            if (ImGui.BeginCombo(id, text))
+            if (ImGuiHelpers.FilteredCombo(id, text, names, (name, _) => name, out string selectedName))
             {
-                foreach (string name in names)
-                {
-                    if (ImGui.MenuItem(name))
-                    {
-                        text = name;
-                        modified = true;
-                    }
-                }
-
-                ImGui.EndCombo();
+                text = selectedName;
+                modified = true;
             }
 
             return modified;
@@ -234,18 +228,10 @@ namespace Murder.Editor.CustomFields
         {
             bool modified = false;
 
-            if (ImGui.BeginCombo(id, text))
+            if (ImGuiHelpers.FilteredCombo(id, text, names, (name, _) => name, out string selectedName))
             {
-                foreach (string name in names)
-                {
-                    if (ImGui.MenuItem(name))
-                    {
-                        text = name;
-                        modified = true;
-                    }
-                }
-
-                ImGui.EndCombo();
+                text = selectedName;
+                modified = true;
             }
 
             return modified;

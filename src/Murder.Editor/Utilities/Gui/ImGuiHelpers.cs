@@ -7,11 +7,156 @@ using System;
 using System.Collections.Immutable;
 using System.Numerics;
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Murder.Editor.ImGuiExtended;
 
 public static class ImGuiHelpers
 {
+    private static string _genericComboFilter = string.Empty;
+    private static string _genericComboFilterId = string.Empty;
+    private static int _genericComboFilterSelectedIndex = 0;
+
+    public static bool FilteredCombo<T>(string id, string previewValue, IEnumerable<T> items, Func<T, int, string> findItemName, out T selected)
+    {
+        selected = default(T)!;
+
+        if (ImGui.BeginCombo(id, previewValue, ImGuiComboFlags.HeightLarge))
+        {
+            bool pressedEnter = false;
+            int itemsCount = items.Count();
+            if (itemsCount > 6)
+            {
+                pressedEnter = ImGuiHelpers.ShowStringComboFilter(id);
+            }
+            else if (itemsCount == 0)
+            {
+                ImGui.TextColored(Game.Profile.Theme.Warning, "-?-");
+            }
+            else
+            {
+                pressedEnter = ImGui.IsKeyPressed(ImGuiKey.Enter);
+            }
+
+            int estimatedItemCount = itemsCount;
+            if (!string.IsNullOrWhiteSpace(_genericComboFilter))
+            {
+                estimatedItemCount = items.Count(item =>
+                    StringHelper.FuzzyMatch(_genericComboFilter, findItemName(item, 0)));
+            }
+
+            float minHeight = Math.Max(100f, estimatedItemCount * ImGui.GetTextLineHeightWithSpacing());
+
+            ImGui.BeginChild($"###Child{id}", new Vector2(0, minHeight), ImGuiChildFlags.None);
+            var drawList = ImGui.GetWindowDrawList();
+
+            int i = 0;
+            int selectionIndex = 0;
+            bool itemWasSelectedByUser = false;
+
+            foreach (T item in items)
+            {
+                string itemName = findItemName(item, i);
+                if (!string.IsNullOrWhiteSpace(_genericComboFilter) && !StringHelper.FuzzyMatch(_genericComboFilter, itemName))
+                {
+                    i++;
+                    continue;
+                }
+
+                if (_genericComboFilterSelectedIndex == selectionIndex)
+                {
+
+                    if (pressedEnter)
+                    {
+                        selected = item;
+                        itemWasSelectedByUser = true;
+                        break;
+                    }
+                }
+
+                if (string.IsNullOrEmpty(itemName))
+                {
+                    ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
+
+                    if (ImGui.MenuItem("-empty-"))
+                    {
+                        selected = item;
+                        itemWasSelectedByUser = true;
+                        break;
+                    }
+
+                    ImGui.PopStyleColor();
+                }
+                else
+                {
+                    if (ImGui.MenuItem(itemName))
+                    {
+                        selected = item;
+                        itemWasSelectedByUser = true;
+                        break;
+                    }
+                }
+
+                if (_genericComboFilterSelectedIndex == selectionIndex && itemsCount > 1)
+                {
+                    ImGuiHelpers.DrawBgPreviousItem(Game.Profile.Theme.Accent with { W = 0.3f }, 0);
+                }
+                selectionIndex++;
+                i++;
+            }
+
+            if (ImGui.IsKeyPressed(ImGuiKey.DownArrow))
+            {
+                _genericComboFilterSelectedIndex++;
+            }
+            if (ImGui.IsKeyPressed(ImGuiKey.UpArrow))
+            {
+                _genericComboFilterSelectedIndex--;
+            }
+            _genericComboFilterSelectedIndex = Math.Clamp(_genericComboFilterSelectedIndex, 0, Math.Max(0, selectionIndex - 1));
+
+            ImGui.EndChild();
+
+            if (itemWasSelectedByUser)
+            {
+                ImGui.CloseCurrentPopup();
+            }
+            ImGui.EndCombo();
+
+            if (itemWasSelectedByUser)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            if (_genericComboFilterId == id)
+            {
+                _genericComboFilter = string.Empty;
+                _genericComboFilterId = string.Empty;
+                _genericComboFilterSelectedIndex = 0;
+            }
+        }
+
+        return false;
+    }
+
+    public static bool ShowStringComboFilter(string id)
+    {
+        if (_genericComboFilterId != id)
+        {
+            _genericComboFilterId = id;
+            _genericComboFilter = string.Empty;
+            ImGui.SetKeyboardFocusHere();
+        }
+        ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.White);
+        ImGui.SetNextItemWidth(-1);
+        bool pressedEnter = ImGui.InputText($"###Filter{id}", ref _genericComboFilter, 256, ImGuiInputTextFlags.EnterReturnsTrue);
+        ImGui.PopStyleColor();
+
+        return pressedEnter;
+    }
+
     /// <summary>
     /// Draws a splitter area after the next item with size0 height/width
     /// Don't forget to add a ImGui.Dummy(new Vector2(0,8)) after it to reserve the space for the splitter
@@ -912,6 +1057,16 @@ public static class ImGuiHelpers
         var dl = ImGui.GetWindowDrawList();
 
         dl.AddRect(min, max, Color.ToUint(color), rounding);
+    }
+
+    public static void DrawBgPreviousItem(Vector4 color, float padding, float rounding = 5)
+    {
+        Vector2 min = ImGui.GetItemRectMin() - new Vector2(padding);
+        Vector2 max = ImGui.GetItemRectMax() + new Vector2(padding);
+
+        var dl = ImGui.GetWindowDrawList();
+
+        dl.AddRectFilled(min, max, Color.ToUint(color), rounding);
     }
 
 
