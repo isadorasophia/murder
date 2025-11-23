@@ -234,6 +234,24 @@ public static partial class RenderServices
             return FrameInfo.Fail;
         }
 
+        return DrawSprite(spriteBatch, pos, clip, animation, asset, frame, origin, imageFlip, rotation, scale, color, blend, sort);
+    }
+
+    public static FrameInfo DrawSprite(
+        Batch2D spriteBatch,
+        Vector2 pos,
+        Rectangle clip,
+        Animation animation,
+        SpriteAsset asset,
+        int frame,
+        Vector2 origin,
+        ImageFlip imageFlip,
+        float rotation,
+        Vector2 scale,
+        Color color,
+        Vector3 blend,
+        float sort)
+    {
         var frameInfo = new FrameInfo()
         {
             Animation = animation,
@@ -259,7 +277,6 @@ public static partial class RenderServices
 
         return frameInfo;
     }
-
 
     public static void DealWithCompleteAnimations(Entity e, SpriteComponent s)
     {
@@ -392,6 +409,7 @@ public static partial class RenderServices
     {
         FrameInfo drawAt(Vector2 position, Color color, bool wash, float sort)
         {
+            // [PERF] There's an obvious way to optimize this by caching the animation frame and drawing it instead of recalculating it every time.
             FrameInfo frameInfo = DrawSprite(
             batch,
             position,

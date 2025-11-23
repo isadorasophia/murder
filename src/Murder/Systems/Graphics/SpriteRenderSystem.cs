@@ -12,6 +12,7 @@ using Murder.Diagnostics;
 using Murder.Services;
 using Murder.Utilities;
 using System.Numerics;
+using System.Security.AccessControl;
 
 namespace Murder.Systems.Graphics
 {
@@ -92,7 +93,7 @@ namespace Murder.Systems.Graphics
 
                 float ySortOffsetRaw = 0;
 
-                string animation = s.CurrentAnimation;
+                string animationId = s.CurrentAnimation;
                 float startTime = e.TryGetAnimationStarted()?.StartTime ?? (s.UseUnscaledTime ? Game.Now : Game.NowUnscaled);
 
                 AnimationOverloadComponent? overload = null;
@@ -106,7 +107,7 @@ namespace Murder.Systems.Graphics
 
                     if (asset.Animations.ContainsKey(o.CurrentAnimation))
                     {
-                        animation = o.CurrentAnimation;
+                        animationId = o.CurrentAnimation;
                     }
 
                     ySortOffsetRaw += o.SortOffset;
@@ -115,7 +116,7 @@ namespace Murder.Systems.Graphics
                 float yPositionForYSort = transform.Y;
 
                 int? forceFrame = null;
-                if (e.TryGetSpriteFrame() is SpriteFrameComponent spriteFrame && spriteFrame.Animation.Equals(animation))
+                if (e.TryGetSpriteFrame() is SpriteFrameComponent spriteFrame && spriteFrame.Animation.Equals(animationId))
                 {
                     forceFrame = spriteFrame.Frame;
                     yPositionForYSort = spriteFrame.Y;
@@ -130,13 +131,21 @@ namespace Murder.Systems.Graphics
                     renderPosition = new Vector2(renderPosition.X, renderPosition.Y - verticalPosition.Value.Z);
                 }
 
+
+                if (!asset.Animations.TryGetValue(animationId, out var animation))
+                {
+                    GameLogger.Log($"Couldn't find animation {animationId} for {asset.Guid}.");
+                    continue;
+                }
+
                 var animationInfo = new AnimationInfo()
                 {
-                    Name = animation,
+                    Name = animationId,
                     Start = startTime,
                     UseScaledTime = !e.HasPauseAnimation() && !s.UseUnscaledTime,
                     Loop =
-                        s.NextAnimations.Length <= 1 &&             // if this is a sequence, don't loop
+                        s.NextAnimations.Length <= 1 &&              // if this is a sequence, don't loop
+                        animation.NextAnimation.Length == 0 &&      //
                         !e.HasDoNotLoop() &&                       // if this has the DoNotLoop component, don't loop
                         !e.HasDestroyOnAnimationComplete() &&     // if you want to destroy this, don't loop
                         (overload == null || (overload.Value.AnimationCount == 1 && overload.Value.Loop)),
@@ -166,7 +175,7 @@ namespace Murder.Systems.Graphics
                         render.GetBatch(s.TargetSpriteBatch),
                         renderPosition,
                         clip,
-                        animation,
+                        animationId,
                         asset,
                         animationInfo.ForceFrame.Value,
                         s.Offset,
@@ -227,22 +236,21 @@ namespace Murder.Systems.Graphics
                 // Animations do not send complete messages until the current sequence is done
                 if (frameInfo.Complete)
                 {
-                    // Handle animation sequences imported by Aseprite and baked into the asset
-                    bool foundNext = false;
-                    foreach (AnimationSequence possibleSequence in frameInfo.Animation.NextAnimation)
+                    if (frameInfo.Animation.NextAnimation.Length > 0)
                     {
-
-                        if (Game.Random.TryWithChanceOf(possibleSequence.Chance))
+                        // Handle animation sequences imported by Aseprite and baked into the asset
+                        if (frameInfo.Animation.GetNextAnimation(Game.Random, out string next))
                         {
-                            if (!string.IsNullOrWhiteSpace(possibleSequence.Next))
-                            {
-                                e.PlaySpriteAnimation(possibleSequence.Next);
-                                foundNext = true;
-                                break;
-                            }
+                            e.PlaySpriteAnimation(next);
+                            break;
                         }
-                    }
+                        else
+                        // Be careful since this only runs when the Entity is in camera this can cause animation loops to get out of sync.
+                        {
+                            e.PlaySpriteAnimation(animationId);
+                        }
 
+                    }
                     RenderServices.DealWithCompleteAnimations(e, s);
                 }
             }
