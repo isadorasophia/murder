@@ -243,10 +243,6 @@ namespace Murder.Systems.Graphics
                         }
                     }
 
-                    if (!foundNext)
-                    {
-                        e.PlaySpriteAnimation(animation);
-                    }
                     RenderServices.DealWithCompleteAnimations(e, s);
                 }
             }
