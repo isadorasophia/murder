@@ -50,14 +50,8 @@ public class CustomComponent
         return false;
     }
 
-    public static bool ShowEditorOf(/* ref */ object? target)
+    public static bool ShowEditorOf(ref object target)
     {
-        if (target is null)
-        {
-            GameLogger.Error("Unable to show the editor of null target.");
-            return false;
-        }
-
         if (CustomEditorsHelper.TryGetCustomComponent(target.GetType(), out var customFieldEditor))
         {
             return customFieldEditor.DrawAllMembersWithTable(ref target);
@@ -67,6 +61,17 @@ public class CustomComponent
             $"Unable to find custom component editor for type: {target?.GetType()?.Name}.");
 
         return false;
+    }
+
+    public static bool ShowEditorOf(/* ref */ object? target)
+    {
+        if (target is null)
+        {
+            GameLogger.Error("Unable to show the editor of null target.");
+            return false;
+        }
+
+        return ShowEditorOf(ref target);
     }
 
     /// <summary>

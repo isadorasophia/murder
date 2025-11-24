@@ -154,7 +154,7 @@ public abstract class CustomField
                         return customFieldEditor.ProcessInput(member, /* ref */ value);
                     }
 
-                    (modified, result) = (CustomComponent.ShowEditorOf(obj), obj);
+                    (modified, result) = (CustomComponent.ShowEditorOf(ref obj), obj);
                 }
 
                 break;
