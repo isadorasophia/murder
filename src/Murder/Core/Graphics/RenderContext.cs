@@ -607,4 +607,9 @@ public class RenderContext : IDisposable
     {
         _takeGameplayScreenShot = 2;
     }
+
+    public virtual void OnShadersReloaded()
+    {
+        
+    }
 }

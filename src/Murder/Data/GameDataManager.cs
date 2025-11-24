@@ -420,6 +420,9 @@ namespace Murder.Data
                     }
                 }
             }
+
+            // Warn the render context
+            Game.Instance.ActiveScene?.RenderContext?.OnShadersReloaded();
         }
 
         public virtual void InitShaders() { }

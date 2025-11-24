@@ -242,7 +242,6 @@ namespace Murder.Systems.Graphics
                         if (frameInfo.Animation.GetNextAnimation(Game.Random, out string next))
                         {
                             e.PlaySpriteAnimation(next);
-                            break;
                         }
                         else
                         // Be careful since this only runs when the Entity is in camera this can cause animation loops to get out of sync.
