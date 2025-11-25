@@ -85,6 +85,7 @@ namespace Murder.Core.Input
         public float CreatedAt;
         public float LastMoved;
         public float LastPressed;
+        public int AttemptedPressCurrentSelection;
         public bool Canceled;
         public bool Disabled = false;
         public int OverflowX = 0;
@@ -398,6 +399,7 @@ namespace Murder.Core.Input
                 _ = SoundServices.Play(Sounds.MenuSubmit);
             }
 
+            AttemptedPressCurrentSelection++;
             LastPressed = now;
         }
 
@@ -425,6 +427,7 @@ namespace Murder.Core.Input
             LastMoved = now;
             LastPressed = now;
 
+            AttemptedPressCurrentSelection = 0;
 
             if (Selection >= Options.Length)
             {
