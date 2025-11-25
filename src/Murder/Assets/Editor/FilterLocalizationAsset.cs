@@ -150,7 +150,7 @@ public class FilteredAssetsForLocalization
         return candidates.ToImmutable();
     }
 
-    private bool ShouldSkip(GameAsset asset)
+    public static bool ShouldSkip(GameAsset asset)
     {
         if (asset is LocalizationAsset or SpriteAsset or SpriteEventDataManagerAsset or
             FontAsset or FloorAsset)
