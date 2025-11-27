@@ -1,19 +1,13 @@
 ﻿using Bang.Components;
 using Murder.Core;
-using Murder.Utilities.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Murder.Components.Utilities
+namespace Murder.Components.Utilities;
+
+/// <summary>
+/// Currently used for some physics check, 
+/// e.g. see <see cref="Murder.Systems.AgentMovementModifierSystem"/>.
+/// </summary>
+public readonly struct TagsComponent : IComponent
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public readonly struct TagsComponent : IComponent
-    {
-        public readonly Tags Tags;
-    }
+    public readonly Tags Tags;
 }
