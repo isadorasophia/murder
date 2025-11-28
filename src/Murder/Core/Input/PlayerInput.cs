@@ -493,7 +493,10 @@ public class PlayerInput
 
         if (pressed)
         {
-            Consume(MurderInputButtons.Submit);
+            if (currentInfo.AcceptPressInputFeedback)
+            {
+                Consume(MurderInputButtons.Submit);
+            }
 
             currentInfo.Press(Game.NowUnscaled);
         }
