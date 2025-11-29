@@ -181,6 +181,10 @@ public class PixelFontSize
                         if (i < j - 1 && c.Kerning.TryGetValue(text[i + 1], out kerning))
                             currentLineWidth -= kerning;
                     }
+                    else if (current == '\n')
+                    {
+                        continue;
+                    }
                     else
                     {
                         GameLogger.Warning($"Character '{current}' not found in font.");
