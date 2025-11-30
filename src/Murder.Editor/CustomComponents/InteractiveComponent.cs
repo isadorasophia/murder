@@ -28,6 +28,11 @@ namespace Murder.Editor.CustomComponents
 
         protected virtual (bool, object?) DrawInteraction(object? interaction)
         {
+            if (interaction is null)
+            {
+                return (false, interaction);
+            }
+
             return (ShowEditorOf(ref interaction), interaction);
         }
     }

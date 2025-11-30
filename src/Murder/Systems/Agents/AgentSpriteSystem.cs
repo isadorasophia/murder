@@ -291,9 +291,10 @@ namespace Murder.Systems
                         // This is a chained animation, e send the complete message and try to play the next one.
                         e.SendAnimationCompleteMessage(AnimationCompleteStyle.Sequence);
                         e.SetAnimationComplete();
+
                         if (frameInfo.Animation.GetNextAnimation(Game.Random, out string next))
                         {
-                            e.SetAnimationOverload(new AnimationOverloadComponent(next, 0f, overload.Value.Loop, overload.Value.IgnoreFacing));
+                            e.SetAnimationOverload(overload.Value.Play(next));
                         }
                     }
                     else if (!overload.Value.Loop)

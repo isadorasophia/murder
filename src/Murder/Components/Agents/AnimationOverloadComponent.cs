@@ -33,16 +33,18 @@ namespace Murder.Components
             }
         }
 
-        [Tooltip("If this is set, replace the animation id.")]
+#pragma warning disable IDE1006 // naming a property with an underscore
         [Serialize]
-        private readonly ImmutableArray<string> _animationId = ImmutableArray<string>.Empty;
+        [Tooltip("If this is set, replace the animation id.")]
+        private readonly ImmutableArray<string> _animationId { get; init; } = [];
+#pragma warning restore IDE1006
 
         [Tooltip("If this is set, replace the sprite animation.")]
         [Serialize]
         [GameAssetId<SpriteAsset>]
         private readonly Guid _customSprite = Guid.Empty;
 
-        public readonly float Start = 0;
+        public readonly float Start { get; init; } = 0;
 
         public readonly float Duration = -1.0f;
 
@@ -77,9 +79,6 @@ namespace Murder.Components
         public AnimationOverloadComponent() { }
 
         public AnimationOverloadComponent(string animationId, bool loop, bool ignoreFacing) : this(animationId, duration: -1, loop, ignoreFacing, Game.Now, Guid.Empty)
-        { }
-
-        public AnimationOverloadComponent(string animationId, bool loop, bool ignoreFacing, Guid customSprite) : this(animationId, duration: -1, loop, ignoreFacing, Game.Now, customSprite)
         { }
 
         public AnimationOverloadComponent(ImmutableArray<string> animationId, bool loop, bool ignoreFacing, Guid customSprite) : this(animationId, duration: -1, loop, ignoreFacing, Game.Now, customSprite)
@@ -146,6 +145,8 @@ namespace Murder.Components
             Loop = loop;
             IgnoreFacing = ignoreFacing;
         }
+
+        public AnimationOverloadComponent Play(string animation) => this with { Start = Game.Now, _animationId = [animation] };
 
         public AnimationOverloadComponent PlayNext() => new AnimationOverloadComponent(
             _animationId, Duration, Loop, IgnoreFacing, Math.Min(_animationId.Length - 1, Current + 1), SortOffset, _customSprite) with
