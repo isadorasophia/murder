@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 
 namespace Murder.Utilities;
 
-public static class BlackboardHelpers
+public static partial class BlackboardHelpers
 {
     public static bool Match(World world, ImmutableArray<CriterionNode> requirements)
     {
@@ -56,7 +56,7 @@ public static class BlackboardHelpers
     {
         newText = text;
 
-        MatchCollection matches = Regex.Matches(text, "{([^}]+)}");
+        MatchCollection matches = TextFormattingRegex().Matches(text);
         if (matches.Count == 0)
         {
             return false;
@@ -109,4 +109,7 @@ public static class BlackboardHelpers
     {
         return Match(world, onlyApplyWhen.Requirements) && IsSatisfied(world, onlyApplyWhen.Conditions);
     }
+
+    [GeneratedRegex("{([^}]+)}")]
+    private static partial Regex TextFormattingRegex();
 }
