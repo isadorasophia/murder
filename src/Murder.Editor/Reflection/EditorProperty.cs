@@ -24,6 +24,6 @@ namespace Murder.Editor.Reflection
         /// <summary>
         /// Do not modify properties without a setter.
         /// </summary>
-        public override bool IsReadOnly => _property.GetSetMethod() is null;
+        public override bool IsReadOnly => _property.SetMethod is null;
     }
 }

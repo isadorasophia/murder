@@ -254,7 +254,11 @@ public static class SerializationHelper
                 return false;
             }
         }
-        
+
+        // explicitly defined a serialize attribute, we should not skip this.
+        Debug.Assert(!Attribute.IsDefined(prop, typeof(SerializeAttribute)), 
+            $"Unable to serialize a property {prop.Name} without a setter!");
+
         // Skip readonly properties. Apparently System.Text.Json likes to ignore ReadOnlyProperties=false when applying to collections
         // so we will manually ignore them here.
         // These won't have a setter and that's why we reached this point.

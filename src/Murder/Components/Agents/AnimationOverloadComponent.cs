@@ -6,37 +6,17 @@ using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using System.Collections.Immutable;
+using System.Text.Json.Serialization;
 
 namespace Murder.Components
 {
     public readonly struct AnimationOverloadComponent : IComponent
     {
-        public string AnimationId => _animationId[0];
-
-        [ShowInEditor]
-        public string CurrentAnimation
-        {
-            get
-            {
-                if (_animationId.Length == 0)
-                {
-                    return string.Empty;
-                }
-
-                if (Current >= 0 && Current < _animationId.Length)
-                {
-                    return _animationId[Current];
-                }
-
-                GameLogger.Warning("Trying to play animation overload with out of bounds index");
-                return string.Empty;
-            }
-        }
-
-#pragma warning disable IDE1006 // naming a property with an underscore
+        // ===== fields and setters =====
         [Serialize]
         [Tooltip("If this is set, replace the animation id.")]
-        private readonly ImmutableArray<string> _animationId { get; init; } = [];
+#pragma warning disable IDE1006 // naming style
+        private readonly ImmutableArray<string> _nextAnimationsOverload = [];
 #pragma warning restore IDE1006
 
         [Tooltip("If this is set, replace the sprite animation.")]
@@ -55,9 +35,6 @@ namespace Murder.Components
         public readonly ImageFlip Flip { get; init; } = ImageFlip.None;
 
         public readonly int Current = 0;
-        public readonly int AnimationCount => _animationId.Length;
-        public bool AtLast => Current == _animationId.Length - 1;
-
         public readonly float SortOffset { get; init; } = 0f;
 
         /// <summary>
@@ -65,99 +42,151 @@ namespace Murder.Components
         /// </summary>
         public readonly int? SupportedDirections { get; init; } = null;
 
+        // ===== getters =====
+        public string AnimationId => _nextAnimationsOverload[0];
+
+        [ShowInEditor]
+        public string CurrentAnimation
+        {
+            get
+            {
+                if (_nextAnimationsOverload.Length == 0)
+                {
+                    return string.Empty;
+                }
+
+                if (Current >= 0 && Current < _nextAnimationsOverload.Length)
+                {
+                    return _nextAnimationsOverload[Current];
+                }
+
+                GameLogger.Warning("Trying to play animation overload with out of bounds index");
+                return string.Empty;
+            }
+        }
+
+        public readonly int AnimationCount => _nextAnimationsOverload.Length;
+        public bool AtLast => Current == _nextAnimationsOverload.Length - 1;
+
         public SpriteAsset? CustomSprite
         {
             get
             {
                 if (_customSprite != Guid.Empty && Game.Data.TryGetAsset<SpriteAsset>(_customSprite) is SpriteAsset asset)
+                {
                     return asset;
+                }
 
                 return null;
             }
         }
 
+        [JsonConstructor]
         public AnimationOverloadComponent() { }
 
-        public AnimationOverloadComponent(string animationId, bool loop, bool ignoreFacing) : this(animationId, duration: -1, loop, ignoreFacing, Game.Now, Guid.Empty)
-        { }
-
-        public AnimationOverloadComponent(ImmutableArray<string> animationId, bool loop, bool ignoreFacing, Guid customSprite) : this(animationId, duration: -1, loop, ignoreFacing, Game.Now, customSprite)
-        { }
-
-        public AnimationOverloadComponent(ImmutableArray<string> animationId, bool loop, bool ignoreFacing) : this(animationId, duration: -1, loop, ignoreFacing, Game.Now, Guid.Empty)
-        { }
-
-        public AnimationOverloadComponent(string animationId, bool loop, bool ignoreFacing, float startTime) : this(animationId, duration: -1, loop, ignoreFacing, startTime, Guid.Empty)
-        { }
-
-        public AnimationOverloadComponent(string animationId, float duration, bool loop, bool ignoreFacing, int current, float sortOffset, Guid customSprite) :
-            this([animationId], duration, loop, ignoreFacing, current, sortOffset, customSprite, Game.Now)
-        { }
-
-        public AnimationOverloadComponent(ImmutableArray<string> animations, float duration, bool loop, bool ignoreFacing, int current, float sortOffset, Guid customSprite) :
-            this(animations, duration, loop, ignoreFacing, current, sortOffset, customSprite, Game.Now)
-        { }
-
-        public AnimationOverloadComponent(string animationId, float duration, bool loop, bool ignoreFacing, float startTime, Guid customSprite)
-            : this([animationId], duration, loop, ignoreFacing, startTime, customSprite)
-        { }
-
-        public AnimationOverloadComponent(string animationId, float duration, bool loop, bool ignoreFacing)
-            : this(animationId, duration, loop, ignoreFacing, Game.Now, customSprite: Guid.Empty)
-        { }
-
-        public AnimationOverloadComponent(string animationId, Guid customSprite, float start, bool loop, bool ignoreFacing) :
-            this([animationId], customSprite, start, loop, ignoreFacing)
-        { }
-
-        public AnimationOverloadComponent(ImmutableArray<string> animations, float duration, bool loop, bool ignoreFacing, int current, float sortOffset, Guid customSprite, float start)
+        public AnimationOverloadComponent(ImmutableArray<string> nextAnimationsOverload, Guid customSprite, float start,
+            float duration, bool loop, bool ignoreFacing, ImageFlip flip, int current, float sortOffset, int? supportedDirections) 
         {
-            _animationId = animations;
+            _nextAnimationsOverload = nextAnimationsOverload;
             _customSprite = customSprite;
 
-            Start = start;
             Loop = loop;
             IgnoreFacing = ignoreFacing;
+
+            Start = start;
+            Duration = duration;
+
+            Flip = flip;
+
             Current = current;
             SortOffset = sortOffset;
-
-            Duration = duration;
+            SupportedDirections = supportedDirections;
         }
 
-        public AnimationOverloadComponent(ImmutableArray<string> animationId, float duration, bool loop, bool ignoreFacing, float startTime, Guid customSprite)
+        public AnimationOverloadComponent(ImmutableArray<string> nextAnimationsOverload, Guid customSprite, bool loop, bool ignoreFacing)
         {
-            _animationId = animationId;
+            _nextAnimationsOverload = nextAnimationsOverload;
             _customSprite = customSprite;
 
-            Start = startTime;
-            Loop = loop;
-            Duration = duration;
+            Start = Game.Now;
 
-            IgnoreFacing = ignoreFacing;
-        }
-
-        public AnimationOverloadComponent(ImmutableArray<string> animationId, Guid customSprite, float start, bool loop, bool ignoreFacing)
-        {
-            _animationId = animationId;
-            _customSprite = customSprite;
-
-            Start = start;
             Loop = loop;
             IgnoreFacing = ignoreFacing;
         }
 
-        public AnimationOverloadComponent Play(string animation) => this with { Start = Game.Now, _animationId = [animation] };
+        public AnimationOverloadComponent(string animationId, Guid customSprite, bool loop, bool ignoreFacing) : this(
+            [animationId],
+            customSprite,
+            loop,
+            ignoreFacing)
+        { }
 
-        public AnimationOverloadComponent PlayNext() => new AnimationOverloadComponent(
-            _animationId, Duration, Loop, IgnoreFacing, Math.Min(_animationId.Length - 1, Current + 1), SortOffset, _customSprite) with
-                { Flip = Flip };
+        public AnimationOverloadComponent(string animationId, bool loop, bool ignoreFacing) : this(
+            [animationId],
+            customSprite: Guid.Empty,
+            loop,
+            ignoreFacing)
+        { }
 
-        public AnimationOverloadComponent Now => new AnimationOverloadComponent(
-            _animationId, Duration, Loop, IgnoreFacing, Current, SortOffset, _customSprite) with
-                { Flip = Flip };
+        public AnimationOverloadComponent(string animationId, float duration, bool loop, bool ignoreFacing) : this(
+            [animationId],
+            customSprite: Guid.Empty,
+            start: Game.Now,
+            duration,
+            loop,
+            ignoreFacing,
+            flip: ImageFlip.None,
+            current: 0,
+            sortOffset: 0,
+            supportedDirections: null)
+        { }
 
-        public AnimationOverloadComponent NoLoop => new AnimationOverloadComponent(
-            _animationId, Duration, loop: false, IgnoreFacing, Current, SortOffset, _customSprite, Start) with
-                { Flip = Flip };
+        public AnimationOverloadComponent Play(string animation) => new(
+            [animation],
+            _customSprite,
+            start: Game.Now,
+            Duration,
+            Loop,
+            IgnoreFacing,
+            Flip,
+            Current,
+            SortOffset,
+            SupportedDirections);
+
+        public AnimationOverloadComponent PlayNext() => new(
+            _nextAnimationsOverload,
+            _customSprite,
+            start: Game.Now,
+            Duration,
+            Loop,
+            IgnoreFacing,
+            Flip,
+            current: Math.Min(_nextAnimationsOverload.Length - 1, Current + 1),
+            SortOffset,
+            SupportedDirections);
+
+        public AnimationOverloadComponent Now => new(
+            _nextAnimationsOverload,
+            _customSprite,
+            start: Game.Now,
+            Duration,
+            Loop,
+            IgnoreFacing,
+            Flip,
+            Current,
+            SortOffset,
+            SupportedDirections); 
+        
+        public AnimationOverloadComponent NoLoop => new(
+            _nextAnimationsOverload,
+            _customSprite,
+            start: Game.Now,
+            Duration,
+            loop: false,
+            IgnoreFacing,
+            Flip,
+            Current,
+            SortOffset,
+            SupportedDirections);
     }
 }

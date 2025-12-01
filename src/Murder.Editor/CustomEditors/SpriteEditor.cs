@@ -210,7 +210,7 @@ namespace Murder.Editor.CustomEditors
 
             info.Stage.AddOrReplaceComponentOnEntity(
                 info.HelperId,
-                new AnimationOverloadComponent(animation, loop: true, ignoreFacing: true, startTime: 0));
+                new AnimationOverloadComponent(animation, loop: true, ignoreFacing: true));
         }
 
         private void DrawFirstColumn(SpriteInformation info)

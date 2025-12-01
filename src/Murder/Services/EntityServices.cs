@@ -637,19 +637,19 @@ public static class EntityServices
         Guid? customSprite = null)
     {
         AnimationOverloadComponent overload =
-                    new AnimationOverloadComponent(
-                        animations,
-                        loop: properties.HasFlag(AnimationOverloadProperties.Loop),
-                        ignoreFacing: properties.HasFlag(AnimationOverloadProperties.IgnoreFacing),
-                        customSprite: customSprite ?? Guid.Empty)
-                    with
-                    { 
-                        SortOffset = offset,
-                        Flip = properties.HasFlag(AnimationOverloadProperties.FlipHorizontal) ? 
-                                ImageFlip.Horizontal : ImageFlip.None,
-                        SupportedDirections = properties.HasFlag(AnimationOverloadProperties.LockTo4Directions) ? 
-                                4 : null
-                    };
+            new AnimationOverloadComponent(
+                animations,
+                customSprite: customSprite ?? Guid.Empty,
+                loop: properties.HasFlag(AnimationOverloadProperties.Loop),
+                ignoreFacing: properties.HasFlag(AnimationOverloadProperties.IgnoreFacing))
+            with
+            {
+                SortOffset = offset,
+                Flip = properties.HasFlag(AnimationOverloadProperties.FlipHorizontal) ? 
+                        ImageFlip.Horizontal : ImageFlip.None,
+                SupportedDirections = properties.HasFlag(AnimationOverloadProperties.LockTo4Directions) ? 
+                        4 : null
+            };
 
         e.SetAnimationOverload(overload);
         e.RemoveAnimationComplete();

@@ -66,7 +66,7 @@ public abstract class CustomField
         bool modified = false;
         object? result = value;
 
-        if (value is not null)
+        if (value is not null && !member.IsReadOnly)
         {
             if (Nullable.GetUnderlyingType(member.Type) != null || member.Type.IsInterface || member.Type == typeof(string))
             {
