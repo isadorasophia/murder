@@ -214,6 +214,7 @@ namespace Murder.Editor.Systems
                     {
                         ImGui.Separator();
                         ImGui.SetNextItemWidth(-1);
+                        ImGui.SetKeyboardFocusHere();
                         ImGui.InputTextWithHint("##searchsavestates", "Search...", ref _newSaveFilter, 256);
                         ImGui.BeginChild("searchChild", new Vector2(-1, 500));
                         foreach ((Guid g, string name) in _saveStateInfo)

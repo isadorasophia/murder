@@ -190,6 +190,21 @@ namespace Murder.Systems
                     UseScaledTime = true
                 };
 
+                // Make sure overloaded animations don't loop if they have a sequence.
+                if (overload != null)
+                {
+                    if (!spriteAsset.Animations.TryGetValue(animationInfo.Name, out var animation))
+                    {
+                        GameLogger.Log($"Couldn't find animation {animationInfo.Name} for {spriteAsset.Guid}.");
+                        continue;
+                    }
+
+                    if (!animation.NextAnimation.IsEmpty)
+                    {
+                        animationInfo = animationInfo with { Loop = false };
+                    }
+                }
+
                 if (e.TryGetForceAnimationOnChance() is ForceAnimationOnChanceComponent forceAnimationOnChance)
                 {
                     // only apply after the animation changed
@@ -235,6 +250,8 @@ namespace Murder.Systems
 
                 Color? outlineColor = e.HasDeactivateHighlightSprite() ? null :
                     e.TryGetHighlightSprite()?.Color;
+
+
 
                 // Draw to the sprite batch
                 FrameInfo frameInfo = RenderServices.DrawSprite(
@@ -295,6 +312,10 @@ namespace Murder.Systems
                         if (frameInfo.Animation.GetNextAnimation(Game.Random, out string next))
                         {
                             e.SetAnimationOverload(overload.Value.Play(next));
+                        }
+                        else
+                        {
+                            e.SetAnimationOverload(overload.Value with { Start = Game.Now });
                         }
                     }
                     else if (!overload.Value.Loop)
