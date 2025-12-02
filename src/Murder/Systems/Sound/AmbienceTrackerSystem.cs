@@ -106,7 +106,7 @@ public class AmbienceTrackerSystem : IMessagerSystem, IReactiveSystem
             AmbienceComponent ambience = e.GetAmbience();
             foreach (SoundEventIdInfo info in ambience.Events)
             {
-                SoundServices.Stop(info.Id, fadeOut: true, entityId: e.EntityId);
+                SoundServices.Stop(info.Id, fadeOut: false, entityId: e.EntityId);
             }
         }
     }
