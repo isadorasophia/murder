@@ -15,6 +15,15 @@ namespace Murder.Systems
                 var velocity = e.GetVelocity();
                 var friction = e.GetFriction();
 
+                if (friction.AirFriction != null)
+                {
+                    if (e.TryGetVerticalPosition() is VerticalPositionComponent verticalPosition && verticalPosition.Z > 0)
+                    {
+                        e.ReplaceComponent(new VelocityComponent(velocity.Velocity * (1 - friction.AirFriction.Value)));
+                        continue;
+                    }
+                }
+
                 e.ReplaceComponent(new VelocityComponent(velocity.Velocity * (1 - friction.Amount)));
             }
         }

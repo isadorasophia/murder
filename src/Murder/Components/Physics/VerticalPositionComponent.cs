@@ -24,14 +24,14 @@ namespace Murder.Components
             HasGravity = hasGravity;
         }
 
-        public VerticalPositionComponent UpdatePosition(float deltaTime, float bounciness)
+        public VerticalPositionComponent UpdatePosition(float deltaTime, float bounciness, float multiplier)
         {
             if (!HasGravity)
             {
                 return this;
             }
 
-            var newZVelocity = ZVelocity + deltaTime * 600;
+            var newZVelocity = ZVelocity + deltaTime * 600 * multiplier;
             var newZ = Z - newZVelocity * deltaTime;
             if (newZ < 0)
             {

@@ -2,6 +2,7 @@
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
+using Murder.Components.Physics;
 using Murder.Messages;
 
 namespace Murder.Systems.Physics
@@ -21,7 +22,14 @@ namespace Murder.Systems.Physics
                     gravity = bounceOverride.GravityMod;
                 }
 
-                var verticalPosition = e.GetVerticalPosition().UpdatePosition(Game.FixedDeltaTime * gravity, bounciness);
+                float multiplier = 1;
+                if (e.TryGetGravityMultiplier() is GravityMultiplierComponent gravityMultiplier)
+                {
+                    multiplier = gravityMultiplier.Multiply;
+                    bounciness *= multiplier;
+                }
+
+                var verticalPosition = e.GetVerticalPosition().UpdatePosition(Game.FixedDeltaTime * gravity, bounciness, multiplier);
 
                 if (verticalPosition.Z == 0)
                 {
