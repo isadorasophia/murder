@@ -1,6 +1,7 @@
 ﻿using Murder.Core.Sounds;
 using Murder.Services;
 using Murder.Utilities;
+using static Murder.Core.Input.PlayerInput;
 
 namespace Murder.Core.Input
 {
@@ -246,7 +247,7 @@ namespace Murder.Core.Input
             return option;
         }
 
-        public (int option, bool wrapped) NextAvailableOptionHorizontal(in int option, int width, int direction)
+        public (int option, bool wrapped) NextAvailableOptionHorizontal(in int option, int width, int direction, GridMenuFlags flags)
         {
             int startRow = Calculator.FloorToInt(option / (float)width);
             int startCollumn = option % width;
@@ -257,14 +258,25 @@ namespace Murder.Core.Input
             bool wrapped = false;
             while (totalAttempts < width)
             {
-                int collumn = Calculator.WrapAround(startCollumn + direction * totalAttempts, 0, width - 1);
+                int column = Calculator.WrapAround(startCollumn + direction * totalAttempts, 0, width - 1);
+
                 // Did we wrap around?
-                if (collumn > startCollumn && direction < 0)
+                if (column > startCollumn && direction < 0)
                 {
+                    if (!flags.HasFlag(GridMenuFlags.ClampLeft))
+                    {
+                        return (option, false);
+                    }
+
                     wrapped = true;
                 }
-                if (collumn < startCollumn && direction > 0)
+                if (column < startCollumn && direction > 0)
                 {
+                    if (!flags.HasFlag(GridMenuFlags.ClampRight))
+                    {
+                        return (option, false);
+                    }
+
                     wrapped = true;
                 }
 
@@ -273,7 +285,7 @@ namespace Murder.Core.Input
                     int checkRow = startRow - i;
                     if (checkRow >= 0)
                     {
-                        int nextOption = checkRow * width + collumn;
+                        int nextOption = checkRow * width + column;
                         if (nextOption > 0 && nextOption < Length)
                         {
                             if (IsOptionAvailable(nextOption))
@@ -286,7 +298,7 @@ namespace Murder.Core.Input
                     checkRow = startRow + i;
                     if (checkRow < totalCollumns)
                     {
-                        int nextOption = checkRow * width + collumn;
+                        int nextOption = checkRow * width + column;
                         if (nextOption > 0 && nextOption < Length)
                         {
                             if (IsOptionAvailable(nextOption))
@@ -303,14 +315,14 @@ namespace Murder.Core.Input
             return (option, false);
         }
 
-        public (int option, bool wrapped) NextAvailableOptionVertical(in int option, int width, int direction)
+        public (int option, bool wrapped) NextAvailableOptionVertical(in int option, int width, int direction, GridMenuFlags flags)
         {
             // If we didn't find an option in the current column, closest to the current selection,
             // the first option available in the next row.
             int initialRow = Calculator.FloorToInt(option / width);
             int totalRows = Calculator.CeilToInt(Length / width);
 
-            int collumn = option % width;
+            int column = option % width;
 
             int totalAttempts = 0;
             bool wrapped = false;
@@ -320,17 +332,27 @@ namespace Murder.Core.Input
                 // Did we wrap around?
                 if (row > initialRow && direction < 0)
                 {
+                    if (!flags.HasFlag(GridMenuFlags.ClampTop))
+                    {
+                        return (option, false);
+                    }
+
                     wrapped = true;
                 }
                 if (row < initialRow && direction > 0)
                 {
+                    if (!flags.HasFlag(GridMenuFlags.ClampBottom))
+                    {
+                        return (option, false);
+                    }
+
                     wrapped = true;
                 }
 
                 // First we try the first one imediatelly below or above the current selection.
                 for (int i = 0; i < width; i++)
                 {
-                    int checkCollumn = collumn - i;
+                    int checkCollumn = column - i;
                     if (checkCollumn >= 0)
                     {
                         int nextOption = row * width + checkCollumn;
@@ -343,7 +365,7 @@ namespace Murder.Core.Input
                         }
                     }
 
-                    checkCollumn = collumn + i;
+                    checkCollumn = column + i;
                     if (checkCollumn < width)
                     {
                         int nextOption = row * width + checkCollumn;
@@ -360,7 +382,8 @@ namespace Murder.Core.Input
                 totalAttempts++;
             }
 
-            return (option, false);
+            // no option is available, so fallback to horizontal.
+            return NextAvailableOptionHorizontal(in option, width, direction, flags);
         }
 
         /// <summary>

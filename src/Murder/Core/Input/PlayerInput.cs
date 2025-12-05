@@ -664,6 +664,10 @@ public class PlayerInput
 
         int selectedOptionX = currentInfo.Selection % width;
         int selectedOptionY = Calculator.FloorToInt(currentInfo.Selection / width);
+
+        int selectedOptionXBeforePressed = currentInfo.Selection % width;
+        int selectedOptionYBeforePressed = Calculator.FloorToInt(currentInfo.Selection / width);
+
         int overflowX = 0;
         int overflowY = 0;
 
@@ -728,6 +732,7 @@ public class PlayerInput
         }
 
         int selectedOptionIndex = selectedOptionX + selectedOptionY * width;
+        int selectedOptionIndexBeforePressed = selectedOptionXBeforePressed + selectedOptionYBeforePressed * width;
 
         if (gridMenuFlags.HasFlag(GridMenuFlags.ClampSize))
         {
@@ -757,7 +762,7 @@ public class PlayerInput
                     int sign = Math.Sign(verticalValue) < 0 ? -1 : 1;
                     if (sign != 0)
                     {
-                        (newOption, bool wrapped) = currentInfo.NextAvailableOptionVertical(selectedOptionIndex, width, sign);
+                        (newOption, bool wrapped) = currentInfo.NextAvailableOptionVertical(selectedOptionIndexBeforePressed, width, sign, gridMenuFlags);
                         if (wrapped)
                         {
                             currentInfo.OverflowY = sign;
@@ -773,7 +778,7 @@ public class PlayerInput
                     int sign = Math.Sign(horizontalValue) < 0 ? -1 : 1;
                     if (sign != 0)
                     {
-                        (newOption, bool wrapped) = currentInfo.NextAvailableOptionHorizontal(selectedOptionIndex, width, sign);
+                        (newOption, bool wrapped) = currentInfo.NextAvailableOptionHorizontal(selectedOptionIndexBeforePressed, width, sign, gridMenuFlags);
                         if (wrapped)
                         {
                             currentInfo.OverflowX = sign;
