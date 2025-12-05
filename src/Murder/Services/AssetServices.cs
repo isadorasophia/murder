@@ -1,5 +1,6 @@
 using Bang;
 using Bang.Entities;
+using Bang.StateMachines;
 using Murder;
 using Murder.Assets;
 using Murder.Components;
@@ -21,7 +22,7 @@ public static class AssetServices
         }
 
         GameLogger.Fail("Unable to create ally!");
-        throw new InvalidOperationException("Unable to create requested entity.");
+        throw new InvalidStateMachineException("Unable to create requested entity.");
     }
 
     /// <summary>
