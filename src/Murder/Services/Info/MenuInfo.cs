@@ -173,7 +173,10 @@ namespace Murder.Core.Input
 
         public void Clamp()
         {
-            Selection = Math.Max(0, Math.Min(Selection, Options.Length - 1));
+            if (Selection < 0 || Selection >= Length || !Options[Selection].Enabled)
+            {
+                Selection = NextAvailableOption(Selection, direction: 1);
+            }
         }
 
         public MenuInfo Disable(bool disabled)
@@ -223,9 +226,12 @@ namespace Murder.Core.Input
 
         /// <param name="option">The currently selected option. If -1, it means that is being initialized.</param>
         /// <param name="direction">A sign number (1 or -1) with the direction.</param>
+        /// <param name="flags">Clamp options.</param>
         /// <returns>The next option that is available.</returns>
-        public int NextAvailableOption(int option, int direction)
+        public int NextAvailableOption(int option, int direction, GridMenuFlags flags = GridMenuFlags.None)
         {
+            int lastOption = option;
+
             int totalOptionsTried = 0;
             while (totalOptionsTried < Length)
             {
@@ -234,7 +240,18 @@ namespace Murder.Core.Input
                 {
                     direction = 1;
                 }
+
                 option = Calculator.WrapAround(option, 0, Length - 1);
+
+                if (option > lastOption && direction < 0 && flags.HasFlag(GridMenuFlags.ClampLeft))
+                {
+                    return lastOption;
+                }
+
+                if (option < lastOption && direction > 0 && flags.HasFlag(GridMenuFlags.ClampRight))
+                {
+                    return lastOption;
+                }
 
                 if (IsOptionAvailable(option))
                 {
@@ -258,12 +275,12 @@ namespace Murder.Core.Input
             bool wrapped = false;
             while (totalAttempts < width)
             {
-                int column = Calculator.WrapAround(startCollumn + direction * totalAttempts, 0, width - 1);
+                int column = Calculator.WrapAround(startCollumn + direction * (totalAttempts + 1), 0, width - 1);
 
                 // Did we wrap around?
                 if (column > startCollumn && direction < 0)
                 {
-                    if (!flags.HasFlag(GridMenuFlags.ClampLeft))
+                    if (flags.HasFlag(GridMenuFlags.ClampLeft))
                     {
                         return (option, false);
                     }
@@ -272,7 +289,7 @@ namespace Murder.Core.Input
                 }
                 if (column < startCollumn && direction > 0)
                 {
-                    if (!flags.HasFlag(GridMenuFlags.ClampRight))
+                    if (flags.HasFlag(GridMenuFlags.ClampRight))
                     {
                         return (option, false);
                     }
@@ -282,28 +299,37 @@ namespace Murder.Core.Input
 
                 for (int i = 0; i < totalCollumns; i++)
                 {
-                    int checkRow = startRow - i;
-                    if (checkRow >= 0)
+                    int checkRow = startRow;
+
+                    if (!flags.HasFlag(GridMenuFlags.ClampRight) || direction < 0)
                     {
-                        int nextOption = checkRow * width + column;
-                        if (nextOption > 0 && nextOption < Length)
+                        checkRow = startRow - i;
+                        if (checkRow >= 0)
                         {
-                            if (IsOptionAvailable(nextOption))
+                            int nextOption = checkRow * width + column;
+                            if (nextOption >= 0 && nextOption < Length)
                             {
-                                return (nextOption, wrapped);
+                                if (IsOptionAvailable(nextOption))
+                                {
+                                    return (nextOption, wrapped);
+                                }
                             }
                         }
                     }
 
-                    checkRow = startRow + i;
-                    if (checkRow < totalCollumns)
+                    if (!flags.HasFlag(GridMenuFlags.ClampLeft) || direction > 0)
                     {
-                        int nextOption = checkRow * width + column;
-                        if (nextOption > 0 && nextOption < Length)
+                        checkRow = startRow + i;
+
+                        if (checkRow < totalCollumns)
                         {
-                            if (IsOptionAvailable(nextOption))
+                            int nextOption = checkRow * width + column;
+                            if (nextOption >= 0 && nextOption < Length)
                             {
-                                return (nextOption, wrapped);
+                                if (IsOptionAvailable(nextOption))
+                                {
+                                    return (nextOption, wrapped);
+                                }
                             }
                         }
                     }
@@ -328,11 +354,12 @@ namespace Murder.Core.Input
             bool wrapped = false;
             while (totalAttempts < totalRows)
             {
-                int row = Calculator.WrapAround(initialRow + direction * totalAttempts, 0, totalRows);
+                int row = Calculator.WrapAround(initialRow + direction * (totalAttempts + 1), 0, totalRows);
+
                 // Did we wrap around?
                 if (row > initialRow && direction < 0)
                 {
-                    if (!flags.HasFlag(GridMenuFlags.ClampTop))
+                    if (flags.HasFlag(GridMenuFlags.ClampTop))
                     {
                         return (option, false);
                     }
@@ -341,7 +368,7 @@ namespace Murder.Core.Input
                 }
                 if (row < initialRow && direction > 0)
                 {
-                    if (!flags.HasFlag(GridMenuFlags.ClampBottom))
+                    if (flags.HasFlag(GridMenuFlags.ClampBottom))
                     {
                         return (option, false);
                     }
@@ -356,7 +383,7 @@ namespace Murder.Core.Input
                     if (checkCollumn >= 0)
                     {
                         int nextOption = row * width + checkCollumn;
-                        if (nextOption > 0 && nextOption < Length)
+                        if (nextOption >= 0 && nextOption < Length)
                         {
                             if (IsOptionAvailable(nextOption))
                             {
@@ -369,7 +396,7 @@ namespace Murder.Core.Input
                     if (checkCollumn < width)
                     {
                         int nextOption = row * width + checkCollumn;
-                        if (nextOption > 0 && nextOption < Length)
+                        if (nextOption >= 0 && nextOption < Length)
                         {
                             if (IsOptionAvailable(nextOption))
                             {
@@ -402,6 +429,11 @@ namespace Murder.Core.Input
             for (int i = 0; i < size; i++)
             {
                 Options[i] = new MenuOption(true);
+            }
+
+            if (Selection == Options.Length && Selection != 0)
+            {
+                Select(Options.Length - 1);
             }
         }
 

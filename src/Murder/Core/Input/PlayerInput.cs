@@ -2,6 +2,7 @@
 using Murder.Assets.Input;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
+using Murder.Helpers;
 using Murder.Save;
 using Murder.Utilities;
 using System.Collections.Immutable;
@@ -624,14 +625,14 @@ public class PlayerInput
     public enum GridMenuFlags
     {
         None,
-        ClampRight,
-        ClampLeft,
-        ClampTop,
-        ClampBottom,
-        ClampAllDirections,
-        ClampSize,
-        SelectDisabled,
-        Rotate
+        ClampRight = 0x1,
+        ClampLeft = 0x10,
+        ClampTop = 0x100,
+        ClampBottom = 0x1000,
+        ClampAllDirections = ClampRight | ClampLeft | ClampTop | ClampBottom,
+        ClampSize = 0x10000,
+        SelectDisabled = 0x100000,
+        Rotate = 0x1000000
     }
 
     public bool GridMenu(ref MenuInfo currentInfo, int width, int maxHeight, int size, GridMenuFlags gridMenuFlags = GridMenuFlags.None)
@@ -674,60 +675,34 @@ public class PlayerInput
         int currentWidth = selectedOptionY == height - 1 ? lastRowWidth : width;
         if (horizontalPressed)
         {
-            selectedOptionX += Math.Sign(horizontalValue);
+            int direction = Math.Sign(horizontalValue);
+            (int newSelectedIndex, bool wrapped) = currentInfo.NextAvailableOptionHorizontal(currentInfo.Selection, width, direction, gridMenuFlags);
 
-            if (selectedOptionX >= currentWidth) // Is on last row and it has less than width.
+            selectedOptionX = newSelectedIndex % width;
+            selectedOptionY = Calculator.FloorToInt(newSelectedIndex / width);
+
+            if (newSelectedIndex == currentInfo.Selection)
             {
-                overflowX = 1;
-                if (gridMenuFlags.HasFlag(GridMenuFlags.ClampRight) || gridMenuFlags.HasFlag(GridMenuFlags.ClampAllDirections))
-                {
-                    selectedOptionX = currentWidth - 1;
-                }
-            }
-            else if (selectedOptionX < 0)
-            {
-                overflowX = -1;
-                if (gridMenuFlags.HasFlag(GridMenuFlags.ClampLeft) || gridMenuFlags.HasFlag(GridMenuFlags.ClampAllDirections))
-                {
-                    selectedOptionX = 0;
-                }
+                overflowX = direction > 0 ? 1 : -1;
             }
 
-            selectedOptionX = Calculator.WrapAround(selectedOptionX, 0, currentWidth - 1);
             lastMoved = Game.NowUnscaled;
         }
 
         int currentHeight = selectedOptionX >= lastRowWidth ? height - 1 : height;
         if (verticalPressed)
         {
-            selectedOptionY += Math.Sign(verticalValue);
+            int direction = Math.Sign(verticalValue);
+            (int newSelectedIndex, _) = currentInfo.NextAvailableOptionVertical(currentInfo.Selection, width, Math.Sign(verticalValue), gridMenuFlags);
 
-            if (selectedOptionY >= currentHeight)
+            selectedOptionX = newSelectedIndex % width;
+            selectedOptionY = Calculator.FloorToInt(newSelectedIndex / width);
+
+            if (newSelectedIndex == currentInfo.Selection)
             {
-                overflowY = 1;
-                if (gridMenuFlags.HasFlag(GridMenuFlags.ClampBottom) || gridMenuFlags.HasFlag(GridMenuFlags.ClampAllDirections))
-                {
-                    selectedOptionY = currentHeight - 1;
-                    currentInfo.Scroll = Math.Max(0, height - maxHeight);
-                }
-            }
-            else if (selectedOptionY < 0)
-            {
-                overflowY = -1;
-                if (gridMenuFlags.HasFlag(GridMenuFlags.ClampTop) || gridMenuFlags.HasFlag(GridMenuFlags.ClampAllDirections))
-                {
-                    selectedOptionY = 0;
-                    currentInfo.Scroll = 0;
-                }
+                overflowX = direction > 0 ? 1 : -1;
             }
 
-            if (selectedOptionY >= currentHeight)
-            {
-                // Select the last option
-                selectedOptionY = currentHeight - 1;
-            }
-
-            selectedOptionY = Calculator.WrapAround(selectedOptionY, 0, currentHeight - 1);
             lastMoved = Game.NowUnscaled;
         }
 
@@ -753,40 +728,6 @@ public class PlayerInput
             if (!isDisabled)
             {
                 currentInfo.Select(selectedOptionIndex, lastMoved, false);
-            }
-            else
-            {
-                if (verticalPressed)
-                {
-                    int newOption = currentInfo.Selection;
-                    int sign = Math.Sign(verticalValue) < 0 ? -1 : 1;
-                    if (sign != 0)
-                    {
-                        (newOption, bool wrapped) = currentInfo.NextAvailableOptionVertical(selectedOptionIndexBeforePressed, width, sign, gridMenuFlags);
-                        if (wrapped)
-                        {
-                            currentInfo.OverflowY = sign;
-                        }
-                    }
-
-                    currentInfo.Select(newOption, Game.NowUnscaled, false);
-                }
-
-                if (horizontalPressed)
-                {
-                    int newOption = currentInfo.Selection;
-                    int sign = Math.Sign(horizontalValue) < 0 ? -1 : 1;
-                    if (sign != 0)
-                    {
-                        (newOption, bool wrapped) = currentInfo.NextAvailableOptionHorizontal(selectedOptionIndexBeforePressed, width, sign, gridMenuFlags);
-                        if (wrapped)
-                        {
-                            currentInfo.OverflowX = sign;
-                        }
-                    }
-
-                    currentInfo.Select(newOption, Game.NowUnscaled, false);
-                }
             }
         }
 
