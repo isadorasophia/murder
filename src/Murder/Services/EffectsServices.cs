@@ -87,18 +87,27 @@ namespace Murder.Services
 
         public static void ApplyHighlight(World world, Entity e, HighlightSpriteComponent highlight)
         {
-            if (e.HasHighlightOnChildren())
+            if (e.TryGetHighlightOnChildren() is HighlightOnChildrenComponent childrenHighlight)
             {
-                foreach (int childId in e.Children)
+                Entity root = EntityServices.FindRootEntity(e);
+                if (childrenHighlight.Child is string child)
                 {
-                    world.TryGetEntity(childId)?.SetHighlightSprite(highlight);
+                    root.TryFetchChild(child)?.SetHighlightSprite(highlight);
+                }
+                else
+                {
+                    foreach (int childId in root.Children)
+                    {
+                        world.TryGetEntity(childId)?.SetHighlightSprite(highlight);
+                    }
                 }
             }
             else
             {
                 if (!e.HasSprite())
                 {
-                    e.TryFetchParent()?.SetHighlightSprite(highlight);
+                    Entity root = EntityServices.FindRootEntity(e);
+                    root.SetHighlightSprite(highlight);
                 }
                 else
                 {
@@ -109,17 +118,32 @@ namespace Murder.Services
 
         public static void RemoveHighlight(Entity e)
         {
-            if (e.HasHighlightOnChildren())
+            if (e.TryGetHighlightOnChildren() is HighlightOnChildrenComponent childrenHighlight)
             {
-                foreach (int childId in e.Children)
+                Entity root = EntityServices.FindRootEntity(e);
+                if (childrenHighlight.Child is string child)
                 {
-                    e.TryFetchChild(childId)?.RemoveHighlightSprite();
+                    root.TryFetchChild(child)?.RemoveHighlightSprite();
+                }
+                else
+                {
+                    foreach (int childId in root.Children)
+                    {
+                        root.TryFetchChild(childId)?.RemoveHighlightSprite();
+                    }
                 }
             }
             else
             {
-                e.RemoveHighlightSprite();
-                e.TryFetchParent()?.RemoveHighlightSprite();
+                if (!e.HasSprite())
+                {
+                    Entity root = EntityServices.FindRootEntity(e);
+                    root.RemoveHighlightSprite();
+                }
+                else
+                {
+                    e.RemoveHighlightSprite();
+                }
             }
         }
 
