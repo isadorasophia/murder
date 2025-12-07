@@ -700,7 +700,7 @@ public class PlayerInput
 
             if (newSelectedIndex == currentInfo.Selection)
             {
-                overflowX = direction > 0 ? 1 : -1;
+                overflowY = direction > 0 ? 1 : -1;
             }
 
             lastMoved = Game.NowUnscaled;
