@@ -8,6 +8,7 @@ using System.Collections.Immutable;
 
 namespace Murder.Assets.Graphics;
 
+[SkipJsonFileIntegrityCheck]
 public class SpriteAsset : GameAsset, IPreview
 {
     [Serialize]
@@ -143,5 +144,25 @@ public class SpriteAsset : GameAsset, IPreview
         FileChanged = true;
 
         return true;
+    }
+
+    public override int GetHashCode() => base.GetHashCode();
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is not SpriteAsset asset)
+        {
+            return false;
+        }
+
+        return Name == asset.Name &&
+               Guid.Equals(asset.Guid) &&
+               Atlas == asset.Atlas &&
+               Frames.Equals(asset.Frames) &&
+               Origin.Equals(asset.Origin) &&
+               Size.Equals(asset.Size) &&
+               NineSlice.Equals(asset.NineSlice) &&
+               EqualityComparer<ImmutableDictionary<string, Animation>>.Default.Equals(Animations, asset.Animations) &&
+               EqualityComparer<AsepriteFileInfo?>.Default.Equals(AsepriteFileInfo, asset.AsepriteFileInfo);
     }
 }
