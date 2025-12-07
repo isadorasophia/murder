@@ -128,6 +128,8 @@ public partial class EditorDataManager
     {
         GameLogger.Log($"Checking for files integrity after publishing...");
 
+        Type tSkipJsonCheckAttribute = typeof(SkipJsonFileIntegrityCheckAttribute);
+
         Dictionary<Guid, string> packedJsonContent = [];
         for (int i = 0; i < total; i++)
         {
@@ -147,15 +149,21 @@ public partial class EditorDataManager
                     return;
                 }
 
-                string jsonForAsset = FileManager.SerializeToJson(asset);
-                string jsonForPackedAsset = FileManager.SerializeToJson(packedAsset);
-                if (jsonForAsset != jsonForPackedAsset)
+                bool skipJson = Attribute.IsDefined(asset.GetType(), tSkipJsonCheckAttribute);
+                if (!skipJson)
                 {
-                    GameLogger.Error($"Mismatch found when comparing json for {packedAsset.Name}!");
-                    GameLogger.Log(jsonForAsset);
-                    GameLogger.Log("----------");
-                    GameLogger.Log(jsonForPackedAsset);
-                    return;
+                    string jsonForAsset = FileManager.SerializeToJson(asset);
+                    string jsonForPackedAsset = FileManager.SerializeToJson(packedAsset);
+                    if (jsonForAsset != jsonForPackedAsset)
+                    {
+                        GameLogger.Error($"Mismatch found when comparing json for {packedAsset.Name}!");
+                        GameLogger.Log(jsonForAsset);
+                        GameLogger.Log("----------");
+                        GameLogger.Log(jsonForPackedAsset);
+                        return;
+                    }
+
+                    packedJsonContent[packedAsset.Guid] = jsonForPackedAsset;
                 }
 
                 if (asset.Equals(packedAsset))
@@ -163,8 +171,6 @@ public partial class EditorDataManager
                     GameLogger.Error($"Mismatch found when comparing assets for {packedAsset.Name}!");
                     return;
                 }
-
-                packedJsonContent[packedAsset.Guid] = jsonForPackedAsset;
             }
         }
 
@@ -195,6 +201,12 @@ public partial class EditorDataManager
                 }
 
                 if (binAsset.Name.StartsWith('_'))
+                {
+                    continue;
+                }
+
+                bool skipJson = Attribute.IsDefined(binAsset.GetType(), tSkipJsonCheckAttribute);
+                if (skipJson)
                 {
                     continue;
                 }
