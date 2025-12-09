@@ -6,6 +6,8 @@ namespace Murder.Core.Sounds
 {
     public class SoundPlayer : ISoundPlayer
     {
+        public SoundSpatialAttributes LastListenerPosition => new();
+
         public void Initialize(string resourcesPath) { }
 
         public Task LoadContentAsync(PackedSoundData? packedData) => Task.CompletedTask;

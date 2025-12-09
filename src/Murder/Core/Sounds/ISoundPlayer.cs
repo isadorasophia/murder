@@ -47,6 +47,8 @@ namespace Murder.Core.Sounds
 
     public interface ISoundPlayer
     {
+        public SoundSpatialAttributes LastListenerPosition { get; }
+
         /// <summary>
         /// This will initialize the fmod libraries, but not load any banks.
         /// </summary>

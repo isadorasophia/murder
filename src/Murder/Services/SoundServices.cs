@@ -5,6 +5,7 @@ using Murder.Diagnostics;
 using Murder.Helpers;
 using System.Collections.Immutable;
 using System.Numerics;
+using System.Reflection.Metadata;
 
 namespace Murder.Services;
 
@@ -66,6 +67,20 @@ public static class SoundServices
         }
 
         return Play(id.Value);
+    }
+
+    public static ValueTask PlayFromListenerPosition(
+        SoundEventId id,
+        SoundLayer layer = SoundLayer.Any,
+        SoundProperties properties = SoundProperties.None)
+    {
+        if (id.IsGuidEmpty || Game.Instance.IsSkippingDeltaTimeOnUpdate)
+        {
+            return default;
+        }
+
+        SoundSpatialAttributes attributes = Game.Sound.LastListenerPosition;
+        return Play(id, layer, properties, attributes, -1, parameter: null);
     }
 
     public static async ValueTask Play(

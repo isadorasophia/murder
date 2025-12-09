@@ -149,7 +149,7 @@ namespace Murder.Core.Dialogs
                 if (dialog.IsChoice)
                 {
                     // We will continue to be in a choice until DoChoice gets kicked off.
-                    DoActiveLineSounds(target, dialog.Lines[_activeLine]);
+                    DoActiveLineSounds(dialog.Lines[_activeLine]);
                     return new(FormatChoice(dialog));
                 }
 
@@ -166,7 +166,7 @@ namespace Murder.Core.Dialogs
                         Line line = dialog.Lines[_activeLine];
 
                         TrackInteracted();
-                        DoActiveLineSounds(target, line);
+                        DoActiveLineSounds(line);
 
                         _activeLine++;
 
@@ -441,7 +441,7 @@ namespace Murder.Core.Dialogs
             ImmutableArray<int> choices = ActiveSituation.Edges[_currentDialog.Value].Dialogs;
 
             Line choiceLine = ActiveSituation.Dialogs[choices[choice]].Lines[0];
-            DoActiveLineSounds(target, choiceLine);
+            DoActiveLineSounds(choiceLine);
 
             // Go to the choice made by the player.
             _currentDialog = choices[choice];
@@ -488,7 +488,7 @@ namespace Murder.Core.Dialogs
             return false;
         }
 
-        private bool DoActiveLineSounds(Entity? target, Line line)
+        private bool DoActiveLineSounds(Line line)
         {
             SoundEventId? sound = FindSoundForActiveLine(line);
             if (sound is null)
@@ -496,7 +496,7 @@ namespace Murder.Core.Dialogs
                 return false;
             }
 
-            _ = SoundServices.Play(sound.Value, target: target);
+            _ = SoundServices.PlayFromListenerPosition(sound.Value);
             return true;
         }
 
