@@ -57,6 +57,8 @@ public partial class EditorScene
             [
                 new ActionShortcut("Save All Assets", Chord.None,
                     SaveAllAssets),
+                new ActionShortcut("Save All Assets of Type...", Chord.None,
+                    SaveAllAssetsOfCurrentAsset),
                 new ActionShortcut("Bake Aseprite Guids", new Chord(Keys.B, InputHelpers.OSActionModifier, Keys.LeftShift),
                     BakeAsepriteGuids)
             ],
@@ -351,6 +353,24 @@ public partial class EditorScene
     private static void SaveAllAssets()
     {
         Architect.EditorData.SaveAllAssets();
+    }
+
+    private void SaveAllAssetsOfCurrentAsset()
+    {
+        if (_selectedTab == Guid.Empty || !_selectedAssets.TryGetValue(_selectedTab, out GameAsset? asset))
+        {
+            GameLogger.Warning("An asset must be opened in order to save assets of current type.");
+        }
+        else
+        {
+            var allAssetsOfType = Game.Data.FilterAllAssets(asset.GetType()).Select(g => g.Value).OrderBy(g => g.FilePath);
+            foreach (GameAsset otherAsset in allAssetsOfType)
+            {
+                Architect.EditorData.SaveAsset(otherAsset);
+            }
+
+            GameLogger.Log($"Finished saving assets of type {asset.GetType().Name}.");
+        }
     }
 
     private static void BakeAsepriteGuids()
