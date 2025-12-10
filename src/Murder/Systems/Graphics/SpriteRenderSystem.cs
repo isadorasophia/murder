@@ -9,6 +9,7 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
+using Murder.Prefabs;
 using Murder.Services;
 using Murder.Utilities;
 using System.Numerics;
@@ -66,9 +67,11 @@ namespace Murder.Systems.Graphics
                     rotation += facing.Angle;
                 }
 
+                Entity root = EntityServices.FindRootEntity(e);
+
                 // Handle color
                 var tintColor = e.TryGetTint()?.TintColor ?? Color.White;
-                var color = tintColor * GetInheritedAlpha(e);
+                var color = tintColor * GetInheritedAlpha(root, e);
 
                 BlendStyle blend;
                 // Handle flashing
@@ -125,12 +128,11 @@ namespace Murder.Systems.Graphics
                 ySortOffsetRaw += yPositionForYSort + s.YSortOffset;
                 float ySort = e.HasUiDisplay() ? e.GetUiDisplay().YSort : RenderServices.YSort(ySortOffsetRaw + 0.01f * (e.EntityId % 20));
 
-                VerticalPositionComponent? verticalPosition = e.TryGetVerticalPosition();
+                VerticalPositionComponent? verticalPosition = e.TryGetVerticalPosition() ?? root.TryGetVerticalPosition();
                 if (verticalPosition is not null)
                 {
                     renderPosition = new Vector2(renderPosition.X, renderPosition.Y - verticalPosition.Value.Z);
                 }
-
 
                 if (!asset.Animations.TryGetValue(animationId, out var animation))
                 {
@@ -262,15 +264,16 @@ namespace Murder.Systems.Graphics
             DebugSnapshot.PauseStopwatch();
         }
 
-        private float GetInheritedAlpha(Entity entity)
+        private float GetInheritedAlpha(Entity root, Entity entity)
         {
-            float alpha = 1;
-            if (entity.TryFetchParent() is Entity parent)
+            float alpha = entity.TryGetAlpha()?.Alpha ?? 1.0f;
+            if (entity.Parent is null)
             {
-                alpha = GetInheritedAlpha(parent);
+                return alpha;
             }
 
-            return alpha * (entity.TryGetAlpha()?.Alpha ?? 1.0f);
+            float parentAlpha = root.TryGetAlpha()?.Alpha ?? 1.0f;
+            return parentAlpha * alpha;
         }
     }
 }
