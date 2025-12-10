@@ -11,7 +11,8 @@ namespace Murder.Components.Effects;
 public enum OnEnterOnExitKind
 {
     Player = 1,
-    Actors = 0x10
+    Actors = 0x10,
+    Npc = Actors | 0x100
 }
 
 [CustomName($"\uf70c {nameof(OnEnterOnExitComponent)}")]
