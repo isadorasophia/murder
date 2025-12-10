@@ -343,20 +343,19 @@ namespace Murder.Editor.CustomEditors
                     // -- Select speaker portrait --
                     if (speaker is not null)
                     {
-                        List<string> allPortraits = [.. speaker.Portraits.Keys.Order()];
-                        int portraitIndex = line.Portrait is null ? -1 : allPortraits.IndexOf(line.Portrait);
+                        string[] allPortraits = [.. speaker.Portraits.Keys.Order()];
+                        portrait = line.Portrait;
 
                         ImGui.PushItemWidth(-1);
 
-                        if (portraitIndex == -1 && allPortraits.Count > 0)
+                        if (portrait is null && allPortraits.Length > 0)
                         {
                             // Just set the first portrait as default.
                             portrait = speaker.DefaultPortrait ?? allPortraits[0];
                             line = ModifyPortraitAt(info, i, speakerGuid, portrait)!.Value;
                         }
-                        else if (ImGui.Combo($"##portrait_{i}", ref portraitIndex, allPortraits.ToArray(), allPortraits.Count))
+                        else if (portrait is not null && StringField.ProcessStringCombo($"##portrait_{i}", ref portrait, allPortraits))
                         {
-                            portrait = allPortraits[portraitIndex];
                             line = ModifyPortraitAt(info, i, speakerGuid, portrait)!.Value;
                         }
 

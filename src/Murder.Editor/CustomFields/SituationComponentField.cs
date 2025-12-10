@@ -49,7 +49,7 @@ namespace Murder.Editor.CustomFields
             }
 
             ImmutableDictionary<string, Situation> situations = asset.Situations;
-            string[] situationNames = situations.Select(s => s.Key).ToArray();
+            string[] situationNames = situations.OrderBy(s => s.Value.Id).Select(s => s.Key).ToArray();
 
             if (situationNames.Length == 0)
             {
