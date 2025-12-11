@@ -12,7 +12,12 @@ namespace Murder.Systems.Graphics
     {
         public void FixedUpdate(Context context)
         {
-            WorldParticleSystemTracker worldTracker = context.World.GetUniqueParticleSystemWorldTracker().Tracker;
+            WorldParticleSystemTracker? worldTracker = context.World.TryGetUniqueParticleSystemWorldTracker()?.Tracker;
+
+            if (worldTracker == null)
+            {
+                return;
+            }
 
             foreach (var e in context.Entities)
             {

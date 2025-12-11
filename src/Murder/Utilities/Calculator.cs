@@ -383,6 +383,21 @@ namespace Murder.Utilities
             return wrappedValue + min;
         }
 
+        public static float WrapAround(float value, in float min, in float max)
+        {
+            if (max < min)
+            {
+                return min;
+            }
+            float range = max - min;
+            // The modulo operation can yield a negative result for negative numbers,
+            // so we adjust it to ensure the result is always between min and max.
+            float wrappedValue = (value - min) % range;
+            if (wrappedValue < 0)
+                wrappedValue += range;
+            return wrappedValue + min;
+        }
+
         public static float ConvertLayerToLayerDepth(int layer)
         {
             return (LayersCount / 2 - layer) / (float)LayersCount;
