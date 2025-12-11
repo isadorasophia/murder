@@ -21,6 +21,12 @@ namespace Murder.Services
 
         public static SaveData? TryGetSave() => Game.Data.TryGetActiveSaveData();
 
+        public static void DoAction(DialogAction action)
+        {
+            BlackboardTracker tracker = CreateOrGetSave().BlackboardTracker;
+            DoAction(tracker, action);
+        }
+
         public static void DoAction(BlackboardTracker tracker, DialogAction action)
         {
             Fact fact = action.Fact;

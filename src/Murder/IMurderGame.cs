@@ -88,6 +88,11 @@ namespace Murder
         public GamePreferences CreateGamePreferences() => new();
 
         /// <summary>
+        /// Creates a custom world processor.
+        /// </summary>
+        public WorldProcessor CreateWorldProcessor() => new();
+
+        /// <summary>
         /// Allow the game to override a font based on localization settings.
         /// </summary>
         public int GetLocalizedFont(int index) => index;

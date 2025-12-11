@@ -103,6 +103,8 @@ namespace Murder.Data
 
         protected virtual GameProfile CreateGameProfile() => _game?.CreateGameProfile() ?? new();
 
+        public WorldProcessor WorldProcessor => _game?.CreateWorldProcessor() ?? new();
+
         public const string GameProfileFileName = @"game_config";
 
         protected readonly string ShaderRelativePath = Path.Join("shaders", "{0}.fxb");

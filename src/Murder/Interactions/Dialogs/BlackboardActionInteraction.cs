@@ -17,8 +17,7 @@ namespace Murder.Interactions
 
         public void Interact(World world, Entity interactor, Entity? interacted)
         {
-            BlackboardTracker tracker = MurderSaveServices.CreateOrGetSave().BlackboardTracker;
-            MurderSaveServices.DoAction(tracker, _action);
+            MurderSaveServices.DoAction(_action);
         }
     }
 }
