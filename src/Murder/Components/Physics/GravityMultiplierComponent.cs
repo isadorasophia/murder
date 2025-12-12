@@ -1,9 +1,4 @@
 ﻿using Bang.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Murder.Components.Physics
 {
@@ -13,6 +8,11 @@ namespace Murder.Components.Physics
 
         public GravityMultiplierComponent()
         {
+        }
+
+        public GravityMultiplierComponent(float multiply)
+        {
+            Multiply = multiply;
         }
     }
 }
