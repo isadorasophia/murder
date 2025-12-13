@@ -71,16 +71,21 @@ public static class SoundServices
 
     public static ValueTask PlayFromListenerPosition(
         SoundEventId id,
-        SoundLayer layer = SoundLayer.Any,
-        SoundProperties properties = SoundProperties.None)
+        float duration = 0)
     {
         if (id.IsGuidEmpty || Game.Instance.IsSkippingDeltaTimeOnUpdate)
         {
             return default;
         }
 
-        SoundSpatialAttributes attributes = Game.Sound.LastListenerPosition;
-        return Play(id, layer, properties, attributes, -1, parameter: null);
+        return Play(
+            id,
+            layer: SoundLayer.Any,
+            properties: SoundProperties.None,
+            attributes: Game.Sound.LastListenerPosition,
+            entityId: -1,
+            parameter: null, 
+            fireAndPersist: duration == 0 ? null : new(duration, PlayingSoundFlags.FollowListenerPosition));
     }
 
     public static async ValueTask Play(
@@ -89,7 +94,8 @@ public static class SoundServices
         SoundProperties properties = SoundProperties.None, 
         SoundSpatialAttributes? attributes = null,
         int entityId = -1,
-        ParameterValue? parameter = null)
+        ParameterValue? parameter = null,
+        FireAndPersistInfo? fireAndPersist = null)
     {
         if (id.IsGuidEmpty || Game.Instance.IsSkippingDeltaTimeOnUpdate)
         {
@@ -102,7 +108,7 @@ public static class SoundServices
             properties |= SoundProperties.Persist;
         }
 
-        await Game.Sound.PlayEvent(id, new PlayEventInfo { Layer = layer, Properties = properties, Attributes = attributes, EntityId = entityId, Parameter = parameter });
+        await Game.Sound.PlayEvent(id, new PlayEventInfo { Layer = layer, Properties = properties, Attributes = attributes, EntityId = entityId, Parameter = parameter, FireAndPersist = fireAndPersist });
     }
 
     public static async ValueTask PlayMusic(SoundEventId id)

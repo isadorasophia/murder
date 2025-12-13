@@ -25,12 +25,37 @@ namespace Murder.Core.Sounds
 
         public ParameterValue? Parameter { get; init; } = null;
 
+        public FireAndPersistInfo? FireAndPersist { get; init; } = null;
+
         /// <summary>
         /// Entity id that is tied to this event.
         /// </summary>
         public int EntityId { get; init; } = -1;
 
         public PlayEventInfo() { }
+    }
+
+    [Flags]
+    public enum PlayingSoundFlags
+    {
+        None = 0,
+
+        /// <summary>
+        /// Only valid if <see cref="PlayEventInfo.EntityId"/> is -1.
+        /// </summary>
+        FollowListenerPosition = 1
+    }
+
+    public readonly struct FireAndPersistInfo
+    {
+        public float Duration { get; init; } = 0;
+
+        public PlayingSoundFlags Flags { get; init; } = PlayingSoundFlags.None;
+
+        public FireAndPersistInfo() { }
+
+        public FireAndPersistInfo(float duration, PlayingSoundFlags flags) =>
+            (Duration, Flags) = (duration, flags);
     }
 
     public struct ParameterValue
