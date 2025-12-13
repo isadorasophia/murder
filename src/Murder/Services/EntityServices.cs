@@ -1,6 +1,7 @@
 ﻿using Bang;
 using Bang.Components;
 using Bang.Entities;
+using Bang.StateMachines;
 using Murder.Assets;
 using Murder.Assets.Graphics;
 using Murder.Components;
@@ -14,11 +15,25 @@ using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace Murder.Services;
 
 public static class EntityServices
 {
+    public static Entity FetchRequiredChild(Entity e, string name, [CallerMemberName] string? caller = null)
+    {
+        Entity? result = e.TryFetchChild(name);
+        if (result is null)
+        {
+            string error = $"Unable to find child named '{name}' at '{caller}'.";
+
+            throw new InvalidStateMachineException(error);
+        }
+
+        return result;
+    }
+
     public static void TurnFaceTowards(this Entity entity, Entity otherEntity, float duration)
     {
         Direction targetFacing = DirectionHelper.LookAtEntity(entity, otherEntity);
