@@ -56,7 +56,7 @@ namespace Murder.Systems
                 if (moveToPerfect.StartPosition is not Vector2 startPosition)
                 {
                     startPosition = e.GetGlobalTransform().Vector2;
-                    e.SetMoveToPerfect(moveToPerfect.WithStartPosition(startPosition));
+                    e.SetMoveToPerfect(moveToPerfect with { StartPosition = startPosition });
                 }
 
                 double delta = Calculator.Clamp01((Game.Now - moveToPerfect.StartTime) / moveToPerfect.Duration);

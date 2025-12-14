@@ -15,7 +15,7 @@ namespace Murder.Components
     public readonly struct MoveToPerfectComponent : IComponent
     {
         public readonly Vector2 Target;
-        public readonly Vector2? StartPosition = null;
+        public readonly Vector2? StartPosition { get; init; } = null;
 
         public readonly float StartTime;
         public readonly float Duration;
@@ -29,7 +29,8 @@ namespace Murder.Components
             (Target, StartPosition, StartTime, Duration, EaseKind) =
             (target, startPosition, startTime, duration, ease);
 
-        public MoveToPerfectComponent(in Vector2 target, float duration, EaseKind ease)
+        public MoveToPerfectComponent(in Vector2 target, float duration, EaseKind ease) : this(target, duration, ease, true) { }
+        public MoveToPerfectComponent(in Vector2 target, float duration, EaseKind ease, bool avoidAtors)
         {
             Target = target;
 
@@ -37,6 +38,7 @@ namespace Murder.Components
             Duration = duration;
 
             EaseKind = ease;
+            AvoidActors = avoidAtors;
         }
 
         public MoveToPerfectComponent WithStartPosition(in Vector2 startPosition) =>
