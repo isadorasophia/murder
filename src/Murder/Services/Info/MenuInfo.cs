@@ -85,6 +85,7 @@ namespace Murder.Core.Input
         public int Selection { get; private set; }
         public float CreatedAt;
         public float LastMoved;
+        public float LastMovedSucessfully;
         public float LastPressed;
         public int AttemptedPressCurrentSelection;
         public bool Canceled;
@@ -476,6 +477,10 @@ namespace Murder.Core.Input
 
             JustMoved = Selection != index;
 
+            if (JustMoved)
+            {
+                LastMovedSucessfully = now;
+            }
             PreviousSelection = Selection;
 
             Selection = index;

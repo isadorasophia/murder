@@ -31,6 +31,8 @@ public static partial class RenderServices
         float sort = .1f) =>
         DrawVerticalMenu(batch, position, position, style, menuInfo, sort);
 
+    internal static Vector2 CalculateSelectorPositionForVerticalMenu(int index, int lineHeight, Point finalPosition) => new Point(0, lineHeight * (index + 1)) + finalPosition;
+
     /// <summary>
     /// TODO: Pass around a "style" for background color, sounds, etc.
     /// </summary>
@@ -51,7 +53,6 @@ public static partial class RenderServices
         Point textFinalPosition = new(Math.Max(textPosition.X, 0), Math.Max(textPosition.Y, 0));
 
         Vector2 CalculateText(int index) => new Point(0, MathF.Floor(lineHeight * (index + 1.25f))) + textFinalPosition;
-        Vector2 CalculateSelector(int index) => new Point(0, lineHeight * (index + 1)) + finalPosition;
 
         for (int i = 0; i < menuInfo.Length; i++)
         {
@@ -104,8 +105,8 @@ public static partial class RenderServices
             }
         }
 
-        Vector2 selectorPosition = CalculateSelector(menuInfo.Selection) + new Vector2(0, MathF.Floor(lineHeight / 2f) - 3);
-        Vector2 previousSelectorPosition = CalculateSelector(menuInfo.PreviousSelection) + new Vector2(0, lineHeight / 2f - 2);
+        Vector2 selectorPosition = CalculateSelectorPositionForVerticalMenu(menuInfo.Selection, lineHeight, finalPosition) + new Vector2(0, MathF.Floor(lineHeight / 2f) - 3);
+        Vector2 previousSelectorPosition = CalculateSelectorPositionForVerticalMenu(menuInfo.PreviousSelection, lineHeight, finalPosition) + new Vector2(0, lineHeight / 2f - 2);
 
         Vector2 easedPosition;
         if (style.SelectorMoveTime == 0)
@@ -119,7 +120,9 @@ public static partial class RenderServices
             SelectorPosition = selectorPosition,
             PreviousSelectorPosition = previousSelectorPosition,
             SelectorEasedPosition = easedPosition.Point(),
-            MaximumSelectionWidth = maxSelectionWidth
+            MaximumSelectionWidth = maxSelectionWidth,
+            LineHeight = lineHeight,
+            FinalPosition = finalPosition
         };
     }
 
