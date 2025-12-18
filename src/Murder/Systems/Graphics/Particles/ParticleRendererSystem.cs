@@ -12,6 +12,7 @@ using Murder.Services;
 using Murder.Utilities;
 using System.Diagnostics;
 using System.Numerics;
+using Murder.Diagnostics;
 
 namespace Murder.Systems
 {
@@ -61,8 +62,8 @@ namespace Murder.Systems
                     asset = Game.Data.TryGetAsset<SpriteAsset>(texture.Asset);
                     if (asset is null)
                     {
-                        // Unable to find asset for particle?
-                        return;
+                        GameLogger.Warning($"Unable to find {texture.Asset} texture!");
+                        continue;
                     }
 
                     animationId = asset.Animations.First().Key;
