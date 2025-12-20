@@ -1,7 +1,6 @@
 ﻿using Bang.Components;
 using Murder.Assets.Graphics;
 using Murder.Attributes;
-using Murder.Core.Particles;
 
 namespace Murder.Components
 {
