@@ -180,7 +180,8 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
 
                     // Draw floor, if any.
                     if (e.TryGetRoom()?.Floor is Guid floorGuid &&
-                        Game.Data.TryGetAsset<FloorAsset>(floorGuid) is FloorAsset floorAsset)
+                        Game.Data.TryGetAsset<FloorAsset>(floorGuid) is FloorAsset floorAsset &&
+                        floorAsset.Image.Guid != Guid.Empty)
                     {
                         SpriteAsset floorSpriteAsset = floorAsset.Image.Asset;
                         Texture2D[] floorSpriteAtlas = Game.Data.FetchAtlas(floorSpriteAsset.Atlas).Textures;

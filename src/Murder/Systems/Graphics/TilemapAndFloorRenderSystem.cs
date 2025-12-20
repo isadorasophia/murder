@@ -49,8 +49,17 @@ public class TilemapAndFloorRenderSystem : IMurderRenderSystem
             (int minX, int maxX, int minY, int maxY) = render.Camera.GetSafeGridBounds(gridComponent.Rectangle);
             TileGrid grid = gridComponent.Grid;
 
-            SpriteAsset floorSpriteAsset = floorAsset.Image.Asset;
-            Texture2D[] floorSpriteAtlas = Game.Data.FetchAtlas(floorSpriteAsset.Atlas).Textures;
+            bool hasFloor = floorAsset.Image.Guid != Guid.Empty;
+
+
+            SpriteAsset? floorSpriteAsset = null;
+            Texture2D[]? floorSpriteAtlas = null;
+            if (hasFloor)
+            {
+                floorSpriteAsset = floorAsset.Image.Asset;
+                floorSpriteAtlas = Game.Data.FetchAtlas(floorSpriteAsset.Atlas).Textures;
+            }
+
             for (int y = minY; y <= maxY; y++)
             {
                 for (int x = minX; x <= maxX; x++)
@@ -103,33 +112,35 @@ public class TilemapAndFloorRenderSystem : IMurderRenderSystem
 #endif
 
                     // Draw the actual floor
-                    if (floorSpriteAsset is not null && (floorAsset.AlwaysDraw || !occluded) && x < maxX && y < maxY)
+                    if (hasFloor)
                     {
-                        ImmutableArray<int> floorFrames = floorSpriteAsset.Animations[string.Empty].Frames;
+                        if (floorSpriteAsset is not null && (floorAsset.AlwaysDraw || !occluded) && x < maxX && y < maxY)
+                        {
+                            ImmutableArray<int> floorFrames = floorSpriteAsset.Animations[string.Empty].Frames;
 
-                        var noise = Calculator.RoundToInt(NoiseHelper.Value2D(x, y) * (floorFrames.Length - 1));
-                        AtlasCoordinates floor = floorSpriteAsset.GetFrame(floorFrames[noise]);
+                            var noise = Calculator.RoundToInt(NoiseHelper.Value2D(x, y) * (floorFrames.Length - 1));
+                            AtlasCoordinates floor = floorSpriteAsset.GetFrame(floorFrames[noise]);
 
-                        // Draw each individual ground tile.
-                        render.FloorBatch.Draw(
-                            floorSpriteAtlas[floor.AtlasIndex],
-                            new Point(x, y) * Grid.CellSize,
-                            floor.Size,
-                            floor.SourceRectangle,
-                            0.8f,
-                            0,
-                            Microsoft.Xna.Framework.Vector2.One,
-                            ImageFlip.None,
-                            Color.White,
-                            Microsoft.Xna.Framework.Vector2.Zero,
-                            RenderServices.BLEND_NORMAL,
-                            MurderBlendState.AlphaBlend
-                            );
+                            // Draw each individual ground tile.
+                            render.FloorBatch.Draw(
+                                floorSpriteAtlas![floor.AtlasIndex],
+                                new Point(x, y) * Grid.CellSize,
+                                floor.Size,
+                                floor.SourceRectangle,
+                                0.8f,
+                                0,
+                                Microsoft.Xna.Framework.Vector2.One,
+                                ImageFlip.None,
+                                Color.White,
+                                Microsoft.Xna.Framework.Vector2.Zero,
+                                RenderServices.BLEND_NORMAL,
+                                MurderBlendState.AlphaBlend
+                                );
+                        }
                     }
                 }
             }
         }
-
         return;
     }
 
