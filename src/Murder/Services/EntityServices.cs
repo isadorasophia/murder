@@ -511,6 +511,11 @@ public static class EntityServices
 
     public static bool IsInCamera(this Entity e, World world)
     {
+        if (e.HasInCamera())
+        {
+            return true;
+        }
+
         if (!e.HasTransform())
         {
             // No transform? Assume it's ~*everywhere~*.
@@ -518,7 +523,6 @@ public static class EntityServices
         }
 
         Point p = e.GetGlobalTransform().Point;
-
         return ((MonoWorld)world).Camera.Bounds.Contains(p);
     }
 

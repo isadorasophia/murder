@@ -34,6 +34,12 @@ public class EventListenerSystem : IMessagerSystem
         bool alwaysPlay = entity.HasPlayEvenOffScreen() || entity.HasUi() || entity.HasCutsceneAnchors();
         bool canPlay = alwaysPlay || entity.IsInCamera(world);
 
+        if (!alwaysPlay && canPlay && entity.TryGetAlpha()?.Alpha == 0)
+        {
+            // don't play events for invisible entities!
+            canPlay = false;
+        }
+
         if (canPlay && events.TryGetValue(animationEvent.Event, out SpriteEventInfo info))
         {
             // Start doing event actions.
