@@ -84,6 +84,11 @@ namespace Murder.Utilities
 
         #region Math
 
+        public static bool DistanceCheck(Vector2 a, Vector2 b, float distance)
+        {
+            return (a - b).LengthSquared() <= distance * distance;
+        }
+
         public static int Digits(int number)
         {
             if (number == 0) return 1;
