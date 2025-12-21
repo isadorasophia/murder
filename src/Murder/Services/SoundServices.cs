@@ -164,6 +164,16 @@ public static class SoundServices
         Game.Sound.Stop(layer, fadeOut);
     }
 
+    public static void SetVolume(SoundLayer layer, float volume)
+    {
+        Game.Sound.SetVolume(layer, volume, fireAfter: 0);
+    }
+
+    public static void SetVolume(SoundLayer layer, float volume, float afterSeconds)
+    {
+        Game.Sound.SetVolume(layer, volume, afterSeconds);
+    }
+
     public static void Resume(SoundLayer layer)
     {
         Game.Sound.Resume(layer);

@@ -120,6 +120,8 @@ namespace Murder.Core.Sounds
 
         public float GetGlobalParameter(ParameterId parameter);
 
+        public void SetVolume(SoundLayer layer, float volume, float fireAfter);
+
         public bool Resume(SoundLayer layer);
 
         public bool Pause(SoundLayer layer);
@@ -151,7 +153,7 @@ namespace Murder.Core.Sounds
         /// <summary>
         /// Change volume.
         /// </summary>
-        public void SetVolume(SoundEventId? id, float volume);
+        public void SetVolume(SoundEventId? bus, float volume);
 
         /// <summary>
         /// Fetch a list of all the banks when serializing it, separated by the supported platform.

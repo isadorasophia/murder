@@ -54,5 +54,7 @@ namespace Murder.Core.Sounds
         public ImmutableArray<string> FetchAllPlugins() => [];
 
         public bool IsEventPlaying(SoundEventId id, int entityId) => false;
+
+        public void SetVolume(SoundLayer _, float __, float ___) { }
     }
 }
