@@ -43,6 +43,8 @@ namespace Murder.Systems.Util
             switch (destroyOnComplete.Settings)
             {
                 case DestroyOnAnimationCompleteFlags.Deactivate:
+                    entity.RemoveDeactivateHighlightSprite();
+
                     entity.RemoveAnimationComplete();
                     entity.RemoveAnimationStarted();
                     entity.Deactivate();
