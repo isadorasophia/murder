@@ -745,7 +745,7 @@ namespace Murder.Editor.CustomEditors
 
                 if (info.SkipGroups.Contains(targetGroup))
                 {
-                    stage.ReplaceComponentForInstance(parent, g.Value, new SkipComponent());
+                    stage.ReplaceComponentForInstance(parent, g.Value, new SkipEntityOnEditorComponent());
                 }
             }
         }

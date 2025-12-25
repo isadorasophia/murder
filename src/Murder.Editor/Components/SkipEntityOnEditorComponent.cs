@@ -7,7 +7,7 @@ namespace Murder.Editor.Components
     /// Used to skip entities on systems.
     /// </summary>
     [DoNotPersistOnSave]
-    internal readonly struct SkipComponent : IComponent
+    internal readonly struct SkipEntityOnEditorComponent : IComponent
     {
     }
 }
