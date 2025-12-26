@@ -95,6 +95,11 @@ namespace Murder.Systems
                     }
                 }
 
+                if (e.TryGetOverrideYOffset() is OverrideYOffsetComponent overrideYOffset)
+                {
+                    ySortOffsetRaw = transform.Y + overrideYOffset.YOffset;
+                }
+
                 float ySort = RenderServices.YSort(ySortOffsetRaw);
 
                 (string suffix, bool horizontalFlip) = DirectionHelper.GetSuffixFromAngle(e, prefix, angle);
