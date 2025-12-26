@@ -266,7 +266,7 @@ public static class EntityServices
 
             entity.SetSprite(result);
 
-            float startedTime = Game.Now;
+            float startedTime = result.UseUnscaledTime ? Game.NowUnscaled : Game.Now;
             if (entity.TryGetRandomizeSprite() is RandomizeSpriteComponent randomize && randomize.RandomizeAnimationStart)
             {
                 startedTime = Game.Random.NextFloat(1f, 32f);
