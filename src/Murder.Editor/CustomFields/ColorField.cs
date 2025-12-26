@@ -44,6 +44,11 @@ namespace Murder.Editor.CustomFields
                     modified = true;
                 }
 
+                if (modified)
+                {
+                    Game.Data.AddPaletteColor(color);
+                }
+
                 ImGui.EndPopup();
             }
 
@@ -127,25 +132,29 @@ namespace Murder.Editor.CustomFields
             {
                 (modified, vector4Color) = Vector4Field.ProcessInputImpl(member, new(color.R, color.G, color.B, color.A));
                 ImGui.SameLine();
-                if (ImGui.BeginCombo($"##{member.Name}", color.ToString()))
-                {
-
-                    var i = 0;
-                    foreach (var c in Game.Data.CurrentPalette)
+                if (Game.Data.CurrentPalette == null) {
+                    ImGui.TextColored(Architect.Profile.Theme.Faded, "(No colors stored yet)");
+                } else { 
+                    if (ImGui.BeginCombo($"##{member.Name}", color.ToString()))
                     {
-                        if (ImGuiHelpers.SelectableColor($"pal_{color}_{i++}", c.ToSysVector4()))
+
+                        var i = 0;
+                        foreach (var c in Game.Data.CurrentPalette)
                         {
-                            modified = true;
-                            vector4Color = c.ToSysVector4();
+                            if (ImGuiHelpers.SelectableColor($"pal_{color}_{i++}", c.ToSysVector4()))
+                            {
+                                modified = true;
+                                vector4Color = c.ToSysVector4();
+                            }
                         }
+                        ImGui.EndCombo();
                     }
-                    ImGui.EndCombo();
-                }
-                else
-                {
-                    var p_min = ImGui.GetItemRectMin();
-                    var p_max = ImGui.GetItemRectMax();
-                    ImGui.GetWindowDrawList().AddRectFilled(p_min, p_max, ImGuiHelpers.MakeColor32(vector4Color));
+                    else
+                    {
+                        var p_min = ImGui.GetItemRectMin();
+                        var p_max = ImGui.GetItemRectMax();
+                        ImGui.GetWindowDrawList().AddRectFilled(p_min, p_max, ImGuiHelpers.MakeColor32(vector4Color));
+                    }
                 }
             }
             ImGui.EndChild();
