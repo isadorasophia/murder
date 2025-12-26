@@ -13,7 +13,7 @@ namespace Murder.Components
 
         public readonly float Z = 0;
         public readonly float ZVelocity = 0;
-        public readonly bool HasGravity = true;
+        public readonly bool HasGravity { get; init; } = true;
 
         public VerticalPositionComponent() { }
 
