@@ -302,6 +302,9 @@ public static class PhysicsServices
         Vector2 newStartPosition = startPosition + (endPosition - startPosition).Normalized() * minHitDistance;
         return Raycast(world, newStartPosition, endPosition, layerMask, ignoreEntities, out hit);
     }
+
+    static readonly List<int> _ignoreEntitiesWithChildren = new List<int>();
+    static readonly List<NodeInfo<Entity>> _possibleEntities = new();
     public static bool Raycast(World world, Vector2 startPosition, Vector2 endPosition, int layerMask, IEnumerable<int> ignoreEntities, out RaycastHit hit)
     {
         hit = default;
@@ -310,15 +313,15 @@ public static class PhysicsServices
         bool hitSomething = false;
         float closest = float.MaxValue;
 
-        List<int> ignoreEntitiesWithChildren = new List<int>();
-        List<NodeInfo<Entity>> possibleEntities = new();
+        _ignoreEntitiesWithChildren.Clear();
+        _possibleEntities.Clear();
 
         foreach (var id in ignoreEntities)
         {
             if (world.TryGetEntity(id) is Entity entity)
             {
-                ignoreEntitiesWithChildren.Add(id);
-                ignoreEntitiesWithChildren.AddRange(EntityServices.GetAllChildren(world, entity));
+                _ignoreEntitiesWithChildren.Add(id);
+                _ignoreEntitiesWithChildren.AddRange(EntityServices.GetAllChildren(world, entity));
             }
         }
 
@@ -339,12 +342,12 @@ public static class PhysicsServices
         float minY = Math.Clamp(MathF.Min(startPosition.Y, endPosition.Y), 0, map.Height * Grid.CellSize);
         float maxY = Math.Clamp(MathF.Max(startPosition.Y, endPosition.Y), 0, map.Height * Grid.CellSize);
 
-        possibleEntities.Clear();
-        qt.GetCollisionEntitiesAt(new Rectangle(minX, minY, maxX - minX, maxY - minY), possibleEntities);
+        _possibleEntities.Clear();
+        qt.GetCollisionEntitiesAt(new Rectangle(minX, minY, maxX - minX, maxY - minY), _possibleEntities);
 
-        foreach (var e in possibleEntities)
+        foreach (var e in _possibleEntities)
         {
-            if (ignoreEntitiesWithChildren.Contains(e.EntityInfo.EntityId))
+            if (_ignoreEntitiesWithChildren.Contains(e.EntityInfo.EntityId))
                 continue;
 
             if (e.EntityInfo.IsDestroyed)
@@ -399,6 +402,7 @@ public static class PhysicsServices
                             {
                                 if (polygon.Polygon.Intersects(line.AddPosition(-position.Point), out Vector2 hitPoint))
                                 {
+                                    hitPoint += position.Vector2;
                                     CompareShapeHits(startPosition, ref hit, ref hitSomething, ref closest, e, hitPoint.Point());
 
                                     continue;
