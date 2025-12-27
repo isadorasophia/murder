@@ -1,5 +1,6 @@
 ﻿using Bang;
 using Bang.Components;
+using Bang.Entities;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
@@ -39,7 +40,7 @@ namespace Murder.Prefabs
         /// Create the entity in the world!
         /// </summary>
         /// <returns>The entity id in this world.</returns>
-        public int Create(World world);
+        public int Create(World world, Entity? replace = null);
 
         public IComponent GetComponent(Type componentType);
 

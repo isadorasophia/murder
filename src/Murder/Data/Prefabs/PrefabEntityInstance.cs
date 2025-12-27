@@ -1,5 +1,6 @@
 ﻿using Bang;
 using Bang.Components;
+using Bang.Entities;
 using Murder.Assets;
 using Murder.Diagnostics;
 using System.Collections.Immutable;
@@ -119,10 +120,6 @@ namespace Murder.Prefabs
             {
                 ImmutableArray<EntityInstance> children = PrefabRef.Fetch().FetchChildren()
                     .AddRange(base.FetchChildren()).ToImmutableArray();
-                if (_childrenModifiers.TryGetValue(Guid, out EntityModifier? modifier))
-                {
-                    children.AddRange(modifier.FetchChildren());
-                }
 
                 return children;
             }
@@ -151,17 +148,19 @@ namespace Murder.Prefabs
         /// Create the instance entity in the world.
         /// </summary>
         /// <param name="world">The world this instance will be tied to.</param>
-        public override int Create(World world)
+        /// <param name="replaceEntity">Entity that it will be replacing, if applicable.</param>
+        public override int Create(World world, Entity? replaceEntity)
         {
-            return Create(world, ImmutableDictionary<Guid, EntityModifier>.Empty);
+            return Create(world, replaceEntity, ImmutableDictionary<Guid, EntityModifier>.Empty);
         }
 
         /// <summary>
         /// Create the instance entity in the world with a list of modifiers.
         /// </summary>
         /// <param name="world">The world this instance will be tied to.</param>
+        /// <param name="replaceEntity">Entity that it will be replacing, if applicable.</param>
         /// <param name="modifiers">Components which might override any of the instances.</param>
-        internal override int Create(World world, in ImmutableDictionary<Guid, EntityModifier> modifiers)
+        internal override int Create(World world, Entity? replaceEntity, in ImmutableDictionary<Guid, EntityModifier> modifiers)
         {
             Dictionary<Guid, EntityModifier> currentModifiers = _childrenModifiers
                 .ToDictionary(e => e.Key, e => e.Value);
@@ -184,7 +183,7 @@ namespace Murder.Prefabs
                     parentModifier;
             }
 
-            return CreateInternal(world, PrefabRef.Guid, currentModifiers.ToImmutableDictionary());
+            return CreateInternal(world, replaceEntity, PrefabRef.Guid, currentModifiers.ToImmutableDictionary());
         }
 
         internal ImmutableDictionary<Guid, EntityModifier> GetChildrenModifiers() => _childrenModifiers.ToImmutableDictionary();

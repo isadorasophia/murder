@@ -40,17 +40,15 @@ namespace Murder.Assets
         /// <summary>
         /// Create an instance of the entity and all of its children.
         /// </summary>
-        public int Create(World world) => _entity.Create(world);
+        public int Create(World world, Entity? replaceEntity = null) => _entity.Create(world, replaceEntity);
 
-        public Entity CreateAndFetch(World world) =>
-            world.GetEntity(EntityBuilder.Create(world, Guid, Components, FetchChildren(), ImmutableDictionary<Guid, EntityModifier>.Empty));
+        public Entity CreateAndFetch(World world) => world.GetEntity(_entity.Create(world, replaceEntity: null));
 
         /// <summary>
         /// This will replace an existing entity in the world.
         /// It keeps some elements of the original entity: position and target id components.
         /// </summary>
-        public void Replace(World world, Entity e) =>
-            EntityBuilder.Replace(world, e, Guid, Components, FetchChildren(), ImmutableDictionary<Guid, EntityModifier>.Empty);
+        public void Replace(World world, Entity e) => _entity.Create(world, e);
 
         /// <summary>
         /// This will replace an existing entity in the world.
@@ -61,23 +59,22 @@ namespace Murder.Assets
         /// <param name="startWithComponents">Custom components that will override whatever this prefab has.</param>
         public void Replace(World world, Entity e, params IComponent[] startWithComponents)
         {
-            HashSet<Type> startComponentTypes = startWithComponents.Select(c => c.GetType())
-                .ToHashSet(new ComponentTypeComparator());
+            Replace(world, e);
 
-            // First, only add components not included in startWithComponents.
-            var builder = ImmutableArray.CreateBuilder<IComponent>();
-            builder.AddRange(startWithComponents);
-
-            for (int i = 0; i < Components.Length; ++i)
+            for (int i = 0; i < startWithComponents.Length; ++i)
             {
-                IComponent c = Components[i];
-                if (!startComponentTypes.Contains(c.GetType()))
+                IComponent c = startWithComponents[i];
+                if (c is ITransformComponent && e.TryGetTransform() is IMurderTransformComponent transform)
                 {
-                    builder.Add(c);
+                    c = transform.WithoutParent();
                 }
-            }
+                else if (c is IModifiableComponent)
+                {
+                    c = SerializationHelper.DeepCopy(c);
+                }
 
-            EntityBuilder.Replace(world, e, Guid, builder.ToImmutable(), FetchChildren(), ImmutableDictionary<Guid, EntityModifier>.Empty);
+                e.AddOrReplaceComponent(c, c.GetType());
+            }
         }
 
         /// <summary>

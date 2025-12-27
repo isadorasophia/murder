@@ -25,7 +25,7 @@ public readonly struct SendMessageInteraction : IInteraction
             return; 
         }
 
-        Entity? target = null;
+        Entity? target;     
         switch (Target)
         {
             case TargetEntity.Self:
@@ -50,16 +50,15 @@ public readonly struct SendMessageInteraction : IInteraction
                 {
                     if (world.TryGetEntity(childId) is Entity child)
                     {
-                        target = child;
-                        break;
+                        child.SendMessage(Message);
                     }
                 }
 
-                break;
+                return;
 
             default:
-                GameLogger.Error("Unsupported TargetEntity for SendMessageInteraction.");
-                break;
+                GameLogger.Error($"Unsupported {Target} for {nameof(SendMessageInteraction)}.");
+                return;
         }
 
         target?.SendMessage(Message);

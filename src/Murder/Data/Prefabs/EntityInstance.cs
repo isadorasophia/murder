@@ -170,9 +170,10 @@ namespace Murder.Prefabs
         /// Create the instance entity in the world.
         /// </summary>
         /// <param name="world">The world this instance will be tied to.</param>
-        public virtual int Create(World world)
+        /// <param name="replaceEntity">Entity that it will be replacing, if applicable.</param>
+        public virtual int Create(World world, Entity? replaceEntity = null)
         {
-            return Create(world, ImmutableDictionary<Guid, EntityModifier>.Empty);
+            return Create(world, replaceEntity, ImmutableDictionary<Guid, EntityModifier>.Empty);
         }
 
         /// <summary>
@@ -188,17 +189,18 @@ namespace Murder.Prefabs
                 modifiers = prefabInstanceParent.GetChildrenModifiers();
             }
 
-            return Create(world, modifiers);
+            return Create(world, replaceEntity: null, modifiers);
         }
 
         /// <summary>
         /// Create the instance entity in the world with a list of modifiers.
         /// </summary>
         /// <param name="world">The world this instance will be tied to.</param>
+        /// <param name="replaceEntity">Entity that it will be replacing, if applicable.</param>
         /// <param name="modifiers">Components which might override any of the instances.</param>
-        internal virtual int Create(World world, in ImmutableDictionary<Guid, EntityModifier> modifiers)
+        internal virtual int Create(World world, Entity? replaceEntity, in ImmutableDictionary<Guid, EntityModifier> modifiers)
         {
-            return CreateInternal(world, Guid.Empty, modifiers);
+            return CreateInternal(world, replaceEntity, Guid.Empty, modifiers);
         }
 
         /// <summary>
@@ -206,11 +208,22 @@ namespace Murder.Prefabs
         /// This filters the modifiers according the children and components.
         /// </summary>
         /// <param name="world">The world this instance will be tied to.</param>
+        /// <param name="replaceEntity">Entity that it will be replacing, if applicable.</param>
         /// <param name="asset">Prefab identifier.</param>
         /// <param name="modifiers">Components which might override any of the instances.</param>
-        internal int CreateInternal(World world, Guid asset, in ImmutableDictionary<Guid, EntityModifier> modifiers)
+        internal int CreateInternal(World world, Entity? replaceEntity, Guid asset, in ImmutableDictionary<Guid, EntityModifier> modifiers)
         {
-            int id = EntityBuilder.Create(world, asset, FetchComponents(modifiers), FetchChildren(modifiers), modifiers, Id);
+            int id;
+            if (replaceEntity is not null)
+            {
+                id = replaceEntity.EntityId;
+                EntityBuilder.Replace(world, replaceEntity, asset, FetchComponents(modifiers), FetchChildren(modifiers), modifiers);
+            }
+            else
+            {
+                id = EntityBuilder.Create(world, asset, FetchComponents(modifiers), FetchChildren(modifiers), modifiers, Id);
+            }
+
             if (IsDeactivated)
             {
                 Entity? entity = world.TryGetEntity(id);
