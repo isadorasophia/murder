@@ -2,7 +2,9 @@
 using Bang.Components;
 using Bang.Entities;
 using Murder.Assets;
+using Murder.Core.Input;
 using Murder.Diagnostics;
+using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
@@ -253,10 +255,10 @@ namespace Murder.Prefabs
         {
             EntityModifier? modifier;
 
-            if (base.TryGetChild(instance, out EntityInstance? child))
+            // make sure we're not modifying a prefab child with the same name...
+            if (base.TryGetChild(instance, out EntityInstance? child) && !PrefabRef.Fetch().TryGetChild(instance, out _))
             {
                 child.AddOrReplaceComponent(component);
-
                 return true;
             }
             else if (TryGetChild(instance, out child))
