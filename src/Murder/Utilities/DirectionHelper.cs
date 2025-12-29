@@ -41,6 +41,13 @@ public static class DirectionHelper
         return (Direction)newDirection;
     }
 
+
+    public static bool IsOpposed(Direction direction, Direction other)
+    {
+        float dotProduct = Vector2.Dot(direction.ToVector(), other.ToVector());
+        return dotProduct < -0.5f;
+    }
+
     public static DirectionFlags ToDirectionFlag(this Direction direction)
     {
         switch (direction)

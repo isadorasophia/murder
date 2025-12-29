@@ -85,7 +85,7 @@ namespace Murder.Core.Input
             }
 
             var lengthSq = Value.LengthSquared();
-            if (lengthSq < 0.0001f)
+            if (lengthSq < 0.15f)
             {
                 Value = Vector2.Zero;
                 IntValue = Point.Zero;
@@ -96,6 +96,7 @@ namespace Murder.Core.Input
                 _pressedYStart = 0;
                 _nextXTick = 0;
                 _nextYTick = 0;
+                lengthSq = 0;
             }
 
             if (lengthSq > 1)
