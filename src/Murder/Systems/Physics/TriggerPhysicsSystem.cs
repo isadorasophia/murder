@@ -152,7 +152,7 @@ namespace Murder.Systems.Physics
             // Triggers don't touch other triggers, and so on.
             bool thisIsAnActor = (collider.Layer & (CollisionLayersBase.ACTOR)) != 0;
 
-            if (e.HasFollowPosition() || e.HasMoveToPerfect())
+            if (e.HasFollowPosition() || (!thisIsAnActor && e.HasMoveToPerfect()))
             {
                 return;
             }
