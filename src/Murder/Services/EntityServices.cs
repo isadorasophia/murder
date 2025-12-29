@@ -518,7 +518,7 @@ public static class EntityServices
         }
 
         Point p = e.GetGlobalTransform().Point;
-        return ((MonoWorld)world).Camera.Bounds.Contains(p) && e.HasInCamera();
+        return ((MonoWorld)world).Camera.Bounds.Contains(p);
     }
 
     public static void RemoveSpeedMultiplier(Entity entity, int slot)
