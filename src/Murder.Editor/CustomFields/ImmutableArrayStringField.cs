@@ -34,24 +34,39 @@ namespace Murder.Editor.CustomFields
             {
                 return ProcessAtlasName(current);
             }
+            char separator = ',';
+            bool multiline = AttributeExtensions.IsDefined(member, typeof(MultilineAttribute));
+
+            if (multiline)
+            {
+                separator = '\n';
+            }
 
             if (member.IsReadOnly)
             {
                 // Read only, do not modify enum value.
-                ImGui.Text(String.Join(',', current));
+                ImGui.Text(String.Join(separator, current));
                 return (false, current);
             }
 
-            var cache = String.Join(',', current);
-            var modified = ImGui.InputText($"##{member.Name}_value", ref cache, 1024);
+            var cache = String.Join(separator, current);
+            bool modified;
+            if (multiline)
+            {
+                modified = ImGui.InputTextMultiline($"##{member.Name}_value", ref cache, 2048, new System.Numerics.Vector2());
+            }
+            else
+            {
+                modified = ImGui.InputText($"##{member.Name}_value", ref cache, 2048);
+            }
 
             if (!ImGui.IsItemFocused())
             {
-                cache = String.Join(',', current);
+                cache = String.Join(separator, current);
             }
             if (modified)
             {
-                var parsed = cache.Trim('\t', ',').Split(',');
+                var parsed = cache.Trim('\t', separator).Split(separator);
                 var builder = ImmutableArray.CreateBuilder<string>();
                 foreach (var item in parsed)
                 {
