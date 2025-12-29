@@ -9,7 +9,6 @@ using Murder.Core.Physics;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Diagnostics;
 
 namespace Murder.Systems.Physics
 {
@@ -23,7 +22,7 @@ namespace Murder.Systems.Physics
         // Used for reclycing over the same collision cache.
         private readonly HashSet<int> _collisionVisitedEntities = new(516);
 
-        private readonly Dictionary<int, (Entity, ImmutableHashSet<int>, bool)> _entitiesOnWatch = new(256);
+        private readonly Dictionary<int, (Entity, ImmutableHashSet<int>)> _entitiesOnWatch = new(256);
 
         private void WatchEntities(ImmutableArray<Entity> entities, World world)
         {
@@ -36,12 +35,6 @@ namespace Murder.Systems.Physics
                     continue;
                 }
 
-                bool isActor = false;
-                if (entity.TryGetCollider() is ColliderComponent collider)
-                {
-                    isActor = (collider.Layer & (CollisionLayersBase.TRIGGER)) == 0;
-                }
-
                 if (entity.IsDestroyed)
                 {
                     // Destroyed entities are not added to the watch list.
@@ -52,7 +45,7 @@ namespace Murder.Systems.Physics
                         continue;
                     }
 
-                    foreach (var other in destroyedCollisionCache.GetCollidingEntities(world))
+                    foreach (Entity other in destroyedCollisionCache.GetCollidingEntities(world))
                     {
                         entity.SendOnCollisionMessage(other.EntityId, CollisionDirection.Exit);
                         other.SendOnCollisionMessage(entity.EntityId, CollisionDirection.Exit);
@@ -63,11 +56,11 @@ namespace Murder.Systems.Physics
 
                 if (entity.TryGetCollisionCache() is CollisionCacheComponent collisionCache)
                 {
-                    _entitiesOnWatch[entity.EntityId] = (entity, collisionCache.CollidingWith, isActor);
+                    _entitiesOnWatch[entity.EntityId] = (entity, collisionCache.CollidingWith);
                 }
                 else
                 {
-                    _entitiesOnWatch[entity.EntityId] = (entity, [], isActor);
+                    _entitiesOnWatch[entity.EntityId] = (entity, []);
                 }
             }
         }
@@ -106,10 +99,10 @@ namespace Murder.Systems.Physics
 
             Quadtree qt = Quadtree.GetOrCreateUnique(world);
 
-            foreach ((int entityId, (Entity entity, ImmutableHashSet<int> collidingWith, bool thisIsAnActor)) in _entitiesOnWatch)
+            foreach ((int entityId, (Entity entity, ImmutableHashSet<int> collidingWith)) in _entitiesOnWatch)
             {
                 // Remove deactivated or destroyed entities from the collision cache and send exit messages.
-                if (!entity.IsActive || entity.IsDestroyed)
+                if (!entity.IsActive)
                 {
                     foreach (int otherCachedId in collidingWith)
                     {
@@ -135,14 +128,14 @@ namespace Murder.Systems.Physics
 
         private void CheckCollision(Entity e, Quadtree qt, World world)
         {
-            if (e.HasIgnoreTriggersUntil())
-            {
-                return;
-            }
-
             if (!e.HasCollider())
             {
                 e.RemoveCollisionCache();
+                return;
+            }
+
+            if (ShouldIgnoreEntity(e))
+            {
                 return;
             }
 
@@ -150,12 +143,7 @@ namespace Murder.Systems.Physics
 
             // Actors and Hitboxes interact with triggers.
             // Triggers don't touch other triggers, and so on.
-            bool thisIsAnActor = (collider.Layer & (CollisionLayersBase.ACTOR)) != 0;
-
-            if (e.HasFollowPosition() || (!thisIsAnActor && e.HasMoveToPerfect()))
-            {
-                return;
-            }
+            bool thisIsAnActor = IsActor(e);
 
             _others.Clear();
             Rectangle boundingBox = collider.GetBoundingBox(e.GetGlobalTransform().Point, e.FetchScale());
@@ -266,10 +254,32 @@ namespace Murder.Systems.Physics
 
             _collisionVisitedEntities.Clear();
         }
+
         private static void SendCollisionMessages(Entity trigger, Entity actor, CollisionDirection direction)
         {
             actor.SendOnCollisionMessage(trigger.EntityId, direction);
             trigger.SendOnCollisionMessage(actor.EntityId, direction);
+        }
+
+        private bool ShouldIgnoreEntity(Entity e)
+        {
+            if (e.HasIgnoreTriggersUntil() || !e.HasCollider() || e.HasFollowPosition())
+            {
+                return true;
+            }
+
+            if (!IsActor(e) && e.HasMoveToPerfect())
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool IsActor(Entity e)
+        {
+            ColliderComponent collider = e.GetCollider();
+            return (collider.Layer & (CollisionLayersBase.ACTOR)) != 0;
         }
     }
 }
