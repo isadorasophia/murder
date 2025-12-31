@@ -13,6 +13,7 @@ using Murder.Diagnostics;
 using Murder.Helpers;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -305,6 +306,7 @@ public static class EntityServices
             return aseprite;
         }
 
+        Debugger.Break();
         GameLogger.Error($"Entity {entity.EntityId} doesn's have an Sprite component ({entity.Components.Count()} components, trying to play '{string.Join(',', animations)}')");
         return null;
     }
@@ -355,6 +357,7 @@ public static class EntityServices
             return aseprite;
         }
 
+        Debugger.Break();
         GameLogger.Error($"Entity {entity.EntityId} doesn's have an Sprite component ({entity.Components.Count()} components, trying to play '{string.Join(',', nextAnimations)}')");
         return null;
     }
