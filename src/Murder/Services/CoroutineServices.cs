@@ -35,7 +35,7 @@ public static class CoroutineServices
         return e;
     }
 
-    public static Coroutine FireAfter(this World world, float seconds, Action action)
+    public static Coroutine FireAfter(this World world, float seconds, Action action, CoroutineFlags flags = CoroutineFlags.None)
     {
         if (world is not MonoWorld murderWorld)
         {
@@ -43,7 +43,7 @@ public static class CoroutineServices
             return new();
         }
 
-        return murderWorld.RunCoroutine(WaitAndRun(seconds, action));
+        return murderWorld.RunCoroutine(WaitAndRun(seconds, action), flags);
     }
 
     private static IEnumerator<Wait> WaitAndRun(float seconds, Action action)
