@@ -322,7 +322,7 @@ namespace Murder.Core.Input
                     {
                         checkRow = startRow + i;
 
-                        if (checkRow < totalCollumns)
+                        if (checkRow <= totalCollumns)
                         {
                             int nextOption = checkRow * width + column;
                             if (nextOption >= 0 && nextOption < Length)
