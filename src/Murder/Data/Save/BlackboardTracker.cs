@@ -666,22 +666,22 @@ namespace Murder.Save
                     switch (criterion.Kind)
                     {
                         case CriterionKind.Less:
-                            return @float < criterion.IntValue;
+                            return @float < criterion.FloatValue;
 
                         case CriterionKind.LessOrEqual:
-                            return @float <= criterion.IntValue;
+                            return @float <= criterion.FloatValue;
 
                         case CriterionKind.Is:
-                            return @float == criterion.IntValue;
+                            return @float == criterion.FloatValue;
 
                         case CriterionKind.Different:
-                            return @float != criterion.IntValue;
+                            return @float != criterion.FloatValue;
 
                         case CriterionKind.BiggerOrEqual:
-                            return @float >= criterion.IntValue;
+                            return @float >= criterion.FloatValue;
 
                         case CriterionKind.Bigger:
-                            return @float > criterion.IntValue;
+                            return @float > criterion.FloatValue;
                     }
 
                     break;
