@@ -271,13 +271,24 @@ public static class StageHelpers
 
     public static Vector2? GetSelectedEntityPosition()
     {
-        if(GetSelectedEntity() is IEntity entity && entity.HasComponent(typeof(PositionComponent)))
+        if (GetSelectedEntity() is IEntity entity && entity.HasComponent(typeof(PositionComponent)))
         {
             return entity.GetComponent<PositionComponent>().ToVector2();
         }
 
         return null;
     }
+
+    public static GameAsset? GetOpenedAsset()
+    {
+        if (Architect.Instance.ActiveScene is EditorScene editor && editor.EditorShown is AssetEditor assetEditor)
+        {
+            return assetEditor.Target;
+        }
+
+        return null;
+    }
+
     public static IEntity? GetSelectedEntity()
     {
         if (Architect.Instance.ActiveScene is EditorScene editor && editor.EditorShown is AssetEditor assetEditor)
