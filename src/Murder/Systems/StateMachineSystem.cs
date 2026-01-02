@@ -38,22 +38,27 @@ namespace Murder.Systems
             }
         }
 
-        public void Update(Context context)
+        public virtual void Update(Context context)
         {
             foreach (Entity e in context.Entities)
             {
-                if (e.TryGetStateMachine() is IStateMachineComponent routine)
+                Update(e);
+            }
+        }
+
+        protected void Update(Entity e)
+        {
+            if (e.TryGetStateMachine() is IStateMachineComponent routine)
+            {
+                float deltaTime = e.HasUnscaledDeltaTime() ?
+                    Game.UnscaledDeltaTime : Game.DeltaTime;
+
+                if (Game.Instance.IsSkippingDeltaTimeOnUpdate)
                 {
-                    float deltaTime = e.HasUnscaledDeltaTime() ? 
-                        Game.UnscaledDeltaTime : Game.DeltaTime;
-
-                    if (Game.Instance.IsSkippingDeltaTimeOnUpdate)
-                    {
-                        deltaTime = 100;
-                    }
-
-                    routine.Tick(deltaTime);
+                    deltaTime = 100;
                 }
+
+                routine.Tick(deltaTime);
             }
         }
 

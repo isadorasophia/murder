@@ -583,7 +583,7 @@ public static partial class TextDataServices
     {
         return c switch
         {
-            '!' or '！' or ':' or '?' or '？' => true,
+            '!' or '！' or ':' or '?' or '？' or '\"' => true,
             _ => false,
         };
     }
