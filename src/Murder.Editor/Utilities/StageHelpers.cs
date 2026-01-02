@@ -281,9 +281,11 @@ public static class StageHelpers
 
     public static GameAsset? GetOpenedAsset()
     {
-        if (Architect.Instance.ActiveScene is EditorScene editor && editor.EditorShown is AssetEditor assetEditor)
+        if (Architect.Instance.ActiveScene is EditorScene editor && 
+            editor.EditorShown is CustomEditor assetEditor &&
+            assetEditor.Target is GameAsset targetAsset)
         {
-            return assetEditor.Target;
+            return targetAsset;
         }
 
         return null;
