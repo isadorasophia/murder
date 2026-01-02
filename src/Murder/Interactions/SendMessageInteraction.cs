@@ -2,6 +2,7 @@
 using Bang.Components;
 using Bang.Entities;
 using Bang.Interactions;
+using Murder.Components;
 using Murder.Diagnostics;
 using Murder.Utilities;
 
@@ -41,9 +42,24 @@ public readonly struct SendMessageInteraction : IInteraction
                 break;
 
             case TargetEntity.Target:
-                int entityId = interacted.TryGetIdTarget()?.Target ?? -1;
-                target = world.TryGetEntity(entityId);
-                break;
+                if (interacted.TryGetIdTarget()?.Target is int entityId)
+                {
+                    target = world.TryGetEntity(entityId);
+                    break;
+                }
+
+                if (interacted.TryGetIdTargetCollection() is IdTargetCollectionComponent targets)
+                {
+                    foreach ((_, int entityTargetId) in targets.Targets)
+                    {
+                        if (world.TryGetEntity(entityTargetId) is Entity child)
+                        {
+                            child.SendMessage(Message);
+                        }
+                    }
+                }
+
+                return;
 
             case TargetEntity.Child:
                 foreach (int childId in interacted.Children)
