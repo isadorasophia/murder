@@ -535,6 +535,14 @@ namespace Murder.Save
             }
         }
 
+        public void WatchAll(Action notification, params BlackboardKind[] kinds)
+        {
+            foreach (BlackboardKind kind in kinds)
+            {
+                Watch(notification, kind);
+            }
+        }
+
         /// <summary>
         /// This will watch any chages to any of the blackboard properties.
         /// </summary>
@@ -548,6 +556,14 @@ namespace Murder.Save
             else
             {
                 _onModified[kind] = notification;
+            }
+        }
+
+        public void ResetAllWatchers(Action notification, params BlackboardKind[] kinds)
+        {
+            foreach (BlackboardKind kind in kinds)
+            {
+                ResetWatcher(kind, notification);
             }
         }
 
