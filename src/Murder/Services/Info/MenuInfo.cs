@@ -157,6 +157,12 @@ namespace Murder.Core.Input
 
         public MenuInfo(IEnumerable<MenuOption> options) : this(options.ToArray()) { }
 
+        public MenuInfo(IEnumerable<MenuOption> options, int startSelectedAt) : this(options.ToArray()) 
+        {
+            PreviousSelection = startSelectedAt;
+            Selection = startSelectedAt;
+        }
+
         public MenuInfo(params string[] options) : this()
         {
             Options = options.Select(s => new MenuOption(s, true)).ToArray();

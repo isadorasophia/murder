@@ -186,7 +186,7 @@ namespace Murder.Editor.Systems
 
                 if (ImGui.BeginMenu("Start playing with save"))
                 {
-                    ImGui.Text("Select a save to start playing with");
+                    ImGui.Text("Select a save to start playing with...");
 
                     if (allSaves.Count > 0)
                     {
