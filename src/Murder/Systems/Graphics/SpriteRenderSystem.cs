@@ -171,10 +171,20 @@ namespace Murder.Systems.Graphics
                 Color? outlineColor = e.HasDeactivateHighlightSprite() ? null : e.TryGetHighlightSprite()?.Color;
 
                 FrameInfo frameInfo;
+                Batch2D batch2D;
+                if (e.TryGetCustomTargetSpriteBatch() is CustomTargetSpriteBatchComponent customTargetSpriteBatch)
+                {
+                    batch2D = render.GetBatch(customTargetSpriteBatch.TargetBatch);
+                }
+                else
+                {
+                    batch2D = render.GetBatch(s.TargetSpriteBatch);
+                }
+
                 if (animationInfo.ForceFrame.HasValue)
                 {
                     frameInfo = RenderServices.DrawSprite(
-                        render.GetBatch(s.TargetSpriteBatch),
+                        batch2D,
                         renderPosition,
                         clip,
                         animationId,
@@ -191,7 +201,7 @@ namespace Murder.Systems.Graphics
                 else
                 {
                     frameInfo = RenderServices.DrawSprite(
-                        render.GetBatch(s.TargetSpriteBatch),
+                        batch2D,
                         asset,
                         renderPosition,
                         new DrawInfo(ySort)
