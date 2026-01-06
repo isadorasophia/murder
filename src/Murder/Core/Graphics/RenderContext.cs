@@ -243,6 +243,7 @@ public class RenderContext : IDisposable
     /// Sets up a new RenderTarget2D, disposing of the existing one if necessary.
     /// </summary>
     /// <param name="existingTarget">The existing RenderTarget2D to be disposed.</param>
+    /// <param name="name">A debug name for the new RenderTarget2D.</param>
     /// <param name="width">Width of the new RenderTarget2D.</param>
     /// <param name="height">Height of the new RenderTarget2D.</param>
     /// <param name="preserveContents">Whether to preserve the contents in the new RenderTarget2D.</param>
@@ -306,16 +307,19 @@ public class RenderContext : IDisposable
     /// <returns>
     /// Whether the window actually required a refresh.
     /// </returns>
-    public bool RefreshWindow(GraphicsDevice graphicsDevice, Point viewportSize, Point nativeResolution, ViewportResizeStyle viewportResizeMode)
+    public bool RefreshWindow(GraphicsDevice graphicsDevice, Point viewportSize, Point? nativeResolution = null, ViewportResizeStyle? viewportResizeMode = null)
     {
+        nativeResolution ??= new Point(Game.Profile.GameWidth, Game.Profile.GameHeight);
+        viewportResizeMode ??= Game.Profile.ResizeStyle;
+
         // No changes, skip
-        if (!Viewport.HasChanges(viewportSize, nativeResolution))
+        if (!Viewport.HasChanges(viewportSize, nativeResolution.Value))
         {
             return false;
         }
         
         _graphicsDevice = graphicsDevice;
-        Viewport = new Viewport(viewportSize, nativeResolution, viewportResizeMode);
+        Viewport = new Viewport(viewportSize, nativeResolution.Value, viewportResizeMode.Value);
 
         Camera.UpdateSize(Viewport.NativeResolution);
         ViewportInitialized = false;
