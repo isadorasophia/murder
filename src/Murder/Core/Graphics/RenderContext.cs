@@ -252,13 +252,13 @@ public class RenderContext : IDisposable
         {
             if (existingTarget.Width == width && existingTarget.Height == height)
             {
-                GameLogger.LogDebug($"Reusing existing RenderTarget2D {existingTarget.Name} of size {existingTarget.Width}x{existingTarget.Height}.");
+                // GameLogger.LogDebug($"Reusing existing RenderTarget2D {existingTarget.Name} of size {existingTarget.Width}x{existingTarget.Height}.");
                 existingTarget.Name = $"{name} (recycled)";
                 return existingTarget;
             }
 
             existingTarget.Dispose();
-            GameLogger.LogDebug($"Disposed existing RenderTarget2D {existingTarget.Name} of size {existingTarget.Width}x{existingTarget.Height}.");
+            // GameLogger.LogDebug($"Disposed existing RenderTarget2D {existingTarget.Name} of size {existingTarget.Width}x{existingTarget.Height}.");
         }
 
         var target = new RenderTarget2D(
