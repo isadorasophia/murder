@@ -246,7 +246,7 @@ public class RenderContext : IDisposable
     /// <param name="clearColor">Clear color for the new RenderTarget2D.</param>
     /// <param name="preserveContents">Whether to preserve the contents in the new RenderTarget2D.</param>
     /// <returns>A new instance of RenderTarget2D.</returns>
-    protected RenderTarget2D SetupRenderTarget(RenderTarget2D? existingTarget, int width, int height, Color clearColor, bool preserveContents)
+    protected RenderTarget2D SetupRenderTarget(RenderTarget2D? existingTarget, int width, int height, bool preserveContents)
     {
         existingTarget?.Dispose();
 
@@ -260,8 +260,8 @@ public class RenderContext : IDisposable
             0,
             preserveContents ? RenderTargetUsage.PreserveContents : RenderTargetUsage.DiscardContents
         );
-        _graphicsDevice.SetRenderTarget(target);
-        _graphicsDevice.Clear(clearColor);
+        //_graphicsDevice.SetRenderTarget(target);
+        //_graphicsDevice.Clear(clearColor);
         return target;
     }
 
@@ -527,11 +527,11 @@ public class RenderContext : IDisposable
         nameof(_finalTarget))]
     public virtual void UpdateViewport()
     {
-        _uiTarget = SetupRenderTarget(_uiTarget, Camera.Width, Camera.Height, Color.Transparent, false);
-        _mainTarget = SetupRenderTarget(_mainTarget, Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2, BackColor, true);
-        _tempTarget = SetupRenderTarget(_tempTarget, Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2, Color.Transparent, true);
-        _debugTarget = SetupRenderTarget(_debugTarget, Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2, BackColor, true);
-        _finalTarget = SetupRenderTarget(_finalTarget, Viewport.OutputRectangle.Size.X + CAMERA_BLEED, Viewport.OutputRectangle.Size.Y + CAMERA_BLEED, BackColor, true);
+        _uiTarget = SetupRenderTarget(_uiTarget, Camera.Width, Camera.Height, false);
+        _mainTarget = SetupRenderTarget(_mainTarget, Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2, true);
+        _tempTarget = SetupRenderTarget(_tempTarget, Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2, true);
+        _debugTarget = SetupRenderTarget(_debugTarget, Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2, true);
+        _finalTarget = SetupRenderTarget(_finalTarget, Viewport.OutputRectangle.Size.X + CAMERA_BLEED, Viewport.OutputRectangle.Size.Y + CAMERA_BLEED, true);
 
         GameBufferSize = new Point(Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2);
     }
