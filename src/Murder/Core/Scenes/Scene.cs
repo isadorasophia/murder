@@ -29,6 +29,7 @@ namespace Murder.Core
         /// Used to track events when the window (UI) refreshes.
         /// </summary>
         private Action? _onRefreshWindow = default;
+        private bool _isRefreshingWindow = false;
 
         [MemberNotNull(nameof(RenderContext))]
         public virtual void Initialize(GraphicsDevice graphics, GameProfile settings, RenderContextFlags flags)
@@ -80,6 +81,13 @@ namespace Murder.Core
         /// <returns></returns>
         public virtual void RefreshWindow(Point viewportSize, GraphicsDevice graphics, GameProfile settings)
         {
+            if (_isRefreshingWindow)
+            {
+                GameLogger.Warning("More than one RefreshWindow call detected in the same frame. Skipping redundant call.");
+                return;
+            }
+
+            _isRefreshingWindow = true;
             GameLogger.Verify(RenderContext is not null, "RenderContext should not be null at this point.");
 
             Point nativeResolution = new Point(settings.GameWidth, settings.GameHeight);
@@ -91,6 +99,8 @@ namespace Murder.Core
             {
                 _onRefreshWindow?.Invoke();
             }
+
+            _isRefreshingWindow = false;
         }
 
         public virtual void Start()
@@ -98,8 +108,8 @@ namespace Murder.Core
             World?.Start();
 
             // Since the viewport might be some other texture, we need to reset it to the main render target so we can measure it.
-            Game.GraphicsDevice.SetRenderTarget(null);
             RefreshWindow(new Point(Game.GraphicsDevice.Viewport.Width, Game.GraphicsDevice.Viewport.Height), Game.GraphicsDevice, Game.Profile);
+
             _calledStart = true;
         }
 
