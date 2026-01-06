@@ -273,8 +273,6 @@ public class RenderContext : IDisposable
         );
         target.Name = name;
 
-        //_graphicsDevice.SetRenderTarget(target);
-        //_graphicsDevice.Clear(clearColor);
         return target;
     }
 
