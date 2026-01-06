@@ -250,13 +250,6 @@ public class RenderContext : IDisposable
     {
         if (existingTarget != null && !existingTarget.IsDisposed)
         {
-            if (existingTarget.Width == width && existingTarget.Height == height)
-            {
-                // GameLogger.LogDebug($"Reusing existing RenderTarget2D {existingTarget.Name} of size {existingTarget.Width}x{existingTarget.Height}.");
-                existingTarget.Name = $"{name} (recycled)";
-                return existingTarget;
-            }
-
             existingTarget.Dispose();
             // GameLogger.LogDebug($"Disposed existing RenderTarget2D {existingTarget.Name} of size {existingTarget.Width}x{existingTarget.Height}.");
         }
