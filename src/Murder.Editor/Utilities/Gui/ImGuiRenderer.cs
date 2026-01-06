@@ -209,7 +209,7 @@ namespace Murder.Editor.ImGuiExtended
             };
 
             // Debug!
-            if (!string.IsNullOrEmpty(texture.Name))
+            if (!string.IsNullOrEmpty(texture.Name) && texture is not RenderTarget2D)
             {
                 if (_loadedTextureDebugIdentifiers.Contains(texture.Name))
                 {

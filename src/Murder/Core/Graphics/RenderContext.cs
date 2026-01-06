@@ -19,6 +19,7 @@ public class RenderContext : IDisposable
     public readonly Camera2D Camera;
 
     protected readonly RenderContextFlags Settings;
+    protected static int DiagnosticsUpdateViewportCount = 0;
 
     /// <summary>
     /// Intended to be the main gameplay batch, influenced by the camera.
@@ -546,7 +547,7 @@ public class RenderContext : IDisposable
         _mainTarget = SetupRenderTarget(_mainTarget, "Main", Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2, true);
         _tempTarget = SetupRenderTarget(_tempTarget, "Tempo", Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2, true);
         _debugTarget = SetupRenderTarget(_debugTarget, "Debug", Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2, true);
-        _finalTarget = SetupRenderTarget(_finalTarget, "Final", Viewport.OutputRectangle.Size.X + CAMERA_BLEED, Viewport.OutputRectangle.Size.Y + CAMERA_BLEED, true);
+        _finalTarget = SetupRenderTarget(_finalTarget, $"Final-{DiagnosticsUpdateViewportCount++}", Viewport.OutputRectangle.Size.X + CAMERA_BLEED, Viewport.OutputRectangle.Size.Y + CAMERA_BLEED, true);
 
         GameBufferSize = new Point(Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2);
     }

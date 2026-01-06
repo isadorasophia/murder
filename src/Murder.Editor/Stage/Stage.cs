@@ -7,6 +7,7 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Diagnostics;
 using Murder.Editor.Assets;
 using Murder.Editor.Components;
 using Murder.Editor.ImGuiExtended;
@@ -40,6 +41,11 @@ namespace Murder.Editor.Stages
         public string? FocusOnGroup = null;
 
         private readonly HashSet<int> _hiddenIds = [];
+        
+        /// <summary>
+        /// Is the scene texture bound to the screen?
+        /// </summary>
+        private bool _textureBound = false;
 
         [Flags]
         public enum StageType
@@ -142,26 +148,6 @@ namespace Murder.Editor.Stages
             Vector2 ratio = size.ToCore() / maxAxis;
             int maxSize = Calculator.RoundToInt(maxAxis);
 
-            var cameraSize = new Point(Calculator.RoundToEven(ratio.X * maxSize), Calculator.RoundToEven(ratio.Y * maxSize));
-
-            if (cameraSize != _renderContext.Camera.Size)
-            {
-                Point diff = _renderContext.Camera.Size - cameraSize;
-
-                if (_renderContext.RefreshWindow(Architect.GraphicsDevice, cameraSize, cameraSize, new ViewportResizeStyle(ViewportResizeMode.None)))
-                {
-                    if (_imGuiRenderTexturePtr == 0) // Not initialized yet
-                    {
-                        _imGuiRenderTexturePtr = _imGuiRenderer.BindTexture(_renderContext.LastRenderTarget!);
-                    }
-                    else // Just resizing the screen
-                    {
-                        _imGuiRenderer.BindTexture(_imGuiRenderTexturePtr, _renderContext.LastRenderTarget!, false);
-                    }
-                    _renderContext.Camera.Position += diff / 2;
-                }
-            }
-
             if (_world.GetUnique<EditorComponent>() is EditorComponent editorComponent)
             {
                 editorComponent.EditorHook.Offset = (topLeft * Architect.EditorSettings.DpiScale).Point();
@@ -173,6 +159,34 @@ namespace Murder.Editor.Stages
             drawList.PushClipRect(topLeft, bottomRight);
 
             DrawWorld();
+
+            var cameraSize = new Point(Calculator.RoundToEven(ratio.X * maxSize), Calculator.RoundToEven(ratio.Y * maxSize));
+
+            if (!_textureBound || cameraSize != _renderContext.Camera.Size)
+            {
+                Point diff = _renderContext.Camera.Size - cameraSize;
+
+                if (_renderContext.RefreshWindow(Architect.GraphicsDevice, cameraSize, cameraSize, new ViewportResizeStyle(ViewportResizeMode.None)))
+                {
+                    if (_renderContext.LastRenderTarget != null)
+                    {
+                        if (_imGuiRenderTexturePtr == 0) // Not initialized yet
+                        {
+                            _imGuiRenderTexturePtr = _imGuiRenderer.BindTexture(_renderContext.LastRenderTarget);
+                        }
+                        else // Just resizing the screen
+                        {
+                            _imGuiRenderer.BindTexture(_imGuiRenderTexturePtr, _renderContext.LastRenderTarget, false);
+                        }
+                        _renderContext.Camera.Position += diff / 2;
+                        _textureBound = true;
+                    }
+                    else
+                    {
+                        GameLogger.Error("Render context has no LastRenderTarget to bind");
+                    }
+                }
+            }
 
             _imGuiRenderer.BindTexture(_imGuiRenderTexturePtr, _renderContext.LastRenderTarget!, unloadPrevious: false);
             // Draw the game window
