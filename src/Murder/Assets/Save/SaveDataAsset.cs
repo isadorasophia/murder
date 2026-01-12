@@ -173,7 +173,7 @@ namespace Murder.Assets
 
                 Game.Instance.SetWaitForSaveComplete();
 
-                _pendingOperation = Task.Run(async delegate
+                _pendingOperation = pendingOperation.ContinueWith(async delegate
                 {
                     try
                     {
