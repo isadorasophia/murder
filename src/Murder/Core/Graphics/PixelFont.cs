@@ -226,6 +226,11 @@ public class PixelFontSize
         }
 
         RuntimeTextData data = TextDataServices.GetOrCreateText(this, text, new TextSettings() { MaxWidth = maxWidth, Scale = scale });
+        if (debugBox)
+        {
+            RenderServices.DrawHorizontalLine(spriteBatch, (int)position.X, (int)position.Y + 3, maxWidth, Color.Red * 0.25f, 0);
+            RenderServices.DrawVerticalLine(spriteBatch, (int)position.X + maxWidth, (int)position.Y - 4, 8, Color.Red, 0);
+        }
         return DrawImpl(data, spriteBatch, position, origin, scale, sort, color, strokeColor, shadowColor, debugBox, visibleCharacters >= 0 ? visibleCharacters : data.Length);
     }
 
