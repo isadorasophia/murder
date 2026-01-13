@@ -12,6 +12,7 @@ using Murder.Save;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Diagnostics;
 
 namespace Murder.Systems
 {
@@ -34,7 +35,13 @@ namespace Murder.Systems
             CheckAndTriggerRules(world, modified: true);
         }
 
-        public void OnRemoved(World world, ImmutableArray<Entity> entities) { }
+        public void OnRemoved(World world, ImmutableArray<Entity> entities) 
+        {
+            foreach (Entity e in entities)
+            {
+                e.RemoveRuleMatched();
+            }
+        }
 
         private void CheckAndTriggerRules(World world, bool modified)
         {
