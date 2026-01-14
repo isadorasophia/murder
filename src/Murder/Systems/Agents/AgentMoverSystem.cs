@@ -1,9 +1,13 @@
-﻿using Bang.Contexts;
+﻿using Bang;
+using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Components.Agents;
+using Murder.Components.Sound;
 using Murder.Core;
+using Murder.Core.Sounds;
+using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -30,22 +34,23 @@ namespace Murder.Systems
                 var agent = e.GetAgent();
                 var impulse = e.GetAgentImpulse();
 
-                if (
-                    !e.HasStrafing() && 
+                if (!e.HasStrafing() &&
                     !e.HasFacingTurn() &&
-                    impulse.Direction != null && 
+                    impulse.Direction != null &&
                     !impulse.Flags.HasFlag(AgentImpulseFlags.IgnoreFacing))
                 {
                     e.SetFacing(impulse.Impulse.Angle());
                 }
 
                 if (!impulse.Impulse.HasValue())
+                {
                     continue;
+                }
 
                 Vector2 startVelocity = e.TryGetVelocity()?.Velocity ?? Vector2.Zero;
 
                 // Use friction on any axis that's not receiving impulse or is receiving it in an oposing direction
-                var result = GetVelocity(e, agent, impulse, startVelocity);
+                Vector2 result = GetVelocity(e, agent, impulse, startVelocity);
 
                 e.RemoveFriction();     // Remove friction to move
                 e.SetVelocity(result); // Turn impulse into velocity
@@ -95,7 +100,7 @@ namespace Murder.Systems
             if (entity.TryGetInsideMovementModArea() is InsideMovementModAreaComponent areaList)
             {
                 var normalized = impulse.Impulse.Normalized();
-                
+
                 if (areaList.GetLatest() is AreaInfo insideArea)
                 {
                     float influence = OrientationHelper.GetOrientationAmount(normalized, insideArea.Orientation);
@@ -110,8 +115,81 @@ namespace Murder.Systems
                 }
             }
 
-            
+
             return Calculator.Approach(newVelocity, finalImpulse * speed * multiplier, accel * multiplier * Game.FixedDeltaTime);
+        }
+    }
+
+    [Filter(typeof(AgentComponent), typeof(AgentOnMoveTrackerComponent))]
+    [Watch(typeof(AgentOnMoveTrackerComponent))]
+    internal class AgentMoverSoundSystem : IFixedUpdateSystem, IReactiveSystem
+    {
+        public void OnAdded(World world, ImmutableArray<Entity> entities) { }
+
+        public void OnModified(World world, ImmutableArray<Entity> entities) { }
+
+        public void OnRemoved(World world, ImmutableArray<Entity> entities)
+        {
+            foreach (Entity e in entities)
+            {
+                if (e.TryGetSoundEventPositionTracker() is SoundEventPositionTrackerComponent tracker)
+                {
+                    Stop(tracker.Sound, e);
+                }
+            }
+        }
+
+        public void OnDeactivate(World world, ImmutableArray<Entity> entities)
+        {
+            OnRemoved(world, entities);
+        }
+
+        public void FixedUpdate(Context context)
+        {
+            foreach (Entity e in context.Entities)
+            {
+                AgentOnMoveTrackerComponent onMoveTracker = e.GetAgentOnMoveTracker();
+                if (IsMoving(e))
+                {
+                    Play(onMoveTracker.OnWalk, e);
+                }
+                else
+                {
+                    Stop(onMoveTracker.OnWalk, e);
+                }
+            }
+        }
+
+        private bool IsMoving(Entity e)
+        {
+            if (e.HasAgentPause())
+            {
+                return false;
+            }
+
+            return e.HasVelocity() || e.HasAgentImpulse() || e.HasMoveToPerfect();
+        }
+
+        private void Play(SoundEventId sound, Entity e)
+        {
+            if (SoundServices.IsPlaying(sound, e.EntityId))
+            {
+                return;
+            }
+
+            _ = SoundServices.Play(sound, e, SoundLayer.Sfx, SoundProperties.Persist);
+            e.SetSoundEventPositionTracker(sound);
+        }
+
+        private void Stop(SoundEventId sound, Entity e)
+        {
+            if (!SoundServices.IsPlaying(sound, e.EntityId))
+            {
+                return;
+            }
+
+            SoundServices.Stop(sound, fadeOut: true, e.EntityId);
+            e.RemoveSoundEventPositionTracker();
         }
     }
 }
