@@ -264,5 +264,11 @@ namespace Murder.Core.Geometry
         {
             return new Point(Calculator.Lerp(point1.X, point2.X, endFraction), Calculator.Lerp(point1.Y, point2.Y, endFraction));
         }
+
+        /// <summary>
+        /// Just a simple helpter to get half of this point.
+        /// </summary>
+        /// <returns></returns>
+        public Point Half() => new(this.X/ 2f, this.Y / 2f);
     }
 }
