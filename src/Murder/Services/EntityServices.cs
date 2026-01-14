@@ -299,16 +299,13 @@ public static class EntityServices
     /// <summary>
     /// Plays an animation or animation sequence. Loops the last animation.
     /// </summary>
-    public static SpriteComponent? PlaySpriteAnimation(this Entity entity, ImmutableArray<string> animations, Guid? replaceSpriteGuid = null)
+    public static SpriteComponent? PlaySpriteAnimation(this Entity entity, ImmutableArray<string> nextAnimations, Guid? replaceSpriteGuid = null)
     {
-        if (TryPlaySpriteAnimation(entity, animations, replaceSpriteGuid) is SpriteComponent aseprite)
-        {
-            return aseprite;
-        }
+        SpriteComponent? sprite = TryPlaySpriteAnimation(entity, nextAnimations, replaceSpriteGuid);
 
-        Debugger.Break();
-        GameLogger.Error($"Entity {entity.EntityId} doesn's have an Sprite component ({entity.Components.Count()} components, trying to play '{string.Join(',', animations)}')");
-        return null;
+        GameLogger.Verify(sprite is not null, 
+            $"Entity {entity.EntityId} doesn't have a sprite component ({entity.Components.Length} components, trying to play '{string.Join(',', nextAnimations)}')");
+        return sprite;
     }
 
     /// <summary>
@@ -347,19 +344,13 @@ public static class EntityServices
     /// <summary>
     /// Plays an animation or animation sequence. Loops the last animation.
     /// </summary>
-    /// <param name="entity"></param>
-    /// <param name="nextAnimations"></param>
-    /// <returns></returns>
     public static SpriteComponent? PlaySpriteAnimation(this Entity entity, params string[] nextAnimations)
     {
-        if (TryPlaySpriteAnimation(entity, nextAnimations) is SpriteComponent aseprite)
-        {
-            return aseprite;
-        }
+        SpriteComponent? sprite = TryPlaySpriteAnimation(entity, nextAnimations);
 
-        Debugger.Break();
-        GameLogger.Error($"Entity {entity.EntityId} doesn's have an Sprite component ({entity.Components.Count()} components, trying to play '{string.Join(',', nextAnimations)}')");
-        return null;
+        GameLogger.Verify(sprite is not null, 
+            $"Entity {entity.EntityId} doesn't have a sprite component ({entity.Components.Length} components, trying to play '{string.Join(',', nextAnimations)}')");
+        return sprite;
     }
 
     public static void RestartSpriteAnimation(this Entity entity)
