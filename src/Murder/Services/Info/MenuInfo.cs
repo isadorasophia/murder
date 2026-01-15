@@ -178,6 +178,12 @@ namespace Murder.Core.Input
             Resize(size);
         }
 
+        public MenuInfo(int size, int startSelectedAt) : this(size)
+        {
+            PreviousSelection = startSelectedAt;
+            Selection = startSelectedAt;
+        }
+
         public void Clamp()
         {
             if (Selection < 0 || Selection >= Length || !Options[Selection].Enabled)

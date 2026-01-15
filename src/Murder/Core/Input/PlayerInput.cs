@@ -440,6 +440,8 @@ public class PlayerInput
 
     public bool HorizontalMenu(ref MenuInfo currentInfo)
     {
+        MenuUpdate(ref currentInfo);
+
         if (currentInfo.Disabled)
         {
             return false;
@@ -447,15 +449,19 @@ public class PlayerInput
 
         currentInfo.JustMoved = false;
         VirtualAxis axis = GetAxis(MurderInputAxis.Ui);
+
+        bool pressed = HorizontalOrVerticalMenu(ref currentInfo, input: axis.TickX ? axis.IntValue.X : null);
 
         // Check for vertical overflow
         currentInfo.OverflowY = axis.TickY ? axis.IntValue.Y : 0;
 
-        return HorizontalOrVerticalMenu(ref currentInfo, input: axis.TickX ? axis.IntValue.X : null);
+        return pressed;
     }
 
     public bool VerticalMenu(ref MenuInfo currentInfo, SimpleMenuFlags flags = SimpleMenuFlags.None)
     {
+        MenuUpdate(ref currentInfo);
+
         if (currentInfo.Disabled)
         {
             return false;
@@ -464,10 +470,18 @@ public class PlayerInput
         currentInfo.JustMoved = false;
         VirtualAxis axis = GetAxis(MurderInputAxis.Ui);
 
+        bool pressed = HorizontalOrVerticalMenu(ref currentInfo, axis.TickY ? axis.IntValue.Y : null, flags);
+
         // Check for horizontal overflow
         currentInfo.OverflowX = axis.TickX ? axis.IntValue.X : 0;
 
-        return HorizontalOrVerticalMenu(ref currentInfo, axis.TickY ? axis.IntValue.Y : null, flags);
+        return pressed;
+    }
+
+    private static void MenuUpdate(ref MenuInfo currentInfo)
+    {
+        // still update the scroll!
+        currentInfo.SmoothScroll = Calculator.LerpSmooth(currentInfo.SmoothScroll, currentInfo.Scroll, Game.UnscaledDeltaTime, 0.1f);
     }
 
     private bool HorizontalOrVerticalMenu(ref MenuInfo currentInfo, float? input, SimpleMenuFlags flags = SimpleMenuFlags.None)
@@ -502,6 +516,8 @@ public class PlayerInput
             currentInfo.Press(Game.NowUnscaled);
         }
 
+        currentInfo.OverflowY = currentInfo.OverflowX = 0;
+
         if (input is not null)
         {
             // Fist check if we are clamping the menu
@@ -509,11 +525,13 @@ public class PlayerInput
             {
                 if (input.Value < 0 && currentInfo.Selection == 0)
                 {
+                    currentInfo.OverflowY = currentInfo.OverflowX = -1;
                     return pressed;
                 }
 
                 if (input.Value > 0 && currentInfo.Selection == currentInfo.Length - 1)
                 {
+                    currentInfo.OverflowY = currentInfo.OverflowX = 1;
                     return pressed;
                 }
             }
@@ -539,7 +557,6 @@ public class PlayerInput
             }
         }
 
-        currentInfo.SmoothScroll = Calculator.LerpSmooth(currentInfo.SmoothScroll, currentInfo.Scroll, Game.UnscaledDeltaTime, 0.1f);
         return pressed;
     }
 
