@@ -193,6 +193,11 @@ namespace Murder.Data
             Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(data.Identifier);
 
             CurrentLocalization = data;
+
+            if (MurderSaveServices.TryGetSave() is SaveData save)
+            {
+                save.BlackboardTracker.ClearFormattedTextCache();
+            }
         }
 
         [MemberNotNull(

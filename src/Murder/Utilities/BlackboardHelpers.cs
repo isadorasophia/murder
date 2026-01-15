@@ -52,7 +52,14 @@ public static partial class BlackboardHelpers
         return matched;
     }
 
-    public static bool FormatText(string text, out string newText)
+    [Flags]
+    public enum FormatTextFlags
+    {
+        None = 0,
+        Cache = 1
+    }
+
+    public static bool FormatText(string text, FormatTextFlags flags, out string newText)
     {
         newText = text;
 
@@ -60,6 +67,13 @@ public static partial class BlackboardHelpers
         if (matches.Count == 0)
         {
             return false;
+        }
+
+        BlackboardTracker tracker = MurderSaveServices.CreateOrGetSave().BlackboardTracker;
+        if (flags.HasFlag(FormatTextFlags.Cache) && tracker.TryFetchFormattedText(text) is string cachedFormattedText)
+        {
+            newText = cachedFormattedText;
+            return true;
         }
 
         ReadOnlySpan<char> rawText = text;
@@ -71,7 +85,7 @@ public static partial class BlackboardHelpers
             result.Append(rawText.Slice(lastIndex, match.Index - lastIndex));
 
             string fieldName = match.Groups[1].Value;
-            string? value = MurderSaveServices.CreateOrGetSave().BlackboardTracker.GetValueAsString(fieldName);
+            string? value = tracker.GetValueAsString(fieldName);
 
             if (value is null)
             {
@@ -89,6 +103,12 @@ public static partial class BlackboardHelpers
         }
 
         newText = result.ToString();
+
+        if (flags.HasFlag(FormatTextFlags.Cache))
+        {
+            tracker.CacheFormattedText(text, newText);
+        }
+
         return true;
     }
 

@@ -8,6 +8,7 @@ using Murder.Diagnostics;
 using Murder.Save;
 using Murder.Services;
 using System.Collections.Immutable;
+using System.Text.Json.Serialization;
 
 namespace Murder.Assets
 {

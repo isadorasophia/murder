@@ -16,6 +16,7 @@ using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using static Murder.Utilities.BlackboardHelpers;
 
 namespace Murder.Core.Dialogs
 {
@@ -627,7 +628,7 @@ namespace Murder.Core.Dialogs
             {
                 if (input is null) return string.Empty;
 
-                _ = BlackboardHelpers.FormatText(input, out string result);
+                _ = BlackboardHelpers.FormatText(input, FormatTextFlags.None, out string result);
                 return result;
             }
 
@@ -666,7 +667,7 @@ namespace Murder.Core.Dialogs
                 line = line.WithSpeakerAndPortrait(_character.Speaker, _character.Portrait);
             }
 
-            if (!BlackboardHelpers.FormatText(text.Value, out string result))
+            if (!BlackboardHelpers.FormatText(text.Value, FormatTextFlags.None, out string result))
             {
                 return line;
             }

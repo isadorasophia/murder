@@ -50,6 +50,13 @@ namespace Murder.Save
         private readonly Dictionary<Guid, Character> _characterCache = [];
 
         /// <summary>
+        /// Cached formatted texts.
+        /// Maps raw string -> formatted string.
+        /// </summary>
+        [JsonIgnore]
+        private readonly Dictionary<string, string> _formattedText = [];
+
+        /// <summary>
         /// Triggered modified values that must be cleaned up.
         /// </summary>
         [Serialize, HideInEditor]
@@ -869,6 +876,26 @@ namespace Murder.Save
                 FieldName = fieldName;
                 Type = t;
             }
+        }
+
+        public void CacheFormattedText(string text, string result)
+        {
+            _formattedText[text] = result;
+        }
+
+        public string? TryFetchFormattedText(string text)
+        {
+            if (_formattedText.TryGetValue(text, out string? result))
+            {
+                return result;
+            }
+
+            return null;
+        }
+
+        public void ClearFormattedTextCache()
+        {
+            _formattedText.Clear();
         }
     }
 }
