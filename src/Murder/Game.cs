@@ -423,10 +423,6 @@ namespace Murder
 
             _game?.Initialize();
 
-            // Setting window size
-            Fullscreen = false;
-            // RefreshWindow();
-
             // Propagate dianostics mode settings.
             World.DIAGNOSTICS_MODE = DIAGNOSTICS_MODE;
         }
@@ -461,6 +457,8 @@ namespace Murder
                 // borderless.
                 Window.IsBorderlessEXT = false;
             }
+
+            ActiveScene?.RenderContext?.RefreshWindow(GraphicsDevice, _screenSize);
         }
 
         /// <summary>
