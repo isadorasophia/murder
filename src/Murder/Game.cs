@@ -423,6 +423,8 @@ namespace Murder
 
             _game?.Initialize();
 
+            RefreshWindow();
+
             // Propagate dianostics mode settings.
             World.DIAGNOSTICS_MODE = DIAGNOSTICS_MODE;
         }
@@ -447,6 +449,7 @@ namespace Murder
             {
                 SetWindowSize(_screenSize, false);
             }
+
             _screenSize = new Point(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
             _graphics.ApplyChanges();
 
@@ -457,8 +460,6 @@ namespace Murder
                 // borderless.
                 Window.IsBorderlessEXT = false;
             }
-
-            ActiveScene?.RenderContext?.RefreshWindow(GraphicsDevice, _screenSize);
         }
 
         /// <summary>

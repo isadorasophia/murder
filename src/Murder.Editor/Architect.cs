@@ -94,6 +94,9 @@ namespace Murder.Editor
 
             base.Initialize();
 
+            // make sure editor never *starts* on full screen.
+            Fullscreen = false;
+
             ImGuiRenderer.InitTheme();
         }
 
