@@ -484,6 +484,7 @@ namespace Murder
         public virtual void SetWindowSize(Point screenSize, bool remember)
         {
             // _graphics.SynchronizeWithVerticalRetrace = true;
+            _windowSettingsDirty = false;
 
             if (Fullscreen)
             {
