@@ -74,20 +74,10 @@ namespace Murder.Core
         /// <summary>
         /// Refresh the window size, updating the camera and render context.
         /// </summary>
-        /// <param name="viewportSize"></param>
-        /// <param name="graphics"></param>
-        /// <param name="settings"></param>
-        /// <returns></returns>
-        public virtual void RefreshWindow(Point viewportSize, GraphicsDevice graphics, GameProfile settings)
+        public virtual void OnClientWindowChanged(Point viewportSize)
         {
-            GameLogger.Verify(RenderContext is not null, "RenderContext should not be null at this point.");
-
-            bool changed = RenderContext.RefreshWindow(graphics, viewportSize);
-
-            if (changed)
-            {
-                _onRefreshWindow?.Invoke();
-            }
+            RenderContext?.OnClientWindowChanged(new(viewportSize));
+            _onRefreshWindow?.Invoke();
         }
 
         public virtual void Start()
@@ -176,6 +166,7 @@ namespace Murder.Core
 
         /// <summary>
         /// This will trigger UI refresh operations.
+        /// DO NOT do any operations that rely on the main thread.
         /// </summary>
         public void AddOnWindowRefresh(Action notification)
         {

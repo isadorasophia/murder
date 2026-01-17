@@ -117,8 +117,15 @@ namespace Murder.Editor.CustomEditors
             if (Architect.EditorSettings.StageInfo.TryGetValue(targetGuid, out PersistStageInfo info))
             {
                 renderContext.Camera.Position = info.Position;
-                renderContext.RefreshWindow(Architect.GraphicsDevice, info.Size, info.Size, new ViewportResizeStyle(ViewportResizeMode.None));
+                renderContext.OnClientWindowChanged(
+                    new WindowChangeSettings(info.Size) 
+                    { 
+                        NativeResolution = info.Size, 
+                        ResizeStyle = new ViewportResizeStyle(ViewportResizeMode.None) 
+                    },
+                    force: true);
             }
+
             else if (target is not PrefabAsset)
             {
                 renderContext.Camera.Position = Vector2.Zero;

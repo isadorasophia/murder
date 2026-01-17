@@ -92,10 +92,8 @@ namespace Murder.Editor
 
             InitializeImGui();
 
-            base.Initialize();
-
-            // make sure editor never *starts* on full screen.
-            Fullscreen = false;
+            base.Initialize(); 
+            OnWindowChanged();
 
             ImGuiRenderer.InitTheme();
         }
@@ -136,6 +134,15 @@ namespace Murder.Editor
                 return;
             }
 
+            if (Fullscreen)
+            {
+                Fullscreen = false;
+
+                // assume we never want fullscreen
+                _graphics.IsFullScreen = false;
+                Window.IsBorderlessEXT = false;
+            }
+
             if (!IsMaximized() && EditorSettings.WindowStartPosition.X > 0 && EditorSettings.WindowStartPosition.Y > 0)
             {
                 Point startPos = EditorSettings.WindowStartPosition;
@@ -152,31 +159,20 @@ namespace Murder.Editor
                 {
                     // This is too big, the user probably just wants the screen to be maximized.
                     MaximizeWindow();
-                    _graphics.PreferredBackBufferWidth = displaySize.X;
-                    _graphics.PreferredBackBufferHeight = displaySize.Y;
                 }
                 else
                 {
                     // Clamp to the current display size with a small margin.
-                    Point minSize = new(800, 600);
-                    Point maxSize = (displaySize - new Point(100, 100)).Max(minSize);
-                    screenSize = EditorSettings.WindowSize.Clamp(minSize, maxSize);
-
                     _graphics.PreferredBackBufferWidth = screenSize.X;
                     _graphics.PreferredBackBufferHeight = screenSize.Y;
+
+                    _graphics.ApplyChanges();
                 }
             }
 
             if (EditorSettings.StartMaximized)
             {
-                if (GetWindowPosition() is Point startPosition)
-                {
-                    SetWindowPosition(new Point(startPosition.X, startPosition.Y));
-                }
-
                 MaximizeWindow();
-                _graphics.PreferredBackBufferWidth = displaySize.X;
-                _graphics.PreferredBackBufferHeight = displaySize.Y;
             }
         }
 
@@ -201,9 +197,10 @@ namespace Murder.Editor
 
                 // Manually set things up in the editor scene.
                 _editorScene.Reload();
+                OnWindowChanged();
 
                 // This is important otherwise the editor will inherit the shader values from the game!
-                _editorScene.UpdateViewportSizes();
+                _editorScene.OnViewportChanged();
             }
 
             // Here, let's mock what a real "quit" would do.
@@ -214,11 +211,6 @@ namespace Murder.Editor
             (_gameData as EditorDataManager)?.RefreshAfterSave();
 
             _playerInput.ClearBinds(MurderInputButtons.PlayGame);
-
-            if (Fullscreen)
-            {
-                Fullscreen = false;
-            }
         }
 
         /// <summary>
@@ -265,8 +257,6 @@ namespace Murder.Editor
 
             SaveWindowPosition();
             _isPlayingGame = true;
-
-            //ActiveScene?.RefreshWindow(new Point(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), GraphicsDevice, Profile);
 
             bool shouldLoad = true;
             if (info.IsQuickplay)
@@ -468,7 +458,12 @@ namespace Murder.Editor
 
         protected void MaximizeWindow()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            // Not sure what is not supported here?
+            bool supportedOs = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || 
+                RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ||
+                RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+
+            if (supportedOs)
             {
                 SDL3.SDL.SDL_MaximizeWindow(Window.Handle);
             }
@@ -505,7 +500,7 @@ namespace Murder.Editor
             return false;
         }
 
-        public override void RefreshWindow()
+        protected override void RefreshWindow()
         {
             ImGuiIOPtr io = ImGui.GetIO();
             io.ConfigFlags = ImGuiConfigFlags.DockingEnable;

@@ -260,6 +260,7 @@ namespace Murder
         protected virtual bool AlwaysUpdateBeforeFixed => true;
 
         private Point _windowedSize = Point.Zero;
+        private bool _windowSettingsDirty = true;
 
         /// <summary>
         /// Gets or sets the fullscreen mode of the game.
@@ -271,8 +272,13 @@ namespace Murder
             set
             {
                 Preferences.SetFullScreen(value);
-                RefreshWindow();
+                OnWindowChanged();
             }
+        }
+
+        public void OnWindowChanged()
+        {
+            _windowSettingsDirty = true;
         }
 
         /// <summary>
@@ -356,14 +362,16 @@ namespace Murder
             Instance = this;
 
             Window.AllowUserResizing = true;
-
             Window.ClientSizeChanged += (s, e) =>
             {
                 if (s is not Microsoft.Xna.Framework.GameWindow window)
                 {
-                    throw new Exception("Window is not a GameWindow");
+                    GameLogger.Error($"How do we have an invalid window of {s?.GetType()}?");
+                    return;
                 }
-                ActiveScene?.RefreshWindow(new(window.ClientBounds.Width, window.ClientBounds.Height), GraphicsDevice, Profile);
+
+                // propagate to the scene
+                ActiveScene?.OnClientWindowChanged(new(window.ClientBounds.Width, window.ClientBounds.Height));
             };
 
             Content.RootDirectory = "Content";
@@ -423,10 +431,10 @@ namespace Murder
 
             _game?.Initialize();
 
-            RefreshWindow();
-
             // Propagate dianostics mode settings.
             World.DIAGNOSTICS_MODE = DIAGNOSTICS_MODE;
+
+            RefreshWindow();
         }
 
         /// <summary>
@@ -435,7 +443,7 @@ namespace Murder
         /// <remarks>
         /// Refreshes the active scene with new graphics settings, if present.
         /// </remarks>
-        public virtual void RefreshWindow()
+        protected virtual void RefreshWindow()
         {
             SetTargetFps(Profile.TargetFps);
 
@@ -451,7 +459,6 @@ namespace Murder
             }
 
             _screenSize = new Point(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
-            _graphics.ApplyChanges();
 
             if (!Fullscreen)
             {
@@ -460,6 +467,9 @@ namespace Murder
                 // borderless.
                 Window.IsBorderlessEXT = false;
             }
+
+            ActiveScene?.OnClientWindowChanged(_screenSize);
+            _windowSettingsDirty = false;
         }
 
         /// <summary>
@@ -501,6 +511,8 @@ namespace Murder
                     _graphics.PreferredBackBufferHeight = screenSize.Y;
                 }
             }
+
+            _graphics.ApplyChanges();
         }
 
         /// <summary>
@@ -808,6 +820,11 @@ namespace Murder
         {
             GameLogger.Verify(ActiveScene is not null);
 
+            if (_windowSettingsDirty)
+            {
+                RefreshWindow();
+            }
+
             if (!ActiveScene.Loaded && ActiveScene.RenderContext is RenderContext renderContext)
             {
                 OnLoadingDraw(renderContext);
@@ -841,6 +858,7 @@ namespace Murder
             {
                 ActiveScene.DrawEnd(); // <==== End RenderContext draw call
             }
+
             base.Draw(gameTime); // Monogame/XNA internal Draw
 
             if (DIAGNOSTICS_MODE)

@@ -271,7 +271,7 @@ public partial class EditorScene
     private void RefreshEditorWindow()
     {
         Architect.Instance.SaveWindowPosition();
-        Architect.Instance.RefreshWindow();
+        Architect.Instance.OnWindowChanged();
     }
 
     private void PackAssetsToPublishedGame()

@@ -98,7 +98,12 @@ public class RenderContext : IDisposable
     protected GraphicsDevice _graphicsDevice;
 
     public Point GameBufferSize;
-    protected bool ViewportInitialized = false;
+
+    /// <summary>
+    /// Set when the window size has a change.
+    /// </summary>
+    private WindowChangeSettings? _pendingWindowSettings = null;
+    private bool _initializedViewport = false;
 
     public RenderTarget2D? LastRenderTarget => _finalTarget;
 
@@ -300,39 +305,43 @@ public class RenderContext : IDisposable
         _spriteBatches[index] = batch;
     }
 
-
     /// <summary>
     /// Refreshes the window with the new viewport size and camera scale.
     /// </summary>
     /// <returns>
     /// Whether the window actually required a refresh.
     /// </returns>
-    public bool RefreshWindow(GraphicsDevice graphicsDevice, Point viewportSize, Point? nativeResolution = null, ViewportResizeStyle? viewportResizeMode = null)
+    private bool RefreshWindow()
     {
-        nativeResolution ??= new Point(Game.Profile.GameWidth, Game.Profile.GameHeight);
-        viewportResizeMode ??= Game.Profile.ResizeStyle;
-
-        // No changes, skip
-        if (!Viewport.HasChanges(viewportSize, nativeResolution.Value))
+        if (_pendingWindowSettings is not WindowChangeSettings settings)
         {
+            // not really updated?
             return false;
         }
-        
-        _graphicsDevice = graphicsDevice;
-        Viewport = new Viewport(viewportSize, nativeResolution.Value, viewportResizeMode.Value);
+
+        Point nativeResolution = settings.NativeResolution ?? new(Game.Profile.GameWidth, Game.Profile.GameHeight);
+        ViewportResizeStyle resizeStyle = settings.ResizeStyle ?? Game.Profile.ResizeStyle;
+
+        Viewport = new Viewport(settings.Size, nativeResolution, resizeStyle);
 
         Camera.UpdateSize(Viewport.NativeResolution);
-        ViewportInitialized = false;
+        _initializedViewport = false;
 
         return true;
     }
 
     public virtual void Begin()
     {
-        if (!ViewportInitialized)
+        if (_pendingWindowSettings is not null)
+        {
+            RefreshWindow();
+            _pendingWindowSettings = null;
+        }
+
+        if (!_initializedViewport)
         {
             UpdateViewport();
-            ViewportInitialized = true;
+            _initializedViewport = true;
         }
 
         // no one should interfere with camera settings at this point.
@@ -534,9 +543,22 @@ public class RenderContext : IDisposable
         stream.Close();
     }
 
-    public virtual void SetViewportDirty()
+    public virtual bool OnClientWindowChanged(WindowChangeSettings settings, bool force = false)
     {
-        ViewportInitialized = false;
+        Point nativeResolution = settings.NativeResolution ?? new(Game.Profile.GameWidth, Game.Profile.GameHeight);
+        if (!force && Viewport.Size == settings.Size && Viewport.NativeResolution == nativeResolution)
+        {
+            // No changes, skip
+            return false;
+        }
+
+        _pendingWindowSettings = settings;
+        return true;
+    }
+
+    public virtual void OnViewportChanged()
+    {
+        _initializedViewport = false;
     }
 
     [MemberNotNull(
@@ -632,4 +654,15 @@ public class RenderContext : IDisposable
     {
         
     }
+}
+
+public struct WindowChangeSettings
+{
+    public Point Size;
+
+    public Point? NativeResolution { get; init; } = null;
+
+    public ViewportResizeStyle? ResizeStyle { get; init; } = null;
+
+    public WindowChangeSettings(Point size) => Size = size;
 }

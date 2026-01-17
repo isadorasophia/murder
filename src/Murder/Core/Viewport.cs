@@ -13,6 +13,7 @@ public readonly struct Viewport
     /// The size of the viewport (tipically the game's window)
     /// </summary>
     public readonly Point Size;
+
     /// <summary>
     /// The resolution that the game is actually rendered
     /// </summary>
@@ -271,9 +272,5 @@ public readonly struct Viewport
             Calculator.RoundToInt((viewportSize.Y - targetSize.Y) / 2f),
             targetSize.X,
             targetSize.Y);
-    }
-    public bool HasChanges(Point size, Vector2 scale)
-    {
-        return Size != size || Scale != scale;
     }
 }

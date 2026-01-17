@@ -166,7 +166,13 @@ namespace Murder.Editor.Stages
             {
                 Point diff = _renderContext.Camera.Size - cameraSize;
 
-                if (_renderContext.RefreshWindow(Architect.GraphicsDevice, cameraSize, cameraSize, new ViewportResizeStyle(ViewportResizeMode.None)))
+                bool updated = _renderContext.OnClientWindowChanged(new WindowChangeSettings(cameraSize)
+                {
+                    NativeResolution = cameraSize,
+                    ResizeStyle = new ViewportResizeStyle(ViewportResizeMode.None)
+                }, force: true);
+
+                if (updated)
                 {
                     if (_renderContext.LastRenderTarget != null)
                     {

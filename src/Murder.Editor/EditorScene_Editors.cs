@@ -430,9 +430,9 @@ namespace Murder.Editor
             return asset.Guid;
         }
 
-        public void UpdateViewportSizes()
+        public void OnViewportChanged()
         {
-            _lastActiveEditorInstance?.SharedRenderContext.SetViewportDirty();
+            _lastActiveEditorInstance?.SharedRenderContext.OnViewportChanged();
         }
     }
 }

@@ -328,7 +328,11 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                         _windowWidth = Game.Instance.Window.ClientBounds.Width;
                         _windowHeight = Game.Instance.Window.ClientBounds.Height;
                         Point windowSize = new Point(_windowWidth, _windowHeight);
-                        render.RefreshWindow(Game.GraphicsDevice, windowSize, new Point(render.Viewport.NativeResolution.X, render.Viewport.NativeResolution.Y), Game.Profile.ResizeStyle);
+
+                        render.OnClientWindowChanged(new WindowChangeSettings(windowSize)
+                        {
+                            NativeResolution = new Point(render.Viewport.NativeResolution.X, render.Viewport.NativeResolution.Y)
+                        });
                     }
 
                     ImGui.EndTabItem();
@@ -417,7 +421,8 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         Game.Instance.Fullscreen = false;
         Game.Instance.SetWindowSize(windowSize, false);
         Game.Instance.GraphicsDeviceManager.ApplyChanges();
-        render.RefreshWindow(Game.GraphicsDevice, windowSize, new Point(Game.Profile.GameWidth, Game.Profile.GameHeight), Game.Profile.ResizeStyle);
+
+        render.OnClientWindowChanged(new(windowSize));
     }
 
     private static void ResizeWindow(float scale, RenderContext render)
@@ -426,7 +431,11 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         Game.Instance.Fullscreen = false;
         Game.Instance.SetWindowSize(windowSize, false);
         Game.Instance.GraphicsDeviceManager.ApplyChanges();
-        render.RefreshWindow(Game.GraphicsDevice, windowSize, new Point(render.Viewport.NativeResolution.X, render.Viewport.NativeResolution.Y), Game.Profile.ResizeStyle);
+
+        render.OnClientWindowChanged(new WindowChangeSettings(windowSize)
+        {
+            NativeResolution = new Point(render.Viewport.NativeResolution.X, render.Viewport.NativeResolution.Y)
+        });
     }
 
     public void Update(Context context)
