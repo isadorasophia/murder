@@ -174,10 +174,12 @@ namespace Murder.Assets
 
                 Game.Instance.SetWaitForSaveComplete();
 
-                _pendingOperation = pendingOperation.ContinueWith(async delegate
+                _pendingOperation = Task.Run(async delegate
                 {
                     try
                     {
+                        await pendingOperation;
+
                         SavedWorld state = await SavedWorld.CreateAsync(world, entitiesOnSaveRequested);
                         Game.Data.AddAssetForCurrentSave(state);
 
@@ -186,6 +188,8 @@ namespace Murder.Assets
                         Game.Data.RemoveAssetForCurrentSave(previousState);
 
                         SavedWorlds = SavedWorlds.SetItem(world.WorldAssetGuid, state.Guid);
+
+                        GameLogger.Log($"Finished persisting world {world.WorldAssetGuid}");
                     }
                     catch (Exception e)
                     {
@@ -197,12 +201,15 @@ namespace Murder.Assets
 
         public bool HasFinishedSaveWorld()
         {
-            if (_pendingOperation is null)
+            lock (_saveLock)
             {
-                return true;
-            }
+                if (_pendingOperation is null)
+                {
+                    return true;
+                }
 
-            return _pendingOperation.IsCompleted;
+                return _pendingOperation.IsCompleted;
+            }
         }
 
         /// <summary>

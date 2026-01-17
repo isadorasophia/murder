@@ -165,8 +165,6 @@ namespace Murder.Editor
                     // Clamp to the current display size with a small margin.
                     _graphics.PreferredBackBufferWidth = screenSize.X;
                     _graphics.PreferredBackBufferHeight = screenSize.Y;
-
-                    _graphics.ApplyChanges();
                 }
             }
 
