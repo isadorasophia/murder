@@ -125,14 +125,16 @@ namespace Murder.Editor.CustomEditors
                     },
                     force: true);
             }
-
-            else if (target is not PrefabAsset)
+            else if (target is PrefabAsset)
+            {
+                renderContext.Camera.Position = -renderContext.Camera.Size / 2f;
+            }
+            else
             {
                 renderContext.Camera.Position = Vector2.Zero;
             }
 
             _asset = (GameAsset)target;
-
             OnSwitchAsset(imGuiRenderer, renderContext, overwrite);
         }
 

@@ -35,6 +35,7 @@ namespace Murder.Editor.CustomEditors
                 stage.SelectEntity(entity, true, clear: true);
                 stage.EditorHook.EditorMode = EditorHook.EditorModes.EditMode;
                 stage.EditorHook.CanSwitchModes = false;
+                stage.EditorHook.CurrentZoomLevel = 5;
 
                 InitializeStage(stage, _asset.Guid);
 

@@ -160,7 +160,7 @@ namespace Murder.Editor.Stages
 
             DrawWorld();
 
-            var cameraSize = new Point(Calculator.RoundToEven(ratio.X * maxSize), Calculator.RoundToEven(ratio.Y * maxSize));
+            Point cameraSize = new(Calculator.RoundToEven(ratio.X * maxSize), Calculator.RoundToEven(ratio.Y * maxSize));
 
             if (!_textureBound || cameraSize != _renderContext.Camera.Size)
             {
@@ -170,7 +170,7 @@ namespace Murder.Editor.Stages
                 {
                     NativeResolution = cameraSize,
                     ResizeStyle = new ViewportResizeStyle(ViewportResizeMode.None)
-                }, force: true);
+                });
 
                 if (updated)
                 {

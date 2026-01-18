@@ -422,7 +422,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         Game.Instance.SetWindowSize(windowSize, false);
         Game.Instance.GraphicsDeviceManager.ApplyChanges();
 
-        render.OnClientWindowChanged(new(windowSize));
+        render.OnClientWindowChanged(new(windowSize), force: true);
     }
 
     private static void ResizeWindow(float scale, RenderContext render)
@@ -435,7 +435,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         render.OnClientWindowChanged(new WindowChangeSettings(windowSize)
         {
             NativeResolution = new Point(render.Viewport.NativeResolution.X, render.Viewport.NativeResolution.Y)
-        });
+        }, force: true);
     }
 
     public void Update(Context context)
