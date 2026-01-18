@@ -80,7 +80,14 @@ namespace Murder.Editor.CustomFields
             IEnumerable<(T Key, U Value)> values;
             if (canbeOrdered)
             {
-                values = dictionary.Select(t => (t.Key, t.Value)).OrderBy(t => t.Key);
+                if (typeof(T) == typeof(Guid))
+                {
+                    values = dictionary.Select(t => (t.Key, t.Value)).OrderBy(t => Game.Data.TryGetAsset((Guid)(object)t.Key)?.Name);
+                }
+                else
+                {
+                    values = dictionary.Select(t => (t.Key, t.Value)).OrderBy(t => t.Key);
+                }
             }
             else
             {
