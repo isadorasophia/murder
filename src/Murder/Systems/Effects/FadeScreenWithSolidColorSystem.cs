@@ -43,29 +43,52 @@ namespace Murder.Systems
             _fadeInTime = -1;
             _fadeOutTime = -1;
 
-            foreach (Entity e in entities)
+            Entity? candidate = null;
+            if (entities.Length > 1)
             {
-                FadeScreenWithSolidColorComponent f = e.GetFadeScreenWithSolidColor();
-                switch (f.FadeType)
+                GameLogger.Warning("Received more than one FadeScreenWithSolidColorComponent in the same frame!?");
+
+                foreach (Entity e in entities)
                 {
-                    case FadeType.In:
-                        // GameLogger.Log("Received fade in.");
-
-                        _fadeInTime = Game.NowUnscaled;
-                        break;
-
-                    case FadeType.Out:
-                        // GameLogger.Log("Received fade out.");
-
-                        _fadeOutTime = Game.NowUnscaled;
-                        break;
+                    FadeScreenWithSolidColorComponent f = e.GetFadeScreenWithSolidColor();
+                    if (f.FadeType == FadeType.Out)
+                    {
+                        candidate = e;
+                    }
                 }
 
-                _color = f.Color;
-                _duration = f.Duration;
-                _currentSort = f.Sort;
-                _targetBatch = f.BatchId;
+                // just grab the first one, then.
+                candidate ??= entities[0];
             }
+            else if (entities.Length > 0)
+            {
+                candidate = entities[0];
+            }
+            else
+            {
+                return;
+            }
+
+            FadeScreenWithSolidColorComponent fade = candidate.GetFadeScreenWithSolidColor();
+            switch (fade.FadeType)
+            {
+                case FadeType.In:
+                    // GameLogger.Log("Received fade in.");
+
+                    _fadeInTime = Game.NowUnscaled;
+                    break;
+
+                case FadeType.Out:
+                    // GameLogger.Log("Received fade out.");
+
+                    _fadeOutTime = Game.NowUnscaled;
+                    break;
+            }
+
+            _color = fade.Color;
+            _duration = fade.Duration;
+            _currentSort = fade.Sort;
+            _targetBatch = fade.BatchId;
         }
 
         public void OnRemoved(World world, ImmutableArray<Entity> entities) { }
