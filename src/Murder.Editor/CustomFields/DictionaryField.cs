@@ -1,6 +1,7 @@
 ﻿using ImGuiNET;
 using Murder.Attributes;
 using Murder.Core.Sounds;
+using Murder.Diagnostics;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
@@ -182,6 +183,7 @@ namespace Murder.Editor.CustomFields
                     if (dictionary.ContainsKey(_cachedModifiedKey))
                     {
                         // Key is already present, ignore!
+                        GameLogger.Error($"Unable to add {_cachedModifiedKey} to the collection, we don't support duplicates on dictionaries!");
                     }
                     else if (dictionary is ImmutableDictionary<T, U> immutable)
                     {
