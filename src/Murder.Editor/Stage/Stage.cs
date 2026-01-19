@@ -170,7 +170,7 @@ namespace Murder.Editor.Stages
                 {
                     NativeResolution = cameraSize,
                     ResizeStyle = new ViewportResizeStyle(ViewportResizeMode.None)
-                });
+                }, force: !_textureBound);
 
                 if (updated)
                 {
