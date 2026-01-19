@@ -557,26 +557,26 @@ namespace Murder.Core.Dialogs
                 case FactKind.Bool:
                     bool @bool = action.BoolValue!.Value;
 
-                    tracker.SetBool(fact.Blackboard, fact.Name, action.Kind, @bool);
+                    tracker.SetBool(fact.Blackboard, fact.Name, action.Kind, @bool, character: Guid);
                     tracker.OnFieldModifiedByDialogue(world, fact.Blackboard, fact.Name, action.Kind, @bool);
                     break;
 
                 case FactKind.Int:
                     int @int = action.IntValue!.Value;
 
-                    tracker.SetInt(fact.Blackboard, fact.Name, action.Kind, @int);
+                    tracker.SetInt(fact.Blackboard, fact.Name, action.Kind, @int, character: Guid);
                     tracker.OnFieldModifiedByDialogue(world, fact.Blackboard, fact.Name, action.Kind, @int);
                     break;
 
                 case FactKind.Float:
                     float @float = action.FloatValue!.Value;
 
-                    tracker.SetFloat(fact.Blackboard, fact.Name, action.Kind, @float);
+                    tracker.SetFloat(fact.Blackboard, fact.Name, action.Kind, @float, character: Guid);
                     tracker.OnFieldModifiedByDialogue(world, fact.Blackboard, fact.Name, action.Kind, @float);
                     break;
 
                 case FactKind.String:
-                    tracker.SetString(fact.Blackboard, fact.Name, action.StrValue!);
+                    tracker.SetString(fact.Blackboard, fact.Name, action.StrValue!, character: Guid);
                     break;
             }
 
