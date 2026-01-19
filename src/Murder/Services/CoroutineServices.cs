@@ -37,6 +37,13 @@ public static class CoroutineServices
 
     public static Coroutine FireAfter(this World world, float seconds, Action action, CoroutineFlags flags = CoroutineFlags.None)
     {
+        if (seconds == 0)
+        {
+            // immediately trigger
+            action.Invoke();
+            return new();
+        }
+
         if (world is not MonoWorld murderWorld)
         {
             GameLogger.Warning("Unable to run coroutine on a world that is not MonoWorld.");
