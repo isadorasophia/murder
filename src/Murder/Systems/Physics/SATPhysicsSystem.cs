@@ -100,7 +100,8 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                     ignoreCollisions = true;
                 }
 
-                if (collider is not null && collider.Value.Layer == CollisionLayersBase.TRIGGER)
+                if (collider is not null && 
+                    (collider.Value.HasLayer(CollisionLayersBase.TRIGGER) || collider.Value.Layer == CollisionLayersBase.NONE))
                 {
                     ignoreCollisions = true;
                 }

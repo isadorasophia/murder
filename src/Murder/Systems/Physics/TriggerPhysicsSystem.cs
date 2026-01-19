@@ -143,7 +143,13 @@ namespace Murder.Systems.Physics
 
             // Actors and Hitboxes interact with triggers.
             // Triggers don't touch other triggers, and so on.
-            bool thisIsAnActor = IsActor(e);
+            bool isActorOrHitbox = IsActorOrHitbox(e);
+            bool isTrigger = IsTrigger(e);
+
+            if (!isActorOrHitbox && !isTrigger)
+            {
+                return;
+            }
 
             _others.Clear();
             Rectangle boundingBox = collider.GetBoundingBox(e.GetGlobalTransform().Point, e.FetchScale());
@@ -174,7 +180,7 @@ namespace Murder.Systems.Physics
 
                 if (shouldAlert)
                 {
-                    SendCollisionMessages(thisIsAnActor ? other : e, thisIsAnActor ? e : other, CollisionDirection.Exit);
+                    SendCollisionMessages(isActorOrHitbox ? other : e, isActorOrHitbox ? e : other, CollisionDirection.Exit);
                 }
 
                 return true;
@@ -204,9 +210,11 @@ namespace Murder.Systems.Physics
                     continue;
                 }
 
-                ColliderComponent otherCollider = other.GetCollider();
-                if (thisIsAnActor && otherCollider.Layer == CollisionLayersBase.ACTOR ||
-                    !thisIsAnActor && otherCollider.Layer == CollisionLayersBase.TRIGGER)
+                bool isOtherActorOrHitbox = IsActorOrHitbox(other);
+                bool isOtherTrigger = IsTrigger(other);
+
+                bool validCollider = (isActorOrHitbox && isOtherTrigger) || (isTrigger && isOtherActorOrHitbox);
+                if (!validCollider)
                 {
                     continue;
                 }
@@ -216,12 +224,10 @@ namespace Murder.Systems.Physics
                 // Check if there's a previous collision happening here
                 if (!collisionCache.HasId(other.EntityId))
                 {
-
                     if (PhysicsServices.CollidesWith(e, other)) // This is the actual physics check
                     {
-
                         // If no previous collision is detected, send messages and add this ID to current collision cache.
-                        SendCollisionMessages(thisIsAnActor ? other : e, thisIsAnActor ? e : other, CollisionDirection.Enter);
+                        SendCollisionMessages(isActorOrHitbox ? other : e, isActorOrHitbox ? e : other, CollisionDirection.Enter);
                         PhysicsServices.AddToCollisionCache(other, e.EntityId);
 
                         collisionCache = collisionCache.Add(other.EntityId);
@@ -268,7 +274,7 @@ namespace Murder.Systems.Physics
                 return true;
             }
 
-            if (!IsActor(e) && e.HasMoveToPerfect())
+            if (!IsActorOrHitbox(e) && e.HasMoveToPerfect())
             {
                 return true;
             }
@@ -276,10 +282,16 @@ namespace Murder.Systems.Physics
             return false;
         }
 
-        private bool IsActor(Entity e)
+        private bool IsActorOrHitbox(Entity e)
         {
             ColliderComponent collider = e.GetCollider();
-            return (collider.Layer & (CollisionLayersBase.ACTOR)) != 0;
+            return collider.HasLayer(CollisionLayersBase.ACTOR) || collider.HasLayer(CollisionLayersBase.HITBOX);
+        }
+
+        private bool IsTrigger(Entity e)
+        {
+            ColliderComponent collider = e.GetCollider();
+            return collider.HasLayer(CollisionLayersBase.TRIGGER);
         }
     }
 }
