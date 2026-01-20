@@ -113,7 +113,7 @@ namespace Murder.Editor.Systems
             }
 
             if (ImGui.BeginPopupContextItem("GameplayContextMenu", ImGuiPopupFlags.MouseButtonRight | ImGuiPopupFlags.NoReopen))
-            {
+            { 
                 hook.IsPopupOpen = true;
                 var allSaves = Game.Data.GetAllSaves();
                 if (allSaves.Count == 0)
@@ -214,7 +214,13 @@ namespace Murder.Editor.Systems
                     {
                         ImGui.Separator();
                         ImGui.SetNextItemWidth(-1);
-                        ImGui.SetKeyboardFocusHere();
+
+                        // Only set focus on the first frame the menu appears
+                        if (ImGui.IsWindowAppearing())
+                        {
+                            ImGui.SetKeyboardFocusHere();
+                        }
+
                         ImGui.InputTextWithHint("##searchsavestates", "Search...", ref _newSaveFilter, 256);
                         ImGui.BeginChild("searchChild", new Vector2(-1, 500));
                         foreach ((Guid g, string name) in _saveStateInfo)
