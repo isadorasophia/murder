@@ -35,9 +35,9 @@ namespace Murder.Assets
             {
                 return e.Create(world);
             }
-            catch
+            catch (Exception ex)
             {
-                GameLogger.Error($"Cannot find asset for entity {e.Name}.");
+                GameLogger.Error($"Cannot find asset for entity {e.Name} due to {ex}.");
             }
 
             return -1;
