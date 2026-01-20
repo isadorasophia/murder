@@ -41,7 +41,7 @@ namespace Murder.Editor.CustomFields
 
             if (Attribute.IsDefined(t, typeof(FlagsAttribute)))
             {
-                modified |= ImGuiHelpers.DrawEnumFieldAsFlags(member.Name, t, ref intValue);
+                modified |= ImGuiHelpers.DrawEnumFieldAsDropdown(member.Name, t, ref intValue);
                 return (modified, Enum.ToObject(t, intValue));
             }
 

@@ -86,7 +86,7 @@ namespace Murder.Editor.CustomFields
                 ImGui.SameLine();
 
                 int flags = (int)element.Properties;
-                if (ImGuiHelpers.DrawEnumFieldAsFlags(id, typeof(PortraitProperties), ref flags))
+                if (ImGuiHelpers.DrawEnumFieldAsDropdown(id, typeof(PortraitProperties), ref flags))
                 {
                     element = element with { Properties = (PortraitProperties)flags };
                     modified = true;

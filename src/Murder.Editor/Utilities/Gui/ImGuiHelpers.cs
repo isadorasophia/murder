@@ -860,6 +860,91 @@ public static class ImGuiHelpers
 
         return modified;
     }
+
+    private readonly static HashSet<int> _selectedFlagsCache = new();
+
+    public static bool DrawEnumFieldAsDropdown(string id, Type enumType, ref int intValue)
+    {
+        Array values = Enum.GetValues(enumType);
+        string[] prettyNames = Enum.GetNames(enumType);
+
+        int tableIndex = 0;
+        bool changed = false;
+        string selectedText = "None";
+        int totalSelected = 0;
+        _selectedFlagsCache.Clear();
+        for (int i = 0; i < values.Length; i++)
+        {
+            if (values.GetValue(i) is not object objValue)
+            {
+                continue;
+            }
+
+            int value = (int)objValue;
+            if (value == 0)
+            {
+                continue;
+            }
+
+            bool isChecked = ~(~value | intValue) == 0;
+            if (isChecked)
+            {
+                _selectedFlagsCache.Add(i);
+                totalSelected++;
+                if (totalSelected == 1)
+                {
+                    selectedText = prettyNames[i];
+                }
+            }
+        }
+        string preview = totalSelected > 1 ? $"{totalSelected} selected" : selectedText;
+
+        if (ImGui.BeginCombo($"##{id}-dropdn", preview))
+        {
+            for (int i = 0; i < values.Length; i++)
+            {
+                if (values.GetValue(i) is not object objValue) continue;
+                int value = (int)objValue;
+                if (value == 0) continue;
+
+                bool isChecked = _selectedFlagsCache.Contains(i);
+                bool originalState = isChecked;
+
+                // Draw checkbox
+                if (ImGui.Checkbox($"##{id}-{i}", ref isChecked))
+                {
+                    // Checkbox was clicked (isChecked already toggled by ImGui)
+                }
+
+                ImGui.SameLine();
+                ImGui.Text(prettyNames[i]);
+
+                // Check if text was clicked
+                if (ImGui.IsItemClicked())
+                {
+                    isChecked = !isChecked;
+                }
+
+                // Update flags if state changed from either interaction
+                if (isChecked != originalState)
+                {
+                    if (isChecked)
+                        intValue |= value;
+                    else
+                        intValue &= ~value;
+                    changed = true;
+                }
+
+                ImGuiHelpers.HelpTooltip(prettyNames[i]);
+            }
+            ImGui.EndCombo();
+        }
+
+        tableIndex++;
+
+        return changed;
+    }
+
     public static bool DrawEnumFieldAsFlags(string id, Type enumType, ref int intValue, int width = -1)
     {
         using TableMultipleColumns table = new($"##{id}-col-table",
@@ -888,6 +973,7 @@ public static class ImGuiHelpers
 
             bool isChecked = ~(~value | intValue) == 0;
 
+            ImGui.BeginGroup();
             if (ImGui.Checkbox($"##{id}-{i}-col-layer", ref isChecked))
             {
                 if (isChecked)
@@ -904,6 +990,8 @@ public static class ImGuiHelpers
 
             ImGui.SameLine();
             ImGui.Text(prettyNames[i]);
+            ImGui.EndGroup();
+            ImGuiHelpers.HelpTooltip(prettyNames[i]);
 
             ImGui.TableNextColumn();
 
