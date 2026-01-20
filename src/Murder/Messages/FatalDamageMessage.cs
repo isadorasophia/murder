@@ -11,13 +11,15 @@ namespace Murder.Messages
     {
         public readonly Vector2 FromPosition = Vector2.Zero;
         public readonly int Amount;
-        public readonly int Source = -1;
+        public readonly int DamageSourceId = -1;
+        public readonly int AttackedId = -1;
 
-        public FatalDamageMessage(Vector2 fromPosition, int damageAmount, int source)
+        public FatalDamageMessage(Vector2 fromPosition, int damageAmount, int source, int attacked)
         {
             FromPosition = fromPosition;
             Amount = damageAmount;
-            Source = source;
+            DamageSourceId = source;
+            AttackedId = attacked;
         }
     }
 }
