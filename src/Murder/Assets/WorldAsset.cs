@@ -540,5 +540,6 @@ namespace Murder.Assets
         None = 0,
         IgnoreSoundFadeOnEnter = 1,
         IgnoreSoundFadeOnExit = 0x10,
+        NeverPersist = 0x100,
     }
 }

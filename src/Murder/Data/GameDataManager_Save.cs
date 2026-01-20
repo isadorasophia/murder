@@ -5,6 +5,7 @@ using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Save;
 using Murder.Serialization;
+using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Concurrent;
 using System.Collections.Immutable;
@@ -244,6 +245,13 @@ namespace Murder.Data
 
         public void SaveWorld(MonoWorld world)
         {
+            if (Game.Data.TryGetAsset<WorldAsset>(world.WorldAssetGuid) is WorldAsset worldAsset &&
+                worldAsset.Flags.HasFlag(WorldFlags.NeverPersist))
+            {
+                // nope!
+                return;
+            }
+
             ActiveSaveData.SaveAsync(world);
         }
 
