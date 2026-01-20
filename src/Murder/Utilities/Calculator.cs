@@ -84,6 +84,13 @@ namespace Murder.Utilities
 
         #region Math
 
+        /// <summary>
+        /// Checks if a distance between two points is less than a given distance.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="distance"></param>
+        /// <returns></returns>
         public static bool DistanceCheck(Vector2 a, Vector2 b, float distance)
         {
             return (a - b).LengthSquared() <= distance * distance;
