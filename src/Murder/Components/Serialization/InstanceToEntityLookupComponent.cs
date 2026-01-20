@@ -1,5 +1,6 @@
 ﻿using Bang.Components;
 using Murder.Attributes;
+using Murder.Diagnostics;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 
@@ -29,8 +30,24 @@ namespace Murder.Components
         {
             InstancesToEntities = instancesToEntities.ToImmutableDictionary();
 
-            Dictionary<int, Guid> idToGuid = instancesToEntities.ToDictionary(kv => kv.Value, kv => kv.Key);
-            EntitiesToInstances = idToGuid.ToImmutableDictionary();
+            var idToGuidBuilder = ImmutableDictionary.CreateBuilder<int, Guid>();
+            foreach ((Guid guid, int entityId) in instancesToEntities)
+            {
+                if (entityId == -1)
+                {
+                    // skip invalid entities
+                    continue;
+                }
+
+                if (idToGuidBuilder.ContainsKey(entityId))
+                {
+                    GameLogger.Warning($"Somehow, we're adding {entityId} twice from {guid}.");
+                }
+
+                idToGuidBuilder[entityId] = guid;
+            }
+
+            EntitiesToInstances = idToGuidBuilder.ToImmutableDictionary();
         }
     }
 }
