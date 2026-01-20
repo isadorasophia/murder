@@ -1,6 +1,7 @@
 ﻿using Murder.Core.Sounds;
 using Murder.Services;
 using Murder.Utilities;
+using System.Data.Common;
 using static Murder.Core.Input.PlayerInput;
 
 namespace Murder.Core.Input
@@ -280,18 +281,18 @@ namespace Murder.Core.Input
         public (int option, bool wrapped) NextAvailableOptionHorizontal(in int option, int width, int direction, GridMenuFlags flags)
         {
             int startRow = Calculator.FloorToInt(option / (float)width);
-            int startCollumn = option % width;
+            int startColumn = option % width;
 
-            int totalCollumns = width;
+            int totalColumns = width;
             int totalAttempts = 0;
 
             bool wrapped = false;
             while (totalAttempts < width)
             {
-                int column = Calculator.WrapAround(startCollumn + direction * (totalAttempts + 1), 0, width - 1);
+                int column = Calculator.WrapAround(startColumn + direction * (totalAttempts + 1), 0, width - 1);
 
                 // Did we wrap around?
-                if (column > startCollumn && direction < 0)
+                if (column > startColumn && direction < 0)
                 {
                     if (flags.HasFlag(GridMenuFlags.ClampLeft))
                     {
@@ -300,7 +301,7 @@ namespace Murder.Core.Input
 
                     wrapped = true;
                 }
-                if (column < startCollumn && direction > 0)
+                if (column < startColumn && direction > 0)
                 {
                     if (flags.HasFlag(GridMenuFlags.ClampRight))
                     {
@@ -310,7 +311,22 @@ namespace Murder.Core.Input
                     wrapped = true;
                 }
 
-                for (int i = 0; i < totalCollumns; i++)
+                int nextOption = startRow * width + column;
+                if (nextOption >= 0 && nextOption < Length && IsOptionAvailable(nextOption))
+                {
+                    return (nextOption, wrapped);
+                }
+
+                totalAttempts++;
+            }
+
+            totalAttempts = 0;
+            while (totalAttempts < width)
+            {
+                int column = Calculator.WrapAround(startColumn + direction * (totalAttempts + 1), 0, width - 1);
+
+                int totalRows = Calculator.CeilToInt(Length / width);
+                for (int i = 0; i < totalRows; i++)
                 {
                     int checkRow = startRow;
 
@@ -334,7 +350,7 @@ namespace Murder.Core.Input
                     {
                         checkRow = startRow + i;
 
-                        if (checkRow <= totalCollumns)
+                        if (checkRow <= totalColumns)
                         {
                             int nextOption = checkRow * width + column;
                             if (nextOption >= 0 && nextOption < Length)
@@ -347,8 +363,6 @@ namespace Murder.Core.Input
                         }
                     }
                 }
-
-                totalAttempts++;
             }
 
             return (option, false);
