@@ -1,7 +1,6 @@
 ﻿using Murder.Core.Sounds;
 using Murder.Services;
 using Murder.Utilities;
-using System.Data.Common;
 using static Murder.Core.Input.PlayerInput;
 
 namespace Murder.Core.Input
@@ -363,6 +362,8 @@ namespace Murder.Core.Input
                         }
                     }
                 }
+
+                totalAttempts++;
             }
 
             return (option, false);
@@ -403,7 +404,21 @@ namespace Murder.Core.Input
                     wrapped = true;
                 }
 
-                // First we try the first one imediatelly below or above the current selection.
+                int nextOption = row * width + column;
+                if (nextOption >= 0 && nextOption < Length && IsOptionAvailable(nextOption))
+                {
+                    return (nextOption, wrapped);
+                }
+
+                totalAttempts++;
+            }
+
+            // then we'll try going to different columns
+            totalAttempts = 0;
+            while (totalAttempts < totalRows)
+            {
+                int row = Calculator.WrapAround(initialRow + direction * (totalAttempts + 1), 0, totalRows);
+
                 for (int i = 0; i < width; i++)
                 {
                     int checkCollumn = column - i;
