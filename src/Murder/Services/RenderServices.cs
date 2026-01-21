@@ -724,7 +724,7 @@ public static partial class RenderServices
     /// </summary>
     public static void DrawCircleOutline(this Batch2D spriteBatch, Vector2 center, float radius, int sides, Color color, float sort = 1f)
     {
-        DrawPoints(spriteBatch, center, Vector2.One * (radius * 2), GeometryServices.GetUnitCircle(sides), color, sort);
+        DrawPoints(spriteBatch, center, Vector2.One * (radius), GeometryServices.GetUnitCircle(sides), color, sort);
     }
 
     public static void DrawCircleOutline(this Batch2D spriteBatch, Rectangle rectangle, int sides, Color color)
@@ -1022,11 +1022,12 @@ public static partial class RenderServices
 
             if (texture is not null)
             {
-                foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+                var passes = effect.CurrentTechnique.Passes;
+                for (int i = 0; i < passes.Count; i++)
                 {
                     try
                     {
-                        pass.Apply();
+                        passes[i].Apply();
                     }
                     catch (Exception e)
                     {
@@ -1038,9 +1039,10 @@ public static partial class RenderServices
             }
             else // Saving that 1 check for performance
             {
-                foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+                var passes = effect.CurrentTechnique.Passes;
+                for (int i = 0; i < passes.Count; i++)
                 {
-                    pass.Apply();
+                    passes[i].Apply();
                     graphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertexCount, indices, 0, primitiveCount);
                 }
             }

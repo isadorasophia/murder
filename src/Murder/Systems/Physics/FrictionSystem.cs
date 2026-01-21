@@ -19,12 +19,12 @@ namespace Murder.Systems
                 {
                     if (e.TryGetVerticalPosition() is VerticalPositionComponent verticalPosition && verticalPosition.Z > 0)
                     {
-                        e.ReplaceComponent(new VelocityComponent(velocity.Velocity * (1 - friction.AirFriction.Value)));
+                        e.SetVelocity(velocity.Velocity * (1 - friction.AirFriction.Value));
                         continue;
                     }
                 }
 
-                e.ReplaceComponent(new VelocityComponent(velocity.Velocity * (1 - friction.Amount)));
+                e.SetVelocity(velocity.Velocity * (1 - friction.Amount));
             }
         }
     }

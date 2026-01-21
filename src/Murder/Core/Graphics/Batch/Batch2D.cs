@@ -350,8 +350,10 @@ public class Batch2D
         if (Effect != null)
         {
             _cachedEffectPassCount = 0;
-            foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
+            var passes = Effect.CurrentTechnique.Passes;
+            for (int p = 0; p < passes.Count; p++)
             {
+                EffectPass pass = passes[p];
                 if (_cachedEffectPasses.Count <= _cachedEffectPassCount)
                 {
                     _cachedEffectPasses.Add(pass);
@@ -399,7 +401,7 @@ public class Batch2D
             WriteBatchItemToBuffers(batchItem, ref verticesIndex, ref indicesIndex);
         }
 
-        Effect?.Parameters["MatrixTransform"]?.SetValue(matrix);
+        //Effect?.Parameters["MatrixTransform"]?.SetValue(matrix); // Redundant due to caching above
         DrawQuads(_vertices, verticesIndex, _indices, indicesIndex, texture, depthStencilState, matrix);
 
         MaxTextureSwaps = Math.Max(MaxTextureSwaps, _currentTextureSwitches);
@@ -413,7 +415,7 @@ public class Batch2D
             if (requiredVertexCapacity > _vertices.Length)
             {
                 int newSize = Math.Max(_vertices.Length * 2, requiredVertexCapacity);
-                Array.Resize(ref _vertices, _vertices.Length * 2);
+                Array.Resize(ref _vertices, newSize);
             }
 
             // Use Span to avoid extra allocations

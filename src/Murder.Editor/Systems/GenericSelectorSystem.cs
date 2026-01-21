@@ -330,6 +330,13 @@ public class GenericSelectorSystem
             Vector2 position = e.GetGlobalTransform().Vector2;
             Rectangle rect = GetSeletionBoundingBox(e, world, position, out bool hasBox);
 
+            if (rect.Width <= 12 && rect.Height <= 12)
+            {
+                // Make sure we can still select small entities.
+                rect = Rectangle.CenterRectangle(rect.Center, 12, 12);
+                hasBox = false;
+            }
+
             if (hasBox)
             {
                 if (Architect.Instance.IsPlayingGame)
@@ -846,6 +853,12 @@ public class GenericSelectorSystem
 
             Vector2 position = e.GetGlobalTransform().Vector2;
             Rectangle bounds = GetSeletionBoundingBox(e, world, position, out var hasBox);
+            if (bounds.Width < 10 && bounds.Height < 10)
+            {
+                // Make sure we can still select small entities.
+                bounds = Rectangle.CenterRectangle(bounds.Center, 12, 12);
+            }
+
             if (!render.Camera.SafeBounds.TouchesInside(bounds))
                 continue;
 
