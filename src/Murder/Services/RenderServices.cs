@@ -758,8 +758,19 @@ public static partial class RenderServices
         batch.DrawPolygon(SharedResources.GetOrCreatePixel(), circleRect.Center, circleVertices, drawInfo with { Scale = circleRect.Size });
     }
 
-    public static void DrawPieChart(this Batch2D batch, Vector2 center, float radius, float startAngle, float endAngle, int steps, DrawInfo? drawInfo = default)
+    public static void DrawCircleSector(this Batch2D batch, Vector2 center, float radius, float startAngle, float endAngle, int steps, DrawInfo? drawInfo = default)
     {
+        float angleRange = endAngle - startAngle;
+        if (angleRange <= 0)
+            return;
+
+        const float fullCircleThreshold = MathF.PI * 2 - 0.001f;
+        if (angleRange >= fullCircleThreshold)
+        {
+            DrawFilledCircle(batch, center, radius, steps, drawInfo);
+            return;
+        }
+
         if (_cachedPieChartVertices.Length < steps + 3)
         {
             GameLogger.LogPerf($"Resizing pie chart vertex cache from {_cachedPieChartVertices.Length} to {steps + 3}, consider increasing the default.");
@@ -769,9 +780,9 @@ public static partial class RenderServices
         ImmutableArray<Vector2> circleVertices = GeometryServices.GetUnitCircle(steps);
 
         // Scale vertices into the array
-        for (int i = 0; i <= steps; i++)
+        for (int i = 0; i < steps; i++)
         {
-            _cachedPieChartVertices[i + 1] = circleVertices[i] * radius * 2;
+            _cachedPieChartVertices[i+1] = circleVertices[i] * radius;
         }
 
         float angleStep = (MathF.PI * 2) / steps;

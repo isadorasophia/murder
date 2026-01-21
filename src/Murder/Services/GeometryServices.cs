@@ -32,26 +32,6 @@ namespace Murder.Services
                 HashCode.Combine(Radius, Sides);
         }
 
-        private readonly struct EllipseKey : IEquatable<EllipseKey>
-        {
-            public readonly float RadiusX;
-            public readonly float RadiusY;
-            public readonly int Sides;
-
-            public EllipseKey(float radiusX, float radiusY, int sides)
-            {
-                RadiusX = Quantize(radiusX);
-                RadiusY = Quantize(radiusY);
-                Sides = sides;
-            }
-
-            public bool Equals(EllipseKey other) =>
-                RadiusX == other.RadiusX && RadiusY == other.RadiusY && Sides == other.Sides;
-
-            public override int GetHashCode() =>
-                HashCode.Combine(RadiusX, RadiusY, Sides);
-        }
-
         private readonly struct TriangleKey : IEquatable<TriangleKey>
         {
             public readonly float Radius;
