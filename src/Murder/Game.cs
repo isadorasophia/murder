@@ -573,20 +573,30 @@ namespace Murder
         /// <param name="waitForAllContent">Indicates whether to wait for all game content to be loaded before proceeding.</param>
         protected virtual async Task LoadSceneAsync(bool waitForAllContent)
         {
-            GameLogger.Verify(_sceneLoader is not null);
-
-            if (waitForAllContent && _gameData.LoadContentProgress is not null)
+            try
             {
-                await _gameData.LoadContentProgress;
-            }
+                GameLogger.Verify(_sceneLoader is not null);
 
-            if (_game is not null)
+                if (waitForAllContent && _gameData.LoadContentProgress is not null)
+                {
+                    await _gameData.LoadContentProgress;
+                }
+
+                if (_game is not null)
+                {
+                    await _game.LoadContentAsync();
+                    _game.OnSceneTransition();
+                }
+
+                _sceneLoader.LoadContent();
+            }
+            catch (Exception ex)
             {
-                await _game.LoadContentAsync();
-                _game.OnSceneTransition();
-            }
+                GameLogger.SpewException(ex);
+                GameLogger.CaptureCrash();
 
-            _sceneLoader.LoadContent();
+                ExitGame();
+            }
         }
 
         /// <summary>

@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Murder.Diagnostics;
@@ -43,16 +44,7 @@ public class GameLogger
             // This enable us to watch for any first chance exception within our game.
             AppDomain.CurrentDomain.FirstChanceException += (_, e) =>
             {
-                StringBuilder message = new();
-                message.Append($"Exception was thrown! {e.Exception.Message}");
-
-                // Ignore stacks for Newtonsoft.
-                if (e.Exception.Source is not string source || !source.Contains("Newtonsoft"))
-                {
-                    message.Append($"\n{e.Exception.StackTrace}");
-                }
-
-                Warning(message.ToString());
+                SpewException(e.Exception);
             };
         }
     }
@@ -318,6 +310,18 @@ public class GameLogger
         public string Message { init; get; }
         public Vector4 Color { init; get; }
         public int Repeats { init; get; }
+    }
+
+    /// <summary>
+    /// Spew exception details into log.
+    /// </summary>
+    public static void SpewException(Exception ex)
+    {
+        StringBuilder message = new();
+        message.Append($"Exception was thrown! {ex.Message}");
+        message.Append($"\n{ex.StackTrace}");
+
+        Warning(message.ToString());
     }
 
     /// <summary>

@@ -47,7 +47,7 @@ namespace Murder.Components
                 idToGuidBuilder[entityId] = guid;
             }
 
-            EntitiesToInstances = idToGuidBuilder.ToImmutableDictionary();
+            EntitiesToInstances = idToGuidBuilder.ToImmutable();
         }
     }
 }
