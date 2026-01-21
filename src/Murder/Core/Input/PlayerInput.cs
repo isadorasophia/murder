@@ -313,6 +313,10 @@ public class PlayerInput
     {
         return _buttons[button].Released;
     }
+    public bool Released(Keys key)
+    {
+        return Keyboard.GetState().IsKeyUp(key) && _previousKeyboardState.IsKeyDown(key);
+    }
 
     public bool Pressed(Keys key)
     {

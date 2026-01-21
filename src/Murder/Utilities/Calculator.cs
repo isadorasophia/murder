@@ -846,6 +846,16 @@ namespace Murder.Utilities
         }
 
         /// <summary>
+        /// Like sine but normalized between 0 and 1 instead of -1 and 1.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static float Sine01(float value)
+        {
+            return (1 + MathF.Sin(value)) / 2f;
+        }
+
+        /// <summary>
         /// Generates a normalized sine wave value oscillating between 0 and 1.
         /// </summary>
         /// <param name="speed">The speed of the oscillation. Higher values result in faster oscillation.</param>

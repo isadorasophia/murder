@@ -48,6 +48,8 @@ public class GenericSelectorSystem
 
     int _previousSelection = -1;
 
+    private float _lastSpaceBarTime = 0;
+
     /// <summary>
     /// Share this across world instances.
     /// </summary>
@@ -323,14 +325,26 @@ public class GenericSelectorSystem
         hook.ClearHoveringEntities();
         foreach (Entity e in entities)
         {
-            if (Architect.Instance.IsPlayingGame)
-            {
-                if (!e.HasInCamera()) continue;
-            }
             if (!e.HasTransform()) continue;
 
             Vector2 position = e.GetGlobalTransform().Vector2;
-            Rectangle rect = GetSeletionBoundingBox(e, world, position, out _);
+            Rectangle rect = GetSeletionBoundingBox(e, world, position, out bool hasBox);
+
+            if (hasBox)
+            {
+                if (Architect.Instance.IsPlayingGame)
+                {
+                    if (!e.HasInCamera()) continue;
+                }
+            }
+            else
+            {
+                if (!cameraRect.Contains(position))
+                {
+                    continue;
+                }
+            }
+
             if (!rect.TouchesInside(cameraRect))
             {
                 continue;
@@ -341,10 +355,10 @@ public class GenericSelectorSystem
                 // We block dragging entities on world editors otherwise it would be too confusing (signed: Pedro).
                 continue;
             }
-            bool isCameraInsideObject = cameraRect.IsInside(rect);
 
             bool isMuchBiggerThanCamera = rect.Width > cameraRect.Width && rect.Height > cameraRect.Height;
 
+            bool isCameraInsideObject = cameraRect.IsInside(rect);
             if (isCameraInsideObject && isMuchBiggerThanCamera)
             {
                 // If the entity is much bigger than the camera, you can still select it by clicking on the very center of it.
@@ -801,7 +815,26 @@ public class GenericSelectorSystem
             return;
         }
 
+        float hideAll;
+        if (Game.Input.Pressed(Keys.Space))
+        {
+            _lastSpaceBarTime = Game.NowUnscaled;
+        }
         if (Game.Input.Down(Keys.Space))
+        {
+            hideAll = 1 - Calculator.ClampTime(Game.NowUnscaled - _lastSpaceBarTime, 0.1f);
+        }
+        else if (Game.Input.Released(Keys.Space))
+        {
+            _lastSpaceBarTime = Game.NowUnscaled;
+            hideAll = 0;
+        }
+        else
+        {
+            hideAll = Calculator.ClampTime(Game.NowUnscaled - _lastSpaceBarTime, 0.1f);
+        }
+
+        if (hideAll <= 0)
         {
             return;
         }
@@ -824,8 +857,10 @@ public class GenericSelectorSystem
                 Matrix3x2 rotationMatrix = Matrix3x2.CreateRotation(rotation, Vector2.Zero);
 
                 // Draw the rotated lines
-                RenderServices.DrawLine(render.DebugBatch, Vector2.Transform(_xPointsCache[0], rotationMatrix) + position, Vector2.Transform(_xPointsCache[1], rotationMatrix) + position, Game.Profile.Theme.Yellow, 0.5f);
-                RenderServices.DrawLine(render.DebugBatch, Vector2.Transform(_xPointsCache[2], rotationMatrix) + position, Vector2.Transform(_xPointsCache[3], rotationMatrix) + position, Game.Profile.Theme.Yellow, 0.5f);
+                RenderServices.DrawLine(render.DebugBatch, Vector2.Transform(_xPointsCache[0], rotationMatrix) + position, Vector2.Transform(_xPointsCache[1], rotationMatrix) + position,
+                    hideAll * Game.Profile.Theme.Yellow, 0.5f);
+                RenderServices.DrawLine(render.DebugBatch, Vector2.Transform(_xPointsCache[2], rotationMatrix) + position, Vector2.Transform(_xPointsCache[3], rotationMatrix) + position,
+                    hideAll * Game.Profile.Theme.Yellow, 0.5f);
 
                 if (_dragging != null)
                 {
@@ -836,20 +871,20 @@ public class GenericSelectorSystem
                         float corners = 1 - delta;
 
                         Vector2 topLeft = bounds.TopLeft + new Vector2(corners, corners) * 4;
-                        RenderServices.DrawLine(render.DebugFxBatch, topLeft, topLeft + new Vector2(cornerSize, 0), Game.Profile.Theme.HighAccent, 0.5f);
-                        RenderServices.DrawLine(render.DebugFxBatch, topLeft, topLeft + new Vector2(0, cornerSize), Game.Profile.Theme.HighAccent, 0.5f);
+                        RenderServices.DrawLine(render.DebugFxBatch, topLeft, topLeft + new Vector2(cornerSize, 0), hideAll * Game.Profile.Theme.HighAccent, 0.5f);
+                        RenderServices.DrawLine(render.DebugFxBatch, topLeft, topLeft + new Vector2(0, cornerSize), hideAll * Game.Profile.Theme.HighAccent, 0.5f);
 
                         Vector2 topRight = bounds.TopRight + new Vector2(-corners, corners) * 4;
-                        RenderServices.DrawLine(render.DebugFxBatch, topRight, topRight + new Vector2(-cornerSize, 0), Game.Profile.Theme.HighAccent, 0.5f);
-                        RenderServices.DrawLine(render.DebugFxBatch, topRight, topRight + new Vector2(0, cornerSize), Game.Profile.Theme.HighAccent, 0.5f);
+                        RenderServices.DrawLine(render.DebugFxBatch, topRight, topRight + new Vector2(-cornerSize, 0), hideAll * Game.Profile.Theme.HighAccent, 0.5f);
+                        RenderServices.DrawLine(render.DebugFxBatch, topRight, topRight + new Vector2(0, cornerSize), hideAll * Game.Profile.Theme.HighAccent, 0.5f);
 
                         Vector2 bottomLeft = bounds.BottomLeft + new Vector2(corners, -corners) * 4;
-                        RenderServices.DrawLine(render.DebugFxBatch, bottomLeft, bottomLeft + new Vector2(cornerSize, 0), Game.Profile.Theme.HighAccent, 0.5f);
-                        RenderServices.DrawLine(render.DebugFxBatch, bottomLeft, bottomLeft + new Vector2(0, -cornerSize), Game.Profile.Theme.HighAccent, 0.5f);
+                        RenderServices.DrawLine(render.DebugFxBatch, bottomLeft, bottomLeft + new Vector2(cornerSize, 0), hideAll * Game.Profile.Theme.HighAccent, 0.5f);
+                        RenderServices.DrawLine(render.DebugFxBatch, bottomLeft, bottomLeft + new Vector2(0, -cornerSize), hideAll * Game.Profile.Theme.HighAccent, 0.5f);
 
                         Vector2 bottomRight = bounds.BottomRight + new Vector2(-corners, -corners) * 4;
-                        RenderServices.DrawLine(render.DebugFxBatch, bottomRight, bottomRight + new Vector2(-cornerSize, 0), Game.Profile.Theme.HighAccent, 0.5f);
-                        RenderServices.DrawLine(render.DebugFxBatch, bottomRight, bottomRight + new Vector2(0, -cornerSize), Game.Profile.Theme.HighAccent, 0.5f);
+                        RenderServices.DrawLine(render.DebugFxBatch, bottomRight, bottomRight + new Vector2(-cornerSize, 0), hideAll * Game.Profile.Theme.HighAccent, 0.5f);
+                        RenderServices.DrawLine(render.DebugFxBatch, bottomRight, bottomRight + new Vector2(0, -cornerSize), hideAll * Game.Profile.Theme.HighAccent, 0.5f);
                     }
                 }
                 else
@@ -869,24 +904,32 @@ public class GenericSelectorSystem
 
                     if (alpha > 0)
                     {
-                        RenderServices.DrawRectangle(render.DebugFxBatch, bounds, _hoverColor * (hook.IsEntityHovered(e.EntityId) ? 0.65f : 0.45f) * alpha);
-                        RenderServices.DrawRectangleOutline(render.DebugFxBatch, bounds, alpha * Game.Profile.Theme.Accent * 0.45f);
+                        RenderServices.DrawRectangle(render.DebugFxBatch, bounds, _hoverColor * hideAll * (hook.IsEntityHovered(e.EntityId) ? 0.65f : 0.45f) * alpha);
+                        RenderServices.DrawRectangleOutline(render.DebugFxBatch, bounds, hideAll * alpha * Game.Profile.Theme.Accent * 0.45f);
                     }
                 }
             }
             else if (hook.IsEntityHovered(e.EntityId))
             {
-                RenderServices.DrawRectangleOutline(render.DebugFxBatch, bounds, _hoverColor * 0.45f);
+                if (!hasBox)
+                {
+                    float offset = (position.X + position.Y) * .1f;
+                    RenderServices.DrawTriangle(render.DebugBatch, position, 7, Game.Now * 0.4f + offset, new DrawInfo(Game.Profile.Theme.White * hideAll, 0));
+                    RenderServices.DrawTriangle(render.DebugBatch, position, 6, Game.Now * 0.4f + offset, new DrawInfo(Color.Lerp(Game.Profile.Theme.Accent * hideAll, Color.Gray, 0.5f * Calculator.Sine01(Game.NowUnscaled + position.X)), 0));
+
+                }
+                RenderServices.DrawRectangleOutline(render.DebugFxBatch, bounds, _hoverColor * 0.45f * hideAll);
                 DrawSelectionTween(render, position);
             }
             else if (!hasBox)
             {
-                RenderServices.DrawCircleOutline(render.DebugBatch, position, 2, 6, Game.Profile.Theme.Yellow);
+                RenderServices.DrawTriangle(render.DebugBatch, position, 5, 0, new DrawInfo(hideAll * Game.Profile.Theme.White, 0));
+                RenderServices.DrawTriangle(render.DebugBatch, position, 3, 0, new DrawInfo(Color.Lerp(Game.Profile.Theme.Accent, Color.Gray, 0.5f * Calculator.Sine01(Game.NowUnscaled + position.X)), 0));
             }
 
         }
 
-        DrawSelectionRectangle(render);
+        DrawSelectionRectangle(render, hideAll);
     }
 
     private void DrawSelectionTween(RenderContext render, Vector2 position)
@@ -910,12 +953,12 @@ public class GenericSelectorSystem
         }
     }
 
-    private void DrawSelectionRectangle(RenderContext render)
+    private void DrawSelectionRectangle(RenderContext render, float alpha)
     {
         if (_currentAreaRectangle is not null && _currentAreaRectangle.Value.Size.X > 1)
         {
-            RenderServices.DrawRectangle(render.DebugFxBatch, _currentAreaRectangle.Value, Color.White * .25f);
-            RenderServices.DrawRectangleOutline(render.DebugFxBatch, _currentAreaRectangle.Value, Color.White * .75f);
+            RenderServices.DrawRectangle(render.DebugFxBatch, _currentAreaRectangle.Value, Color.White * .25f * alpha);
+            RenderServices.DrawRectangleOutline(render.DebugFxBatch, _currentAreaRectangle.Value, Color.White * .75f * alpha);
         }
     }
 

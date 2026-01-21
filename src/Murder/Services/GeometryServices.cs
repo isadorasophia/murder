@@ -2,127 +2,184 @@
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace Murder.Services
 {
     public static class GeometryServices
     {
-        private static readonly Dictionary<String, ImmutableArray<Vector2>> _circleCache = [];
-        private static readonly Dictionary<String, ImmutableArray<Vector2>> _flatCircleCache = [];
-
-        /// <summary>
-        /// Creates a list of vectors that represents a circle
-        /// </summary>
-        /// <param name="radius">The radius of the circle</param>
-        /// <param name="sides">The number of sides to generate</param>
-        /// <returns>A list of vectors that, if connected, will create a circle</returns>
-        public static ImmutableArray<Vector2> CreateCircle(double radius, int sides)
+        #region Cache Keys
+        private static float Quantize(float value)
         {
-            // Look for a cached version of this circle
-            string circleKey = $"{radius}x{sides}";
-            if (_circleCache.ContainsKey(circleKey))
-            {
-                return _circleCache[circleKey];
-            }
-
-            const double max = 2.0 * Math.PI;
-            double step = max / sides;
-
-            // perf: pre-allocate this?
-            var builder = ImmutableArray.CreateBuilder<Vector2>();
-            for (double theta = 0.0; theta < max; theta += step)
-            {
-                builder.Add(new Vector2((float)(radius * Math.Cos(theta)), (float)(radius * Math.Sin(theta))));
-            }
-
-            // Cache this circle so that it can be quickly drawn next time
-            ImmutableArray<Vector2> result = builder.ToImmutable();
-
-            _circleCache.Add(circleKey, result);
-            return result;
+            return MathF.Round(value * 10000f) / 10000f;
         }
 
-
-        public static ImmutableArray<Vector2> CreateOrGetCircle(float size, int sides)=>
-            CreateOrGetCircle(new Vector2(size, size), sides);
-
-        /// <summary>
-        /// Gets or creates a list of vectors that represents a circle using a rectangle as a base
-        /// </summary>
-        public static ImmutableArray<Vector2> CreateOrGetCircle(Vector2 size, int sides)
+        private readonly struct CircleKey : IEquatable<CircleKey>
         {
-            float width = size.X;
-            float height = size.Y;
+            public readonly float Radius;
+            public readonly int Sides;
 
-            // Determine the smaller side of the rectangle
-            float diameter = Math.Min(width, height);
-            float radius = diameter / 2;
-
-            float scaleX = width / diameter;
-            float scaleY = height / diameter;
-
-            // Look for a cached version of this circle
-            string circleKey = $"{radius}x{scaleX}x{scaleY}x{sides}";
-            if (_flatCircleCache.ContainsKey(circleKey))
+            public CircleKey(float radius, int sides)
             {
-                return _flatCircleCache[circleKey];
+                Radius = Quantize(radius);
+                Sides = sides;
             }
 
+            public bool Equals(CircleKey other) =>
+                Radius == other.Radius && Sides == other.Sides;
+
+            public override int GetHashCode() =>
+                HashCode.Combine(Radius, Sides);
+        }
+
+        private readonly struct EllipseKey : IEquatable<EllipseKey>
+        {
+            public readonly float RadiusX;
+            public readonly float RadiusY;
+            public readonly int Sides;
+
+            public EllipseKey(float radiusX, float radiusY, int sides)
+            {
+                RadiusX = Quantize(radiusX);
+                RadiusY = Quantize(radiusY);
+                Sides = sides;
+            }
+
+            public bool Equals(EllipseKey other) =>
+                RadiusX == other.RadiusX && RadiusY == other.RadiusY && Sides == other.Sides;
+
+            public override int GetHashCode() =>
+                HashCode.Combine(RadiusX, RadiusY, Sides);
+        }
+
+        private readonly struct TriangleKey : IEquatable<TriangleKey>
+        {
+            public readonly float Radius;
+            public readonly float Rotation;
+
+            public TriangleKey(float radius, float rotation)
+            {
+                Radius = Quantize(radius);
+                Rotation = Quantize(rotation);
+            }
+
+            public bool Equals(TriangleKey other) =>
+                Radius == other.Radius && Rotation == other.Rotation;
+
+            public override int GetHashCode() =>
+                HashCode.Combine(Radius, Rotation);
+        }
+
+        #endregion
+
+        private static readonly Dictionary<CircleKey, ImmutableArray<Vector2>> _circleCache = new();
+        private static readonly Dictionary<TriangleKey, ImmutableArray<Vector2>> _triangleCache = new();
+
+        #region Circles
+
+        /// <summary>
+        /// Gets or creates a unit circle (radius 1.0) with the specified number of sides.
+        /// </summary>
+        public static ImmutableArray<Vector2> GetUnitCircle(int sides)
+        {
+            var key = new CircleKey(1f, sides);
+
+            if (_circleCache.TryGetValue(key, out var cached))
+                return cached;
+
+            return CreateAndCacheCircle(1f, sides, key);
+        }
+
+        /// <summary>
+        /// Gets or creates a circle with the specified radius and number of sides.
+        /// </summary>
+        public static ImmutableArray<Vector2> GetCircle(float radius, int sides)
+        {
+            var key = new CircleKey(radius, sides);
+
+            if (_circleCache.TryGetValue(key, out var cached))
+                return cached;
+
+            return CreateAndCacheCircle(radius, sides, key);
+        }
+
+        private static ImmutableArray<Vector2> CreateAndCacheCircle(float radius, int sides, CircleKey key)
+        {
             const double max = 2.0 * Math.PI;
             double step = max / sides;
 
-            // perf: pre-allocate this?
-            var builder = ImmutableArray.CreateBuilder<Vector2>();
-            for (double theta = 0.0; theta < max; theta += step)
+            // Since we know the exact length of the array, we can use the ImmutableArray.CreateBuilder<>
+            // plus the .MoveToImmutable() that will create an ImmutableArray<>
+            // from the internals of the Builder without copying it:
+            var builder = ImmutableArray.CreateBuilder<Vector2>(sides + 1);
+
+            for (int i = 0; i < sides; i++)
             {
+                double theta = i * step;
                 builder.Add(new Vector2(
-                    (float)(radius * Math.Cos(theta) * scaleX),
-                    (float)(radius * Math.Sin(theta) * scaleY)
+                    (float)(radius * Math.Cos(theta)),
+                    (float)(radius * Math.Sin(theta))
                 ));
             }
 
-            // then add the first vector again so it's a complete loop
-            builder.Add(new Vector2(
-                (float)(radius * Math.Cos(0) * scaleX),
-                (float)(radius * Math.Sin(0) * scaleY)
-            ));
+            // Close the loop by adding first point again
+            builder.Add(new Vector2(radius, 0));
 
-            // Cache this circle so that it can be quickly drawn next time
-            var result = builder.ToImmutable();
-            _flatCircleCache.Add(circleKey, result);
-
+            var result = builder.MoveToImmutable();
+            _circleCache[key] = result;
             return result;
         }
 
+        #endregion
 
-        public static ImmutableArray<Vector2> CreateOrGetFlattenedCircle(float radius, float scaleY, int sides)
+        #region Triangles
+
+        /// <summary>
+        /// Gets or creates an equilateral triangle pointing up with the specified radius and rotation.
+        /// The radius is the distance from center to each vertex.
+        /// Rotation is in radians (0 = pointing up).
+        /// </summary>
+        public static ImmutableArray<Vector2> GetTriangle(float radius, float rotation = 0f)
         {
-            // Look for a cached version of this circle
-            String circleKey = $"{radius}x{scaleY}x{sides}";
-            if (_flatCircleCache.ContainsKey(circleKey))
+            var key = new TriangleKey(radius, rotation);
+
+            if (_triangleCache.TryGetValue(key, out var cached))
+                return cached;
+
+            return CreateAndCacheTriangle(radius, rotation, key);
+        }
+
+        /// <summary>
+        /// Gets a unit triangle (radius 1.0) pointing up.
+        /// </summary>
+        public static ImmutableArray<Vector2> GetUnitTriangle(float rotation = 0f)
+        {
+            return GetTriangle(1f, rotation);
+        }
+
+        private static ImmutableArray<Vector2> CreateAndCacheTriangle(float radius, float rotation, TriangleKey key)
+        {
+            var builder = ImmutableArray.CreateBuilder<Vector2>(4); // 3 vertices + close loop
+
+            // Equilateral triangle with vertices at 0°, 120°, 240° (starting at top)
+            for (int i = 0; i < 3; i++)
             {
-                return _flatCircleCache[circleKey];
+                float angle = rotation + (i * MathF.PI * 2f / 3f) - MathF.PI / 2f; // -PI/2 to start at top
+                builder.Add(new Vector2(
+                    radius * MathF.Cos(angle),
+                    radius * MathF.Sin(angle)
+                ));
             }
 
-            const double max = 2.0 * Math.PI;
-            double step = max / sides;
+            // Close the loop
+            builder.Add(builder[0]);
 
-            // perf: pre-allocate this?
-            var builder = ImmutableArray.CreateBuilder<Vector2>();
-            for (double theta = 0.0; theta < max; theta += step)
-            {
-                builder.Add(new Vector2((float)(radius * Math.Cos(theta)), (float)(radius * Math.Sin(theta)) * scaleY));
-            }
-
-            // then add the first vector again so it's a complete loop
-            builder.Add(new Vector2((float)(radius * Math.Cos(0)), (float)(radius * Math.Sin(0)) * scaleY));
-
-            // Cache this circle so that it can be quickly drawn next time
-            var result = builder.ToImmutable();
-            _flatCircleCache.Add(circleKey, result);
-
+            var result = builder.MoveToImmutable();
+            _triangleCache[key] = result;
             return result;
         }
+
+        #endregion
 
         /// <summary>
         /// Check if two ranges overlap at any point.

@@ -193,8 +193,7 @@ public class Batch2D
         Transform = Matrix.CreateScale(scale.X, scale.Y, 1) * Matrix.CreateTranslation(position.X, position.Y, 0f);
         _matrixDirty = true;
     }
-
-    public void DrawPolygon(Texture2D texture, System.Numerics.Vector2 position, ImmutableArray<System.Numerics.Vector2> vertices, DrawInfo drawInfo)
+    public void DrawPolygon(Texture2D texture, System.Numerics.Vector2 position, ReadOnlySpan<System.Numerics.Vector2> vertices, DrawInfo drawInfo)
     {
         if (!IsBatching)
         {
@@ -204,6 +203,22 @@ public class Batch2D
         ref SpriteBatchItem batchItem = ref GetBatchItem();
 
         batchItem.SetPolygon(texture, position, vertices, drawInfo);
+
+        if (BatchMode == BatchMode.Immediate)
+        {
+            Flush();
+        }
+    }
+    public void DrawPolygon(Texture2D texture, System.Numerics.Vector2 position, ImmutableArray<System.Numerics.Vector2> vertices, DrawInfo drawInfo)
+    {
+        if (!IsBatching)
+        {
+            throw new InvalidOperationException("Begin() must be called before any Draw() operation.");
+        }
+
+        ref SpriteBatchItem batchItem = ref GetBatchItem();
+
+        batchItem.SetPolygon(texture, position, vertices.AsSpan(), drawInfo);
 
         if (BatchMode == BatchMode.Immediate)
         {

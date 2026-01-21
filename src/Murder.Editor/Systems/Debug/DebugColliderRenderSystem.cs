@@ -4,6 +4,7 @@ using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using ImGuiNET;
+using Microsoft.Xna.Framework.Input;
 using Murder.Components;
 using Murder.Components.Cutscenes;
 using Murder.Core;
@@ -42,6 +43,7 @@ namespace Murder.Editor.Systems
         private static int _hoveringShape = -1;
         private static bool _contextMenuOpened = false;
 
+        private static float _lastSpaceBarTime = 0;
         public void Draw(RenderContext render, Context context)
         {
             DrawImpl(render, context, allowEditingByDefault: false, ref _wasClicking);
@@ -60,14 +62,33 @@ namespace Murder.Editor.Systems
                 return;
             }
 
-            if (Game.Input.Down(MurderInputButtons.Space))
+            float hideAll;
+            if (Game.Input.Pressed(Keys.Space))
+            {
+                _lastSpaceBarTime = Game.NowUnscaled;
+            }
+            if (Game.Input.Down(Keys.Space))
+            {
+                hideAll = 1 - Calculator.ClampTime(Game.NowUnscaled - _lastSpaceBarTime, .2f);
+            }
+            else if (Game.Input.Released(Keys.Space))
+            {
+                _lastSpaceBarTime = Game.NowUnscaled;
+                hideAll = 0;
+            }
+            else
+            {
+                hideAll = Calculator.ClampTime(Game.NowUnscaled - _lastSpaceBarTime, 0.1f);
+            }
+
+            if (hideAll <= 0)
             {
                 return;
             }
 
             bool usingCursor = false;
             EditorHook hook = editor.EditorHook;
-            
+
             foreach (Entity e in context.Entities)
             {
                 if (!e.HasCollider() || !e.HasTransform())
@@ -86,7 +107,7 @@ namespace Murder.Editor.Systems
                     (!hook.HideEditIds.Contains(e.EntityId)) &&
                     (hook.EditorMode == EditorHook.EditorModes.EditMode && (!hook.CanSwitchModes || hook.IsEntitySelectedOrParent(e))) &&
                     hook.StageSettings.HasFlag(Assets.StageSetting.ShowCollider) &&
-                    (hook.CursorIsBusy.Count==1 && hook.CursorIsBusy.Contains(typeof(DebugColliderRenderSystem)) || !hook.CursorIsBusy.Any());
+                    (hook.CursorIsBusy.Count == 1 && hook.CursorIsBusy.Contains(typeof(DebugColliderRenderSystem)) || !hook.CursorIsBusy.Any());
 
                 if (!_contextMenuOpened)
                 {
@@ -113,7 +134,7 @@ namespace Murder.Editor.Systems
                         render,
                         editor.EditorHook,
                         showHandles,
-                        color * (isSolid ? 1f : 0.5f),
+                        color * (isSolid ? 1f : 0.5f) * hideAll,
                         out bool isHoveringShape, out var newShapeResult))
                     {
                         newShape = newShapeResult;
@@ -137,7 +158,7 @@ namespace Murder.Editor.Systems
                     }
                     else if (wasClicking && !usingCursor)
                     {
-                        wasClicking = false;   
+                        wasClicking = false;
                     }
                     else if (allowEditingByDefault)
                     {
@@ -264,8 +285,8 @@ namespace Murder.Editor.Systems
             {
                 _contextMenuOpened = true;
                 ImGui.SeparatorText("Colliders");
-                
-                if (_hoveringEntity>0 && context.World.TryGetEntity(_hoveringEntity) is Entity entity)
+
+                if (_hoveringEntity > 0 && context.World.TryGetEntity(_hoveringEntity) is Entity entity)
                 {
                     ImGui.TextColored(Game.Profile.Theme.Accent, $"Entity {entity.EntityId} Hovered");
 
@@ -311,7 +332,7 @@ namespace Murder.Editor.Systems
             {
                 _contextMenuOpened = false;
             }
-        
+
         }
 
         private static Type DrawShapeButtons()

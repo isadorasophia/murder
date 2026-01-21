@@ -182,10 +182,10 @@ public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSy
 
                         // Draw a circle, filled with the current volume.
                         RenderServices.DrawCircleOutline(render.DebugBatch, cursorPosition + new Point(16), 8, 24, Color.White, 0.5f);
-
                         float ratio = soundPosition.EasedDistance;
 
                         RenderServices.DrawPieChart(render.DebugBatch, cursorPosition + new Point(16), 8, 0, MathF.PI * 2 * ratio, 24, new DrawInfo(Color.White * ratio, 0.5f));
+                        //RenderServices.DrawTriangle()
                     }
                 }
                 else

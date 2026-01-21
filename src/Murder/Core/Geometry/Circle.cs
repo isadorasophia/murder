@@ -37,13 +37,16 @@ namespace Murder.Core.Geometry
 
         internal ImmutableArray<Vector2> MakePolygon()
         {
-            var builder = ImmutableArray.CreateBuilder<Vector2>();
-            foreach (Vector2 point in GeometryServices.CreateCircle(Radius, 12))
+            ImmutableArray<Vector2> circle = GeometryServices.GetUnitCircle(12);
+            Vector2 offset = new Vector2(X, Y);
+
+            var builder = ImmutableArray.CreateBuilder<Vector2>(circle.Length);
+            for (int i = 0; i < circle.Length; i++)
             {
-                builder.Add(point.Point() + new Point(X, Y));
+                builder.Add(circle[i] * Radius + offset);
             }
 
-            return builder.ToImmutable();
+            return builder.MoveToImmutable();
         }
 
         public static int EstipulateSidesFromRadius(float radius)

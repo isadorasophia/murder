@@ -119,7 +119,7 @@ public class SpriteBatchItem
             VertexData[0].TextureCoordinate = texCoord;
         }
     }
-    public void SetPolygon(Texture2D texture, System.Numerics.Vector2 position, ImmutableArray<System.Numerics.Vector2> vertices, DrawInfo drawInfo)
+    public void SetPolygon(Texture2D texture, System.Numerics.Vector2 position, ReadOnlySpan<System.Numerics.Vector2> vertices, DrawInfo drawInfo)
     {
         Texture = texture;
         VertexCount = (short)vertices.Length;
