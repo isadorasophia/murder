@@ -98,7 +98,9 @@ namespace Murder.Services
             var key = new CircleKey(radius, sides);
 
             if (_circleCache.TryGetValue(key, out var cached))
+            {
                 return cached;
+            }
 
             return CreateAndCacheCircle(radius, sides, key);
         }
@@ -111,19 +113,16 @@ namespace Murder.Services
             // Since we know the exact length of the array, we can use the ImmutableArray.CreateBuilder<>
             // plus the .MoveToImmutable() that will create an ImmutableArray<>
             // from the internals of the Builder without copying it:
-            var builder = ImmutableArray.CreateBuilder<Vector2>(sides + 1);
+            var builder = ImmutableArray.CreateBuilder<Vector2>(sides);
 
             for (int i = 0; i < sides; i++)
             {
-                double theta = i * step;
+                double theta = max - (i * step);  // Go backwards around the circle
                 builder.Add(new Vector2(
                     (float)(radius * Math.Cos(theta)),
                     (float)(radius * Math.Sin(theta))
                 ));
             }
-
-            // Close the loop by adding first point again
-            builder.Add(new Vector2(radius, 0));
 
             var result = builder.MoveToImmutable();
             _circleCache[key] = result;
@@ -144,7 +143,9 @@ namespace Murder.Services
             var key = new TriangleKey(radius, rotation);
 
             if (_triangleCache.TryGetValue(key, out var cached))
+            {
                 return cached;
+            }
 
             return CreateAndCacheTriangle(radius, rotation, key);
         }

@@ -28,7 +28,7 @@ namespace Murder.Core.Geometry
             _polygonCache ??= new PolygonShape(
                 new Polygon(Circle.MakePolygon())
                 );
-            return _polygonCache.Value;
+            return new PolygonShape(new Polygon(Circle.MakePolygon()));
         }
     }
 }

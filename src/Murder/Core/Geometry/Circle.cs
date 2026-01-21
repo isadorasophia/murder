@@ -46,7 +46,7 @@ namespace Murder.Core.Geometry
                 builder.Add(circle[i] * Radius + offset);
             }
 
-            return builder.MoveToImmutable();
+            return builder.ToImmutable();
         }
 
         public static int EstipulateSidesFromRadius(float radius)
