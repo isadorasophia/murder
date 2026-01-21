@@ -1,4 +1,5 @@
-﻿using Bang.Components;
+﻿using Bang;
+using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.StateMachines;
@@ -8,7 +9,8 @@ using System.Collections.Immutable;
 namespace Murder.Systems
 {
     [Filter(kind: ContextAccessorKind.Read, typeof(IStateMachineComponent))]
-    public class StateMachineSystem : IStartupSystem, IUpdateSystem, IExitSystem
+    [Watch(typeof(IStateMachineComponent))]
+    public class StateMachineSystem : IStartupSystem, IUpdateSystem, IReactiveSystem, IExitSystem
     {
         public void Start(Context context)
         {
@@ -65,6 +67,29 @@ namespace Murder.Systems
                 {
                     disposableRoutine.Dispose();
                 }
+            }
+        }
+
+        public void OnAdded(World world, ImmutableArray<Entity> entities)
+        {
+            Cleanup(entities);
+        }
+
+        public void OnModified(World world, ImmutableArray<Entity> entities)
+        {
+            Cleanup(entities);
+        }
+
+        public void OnRemoved(World world, ImmutableArray<Entity> entities)
+        {
+            Cleanup(entities);
+        }
+
+        private void Cleanup(ImmutableArray<Entity> entities)
+        {
+            foreach (Entity e in entities)
+            {
+                e.RemovePauseStateMachineUpdate();
             }
         }
     }
