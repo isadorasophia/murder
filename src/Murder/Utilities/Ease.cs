@@ -476,7 +476,7 @@ public static partial class Ease
         return MathF.Sin(Calculator.Clamp01(t) * MathF.PI);
     }
     // Predefined curve representing the intensity of the flicker effect over time
-    private static readonly float[] flickerCurve = {
+    private static readonly float[] _flickerCurve = {
     0.0f, 0.2f, 0.5f, 0.8f, 1.0f, 0.7f,  1.0f, 1.0f,0.4f, 0.3f, 0.6f, 0.9f, 0.6f, 0.3f, 0.1f, 0.0f
 };
 
@@ -487,13 +487,13 @@ public static partial class Ease
         t = Math.Clamp(t, 0.0f, 1.0f);
 
         // Map t to a fractional index in the flickerCurve array
-        float scaledIndex = t * (flickerCurve.Length - 1);
+        float scaledIndex = t * (_flickerCurve.Length - 1);
         int lowerIndex = (int)Math.Floor(scaledIndex);
-        int upperIndex = Math.Min(lowerIndex + 1, flickerCurve.Length - 1);
+        int upperIndex = Math.Min(lowerIndex + 1, _flickerCurve.Length - 1);
 
         // Get the two closest values from the curve
-        float lowerValue = flickerCurve[lowerIndex];
-        float upperValue = flickerCurve[upperIndex];
+        float lowerValue = _flickerCurve[lowerIndex];
+        float upperValue = _flickerCurve[upperIndex];
 
         // Calculate the fractional part for interpolation
         float fractionalPart = scaledIndex - lowerIndex;
