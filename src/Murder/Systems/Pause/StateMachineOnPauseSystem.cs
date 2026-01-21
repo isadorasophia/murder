@@ -1,5 +1,4 @@
-﻿using Bang;
-using Bang.Contexts;
+﻿using Bang.Contexts;
 using Bang.Entities;
 using Bang.StateMachines;
 using Bang.Systems;
@@ -10,20 +9,8 @@ namespace Murder.Systems
 {
     [OnPause]
     [Filter(typeof(IStateMachineComponent), typeof(DoNotPauseComponent))]
-    [Watch(typeof(IStateMachineComponent))]
-    public class StateMachineOnPauseSystem : IUpdateSystem, IReactiveSystem, IExitSystem
+    public class StateMachineOnPauseSystem : IUpdateSystem, IExitSystem
     {
-        public void OnAdded(World world, ImmutableArray<Entity> entities)
-        { }
-
-        public void OnModified(World world, ImmutableArray<Entity> entities)
-        { }
-
-        public void OnRemoved(World world, ImmutableArray<Entity> entities)
-        {
-            Clean(entities, force: false);
-        }
-
         public void Exit(Context context)
         {
             Clean(context.Entities, force: true);
@@ -33,7 +20,11 @@ namespace Murder.Systems
         {
             foreach (Entity e in context.Entities)
             {
-                IStateMachineComponent routine = e.GetComponent<IStateMachineComponent>();
+                if (e.TryGetStateMachine() is not IStateMachineComponent routine)
+                {
+                    continue;
+                }
+
                 routine.Tick(Game.UnscaledDeltaTime);
             }
         }
@@ -42,10 +33,14 @@ namespace Murder.Systems
         {
             foreach (Entity e in entities)
             {
+                if (e.TryGetStateMachine() is not IDisposable disposableRoutine)
+                {
+                    continue;
+                }
+
                 if (e.IsDestroyed || force)
                 {
-                    IStateMachineComponent? routine = e.TryGetStateMachine();
-                    routine?.OnDestroyed();
+                    disposableRoutine.Dispose();
                 }
             }
         }
