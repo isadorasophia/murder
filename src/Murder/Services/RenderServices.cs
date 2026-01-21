@@ -408,87 +408,166 @@ public static partial class RenderServices
         return DrawSprite(batch, assetGuid, new Vector2(x, y), drawInfo, animationInfo);
     }
 
+
+
+//    public static FrameInfo DrawSprite(this Batch2D batch, SpriteAsset asset, Vector2 position, DrawInfo drawInfo, AnimationInfo animationInfo)
+//    {
+//        FrameInfo drawAt(Vector2 position, Color color, bool wash, float sort)
+//        {
+//            // [PERF] There's an obvious way to optimize this by caching the animation frame and drawing it instead of recalculating it every time.
+//            FrameInfo frameInfo = DrawSprite(
+//            batch,
+//            position,
+//            drawInfo.Clip,
+//            animationInfo.Name,
+//            asset,
+//            animationInfo.Start,
+//            animationInfo.Duration,
+//            animationInfo.Loop,
+//            drawInfo.Origin,
+//            drawInfo.ImageFlip,
+//            drawInfo.Rotation,
+//            drawInfo.Scale,
+//            color,
+//            wash ? RenderServices.BLEND_WASH : drawInfo.GetBlendMode(),
+//            drawInfo.BlendState,
+//            sort,
+//            animationInfo.CurrentTime());
+
+//#if DEBUG
+//            if (frameInfo.Failed)
+//            {
+//                DrawRectangle(batch, new Rectangle(position, new Vector2(32, 32)), Color.White * Calculator.Wave(10), sort);
+//                DrawText(batch, MurderFonts.PixelFont, $"<c=#ffffff>Sprite: </c>{asset.Name}\n\n<c=#ffffff>Animation:  </c>{animationInfo.Name}", position, new DrawInfo(0)
+//                {
+//                    Color = Color.Orange,
+//                    Outline = Color.Black
+//                }); ;
+//            }
+//#endif
+
+//            return frameInfo;
+//        }
+
+//        if (animationInfo.Name == "_")
+//        {
+//            return new FrameInfo(0, 0, true, Animation.Empty);
+//        }
+
+//        if (drawInfo.Outline.HasValue && drawInfo.OutlineStyle != OutlineStyle.None)
+//        {
+//            if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Bottom))
+//            {
+//                drawAt(position + new Vector2(0, 1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+//            }
+
+//            if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Top))
+//            {
+//                drawAt(position + new Vector2(0, -1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+//            }
+
+//            if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Left))
+//            {
+//                drawAt(position + new Vector2(-1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+//            }
+
+//            if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Right))
+//            {
+//                drawAt(position + new Vector2(1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+//            }
+//        }
+
+//        if (drawInfo.Shadow.HasValue)
+//        {
+//            int shadowOffset = 1;
+
+//            // Make sure the shadow shows up even if there is an outline.
+//            if (drawInfo.Outline.HasValue && drawInfo.OutlineStyle.HasFlag(OutlineStyle.Bottom))
+//            {
+//                shadowOffset = 2;
+//            }
+
+//            drawAt(position + new Vector2(0, shadowOffset), drawInfo.Shadow.Value, true, drawInfo.Sort + 0.0002f);
+//        }
+
+//        return drawAt(position, drawInfo.Color, false, drawInfo.Sort);
+//    }
     public static FrameInfo DrawSprite(this Batch2D batch, SpriteAsset asset, Vector2 position, DrawInfo drawInfo, AnimationInfo animationInfo)
     {
-        FrameInfo drawAt(Vector2 position, Color color, bool wash, float sort)
-        {
-            // [PERF] There's an obvious way to optimize this by caching the animation frame and drawing it instead of recalculating it every time.
-            FrameInfo frameInfo = DrawSprite(
-            batch,
-            position,
-            drawInfo.Clip,
-            animationInfo.Name,
-            asset,
-            animationInfo.Start,
-            animationInfo.Duration,
-            animationInfo.Loop,
-            drawInfo.Origin,
-            drawInfo.ImageFlip,
-            drawInfo.Rotation,
-            drawInfo.Scale,
-            color,
-            wash ? RenderServices.BLEND_WASH : drawInfo.GetBlendMode(),
-            drawInfo.BlendState,
-            sort,
-            animationInfo.CurrentTime());
-
-#if DEBUG
-            if (frameInfo.Failed)
-            {
-                DrawRectangle(batch, new Rectangle(position, new Vector2(32, 32)), Color.White * Calculator.Wave(10), sort);
-                DrawText(batch, MurderFonts.PixelFont, $"<c=#ffffff>Sprite: </c>{asset.Name}\n\n<c=#ffffff>Animation:  </c>{animationInfo.Name}", position, new DrawInfo(0)
-                {
-                    Color = Color.Orange,
-                    Outline = Color.Black
-                }); ;
-            }
-#endif
-
-            return frameInfo;
-        }
-
         if (animationInfo.Name == "_")
         {
             return new FrameInfo(0, 0, true, Animation.Empty);
         }
 
+        if (!asset.Animations.TryGetValue(animationInfo.Name, out var animation))
+        {
+            GameLogger.Log($"Couldn't find animation {animationInfo.Name} for {asset.Guid}.");
+            return FrameInfo.Fail;
+        }
+
+        // Calculate frame info ONCE
+        float time = animationInfo.CurrentTime() - animationInfo.Start;
+        var frameInfo = animation.Evaluate(time, animationInfo.Loop, animationInfo.Duration) with
+        {
+            Animation = animation
+        };
+
+        var image = asset.GetFrame(frameInfo.Frame);
+        Vector2 offset = (asset.Origin + drawInfo.Origin * image.Size).Round();
+
+        void DrawImageAt(Vector2 pos, Color color, bool wash, float sort)
+        {
+            image.Draw(
+                spriteBatch: batch,
+                position: pos.Round(),
+                clip: drawInfo.Clip,
+                color: color,
+                offset: offset,
+                scale: drawInfo.Scale,
+                rotation: drawInfo.Rotation,
+                imageFlip: drawInfo.ImageFlip,
+                blend: wash ? BLEND_WASH : drawInfo.GetBlendMode(),
+                blendState: drawInfo.BlendState,
+                sort: sort
+            );
+        }
+
+        // Draw outline (if needed)
         if (drawInfo.Outline.HasValue && drawInfo.OutlineStyle != OutlineStyle.None)
         {
             if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Bottom))
-            {
-                drawAt(position + new Vector2(0, 1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
-            }
+                DrawImageAt(position + new Vector2(0, 1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
 
             if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Top))
-            {
-                drawAt(position + new Vector2(0, -1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
-            }
+                DrawImageAt(position + new Vector2(0, -1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
 
             if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Left))
-            {
-                drawAt(position + new Vector2(-1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
-            }
+                DrawImageAt(position + new Vector2(-1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
 
             if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Right))
-            {
-                drawAt(position + new Vector2(1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
-            }
+                DrawImageAt(position + new Vector2(1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
         }
 
+        // Draw shadow (if needed)
         if (drawInfo.Shadow.HasValue)
         {
-            int shadowOffset = 1;
-
-            // Make sure the shadow shows up even if there is an outline.
-            if (drawInfo.Outline.HasValue && drawInfo.OutlineStyle.HasFlag(OutlineStyle.Bottom))
-            {
-                shadowOffset = 2;
-            }
-
-            drawAt(position + new Vector2(0, shadowOffset), drawInfo.Shadow.Value, true, drawInfo.Sort + 0.0002f);
+            int shadowOffset = drawInfo.Outline.HasValue && drawInfo.OutlineStyle.HasFlag(OutlineStyle.Bottom) ? 2 : 1;
+            DrawImageAt(position + new Vector2(0, shadowOffset), drawInfo.Shadow.Value, true, drawInfo.Sort + 0.0002f);
         }
 
-        return drawAt(position, drawInfo.Color, false, drawInfo.Sort);
+        // Draw main sprite
+        DrawImageAt(position, drawInfo.Color, false, drawInfo.Sort);
+
+#if DEBUG
+        if (frameInfo.Failed)
+        {
+            DrawRectangle(batch, new Rectangle(position, new Vector2(32, 32)), Color.White * Calculator.Wave(10), drawInfo.Sort);
+            DrawText(batch, MurderFonts.PixelFont, $"<c=#ffffff>Sprite: </c>{asset.Name}\n\n<c=#ffffff>Animation:  </c>{animationInfo.Name}",
+                position, new DrawInfo(0) { Color = Color.Orange, Outline = Color.Black });
+        }
+#endif
+
+        return frameInfo;
     }
 
     /// <summary>
@@ -782,7 +861,7 @@ public static partial class RenderServices
         // Scale vertices into the array
         for (int i = 0; i < steps; i++)
         {
-            _cachedPieChartVertices[i+1] = circleVertices[i] * radius;
+            _cachedPieChartVertices[i + 1] = circleVertices[i] * radius;
         }
 
         float angleStep = (MathF.PI * 2) / steps;
