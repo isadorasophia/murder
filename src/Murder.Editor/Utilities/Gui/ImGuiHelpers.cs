@@ -895,11 +895,14 @@ public static class ImGuiHelpers
                 {
                     selectedText = prettyNames[i];
                 }
+                else
+                {
+                    selectedText = $"{selectedText}, {prettyNames[i]}";
+                }
             }
         }
-        string preview = totalSelected > 1 ? $"{totalSelected} selected" : selectedText;
 
-        if (ImGui.BeginCombo($"##{id}-dropdn", preview))
+        if (ImGui.BeginCombo($"##{id}-dropdn", selectedText))
         {
             for (int i = 0; i < values.Length; i++)
             {
