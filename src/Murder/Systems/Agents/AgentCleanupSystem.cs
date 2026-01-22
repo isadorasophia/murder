@@ -8,7 +8,7 @@ namespace Murder.Systems
 {
     [Filter(typeof(AgentComponent))]
     [Filter(ContextAccessorFilter.AnyOf, typeof(VelocityComponent), typeof(AgentImpulseComponent))]
-    [Filter(ContextAccessorFilter.NoneOf, typeof(DisableAgentComponent), typeof(AgentPauseComponent))]
+    [Filter(ContextAccessorFilter.NoneOf, typeof(DisableAgentComponent))]
     internal class AgentCleanupSystem : IFixedUpdateSystem
     {
         public void FixedUpdate(Context context)
