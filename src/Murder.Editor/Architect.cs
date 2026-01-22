@@ -457,9 +457,7 @@ namespace Murder.Editor
         protected void MaximizeWindow()
         {
             // Not sure what is not supported here?
-            bool supportedOs = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || 
-                RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ||
-                RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+            bool supportedOs = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
             if (supportedOs)
             {
