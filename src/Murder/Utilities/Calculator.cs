@@ -96,6 +96,14 @@ namespace Murder.Utilities
             return (a - b).LengthSquared() <= distance * distance;
         }
 
+        /// <summary>
+        /// Checks if a distance between two floats is less than a given distance.
+        /// </summary>
+        public static bool DistanceCheck(float a, float b, float distance)
+        {
+            return MathF.Abs(a - b) <= distance;
+        }
+
         public static int Digits(int number)
         {
             if (number == 0) return 1;
