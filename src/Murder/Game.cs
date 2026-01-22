@@ -120,9 +120,11 @@ namespace Murder
         public static float FixedDeltaTime => Instance._fixedUpdateDelta;
 
         public static bool IsRunningSlowly { get; private set; } = false;
+
         /// <summary>
         /// Total time in seconds that the game has been running since the last update.
         /// Useful for calculating the total time of the game, including pauses and freezes.
+        /// DO NOT rely on this for critical effects or operations.
         /// </summary>
         public float LastFrameDuration { get; private set; } = 0f;
         private readonly Stopwatch _lastFrameStopwatch = new Stopwatch();
@@ -748,7 +750,6 @@ namespace Murder
             GameLogger.Verify(ActiveScene is not null);
 
             var calculatedDelta = LastFrameDuration;
-
 
             double deltaTime;
             if (_isSkippingDeltaTimeOnUpdate)
