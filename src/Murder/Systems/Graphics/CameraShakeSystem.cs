@@ -5,19 +5,18 @@ using Murder.Core.Graphics;
 
 namespace Murder.Systems;
 
+[DoNotPause]
 [Filter(ContextAccessorFilter.None)]
-public class CameraShakeSystem : IMonoPreRenderSystem
+public class CameraShakeSystem : IUpdateSystem
 {
-    public CameraShakeSystem()
-    {
-    }
+    public CameraShakeSystem() { }
 
-    public void BeforeDraw(Context context)
+    public void Update(Context context)
     {
-        var camera = ((MonoWorld)context.World).Camera;
+        Camera2D camera = ((MonoWorld)context.World).Camera;
         if (camera.ShakeTime > 0)
         {
-            camera.ShakeTime -= Game.Instance.LastFrameDuration;
+            camera.ShakeTime -= Game.UnscaledDeltaTime;
             if (camera.ShakeTime < 0)
             {
                 camera.ShakeTime = 0f;
