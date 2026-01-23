@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Murder.Utilities;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -17,6 +18,7 @@ public class JsonTypeConverter : JsonConverter<Type>
         string? assemblyQualifiedName = reader.GetString();
         if (assemblyQualifiedName is null || Type.GetType(assemblyQualifiedName) is not Type t)
         {
+            // TODO: Do something smarter that converts previous types into new ones?
             throw new JsonException($"Type {assemblyQualifiedName} not found!");
         }
 
