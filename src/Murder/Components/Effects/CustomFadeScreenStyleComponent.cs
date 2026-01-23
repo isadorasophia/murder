@@ -10,4 +10,7 @@ public readonly struct CustomFadeScreenStyleComponent: IComponent
     public readonly SoundEventId? CustomSoundFadeIn = null;
 
     public CustomFadeScreenStyleComponent() { }
+
+    public CustomFadeScreenStyleComponent(string customFadeImage) =>
+        CustomFadeImage = customFadeImage;
 }
