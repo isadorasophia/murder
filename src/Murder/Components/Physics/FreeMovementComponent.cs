@@ -1,18 +1,29 @@
 ﻿using Bang.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Components;
 
+public enum FreeMovementFlags
+{
+    None = 0,
+
+    /// <summary>
+    /// Do not automatically clear this.
+    /// </summary>
+    DoNotClear = 1
+}
+
+[RuntimeOnly]
 public readonly struct FreeMovementComponent : IComponent
 {
-    public readonly float Since;
+    public readonly FreeMovementFlags Flags = FreeMovementFlags.None;
 
     public FreeMovementComponent()
     {
-        Since = Game.Now;
+    }
+
+    public FreeMovementComponent(FreeMovementFlags flags)
+    {
+        Flags = flags;
     }
 }
