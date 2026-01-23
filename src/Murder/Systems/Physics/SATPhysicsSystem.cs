@@ -55,7 +55,7 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                             _ignore.Add(child);
                         }
                     }
-                } 
+                }
             }
 
             if (e.Parent is not null)
@@ -93,20 +93,18 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                 IMurderTransformComponent relativeStartPosition = e.GetMurderTransform();
                 Vector2 startPosition = relativeStartPosition.GetGlobal().ToVector2();
 
-                
+
                 // This is moving too slowly, checking for collisions is not necessary.
                 if ((startPosition + velocity).Round() == startPosition.Round())
                 {
                     ignoreCollisions = true;
                 }
 
-                if (collider is not null && 
-                    (collider.Value.HasLayer(CollisionLayersBase.TRIGGER) || collider.Value.Layer == CollisionLayersBase.NONE))
+                if (collider is null)
                 {
                     ignoreCollisions = true;
                 }
-
-                if (collider is null)
+                else if (!collider.Value.HasLayer(CollisionLayersBase.ACTOR))
                 {
                     ignoreCollisions = true;
                 }
@@ -158,7 +156,7 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                         // Some collision was found!
                         if (collided)
                         {
-                            e.SendMessage(new CollidedWithMessage(hitId, hitLayer));
+                            e.SendCollidedWithMessage(hitId, hitLayer);
 
                             // Slide the speed accordingly
                             Vector2 translationVector = startPosition + velocity - moveToPosition;
