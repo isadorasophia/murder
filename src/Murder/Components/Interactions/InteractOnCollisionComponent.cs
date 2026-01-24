@@ -9,7 +9,7 @@ namespace Murder.Components
     public readonly struct InteractOnCollisionComponent : IComponent
     {
         [Tooltip("Whether this should be activated again.")]
-        public readonly bool OnlyOnce = false;
+        public readonly bool OnlyOnce { get; init; } = false;
 
         [Tooltip("Whether this will send a message once the object stop colliding.")]
         public readonly bool SendMessageOnExit = false;
