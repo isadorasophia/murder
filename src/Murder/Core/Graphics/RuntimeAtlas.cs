@@ -85,7 +85,6 @@ public class RuntimeAtlas : IDisposable
             _chunkBrush,
             _chunkBrush.Bounds,
             rect,
-            Matrix.Identity,
             Color.Transparent,
             BlendState.Opaque);
     }
@@ -124,7 +123,7 @@ public class RuntimeAtlas : IDisposable
         Game.GraphicsDevice.SetRenderTarget(_atlasRenderTarget);
 
         Rectangle rect = GetRect(_currentlyBatching);
-        RenderServices.DrawTextureQuad(_chunkBrush, _chunkBrush.Bounds, rect, Matrix.Identity, Color.White, BlendState.AlphaBlend);
+        RenderServices.DrawTextureQuad(_chunkBrush, _chunkBrush.Bounds, rect, Color.White, BlendState.AlphaBlend);
 
         if (_debug)
         {

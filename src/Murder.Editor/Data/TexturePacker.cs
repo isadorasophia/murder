@@ -554,7 +554,7 @@ namespace Murder.Editor.Data
                             RenderServices.DrawTextureQuad(sourceImg,
                                 source: n.Texture.CroppedBounds,
                                 destination: new Rectangle(n.Bounds.X, n.Bounds.Y, n.Texture.CroppedBounds.Width, n.Texture.CroppedBounds.Height),
-                                Microsoft.Xna.Framework.Matrix.Identity, Color.White, BlendState.AlphaBlend);
+                                Color.White, BlendState.AlphaBlend);
                             break;
 
                         case ".clip":
@@ -616,7 +616,7 @@ namespace Murder.Editor.Data
                 RenderServices.DrawTextureQuad(sourceImg,
                 source: n.Texture.CroppedBounds,
                 destination: new Rectangle(n.Bounds.X, n.Bounds.Y, n.Texture.CroppedBounds.Width, n.Texture.CroppedBounds.Height),
-                Microsoft.Xna.Framework.Matrix.Identity, Color.White, BlendState.AlphaBlend);
+                Color.White, BlendState.AlphaBlend);
             }
 
             return sourceImg;

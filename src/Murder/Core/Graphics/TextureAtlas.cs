@@ -116,7 +116,6 @@ namespace Murder.Core.Graphics
                 textureCoord.Atlas,
                 textureCoord.SourceRectangle,
                 result.Bounds,
-                Microsoft.Xna.Framework.Matrix.Identity,
                 Color.White,
                 BlendState.AlphaBlend
                 );

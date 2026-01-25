@@ -23,6 +23,28 @@ public static partial class RenderServices
     const int Y_SORT_RANGE = 10000;
     const int Y_SORT_RANGE_X2 = Y_SORT_RANGE * 2;
 
+    private static Matrix _cachedProjectionMatrix;
+    private static int _cachedViewportWidth;
+    private static int _cachedViewportHeight;
+    // [PERF] This can be recalculated by someone else, only when the window size changes
+    private static Matrix GetProjectionMatrix(GraphicsDevice graphicsDevice)
+    {
+        int width = graphicsDevice.Viewport.Width;
+        int height = graphicsDevice.Viewport.Height;
+
+        if (width != _cachedViewportWidth || height != _cachedViewportHeight)
+        {
+            _cachedViewportWidth = width;
+            _cachedViewportHeight = height;
+            var size = new Vector2(graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height);
+            _cachedProjectionMatrix = Matrix.Identity;
+            _cachedProjectionMatrix *= Matrix.CreateScale((1f / size.X) * 2, -(1f / size.Y) * 2, 1f); // scale to relative points
+            _cachedProjectionMatrix *= Matrix.CreateTranslation(-1f, 1f, 0); // translate to relative points
+        }
+
+        return _cachedProjectionMatrix;
+    }
+
     public static DrawMenuInfo DrawVerticalMenu(
         Batch2D batch,
         in Point position,
@@ -133,9 +155,16 @@ public static partial class RenderServices
         Rectangle area,
         float sort)
     {
-        for (int x = Calculator.RoundToInt(area.X); x < area.Right; x += texture.Size.X)
+        int texWidth = texture.Size.X;
+        int texHeight = texture.Size.Y;
+        float areaRight = area.Right;
+        float areaBottom = area.Bottom;
+        int startX = Calculator.RoundToInt(area.X);
+        int startY = Calculator.RoundToInt(area.Y);
+
+        for (int x = startX; x < areaRight; x += texWidth)
         {
-            for (int y = Calculator.RoundToInt(area.Y); y < area.Bottom; y += texture.Size.Y)
+            for (int y = startY; y < areaBottom; y += texHeight)
             {
                 Vector2 excess = new(MathF.Max(0, x + texture.Size.X - area.Right), MathF.Max(0, y + texture.Size.Y - area.Bottom));
                 texture.Draw(batch, new Vector2(x, y), new Rectangle(Vector2.Zero, texture.Size - excess), Color.White, Vector2.One, 0, Vector2.Zero, ImageFlip.None, RenderServices.BLEND_NORMAL, MurderBlendState.AlphaBlend, sort);
@@ -410,88 +439,88 @@ public static partial class RenderServices
 
 
 
-//    public static FrameInfo DrawSprite(this Batch2D batch, SpriteAsset asset, Vector2 position, DrawInfo drawInfo, AnimationInfo animationInfo)
-//    {
-//        FrameInfo drawAt(Vector2 position, Color color, bool wash, float sort)
-//        {
-//            // [PERF] There's an obvious way to optimize this by caching the animation frame and drawing it instead of recalculating it every time.
-//            FrameInfo frameInfo = DrawSprite(
-//            batch,
-//            position,
-//            drawInfo.Clip,
-//            animationInfo.Name,
-//            asset,
-//            animationInfo.Start,
-//            animationInfo.Duration,
-//            animationInfo.Loop,
-//            drawInfo.Origin,
-//            drawInfo.ImageFlip,
-//            drawInfo.Rotation,
-//            drawInfo.Scale,
-//            color,
-//            wash ? RenderServices.BLEND_WASH : drawInfo.GetBlendMode(),
-//            drawInfo.BlendState,
-//            sort,
-//            animationInfo.CurrentTime());
+    //    public static FrameInfo DrawSprite(this Batch2D batch, SpriteAsset asset, Vector2 position, DrawInfo drawInfo, AnimationInfo animationInfo)
+    //    {
+    //        FrameInfo drawAt(Vector2 position, Color color, bool wash, float sort)
+    //        {
+    //            // [PERF] There's an obvious way to optimize this by caching the animation frame and drawing it instead of recalculating it every time.
+    //            FrameInfo frameInfo = DrawSprite(
+    //            batch,
+    //            position,
+    //            drawInfo.Clip,
+    //            animationInfo.Name,
+    //            asset,
+    //            animationInfo.Start,
+    //            animationInfo.Duration,
+    //            animationInfo.Loop,
+    //            drawInfo.Origin,
+    //            drawInfo.ImageFlip,
+    //            drawInfo.Rotation,
+    //            drawInfo.Scale,
+    //            color,
+    //            wash ? RenderServices.BLEND_WASH : drawInfo.GetBlendMode(),
+    //            drawInfo.BlendState,
+    //            sort,
+    //            animationInfo.CurrentTime());
 
-//#if DEBUG
-//            if (frameInfo.Failed)
-//            {
-//                DrawRectangle(batch, new Rectangle(position, new Vector2(32, 32)), Color.White * Calculator.Wave(10), sort);
-//                DrawText(batch, MurderFonts.PixelFont, $"<c=#ffffff>Sprite: </c>{asset.Name}\n\n<c=#ffffff>Animation:  </c>{animationInfo.Name}", position, new DrawInfo(0)
-//                {
-//                    Color = Color.Orange,
-//                    Outline = Color.Black
-//                }); ;
-//            }
-//#endif
+    //#if DEBUG
+    //            if (frameInfo.Failed)
+    //            {
+    //                DrawRectangle(batch, new Rectangle(position, new Vector2(32, 32)), Color.White * Calculator.Wave(10), sort);
+    //                DrawText(batch, MurderFonts.PixelFont, $"<c=#ffffff>Sprite: </c>{asset.Name}\n\n<c=#ffffff>Animation:  </c>{animationInfo.Name}", position, new DrawInfo(0)
+    //                {
+    //                    Color = Color.Orange,
+    //                    Outline = Color.Black
+    //                }); ;
+    //            }
+    //#endif
 
-//            return frameInfo;
-//        }
+    //            return frameInfo;
+    //        }
 
-//        if (animationInfo.Name == "_")
-//        {
-//            return new FrameInfo(0, 0, true, Animation.Empty);
-//        }
+    //        if (animationInfo.Name == "_")
+    //        {
+    //            return new FrameInfo(0, 0, true, Animation.Empty);
+    //        }
 
-//        if (drawInfo.Outline.HasValue && drawInfo.OutlineStyle != OutlineStyle.None)
-//        {
-//            if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Bottom))
-//            {
-//                drawAt(position + new Vector2(0, 1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
-//            }
+    //        if (drawInfo.Outline.HasValue && drawInfo.OutlineStyle != OutlineStyle.None)
+    //        {
+    //            if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Bottom))
+    //            {
+    //                drawAt(position + new Vector2(0, 1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+    //            }
 
-//            if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Top))
-//            {
-//                drawAt(position + new Vector2(0, -1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
-//            }
+    //            if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Top))
+    //            {
+    //                drawAt(position + new Vector2(0, -1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+    //            }
 
-//            if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Left))
-//            {
-//                drawAt(position + new Vector2(-1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
-//            }
+    //            if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Left))
+    //            {
+    //                drawAt(position + new Vector2(-1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+    //            }
 
-//            if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Right))
-//            {
-//                drawAt(position + new Vector2(1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
-//            }
-//        }
+    //            if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Right))
+    //            {
+    //                drawAt(position + new Vector2(1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+    //            }
+    //        }
 
-//        if (drawInfo.Shadow.HasValue)
-//        {
-//            int shadowOffset = 1;
+    //        if (drawInfo.Shadow.HasValue)
+    //        {
+    //            int shadowOffset = 1;
 
-//            // Make sure the shadow shows up even if there is an outline.
-//            if (drawInfo.Outline.HasValue && drawInfo.OutlineStyle.HasFlag(OutlineStyle.Bottom))
-//            {
-//                shadowOffset = 2;
-//            }
+    //            // Make sure the shadow shows up even if there is an outline.
+    //            if (drawInfo.Outline.HasValue && drawInfo.OutlineStyle.HasFlag(OutlineStyle.Bottom))
+    //            {
+    //                shadowOffset = 2;
+    //            }
 
-//            drawAt(position + new Vector2(0, shadowOffset), drawInfo.Shadow.Value, true, drawInfo.Sort + 0.0002f);
-//        }
+    //            drawAt(position + new Vector2(0, shadowOffset), drawInfo.Shadow.Value, true, drawInfo.Sort + 0.0002f);
+    //        }
 
-//        return drawAt(position, drawInfo.Color, false, drawInfo.Sort);
-//    }
+    //        return drawAt(position, drawInfo.Color, false, drawInfo.Sort);
+    //    }
     public static FrameInfo DrawSprite(this Batch2D batch, SpriteAsset asset, Vector2 position, DrawInfo drawInfo, AnimationInfo animationInfo)
     {
         if (animationInfo.Name == "_")
@@ -514,12 +543,12 @@ public static partial class RenderServices
 
         var image = asset.GetFrame(frameInfo.Frame);
         Vector2 offset = (asset.Origin + drawInfo.Origin * image.Size).Round();
-
+        Vector2 roundedPosition = position.Round();
         void DrawImageAt(Vector2 pos, Color color, bool wash, float sort)
         {
             image.Draw(
                 spriteBatch: batch,
-                position: pos.Round(),
+                position: pos,
                 clip: drawInfo.Clip,
                 color: color,
                 offset: offset,
@@ -536,27 +565,27 @@ public static partial class RenderServices
         if (drawInfo.Outline.HasValue && drawInfo.OutlineStyle != OutlineStyle.None)
         {
             if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Bottom))
-                DrawImageAt(position + new Vector2(0, 1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+                DrawImageAt(roundedPosition + new Vector2(0, 1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
 
             if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Top))
-                DrawImageAt(position + new Vector2(0, -1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+                DrawImageAt(roundedPosition + new Vector2(0, -1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
 
             if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Left))
-                DrawImageAt(position + new Vector2(-1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+                DrawImageAt(roundedPosition + new Vector2(-1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
 
             if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Right))
-                DrawImageAt(position + new Vector2(1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+                DrawImageAt(roundedPosition + new Vector2(1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
         }
 
         // Draw shadow (if needed)
         if (drawInfo.Shadow.HasValue)
         {
             int shadowOffset = drawInfo.Outline.HasValue && drawInfo.OutlineStyle.HasFlag(OutlineStyle.Bottom) ? 2 : 1;
-            DrawImageAt(position + new Vector2(0, shadowOffset), drawInfo.Shadow.Value, true, drawInfo.Sort + 0.0002f);
+            DrawImageAt(roundedPosition + new Vector2(0, shadowOffset), drawInfo.Shadow.Value, true, drawInfo.Sort + 0.0002f);
         }
 
         // Draw main sprite
-        DrawImageAt(position, drawInfo.Color, false, drawInfo.Sort);
+        DrawImageAt(roundedPosition, drawInfo.Color, false, drawInfo.Sort);
 
 #if DEBUG
         if (frameInfo.Failed)
@@ -900,14 +929,14 @@ public static partial class RenderServices
     public static Vector3 BLEND_WASH = new(0, 1, 0);
     public static Vector3 BLEND_COLOR_ONLY = new(0, 0, 1);
 
-    public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, Effect? effect, BlendState blend, bool smoothing)
+    public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Color color, Effect? effect, BlendState blend, bool smoothing)
     {
         (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BLEND_NORMAL);
 
-        DrawIndexedVertices(matrix, Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, effect, blend, texture, smoothing);
+        DrawIndexedVertices(Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, effect, blend, texture, smoothing);
     }
 
-    public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, BlendState blend)
+    public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Color color, BlendState blend)
     {
         (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BLEND_NORMAL);
 
@@ -917,21 +946,19 @@ public static partial class RenderServices
             Game.Data.ShaderSprite?.SetTechnique("Alpha");
 
         DrawIndexedVertices(
-            matrix,
             Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, Game.Data.ShaderSprite,
             blend,
             texture,
             false);
     }
 
-    public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, BlendState blend, Effect? shaderEffect)
-        => DrawTextureQuad(texture, source, destination, matrix, color, blend, shaderEffect, BLEND_NORMAL);
-    public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, BlendState blend, Effect? shaderEffect, Vector3 colorBlend)
+    public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Color color, BlendState blend, Effect? shaderEffect)
+        => DrawTextureQuad(texture, source, destination, color, blend, shaderEffect, BLEND_NORMAL);
+    public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Color color, BlendState blend, Effect? shaderEffect, Vector3 colorBlend)
     {
         (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, colorBlend);
 
         DrawIndexedVertices(
-            matrix,
             Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, shaderEffect,
             blend,
             texture);
@@ -952,7 +979,6 @@ public static partial class RenderServices
         Game.Data.ShaderSprite?.SetTechnique("Alpha");
 
         DrawIndexedVertices(
-            Microsoft.Xna.Framework.Matrix.CreateTranslation(Microsoft.Xna.Framework.Vector3.Zero),
             Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, Game.Data.ShaderSprite,
             BlendState.AlphaBlend,
             null);
@@ -1091,15 +1117,12 @@ public static partial class RenderServices
 
         return (_cachedRectVertices, _cachedRectIndices);
     }
-
-    public static void DrawIndexedVertices<T>(Matrix matrix, GraphicsDevice graphicsDevice, T[] vertices, int vertexCount, short[] indices, int primitiveCount, Effect? effect, BlendState? blendState = null, Texture2D? texture = null, bool smoothing = false) where T : struct, IVertexType
+    
+    public static void DrawIndexedVertices<T>(GraphicsDevice graphicsDevice, T[] vertices, int vertexCount, short[] indices, int primitiveCount, Effect? effect, BlendState? blendState = null, Texture2D? texture = null, bool smoothing = false) where T : struct, IVertexType
     {
         var b = blendState ?? BlendState.AlphaBlend;
 
-        var size = new Vector2(graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height);
-
-        matrix *= Matrix.CreateScale((1f / size.X) * 2, -(1f / size.Y) * 2, 1f); // scale to relative points
-        matrix *= Matrix.CreateTranslation(-1f, 1f, 0); // translate to relative points
+        Matrix matrix = GetProjectionMatrix(graphicsDevice);
 
         graphicsDevice.RasterizerState = RasterizerState.CullNone;
         graphicsDevice.BlendState = b;
@@ -1226,7 +1249,7 @@ public static partial class RenderServices
 
         gd.SetRenderTarget(rt);
         gd.Clear(Color.Transparent);
-        DrawTextureQuad(mainTarget, mainTarget.Bounds, rt.Bounds, Matrix.Identity, Color.White, BlendState.Opaque);
+        DrawTextureQuad(mainTarget, mainTarget.Bounds, rt.Bounds, Color.White, BlendState.Opaque);
 
         gd.SetRenderTarget(null);
         return rt;
@@ -1242,7 +1265,7 @@ public static partial class RenderServices
         // Make sure we didn't change animations
         if (previousCache is not RenderedSpriteCacheComponent cache ||
             cache.RenderedSprite != currentAnimationGuid ||
-            !string.Equals(cache.AnimInfo.Name, animationInfo.Name, StringComparison.InvariantCulture))
+            !string.Equals(cache.AnimInfo.Name, animationInfo.Name, StringComparison.Ordinal))
         {
             // We changed animations, so we need to reset to -1 so we can trigger the first frame event
             previousFrame = frameInfo.InternalFrame - 1;
@@ -1315,7 +1338,7 @@ public static partial class RenderServices
         // Make sure we didn't change animations
         if (previous is null ||
             previous.Value.RenderedSprite != currentAnimationGuid ||
-            !string.Equals(previous.Value.AnimInfo.Name, animationInfo.Name, StringComparison.InvariantCulture))
+            !string.Equals(previous.Value.AnimInfo.Name, animationInfo.Name, StringComparison.Ordinal))
         {
             // We changed animations, so we need to reset to -1 so we can trigger the first frame event
             previousFrame = frameInfo.InternalFrame - 1;

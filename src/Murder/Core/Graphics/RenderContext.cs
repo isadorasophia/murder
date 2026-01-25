@@ -17,7 +17,7 @@ public class RenderContext : IDisposable
     /// The active camera used for rendering scenes.
     /// </summary>
     public readonly Camera2D Camera;
-
+    
     protected readonly RenderContextFlags Settings;
     protected static int DiagnosticsUpdateViewportCount = 0;
 
@@ -397,7 +397,7 @@ public class RenderContext : IDisposable
                               // =======================================================>
 
         _graphicsDevice.SetRenderTarget(_mainTarget);
-        RenderServices.DrawTextureQuad(_tempTarget, _tempTarget.Bounds, _mainTarget.Bounds, Matrix.Identity, Color.White, BlendState.Opaque, Game.Data.ShaderSimple);
+        RenderServices.DrawTextureQuad(_tempTarget, _tempTarget.Bounds, _mainTarget.Bounds, Color.White, BlendState.Opaque, Game.Data.ShaderSimple);
         CreateDebugPreviewIfNecessary(BatchPreviewState.Step1, _mainTarget);
         
         // Draw all the gameplay graphics to _mainTarget
@@ -432,7 +432,6 @@ public class RenderContext : IDisposable
         RenderServices.DrawTextureQuad(_mainTarget,     // <=== Draws the game buffer to the final buffer using a optimized pixel shader
             _mainTarget.Bounds,
             new Rectangle(_subPixelOffset, _mainTarget.Bounds.Size() * Viewport.Scale),
-            Matrix.Identity,
             Color.White, Game.Data.ShaderPixel, BlendState.Opaque, true);
 
         CreateDebugPreviewIfNecessary(BatchPreviewState.Step2, _finalTarget);
@@ -444,7 +443,6 @@ public class RenderContext : IDisposable
         RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to the final buffer using a optimized pixel shader
             _uiTarget.Bounds,
             new Rectangle(Vector2.Zero, _uiTarget.Bounds.Size() * Viewport.Scale),
-            Matrix.Identity,
             Color.White, Game.Data.ShaderPixel, BlendState.AlphaBlend, true);
 
         CreateDebugPreviewIfNecessary(BatchPreviewState.Step3, _finalTarget);
@@ -472,7 +470,6 @@ public class RenderContext : IDisposable
             RenderServices.DrawTextureQuad(_debugTarget,     // <=== Draws the debug buffer to the final buffer
                 _debugTarget.Bounds,
                 new Rectangle(_subPixelOffset, _finalTarget.Bounds.Size() + Viewport.Scale * CAMERA_BLEED * 2),
-                Matrix.Identity,
                 Color.White, Game.Data.ShaderSimple, BlendState.AlphaBlend, false);
         }
         BeforeScreenRender(_finalTarget);
@@ -502,14 +499,14 @@ public class RenderContext : IDisposable
                 RenderServices.DrawTextureQuad(_finalTarget,
                     _finalTarget.Bounds, 
                     Viewport.OutputRectangle,
-                    Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
+                    Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
             }
             // We are in preview mode, draw the preview buffer instead
             else
             {
                 RenderServices.DrawTextureQuad(_debugTargetPreview,
                     _debugTargetPreview.Bounds, PreviewStretch ? _finalTarget.Bounds : _debugTargetPreview.Bounds,
-                    Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
+                    Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
             }
         }
 
@@ -526,7 +523,7 @@ public class RenderContext : IDisposable
             using var screenshot = new RenderTarget2D(_graphicsDevice, size.X, size.Y);
             _graphicsDevice.SetRenderTarget(screenshot);
 
-            RenderServices.DrawTextureQuad(target, new Rectangle(position, size * Camera.Zoom), new Rectangle(Vector2.Zero, size), Matrix.Identity, Color.White, BlendState.Opaque);
+            RenderServices.DrawTextureQuad(target, new Rectangle(position, size * Camera.Zoom), new Rectangle(Vector2.Zero, size), Color.White, BlendState.Opaque);
             SaveScreenshot(screenshot, screenshotArea.Size.Point());
             _takeScreenShot = null;
 
@@ -631,7 +628,6 @@ public class RenderContext : IDisposable
             RenderServices.DrawTextureQuad(target,
                 target.Bounds,
                 target.Bounds,
-                Matrix.Identity,
                 Color.White, Game.Data.ShaderSimple, BlendState.NonPremultiplied, false);
         }
     }
