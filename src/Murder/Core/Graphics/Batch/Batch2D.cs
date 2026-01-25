@@ -252,6 +252,7 @@ public class Batch2D
     {
         if (_nextItemIndex >= _batchItems.Length)
         {
+            // Ideally this is very rare, and in practice shouldn't happen more than a few times after loading a scene.
             SetBuffersCapacity(_batchItems.Length * 2);
         }
 

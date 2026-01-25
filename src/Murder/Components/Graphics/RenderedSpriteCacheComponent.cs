@@ -1,5 +1,6 @@
 ﻿using Bang.Components;
 using Murder.Attributes;
+using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Utilities.Attributes;
 using System.Numerics;
@@ -26,5 +27,6 @@ namespace Murder.Components.Graphics
         /// The last recorded animation frame. Uses the internal animation frame, not the generic frame index.
         /// </summary>
         public readonly int LastFrameIndex { get; init; }
+        public readonly Point SpriteSize { get; init; }
     }
 }

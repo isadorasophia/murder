@@ -298,7 +298,8 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
                 Outline = sprite?.HighlightStyle ?? OutlineStyle.None,
                 AnimInfo = animationInfo,
                 Sorting = ySort,
-                LastFrameIndex = frameInfo.InternalFrame
+                LastFrameIndex = frameInfo.InternalFrame,
+                SpriteSize = asset.Size,
             });
 
             if (frameInfo.Complete && overload != null)

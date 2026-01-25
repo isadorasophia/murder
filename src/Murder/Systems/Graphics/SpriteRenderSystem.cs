@@ -236,7 +236,8 @@ namespace Murder.Systems.Graphics
                     Outline = s.HighlightStyle,
                     AnimInfo = animationInfo,
                     Sorting = ySort,
-                    LastFrameIndex = frameInfo.InternalFrame
+                    LastFrameIndex = frameInfo.InternalFrame,
+                    SpriteSize = asset.Size
                 });
 
                 if (frameInfo.Failed)

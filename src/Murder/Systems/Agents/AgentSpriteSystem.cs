@@ -289,7 +289,8 @@ namespace Murder.Systems
                     Outline = OutlineStyle.None,
                     AnimInfo = animationInfo,
                     Sorting = ySort,
-                    LastFrameIndex = frameInfo.InternalFrame
+                    LastFrameIndex = frameInfo.InternalFrame,
+                    SpriteSize = spriteAsset.Size
                 });
 
                 // The animation overload is now done

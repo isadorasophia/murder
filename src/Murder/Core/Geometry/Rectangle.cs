@@ -10,8 +10,8 @@ public struct Rectangle : IEquatable<Rectangle>
 {
     public static Rectangle Empty => _empty;
     public static Rectangle One => _one;
-    private static Rectangle _empty = new();
-    private static Rectangle _one = new(0, 0, 1, 1);
+    private readonly static Rectangle _empty = new();
+    private readonly static Rectangle _one = new(0, 0, 1, 1);
 
     public float X;
     public float Y;
@@ -208,7 +208,10 @@ public struct Rectangle : IEquatable<Rectangle>
     }
 
     public bool Contains(Vector2 vector) => Contains(vector.X, vector.Y);
-    public bool Contains(float X, float Y) => Contains(Calculator.RoundToInt(X), Calculator.RoundToInt(Y));
+    public bool Contains(float X, float Y)
+    {
+        return X > Left && X < Right && Y > Top && Y < Bottom;
+    }
 
     public bool Contains(Point point) => Contains(point.X, point.Y);
     public bool Contains(int X, int Y)
@@ -281,52 +284,6 @@ public struct Rectangle : IEquatable<Rectangle>
         return Width * Height;
     }
 
-    public static IEnumerable<Rectangle> SubtractRectangles(Rectangle main, Rectangle subtract)
-    {
-        // Calculate the intersecting rectangle
-        Rectangle intersection = Rectangle.Intersection(main, subtract);
-
-        // If there is no intersection, just return the main rectangle if it's not empty
-        if (intersection.IsEmpty && !main.IsEmpty)
-        {
-            yield return main;
-            yield break;
-        }
-
-        // Top part of main rectangle, if any and non-empty
-        if (main.Top < intersection.Top)
-        {
-            Rectangle topRect = new Rectangle(main.Left, main.Top, main.Width, intersection.Top - main.Top);
-            if (!topRect.IsEmpty)
-                yield return topRect;
-        }
-
-        // Bottom part of main rectangle, if any and non-empty
-        if (main.Bottom > intersection.Bottom)
-        {
-            Rectangle bottomRect = new Rectangle(main.Left, intersection.Bottom, main.Width, main.Bottom - intersection.Bottom);
-            if (!bottomRect.IsEmpty)
-                yield return bottomRect;
-        }
-
-        // Left part of main rectangle, if any and non-empty
-        if (main.Left < intersection.Left)
-        {
-            Rectangle leftRect = new Rectangle(main.Left, Math.Max(main.Top, intersection.Top), intersection.Left - main.Left, Math.Min(main.Bottom, intersection.Bottom) - Math.Max(main.Top, intersection.Top));
-            if (!leftRect.IsEmpty)
-                yield return leftRect;
-        }
-
-        // Right part of main rectangle, if any and non-empty
-        if (main.Right > intersection.Right)
-        {
-            Rectangle rightRect = new Rectangle(intersection.Right, Math.Max(main.Top, intersection.Top), main.Right - intersection.Right, Math.Min(main.Bottom, intersection.Bottom) - Math.Max(main.Top, intersection.Top));
-            if (!rightRect.IsEmpty)
-                yield return rightRect;
-        }
-    }
-
-
     /// <summary>
     /// Checks if this rectangle intersects with another rectangle, taking an offset into account.
     /// </summary>
@@ -369,5 +326,10 @@ public struct Rectangle : IEquatable<Rectangle>
             scaled.Height = Height * scale.Y;
         }
         return scaled;
+    }
+
+    public Rectangle TrimTop(float down)
+    {
+        return new Rectangle(X, Y + down, Width, Height - down);
     }
 }

@@ -19,12 +19,13 @@ namespace Murder.Services
                 new SpriteComponent(info.Sprite, Vector2.Zero, info.Animations, info.YSortOffset, false, OutlineStyle.None, info.TargetSpriteBatch),
                 new PositionComponent(info.Offset),
                 new DoNotPersistEntityOnSaveComponent(),
-                new FlipSpriteComponent(info.Flip)
+                new FlipSpriteComponent(info.Flip),
+                new TintComponent(info.Tint)
             );
 
             if (destroyAfter)
             {
-                e.SetDestroyOnAnimationComplete();
+                e.SetDestroyOnAnimationComplete(DestroyOnAnimationCompleteFlags.Destroy);
             }
 
             if (parent != null)
