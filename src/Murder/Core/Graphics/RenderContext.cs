@@ -311,7 +311,7 @@ public class RenderContext : IDisposable
     /// <returns>
     /// Whether the window actually required a refresh.
     /// </returns>
-    private bool RefreshWindow()
+    protected bool RefreshWindow()
     {
         if (_pendingWindowSettings is not WindowChangeSettings settings)
         {
@@ -325,7 +325,9 @@ public class RenderContext : IDisposable
         Viewport = new Viewport(settings.Size, nativeResolution, resizeStyle);
 
         Camera.UpdateSize(Viewport.NativeResolution);
+
         _initializedViewport = false;
+        _pendingWindowSettings = null;
 
         return true;
     }
@@ -335,7 +337,6 @@ public class RenderContext : IDisposable
         if (_pendingWindowSettings is not null)
         {
             RefreshWindow();
-            _pendingWindowSettings = null;
         }
 
         if (!_initializedViewport)
