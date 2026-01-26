@@ -67,6 +67,8 @@ public class RenderContext : IDisposable
     /// </summary>
     public float ScreenFade = 0;
 
+    public bool DoNotRender = false;
+
     public enum BatchPreviewState
     {
         None,
@@ -102,8 +104,8 @@ public class RenderContext : IDisposable
     /// <summary>
     /// Set when the window size has a change.
     /// </summary>
-    private WindowChangeSettings? _pendingWindowSettings = null;
-    private bool _initializedViewport = false;
+    protected WindowChangeSettings? _pendingWindowSettings = null;
+    protected bool _initializedViewport = false;
 
     public RenderTarget2D? LastRenderTarget => _finalTarget;
 
@@ -348,6 +350,11 @@ public class RenderContext : IDisposable
         // no one should interfere with camera settings at this point.
         Camera.Lock();
 
+        if (DoNotRender)
+        {
+            return;
+        }
+
         for (int i = 0; i < _spriteBatches.Length; i++)
         {
             if (_spriteBatches[i] is Batch2D batch2D)
@@ -377,6 +384,11 @@ public class RenderContext : IDisposable
 
     public virtual void End()
     {
+        if (DoNotRender)
+        {
+            return;
+        }
+
         GameLogger.Verify(
             _uiTarget is not null &&
             _mainTarget is not null &&

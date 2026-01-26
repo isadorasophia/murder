@@ -1074,7 +1074,7 @@ public static partial class RenderServices
         return (_cachedRectVertices, _cachedRectIndices);
     }
 
-    private static (VertexInfo[] vertices, short[] indices) MakeTexturedQuad(Rectangle destination, Rectangle source, Vector2 sourceSize, Color color, Vector3 BlendType)
+    public static (VertexInfo[] vertices, short[] indices) MakeTexturedQuad(Rectangle destination, Rectangle source, Vector2 sourceSize, Color color, Vector3 BlendType)
     {
         // 0---1
         // |\  |

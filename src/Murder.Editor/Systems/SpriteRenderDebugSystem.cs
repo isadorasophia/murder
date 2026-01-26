@@ -284,8 +284,8 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
                 animationInfo);
 
             issueSlowdownWarning = RenderServices.TriggerEventsIfNeeded(e, asset.Guid, animationInfo, frameInfo);
-
-            e.SetRenderedSpriteCache(new RenderedSpriteCacheComponent() with
+            e.SetRenderedSpriteCache(new 
+                RenderedSpriteCacheComponent() with
             {
                 RenderedSprite = asset.Guid,
                 CurrentAnimation = frameInfo.Animation,
