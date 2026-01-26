@@ -64,6 +64,15 @@ namespace Murder.Assets
         public readonly string SoundsPath = "sounds/";
 
         /// <summary>
+        /// Where our video contents are stored.
+        /// Under:
+        ///   packed/ -> bin/resources/
+        ///     video/
+        /// </summary>
+        [HideInEditor]
+        public readonly string VideoPath = "video/";
+
+        /// <summary>
         /// Where our dialogues contents are stored.
         /// Under:
         ///   packed/ -> bin/resources/

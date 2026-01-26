@@ -25,6 +25,8 @@ public partial class EditorDataManager
 
             SkipLoadingAssetsAt(fullPath);
         }
+
+        PreprocessVideoFiles();
     }
 
     protected override async Task LoadAllAssetsAsync()

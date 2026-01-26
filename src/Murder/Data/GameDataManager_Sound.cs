@@ -25,6 +25,11 @@ namespace Murder.Data
         /// <summary>
         /// Implemented by custom implementations of data manager that want to do some preprocessing on the sounds.
         /// </summary>
+        protected virtual void PreprocessVideoFiles() { }
+
+        /// <summary>
+        /// Implemented by custom implementations of data manager that want to do some preprocessing on the sounds.
+        /// </summary>
         protected virtual async Task LoadSoundsImplAsync(bool reload)
         {
             string path = Path.Join(PublishedPackedAssetsFullPath, PackedSoundData.Name);
