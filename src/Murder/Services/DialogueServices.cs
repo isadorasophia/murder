@@ -137,7 +137,7 @@ public static class DialogueServices
 
     public static bool HasDialogue(World world, Entity? e, SituationComponent situation)
     {
-        if (situation.Character == Guid.Empty)
+        if (situation.Empty)
         {
             return false;
         }
