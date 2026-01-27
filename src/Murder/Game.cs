@@ -127,7 +127,7 @@ namespace Murder
         /// DO NOT rely on this for critical effects or operations.
         /// </summary>
         public float LastFrameDuration { get; private set; } = 0f;
-        private readonly Stopwatch _lastFrameStopwatch = new Stopwatch();
+        private readonly Stopwatch _lastFrameStopwatch = new();
 
         private readonly Stopwatch _updateStopwatch = new();
         private readonly Stopwatch _renderStopWatch = new();
@@ -228,6 +228,11 @@ namespace Murder
         /// Time since we have been freezing the frames.
         /// </summary>
         private double _freezeFrameTime = 0;
+
+        /// <summary>
+        /// Whether there is a preload game active.
+        /// </summary>
+        private IPreloadGame? _preload = null;
 
         /// <summary>
         /// Whether the player is currently skipping frames (due to cutscene) and ignore
@@ -336,6 +341,8 @@ namespace Murder
         /// </summary>
         protected GameLogger _logger;
 
+        protected virtual IPreloadGame? TryCreatePreloadScreen() => _game?.TryCreatePreload();
+
         /// <summary>
         /// Gets the current graph logger debugger.
         /// </summary>
@@ -376,7 +383,6 @@ namespace Murder
                 ActiveScene?.OnClientWindowChanged(new(window.ClientBounds.Width, window.ClientBounds.Height));
             };
 
-            Content.RootDirectory = "Content";
             IsMouseVisible = HasCursor || (game?.HasCursor ?? false);
 
             _logger = GameLogger.GetOrCreateInstance();
@@ -391,6 +397,9 @@ namespace Murder
             _gameData = dataManager;
 
             _graphics = new(this);
+            _preload = TryCreatePreloadScreen();
+
+            Content.RootDirectory = _gameData.BinResourcesDirectoryPath;
         }
 
         /// <summary>
@@ -683,16 +692,27 @@ namespace Murder
                 return;
             }
 
-            if (ActiveScene is not null && ActiveScene.Loaded && !_initialiazedAfterContentLoaded)
+            if (ActiveScene is not null && ActiveScene.Loaded)
             {
-                _gameData.AfterContentLoadedFromMainThread();
-                _initialiazedAfterContentLoaded = true;
+                if (_preload is not null && _preload.WrapItUp())
+                {
+                    _preload = null;
+                }
+
+                if (_preload is null && !_initialiazedAfterContentLoaded)
+                {
+                    _gameData.AfterContentLoadedFromMainThread();
+                    _initialiazedAfterContentLoaded = true;
+                }
             }
+
+            _preload?.Update();
 
             if (DIAGNOSTICS_MODE)
             {
                 _updateStopwatch.Start();
             }
+
             UpdateImpl(gameTime);
 
             // Absolute time is ALWAYS updated.
@@ -709,6 +729,7 @@ namespace Murder
             {
                 _soundStopWatch.Start();
             }
+
             // Update sound logic!
             SoundPlayer.Update();
 
@@ -741,6 +762,7 @@ namespace Murder
                     _freezeFrameCount--;
                     _freezeFrameTime = 0;
                 }
+
                 return;
             }
 
@@ -792,7 +814,10 @@ namespace Murder
 
             for (int fixedUpdateCount = 0; fixedUpdateCount < fixedUpdatesRequired; fixedUpdateCount++)
             {
-                ActiveScene.FixedUpdate(); // <==== Update all FixedUpdate systems
+                if (_preload is null)
+                {
+                    ActiveScene.FixedUpdate(); // <==== Update all FixedUpdate systems
+                }
 
                 if (AlwaysUpdateBeforeFixed)
                 {
@@ -808,7 +833,6 @@ namespace Murder
             _unscaledPreviousElapsedTime = _unscaledElapsedTime;
             _scaledPreviousElapsedTime = _scaledElapsedTime;
 
-
             base.Update(gameTime); // Monogame/XNA internal Update
 
             _game?.OnUpdate();
@@ -822,7 +846,11 @@ namespace Murder
             GameLogger.Verify(ActiveScene is not null);
 
             _playerInput.Update();
-            ActiveScene.Update();
+
+            if (_preload is null)
+            {
+                ActiveScene.Update();
+            }
         }
 
         /// <summary>
@@ -837,39 +865,13 @@ namespace Murder
                 RefreshWindow();
             }
 
-            if (!ActiveScene.Loaded && ActiveScene.RenderContext is RenderContext renderContext)
+            bool loading = _preload is not null || !ActiveScene.Loaded;
+            if (loading && ActiveScene.RenderContext is RenderContext renderContext)
             {
-                OnLoadingDraw(renderContext);
+                _preload?.Draw(renderContext);
             }
 
-            bool drawStarted = ActiveScene.DrawStart(); // <==== Start RenderContext draw call
-
-            if (DIAGNOSTICS_MODE)
-            {
-                UpdateTime = (float)(_updateStopwatch.Elapsed.TotalSeconds);
-                _updateStopwatch.Stop();
-                _updateStopwatch.Reset();
-                TimeTrackerDiagnostics.Update(UpdateTime);
-
-                if (Now > _longestUpdateTimeAt + LONGEST_TIME_RESET)
-                {
-                    _longestUpdateTimeAt = Now;
-                    LongestUpdateTime = 0.0f;
-                }
-
-                if (UpdateTime > LongestUpdateTime)
-                {
-                    _longestUpdateTimeAt = Now;
-                    LongestUpdateTime = UpdateTime;
-                }
-
-                _renderStopWatch.Start();
-            }
-
-            if (drawStarted)
-            {
-                ActiveScene.DrawEnd(); // <==== End RenderContext draw call
-            }
+            DrawScene();
 
             base.Draw(gameTime); // Monogame/XNA internal Draw
 
@@ -904,19 +906,59 @@ namespace Murder
                 }
             }
 
-            _game?.OnDraw();
+            _game?.AfterDraw();
         }
-
         /// <summary>
         /// Display drawing for the load animation.
         /// </summary>
         protected virtual void OnLoadingDraw(RenderContext render)
         {
-            bool rendered = _game?.OnLoadingDraw(render) ?? false;
-
-            if (!rendered)
+            if (_preload is not null)
+            {
+                _preload.Draw(render);
+            }
+            else
             {
                 GraphicsDevice.SetRenderTarget(null);
+            }
+        }
+
+        private void DrawScene()
+        {
+            if (_preload is not null)
+            {
+                return;
+            }
+
+            GameLogger.Verify(ActiveScene is not null);
+
+            bool drawStarted = ActiveScene.DrawStart(); // <==== Start RenderContext draw call
+
+            if (DIAGNOSTICS_MODE)
+            {
+                UpdateTime = (float)(_updateStopwatch.Elapsed.TotalSeconds);
+                _updateStopwatch.Stop();
+                _updateStopwatch.Reset();
+                TimeTrackerDiagnostics.Update(UpdateTime);
+
+                if (Now > _longestUpdateTimeAt + LONGEST_TIME_RESET)
+                {
+                    _longestUpdateTimeAt = Now;
+                    LongestUpdateTime = 0.0f;
+                }
+
+                if (UpdateTime > LongestUpdateTime)
+                {
+                    _longestUpdateTimeAt = Now;
+                    LongestUpdateTime = UpdateTime;
+                }
+
+                _renderStopWatch.Start();
+            }
+
+            if (drawStarted)
+            {
+                ActiveScene.DrawEnd(); // <==== End RenderContext draw call
             }
         }
 

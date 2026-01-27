@@ -1,14 +1,9 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets;
-using Murder.Components;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
-using Murder.Utilities;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Numerics;
-using System.Threading.Channels;
 
 namespace Murder.Core
 {
@@ -189,7 +184,7 @@ namespace Murder.Core
             _ = UnloadAsyncImpl();
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             RenderContext?.Dispose();
         }

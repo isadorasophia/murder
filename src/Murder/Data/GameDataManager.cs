@@ -87,7 +87,7 @@ namespace Murder.Data
         private string? _packedBinDirectoryPath;
         public string PackedBinDirectoryPath => _packedBinDirectoryPath!;
 
-        public string BinResourcesDirectoryPath => _binResourcesDirectory!;
+        public string BinResourcesDirectoryPath => _binResourcesDirectory;
         
         public GameProfile GameProfile
         {

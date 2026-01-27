@@ -986,10 +986,15 @@ public class PlayerInput
 
     public bool Down(Keys key)
     {
-        var keyboardState = Keyboard.GetState();
+        KeyboardState keyboardState = Keyboard.GetState();
         return keyboardState.IsKeyDown(key);
     }
 
+    public bool Down(Buttons button)
+    {
+        GamePadState gamepadState = GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One);
+        return gamepadState.IsButtonDown(button);
+    }
 
     static readonly ImmutableArray<ButtonBindingsInfo>.Builder _bindingsInfoBuilder = ImmutableArray.CreateBuilder<ButtonBindingsInfo>();
     public void SaveCurrentToPreferences(GamePreferences gamePreferences)
@@ -1223,12 +1228,22 @@ public class PlayerInput
         }
     }
 
+    private readonly static Buttons[] _allButtons = 
+        [Buttons.DPadUp, Buttons.DPadDown, Buttons.DPadLeft, Buttons.DPadRight, 
+         Buttons.Start, Buttons.Back, Buttons.LeftStick, Buttons.RightStick, 
+         Buttons.LeftShoulder, Buttons.RightShoulder, Buttons.BigButton, 
+         Buttons.A, Buttons.B, Buttons.X, Buttons.Y, Buttons.LeftThumbstickLeft, 
+         Buttons.RightTrigger, Buttons.LeftTrigger, Buttons.RightThumbstickUp, 
+         Buttons.RightThumbstickDown, Buttons.RightThumbstickRight, 
+         Buttons.RightThumbstickLeft, Buttons.LeftThumbstickUp, Buttons.LeftThumbstickDown,
+         Buttons.LeftThumbstickRight];
+
     public Buttons? GetAnyGamepadButton()
     {
-        var gamepadState = GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One);
+        GamePadState gamepadState = GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One);
         if (gamepadState.IsConnected)
         {
-            foreach (var button in Enum.GetValues<Buttons>())
+            foreach (var button in _allButtons)
             {
                 if (gamepadState.IsButtonDown(button))
                 {

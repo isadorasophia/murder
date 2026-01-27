@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets;
 using Murder.Assets.Save;
+using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Core.Sounds;
 using Murder.Data;
@@ -41,16 +42,9 @@ namespace Murder
         public void OnUpdate() { }
 
         /// <summary>
-        /// Called when a scene is unavailable due to loading of assets.
-        /// Only assets at <see cref="GameDataManager.PreloadContent"/> are available.
-        /// </summary>
-        /// <param name="context">Borrows the RenderContext from the world (currently busy loading).</param>
-        public bool OnLoadingDraw(RenderContext context) => false;
-
-        /// <summary>
         /// Called after each draw.
         /// </summary>
-        public void OnDraw() { }
+        public void AfterDraw() { }
 
         /// <summary>
         /// Called before a scene transition.
@@ -76,6 +70,11 @@ namespace Murder
         /// Creates the client custom sound player.
         /// </summary>
         public ISoundPlayer CreateSoundPlayer() => new SoundPlayer();
+
+        /// <summary>
+        /// Create an instance preloading the game.
+        /// </summary>
+        public IPreloadGame? TryCreatePreload() => null;
 
         /// <summary>
         /// Creates a custom game profile for the game.

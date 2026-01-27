@@ -386,6 +386,7 @@ public class RenderContext : IDisposable
     {
         if (DoNotRender)
         {
+            Camera.Unlock();
             return;
         }
 
@@ -395,7 +396,6 @@ public class RenderContext : IDisposable
             _tempTarget is not null &&
             _finalTarget is not null,
             "Did not initialize buffer targets before calling RenderContext.End()?");
-
 
         // Setup the basic shader parameters
 

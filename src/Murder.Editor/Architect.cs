@@ -55,6 +55,8 @@ namespace Murder.Editor
 
         protected override Scene InitialScene => _editorScene ??= new();
 
+        protected override IPreloadGame? TryCreatePreloadScreen() => null;
+
         /* *** SDL helpers *** */
         private const int SDL_WINDOW_MAXIMIZED = 0x00000080;
 
