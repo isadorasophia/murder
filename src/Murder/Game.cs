@@ -868,7 +868,7 @@ namespace Murder
             bool loading = _preload is not null || !ActiveScene.Loaded;
             if (loading && ActiveScene.RenderContext is RenderContext renderContext)
             {
-                _preload?.Draw(renderContext);
+                OnLoadingDraw(renderContext);
             }
 
             DrawScene();
