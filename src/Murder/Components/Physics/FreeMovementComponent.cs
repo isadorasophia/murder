@@ -1,4 +1,5 @@
 ﻿using Bang.Components;
+using Murder.Attributes;
 using Murder.Utilities.Attributes;
 
 namespace Murder.Components;
@@ -13,7 +14,7 @@ public enum FreeMovementFlags
     DoNotClear = 1
 }
 
-[RuntimeOnly]
+[DoNotPersistOnSave]
 public readonly struct FreeMovementComponent : IComponent
 {
     public readonly FreeMovementFlags Flags = FreeMovementFlags.None;
