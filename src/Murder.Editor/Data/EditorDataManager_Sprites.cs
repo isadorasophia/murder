@@ -182,6 +182,14 @@ public partial class EditorDataManager
             return false;
         }
 
+        string rawResourcesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath);
+        if (!Directory.Exists(rawResourcesPath))
+        {
+            GameLogger.Log($"Unable to find raw resources path at {rawResourcesPath}." +
+                $"Use this directory for loading importers.");
+            return false;
+        }
+
         List<(ResourceImporter importer, ImporterSettingsAttribute filter)> importersWithFilters = new();
         foreach (ResourceImporter importer in AllImporters)
         {
@@ -213,7 +221,6 @@ public partial class EditorDataManager
 
         DateTime lastTimeFetched = reload ? EditorSettings.LastHotReloadImport : EditorSettings.LastImported;
 
-        string rawResourcesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath);
         foreach (string file in Directory.GetFiles(rawResourcesPath, "*.*", SearchOption.AllDirectories))
         {
             // Skip files that begin with "_".
