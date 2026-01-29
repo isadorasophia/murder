@@ -268,10 +268,13 @@ public static class EntityServices
             entity.SetSprite(result);
 
             float startedTime = result.UseUnscaledTime ? Game.NowUnscaled : Game.Now;
-            if (entity.TryGetRandomizeSprite() is RandomizeSpriteComponent randomize && randomize.RandomizeAnimationStart)
-            {
-                startedTime = Game.Random.NextFloat(1f, 32f);
-            }
+
+            // I don't think we want this when we're just playing an animation? We might pass a flag if we can find an example
+            // where we actually need this.
+            //if (entity.TryGetRandomizeSprite() is RandomizeSpriteComponent randomize && randomize.RandomizeAnimationStart)
+            //{
+            //    startedTime = Game.Random.NextFloat(1f, 32f);
+            //}
 
             entity.SetAnimationStarted(startedTime);
             return result;
