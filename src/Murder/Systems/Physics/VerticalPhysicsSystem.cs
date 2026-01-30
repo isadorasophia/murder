@@ -3,7 +3,6 @@ using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Components.Physics;
-using Murder.Messages;
 
 namespace Murder.Systems.Physics
 {
@@ -33,7 +32,7 @@ namespace Murder.Systems.Physics
 
                 if (verticalPosition.Z == 0)
                 {
-                    e.SendMessage(new TouchedGroundMessage());
+                    e.SendTouchedGroundMessage();
 
                     if (verticalPosition.ZVelocity == 0)
                     {
