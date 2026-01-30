@@ -39,7 +39,7 @@ namespace Murder.Services
         /// <summary>
         /// Add an entity which will apply a "fade-in" effect. Darkening the screen to black.
         /// </summary>
-        public static Entity? FadeIn(World world, float time, Color color, float sorting = 0, int? targetBatch = null)
+        public static Entity? FadeIn(World world, float time, Color color, float sorting = 0, int? targetBatch = null, string? customTexture = null)
         {
             if (Game.Instance.IsSkippingDeltaTimeOnUpdate)
             {
@@ -47,7 +47,7 @@ namespace Murder.Services
             }
 
             Entity e = world.AddEntity();
-            string? customTexture = world.TryGetUniqueCustomFadeScreenStyle()?.CustomFadeImage;
+            customTexture ??= world.TryGetUniqueCustomFadeScreenStyle()?.CustomFadeImage;
 
             e.SetFadeScreen(new FadeScreenComponent(FadeType.In, Game.NowUnscaled, time, color, customTexture != null ? Path.Join("images", customTexture) : string.Empty, sorting: sorting)
                 with

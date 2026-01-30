@@ -28,6 +28,11 @@ public class EventListenerSystem : IMessagerSystem
             return;
         }
 
+        if (world.TryGetUniqueEntityMuteAllEvents() is not null)
+        {
+            return;
+        }
+
         // Were we actually listening to this particular event?
         ImmutableDictionary<string, SpriteEventInfo> events = entity.GetEventListener().Events;
 
