@@ -38,9 +38,9 @@ namespace Murder.Editor
 
                 ImGui.PushStyleColor(ImGuiCol.Button, baseColor);
                 ImGui.PushStyleColor(ImGuiCol.ButtonActive, baseColor);
+                ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.HighAccent);
 
                 ImGui.PushFont(Fonts.LargeIcons);
-                ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.HighAccent);
 
                 if (ImGui.Button($"{tab.Icon}", new Vector2(-4, 36)))
                 {
@@ -52,10 +52,9 @@ namespace Murder.Editor
                     }
                 }
 
-                ImGui.PopStyleColor();
                 ImGui.PopFont();
-
-                ImGui.PopStyleColor(2);
+                
+                ImGui.PopStyleColor(3);
 
                 ImGuiHelpers.HelpTooltip(tab.Title);
             }
@@ -81,8 +80,8 @@ namespace Murder.Editor
                     ImGui.Spacing();
 
                     _selectedExplorerWindow.RenderCallback();
-                }
 
+                }
                 ImGui.EndChild();
             }
         }

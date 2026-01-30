@@ -144,7 +144,7 @@ public static class FeedbackServices
 
         string computerName = GenerateFunnyName(data.MachineId);
 
-        await SendFeedbackAsync(Game.Profile.FeedbackUrl, $"{StringHelper.CapitalizeFirstLetter(computerName)}: {data.Name}", data.Description, files);
+        bool success = await SendFeedbackAsync(Game.Profile.FeedbackUrl, $"{StringHelper.CapitalizeFirstLetter(computerName)}: {data.Name}", data.Description, files);
 
         if (data.Screenshots is not null)
         {
@@ -154,14 +154,14 @@ public static class FeedbackServices
             }
         }
 
-        return true;
+        return success;
     }
 
-    public static async Task SendFeedbackAsync(string url, string title, string description, IEnumerable<(string name, FileWrapper file)> files)
+    public static async Task<bool> SendFeedbackAsync(string url, string title, string description, IEnumerable<(string name, FileWrapper file)> files)
     {
         if (string.IsNullOrWhiteSpace(url))
         {
-            return; // Do not send feedback if the URL is not set.
+            return false; // Do not send feedback if the URL is not set.
         }
 
         using (HttpClient _client = new())
@@ -187,10 +187,12 @@ public static class FeedbackServices
 
                 string responseBody = await response.Content.ReadAsStringAsync();
                 GameLogger.Log($"Feedback sent: {responseBody}");
+                return true;
             }
             catch (HttpRequestException e)
             {
                 GameLogger.Warning($"Sending feedback failed: {e.Message}");
+                return false;
             }
         }
     }
