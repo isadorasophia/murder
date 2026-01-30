@@ -59,18 +59,29 @@ namespace Murder.Utilities
             return result;
         }
 
-        public static U GetRandom<T, U>(this IDictionary<T, U> dict, Random random) where T : notnull
+        public static U? TryGetRandom<T, U>(this IDictionary<T, U> dict, Random random) where T : notnull
         {
+            if (dict.Count == 0)
+            {
+                return default;
+            }
+
             int i = random.Next(dict.Count);
             var result = dict.ElementAt(i);
 
             return dict[result.Key];
         }
-        public static T GetRandomKey<T, U>(this IDictionary<T, U> dict, Random random) where T : notnull
-        {
-            int i = random.Next(dict.Count);
-            var result = dict.ElementAt(i);
 
+        public static T? TryGetRandomKey<T, U>(this IDictionary<T, U> dict, Random random) where T : notnull
+        {
+            if (dict.Count == 0)
+            {
+                return default;
+            }
+
+            int i = random.Next(dict.Count);
+
+            KeyValuePair<T, U> result = dict.ElementAt(i);
             return result.Key;
         }
 

@@ -58,10 +58,18 @@ namespace Murder.Systems.Graphics
 
         private ImmutableArray<string> GetRandomAnimationId(Guid animationGuid)
         {
-            var ase = Game.Data.GetAsset<SpriteAsset>(animationGuid);
-            var animation = ase.Animations.Remove("").GetRandomKey(Game.Random);
+            if (Game.Data.TryGetAsset<SpriteAsset>(animationGuid) is not SpriteAsset sprite)
+            {
+                return [];
+            }
 
-            return ImmutableArray.Create(animation);
+            string? animation = sprite.Animations.Remove("").TryGetRandomKey(Game.Random);
+            if (animation is null)
+            {
+                return [];
+            }
+
+            return [animation];
         }
 
         public void OnModified(World world, ImmutableArray<Entity> entities)
