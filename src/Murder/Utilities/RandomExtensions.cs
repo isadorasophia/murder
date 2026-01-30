@@ -85,10 +85,16 @@ namespace Murder.Utilities
             return result.Key;
         }
 
-        public static U PopRandom<T, U>(this Dictionary<T, U> dict, Random random) where T : notnull
+        public static U? PopRandom<T, U>(this Dictionary<T, U> dict, Random random) where T : notnull
         {
+            if (dict.Count == 0)
+            {
+                return default;
+            }
+
             int i = random.Next(dict.Count);
-            var result = dict.ElementAt(i);
+
+            KeyValuePair<T, U> result = dict.ElementAt(i);
             dict.Remove(result.Key);
 
             return result.Value;
