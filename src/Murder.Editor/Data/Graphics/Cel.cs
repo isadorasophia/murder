@@ -17,7 +17,7 @@ namespace Murder.Editor.Data.Graphics
         {
             public Layer Layer = null!;
             public Tileset Tilemap = null!;
-            public Color[] Pixels = null!;
+            public Color[]? Pixels = null;
 
             public int X;
             public int Y;

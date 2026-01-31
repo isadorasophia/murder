@@ -172,6 +172,7 @@ namespace Murder.Core.Graphics
         [MemberNotNull(nameof(_textures))]
         public void LoadTextures()
         {
+            using var recorder = new PerfTimeRecorder($"TextureAtlas.LoadTextures - {AtlasId}");
             if (_textures is not null)
             {
                 return;
@@ -219,6 +220,10 @@ namespace Murder.Core.Graphics
         {
             UnloadTextures();
             _entries.Clear();
+        }
+        public void AddEntry(string id, AtlasCoordinates coord)
+        {
+            _entries[id.EscapePath()] = coord;
         }
     }
 }

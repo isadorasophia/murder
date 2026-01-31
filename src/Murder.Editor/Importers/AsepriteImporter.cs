@@ -200,6 +200,18 @@ namespace Murder.Editor.Importers
 
             string rawResourcesPath = GetRawResourcesPath(); // Path where the raw .aseprite files are.
             atlas.PopulateAtlas(GetCoordinatesForAtlas(packer, atlasId, rawResourcesPath));
+            foreach (var (duplicateId, originalId) in packer.DuplicateFrameMapping)
+            {
+                if (atlas.TryGet(originalId, out var originalCoord))
+                {
+                    // The duplicate uses the exact same atlas coordinates as the original
+                    atlas.AddEntry(duplicateId, originalCoord);
+                }
+                else
+                {
+                    GameLogger.Warning($"Duplicate '{duplicateId}' references missing original '{originalId}'");
+                }
+            }
 
             if (atlas.CountEntries == 0)
             {

@@ -135,7 +135,12 @@ namespace Murder.Editor.Data
         /// </summary>
         public List<Atlas> Atlasses;
 
-        public bool CropAlpha = true;
+        /// <summary>
+        /// Maps duplicate frame IDs to their original frame IDs.
+        /// Used to create atlas coordinate aliases for deduplicated frames.
+        /// </summary>
+        public Dictionary<string, string> DuplicateFrameMapping { get; } = new();
+        private readonly Dictionary<TextureInfo, ulong> _textureHashes = new();
 
         public Packer()
         {
@@ -158,10 +163,18 @@ namespace Murder.Editor.Data
             //1: scan for all the textures we need to pack
             ScanForTextures(files);
 
-            // textures = SourceTextures.ToList();
-            List<TextureInfo> textures = SourceTextures.Where(t => (t.CroppedBounds.Width > 0 && t.CroppedBounds.Height > 0)).ToList();
+            // 2: Deduplicate across entire atlas
+            DeduplicateTextures();
 
-            //2: generate as many atlasses as needed (with the latest one as small as possible)
+            // 3: Clear hashes
+            _textureHashes.Clear();
+
+            // 4: Filter and pack
+            List<TextureInfo> textures = SourceTextures
+                .Where(t => t.CroppedBounds.Width > 0 && t.CroppedBounds.Height > 0)
+                .ToList();
+
+            //4 5: generate as many atlasses as needed (with the latest one as small as possible)
             Atlasses = new List<Atlas>();
             while (textures.Count > 0)
             {
@@ -203,7 +216,100 @@ namespace Murder.Editor.Data
                 textures = leftovers;
             }
         }
+        private void DeduplicateTextures()
+        {
+            using PerfTimeRecorder ptr = new("Deduplicating Textures");
 
+            // Key: (hash, width, height) to avoid collisions between different dimensions
+            Dictionary<(ulong hash, int w, int h), TextureInfo> uniqueTextures = new();
+            List<TextureInfo> duplicates = new();
+            int duplicateCount = 0;
+
+            foreach (var ti in SourceTextures)
+            {
+                if (ti.CroppedBounds.Width <= 0 || ti.CroppedBounds.Height <= 0)
+                    continue;
+
+                if (!_textureHashes.TryGetValue(ti, out ulong hash))
+                    continue;
+
+                var key = (hash, ti.CroppedBounds.Width, ti.CroppedBounds.Height);
+
+                if (uniqueTextures.TryGetValue(key, out var original))
+                {
+                    string thisId = GetTextureAtlasId(ti);
+                    string originalId = GetTextureAtlasId(original);
+                    DuplicateFrameMapping[thisId] = originalId;
+                    duplicates.Add(ti);
+                    duplicateCount++;
+                }
+                else
+                {
+                    uniqueTextures[key] = ti;
+                }
+            }
+
+            foreach (var ti in duplicates)
+            {
+                SourceTextures.Remove(ti);
+            }
+
+            if (duplicateCount > 0)
+            {
+                GameLogger.Log($"Deduplicated {duplicateCount} duplicate frames across atlas");
+            }
+        }
+
+        private string GetTextureAtlasId(TextureInfo ti)
+        {
+            // Build the atlas ID that matches what's used in atlas coordinate generation
+            string baseName = Path.GetFileNameWithoutExtension(ti.Source);
+
+            // Handle relative path structure
+            string relativePath = Aseprite.GetRelativeToContent(
+                FileHelper.GetPathWithoutExtension(ti.Source));
+
+            string id = relativePath;
+
+            if (ti.HasLayers && !string.IsNullOrEmpty(ti.LayerName))
+            {
+                id = $"{id}_{ti.LayerName}";
+            }
+
+            if (ti.HasSlices && !string.IsNullOrEmpty(ti.SliceName))
+            {
+                id = $"{id}_{ti.SliceName}";
+            }
+
+            if (ti.IsAnimation)
+            {
+                id = $"{id}_{ti.Frame:0000}";
+            }
+
+            return id;
+        }
+
+        private static ulong ComputePixelHash(Microsoft.Xna.Framework.Color[] pixels, Point totalSize, IntRectangle crop)
+        {
+            // FNV-1a 64-bit hash
+            ulong hash = 14695981039346656037UL;
+            const ulong prime = 1099511628211UL;
+
+            for (int y = crop.Top; y < crop.Bottom; y++)
+            {
+                for (int x = crop.Left; x < crop.Right; x++)
+                {
+                    int idx = y * totalSize.X + x;
+                    if (idx >= 0 && idx < pixels.Length)
+                    {
+                        hash ^= pixels[idx].PackedValue;
+                        hash *= prime;
+                    }
+                }
+            }
+
+            return hash;
+        }
         /// <summary>
         /// Save the processed atlasses at <paramref name="targetFilePathWithoutExtension"/>.
         /// </summary>
@@ -315,26 +421,32 @@ namespace Murder.Editor.Data
             ti.Source = path;
             ti.SliceName = slice.Name;
             ti.HasSlices = ase.Slices.Count > 1;
-
             ti.SliceSize = new(slice.Width, slice.Height);
 
             var startingCrop = new IntRectangle(slice.OriginX, slice.OriginY, slice.Width, slice.Height);
 
-            if (ti.HasLayers)
-            {
-                ti.CroppedBounds = CalculateCrop(GetPixelsFromLayer(ase, frame, layer), new(ase.Width, ase.Height), startingCrop);
-            }
-            else
-            {
-                ti.CroppedBounds = CalculateCrop(ase.Frames[frame].Pixels, new(ase.Width, ase.Height), startingCrop);
-            }
+            Microsoft.Xna.Framework.Color[] pixels = layer >= 0
+                ? GetPixelsFromLayer(ase, frame, layer)
+                : ase.Frames[frame].Pixels;
 
-            //Image '{fi.AtlasId}' is completelly transparent! Let's ignore it?
+            ti.CroppedBounds = CalculateCrop(pixels, new(ase.Width, ase.Height), startingCrop);
+
             if (ti.CroppedBounds.Width <= 0 || ti.CroppedBounds.Height <= 0)
             {
                 ti.CroppedBounds = IntRectangle.Empty;
             }
-            ti.TrimArea = new IntRectangle(ti.CroppedBounds.X - slice.OriginX, ti.CroppedBounds.Y - slice.OriginY, ti.CroppedBounds.Width, ti.CroppedBounds.Height);
+            else
+            {
+                // Store hash separately
+                ulong hash = ComputePixelHash(pixels, new(ase.Width, ase.Height), ti.CroppedBounds);
+                _textureHashes[ti] = hash;
+            }
+
+            ti.TrimArea = new IntRectangle(
+                ti.CroppedBounds.X - slice.OriginX,
+                ti.CroppedBounds.Y - slice.OriginY,
+                ti.CroppedBounds.Width,
+                ti.CroppedBounds.Height);
 
             if (layer >= 0)
             {
@@ -342,6 +454,7 @@ namespace Murder.Editor.Data
                 ti.Layer = layer;
                 ti.LayerName = ase.Layers[layer].Name;
             }
+
             ti.Frame = frame;
             if (ase.FrameCount > 1)
                 ti.IsAnimation = true;
@@ -631,7 +744,7 @@ namespace Murder.Editor.Data
         {
             if (ase.Frames[frame].Cels.TryGetValue(layer, out var cel))
             {
-                return cel.Pixels;
+                return cel.Pixels ?? new Microsoft.Xna.Framework.Color[ase.Width * ase.Height];
             }
 
             return new Microsoft.Xna.Framework.Color[ase.Width * ase.Height];
@@ -639,11 +752,6 @@ namespace Murder.Editor.Data
 
         private IntRectangle CalculateCrop(Microsoft.Xna.Framework.Color[] pixels, Point totalSize, IntRectangle startingCrop)
         {
-            if (!CropAlpha)
-            {
-                return startingCrop;
-            }
-
             IntRectangle cropArea = new(-1, -1, -1, -1);
             int xHeadstart1 = 0;
             int xHeadstart2 = 0;

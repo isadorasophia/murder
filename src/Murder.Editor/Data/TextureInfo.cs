@@ -50,11 +50,6 @@ namespace Murder.Editor.Data
         public bool HasSlices = false;
 
         /// <summary>
-        /// The Asepritefile index
-        /// </summary>
-        internal int AsepriteFile;
-
-        /// <summary>
         /// Is this part of an animation sequence?
         /// </summary>
         internal bool IsAnimation;

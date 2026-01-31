@@ -654,6 +654,11 @@ public partial class Aseprite
     /// </summary>
     private void CelToFrame(Frame frame, Cel cel)
     {
+        if (cel.Pixels == null)
+        {
+            return;
+        }
+
         var opacity = (byte)(cel.Alpha * cel.Layer.Alpha * 255);
         var blend = _blendModes[cel.Layer.BlendMode];
 
@@ -685,6 +690,9 @@ public partial class Aseprite
     {
         if (!SplitLayers) // Cel data is only used when the aseprite file individual layers are required
             return;       // we can safely skip this to save time.
+
+        if (source.Pixels == null)
+            return;
 
         var opacity = (byte)(source.Alpha * source.Layer.Alpha * 255);
         var blend = _blendModes[source.Layer.BlendMode];
