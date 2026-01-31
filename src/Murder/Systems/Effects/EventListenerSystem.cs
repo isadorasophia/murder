@@ -45,6 +45,13 @@ public class EventListenerSystem : IMessagerSystem
             canPlay = false;
         }
 
+        // this is sort of wrong right now. we should find a better threshold and propagation from parent.
+        if (canPlay && entity.TryFetchParent()?.TryGetAlpha()?.Alpha < .25f)
+        {
+            // don't play events for invisible entities!
+            canPlay = false;
+        }
+
         if (canPlay && events.TryGetValue(animationEvent.Event, out SpriteEventInfo info))
         {
             // Start doing event actions.
