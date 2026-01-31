@@ -23,7 +23,7 @@ namespace Murder.Systems
             _logger.DrawConsole((string input) =>
             {
                 return CommandServices.Parse(context.World, input);
-            });
+            }, context.World);
         }
     }
 }

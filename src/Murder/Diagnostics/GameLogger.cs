@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Bang;
+using Microsoft.Xna.Framework.Input;
 using Murder.Core.Graphics;
 using Murder.Utilities;
 using System.Collections.Immutable;
@@ -80,7 +81,7 @@ public class GameLogger
     /// <summary>
     /// Draws the console of the game.
     /// </summary>
-    public virtual void DrawConsole(Func<string, string>? onInputAction = default) { }
+    public virtual void DrawConsole(Func<string, string>? onInputAction = default, World? world = null) { }
 
     /// <summary>
     /// Shows the top bar of the console. Called when a console is displayed.
@@ -120,7 +121,7 @@ public class GameLogger
         [CallerLineNumber] int lineNumber = 0) => GetOrCreateInstance().LogWarningImpl(msg, memberName, lineNumber);
 
     public static void Error(
-        string msg, 
+        string msg,
         [CallerMemberName] string memberName = "",
         [CallerLineNumber] int lineNumber = 0) => GetOrCreateInstance().LogErrorImpl(msg, memberName, lineNumber);
 
@@ -193,7 +194,7 @@ public class GameLogger
         string message = $"[PERF] 📈 {rawMessage}";
         Debug.WriteLine(message);
 
-        OutputToLog($"\uf201 {rawMessage}", color);
+        OutputToLog($"\uf201 {rawMessage}", LogType.Perf, color);
         _scrollToBottom = 2;
     }
 
@@ -205,7 +206,7 @@ public class GameLogger
         string message = $"[DEBUG] {rawMessage}";
         Debug.WriteLine(message);
 
-        OutputToLog($"\uf188 {rawMessage}", new Vector4(1, 1, 1, 0.5f));
+        OutputToLog($"\uf188 {rawMessage}", LogType.Debug, new Vector4(1, 1, 1, 0.5f));
         _scrollToBottom = 2;
     }
 
@@ -217,7 +218,7 @@ public class GameLogger
         string message = $"[LOG] {rawMessage}";
         Debug.WriteLine(message);
 
-        OutputToLog(rawMessage, color);
+        OutputToLog(rawMessage, LogType.Log, color);
         _scrollToBottom = 2;
     }
 
@@ -236,7 +237,7 @@ public class GameLogger
             outputMessage = $"{memberName} (line {lineNumber}): {outputMessage}";
         }
 
-        OutputToLog(outputMessage, new Vector4(1, 1, 0.5f, 1));
+        OutputToLog(outputMessage, LogType.Warning, new Vector4(1, 1, 0.5f, 1));
         _scrollToBottom = 2;
     }
 
@@ -255,7 +256,7 @@ public class GameLogger
             outputMessage = $"{memberName} (line {lineNumber}): {outputMessage}";
         }
 
-        OutputToLog(outputMessage, new Vector4(1, 0.25f, 0.5f, 1));
+        OutputToLog(outputMessage, LogType.Error, new Vector4(1, 0.25f, 0.5f, 1));
         _scrollToBottom = 2;
         _showDebug = true;
     }
@@ -265,7 +266,7 @@ public class GameLogger
         Debug.WriteLine($"[Input <<] {msg}");
 
         string message = $"> {msg}";
-        OutputToLog(message, new Vector4(.5f, 1, .3f, 1));
+        OutputToLog(message, LogType.Command, new Vector4(.5f, 1, .3f, 1));
         _scrollToBottom = 2;
 
         _lastInputs[_lastInputIndex++ % _lastInputs.Length] = msg;
@@ -275,18 +276,18 @@ public class GameLogger
     {
         Debug.WriteLine($"[Output >>] {msg}");
 
-        OutputToLog(msg, new Vector4(1, 1, 1, 1), includeTime: false);
+        OutputToLog(msg, LogType.Command, new Vector4(1, 1, 1, 1), includeTime: false);
         _scrollToBottom = 2;
     }
 
-    private void OutputToLog(string message, Vector4 color, bool includeTime = true)
+    private void OutputToLog(string message, LogType logType, Vector4 color, bool includeTime = true)
     {
         string time = includeTime ? $"[{DateTime.Now:HH:mm:ss}] " : string.Empty;
 
         using StringReader reader = new(time + message);
         for (string? line = reader.ReadLine(); line != null; line = reader.ReadLine())
         {
-            _log.Add(new LogLine() { Message = line, Color = color, Repeats = 1 });
+            _log.Add(new LogLine() { Message = line, Color = color, Repeats = 1, Type = logType });
         }
     }
 
@@ -305,11 +306,21 @@ public class GameLogger
 
     protected void ClearLog() => _log.Clear();
 
+    public enum LogType
+    {
+        Log,
+        Debug,
+        Perf,
+        Warning,
+        Error,
+        Command
+    }
     protected readonly struct LogLine
     {
         public string Message { init; get; }
         public Vector4 Color { init; get; }
         public int Repeats { init; get; }
+        public LogType Type { init; get; }
     }
 
     /// <summary>

@@ -9,6 +9,7 @@ using Murder.Editor.Data;
 using Murder.Editor.Data.Graphics;
 using Murder.Editor.Utilities;
 using Murder.Serialization;
+using System.IO;
 using static Murder.Utilities.StringHelper;
 
 namespace Murder.Editor.Importers
@@ -106,27 +107,34 @@ namespace Murder.Editor.Importers
                 return;
             }
 
-            // Generate animation aseprite asset files
-            for (int i = 0; i < packer.AsepriteFiles.Count; i++)
+            foreach (string file in _reloadedSprites)
             {
-                Aseprite animation = packer.AsepriteFiles[i];
+                string ext = Path.GetExtension(file).ToLowerInvariant();
+                if (!IsAsepriteFile(file))
+                    continue;
 
-                foreach (SpriteAsset asset in animation.CreateAssets(targetAtlasName))
+                // Load metadata only - no pixel data
+                var ase = new Aseprite(file, loadImageData: false);
+
+                foreach (SpriteAsset asset in ase.CreateAssets(targetAtlasName))
                 {
                     if (Game.Data.HasAsset<SpriteAsset>(asset.Guid))
                     {
-                        // Remove the previous sprite asset.
                         Game.Data.RemoveAsset<SpriteAsset>(asset.Guid);
                     }
 
                     SaveAsset(asset, cleanDirectory: false);
-
-                    // Load the new asset, as if nothing happened... >:)
-                    Game.Data.AddAsset(asset);
+                    Game.Data.AddAsset(asset, true);
                 }
             }
 
             SerializeAtlas(targetAtlasName, packer, SerializeAtlasFlags.None);
+        }
+
+        private static bool IsAsepriteFile(string path)
+        {
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return ext is ".ase" or ".aseprite";
         }
 
         private async Task ProcessAllFiles()
@@ -135,30 +143,31 @@ namespace Murder.Editor.Importers
 
             await Task.Yield();
 
-            AtlasId targetAtlasId = Atlas;
             string targetAtlasName = GetAtlasName(Atlas, SubAtlasId);
 
-            Packer? packer = CreateAtlasPacker(GetAtlasName(Atlas, SubAtlasId), AllFiles);
+            // Pack the atlas first (this loads files WITH pixel data for cropping)
+            Packer? packer = CreateAtlasPacker(targetAtlasName, AllFiles);
             if (packer is null)
             {
                 return;
             }
 
-            // Check whether the target path has previously been loaded (and hence ignore any warnings).
+            // NOW create assets by reloading files WITHOUT pixel data
             bool skipLoadingWarnings = Game.Data.IsPathOnSkipLoading(GetSourceResourcesPath());
             bool hasCleanedDirectory = false;
 
-            // Generate animation aseprite asset files
-            for (int i = 0; i < packer.AsepriteFiles.Count; i++)
+            foreach (string file in AllFiles)
             {
-                var animation = packer.AsepriteFiles[i];
+                if (!IsAsepriteFile(file))
+                    continue;
 
-                foreach (SpriteAsset asset in animation.CreateAssets(targetAtlasName))
+                var ase = new Aseprite(file, loadImageData: false);
+
+                foreach (SpriteAsset asset in ase.CreateAssets(targetAtlasName))
                 {
                     bool cleanDirectoryBeforeSaving = false;
                     if (!hasCleanedDirectory)
                     {
-                        // Make sure we clean the directory before saving this asset.
                         cleanDirectoryBeforeSaving = ClearBeforeSaving;
                         hasCleanedDirectory = true;
                     }
@@ -167,19 +176,10 @@ namespace Murder.Editor.Importers
 
                     if (!skipLoadingWarnings && Game.Data.HasAsset<SpriteAsset>(asset.Guid))
                     {
-                        if (skipLoadingWarnings)
-                        {
-                            // Remove the previous sprite asset.
-                            Game.Data.RemoveAsset<SpriteAsset>(asset.Guid);
-                        }
-                        else
-                        {
-                            GameLogger.Warning($"Found a duplicated slice at {asset.Name}.");
-                            continue;
-                        }
+                        GameLogger.Warning($"Found a duplicated slice at {asset.Name}.");
+                        continue;
                     }
 
-                    // Instead of loading the asset we just saved (slow), track it right away!
                     Game.Data.AddAsset(asset);
                 }
             }
@@ -282,7 +282,7 @@ namespace Murder.Editor.Importers
                     {
                         FileManager.DeleteDirectoryIfExists(sourceAtlasSubAtlasPath);
                     }
-
+                    
                     if (binAtlasSubAtlasPath is not null)
                     {
                         FileManager.DeleteDirectoryIfExists(binAtlasSubAtlasPath);

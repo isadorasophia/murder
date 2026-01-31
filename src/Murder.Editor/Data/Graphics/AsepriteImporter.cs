@@ -223,34 +223,18 @@ public partial class Aseprite
                                 // Compressed Image
                                 else if (celType == 2)
                                 {
-                                    SEEK(2);
+                                    SEEK(2); // Skip zlib header
 
-                                    const int HEADER_SIZE = 6;
+                                    using var deflate = new DeflateStream(reader.BaseStream, CompressionMode.Decompress, leaveOpen: true);
 
-                                    int chunkLength = (int)(chunkEnd - chunkStart);
-                                    int compressedDataSize = (int)(chunkLength - 22 /* magic number? */) - HEADER_SIZE;
-
-                                    DeflateStream gzip = new DeflateStream(reader.BaseStream, CompressionMode.Decompress);
-
-                                    int len = 0;
-                                    MemoryStream uncompressed = new MemoryStream();
-
-                                    byte[] buffer = new byte[1024];
-
-                                    do
+                                    // Read directly into the buffer
+                                    int totalRead = 0;
+                                    while (totalRead < count)
                                     {
-                                        len = gzip.Read(buffer, 0, buffer.Length);
-
-                                        if (len > 0)
-                                        {
-                                            uncompressed.Write(buffer, 0, len);
-                                        }
-
-                                    } while (len > 0);
-
-                                    uncompressed.Position = 0;
-                                    BinaryReader ureader = new BinaryReader(uncompressed);
-                                    pixelBuffer = ureader.ReadBytes(count);
+                                        int read = deflate.Read(pixelBuffer, totalRead, count - totalRead);
+                                        if (read == 0) break;
+                                        totalRead += read;
+                                    }
                                 }
 
                                 cel.Pixels = new Color[cel.Width * cel.Height];
@@ -459,6 +443,10 @@ public partial class Aseprite
                     }
                     else if (chunkType == Chunks.OldPaletteB)
                     {
+                    }
+                    else if (chunkType == Chunks.CelExtra)
+                    {
+                        // Reference layer, ignore
                     }
                     else
                     {
