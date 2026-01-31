@@ -24,6 +24,7 @@ namespace Murder.Components
         [GameAssetId<SpriteAsset>]
         private readonly Guid _customSprite = Guid.Empty;
 
+        [JsonIgnore]
         public readonly float Start { get; init; } = 0;
 
         public readonly float Duration = -1.0f;
