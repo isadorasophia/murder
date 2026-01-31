@@ -255,7 +255,10 @@ namespace Murder.Core
 
                     if (!value.HasFlag(CollisionLayersBase.SOLID))
                     {
-                        GameLogger.Verify(weight != -1, "Invalid weight of -1 for non-solid carve layer!");
+                        if (weight == -1)
+                        {
+                            GameLogger.Warning("Invalid weight of -1 for non-solid carve layer!");
+                        }
 
                         // Clamp weight at 1.
                         _gridMap[position].Weight = Math.Max(1, _gridMap[position].Weight - weight);
@@ -290,7 +293,11 @@ namespace Murder.Core
 
                     if (!layer.HasFlag(CollisionLayersBase.SOLID))
                     {
-                        GameLogger.Verify(weight != -1, "Invalid weight of -1 for non-solid carve layer!");
+                        if (weight == -1)
+                        {
+                            GameLogger.Warning("Invalid weight of -1 for non-solid carve layer!");
+                        }
+
                         _gridMap[position].Weight += weight;
                     }
                 }
