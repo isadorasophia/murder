@@ -7,6 +7,7 @@ using Murder.Editor.Services;
 using Murder.Serialization;
 using Murder.Services;
 using Murder.Utilities;
+using System.Collections;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
@@ -274,10 +275,6 @@ namespace Murder.Editor.Data
             // GameDebugger.Log($"Loading the file {fi.FullName}.");
             var ase = new Aseprite(path);
 
-            // Skips files starting with underscore
-            if (path.StartsWith('_'))
-                return;
-
             AsepriteFiles.Add(ase);
 
             if (ase.Width <= _atlasSize && ase.Height <= _atlasSize)
@@ -387,48 +384,48 @@ namespace Murder.Editor.Data
             }
         }
 
-        private void HorizontalSplit(Node _ToSplit, int _Width, int _Height, List<Node> _List)
+        private void HorizontalSplit(Node toSplit, int width, int height, Queue<Node> list)
         {
             Node n1 = new Node();
-            n1.Bounds.X = _ToSplit.Bounds.X + _Width + _padding;
-            n1.Bounds.Y = _ToSplit.Bounds.Y;
-            n1.Bounds.Width = _ToSplit.Bounds.Width - _Width - _padding;
-            n1.Bounds.Height = _Height;
+            n1.Bounds.X = toSplit.Bounds.X + width + _padding;
+            n1.Bounds.Y = toSplit.Bounds.Y;
+            n1.Bounds.Width = toSplit.Bounds.Width - width - _padding;
+            n1.Bounds.Height = height;
             n1.SplitType = SplitType.Vertical;
 
             Node n2 = new Node();
-            n2.Bounds.X = _ToSplit.Bounds.X;
-            n2.Bounds.Y = _ToSplit.Bounds.Y + _Height + _padding;
-            n2.Bounds.Width = _ToSplit.Bounds.Width;
-            n2.Bounds.Height = _ToSplit.Bounds.Height - _Height - _padding;
+            n2.Bounds.X = toSplit.Bounds.X;
+            n2.Bounds.Y = toSplit.Bounds.Y + height + _padding;
+            n2.Bounds.Width = toSplit.Bounds.Width;
+            n2.Bounds.Height = toSplit.Bounds.Height - height - _padding;
             n2.SplitType = SplitType.Horizontal;
 
             if (n1.Bounds.Width > 0 && n1.Bounds.Height > 0)
-                _List.Add(n1);
+                list.Enqueue(n1);
             if (n2.Bounds.Width > 0 && n2.Bounds.Height > 0)
-                _List.Add(n2);
+                list.Enqueue(n2);
         }
 
-        private void VerticalSplit(Node _ToSplit, int _Width, int _Height, List<Node> _List)
+        private void VerticalSplit(Node toSplit, int width, int height, Queue<Node> list)
         {
             Node n1 = new Node();
-            n1.Bounds.X = _ToSplit.Bounds.X + _Width + _padding;
-            n1.Bounds.Y = _ToSplit.Bounds.Y;
-            n1.Bounds.Width = _ToSplit.Bounds.Width - _Width - _padding;
-            n1.Bounds.Height = _ToSplit.Bounds.Height;
+            n1.Bounds.X = toSplit.Bounds.X + width + _padding;
+            n1.Bounds.Y = toSplit.Bounds.Y;
+            n1.Bounds.Width = toSplit.Bounds.Width - width - _padding;
+            n1.Bounds.Height = toSplit.Bounds.Height;
             n1.SplitType = SplitType.Vertical;
 
             Node n2 = new Node();
-            n2.Bounds.X = _ToSplit.Bounds.X;
-            n2.Bounds.Y = _ToSplit.Bounds.Y + _Height + _padding;
-            n2.Bounds.Width = _Width;
-            n2.Bounds.Height = _ToSplit.Bounds.Height - _Height - _padding;
+            n2.Bounds.X = toSplit.Bounds.X;
+            n2.Bounds.Y = toSplit.Bounds.Y + height + _padding;
+            n2.Bounds.Width = width;
+            n2.Bounds.Height = toSplit.Bounds.Height - height - _padding;
             n2.SplitType = SplitType.Horizontal;
 
             if (n1.Bounds.Width > 0 && n1.Bounds.Height > 0)
-                _List.Add(n1);
+                list.Enqueue(n1);
             if (n2.Bounds.Width > 0 && n2.Bounds.Height > 0)
-                _List.Add(n2);
+                list.Enqueue(n2);
         }
 
         private TextureInfo? FindBestFitForNode(Node _Node, List<TextureInfo> textures)
@@ -479,7 +476,7 @@ namespace Murder.Editor.Data
 
         private List<TextureInfo> LayoutAtlas(List<TextureInfo> _Textures, Atlas _Atlas)
         {
-            List<Node> freeList = new List<Node>();
+            Queue<Node> freeList = new();
 
             _Atlas.Nodes = new List<Node>();
 
@@ -489,12 +486,11 @@ namespace Murder.Editor.Data
             root.Bounds.Size = new Point(_Atlas.Width, _Atlas.Height);
             root.SplitType = SplitType.Horizontal;
 
-            freeList.Add(root);
+            freeList.Enqueue(root);
 
             while (freeList.Count > 0 && textures.Count > 0)
             {
-                Node node = freeList[0];
-                freeList.RemoveAt(0);
+                Node node = freeList.Dequeue();
 
                 TextureInfo? bestFit = FindBestFitForNode(node, textures);
                 if (bestFit != null)
