@@ -222,7 +222,6 @@ namespace Murder
         /// If set, this is the amount of frames we will skip while rendering.
         /// </summary>
         private int _freezeFrameCount = 0;
-        private int _freezeFrameCountPending = 0;
 
         /// <summary>
         /// Time since we have been freezing the frames.
@@ -624,7 +623,6 @@ namespace Murder
         public void FreezeFrames(int amount)
         {
             _freezeFrameCount = amount;
-            _freezeFrameCountPending = amount;
         }
 
         /// <summary>
@@ -771,22 +769,17 @@ namespace Murder
 
             GameLogger.Verify(ActiveScene is not null);
 
-            var calculatedDelta = LastFrameDuration;
+            _unscaledPreviousElapsedTime = _unscaledElapsedTime;
+            _scaledPreviousElapsedTime = _scaledElapsedTime;
 
-            double deltaTime;
+            double deltaTime = LastFrameDuration;
             if (_isSkippingDeltaTimeOnUpdate)
             {
                 deltaTime = LastFrameDuration;
             }
             else
             {
-                deltaTime = Math.Clamp(calculatedDelta, 0, FixedDeltaTime * 2);
-            }
-
-            if (_freezeFrameCountPending > 0)
-            {
-                deltaTime -= _freezeFrameCountPending * FixedDeltaTime;
-                _freezeFrameCountPending = 0;
+                deltaTime = Math.Clamp(LastFrameDuration, 0, FixedDeltaTime * 2);
             }
 
             UpdateUnscaledDeltaTime(deltaTime);
@@ -828,10 +821,6 @@ namespace Murder
                     UpdateInputAndScene(); // <==== Update all Update systems (and input
                 }
             }
-
-            // Update previous time after fixed update
-            _unscaledPreviousElapsedTime = _unscaledElapsedTime;
-            _scaledPreviousElapsedTime = _scaledElapsedTime;
 
             base.Update(gameTime); // Monogame/XNA internal Update
 

@@ -540,6 +540,7 @@ public class RenderContext : IDisposable
             SaveScreenshot(screenshot, screenshotArea.Size.Point());
             _takeScreenShot = null;
 
+            _graphicsDevice.SetRenderTarget(target);
         }
     }
 
