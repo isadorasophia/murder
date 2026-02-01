@@ -220,8 +220,7 @@ namespace Murder.Editor.Data
         {
             using PerfTimeRecorder ptr = new("Deduplicating Textures");
 
-            // Key: (hash, width, height) to avoid collisions between different dimensions
-            Dictionary<(ulong hash, int w, int h), TextureInfo> uniqueTextures = new();
+            Dictionary<(ulong hash, int offsetX, int offsetY, int w, int h), TextureInfo> uniqueTextures = new();
             List<TextureInfo> duplicates = new();
             int duplicateCount = 0;
 
@@ -233,7 +232,7 @@ namespace Murder.Editor.Data
                 if (!_textureHashes.TryGetValue(ti, out ulong hash))
                     continue;
 
-                var key = (hash, ti.CroppedBounds.Width, ti.CroppedBounds.Height);
+                var key = (hash, ti.TrimArea.X, ti.TrimArea.Y, ti.TrimArea.Width, ti.TrimArea.Height);
 
                 if (uniqueTextures.TryGetValue(key, out var original))
                 {
