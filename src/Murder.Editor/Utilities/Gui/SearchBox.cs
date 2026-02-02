@@ -389,6 +389,7 @@ namespace Murder.Editor.ImGuiExtended
             _searchBoxWidth = -1;
         }
 
+
         /// <summary>
         /// Internally called through <see cref="SearchBox"/> implementations.
         /// Complete entrypoint for creating a search box.
@@ -399,7 +400,7 @@ namespace Murder.Editor.ImGuiExtended
             Dictionary<string, T> values,
             SearchBoxFlags flags,
             [NotNullWhen(true)] out T? result
-        ) => Search(id, settings, values, flags, SearchBoxConfiguration.Default, out result);
+        ) => Search(id, settings, values, flags, SearchBoxConfiguration.Default, null, out result);
 
         public struct SearchBoxSettings<T>
         {
@@ -438,6 +439,7 @@ namespace Murder.Editor.ImGuiExtended
             Dictionary<string, T> values,
             SearchBoxFlags flags,
             SearchBoxConfiguration sizeConfiguration,
+            Func<KeyValuePair<string, T>, IComparable?>? orderKeySelector,
             [NotNullWhen(true)] out T? result)
         {
             result = default;
@@ -575,6 +577,12 @@ namespace Murder.Editor.ImGuiExtended
             // This is the searchbox window:
             if (isUnfolded || ImGui.BeginPopup(id + "_search", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoBackground))
             {
+                if (ImGui.IsWindowAppearing())
+                {
+                    _tempSearchText = string.Empty;
+                    _searchBoxSelection = 0;
+                }
+
                 pos = new(pos.X, pos.Y + Math.Min(0, ImGui.GetWindowViewport().Size.Y - pos.Y - 400));
                 ImGui.SetWindowPos(pos);
 
@@ -598,7 +606,15 @@ namespace Murder.Editor.ImGuiExtended
                     ImGui.CloseCurrentPopup();
                 }
 
-                var orderedKeyAndValue = values.OrderBy(n => n.Key);
+                IOrderedEnumerable<KeyValuePair<string, T>> orderedKeyAndValue;
+                if (orderKeySelector is not null)
+                {
+                    orderedKeyAndValue = values.OrderBy(orderKeySelector);
+                }
+                else
+                {
+                    orderedKeyAndValue = values.OrderBy(n => n.Key);
+                }
 
                 int count = 0;
                 foreach ((string name, T asset) in orderedKeyAndValue)
@@ -618,6 +634,7 @@ namespace Murder.Editor.ImGuiExtended
                         if (item_selected)
                         {
                             ImGuiHelpers.DrawBorderOnPreviousItem(Game.Profile.Theme.HighAccent, 0);
+                            ImGui.SetScrollHereY();
                         }
 
                         if (ImGui.IsItemHovered())
@@ -666,6 +683,14 @@ namespace Murder.Editor.ImGuiExtended
                     if (ImGui.IsKeyPressed(ImGuiKey.DownArrow))
                     {
                         _searchBoxSelection = Calculator.WrapAround(_searchBoxSelection + 1, 0, count - 1);
+                    }
+                    if (ImGui.IsKeyPressed(ImGuiKey.Home))
+                    {
+                        _searchBoxSelection = 0;
+                    }
+                    if (ImGui.IsKeyPressed(ImGuiKey.End))
+                    {
+                        _searchBoxSelection = count - 1;
                     }
                 }
                 else

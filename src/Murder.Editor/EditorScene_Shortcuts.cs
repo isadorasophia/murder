@@ -11,7 +11,6 @@ using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Numerics;
-using static Murder.Editor.ImGuiExtended.SearchBox;
 
 namespace Murder.Editor;
 
@@ -233,7 +232,7 @@ public partial class EditorScene
             ImGui.SetWindowSize(_commandPaletteWindowSize);
             ImGui.SetWindowFocus();
 
-            SearchBoxSettings<Guid> settings = new(initialText: "Type a command");
+            SearchBox.SearchBoxSettings<Guid> settings = new(initialText: "Type a command");
             if (_shortcutSearchValuesCache == null)
             {
                 _shortcutSearchValuesCache = new Dictionary<string, Guid>();
@@ -253,9 +252,13 @@ public partial class EditorScene
                 values: _shortcutSearchValuesCache,
                 flags: SearchBoxFlags.Unfolded,
                 sizeConfiguration: _commandPaletteSizeConfiguration,
+                orderKeySelector: n => Architect.EditorSettings.GetTimesOpenedAsset(n.Value),
                 out Guid guid))
             {
-
+                if (Game.Data.TryGetAsset(guid) is GameAsset asset)
+                {
+                    OpenAssetEditor(asset, false);
+                }
                 _commandPaletteIsVisible = false;
             }
 

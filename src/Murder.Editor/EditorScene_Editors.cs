@@ -416,6 +416,7 @@ namespace Murder.Editor
         }
         public Guid OpenAssetEditor(GameAsset asset, bool overwrite)
         {
+            Architect.EditorSettings.IncrementTimesOpenedAsset(asset.Guid);
             GameLogger.Verify(RenderContext is not null);
 
             _selectedAssets[asset.Guid] = asset;

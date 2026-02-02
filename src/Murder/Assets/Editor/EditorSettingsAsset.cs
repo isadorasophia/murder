@@ -110,7 +110,7 @@ public class EditorSettingsAsset : GameAsset
     [Serialize, HideInEditor]
     public float FontScale = 1;
 
-    [Serialize, Slider(1,2000)]
+    [Serialize, Slider(1, 2000)]
     public float WasdCameraSpeed = 100;
 
     [Serialize]
@@ -142,6 +142,51 @@ public class EditorSettingsAsset : GameAsset
 
     private readonly List<GameAsset> _cachedFavoriteAssets = new();
 
+    private readonly Dictionary<Guid, int> _timesOpenedAsset = new();
+
+    public int GetTimesOpenedAsset(Guid guid)
+    {
+        if (!_timesOpenedAsset.TryGetValue(guid, out int times))
+        {
+            return 0;
+        }
+        return times;
+    }
+
+    private const int MAX_GUIDS_IN_TIMES_OPENED_ASSET_DICT = 120;
+    /// <summary>
+    /// Incements the times opened for an asset.
+    /// </summary>
+    /// <param name="guid"></param>
+    public void IncrementTimesOpenedAsset(Guid guid)
+    {
+        if (_timesOpenedAsset.ContainsKey(guid))
+        {
+            _timesOpenedAsset[guid]++;
+        }
+        else
+        {
+            if (_timesOpenedAsset.Count >= MAX_GUIDS_IN_TIMES_OPENED_ASSET_DICT)
+            {
+                // Remove the least opened asset to make space
+                Guid leastOpenedGuid = Guid.Empty;
+                int leastOpenedCount = int.MaxValue;
+                foreach (var kvp in _timesOpenedAsset)
+                {
+                    if (kvp.Value < leastOpenedCount)
+                    {
+                        leastOpenedCount = kvp.Value;
+                        leastOpenedGuid = kvp.Key;
+                    }
+                }
+                if (leastOpenedGuid != Guid.Empty)
+                {
+                    _timesOpenedAsset.Remove(leastOpenedGuid);
+                }
+            }
+            _timesOpenedAsset[guid] = 1;
+        }
+    }
     public List<GameAsset> CachedFavoriteAssets
     {
         get
