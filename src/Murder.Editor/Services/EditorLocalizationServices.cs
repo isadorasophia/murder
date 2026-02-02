@@ -57,7 +57,7 @@ internal static class EditorLocalizationServices
             return result;
         });
 
-        if (SearchBox.Search(id: "s_", settings, values: candidates, SearchBoxFlags.None, out Guid result))
+        if (SearchBox.Search(id: "s_", settings, values: candidates.Value, SearchBoxFlags.None, out Guid result))
         {
             if (result == Guid.Empty)
             {

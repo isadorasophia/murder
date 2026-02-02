@@ -197,11 +197,12 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                         return collided;
                     }
 
-                    if (velocity.Length() > minStepSize)
+                    float velocityLength = velocity.Length();
+                    if (velocityLength > minStepSize)
                     {
                         // If the velocity is too high, we need to split it up into smaller steps.
                         bool fail = false;
-                        for (int i = 0; i < velocity.Length(); i += minStepSize)
+                        for (int i = 0; i < velocityLength; i += minStepSize)
                         {
                             Vector2 step = velocity.Normalized() * minStepSize;
                             Vector2 targetPosition = startPosition + step;

@@ -19,17 +19,16 @@ public partial class EditorScene
 {
     private static readonly Vector2 _commandPaletteWindowSize = new(400, 350);
     private static readonly Vector2 _commandPalettePadding = new(20, 0);
-    private static readonly Vector2 _commandPaletteSearchBoxPadding = new (20, 20);
+    private static readonly Vector2 _commandPaletteSearchBoxPadding = new(20, 20);
     private static readonly SearchBox.SearchBoxConfiguration _commandPaletteSizeConfiguration = new(
         SearchFrameSize: _commandPaletteWindowSize - _commandPalettePadding,
         SearchBoxContainerSize: _commandPaletteWindowSize - _commandPaletteSearchBoxPadding
     );
-    
+
     private readonly ImmutableDictionary<ShortcutGroup, List<Shortcut>> _shortcuts;
-    private readonly Dictionary<string, Shortcut> _shortcutSearchValues;
 
     private bool _commandPaletteIsVisible;
-    private readonly Lazy<Dictionary<string, Shortcut>> _shortcutSearchValuesCache;
+    private Dictionary<string, Guid>? _shortcutSearchValuesCache = null;
 
     private ImmutableDictionary<ShortcutGroup, List<Shortcut>> CreateShortcutList() =>
         new Dictionary<ShortcutGroup, List<Shortcut>>
@@ -163,7 +162,7 @@ public partial class EditorScene
     private void DrawMainMenuBar()
     {
         ImGui.BeginMainMenuBar();
-        
+
         foreach (ShortcutGroup group in _shortcuts.Keys)
         {
             // Storing this value because the keyboard shortcuts must be verified regardless.
@@ -200,7 +199,7 @@ public partial class EditorScene
                 ToggleGameLogger();
             }
         }
-        
+
         if (Game.Input.Shortcut(Keys.W, InputHelpers.OSActionModifier) ||
             Game.Input.Shortcut(Keys.W, InputHelpers.OSActionModifier))
         {
@@ -210,14 +209,14 @@ public partial class EditorScene
             }
         }
 
-        if (Game.Input.Shortcut(Keys.F, InputHelpers.OSActionModifier) || 
+        if (Game.Input.Shortcut(Keys.F, InputHelpers.OSActionModifier) ||
             Game.Input.Shortcut(Keys.F, InputHelpers.OSActionModifier))
         {
             _focusOnFind = true;
         }
 
         if (_commandPaletteIsVisible)
-        {    
+        {
             Vector2 viewportSize = ImGui.GetMainViewport().Size;
 
             // Background of the command palette, slightly darker and prevents interaction with the editor.
@@ -226,28 +225,40 @@ public partial class EditorScene
             ImGui.SetWindowPos(Vector2.Zero);
             ImGui.SetWindowSize(viewportSize);
             ImGui.End();
-            
+
             // Command palette window.
-            ImGui.Begin("Command Palette",  ImGuiWindowFlags.Modal | ImGuiWindowFlags.NoDecoration);
+            ImGui.Begin("Command Palette", ImGuiWindowFlags.Modal | ImGuiWindowFlags.NoDecoration);
             ImGui.SetWindowPos((viewportSize - _commandPaletteWindowSize) / 2f);
             ImGui.SetWindowPos((viewportSize - _commandPaletteWindowSize) / 2f);
             ImGui.SetWindowSize(_commandPaletteWindowSize);
             ImGui.SetWindowFocus();
 
-            SearchBoxSettings<Shortcut> settings = new(initialText: "Type a command");
+            SearchBoxSettings<Guid> settings = new(initialText: "Type a command");
+            if (_shortcutSearchValuesCache == null)
+            {
+                _shortcutSearchValuesCache = new Dictionary<string, Guid>();
+            }
+
+            if (_shortcutSearchValuesCache.Count == 0)
+            {
+                foreach (var asset in Game.Data.GetAllAssets())
+                {
+                    _shortcutSearchValuesCache[$"{asset.Icon} {asset.Name}"] = asset.Guid;
+                }
+            }
 
             if (SearchBox.Search(
-                $"command_palette", 
-                settings,
+                id: $"command_palette",
+                settings: settings,
                 values: _shortcutSearchValuesCache,
                 flags: SearchBoxFlags.Unfolded,
-                sizeConfiguration: _commandPaletteSizeConfiguration, 
-                out Shortcut? shortcut))
+                sizeConfiguration: _commandPaletteSizeConfiguration,
+                out Guid guid))
             {
-                shortcut.Execute();
+
                 _commandPaletteIsVisible = false;
             }
-            
+
             ImGui.End();
         }
     }
@@ -264,7 +275,7 @@ public partial class EditorScene
 
             return pressed;
         }
-        
+
         return ImGui.MenuItem(shortcut.Name, shortcut.Chord.ToString());
     }
 
@@ -416,7 +427,7 @@ public partial class EditorScene
             Action();
         }
     }
-    
+
     private sealed record ToggleShortcut(
         string Name,
         Chord Chord,

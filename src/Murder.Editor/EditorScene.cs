@@ -46,24 +46,14 @@ namespace Murder.Editor
             _selectedExplorerWindow = _explorerPages.First();
 
             _shortcuts = CreateShortcutList();
-            _shortcutSearchValues = _shortcuts
-                .Keys.SelectMany(group => _shortcuts[group].Select(shortcut => (group, shortcut)))
-                .ToDictionary(tuple => $"{tuple.group} > {tuple.shortcut.Name}", tuple => tuple.shortcut);
 
-            _shortcutSearchValuesCache = new Lazy<Dictionary<string, Shortcut>>(() =>
-            {
-                Dictionary<string, Shortcut> all = new();
-
-                // Add _shortcutSearchValues to the dictionary
-                foreach (var (key, value) in _shortcutSearchValues)
-                {
-                    all[key] = value;
-                }
-
-                return all;
-            });
+            _shortcutSearchValuesCache = null;
 
             FileDropEXT.DropFile += FileDropped;
+        }
+        public void ClearShortcutsCache()
+        {
+            _shortcutSearchValuesCache?.Clear();
         }
 
         protected void FileDropped(string path)
@@ -121,7 +111,7 @@ namespace Murder.Editor
             TextInputEXT.StartTextInput();
         }
 
-        private void ReopenLastTabs()   
+        private void ReopenLastTabs()
         {
             foreach (var item in Architect.EditorSettings.OpenedTabs)
             {
@@ -508,9 +498,9 @@ namespace Murder.Editor
                 ImGui.BeginChild("");
 
                 // Extra padding on the left
-                ImGui.Dummy(new Vector2(0,0));
+                ImGui.Dummy(new Vector2(0, 0));
                 ImGui.SameLine();
-                
+
                 ImGui.BeginGroup();
                 if (Architect.EditorSettings.FavoriteAssets.Any())
                 {
@@ -524,7 +514,7 @@ namespace Murder.Editor
                         {
                             DrawAssetInList(asset, Architect.Profile.Theme.Yellow, asset.Name);
                         }
-                    ImGui.TreePop();    
+                        ImGui.TreePop();
                     }
                     ImGui.EndGroup();
 

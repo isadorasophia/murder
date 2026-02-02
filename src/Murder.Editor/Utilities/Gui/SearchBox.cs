@@ -14,7 +14,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Text;
-using static Murder.Editor.ImGuiExtended.SearchBox;
 
 namespace Murder.Editor.ImGuiExtended
 {
@@ -69,7 +68,7 @@ namespace Murder.Editor.ImGuiExtended
                 return CollectionHelper.ToStringDictionary(assets, a => a.Name, a => a);
             });
 
-            if (Search(id: "a_", settings, values: candidates, flags, out GameAsset? chosen))
+            if (Search(id: "a_", settings, values: candidates.Value, flags, out GameAsset? chosen))
             {
                 if (chosen is null)
                 {
@@ -94,7 +93,7 @@ namespace Murder.Editor.ImGuiExtended
 
             Lazy<Dictionary<string, Type>> candidates = new(CollectionHelper.ToStringDictionary(types, t => t.Name, t => t));
 
-            if (Search(id: "c_", settings, values: candidates, SearchBoxFlags.None, out Type? chosen))
+            if (Search(id: "c_", settings, values: candidates.Value, SearchBoxFlags.None, out Type? chosen))
             {
                 return chosen;
             }
@@ -128,7 +127,7 @@ namespace Murder.Editor.ImGuiExtended
                 return result;
             });
 
-            if (Search(id: "c_", settings, values: candidates, SearchBoxFlags.None, out Type? chosen))
+            if (Search(id: "c_", settings, values: candidates.Value, SearchBoxFlags.None, out Type? chosen))
             {
                 return chosen;
             }
@@ -153,7 +152,7 @@ namespace Murder.Editor.ImGuiExtended
                 return result;
             });
 
-            if (Search(id: "i_", settings, values: candidates, SearchBoxFlags.None, out Type? chosen))
+            if (Search(id: "i_", settings, values: candidates.Value, SearchBoxFlags.None, out Type? chosen))
             {
                 return chosen;
             }
@@ -179,7 +178,7 @@ namespace Murder.Editor.ImGuiExtended
                 return result;
             });
 
-            if (Search(id: "s_", settings, values: candidates, SearchBoxFlags.None, out chosen))
+            if (Search(id: "s_", settings, values: candidates.Value, SearchBoxFlags.None, out chosen))
             {
                 return true;
             }
@@ -209,7 +208,7 @@ namespace Murder.Editor.ImGuiExtended
                 return result;
             });
 
-            if (Search(id: "e_", settings, values: candidates, SearchBoxFlags.None, out Guid chosen))
+            if (Search(id: "e_", settings, values: candidates.Value, SearchBoxFlags.None, out Guid chosen))
             {
                 return chosen;
             }
@@ -229,7 +228,7 @@ namespace Murder.Editor.ImGuiExtended
             Lazy<Dictionary<string, Type>> candidates = new(() => CollectionHelper.ToStringDictionary(
                 AssetsFilter.GetFromInterface(@interface), s => s.Name, s => s));
 
-            if (Search(id: "s_", settings, values: candidates, SearchBoxFlags.None, out Type? chosen))
+            if (Search(id: "s_", settings, values: candidates.Value, SearchBoxFlags.None, out Type? chosen))
             {
                 return chosen;
             }
@@ -247,7 +246,7 @@ namespace Murder.Editor.ImGuiExtended
                 s => s.Name,
                 s => s));
 
-            if (Search(id: "s_", settings, values: candidates, SearchBoxFlags.None, out Type? chosen))
+            if (Search(id: "s_", settings, values: candidates.Value, SearchBoxFlags.None, out Type? chosen))
             {
                 return chosen;
             }
@@ -266,7 +265,7 @@ namespace Murder.Editor.ImGuiExtended
 
             Lazy<Dictionary<string, SoundFact>> candidates = new(AssetsFilter.GetAllFactsFromSoundBlackboards);
 
-            if (Search(id: $"{id}_s_", settings, values: candidates, SearchBoxFlags.None, out SoundFact chosen))
+            if (Search(id: $"{id}_s_", settings, values: candidates.Value, SearchBoxFlags.None, out SoundFact chosen))
             {
                 return chosen.Equals(default(Fact)) ? null : chosen;
             }
@@ -285,7 +284,7 @@ namespace Murder.Editor.ImGuiExtended
 
             Lazy<Dictionary<string, Fact>> candidates = new(() => AssetsFilter.GetAllFactsFromBlackboards(kind));
 
-            if (Search(id: $"{id}_s_", settings, values: candidates, SearchBoxFlags.None, out Fact chosen))
+            if (Search(id: $"{id}_s_", settings, values: candidates.Value, SearchBoxFlags.None, out Fact chosen))
             {
                 return chosen;
             }
@@ -303,7 +302,7 @@ namespace Murder.Editor.ImGuiExtended
             SearchBoxSettings<T> settings = new(initialText: "Add kind");
 
             Lazy<Dictionary<string, T>> candidates = new(() => valuesToSearch.ToDictionary(v => Enum.GetName(typeof(T), v)!, v => v));
-            return Search(id: "s_", settings, values: candidates, SearchBoxFlags.None, out chosen);
+            return Search(id: "s_", settings, values: candidates.Value, SearchBoxFlags.None, out chosen);
         }
 
         public static bool SearchInstanceInWorld(ref Guid guid, WorldAsset world)
@@ -357,7 +356,7 @@ namespace Murder.Editor.ImGuiExtended
                 return result;
             });
 
-            if (Search(id: "a_", settings, values: candidates, SearchBoxFlags.None, out Guid chosen))
+            if (Search(id: "a_", settings, values: candidates.Value, SearchBoxFlags.None, out Guid chosen))
             {
                 if (chosen == Guid.Empty)
                 {
@@ -397,7 +396,7 @@ namespace Murder.Editor.ImGuiExtended
         public static bool Search<T>(
             string id,
             SearchBoxSettings<T> settings,
-            Lazy<Dictionary<string, T>> values,
+            Dictionary<string, T> values,
             SearchBoxFlags flags,
             [NotNullWhen(true)] out T? result
         ) => Search(id, settings, values, flags, SearchBoxConfiguration.Default, out result);
@@ -436,7 +435,7 @@ namespace Murder.Editor.ImGuiExtended
         public static bool Search<T>(
             string id,
             SearchBoxSettings<T> settings,
-            Lazy<Dictionary<string, T>> values,
+            Dictionary<string, T> values,
             SearchBoxFlags flags,
             SearchBoxConfiguration sizeConfiguration,
             [NotNullWhen(true)] out T? result)
@@ -599,7 +598,7 @@ namespace Murder.Editor.ImGuiExtended
                     ImGui.CloseCurrentPopup();
                 }
 
-                var orderedKeyAndValue = values.Value.OrderBy(n => n.Key);
+                var orderedKeyAndValue = values.OrderBy(n => n.Key);
 
                 int count = 0;
                 foreach ((string name, T asset) in orderedKeyAndValue)
