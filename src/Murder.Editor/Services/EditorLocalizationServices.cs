@@ -36,6 +36,12 @@ internal static class EditorLocalizationServices
                     continue;
                 }
 
+                if (data.String is null)
+                {
+                    GameLogger.Error($"How is {data.Guid} null? This should never be possible. Did you mess the json manually?");
+                    continue;
+                }
+
                 string key;
                 if (data.String.Length > 32)
                 {
