@@ -764,14 +764,11 @@ namespace Murder
                 return;
             }
 
-            DoPendingExitGame();
-            DoPendingWorldTransition();
-
             GameLogger.Verify(ActiveScene is not null);
 
             _unscaledPreviousElapsedTime = _unscaledElapsedTime;
             _scaledPreviousElapsedTime = _scaledElapsedTime;
-
+    
             double deltaTime = LastFrameDuration;
             if (_isSkippingDeltaTimeOnUpdate)
             {
@@ -833,6 +830,9 @@ namespace Murder
         private void UpdateInputAndScene()
         {
             GameLogger.Verify(ActiveScene is not null);
+
+            DoPendingExitGame();
+            DoPendingWorldTransition();
 
             _playerInput.Update();
 
