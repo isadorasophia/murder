@@ -616,9 +616,41 @@ namespace Murder.Editor.ImGuiExtended
                     orderedKeyAndValue = values.OrderBy(n => n.Key);
                 }
 
+                int totalItemsCount = orderedKeyAndValue.Count();
+                bool movedSelection = false;
+                // Handle keyboard arrows
+                if (totalItemsCount > 0)
+                {
+                    if (ImGui.IsKeyPressed(ImGuiKey.UpArrow))
+                    {
+                        _searchBoxSelection = Calculator.WrapAround(_searchBoxSelection - 1, 0, totalItemsCount - 1);
+                        movedSelection = true;
+                    }
+                    if (ImGui.IsKeyPressed(ImGuiKey.DownArrow))
+                    {
+                        _searchBoxSelection = Calculator.WrapAround(_searchBoxSelection + 1, 0, totalItemsCount - 1);
+                        movedSelection = true;
+                    }
+                    if (ImGui.IsKeyPressed(ImGuiKey.Home))
+                    {
+                        _searchBoxSelection = 0;
+                        movedSelection = true;
+                    }
+                    if (ImGui.IsKeyPressed(ImGuiKey.End))
+                    {
+                        _searchBoxSelection = totalItemsCount - 1;
+                        movedSelection = true;
+                    }
+                }
+                else
+                {
+                    _searchBoxSelection = 0;
+                }
+
                 int count = 0;
                 foreach ((string name, T asset) in orderedKeyAndValue)
                 {
+
                     if (StringHelper.FuzzyMatch(_tempSearchText, name))
                     {
                         bool item_selected = count++ == _searchBoxSelection;
@@ -634,7 +666,10 @@ namespace Murder.Editor.ImGuiExtended
                         if (item_selected)
                         {
                             ImGuiHelpers.DrawBorderOnPreviousItem(Game.Profile.Theme.HighAccent, 0);
-                            ImGui.SetScrollHereY();
+                            if (movedSelection)
+                            {
+                                ImGui.SetScrollHereY();
+                            }
                         }
 
                         if (ImGui.IsItemHovered())
@@ -671,31 +706,6 @@ namespace Murder.Editor.ImGuiExtended
 
                         ImGui.PopID();
                     }
-                }
-
-                // Handle keyboard arrows
-                if (count > 0)
-                {
-                    if (ImGui.IsKeyPressed(ImGuiKey.UpArrow))
-                    {
-                        _searchBoxSelection = Calculator.WrapAround(_searchBoxSelection - 1, 0, count - 1);
-                    }
-                    if (ImGui.IsKeyPressed(ImGuiKey.DownArrow))
-                    {
-                        _searchBoxSelection = Calculator.WrapAround(_searchBoxSelection + 1, 0, count - 1);
-                    }
-                    if (ImGui.IsKeyPressed(ImGuiKey.Home))
-                    {
-                        _searchBoxSelection = 0;
-                    }
-                    if (ImGui.IsKeyPressed(ImGuiKey.End))
-                    {
-                        _searchBoxSelection = count - 1;
-                    }
-                }
-                else
-                {
-                    _searchBoxSelection = 0;
                 }
 
                 ImGui.EndChild();
