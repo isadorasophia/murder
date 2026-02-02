@@ -79,14 +79,14 @@ namespace Murder.Systems
             }
         }
 
-        public const int LineOfSightCollisionMask = CollisionLayersBase.BLOCK_VISION | CollisionLayersBase.SOLID | CollisionLayersBase.HOLE | CollisionLayersBase.CARVE;
+        public virtual int GetLineOfSightCollisionMask() =>
+            CollisionLayersBase.BLOCK_VISION | CollisionLayersBase.SOLID | CollisionLayersBase.HOLE | CollisionLayersBase.CARVE;
 
-        private static void CalculatePath(World world, Map map, Entity e)
+        private void CalculatePath(World world, Map map, Entity e)
         {
             PathfindComponent pathfind = e.GetPathfind();
             IMurderTransformComponent position = e.GetGlobalTransform();
-            
-
+     
             Point initialCell = new(position.Cx, position.Cy);
             Point targetCell = pathfind.Target.ToGridPoint();
 
@@ -100,14 +100,15 @@ namespace Murder.Systems
             }
 
             int collisionMask;
-            if (e.TryGetCustomCollisionMask() is CustomCollisionMask customCollisionMaskComponent)
+            if (e.TryGetCustomLineOfSightMask() is CustomLineOfSightMaskComponent customLineOfSight)
             {
-                collisionMask = customCollisionMaskComponent.CollisionMask;
+                collisionMask = customLineOfSight.Mask;
             }
             else
             {
-                collisionMask = LineOfSightCollisionMask;
+                collisionMask = GetLineOfSightCollisionMask();
             }
+
             // Carve and block vision are always added, no matter what.
             collisionMask |= CollisionLayersBase.CARVE | CollisionLayersBase.BLOCK_VISION;
 
