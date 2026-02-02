@@ -142,6 +142,7 @@ public class EditorSettingsAsset : GameAsset
 
     private readonly List<GameAsset> _cachedFavoriteAssets = new();
 
+    [Serialize, HideInEditor]
     private readonly Dictionary<Guid, int> _timesOpenedAsset = new();
 
     public int GetTimesOpenedAsset(Guid guid)
