@@ -12,8 +12,10 @@ using Murder.Diagnostics;
 using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Numerics;
+using static Murder.Services.PhysicsServices;
 
 namespace Murder.Systems.Physics;
 
@@ -36,9 +38,12 @@ public class SATPhysicsSystem : IFixedUpdateSystem
 
         _entityList.Clear();
 
-        foreach (Entity e in context.Entities)
+        for (int entityIndex = 0; entityIndex < context.Entities.Length; entityIndex++)
         {
+            Entity e = context.Entities[entityIndex];
+
             bool ignoreCollisions = false;
+            bool forceRespectTiles = false;
 
             var collider = e.TryGetCollider();
             _ignore.Clear();
@@ -75,9 +80,18 @@ public class SATPhysicsSystem : IFixedUpdateSystem
             if (e.TryGetCustomCollisionMask() is CustomCollisionMask agent)
                 mask = agent.CollisionMask;
 
-            if (e.HasFreeMovement())
+            if (e.TryGetFreeMovement() is FreeMovementComponent freeMovement)
             {
                 ignoreCollisions = true;
+
+                if (freeMovement.Flags.HasFlag(FreeMovementFlags.RespectTiles))
+                {
+                    forceRespectTiles = true;
+                }
+                else
+                {
+                    forceRespectTiles = false;
+                }
             }
 
             // If the entity has a velocity, we'll move around by checking for collisions first.
@@ -109,7 +123,7 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                     ignoreCollisions = true;
                 }
 
-                if (ignoreCollisions)
+                if (ignoreCollisions && !forceRespectTiles)
                 {
                     e.SetGlobalPosition(startPosition + velocity);
                 }
@@ -119,9 +133,16 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                     _hitCounter.Clear();
 
                     IntRectangle boundingBox = collider!.Value.GetBoundingBox(startPosition + velocity, e.FetchScale());
-
-                    qt.GetCollisionEntitiesAt(boundingBox, _entityList);
-                    var collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(_entityList, _ignore, mask);
+                    ImmutableArray<PhysicEntityCachedInfo> collisionEntities;
+                    if (ignoreCollisions)
+                    {
+                        collisionEntities = [];
+                    }
+                    else
+                    {
+                        qt.GetCollisionEntitiesAt(boundingBox, _entityList);
+                        collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(_entityList, _ignore, mask);
+                    }
 
                     int exhaustCounter = ExhaustLimit;
 
@@ -158,12 +179,19 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                         {
                             e.SendCollidedWithMessage(hitId, hitLayer);
 
-                            // Slide the speed accordingly
-                            Vector2 translationVector = startPosition + velocity - moveToPosition;
-                            Vector2 edgePerpendicularToMTV = new Vector2(-translationVector.Y, translationVector.X);
-                            Vector2 normalizedEdge = edgePerpendicularToMTV.Normalized();
-                            float dotProduct = Vector2.Dot(currentVelocity, normalizedEdge);
-                            currentVelocity = normalizedEdge * dotProduct;
+                            if (e.HasStopOnCollision())
+                            {
+                                currentVelocity = Vector2.Zero;
+                            }
+                            else
+                            {
+                                // Slide the speed accordingly
+                                Vector2 translationVector = startPosition + velocity - moveToPosition;
+                                Vector2 edgePerpendicularToMTV = new Vector2(-translationVector.Y, translationVector.X);
+                                Vector2 normalizedEdge = edgePerpendicularToMTV.Normalized();
+                                float dotProduct = Vector2.Dot(currentVelocity, normalizedEdge);
+                                currentVelocity = normalizedEdge * dotProduct;
+                            }
                         }
 
                         return collided;

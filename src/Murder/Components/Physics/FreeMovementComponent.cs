@@ -11,10 +11,11 @@ public enum FreeMovementFlags
     /// <summary>
     /// Do not automatically clear this.
     /// </summary>
-    DoNotClear = 1
+    DoNotClear = 1 << 0,
+    RespectTiles = 1 << 1,
 }
 
-[DoNotPersistOnSave]
+[DoNotPersistOnSave, HideInEditor]
 public readonly struct FreeMovementComponent : IComponent
 {
     public readonly FreeMovementFlags Flags = FreeMovementFlags.None;
