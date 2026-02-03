@@ -1,5 +1,7 @@
 ﻿using Bang.Components;
 using Murder.Attributes;
+using Murder.Core.Physics;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Components
 {
@@ -28,6 +30,14 @@ namespace Murder.Components
         /// Ignored if <see cref="Obstacle"/> is true.
         /// </summary>
         public readonly int Weight = -1;
+
+        /// <summary>
+        /// Only used if <see cref="ClearPath"/> is true.
+        /// Otherwise, clear all layers on this tile.
+        /// </summary>
+        [CollisionLayer]
+        [Default("Only clear layers...")]
+        public readonly int? ClearLayers = null;
 
         public CarveComponent() { }
 

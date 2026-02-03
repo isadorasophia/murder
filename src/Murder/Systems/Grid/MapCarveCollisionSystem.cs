@@ -108,7 +108,7 @@ namespace Murder.Systems
 
             if (IsValidCarve(e, collider, carve))
             {
-                map.SetOccupiedAsCarve(rect, carve.BlockVision, carve.Obstacle, carve.ClearPath, carve.Weight);
+                map.SetOccupiedAsCarve(rect, carve);
             }
         }
 

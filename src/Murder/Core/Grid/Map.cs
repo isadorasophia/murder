@@ -1,4 +1,5 @@
-﻿using Murder.Core.Geometry;
+﻿using Murder.Components;
+using Murder.Core.Geometry;
 using Murder.Core.Physics;
 using Murder.Diagnostics;
 using Murder.Utilities;
@@ -201,26 +202,37 @@ namespace Murder.Core
         public void SetUnoccupied(Point p, int collisionMask, int weight) =>
             UnsetGridCollision(p.X, p.Y, 1, 1, collisionMask, weight);
 
-        public void SetOccupiedAsCarve(IntRectangle rect, bool blockVision, bool isObstacle, bool isClearPath, int weight)
+        public void SetOccupiedAsCarve(IntRectangle rect, CarveComponent carve)
         {
+            bool @override = false;
             int collisionMask = CollisionLayersBase.CARVE;
 
-            if (isClearPath)
+            if (carve.ClearPath)
             {
-                collisionMask = CollisionLayersBase.NONE;
+                @override = true;
+
+                if (carve.ClearLayers is int layers)
+                {
+                    collisionMask = At(rect.X, rect.Y);
+                    collisionMask &= ~layers;
+                }
+                else
+                {
+                    collisionMask = CollisionLayersBase.NONE;
+                }
             }
 
-            if (blockVision)
+            if (carve.BlockVision)
             {
                 collisionMask |= CollisionLayersBase.BLOCK_VISION;
             }
 
-            if (isObstacle)
+            if (carve.Obstacle)
             {
                 collisionMask |= CollisionLayersBase.SOLID;
             }
 
-            SetGridCollision(rect.X, rect.Y, rect.Width, rect.Height, collisionMask, @override: isClearPath, weight);
+            SetGridCollision(rect.X, rect.Y, rect.Width, rect.Height, collisionMask, @override, carve.Weight);
         }
 
         public void SetUnoccupiedCarve(IntRectangle rect, bool blockVision, bool isObstacle, int weight)
