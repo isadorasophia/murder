@@ -382,7 +382,7 @@ public static partial class RenderServices
         {
             batch.Draw(
                 texture,
-                position.ToXnaVector2() - (drawInfo.Origin * texture.Bounds.Size()).ToPoint(),
+                position.ToXnaVector2(),
                 bounds.Size(),
                 bounds,
                 sort,
@@ -390,7 +390,7 @@ public static partial class RenderServices
                 drawInfo.Scale.ToXnaVector2(),
                 drawInfo.ImageFlip,
                 color,
-                drawInfo.Origin.ToXnaVector2(),
+                drawInfo.Origin.ToXnaVector2() * texture.Bounds.Size(),
                 blendMode,
                 drawInfo.BlendState
                 );
