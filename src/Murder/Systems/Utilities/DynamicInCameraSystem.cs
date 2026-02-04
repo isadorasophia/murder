@@ -105,7 +105,6 @@ public sealed class DynamicInCameraSystem : IMonoPreRenderSystem
                 Vector2 adjustedPosition = pos;
                 if (e.TryGetParallax() is ParallaxComponent parallax)
                     adjustedPosition += cameraPos * (1f - parallax.Factor);
-                Vector2 renderPosition = adjustedPosition + sprite.Offset * asset.Origin + asset.Size;
 
                 // Scale / rotation
                 Vector2 scale = (e.TryGetScale() is ScaleComponent sc) ? sc.Scale : Vector2.One;
@@ -121,11 +120,6 @@ public sealed class DynamicInCameraSystem : IMonoPreRenderSystem
                     flip);
 
                 // Cache bounds for future frames if entity is static
-                if (e.HasStatic())
-                {
-                    e.SetEntityBoundsCache(aabb);
-                }
-
                 if (sprite.TargetSpriteBatch == Batches2D.UiBatchId || cameraBounds.Touches(aabb))
                 {
                     e.SetInCamera();
