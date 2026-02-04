@@ -9,10 +9,16 @@ namespace Murder.Utilities
     {
         public static void SetTechnique(this Effect effect, string id)
         {
-            if (effect.CurrentTechnique != effect.Techniques[id])
+            try
             {
                 effect.CurrentTechnique = effect.Techniques[id];
             }
+            catch
+            {
+                GameLogger.Error($"Error while trying to SetTechinique {id}, does it really exists?");
+            }
+
+
 
             // Funny enough, this is consuming way too much memory.
             // GameLogger.Verify(effect.CurrentTechnique != null, $"Skipping technique {id} for shader effect.");
