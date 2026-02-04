@@ -185,7 +185,16 @@ namespace Murder.Data
             return Game.Data.GetAsset<LocalizationAsset>(resourceGuid);
         }
 
-        public void ChangeLanguage(LanguageId id) => ChangeLanguage(Languages.Get(id));
+        public void ChangeLanguage(LanguageId id)
+        {
+            if (Languages.TryGet(id) is not LanguageIdData data)
+            {
+                GameLogger.Error($"Unsupported language {id}.");
+                return;
+            }
+
+            ChangeLanguage(data);
+        }
 
         public void ChangeLanguage(LanguageIdData data)
         {

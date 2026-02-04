@@ -326,6 +326,12 @@ namespace Murder.Data
         /// </summary>
         public void QuickSave()
         {
+            if (!Game.CanSave)
+            {
+                GameLogger.Warning("Skipping save game progress.");
+                return;
+            }
+
             if (PendingSave is not null && !PendingSave.Value.IsCompleted)
             {
                 return;

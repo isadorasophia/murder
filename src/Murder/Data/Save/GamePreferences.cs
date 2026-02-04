@@ -1,3 +1,4 @@
+using Bang;
 using Murder.Assets.Input;
 using Murder.Assets.Localization;
 using Murder.Core.Input;
@@ -16,34 +17,29 @@ namespace Murder.Save
         private const string _filename = ".preferences";
         private readonly static string _path = Path.Join(Game.Data.SaveBasePath, _filename);
 
-        [Bang.Serialize]
+        [Serialize]
         protected float _soundVolume = 1;
 
-        [Bang.Serialize]
+        [Serialize]
         protected float _musicVolume = 1;
 
-        [Bang.Serialize]
+        [Serialize]
         protected bool _showFps = false;
 
-        [Bang.Serialize]
+        [Serialize]
         protected LanguageId _language = LanguageId.English;
 
-        [Bang.Serialize]
+        [Serialize]
         protected bool _fullscreen = true;
 
-        [Bang.Serialize]
-        protected ImmutableArray<ButtonBindingsInfo> buttonBindingsInfos = ImmutableArray<ButtonBindingsInfo>.Empty;
+        [Serialize]
+        protected ImmutableArray<ButtonBindingsInfo> _buttonBindingsInfos = ImmutableArray<ButtonBindingsInfo>.Empty;
 
-        [Bang.Serialize]
-        protected ImmutableArray<AxisBindingsInfo> axisBindingsInfos = ImmutableArray<AxisBindingsInfo>.Empty;
+        [Serialize]
+        protected ImmutableArray<AxisBindingsInfo> _axisBindingsInfos = ImmutableArray<AxisBindingsInfo>.Empty;
 
-        public ImmutableArray<ButtonBindingsInfo> ButtonBindingsInfos => buttonBindingsInfos;
-        public ImmutableArray<AxisBindingsInfo> AxisBindingsInfos => axisBindingsInfos;
-
-        protected void SaveSettings()
-        {
-            Game.Data.FileManager.SaveSerialized(this, _path);
-        }
+        public ImmutableArray<ButtonBindingsInfo> ButtonBindingsInfos => _buttonBindingsInfos;
+        public ImmutableArray<AxisBindingsInfo> AxisBindingsInfos => _axisBindingsInfos;
 
         internal static GamePreferences? TryFetchPreferences()
         {
@@ -79,7 +75,7 @@ namespace Murder.Save
 
         public void SetButtonBindingsInfos(ImmutableArray<ButtonBindingsInfo> buttonBindingsInfos)
         {
-            this.buttonBindingsInfos = buttonBindingsInfos;
+            _buttonBindingsInfos = buttonBindingsInfos;
             OnPreferencesChanged();
         }
 
@@ -109,18 +105,18 @@ namespace Murder.Save
             return SetMusicVolume(_musicVolume == 1 ? 0 : 1);
         }
 
-        public bool ToggleShowFps()
-        {
-            SetShowFps(!_showFps);
-            return _showFps;
-        }
-
         public float SetMusicVolume(float value)
         {
             _musicVolume = value;
 
             OnPreferencesChanged();
             return _musicVolume;
+        }
+
+        public bool ToggleShowFps()
+        {
+            SetShowFps(!_showFps);
+            return _showFps;
         }
 
         public void SetLanguage(LanguageId id)
@@ -159,9 +155,11 @@ namespace Murder.Save
             SaveSettings();
         }
 
-        public virtual void OnPreferencesChangedImpl()
+        protected void SaveSettings()
         {
-            Game.Sound.SetVolume(bus: default, _soundVolume);
+            Game.Data.FileManager.SaveSerialized(this, _path);
         }
+
+        public virtual void OnPreferencesChangedImpl() { }
     }
 }
