@@ -1,4 +1,5 @@
-﻿using Murder.Utilities;
+﻿using Murder.Diagnostics;
+using Murder.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,12 +23,28 @@ namespace Murder.Components
         public bool Contains(int v) => v >= Start && v <= End;
 
         public float GetRandom() => GetRandom(Game.Random);
+
         public int GetRandom(Random random)
         {
+            GameLogger.Verify(Start < End, "Why is GetRandom() start bigger than end?");
+
+            if (Start >= End)
+            {
+                return End;
+            }
+
             return (int)random.NextInt64(Start, End);
         }
+
         public float GetRandomFloat(Random random)
         {
+            GameLogger.Verify(Start < End, "Why is GetRandom() start bigger than end?");
+
+            if (Start >= End)
+            {
+                return End;
+            }
+
             return random.Next(Start, End);
         }
 
