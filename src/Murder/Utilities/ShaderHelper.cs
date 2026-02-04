@@ -151,6 +151,18 @@ namespace Murder.Utilities
             }
         }
 
+        public static void SetParameter(this Effect effect, string id, Texture3D val)
+        {
+            if (effect.Parameters[id] != null)
+            {
+                effect.Parameters[id].SetValue(val);
+            }
+            else
+            {
+                GameLogger.Warning($"Shader param '{id}' wasn't found");
+            }
+        }
+
         public static Vector2? TryGetAnotationVector2(EffectParameter parameter, string anotationName)
         {
             if (parameter.Annotations[anotationName] is EffectAnnotation annotation)

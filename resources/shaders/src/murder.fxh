@@ -19,11 +19,21 @@
         Texture2D<float4> Name : register(t##index); \
         sampler Name##Sampler : register(s##index) = sampler_state { Filter = MIN_MAG_MIP_POINT; AddressU = Wrap; AddressV = Wrap; Texture = (Name); }
 
+    #define DECLARE_TEXTURE_SMOOTH(Name, index) \
+        Texture2D<float4> Name : register(t##index); \
+        sampler Name##Sampler : register(s##index) = sampler_state { Filter = MIN_MAG_MIP_LINEAR; AddressU = Wrap; AddressV = Wrap; Texture = (Name); }
+
     #define SAMPLE_TEXTURE(Name, texCoord)  Name.Sample(Name##Sampler, texCoord)
+
+    #define DECLARE_TEXTURE3D(Name, index) \
+        Texture3D<float4> Name : register(t##index); \
+        sampler Name##Sampler : register(s##index) = sampler_state { MinFilter = Point; MagFilter = Point; MipFilter = Point; AddressU = Clamp; AddressV = Clamp; AddressW = Clamp; };
+    #define SAMPLE_TEXTURE3D(Name, texCoord)  Name.Sample(Name##Sampler, texCoord)
+
 
 #else // shader model 2.0 (DX9)
 
-    #define VS_SHADERMODEL vs_2_0
+    #define VS_SHADERMODEL vs_3_0
     #define PS_SHADERMODEL ps_3_0
 
     #define DECLARE_TEXTURE(Name, index) \
@@ -38,8 +48,18 @@
         Texture2D<float4> Name : register(t##index); \
         sampler Name##Sampler : register(s##index) = sampler_state { Filter = MIN_MAG_MIP_POINT; AddressU = Wrap; AddressV = Wrap; Texture = (Name); }
 
-    #define SAMPLE_TEXTURE(Name, texCoord)  tex2D(Name##Sampler, texCoord)
+    #define DECLARE_TEXTURE_SMOOTH(Name, index) \
+        Texture2D<float4> Name : register(t##index); \
+        sampler Name##Sampler : register(s##index) = sampler_state { Filter = MIN_MAG_MIP_LINEAR; AddressU = Wrap; AddressV = Wrap; Texture = (Name); }
 
+    #define SAMPLE_TEXTURE(Name, texCoord)  tex2D(Name##Sampler, texCoord)
+    #define SAMPLE_TEXTURE_LOD(Name, uv, lod)  tex2Dlod(Name##Sampler, float4(uv.x, uv.y, lod, lod))
+    
+    #define DECLARE_TEXTURE3D(Name, index) \
+        Texture3D Name; \
+        sampler3D Name##Sampler : register(s##index) = sampler_state { Texture = (Name); MinFilter = Point; MagFilter = Point; MipFilter = Point; AddressU = Clamp; AddressV = Clamp; AddressW = Clamp; };
+    #define SAMPLE_TEXTURE3D(Name, texCoord)  tex3D(Name##Sampler, texCoord)
+    
 #endif
 
 //-----------------------------------------------------------------------------
@@ -92,3 +112,15 @@ VSOutput DefaultVertexShader(
             VertexShader = compile VS_SHADERMODEL DefaultVertexShader(); \
         } \
     }
+
+
+//-----------------------------------------------------------------------------
+// Debug helpers
+//-----------------------------------------------------------------------------
+#define PREVIEW_FLOAT(value) return float4(value, value, value, 1)
+
+#define PREVIEW_FLOAT2(value) return float4(value.x, value.y, 0.5, 1)
+
+#define PREVIEW_FLOAT3(value) return float4(value.x, value.y, value.z, 1)
+
+#define PREVIEW_FLOAT4(value) return value
