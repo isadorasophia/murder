@@ -11,6 +11,7 @@ using Murder.Diagnostics;
 using Murder.Messages;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Systems
 {
@@ -85,9 +86,9 @@ namespace Murder.Systems
         private void CalculatePath(World world, Map map, Entity e)
         {
             PathfindComponent pathfind = e.GetPathfind();
-            IMurderTransformComponent position = e.GetGlobalTransform();
+            Vector2 position = e.GetGlobalPosition();
      
-            Point initialCell = new(position.Cx, position.Cy);
+            Point initialCell = position.ToGridPoint();
             Point targetCell = pathfind.Target.ToGridPoint();
 
             if (initialCell == targetCell)

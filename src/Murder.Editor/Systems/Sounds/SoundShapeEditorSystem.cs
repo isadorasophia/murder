@@ -113,7 +113,7 @@ public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSy
         foreach (Entity e in context.Entities)
         {
             SoundShapeComponent soundShape = e.GetSoundShape();
-            Point position = e.GetGlobalTransform().Point;
+            Point position = e.GetGlobalPosition().ToPoint();
 
             ShapePosition soundPosition = soundShape.GetSoundPosition(cursorPosition - position);
             Vector2 closestPoint = soundPosition.ClosestPoint + position;

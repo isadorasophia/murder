@@ -20,8 +20,8 @@ public class PolygonSpriteRenderSystem : IMurderRenderSystem
         foreach (var e in context.Entities)
         {
             var polygonComponent = e.GetPolygonSprite();
-            var batch = render.GetBatch((int)polygonComponent.Batch);
-            var position = e.GetGlobalTransform().Point;
+            var batch = render.GetBatch(polygonComponent.Batch);
+            var position = e.GetGlobalPosition().ToPoint();
             var info = new DrawInfo(RenderServices.YSort(position.Y + polygonComponent.SortOffset))
             {
                 Color = polygonComponent.Color

@@ -1,4 +1,5 @@
-﻿using Murder.Core;
+﻿using Murder.Components;
+using Murder.Core;
 using Murder.Core.Geometry;
 using System.Numerics;
 
@@ -57,6 +58,8 @@ namespace Murder.Utilities
             new(
                 Calculator.FloorToInt(vector.X / Grid.CellSize),
                 Calculator.FloorToInt(vector.Y / Grid.CellSize));
+
+        public static bool IsSameCell(this Vector2 @this, Vector2 other) => @this.ToGridPoint() == other.ToGridPoint();
 
         /// <summary>
         /// Returns a new vector, rotated by the given angle. In radians.

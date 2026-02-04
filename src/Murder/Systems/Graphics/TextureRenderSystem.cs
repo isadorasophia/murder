@@ -30,7 +30,7 @@ public class TextureRenderSystem : IMurderRenderSystem, IReactiveSystem, IExitSy
             // Will update this if the need arrives
             batch.Draw(
                 texture.Texture,
-                (e.GetGlobalTransform().Point + render.Camera.Position).ToXnaVector2(),
+                (e.GetGlobalPosition().ToPoint() + render.Camera.Position).ToXnaVector2(),
                 texture.Texture.Bounds.XnaSize(),
                 texture.Texture.Bounds,
                 0,

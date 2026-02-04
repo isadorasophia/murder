@@ -20,7 +20,7 @@ namespace Murder.Core.Physics
         [JsonIgnore]
         public readonly QTNode<(
             Entity entity,
-            IMurderTransformComponent position,
+            Vector2 position,
             PushAwayComponent pushAway,
             Vector2 velocity
             )> PushAway;
@@ -37,10 +37,10 @@ namespace Murder.Core.Physics
 
         public void AddToCollisionQuadTree(Entity entity)
         {
-            IMurderTransformComponent pos = entity.GetGlobalTransform();
+            Vector2 pos = entity.GetGlobalPosition();
             if (entity.TryGetCollider() is ColliderComponent collider)
             {
-                Collision.Insert(entity.EntityId, entity, collider.GetBoundingBox(pos.Vector2, entity.FetchScale()));
+                Collision.Insert(entity.EntityId, entity, collider.GetBoundingBox(pos, entity.FetchScale()));
             }
 
             if (entity.TryGetPushAway() is PushAwayComponent pushAway)
@@ -86,10 +86,10 @@ namespace Murder.Core.Physics
 
             foreach (var e in entities)
             {
-                IMurderTransformComponent pos = e.GetGlobalTransform();
+                Vector2 pos = e.GetGlobalPosition();
                 if (e.TryGetCollider() is ColliderComponent collider)
                 {
-                    Collision.Insert(e.EntityId, e, collider.GetBoundingBox(pos.Point, e.FetchScale()));
+                    Collision.Insert(e.EntityId, e, collider.GetBoundingBox(pos.ToPoint(), e.FetchScale()));
                 }
 
                 if (e.TryGetPushAway() is PushAwayComponent pushAway)
@@ -97,7 +97,7 @@ namespace Murder.Core.Physics
                     PushAway.Insert(e.EntityId,
                         (
                             e,
-                            e.GetGlobalTransform(),
+                            e.GetGlobalPosition(),
                             e.GetPushAway(),
                             e.TryGetVelocity()?.Velocity ?? Vector2.Zero
                         ), new Rectangle(pos.X, pos.Y, pushAway.Size, pushAway.Size));
@@ -120,7 +120,7 @@ namespace Murder.Core.Physics
                 if (!e.IsActive)
                     continue;
 
-                Point position = e.GetGlobalTransform().Point;
+                Point position = e.GetGlobalPosition().ToPoint();
                 SpriteComponent spriteComponent = e.GetSprite();
 
                 if (Game.Data.TryGetAsset<SpriteAsset>(spriteComponent.AnimationGuid) is not SpriteAsset spriteAsset)

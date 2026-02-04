@@ -26,7 +26,7 @@ internal class StateMachineDebugSystem : IMurderRenderSystem
                     continue;
                 }
 
-                RenderServices.DrawText(render.DebugBatch, MurderFonts.PixelFont, e.GetStateMachine().State, e.GetGlobalTransform().Vector2,
+                RenderServices.DrawText(render.DebugBatch, MurderFonts.PixelFont, e.GetStateMachine().State, e.GetGlobalPosition().ToPoint(),
                     new DrawInfo(0f) { Color = Color.White, Outline = Color.Black });
             }
         }

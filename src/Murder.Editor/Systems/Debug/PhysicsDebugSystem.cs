@@ -23,7 +23,7 @@ public class PhysicsDebugSystem : IMurderRenderSystem
 
         foreach (var e in context.Entities)
         {
-            Vector2 position = e.GetGlobalTransform().Vector2;
+            Vector2 position = e.GetGlobalPosition();
             Vector2 velocity = e.GetVelocity().Velocity;
             Color color = Color.Lerp(Color.Green, Color.Red, Calculator.Clamp01(velocity.Length() / 350f));
 

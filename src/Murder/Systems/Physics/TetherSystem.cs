@@ -32,7 +32,7 @@ namespace Murder.Systems
         private void AdjustPosition(World world, Entity e)
         {
             var tetherComponent = e.GetTethered();
-            Vector2 position = e.GetGlobalTransform().Vector2;
+            Vector2 position = e.GetGlobalPosition();
             bool isStatic = e.HasStatic();
 
             foreach (var tetherPoint in tetherComponent.TetherPoints)
@@ -43,7 +43,7 @@ namespace Murder.Systems
                     continue;
                 }
 
-                Vector2 targetPosition = target.GetGlobalTransform().Vector2;
+                Vector2 targetPosition = target.GetGlobalPosition();
                 Vector2 direction = targetPosition - position;
                 float distance = direction.Length();
 

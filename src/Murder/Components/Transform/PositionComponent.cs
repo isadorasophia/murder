@@ -18,7 +18,7 @@ namespace Murder.Components
     [CustomName($" Position")]
     public readonly struct PositionComponent : IMurderTransformComponent, IEquatable<PositionComponent>
     {
-        private readonly IMurderTransformComponent? _parent;
+        private readonly Vector2? _globalPosition;
 
         [Serialize]
         private readonly float _x;
@@ -43,14 +43,27 @@ namespace Murder.Components
         /// <summary>
         /// Return the global position of the component within the world.
         /// </summary>
-        public IMurderTransformComponent GetGlobal()
+        public Vector2 GetGlobal()
         {
-            if (_parent is IMurderTransformComponent parentPosition)
-            {
-                return parentPosition.GetGlobal().Add(this);
-            }
+            return _globalPosition ?? new(X, Y);
+        }
 
-            return this;
+        /// <summary>
+        /// Return the global position of the component within the world.
+        /// </summary>
+        public PositionComponent SetGlobal(Vector2 position)
+        {
+            if (_globalPosition is not null)
+            {
+                Vector2 parentPosition = _globalPosition.Value - new Vector2(X, Y);
+                Vector2 localAfter = position - parentPosition;
+
+                return new(localAfter.X, localAfter.Y, globalPosition: position);
+            }
+            else
+            {
+                return new(position);
+            }
         }
 
         /// <summary>
@@ -59,10 +72,10 @@ namespace Murder.Components
         [JsonConstructor]
         public PositionComponent(float x, float y) : this(x, y, null) { }
 
-        public PositionComponent(float x, float y, IMurderTransformComponent? parent)
+        public PositionComponent(float x, float y, Vector2? globalPosition)
         {
             (_x, _y) = (x, y);
-            _parent = parent;
+            _globalPosition = globalPosition;
         }
 
         /// <summary>
@@ -101,7 +114,18 @@ namespace Murder.Components
 
         public IMurderTransformComponent Subtract(IMurderTransformComponent r) => this - r;
 
-        public IMurderTransformComponent With(float x, float y) => new PositionComponent(x, y, _parent);
+        public IMurderTransformComponent WithLocal(float x, float y) => WithLocalPosition(x, y);
+
+        public PositionComponent WithLocalPosition(float x, float y)
+        {
+            if (_globalPosition is not Vector2 globalPosition)
+            {
+                return new PositionComponent(x, y);
+            }
+
+            // otherwise, subtract whatever used to be our global position and apply the new one.
+            return new PositionComponent(x, y, new Vector2(globalPosition.X - X + x, globalPosition.Y - Y + y));
+        }
 
         /// <summary>
         /// Creates a copy of component with the relative coordinates without its parent.
@@ -112,8 +136,7 @@ namespace Murder.Components
         /// <summary>
         /// Whether this position is tracking a parent entity.
         /// </summary>
-        public bool HasParent => _parent is not null;
-
+        public bool HasParent => _globalPosition is not null;
 
         /// <summary>
         /// This tracks whenever a parent position has been modified.
@@ -122,9 +145,10 @@ namespace Murder.Components
         /// <param name="childEntity">The entity of the child which owns this component.</param>
         public void OnParentModified(IComponent parentComponent, Entity childEntity)
         {
-            IMurderTransformComponent parentGlobalPosition = ((IMurderTransformComponent)parentComponent).GetGlobal();
+            Vector2 parentGlobalPosition = ((IMurderTransformComponent)parentComponent).GetGlobal();
 
-            childEntity.ReplaceComponent(new PositionComponent(X, Y, parentGlobalPosition));
+            Vector2 globalPosition = parentGlobalPosition + new Vector2(X, Y);
+            childEntity.ReplaceComponent(new PositionComponent(X, Y, globalPosition));
         }
 
         public override int GetHashCode() => (X, Y).GetHashCode();
@@ -134,14 +158,14 @@ namespace Murder.Components
         /// </summary>
         public bool Equals(PositionComponent other)
         {
-            if (_parent is null || other._parent is null)
+            if (_globalPosition is null || other._globalPosition is null)
             {
-                if (_parent is not null || other._parent is not null)
+                if (_globalPosition is not null || other._globalPosition is not null)
                 {
                     return false;
                 }
             }
-            else if (!_parent.Equals(other._parent))
+            else if (!_globalPosition.Equals(other._globalPosition))
             {
                 return false;
             }

@@ -172,7 +172,7 @@ public abstract class SoundShapeTrackerSystem : IFixedUpdateSystem, IReactiveSys
     private static Vector2 CalculateSoundOrigin(Entity e, Vector2 listenerPosition, Vector2? relativeToGlobalListenerAt = null)
     {
         SoundShapeComponent soundShape = e.GetSoundShape();
-        Vector2 position = e.GetGlobalTransform().Vector2;
+        Vector2 position = e.GetGlobalPosition();
 
         Vector2 soundOrigin = position;
 

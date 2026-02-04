@@ -114,7 +114,7 @@ public static class PhysicsServices
         }
 
         ColliderComponent collider = target.GetCollider();
-        Vector2 position = target.GetGlobalTransform().Vector2;
+        Vector2 position = target.GetGlobalPosition();
 
         return collider.GetBoundingBox(position.Point(), target.FetchScale());
     }
@@ -352,7 +352,8 @@ public static class PhysicsServices
 
             if (e.EntityInfo.IsDestroyed)
                 continue;
-            var position = e.EntityInfo.GetGlobalTransform();
+
+            Vector2 position = e.EntityInfo.GetGlobalPosition();
             if (e.EntityInfo.TryGetCollider() is ColliderComponent collider)
             {
                 if ((collider.Layer & CollisionLayersBase.RAYIGNORE) != 0)
@@ -369,7 +370,7 @@ public static class PhysicsServices
                         // TODO: Get intersecting point with circle
                         case CircleShape circle:
                             {
-                                if (line.TryGetIntersectingPoint(circle.Circle.AddPosition(position.Point), out Vector2 hitPoint))
+                                if (line.TryGetIntersectingPoint(circle.Circle.AddPosition(position.ToPoint()), out Vector2 hitPoint))
                                 {
                                     CompareShapeHits(startPosition, ref hit, ref hitSomething, ref closest, e, hitPoint.Point());
 
@@ -379,7 +380,7 @@ public static class PhysicsServices
                             break;
                         case BoxShape rect:
                             {
-                                if (line.TryGetIntersectingPoint(rect.Rectangle + position.Point, out Vector2 hitPoint))
+                                if (line.TryGetIntersectingPoint(rect.Rectangle + position.ToPoint(), out Vector2 hitPoint))
                                 {
                                     CompareShapeHits(startPosition, ref hit, ref hitSomething, ref closest, e, hitPoint.Point());
 
@@ -389,7 +390,7 @@ public static class PhysicsServices
                             break;
                         case LazyShape lazy:
                             {
-                                var otherRect = lazy.Rectangle(position.Point);
+                                var otherRect = lazy.Rectangle(position.ToPoint());
                                 if (line.TryGetIntersectingPoint(otherRect, out Vector2 hitPoint))
                                 {
                                     CompareShapeHits(startPosition, ref hit, ref hitSomething, ref closest, e, hitPoint.Point());
@@ -400,9 +401,9 @@ public static class PhysicsServices
                             break;
                         case PolygonShape polygon:
                             {
-                                if (polygon.Polygon.Intersects(line.AddPosition(-position.Point), out Vector2 hitPoint))
+                                if (polygon.Polygon.Intersects(line.AddPosition(-position.ToPoint()), out Vector2 hitPoint))
                                 {
-                                    hitPoint += position.Vector2;
+                                    hitPoint += position;
                                     CompareShapeHits(startPosition, ref hit, ref hitSomething, ref closest, e, hitPoint.Point());
 
                                     continue;
@@ -603,7 +604,7 @@ public static class PhysicsServices
                 new PhysicEntityCachedInfo(
                     e.EntityInfo.EntityId,
                     e.EntityInfo.FetchScale(),
-                    e.EntityInfo.GetGlobalTransform().Point,
+                    e.EntityInfo.GetGlobalPosition().ToPoint(),
                     collider
                 ));
         }
@@ -625,7 +626,7 @@ public static class PhysicsServices
                 new PhysicEntityCachedInfo(
                     e.EntityId,
                     e.FetchScale(),
-                    e.GetGlobalTransform().Point,
+                    e.GetGlobalPosition().ToPoint(),
                     collider
                 ));
         }
@@ -644,7 +645,7 @@ public static class PhysicsServices
                 _physicsInfoCacheBuilder.Add(new PhysicEntityCachedInfo(
                     e.EntityId,
                     e.FetchScale(),
-                    e.GetGlobalTransform().Point,
+                    e.GetGlobalPosition().ToPoint(),
                     collider
                     ));
             }
@@ -667,7 +668,7 @@ public static class PhysicsServices
                 (
                 e.EntityId,
                 e.TryGetScale()?.Scale ?? Vector2.One,
-                e.GetGlobalTransform().Point,
+                e.GetGlobalPosition().ToPoint(),
                 collider
                 ));
         }
@@ -690,9 +691,9 @@ public static class PhysicsServices
         return collisionEntities;
     }
 
-    public static ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)> FilterPositionAndColliderEntities(World world, int layerMask, params Type[] requireComponents)
+    public static ImmutableArray<(int id, ColliderComponent collider, Vector2 position)> FilterPositionAndColliderEntities(World world, int layerMask, params Type[] requireComponents)
     {
-        var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent collider, IMurderTransformComponent position)>();
+        var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent collider, Vector2 position)>();
         Type[] filter = new Type[requireComponents.Length + 2];
         filter[0] = typeof(ColliderComponent);
         filter[1] = typeof(ITransformComponent);
@@ -709,7 +710,7 @@ public static class PhysicsServices
                 builder.Add((
                     e.EntityId,
                     collider,
-                    e.GetGlobalTransform()
+                    e.GetGlobalPosition()
                     ));
             }
         }
@@ -738,7 +739,7 @@ public static class PhysicsServices
             if (!otherCollider.Layer.HasFlag(mask))
                 continue;
 
-            var otherPosition = other.EntityInfo.GetGlobalTransform().Point;
+            var otherPosition = other.EntityInfo.GetGlobalPosition().ToPoint();
             Vector2 otherScale = other.EntityInfo.FetchScale();
 
             foreach (var shape in collider.Shapes)
@@ -1033,7 +1034,7 @@ public static class PhysicsServices
             {
                 foreach (var shapeB in colliderB.Shapes)
                 {
-                    if (CollidesWith(shapeA, posA, scaleA, shapeB, positionB.GetGlobal().Point, scaleB))
+                    if (CollidesWith(shapeA, posA, scaleA, shapeB, positionB.GetGlobal().ToPoint(), scaleB))
                         return true;
                 }
             }
@@ -1379,7 +1380,7 @@ public static class PhysicsServices
         Point position = Point.Zero;
         if (entity.TryGetComponent<PositionComponent>() is PositionComponent positionComponent)
         {
-            position = positionComponent.GetGlobal().Point;
+            position = positionComponent.GetGlobal().ToPoint();
         }
 
         if (collider.Shapes.IsDefaultOrEmpty)
@@ -1623,7 +1624,7 @@ public static class PhysicsServices
                 continue;
             }
 
-            var otherPosition = other.EntityInfo.GetGlobalTransform().Point;
+            var otherPosition = other.EntityInfo.GetGlobalPosition().ToPoint();
             foreach (var otherShape in collider.Shapes)
             {
                 if (otherShape is LazyShape lazy)
@@ -1697,7 +1698,7 @@ public static class PhysicsServices
                 continue;
             }
 
-            Vector2 otherPosition = e.EntityInfo.GetGlobalTransform().Vector2;
+            Vector2 otherPosition = e.EntityInfo.GetGlobalPosition();
             float distance = (otherPosition - fromPosition).LengthSquared();
 
             if (distance > maximumDistance)

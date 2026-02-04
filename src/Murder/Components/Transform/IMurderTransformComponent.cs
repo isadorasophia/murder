@@ -26,7 +26,7 @@ namespace Murder.Components
 
         public Vector2 Scale { get; }
 
-        public IMurderTransformComponent GetGlobal();
+        public Vector2 GetGlobal();
 
         public IMurderTransformComponent Add(Vector2 r);
 
@@ -40,11 +40,11 @@ namespace Murder.Components
 
         public IMurderTransformComponent Subtract(IMurderTransformComponent r);
 
-        public IMurderTransformComponent With(float x, float y);
+        public IMurderTransformComponent WithLocal(float x, float y);
 
-        public IMurderTransformComponent With(Vector2 p) => With(p.X, p.Y);
+        public IMurderTransformComponent WithLocal(Vector2 p) => WithLocal(p.X, p.Y);
 
-        public virtual IMurderTransformComponent With(Point p) => With(p.X, p.Y);
+        public virtual IMurderTransformComponent WithLocal(Point p) => WithLocal(p.X, p.Y);
 
         public virtual Vector2 Vector2 => new(X, Y);
 

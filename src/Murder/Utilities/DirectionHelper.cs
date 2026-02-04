@@ -388,13 +388,13 @@ public static class DirectionHelper
 
     public static Direction LookAtEntity(Entity e, Entity target)
     {
-        Vector2 direction = target.GetGlobalTransform().Vector2 - e.GetGlobalTransform().Vector2;
+        Vector2 direction = target.GetGlobalPosition() - e.GetGlobalPosition();
         return FromVector(direction);
     }
 
     public static Direction LookAtPosition(Entity e, Vector2 target)
     {
-        Vector2 direction = target - e.GetGlobalTransform().Vector2;
+        Vector2 direction = target - e.GetGlobalPosition();
         return FromVector(direction);
     }
 

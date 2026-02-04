@@ -24,8 +24,7 @@ namespace Murder.Systems.Graphics
             {
                 NineSliceComponent nineSlice = e.GetNineSlice();
 
-                IMurderTransformComponent transform = e.GetGlobalTransform();
-                Vector2 position = transform.Vector2;
+                Vector2 position = e.GetGlobalPosition();
 
                 // This is as early as we can to check for out of bounds
                 if (nineSlice.TargetSpriteBatch != Batches2D.UiBatchId &&
@@ -36,7 +35,7 @@ namespace Murder.Systems.Graphics
 
                 Batch2D targetBatch = render.GetBatch((int)nineSlice.TargetSpriteBatch);
 
-                float ySort = RenderServices.YSort(transform.Y + nineSlice.YSortOffset);
+                float ySort = RenderServices.YSort(position.Y + nineSlice.YSortOffset);
                 RenderServices.Draw9Slice(targetBatch, nineSlice.Sprite, nineSlice.Target.AddPosition(position), nineSlice.Style, new DrawInfo() { Sort = ySort }, AnimationInfo.Default);
             }
         }

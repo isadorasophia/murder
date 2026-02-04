@@ -31,7 +31,7 @@ namespace Murder.Systems
 
             foreach (var e in context.Entities)
             {
-                IMurderTransformComponent transform = e.GetGlobalTransform();
+                Vector2 transform = e.GetGlobalPosition();
                 AgentSpriteComponent sprite = e.GetAgentSprite();
 
                 if (Game.Data.GetAsset<SpriteAsset>(sprite.AnimationGuid) is not SpriteAsset spriteAsset)
@@ -42,11 +42,11 @@ namespace Murder.Systems
                 Vector2 renderPosition;
                 if (verticalPosition is not null)
                 {
-                    renderPosition = transform.Vector2 + new Vector2(0, -verticalPosition.Value.Z);
+                    renderPosition = transform + new Vector2(0, -verticalPosition.Value.Z);
                 }
                 else
                 {
-                    renderPosition = transform.Vector2;
+                    renderPosition = transform;
                 }
 
                 FacingComponent facing = e.GetFacing();

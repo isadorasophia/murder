@@ -327,7 +327,7 @@ public class GenericSelectorSystem
         {
             if (!e.HasTransform()) continue;
 
-            Vector2 position = e.GetGlobalTransform().Vector2;
+            Vector2 position = e.GetGlobalPosition();
             Rectangle rect = GetSeletionBoundingBox(e, world, position, out bool hasBox);
 
             if (rect.Width <= 12 && rect.Height <= 12)
@@ -451,7 +451,7 @@ public class GenericSelectorSystem
                 if (distance > 4)
                 {
                     _dragging = _startedDragging;
-                    _offset = _startedDragging.GetGlobalTransform().Vector2 - cursorPosition;
+                    _offset = _startedDragging.GetGlobalPosition().ToPoint() - cursorPosition;
 
                     foreach ((int _, Entity e) in selectedEntities)
                     {
@@ -463,7 +463,7 @@ public class GenericSelectorSystem
 
         if (_dragging != null && !isCursorBusy)
         {
-            Vector2 delta = cursorPosition - _dragging.GetGlobalTransform().Vector2 + _offset;
+            Vector2 delta = cursorPosition - _dragging.GetGlobalPosition().ToPoint() + _offset;
 
             // On "ctrl", snap entities to the grid.
             bool snapToGrid = Game.Input.Down(Keys.LeftControl);
@@ -485,7 +485,7 @@ public class GenericSelectorSystem
                     continue;
                 }
 
-                IMurderTransformComponent newTransform = e.GetGlobalTransform().Add(delta);
+                Vector2 newTransform = e.GetGlobalPosition() + delta;
 
                 if (snapToGrid)
                 {
@@ -494,9 +494,9 @@ public class GenericSelectorSystem
 
                 if (snapToAxis && _dragStart != null)
                 {
-                    Vector2 entityOffset = cursorPosition.ToVector2() - newTransform.ToVector2();
+                    Vector2 entityOffset = cursorPosition.ToVector2() - newTransform;
                     Vector2 start = _dragStart.Value - entityOffset;
-                    Vector2 dragDistance = newTransform.Vector2 - start;
+                    Vector2 dragDistance = newTransform - start;
 
                     if (dragDistance != Vector2.Zero)
                     {
@@ -504,11 +504,11 @@ public class GenericSelectorSystem
                         Vector2 newPosition = start + (dragDistance * unitDirection);
                         Vector2 newDelta = newPosition - start;
 
-                        newTransform = newTransform.Subtract(newDelta);
+                        newTransform = newTransform - newDelta;
                     }
                 }
 
-                e.SetGlobalTransform(newTransform);
+                e.SetGlobalPosition(newTransform);
             }
         }
         else
@@ -527,18 +527,18 @@ public class GenericSelectorSystem
                         continue;
                     }
 
-                    IMurderTransformComponent newTransform = e.GetGlobalTransform();
+                    Vector2 newTransform = e.GetGlobalPosition();
 
                     if (snapToGrid)
                     {
-                        newTransform = newTransform.Add(delta * Grid.CellSize)/*.SnapToGridDelta()*/;
+                        newTransform = newTransform + delta * Grid.CellSize/*.SnapToGridDelta()*/;
                     }
                     else
                     {
-                        newTransform = newTransform.Add(delta);
+                        newTransform = newTransform + delta;
                     }
 
-                    e.SetGlobalTransform(newTransform);
+                    e.SetGlobalPosition(newTransform);
                     e.SendMessage(new AssetUpdatedMessage(typeof(PositionComponent)));
                     e.AddOrReplaceComponent(new EditorTween(Game.NowUnscaled, 1f, EditorTweenType.Move));
                 }
@@ -694,7 +694,7 @@ public class GenericSelectorSystem
         return new(position - _selectionBox / 2f, _selectionBox);
     }
 
-    private static Vector2 GetTopLeftOrigin(World world, EntityInstance[] selectedEntities)
+    private static Vector2 GetTopLeftOrigin(World _, EntityInstance[] selectedEntities)
     {
         if (selectedEntities.Length == 0)
         {
@@ -769,7 +769,7 @@ public class GenericSelectorSystem
                 continue;
             }
 
-            var position = entity.GetGlobalTransform().Vector2;
+            var position = entity.GetGlobalPosition();
             var box = GetSeletionBoundingBox(entity, world, position, out _);
             var boxArea = box.Width * box.Height;
             var distance = (box.Center - cursor).LengthSquared();
@@ -851,7 +851,7 @@ public class GenericSelectorSystem
             if (!e.HasTransform()) continue;
             if (e.Parent != null) continue;
 
-            Vector2 position = e.GetGlobalTransform().Vector2;
+            Vector2 position = e.GetGlobalPosition();
             Rectangle bounds = GetSeletionBoundingBox(e, world, position, out var hasBox);
             if (bounds.Width < 10 && bounds.Height < 10)
             {

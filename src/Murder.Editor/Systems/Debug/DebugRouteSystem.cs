@@ -35,7 +35,7 @@ namespace Murder.Editor.Systems
             {
                 ComplexDictionary<Point, Point> path = e.GetRoute().Nodes;
 
-                Point position = e.GetGlobalTransform().Point;
+                Point position = e.GetGlobalPosition().ToPoint();
                 Point gridPosition = position.ToGrid();
 
                 if (e.TryGetPathfindStatus() is PathfindStatusComponent pathfindStatusComponent)

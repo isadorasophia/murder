@@ -49,7 +49,7 @@ namespace Murder.Editor.Systems
 
                 bool isSelected = hook.IsEntitySelected(e.EntityId);
 
-                Vector2 position = e.GetGlobalTransform().Vector2;
+                Vector2 position = e.GetGlobalPosition();
                 RenderSprite(render, position, isSelected);
             }
         }

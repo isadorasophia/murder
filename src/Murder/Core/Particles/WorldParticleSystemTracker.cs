@@ -177,7 +177,7 @@ namespace Murder.Core.Particles
             for (int i = 0; i < _currentLength; ++i)
             {
                 int entityId = _indexToEntityId[i];
-                Vector2 position = world.GetEntity(entityId).TryGetMurderTransform()?.GetGlobal()?.Vector2 ?? Vector2.Zero;
+                Vector2 position = world.GetEntity(entityId).TryGetMurderTransform()?.GetGlobal() ?? Vector2.Zero;
                 _poolTrackers[i].Step(_activeParticleSystems.Contains(entityId), position, cameraArea ,entityId);
             }
         }

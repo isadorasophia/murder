@@ -67,7 +67,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
         {
             SpriteComponent? sprite = e.TryGetSprite();
             AgentSpriteComponent? agentSprite = e.TryGetAgentSprite();
-            IMurderTransformComponent transform = e.GetGlobalTransform();
+            Vector2 transform = e.GetGlobalPosition();
 
             string animationId;
             SpriteAsset? asset;
@@ -122,11 +122,11 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
             Vector2 renderPosition;
             if (e.TryGetParallax() is ParallaxComponent parallax)
             {
-                renderPosition = (transform.Vector2 + render.Camera.Position * (1 - parallax.Factor)).Point();
+                renderPosition = (transform + render.Camera.Position * (1 - parallax.Factor)).Point();
             }
             else
             {
-                renderPosition = transform.Point;
+                renderPosition = transform.ToPoint();
             }
 
             // Handle alpha
@@ -161,7 +161,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
 
             int ySortOffset = sprite.HasValue ? sprite.Value.YSortOffset : agentSprite!.Value.YSortOffset;
 
-            float rotation = transform.Angle;
+            float rotation = e.GetPosition().Angle;
 
             if (e.TryGetRotation() is RotationComponent RotationComponent)
             {
@@ -387,7 +387,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
 
             SpriteComponent? sprite = e.TryGetSprite();
             AgentSpriteComponent? agentSprite = e.TryGetAgentSprite();
-            IMurderTransformComponent transform = e.GetGlobalTransform();
+            Vector2 transform = e.GetGlobalPosition();
             float ySortOffsetRaw;
 
             if (sprite.HasValue)
@@ -408,7 +408,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
                 {
                     color = Architect.Profile.Theme.HighAccent;
 
-                    int newYSortOffset = (int)((cursorPosition.Y - transform.Vector2.Y));
+                    int newYSortOffset = (int)((cursorPosition.Y - transform.Y));
                     if (sprite != null)
                     {
                         e.SetSprite(sprite.Value with { YSortOffset = newYSortOffset });

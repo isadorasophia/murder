@@ -24,7 +24,7 @@ namespace Murder.Systems.Graphics
                 DrawRectangleComponent rect = e.GetDrawRectangle();
                 var batch = render.GetBatch(rect.TargetSpriteBatch);
 
-                Vector2 position = e.GetGlobalTransform().Vector2;
+                Vector2 position = e.GetGlobalPosition();
                 Rectangle box;
 
                 float alpha = 1.0f;

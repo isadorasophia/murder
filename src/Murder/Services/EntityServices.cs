@@ -64,6 +64,7 @@ public static class EntityServices
     {
         return entity.TryGetScale()?.Scale ?? Vector2.One;
     }
+
     public static Vector2? GetGlobalPositionIfValid(this Entity? entity)
     {
         if (entity is null || !entity.IsActive || entity.IsDestroyed || !entity.HasTransform())
@@ -71,7 +72,7 @@ public static class EntityServices
             return null;
         }
         
-        return entity.GetGlobalTransform().Vector2;
+        return entity.GetGlobalPosition();
     }
 
     public static void SubscribeToAnimationEvents(this Entity listener, Entity broadcaster)
@@ -514,7 +515,7 @@ public static class EntityServices
             return true;
         }
 
-        Point p = e.GetGlobalTransform().Point;
+        Vector2 p = e.GetGlobalPosition();
         return ((MonoWorld)world).Camera.Bounds.Contains(p);
     }
 

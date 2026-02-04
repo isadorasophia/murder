@@ -90,7 +90,7 @@ namespace Murder.Editor.Systems
             // This is useful if we decide to move a group of anchors or entities.
             foreach (Entity e in context.Entities)
             {
-                Vector2 position = e.GetGlobalTransform().Vector2;
+                Vector2 position = e.GetGlobalPosition();
                 Rectangle cutsceneRect = new(position - _hitBox / 2f, _hitBox);
                 if (hook.CursorWorldPosition!=null && cutsceneRect.Contains(hook.CursorWorldPosition.Value))
                 {
@@ -134,7 +134,7 @@ namespace Murder.Editor.Systems
 
                 hook.SelectEntity(dragged, true);
 
-                IMurderTransformComponent cutsceneTransform = dragged.GetGlobalTransform();
+                Vector2 cutsceneTransform = dragged.GetGlobalPosition();
 
                 // On "ctrl", snap entities to the grid.
                 bool snapToGrid = Game.Input.Down(MurderInputButtons.Ctrl);
@@ -143,21 +143,21 @@ namespace Murder.Editor.Systems
                     if (name is null)
                     {
                         // This is actually dragging the root of the cutscene.
-                        Vector2 delta = cursorPosition - cutsceneTransform.Vector2 - _draggedOffset;
+                        Vector2 delta = cursorPosition - cutsceneTransform - _draggedOffset;
 
-                        IMurderTransformComponent newTransform = cutsceneTransform.Add(delta);
+                        Vector2 newTransform = cutsceneTransform + delta;
                         if (snapToGrid)
                         {
                             newTransform = newTransform.SnapToGridDelta();
                         }
 
-                        dragged.SetGlobalTransform(newTransform);
+                        dragged.SetGlobalPosition(newTransform);
                         dragged.SendMessage(new AssetUpdatedMessage(typeof(PositionComponent)));
                     }
                     else
                     {
                         Vector2 anchorPosition = dragged.GetCutsceneAnchorsEditor().FindAnchor(name).Position;
-                        Vector2 delta = cursorPosition - cutsceneTransform.Vector2 - anchorPosition;
+                        Vector2 delta = cursorPosition - cutsceneTransform - anchorPosition;
 
                         Vector2 finalNewPosition = anchorPosition + delta - _draggedOffset;
 
@@ -218,7 +218,7 @@ namespace Murder.Editor.Systems
 
             foreach (Entity e in context.Entities)
             {
-                Vector2 position = e.GetGlobalTransform().Vector2;
+                Vector2 position = e.GetGlobalPosition();
 
                 ImmutableArray<AnchorId> anchors = e.GetCutsceneAnchorsEditor().Anchors;
 

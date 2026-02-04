@@ -21,15 +21,15 @@ namespace Murder.Systems
                 // We might have deleted the MoveTo component in MoveToSystem.
                 MoveToComponent? moveToComponent = e.TryGetMoveTo();
 
-                IMurderTransformComponent position = e.GetGlobalTransform();
-                Vector2 currentTarget = moveToComponent?.Target ?? position.ToVector2();
+                Vector2 position = e.GetGlobalPosition();
+                Vector2 currentTarget = moveToComponent?.Target ?? position;
 
-                if (position.IsSameCell(currentTarget.ToPosition()))
+                if (position.IsSameCell(currentTarget))
                 {
                     PathfindComponent pathfindComponent = e.GetPathfind();
 
                     Vector2 pathfindTarget = pathfindComponent.Target;
-                    Point cell = position.CellPoint();
+                    Point cell = position.ToGridPoint();
 
                     if (cell == pathfindTarget.ToGridPoint())
                     {

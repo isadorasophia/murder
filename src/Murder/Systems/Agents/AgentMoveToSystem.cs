@@ -33,12 +33,12 @@ namespace Murder.Systems.Agents
                     e.RemoveMoveToTarget();
                 }
 
-                IMurderTransformComponent position = e.GetGlobalTransform();
+                Vector2 position = e.GetGlobalPosition();
                 
                 if (e.TryGetMoveTo() is MoveToComponent move)
                 {
                     Vector2 targetPosition = move.Target;
-                    Vector2 delta = targetPosition - position.ToVector2();
+                    Vector2 delta = targetPosition - position;
 
                     var distanceSq = delta.LengthSquared();
                     if (distanceSq < MathF.Pow(move.MinDistance, 2))
@@ -69,8 +69,8 @@ namespace Murder.Systems.Agents
                 {
                     if (context.World.TryGetEntity(moveToTarget.Target) is Entity target)
                     {
-                        Vector2 targetPosition = target.GetGlobalTransform().ToVector2() + moveToTarget.Offset;
-                        Vector2 delta = targetPosition - position.ToVector2();
+                        Vector2 targetPosition = target.GetGlobalPosition() + moveToTarget.Offset;
+                        Vector2 delta = targetPosition - position;
 
                         var distanceSq = delta.LengthSquared();
                         if (distanceSq < MathF.Pow(moveToTarget.MinDistance, 2))

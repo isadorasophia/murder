@@ -55,7 +55,7 @@ namespace Murder.Systems
                 MoveToPerfectComponent moveToPerfect = e.GetMoveToPerfect();
                 if (moveToPerfect.StartPosition is not Vector2 startPosition)
                 {
-                    startPosition = e.GetGlobalTransform().Vector2;
+                    startPosition = e.GetGlobalPosition();
                     e.SetMoveToPerfect(moveToPerfect with { StartPosition = startPosition });
                 }
 
@@ -63,18 +63,18 @@ namespace Murder.Systems
                 double easedDelta = Ease.Evaluate(delta, moveToPerfect.EaseKind);
 
                 Vector2 current = Vector2Helper.LerpSnap(startPosition, moveToPerfect.Target, easedDelta);
-                e.SetGlobalTransform(e.GetMurderTransform().With(current.Point()));
+                e.SetGlobalPosition(current.Point());
 
                 if (anyActorAvoidant && moveToPerfect.AvoidActors && _actorsCache != null && e.TryGetCollider() is ColliderComponent collider)
                 {
-                    Vector2 position = e.GetGlobalTransform().Vector2;
+                    Vector2 position = e.GetGlobalPosition();
 
                     // Avoid actors
                     if (PhysicsServices.GetFirstMtv(e.EntityId, collider, position, _actorsCache, out int hit) is Vector2 mtv)
                     {
                         if (context.World.TryGetEntity(hit) is Entity actor)
                         {
-                            actor.SetGlobalTransform(actor.GetGlobalTransform().With(actor.GetGlobalTransform().Vector2 + mtv));
+                            actor.SetGlobalPosition(actor.GetGlobalPosition() + mtv);
                         }
                     }
                 }

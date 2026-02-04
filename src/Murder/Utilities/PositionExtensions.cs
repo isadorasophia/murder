@@ -9,9 +9,9 @@ namespace Murder.Utilities
 {
     public static class PositionExtensions
     {
-        public static IMurderTransformComponent GetGlobalTransform(this Entity entity)
+        public static Vector2 GetGlobalPosition(this Entity entity)
         {
-            if (entity.TryGetMurderTransform() is not IMurderTransformComponent transform)
+            if (entity.TryGetPosition() is not PositionComponent positionComponent)
             {
                 if (!entity.IsActive)
                 {
@@ -22,63 +22,27 @@ namespace Murder.Utilities
                     GameLogger.Error($"Tried to retrieve position of an entity without position: {entity.EntityId}! Expect things to fall apart.");
                 }
 
-                return new PositionComponent();
+                return Vector2.Zero;
             }
 
-            return transform.GetGlobal();
-        }
-
-        public static void SetGlobalTransform<T>(this Entity entity, T transform) where T : IMurderTransformComponent
-        {
-            // This will make the value relative, if needed.
-            if (entity.HasTransform() && entity.TryFetchParent() is Entity parent)
-            {
-                if (parent.HasTransform())
-                {
-                    entity.SetTransform(transform.Subtract(parent.GetGlobalTransform()));
-                }
-                else
-                {
-                    entity.SetTransform(transform);
-                }
-            }
-            else if (transform is not null)
-            {
-                entity.SetTransform(transform);
-            }
+            return positionComponent.GetGlobal();
         }
 
         public static void SetLocalPosition(this Entity entity, Vector2 position)
         {
-            IMurderTransformComponent newTransform = entity.GetMurderTransform().With(position);
-            entity.SetTransform(newTransform);
+            PositionComponent newPosition = entity.GetPosition().WithLocalPosition(position.X, position.Y);
+            entity.SetPosition(newPosition);
         }
+
         public static void SetGlobalPosition(this Entity entity, Vector2 position)
         {
-            IMurderTransformComponent newTransform;
-            if (entity.HasTransform())
+            if (entity.TryGetMurderTransform() is PositionComponent transform)
             {
-                IMurderTransformComponent transform = entity.GetGlobalTransform();
-                if (transform.Vector2 == position)
-                {
-                    return;
-                }
-
-                newTransform = entity.GetGlobalTransform().With(position);
+                entity.SetPosition(transform.SetGlobal(position));
             }
             else
             {
-                newTransform = new PositionComponent(position);
-            }
-
-            // This will make the value relative, if needed.
-            if (entity.HasTransform() && entity.TryFetchParent() is Entity parent && parent.HasTransform())
-            {
-                entity.SetTransform(newTransform.Subtract(parent.GetGlobalTransform()));
-            }
-            else
-            {
-                entity.SetTransform(newTransform);
+                entity.SetPosition(position);
             }
         }
 
@@ -101,7 +65,7 @@ namespace Murder.Utilities
 
         public static Point ToCellPoint(this IMurderTransformComponent position) => new(position.Cx, position.Cy);
 
-        public static Point ToCellPoint(this Vector2 v) => new((int)Math.Floor(v.X / Grid.CellSize), (int)Math.Floor(v.Y / Grid.CellSize));
+        public static Point ToCellPoint(this Vector2 v) => new(Calculator.FloorToInt(v.X / Grid.CellSize), Calculator.FloorToInt(v.Y / Grid.CellSize));
 
         public static Vector2 ToVector2(this IMurderTransformComponent position) => new(position.X, position.Y);
 

@@ -28,7 +28,7 @@ namespace Murder.Systems.Graphics
 
             foreach (Entity e in context.Entities)
             {
-                IMurderTransformComponent transform = e.GetGlobalTransform();
+                Vector2 position = e.GetGlobalPosition();
                 SpriteComponent s = e.GetSprite();
 
                 if (Game.Data.TryGetAsset<SpriteAsset>(s.AnimationGuid) is not SpriteAsset asset)
@@ -47,15 +47,15 @@ namespace Murder.Systems.Graphics
                 Vector2 renderPosition;
                 if (e.TryGetParallax() is ParallaxComponent parallax)
                 {
-                    renderPosition = (transform.Vector2 + render.Camera.Position * (1 - parallax.Factor)).Round();
+                    renderPosition = (position + render.Camera.Position * (1 - parallax.Factor)).Round();
                 }
                 else
                 {
-                    renderPosition = transform.Vector2;
+                    renderPosition = position;
                 }
 
                 // Handle rotation
-                float rotation = transform.Angle;
+                float rotation = e.GetPosition().Angle;
 
                 if (e.TryGetRotation() is RotationComponent RotationComponent)
                 {
@@ -116,7 +116,7 @@ namespace Murder.Systems.Graphics
                     ySortOffsetRaw += o.SortOffset;
                 }
 
-                float yPositionForYSort = transform.Y;
+                float yPositionForYSort = position.Y;
 
                 int? forceFrame = null;
                 if (e.TryGetSpriteFrame() is SpriteFrameComponent spriteFrame && spriteFrame.Animation.Equals(animationId))

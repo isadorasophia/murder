@@ -55,7 +55,7 @@ namespace Murder.Editor.Systems.Sounds
 
                 Guid asset = Game.Profile.EditorAssets.SoundImage;
 
-                Vector2 position = e.GetGlobalTransform().Vector2;
+                Vector2 position = e.GetGlobalPosition();
                 if (e.TryGetCollider() is ColliderComponent collider)
                 {
                     position = collider.GetBoundingBox(position, Vector2.One).CenterPoint;
@@ -96,7 +96,7 @@ namespace Murder.Editor.Systems.Sounds
 
                 Guid asset = Game.Profile.EditorAssets.SoundImage;
 
-                Vector2 position = e.GetGlobalTransform().Vector2;
+                Vector2 position = e.GetGlobalPosition();
                 if (e.TryGetCollider() is ColliderComponent collider)
                 {
                     position = collider.GetBoundingBox(position, Vector2.One).CenterPoint;

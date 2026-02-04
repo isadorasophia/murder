@@ -25,7 +25,7 @@ namespace Murder.Core.Physics
         private const int MAX_OBJECTS = 6;
         private const int MAX_LEVELS = 6;
 
-        public ImmutableArray<QTNode<T>> Nodes = ImmutableArray.Create<QTNode<T>>();
+        public ImmutableArray<QTNode<T>> Nodes = [];
         public readonly Rectangle Bounds;
         public readonly int Level;
 
@@ -33,7 +33,6 @@ namespace Murder.Core.Physics
         /// Entities are indexed by their entity ID number
         /// </summary>
         public readonly Dictionary<int, NodeInfo<T>> Entities = new(MAX_OBJECTS);
-
 
         public QTNode(int level, Rectangle bounds)
         {
@@ -68,7 +67,8 @@ namespace Murder.Core.Physics
         public void Clear()
         {
             Entities.Clear();
-            Nodes = ImmutableArray.Create<QTNode<T>>();
+            Nodes = [];
+
             if (!Nodes.IsDefaultOrEmpty)
             {
                 for (int i = 0; i < Nodes.Length; i++)
@@ -84,7 +84,7 @@ namespace Murder.Core.Physics
         public void Reset()
         {
             Entities.Clear();
-            Nodes = ImmutableArray.Create<QTNode<T>>();
+            Nodes = [];
         }
 
         public void Split()

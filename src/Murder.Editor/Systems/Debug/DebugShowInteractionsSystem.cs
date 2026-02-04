@@ -37,7 +37,7 @@ namespace Murder.Editor.Systems
 
         private void ShowTargetId(RenderContext render, World world, EditorHook hook, Entity e)
         {
-            Point from = e.GetGlobalTransform().Point;
+            Point from = e.GetGlobalPosition().ToPoint();
 
             int? targetId = default;
             if (e.HasIdTarget())
@@ -61,7 +61,7 @@ namespace Murder.Editor.Systems
 
         private void ShowTargetIdCollection(RenderContext render, World world, EditorHook hook, Entity e)
         {
-            Point from = e.GetGlobalTransform().Point;
+            Point from = e.GetGlobalPosition().ToPoint();
 
             IEnumerable<int>? targets = default;
             if (e.HasIdTargetCollection())
@@ -103,7 +103,7 @@ namespace Murder.Editor.Systems
                 return;
             }
 
-            RenderServices.DrawLine(render.DebugFxBatch, from, target.GetGlobalTransform().Point, Color.White);
+            RenderServices.DrawLine(render.DebugFxBatch, from, target.GetGlobalPosition().ToPoint(), Color.White);
         }
     }
 }

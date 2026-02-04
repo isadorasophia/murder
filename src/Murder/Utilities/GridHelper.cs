@@ -84,7 +84,7 @@ namespace Murder.Utilities
 
         public static IMurderTransformComponent SnapToGridDelta(this IMurderTransformComponent transform)
         {
-            return transform.With(
+            return transform.WithLocal(
                 transform.X - transform.X % Grid.CellSize,
                 transform.Y - transform.Y % Grid.CellSize);
         }

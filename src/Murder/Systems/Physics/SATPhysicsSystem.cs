@@ -105,8 +105,7 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                     continue;
                 }
                 IMurderTransformComponent relativeStartPosition = e.GetMurderTransform();
-                Vector2 startPosition = relativeStartPosition.GetGlobal().ToVector2();
-
+                Vector2 startPosition = relativeStartPosition.GetGlobal();
 
                 // This is moving too slowly, checking for collisions is not necessary.
                 if ((startPosition + velocity).Round() == startPosition.Round())

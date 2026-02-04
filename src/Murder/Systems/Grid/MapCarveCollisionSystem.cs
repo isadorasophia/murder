@@ -132,7 +132,7 @@ namespace Murder.Systems
 
         private IntRectangle GetCarveBoundingBox(Entity e)
         {
-            Vector2 position = e.GetGlobalTransform().Vector2;
+            Vector2 position = e.GetGlobalPosition();
 
             IntRectangle updatedRectangle;
             if (e.TryGetCollider() is ColliderComponent collider)

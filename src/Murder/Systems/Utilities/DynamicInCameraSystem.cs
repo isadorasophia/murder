@@ -78,8 +78,7 @@ public sealed class DynamicInCameraSystem : IMonoPreRenderSystem
 
         foreach (Entity e in context.Entities)
         {
-            var transform = e.GetGlobalTransform();
-            Vector2 pos = transform.Vector2;
+            Vector2 pos = e.GetGlobalPosition();
 
             // ------------  cached bounds -------------------------------------
             if (e.TryGetEntityBoundsCache() is EntityBoundsCacheComponent cache)

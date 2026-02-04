@@ -36,8 +36,7 @@ namespace Murder.Systems.Graphics
                     continue;
                 }
 
-                IMurderTransformComponent transform = e.GetGlobalTransform();
-                Vector2 position = transform.Vector2;
+                Vector2 position = e.GetGlobalPosition();
 
                 // This is as early as we can to check for out of bounds
                 if (s.TargetSpriteBatch != Batches2D.UiBatchId &&
@@ -56,7 +55,7 @@ namespace Murder.Systems.Graphics
                 var texture = ase.GetFrame(frame.Frame);
 
                 ThreeSliceComponent threeSlice = e.GetThreeSlice();
-                float ySort = RenderServices.YSort(transform.Y + s.YSortOffset);
+                float ySort = RenderServices.YSort(position.Y + s.YSortOffset);
 
                 RenderServices.Draw3Slice(
                     render.GetBatch(s.TargetSpriteBatch),

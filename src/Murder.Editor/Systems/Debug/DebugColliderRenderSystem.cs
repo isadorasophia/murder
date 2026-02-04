@@ -97,7 +97,7 @@ namespace Murder.Editor.Systems
                 }
 
                 ColliderComponent collider = e.GetCollider();
-                Vector2 globalPosition = e.GetGlobalTransform().Vector2;
+                Vector2 globalPosition = e.GetGlobalPosition();
                 Vector2 scale = e.FetchScale();
 
                 Color color = collider.DebugColor * .6f;
@@ -397,7 +397,7 @@ namespace Murder.Editor.Systems
             {
                 if (DrawShapeButtons() is Type shapeType)
                 {
-                    Vector2 position = entity.GetGlobalTransform().Vector2;
+                    Vector2 position = entity.GetGlobalPosition();
                     Point offset = (hook.LastCursorWorldPosition - position).Point();
 
                     if (CreateShapeFromType(shapeType, offset) is IShape newShape)
