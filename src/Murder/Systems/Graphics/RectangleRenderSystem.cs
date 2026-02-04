@@ -14,7 +14,7 @@ using System.Numerics;
 namespace Murder.Systems.Graphics
 {
     [EditorSystem]
-    [Filter(typeof(ITransformComponent), typeof(DrawRectangleComponent))]
+    [Filter(typeof(PositionComponent), typeof(DrawRectangleComponent))]
     public class RectangleRenderSystem : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)

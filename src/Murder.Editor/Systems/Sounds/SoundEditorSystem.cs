@@ -49,7 +49,7 @@ namespace Murder.Editor.Systems.Sounds
             EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
             foreach (Entity e in entities)
             {
-                if (!e.HasTransform()) continue;
+                if (!e.HasPosition()) continue;
 
                 bool isSelected = hook.IsEntitySelected(e.EntityId);
 
@@ -75,7 +75,7 @@ namespace Murder.Editor.Systems.Sounds
             ImmutableArray<Entity> soundPlayerEntities = FetchEntities(world);
             foreach (Entity e in soundPlayerEntities)
             {
-                if (!e.HasTransform()) continue;
+                if (!e.HasPosition()) continue;
 
                 // Make sure we are only drawing once, or things will get weird.
                 if (entitiesDrawn.Contains(e.Parent ?? -1)) continue;

@@ -27,7 +27,7 @@ internal class AnimationEventDebugSystem : IMessagerSystem
             return;
         }
 
-        if (!entity.HasTransform())
+        if (!entity.HasPosition())
         {
             return;
         }

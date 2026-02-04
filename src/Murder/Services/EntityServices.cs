@@ -67,7 +67,7 @@ public static class EntityServices
 
     public static Vector2? GetGlobalPositionIfValid(this Entity? entity)
     {
-        if (entity is null || !entity.IsActive || entity.IsDestroyed || !entity.HasTransform())
+        if (entity is null || !entity.IsActive || entity.IsDestroyed || !entity.HasPosition())
         {
             return null;
         }
@@ -91,22 +91,22 @@ public static class EntityServices
         {
             if (world.TryGetEntity(id) is Entity child)
             {
-                Vector2 localPosition = child.GetMurderTransform().Vector2;
-                child.SetTransform(new PositionComponent(localPosition.Rotate(angle)));
+                Vector2 localPosition = child.GetPosition().Vector2;
+                child.SetPosition(localPosition.Rotate(angle));
             }
         }
     }
 
     public static void RotatePositionAround(Entity entity, Vector2 center, float angle)
     {
-        Vector2 localPosition = entity.GetMurderTransform().Vector2 - center;
-        entity.SetTransform(new PositionComponent(center + localPosition.Rotate(angle)));
+        Vector2 localPosition = entity.GetPosition().Vector2 - center;
+        entity.SetPosition(center + localPosition.Rotate(angle));
     }
 
     public static void RotatePosition(Entity entity, float angle)
     {
-        Vector2 localPosition = entity.GetMurderTransform().Vector2;
-        entity.SetTransform(new PositionComponent(localPosition.Rotate(angle)));
+        Vector2 localPosition = entity.GetPosition().Vector2;
+        entity.SetPosition(localPosition.Rotate(angle));
     }
 
     public static bool IsChildOf(World world, Entity parent, Entity child)
@@ -421,7 +421,7 @@ public static class EntityServices
                     position = targetGlobalPosition;
                 }
 
-                spawned.SetTransform(new PositionComponent(position));
+                spawned.SetPosition(position);
                 foreach (var c in addComponents)
                 {
                     spawned.AddComponent(c);
@@ -509,7 +509,7 @@ public static class EntityServices
 
     public static bool IsInCamera(this Entity e, World world)
     {
-        if (!e.HasTransform())
+        if (!e.HasPosition())
         {
             // No transform? Assume it's ~*everywhere~*.
             return true;

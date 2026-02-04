@@ -12,7 +12,7 @@ namespace Murder.Components
         public PushAwayComponent(int size, int strength) =>
             (Size, Strength) = (size, strength);
 
-        public Rectangle GetBoundingBox(IMurderTransformComponent position) =>
+        public Rectangle GetBoundingBox(PositionComponent position) =>
             new(position.X - Size / 2, position.Y - Size / 2, Size, Size);
 
         public Rectangle GetBoundingBox(Vector2 position) =>

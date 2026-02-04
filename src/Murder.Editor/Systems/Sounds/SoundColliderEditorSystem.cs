@@ -13,7 +13,7 @@ namespace Murder.Editor.Systems.Sounds
     [SoundEditor]
     [PrefabEditor]
     [OnlyShowOnDebugView]
-    [Filter(typeof(ColliderComponent), typeof(ITransformComponent))]
+    [Filter(typeof(ColliderComponent), typeof(PositionComponent))]
     [Filter(ContextAccessorFilter.AnyOf, typeof(SoundComponent), typeof(SoundParameterComponent))]
     public class SoundColliderEditorSystem : IUpdateSystem, IMurderRenderSystem
     {

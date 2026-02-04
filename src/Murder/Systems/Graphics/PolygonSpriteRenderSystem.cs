@@ -12,7 +12,7 @@ using Murder.Utilities;
 namespace Murder.Systems;
 
 [EditorSystem]
-[Filter(ContextAccessorFilter.AllOf, typeof(PolygonSpriteComponent), typeof(ITransformComponent))]
+[Filter(ContextAccessorFilter.AllOf, typeof(PolygonSpriteComponent), typeof(PositionComponent))]
 public class PolygonSpriteRenderSystem : IMurderRenderSystem
 {
     public void Draw(RenderContext render, Context context)

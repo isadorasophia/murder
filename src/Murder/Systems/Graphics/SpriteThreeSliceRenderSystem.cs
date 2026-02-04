@@ -16,7 +16,7 @@ using System.Numerics;
 namespace Murder.Systems.Graphics
 {
     [EditorSystem]
-    [Filter(ContextAccessorFilter.AllOf, typeof(ThreeSliceComponent), typeof(ITransformComponent))]
+    [Filter(ContextAccessorFilter.AllOf, typeof(ThreeSliceComponent), typeof(PositionComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(InvisibleComponent))]
     public class SpriteThreeSliceRenderSystem : IMurderRenderSystem
     {

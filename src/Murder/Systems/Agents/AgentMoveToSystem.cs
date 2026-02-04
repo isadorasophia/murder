@@ -11,7 +11,7 @@ namespace Murder.Systems.Agents
     /// <summary>
     /// Simple system for moving agents to another position. Looks for 'MoveTo' components and adds agent inpulses to it.
     /// </summary>
-    [Filter(typeof(ITransformComponent))]
+    [Filter(typeof(PositionComponent))]
     [Filter(ContextAccessorFilter.AnyOf, typeof(MoveToComponent), typeof(MoveToTargetComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(AgentPauseComponent))]
     public class AgentMoveToSystem : IFixedUpdateSystem

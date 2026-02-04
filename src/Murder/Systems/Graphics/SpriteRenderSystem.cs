@@ -17,7 +17,7 @@ using System.Security.AccessControl;
 
 namespace Murder.Systems.Graphics
 {
-    [Filter(ContextAccessorFilter.AllOf, typeof(SpriteComponent), typeof(ITransformComponent), typeof(InCameraComponent))]
+    [Filter(ContextAccessorFilter.AllOf, typeof(SpriteComponent), typeof(PositionComponent), typeof(InCameraComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(InvisibleComponent), typeof(ThreeSliceComponent))]
     public class SpriteRenderSystem : IMurderRenderSystem
     {

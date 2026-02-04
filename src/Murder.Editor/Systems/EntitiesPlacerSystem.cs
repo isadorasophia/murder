@@ -51,7 +51,7 @@ namespace Murder.Editor.Systems
 
             foreach (Entity e in context.Entities)
             {
-                e.SetTransform(new PositionComponent(cursorPosition));
+                e.SetPosition(cursorPosition);
 
                 if (destroy)
                 {
@@ -65,7 +65,7 @@ namespace Murder.Editor.Systems
                     string? targetGroup = EditorTileServices.FindTargetGroup(world, hook, cursorPosition);
 
                     // Create itself from the hook and destroy this copy from the world.
-                    hook.AddPrefabWithStage?.Invoke(hook.EntityToBePlaced.Value, [e.GetTransform()], targetGroup);
+                    hook.AddPrefabWithStage?.Invoke(hook.EntityToBePlaced.Value, [e.GetPosition()], targetGroup);
 
                     if (doCopy)
                     {

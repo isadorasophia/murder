@@ -18,7 +18,7 @@ using Murder.Serialization;
 namespace Murder.Editor.Systems
 {
     [OnlyShowOnDebugView]
-    [Filter(typeof(ITransformComponent), typeof(RouteComponent))]
+    [Filter(typeof(PositionComponent), typeof(RouteComponent))]
     public class DebugRouteSystem : IMurderRenderSystem
     {
         private readonly HashSet<Point> _loopCheck = new();

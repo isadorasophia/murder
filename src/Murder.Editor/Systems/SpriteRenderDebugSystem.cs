@@ -25,7 +25,7 @@ using Murder.Diagnostics;
 namespace Murder.Editor.Systems;
 
 [EditorSystem]
-[Filter(typeof(ITransformComponent))]
+[Filter(typeof(PositionComponent))]
 [Filter(filter: ContextAccessorFilter.AnyOf, typeof(SpriteComponent), typeof(AgentSpriteComponent))]
 [Filter(ContextAccessorFilter.NoneOf, typeof(ThreeSliceComponent))]
 [Filter(ContextAccessorFilter.NoneOf, typeof(InvisibleComponent))]

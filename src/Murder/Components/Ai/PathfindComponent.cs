@@ -6,7 +6,7 @@ using System.Numerics;
 namespace Murder.Components
 {
     [DoNotPersistOnSave(exceptIfComponentIsPresent: typeof(PersistPathfindComponent))]
-    [Requires(typeof(ITransformComponent))]
+    [Requires(typeof(PositionComponent))]
     public readonly struct PathfindComponent : IComponent
     {
         public readonly Vector2 Target;

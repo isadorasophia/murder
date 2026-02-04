@@ -53,7 +53,7 @@ namespace Murder.Prefabs
             for (int i = 0; i < components.Length; ++i)
             {
                 IComponent c = components[i];
-                if (c is ITransformComponent && e.TryGetTransform() is IMurderTransformComponent transform)
+                if (c is PositionComponent && e.TryGetPosition() is PositionComponent transform)
                 {
                     c = transform.WithoutParent();
                 }

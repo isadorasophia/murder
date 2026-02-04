@@ -20,7 +20,7 @@ using static Murder.Services.PhysicsServices;
 namespace Murder.Systems.Physics;
 
 
-[Filter(typeof(ITransformComponent), typeof(VelocityComponent))]
+[Filter(typeof(PositionComponent), typeof(VelocityComponent))]
 public class SATPhysicsSystem : IFixedUpdateSystem
 {
     private const int ExhaustLimit = 10;
@@ -104,7 +104,8 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                     e.SetVelocity(Vector2.Zero);
                     continue;
                 }
-                IMurderTransformComponent relativeStartPosition = e.GetMurderTransform();
+
+                PositionComponent relativeStartPosition = e.GetPosition();
                 Vector2 startPosition = relativeStartPosition.GetGlobal();
 
                 // This is moving too slowly, checking for collisions is not necessary.

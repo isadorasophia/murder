@@ -6,6 +6,7 @@ internal readonly struct MurderTypeSymbols
 {
     public INamedTypeSymbol ComponentInterface { get; init; }
     public INamedTypeSymbol MessageInterface { get; init; }
+    public INamedTypeSymbol PositionComponent { get; init; }
     public INamedTypeSymbol StateMachineClass { get; init; }
     public INamedTypeSymbol StateMachineComponentInterface { get; init; }
     public INamedTypeSymbol InteractionInterface { get; init; }
@@ -32,6 +33,9 @@ internal readonly struct MurderTypeSymbols
 
         INamedTypeSymbol? messageInterface = compilation.GetTypeByMetadataName("Bang.Components.IMessage");
         if (messageInterface is null) return null;
+
+        INamedTypeSymbol? positionComponent = compilation.GetTypeByMetadataName("Bang.Components.PositionComponent");
+        if (positionComponent is null) return null;
 
         INamedTypeSymbol? stateMachineClass = compilation.GetTypeByMetadataName("Bang.StateMachines.StateMachine");
         if (stateMachineClass is null) return null;
@@ -84,6 +88,7 @@ internal readonly struct MurderTypeSymbols
         {
             ComponentInterface = componentInterface,
             MessageInterface = messageInterface,
+            PositionComponent = positionComponent,
             StateMachineClass = stateMachineClass,
             StateMachineComponentInterface = stateMachineComponentInterface,
             InteractionInterface = interactionInterface,

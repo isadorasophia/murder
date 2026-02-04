@@ -30,7 +30,7 @@ namespace Murder.Editor.Systems
 {
     [WorldEditor(startActive: true)]
     [OnlyShowOnDebugView]
-    [Filter(kind: ContextAccessorKind.Read, typeof(ColliderComponent), typeof(ITransformComponent))]
+    [Filter(kind: ContextAccessorKind.Read, typeof(ColliderComponent), typeof(PositionComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(CutsceneAnchorsComponent), typeof(SoundParameterComponent))] // Skip cutscene and sounds.
     public class DebugColliderRenderSystem : IMurderRenderSystem, IGuiSystem
     {
@@ -91,7 +91,7 @@ namespace Murder.Editor.Systems
 
             foreach (Entity e in context.Entities)
             {
-                if (!e.HasCollider() || !e.HasTransform())
+                if (!e.HasCollider() || !e.HasPosition())
                 {
                     continue;
                 }

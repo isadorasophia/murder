@@ -19,6 +19,7 @@ using System.Numerics;
 using Microsoft.Xna.Framework.Input;
 using Murder.Editor.Messages;
 using Murder.Prefabs;
+using Bang.Components;
 
 namespace Murder.Editor.Systems;
 
@@ -325,7 +326,7 @@ public class GenericSelectorSystem
         hook.ClearHoveringEntities();
         foreach (Entity e in entities)
         {
-            if (!e.HasTransform()) continue;
+            if (!e.HasPosition()) continue;
 
             Vector2 position = e.GetGlobalPosition();
             Rectangle rect = GetSeletionBoundingBox(e, world, position, out bool hasBox);
@@ -445,7 +446,7 @@ public class GenericSelectorSystem
                 }
             }
 
-            if (_dragging == null && _dragStart != null && _startedDragging != null && down && _startedDragging.HasTransform())
+            if (_dragging == null && _dragStart != null && _startedDragging != null && down && _startedDragging.HasPosition())
             {
                 float distance = (cursorPosition - _dragStart.Value).Length();
                 if (distance > 4)
@@ -480,7 +481,7 @@ public class GenericSelectorSystem
                     continue;
                 }
 
-                if (!e.HasTransform())
+                if (!e.HasPosition())
                 {
                     continue;
                 }
@@ -522,7 +523,7 @@ public class GenericSelectorSystem
 
                 foreach ((int _, Entity e) in selectedEntities)
                 {
-                    if (!e.HasTransform())
+                    if (!e.HasPosition())
                     {
                         continue;
                     }
@@ -764,7 +765,7 @@ public class GenericSelectorSystem
                 continue;
             }
 
-            if (!entity.HasTransform())
+            if (!entity.HasPosition())
             {
                 continue;
             }
@@ -848,7 +849,7 @@ public class GenericSelectorSystem
 
         foreach (Entity e in entities)
         {
-            if (!e.HasTransform()) continue;
+            if (!e.HasPosition()) continue;
             if (e.Parent != null) continue;
 
             Vector2 position = e.GetGlobalPosition();

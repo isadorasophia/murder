@@ -1,4 +1,5 @@
-﻿using Bang.Entities;
+﻿using Bang.Components;
+using Bang.Entities;
 using Murder.Components;
 using Murder.Core.Sounds;
 using Murder.Diagnostics;
@@ -219,7 +220,7 @@ public static class SoundServices
         }
 
         Entity root = EntityServices.FindRootEntity(target);
-        if (root.TryGetTransform() is IMurderTransformComponent transform)
+        if (root.TryGetPosition() is PositionComponent transform)
         {
             attributes.Position = new Vector3(transform.Vector2.X, transform.Vector2.Y, z: 0);
         }

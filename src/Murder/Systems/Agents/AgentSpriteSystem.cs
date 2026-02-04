@@ -21,7 +21,7 @@ using System.Numerics;
 
 namespace Murder.Systems
 {
-    [Filter(ContextAccessorFilter.AllOf, typeof(ITransformComponent), typeof(AgentSpriteComponent), typeof(FacingComponent), typeof(InCameraComponent))]
+    [Filter(ContextAccessorFilter.AllOf, typeof(PositionComponent), typeof(AgentSpriteComponent), typeof(FacingComponent), typeof(InCameraComponent))]
     [ShowInEditor]
     public class AgentSpriteSystem : IMurderRenderSystem
     {

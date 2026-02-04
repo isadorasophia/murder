@@ -1,4 +1,5 @@
-﻿using Murder.Components;
+﻿using Bang.Components;
+using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Serialization;
@@ -82,7 +83,7 @@ namespace Murder.Utilities
         public static Point ToGrid(this Vector2 position) =>
             new Point(Calculator.FloorToInt(position.X / Grid.CellSize), Calculator.FloorToInt(position.Y / Grid.CellSize));
 
-        public static IMurderTransformComponent SnapToGridDelta(this IMurderTransformComponent transform)
+        public static PositionComponent SnapToGridDelta(this PositionComponent transform)
         {
             return transform.WithLocal(
                 transform.X - transform.X % Grid.CellSize,

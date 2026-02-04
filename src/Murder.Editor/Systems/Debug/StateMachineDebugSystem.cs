@@ -21,7 +21,7 @@ internal class StateMachineDebugSystem : IMurderRenderSystem
         {
             foreach (var e in context.Entities)
             {
-                if (e.IsDestroyed || !e.HasTransform())
+                if (e.IsDestroyed || !e.HasPosition())
                 {
                     continue;
                 }

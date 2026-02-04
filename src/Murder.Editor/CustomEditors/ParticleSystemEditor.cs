@@ -1,4 +1,5 @@
-﻿using ImGuiNET;
+﻿using Bang.Components;
+using ImGuiNET;
 using Murder.Assets;
 using Murder.Assets.Graphics;
 using Murder.Components;

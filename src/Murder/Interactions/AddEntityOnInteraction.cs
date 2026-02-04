@@ -38,9 +38,9 @@ namespace Murder.Interactions
             }
 
             // Adjust the position, if applicable.
-            if (interacted?.TryGetTransform() is IMurderTransformComponent transform)
+            if (interacted?.TryGetPosition() is PositionComponent position)
             {
-                result.SetTransform(transform);
+                result.SetPosition(position.Vector2);
             }
 
             // Remove after triggered.

@@ -3,9 +3,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Murder.Serializer.Extensions;
 using Murder.Serializer.Metadata;
 using System.Collections.Immutable;
-using System.Diagnostics;
-using System.Reflection;
-using System.Xml.Linq;
 
 namespace Murder.Generator.Metadata;
 
@@ -220,6 +217,10 @@ public sealed class MetadataFetcher
         TrackMetadataAndPrivateMembers(symbols, symbols.StateMachineComponentInterface);
         TrackMetadataAndPrivateMembers(symbols, symbols.InteractionInterface);
         TrackMetadataAndPrivateMembers(symbols, symbols.InteractiveComponentInterface);
+        TrackMetadataAndPrivateMembers(symbols, symbols.PositionComponent);
+
+        MetadataType m = new() { Type = symbols.PositionComponent, QualifiedName = symbols.PositionComponent.FullyQualifiedName() };
+        TrackPolymorphicType(symbols.ComponentInterface, m);
     }
 
     private void Populate(

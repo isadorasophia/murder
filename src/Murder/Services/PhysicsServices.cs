@@ -108,7 +108,7 @@ public static class PhysicsServices
     /// </summary>
     public static IntRectangle GetColliderBoundingBox(this Entity target)
     {
-        if (!target.HasCollider() || !target.HasTransform())
+        if (!target.HasCollider() || !target.HasPosition())
         {
             return IntRectangle.Empty;
         }
@@ -271,12 +271,12 @@ public static class PhysicsServices
 
     public static bool HasLineOfSight(World world, Entity from, Entity to)
     {
-        if (from.TryGetMurderTransform()?.Vector2 is not Vector2 origin)
+        if (from.TryGetPosition()?.Vector2 is not Vector2 origin)
         {
             return false;
         }
 
-        if (to.TryGetMurderTransform()?.Vector2 is not Vector2 target)
+        if (to.TryGetPosition()?.Vector2 is not Vector2 target)
         {
             return false;
         }
@@ -637,7 +637,7 @@ public static class PhysicsServices
     public static ImmutableArray<PhysicEntityCachedInfo> FilterPositionAndColliderEntities(World world, Func<Entity, bool> filter)
     {
         _physicsInfoCacheBuilder.Clear();
-        foreach (var e in world.GetEntitiesWith(ContextAccessorFilter.AllOf, typeof(ColliderComponent), typeof(ITransformComponent)))
+        foreach (var e in world.GetEntitiesWith(ContextAccessorFilter.AllOf, typeof(ColliderComponent), typeof(PositionComponent)))
         {
             var collider = e.GetCollider();
             if (filter(e))
@@ -657,7 +657,7 @@ public static class PhysicsServices
     public static ImmutableArray<PhysicEntityCachedInfo> FilterPositionAndColliderEntities(World world, int layerMask)
     {
         _physicsInfoCacheBuilder.Clear();
-        foreach (var e in world.GetEntitiesWith(ContextAccessorFilter.AllOf, typeof(ColliderComponent), typeof(ITransformComponent)))
+        foreach (var e in world.GetEntitiesWith(ContextAccessorFilter.AllOf, typeof(ColliderComponent), typeof(PositionComponent)))
         {
             var collider = e.GetCollider();
             if ((collider.Layer & layerMask) == 0)
@@ -679,7 +679,7 @@ public static class PhysicsServices
     public static ImmutableArray<Entity> FilterEntities(World world, int layerMask)
     {
         var builder = ImmutableArray.CreateBuilder<Entity>();
-        foreach (var e in world.GetEntitiesWith(ContextAccessorFilter.AllOf, typeof(ColliderComponent), typeof(ITransformComponent)))
+        foreach (var e in world.GetEntitiesWith(ContextAccessorFilter.AllOf, typeof(ColliderComponent), typeof(PositionComponent)))
         {
             var collider = e.GetCollider();
             if ((collider.Layer & layerMask) == 0)
@@ -696,7 +696,7 @@ public static class PhysicsServices
         var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent collider, Vector2 position)>();
         Type[] filter = new Type[requireComponents.Length + 2];
         filter[0] = typeof(ColliderComponent);
-        filter[1] = typeof(ITransformComponent);
+        filter[1] = typeof(PositionComponent);
         for (int i = 0; i < requireComponents.Length; i++)
         {
             filter[i + 2] = requireComponents[i];
@@ -1025,7 +1025,7 @@ public static class PhysicsServices
     {
         if (entityA.TryGetCollider() is ColliderComponent colliderA
             && entityB.TryGetCollider() is ColliderComponent colliderB
-            && entityB.TryGetTransform() is IMurderTransformComponent positionB)
+            && entityB.TryGetPosition() is PositionComponent positionB)
         {
             Point posA = positionA.Point();
             Vector2 scaleA = entityA.FetchScale();

@@ -1,4 +1,5 @@
 ﻿using Bang;
+using Bang.Components;
 using Murder.Components;
 using Murder.Core.Particles;
 using Murder.Prefabs;

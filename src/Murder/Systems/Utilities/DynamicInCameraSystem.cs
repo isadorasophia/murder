@@ -1,4 +1,5 @@
 ﻿using Bang;
+using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
@@ -15,7 +16,7 @@ using System.Numerics;
 
 namespace Murder.Systems;
 
-[Filter(typeof(IMurderTransformComponent))]
+[Filter(typeof(PositionComponent))]
 [Filter(ContextAccessorFilter.AnyOf, typeof(SpriteComponent), typeof(AgentSpriteComponent))]
 [Filter(ContextAccessorFilter.NoneOf, typeof(StaticComponent))]
 public sealed class DynamicInCameraSystem : IMonoPreRenderSystem

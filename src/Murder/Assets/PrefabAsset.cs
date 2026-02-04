@@ -64,7 +64,7 @@ namespace Murder.Assets
             for (int i = 0; i < startWithComponents.Length; ++i)
             {
                 IComponent c = startWithComponents[i];
-                if (c is ITransformComponent && e.TryGetTransform() is IMurderTransformComponent transform)
+                if (c is PositionComponent && e.TryGetPosition() is PositionComponent transform)
                 {
                     c = transform.WithoutParent();
                 }

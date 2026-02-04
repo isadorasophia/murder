@@ -351,7 +351,7 @@ namespace Murder.Editor.Stages
                             if (EditorHook.AllSelectedEntities.Count == 1 &&
                                 EditorHook.AllSelectedEntities.First().Value is Entity selected)
                             {
-                                if (selected.HasCollider() && selected.HasTransform())
+                                if (selected.HasCollider() && selected.HasPosition())
                                 {
                                     var boxSize = selected.GetColliderBoundingBox();
                                     ImGui.TextColored(Game.Profile.Theme.Faded, $"{boxSize.Width}x{boxSize.Height}px");

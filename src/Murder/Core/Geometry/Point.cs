@@ -1,4 +1,5 @@
-﻿using Murder.Components;
+﻿using Bang.Components;
+using Murder.Components;
 using Murder.Utilities;
 using System.Numerics;
 
@@ -187,12 +188,12 @@ namespace Murder.Core.Geometry
         /// <summary>
         /// Sums both the X and Y values of the point <paramref name="b"/> with the X and Y values of the <see cref="IMurderTransformComponent"/> <paramref name="a"/>.
         /// </summary>
-        public static Vector2 operator +(IMurderTransformComponent a, Point b) => new(a.X + b.X, a.Y + b.Y);
+        public static Vector2 operator +(PositionComponent a, Point b) => new(a.X + b.X, a.Y + b.Y);
 
         /// <summary>
         /// Subtracts both the X and Y values of the point <paramref name="b"/> by the X and Y values of the <see cref="IMurderTransformComponent"/> <paramref name="a"/>.
         /// </summary>
-        public static Vector2 operator -(IMurderTransformComponent a, Point b) => new(a.X - b.X, a.Y - b.Y);
+        public static Vector2 operator -(PositionComponent a, Point b) => new(a.X - b.X, a.Y - b.Y);
 
         /// <summary>
         /// Compares whether the point <paramref name="other"/> has the same X and Y value as this point.

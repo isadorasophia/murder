@@ -13,8 +13,8 @@ using System.Collections.Immutable;
 
 namespace Murder.Systems;
 
-[Filter(typeof(ColliderComponent), typeof(ITransformComponent))]
-[Watch(typeof(ITransformComponent), typeof(ColliderComponent))]
+[Filter(typeof(ColliderComponent), typeof(PositionComponent))]
+[Watch(typeof(PositionComponent), typeof(ColliderComponent))]
 public class QuadtreeCalculatorSystem : IReactiveSystem, IStartupSystem
 {
     private readonly HashSet<int> _entitiesOnWatch = new(516);

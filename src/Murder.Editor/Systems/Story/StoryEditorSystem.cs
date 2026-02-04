@@ -45,7 +45,7 @@ namespace Murder.Editor.Systems
             EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
             foreach (Entity e in entities)
             {
-                if (!e.HasTransform()) continue;
+                if (!e.HasPosition()) continue;
 
                 bool isSelected = hook.IsEntitySelected(e.EntityId);
 

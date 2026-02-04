@@ -358,10 +358,10 @@ namespace Murder.Editor.CustomEditors
                     continue;
                 }
 
-                IMurderTransformComponent? transform =
+                PositionComponent transform =
                     (PositionComponent)entity.GetComponent(typeof(PositionComponent));
 
-                ReplaceComponent(parent: null, entity, (PositionComponent)transform.Add(worldDelta));
+                ReplaceComponent(parent: null, entity, transform.Add(worldDelta));
             }
         }
     }

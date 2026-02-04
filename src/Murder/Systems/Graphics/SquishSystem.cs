@@ -9,7 +9,7 @@ using Murder.Diagnostics;
 
 namespace Murder.Systems
 {
-    [Filter(ContextAccessorFilter.AllOf, typeof(ITransformComponent), typeof(SquishComponent))]
+    [Filter(ContextAccessorFilter.AllOf, typeof(PositionComponent), typeof(SquishComponent))]
     internal class SquishSystem : IMonoPreRenderSystem
     {
         public void BeforeDraw(Context context)

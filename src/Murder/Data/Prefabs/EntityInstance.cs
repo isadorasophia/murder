@@ -1,4 +1,5 @@
 ﻿using Bang;
+using Bang.Attributes;
 using Bang.Components;
 using Bang.Entities;
 using Murder.Attributes;

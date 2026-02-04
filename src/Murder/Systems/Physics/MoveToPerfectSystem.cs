@@ -14,7 +14,7 @@ namespace Murder.Systems
     /// <summary>
     /// Simple system for moving agents to another position. Looks for 'MoveTo' components and adds agent inpulses to it.
     /// </summary>
-    [Filter(typeof(ITransformComponent), typeof(MoveToPerfectComponent))]
+    [Filter(typeof(PositionComponent), typeof(MoveToPerfectComponent))]
     public class MoveToPerfectSystem : IFixedUpdateSystem, IStartupSystem
     {
         ImmutableArray<PhysicsServices.PhysicEntityCachedInfo>? _actorsCache = null;

@@ -11,7 +11,7 @@ using System.Collections.Immutable;
 
 namespace Murder.Systems;
 
-[Filter(typeof(TextureComponent), typeof(ITransformComponent))]
+[Filter(typeof(TextureComponent), typeof(PositionComponent))]
 [Watch(typeof(TextureComponent))]
 [Filter(ContextAccessorFilter.NoneOf, typeof(InvisibleComponent))]
 public class TextureRenderSystem : IMurderRenderSystem, IReactiveSystem, IExitSystem

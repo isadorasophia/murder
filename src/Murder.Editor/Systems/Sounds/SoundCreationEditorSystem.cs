@@ -1,4 +1,5 @@
-﻿using Bang.Contexts;
+﻿using Bang.Components;
+using Bang.Contexts;
 using Bang.Interactions;
 using Bang.Systems;
 using ImGuiNET;

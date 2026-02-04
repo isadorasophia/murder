@@ -696,7 +696,7 @@ namespace Murder.Editor.CustomEditors
                     continue;
                 }
 
-                if (!entity.HasComponent(typeof(ITransformComponent)))
+                if (!entity.HasComponent(typeof(PositionComponent)))
                 {
                     // Entity doesn't really have a transform component to move.
                     continue;

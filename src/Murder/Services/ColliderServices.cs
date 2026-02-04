@@ -20,7 +20,7 @@ namespace Murder.Services
 
         public static IntRectangle GetBoundingBox(Entity e)
         {
-            Point position = e.HasTransform() ? e.GetGlobalPosition().ToPoint() : Point.Zero;
+            Point position = e.HasPosition() ? e.GetGlobalPosition().ToPoint() : Point.Zero;
             if (e.TryGetCollider() is not ColliderComponent collider)
             {
                 return IntRectangle.Empty;
@@ -56,10 +56,10 @@ namespace Murder.Services
 
         public static IntRectangle[] GetCollidersBoundingBox(Entity e, bool gridCoordinates)
         {
-            Point position = e.HasTransform() ? e.GetGlobalPosition().ToPoint() : Point.Zero;
+            Point position = e.HasPosition() ? e.GetGlobalPosition().ToPoint() : Point.Zero;
             if (e.TryGetCollider() is not ColliderComponent collider)
             {
-                return Array.Empty<IntRectangle>();
+                return [];
             }
 
             return PhysicsServices.GetCollidersBoundingBox(collider, position, gridCoordinates);

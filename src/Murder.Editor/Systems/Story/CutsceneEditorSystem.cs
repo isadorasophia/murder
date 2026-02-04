@@ -383,7 +383,7 @@ namespace Murder.Editor.Systems
                         // Let's find the closest cutscene to add this anchor to.
                         foreach (Entity e in context.Entities)
                         {
-                            Vector2 distance = cursorWorldPosition - e.GetMurderTransform().Vector2;
+                            Vector2 distance = cursorWorldPosition - e.GetPosition().Vector2;
                             float length = distance.LengthSquared();
 
                             if (length < bestMatch)
@@ -403,7 +403,7 @@ namespace Murder.Editor.Systems
                     }
                     else
                     {
-                        Vector2 relativePosition = cursorWorldPosition - cutscene.GetMurderTransform().Vector2;
+                        Vector2 relativePosition = cursorWorldPosition - cutscene.GetPosition().Vector2;
                         CutsceneAnchorsEditorComponent anchorsComponents = cutscene.TryGetCutsceneAnchorsEditor() ?? new CutsceneAnchorsEditorComponent();
 
                         cutscene.SetCutsceneAnchorsEditor(anchorsComponents.AddAnchorAt(relativePosition));

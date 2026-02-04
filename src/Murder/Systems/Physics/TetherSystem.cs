@@ -10,6 +10,7 @@ using System.Collections.Immutable;
 using Murder.Services;
 using System.Runtime.CompilerServices;
 using Murder.Helpers;
+using Bang.Components;
 
 namespace Murder.Systems
 {

@@ -1,4 +1,5 @@
 ﻿using Bang;
+using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
@@ -98,7 +99,7 @@ namespace Murder.Editor.Systems
         private void ShowLine(RenderContext render, World world, Point from, int targetTo)
         {
             Entity? target = world.TryGetEntity(targetTo);
-            if (target == null || !target.HasTransform())
+            if (target == null || !target.HasPosition())
             {
                 return;
             }

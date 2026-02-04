@@ -453,7 +453,7 @@ namespace Murder.Editor.CustomEditors
 
             ImGui.Separator();
 
-            if (!entityInstance.HasComponent(typeof(ITransformComponent)))
+            if (!entityInstance.HasComponent(typeof(PositionComponent)))
             {
                 if (ImGui.Button("+\uf0b2"))
                 {
@@ -715,8 +715,8 @@ namespace Murder.Editor.CustomEditors
             var builder = ImmutableArray.CreateBuilder<IComponent>();
 
             // Place "Position" as the first component.
-            if (entityInstance.HasComponent(typeof(ITransformComponent)) &&
-                components.FirstOrDefault(c => c is ITransformComponent) is IComponent position)
+            if (entityInstance.HasComponent(typeof(PositionComponent)) &&
+                components.FirstOrDefault(c => c is PositionComponent) is IComponent position)
             {
                 builder.Add(position);
                 components = components.Remove(position);
@@ -934,13 +934,6 @@ namespace Murder.Editor.CustomEditors
                     if (!hasComponent)
                     {
                         Type t = requiredComponentType;
-
-                        // TODO: Support generic interface components...?
-                        if (t == typeof(ITransformComponent))
-                        {
-                            t = typeof(PositionComponent);
-                        }
-
                         AddComponent(parent, entityInstance, t);
                     }
                 }

@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace Murder.Systems.Physics
 {
     [Filter(ContextAccessorFilter.NoneOf, typeof(DisableEntityComponent))]
-    [Filter(ContextAccessorFilter.AllOf, typeof(ITransformComponent), typeof(SpriteComponent), typeof(StaticComponent))]
+    [Filter(ContextAccessorFilter.AllOf, typeof(PositionComponent), typeof(SpriteComponent), typeof(StaticComponent))]
     [Watch(typeof(StaticComponent))]
     internal class StaticRenderQuadTreeSystem : IReactiveSystem
     {

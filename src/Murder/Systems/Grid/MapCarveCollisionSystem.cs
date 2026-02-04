@@ -16,7 +16,7 @@ using System.Numerics;
 namespace Murder.Systems
 {
     [Filter(typeof(CarveComponent), typeof(ColliderComponent))]
-    [Watch(typeof(ITransformComponent), typeof(ColliderComponent), typeof(CarveComponent))]
+    [Watch(typeof(PositionComponent), typeof(ColliderComponent), typeof(CarveComponent))]
     public class MapCarveCollisionSystem : IReactiveSystem
     {
         private readonly Dictionary<int, IntRectangle> _trackEntitiesPreviousPosition = [];

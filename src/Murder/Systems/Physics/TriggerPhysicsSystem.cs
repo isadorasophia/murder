@@ -12,9 +12,9 @@ using System.Collections.Immutable;
 
 namespace Murder.Systems.Physics
 {
-    [Filter(ContextAccessorFilter.AllOf, typeof(ITransformComponent), typeof(ColliderComponent))]
+    [Filter(ContextAccessorFilter.AllOf, typeof(PositionComponent), typeof(ColliderComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(IgnoreTriggersUntilComponent))]
-    [Watch(typeof(ITransformComponent))]
+    [Watch(typeof(PositionComponent))]
     public class TriggerPhysicsSystem : IReactiveSystem
     {
         private readonly List<NodeInfo<Entity>> _others = [];
