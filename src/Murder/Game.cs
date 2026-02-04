@@ -122,6 +122,11 @@ namespace Murder
         public static bool IsRunningSlowly { get; private set; } = false;
 
         /// <summary>
+        /// Whether the game support saving game progress.
+        /// </summary>
+        public static bool CanSave => Instance._game?.CanSave ?? false;
+
+        /// <summary>
         /// Total time in seconds that the game has been running since the last update.
         /// Useful for calculating the total time of the game, including pauses and freezes.
         /// DO NOT rely on this for critical effects or operations.
@@ -133,7 +138,6 @@ namespace Murder
         private readonly Stopwatch _renderStopWatch = new();
         private readonly Stopwatch _imGuiStopWatch = new();
         private readonly Stopwatch _soundStopWatch = new();
-
 
         /// <summary>
         /// Beautiful hardcoded grid so it's very easy to access in game!
@@ -200,7 +204,6 @@ namespace Murder
         public float ImGuiRenderTime { get; private set; }
         public float SoundUpdateTime { get; private set; }
 
-
         /// <summary>
         /// Gets the longest render time ever recorded.
         /// </summary>
@@ -214,6 +217,7 @@ namespace Murder
         public float PreviousElapsedTime => (float)_scaledPreviousElapsedTime;
 
         public float TimeScale = 1f;
+
         public bool IsPaused { get; private set; }
 
         private GridConfiguration _grid = new(cellSize: 24 /* default size, just in case, who knows */);

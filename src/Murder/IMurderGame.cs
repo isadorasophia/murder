@@ -105,6 +105,11 @@ namespace Murder
         public bool HasCursor => true;
 
         /// <summary>
+        /// Whether the game supports saving.
+        /// </summary>
+        public bool CanSave => true;
+
+        /// <summary>
         /// This is the name of the game, used when creating assets.
         /// </summary>
         public string Name { get; }
