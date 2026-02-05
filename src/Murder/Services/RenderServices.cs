@@ -1326,7 +1326,7 @@ public static partial class RenderServices
     }
 
     public static string? CheckForEvents(
-        RenderedSpriteCacheComponent? previous,
+        RenderedSpriteCache? previous,
         Guid currentAnimationGuid,
         AnimationInfo animationInfo,
         FrameInfo frameInfo)

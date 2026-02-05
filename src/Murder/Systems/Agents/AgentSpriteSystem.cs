@@ -276,7 +276,7 @@ namespace Murder.Systems
 
                 issueSlowdownWarning = RenderServices.TriggerEventsIfNeeded(e, spriteAsset.Guid, animationInfo, frameInfo);
 
-                e.SetRenderedSpriteCache(new RenderedSpriteCacheComponent() with
+                RenderServices.UpdateRenderedSpriteCache(e, new RenderedSpriteCache() with
                 {
                     RenderedSprite = spriteAsset.Guid,
                     CurrentAnimation = frameInfo.Animation,
