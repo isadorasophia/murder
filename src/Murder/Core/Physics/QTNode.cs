@@ -22,7 +22,7 @@ namespace Murder.Core.Physics
 
     public class QTNode<T> where T : notnull
     {
-        private const int MAX_OBJECTS = 6;
+        private const int MAX_OBJECTS = 32;
         private const int MAX_LEVELS = 6;
 
         public ImmutableArray<QTNode<T>> Nodes = [];
