@@ -264,8 +264,11 @@ public class SystemsDiagnosticsSystem : IGuiSystem
         ImGui.Separator();
     }
 
+    private string _systemsFilter = "";
     private void DrawTab(MonoWorld world, IDictionary<int, SmoothCounter> stats, Dictionary<int, (string label, double size)> statistics)
     {
+        ImGui.InputTextWithHint("", "Filter", ref _systemsFilter, 256);
+
         using TableMultipleColumns systemsTable = new("systems_view", ImGuiTableFlags.Borders,
             20, -1, 50, 50, 50);
 
@@ -292,6 +295,15 @@ public class SystemsDiagnosticsSystem : IGuiSystem
         foreach (var (systemId, counter) in stats)
         {
             Type tSystem = world.IdToSystem[systemId].GetType();
+
+            if (!string.IsNullOrWhiteSpace(_systemsFilter))
+            {
+                var systemName = tSystem.Name.ToLowerInvariant();
+                if (!StringHelper.FuzzyMatch(_systemsFilter.ToLowerInvariant(), systemName))
+                {
+                    continue;
+                }
+            }
 
             bool isSelected = world.IsSystemActive(tSystem);
             if (ImGui.Checkbox($"##{systemId}", ref isSelected))
