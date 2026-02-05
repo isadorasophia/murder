@@ -226,11 +226,14 @@ public partial class EditorScene
             ImGui.End();
 
             // Command palette window.
-            ImGui.Begin("Command Palette", ImGuiWindowFlags.Modal | ImGuiWindowFlags.NoDecoration);
+            ImGui.Begin("Command Palette", ImGuiWindowFlags.Modal | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.AlwaysAutoResize);
             ImGui.SetWindowPos((viewportSize - _commandPaletteWindowSize) / 2f);
             ImGui.SetWindowPos((viewportSize - _commandPaletteWindowSize) / 2f);
-            ImGui.SetWindowSize(_commandPaletteWindowSize);
-            ImGui.SetWindowFocus();
+
+            if (ImGui.IsWindowAppearing())
+            {
+                ImGui.SetWindowFocus();
+            }
 
             SearchBox.SearchBoxSettings<Guid> settings = new(initialText: "Type a command");
             if (_shortcutSearchValuesCache == null)
@@ -252,7 +255,7 @@ public partial class EditorScene
                 values: _shortcutSearchValuesCache,
                 flags: SearchBoxFlags.Unfolded,
                 sizeConfiguration: _commandPaletteSizeConfiguration,
-                orderKeySelector: n => Architect.EditorSettings.GetTimesOpenedAsset(n.Value),
+                orderKeySelector: n => -Architect.EditorSettings.GetTimesOpenedAsset(n.Value),
                 out Guid guid))
             {
                 if (Game.Data.TryGetAsset(guid) is GameAsset asset)
