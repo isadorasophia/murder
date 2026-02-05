@@ -153,6 +153,31 @@ namespace Murder.Editor.CustomEditors
                 }
             }
 
+            if (isDefaultResource)
+            {
+                if (!_currentlyRunningOnLocalization)
+                {
+                    if (ImGuiHelpers.IconButton('\uf462', $"fix_{_localization.Guid}"))
+                    {
+                        _currentlyRunningOnLocalization = true;
+
+                        Task.Run(() =>
+                        {
+                            EditorLocalizationServices.ValidateStrings(_localization);
+                            _currentlyRunningOnLocalization = false;
+                        });
+                    }
+
+                    ImGuiHelpers.HelpTooltip("Validate strings from a ref.csv file.");
+                    ImGui.SameLine();
+                }
+                else
+                {
+                    ImGuiHelpers.SelectedIconButton('\uf462');
+                    ImGui.SameLine();
+                }
+            }
+
             bool importButton = isDefaultResource ?
                 ImGuiHelpers.SelectedIconButton('\uf56f') :
                 ImGuiHelpers.IconButton('\uf56f', $"import_{_localization.Guid}");

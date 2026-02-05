@@ -1,10 +1,12 @@
 ﻿using ImGuiNET;
+using Microsoft.VisualBasic.FileIO;
 using Murder.Assets;
 using Murder.Assets.Localization;
 using Murder.Core.Input;
 using Murder.Diagnostics;
 using Murder.Editor.Assets;
 using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Utilities.Serialization;
 using Murder.Serialization;
 using System.Collections.Immutable;
 using System.Linq;
@@ -165,6 +167,83 @@ internal static class EditorLocalizationServices
     {
         FilterLocalizationAsset? asset = GetFilterLocalizationAsset();
         return asset.GetLocalizationCandidates(name);
+    }
+
+    public static bool ValidateStrings(LocalizationAsset asset)
+    {
+        string fullLocalizationPath = LocalizationExporter.GetFullRawLocalizationPath("ref");
+        if (!File.Exists(fullLocalizationPath))
+        {
+            GameLogger.Error($"Missing file to validate from at: {fullLocalizationPath}");
+            return false;
+        }
+
+        try
+        {
+            using TextFieldParser parser = new(fullLocalizationPath);
+
+            parser.TextFieldType = FieldType.Delimited;
+            parser.SetDelimiters(",");
+
+            int row = 0;
+            while (!parser.EndOfData)
+            {
+                row++;
+
+                // Read tokens for this row
+                string[]? tokens = parser.ReadFields();
+                if (tokens is null || tokens[0].StartsWith("Guid") || tokens[0].StartsWith('#'))
+                {
+                    continue;
+                }
+
+                if (string.IsNullOrEmpty(tokens[0]))
+                {
+                    continue;
+                }
+
+                if (tokens.Length < 3)
+                {
+                    GameLogger.Warning($"Skipping row {row} from {fullLocalizationPath}.");
+                }
+
+                Guid guid;
+                try
+                {
+                    guid = Guid.Parse(tokens[0]);
+                }
+                catch
+                {
+                    GameLogger.Warning($"Skipping row {row} from {fullLocalizationPath}.");
+                    continue;
+                }
+
+                /* not really used? */
+                string text = tokens[2];
+
+                LocalizedStringData? originalData = asset.TryGetResource(guid);
+                if (originalData is null)
+                {
+                    GameLogger.Warning($"Unable to found: {guid}, {text}");
+                }
+                else if (!string.Equals(originalData?.String, text))
+                {
+                    GameLogger.Warning($"Mismatch on {guid}!");
+                    GameLogger.Warning($"Current (in-game): {originalData?.String}");
+                    GameLogger.Warning($"Resource file: {text}");
+                }
+            }
+        }
+        catch (IOException)
+        {
+            GameLogger.Warning($"Unable to open the file: {fullLocalizationPath}.");
+        }
+        catch (MalformedLineException)
+        {
+
+        }
+
+        return true;
     }
 
     public static void ReorderResources(LocalizationAsset localization)
