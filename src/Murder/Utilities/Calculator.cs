@@ -638,6 +638,11 @@ namespace Murder.Utilities
             return new Vector2(LerpSmooth(a.X, b.X, deltaTime, halfLife), LerpSmooth(a.Y, b.Y, deltaTime, halfLife));
         }
 
+        public static Vector2 LerpSmoothSnap(Vector2 a, Vector2 b, float deltaTime, float halfLife, float threshold)
+        {
+            return new Vector2(LerpSmoothSnap(a.X, b.X, deltaTime, halfLife, threshold), LerpSmoothSnap(a.Y, b.Y, deltaTime, halfLife, threshold));
+        }
+
         /// <summary>
         /// Smoothly interpolates between two angles over time using a linear interpolation method.
         /// </summary>
