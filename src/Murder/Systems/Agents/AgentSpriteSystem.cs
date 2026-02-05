@@ -7,6 +7,7 @@ using Murder.Assets.Graphics;
 using Murder.Attributes;
 using Murder.Components;
 using Murder.Components.Graphics;
+using Murder.Components.Physics;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
@@ -29,9 +30,12 @@ namespace Murder.Systems
         {
             bool issueSlowdownWarning = false;
 
+            float lerpFactor = (Game.Now - Game.PreviousFixedUpdateTime) / Game.FixedDeltaTime * Game.Instance.TimeScale;
+
             foreach (var e in context.Entities)
             {
                 Vector2 transform = e.GetGlobalPosition();
+
                 AgentSpriteComponent sprite = e.GetAgentSprite();
 
                 if (Game.Data.GetAsset<SpriteAsset>(sprite.AnimationGuid) is not SpriteAsset spriteAsset)
