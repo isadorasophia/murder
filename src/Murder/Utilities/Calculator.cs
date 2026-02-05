@@ -672,7 +672,12 @@ namespace Murder.Utilities
         /// </remarks>
         public static float LerpSmooth(float a, float b, float deltaTime, float halfLife)
         {
-            return Math.Abs(a- b) < 0.001f? b : b + (a - b) * float.Exp2(-deltaTime / halfLife);
+            return LerpSmoothSnap(a, b, deltaTime, halfLife, 0.001f);
+        }
+
+        public static float LerpSmoothSnap(float a, float b, float deltaTime, float halfLife, float threshold)
+        {
+            return Math.Abs(a - b) < threshold ? b : b + (a - b) * float.Exp2(-deltaTime / halfLife);
         }
 
         public static int FloorToInt(float v) => (int)MathF.Floor(v);
