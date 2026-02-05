@@ -95,6 +95,11 @@ namespace Murder
         public static float Now => (float)Instance._scaledElapsedTime;
 
         /// <summary>
+        /// Gets the elapsed time from the previous fixed update.
+        /// </summary>
+        public static float PreviousFixedUpdateTime => (float)Instance._previousFixedUpdateTime;
+
+        /// <summary>
         /// Gets the scaled elapsed time from the previous fixed update.
         /// </summary>
         public static float PreviousNow => (float)Instance._scaledPreviousElapsedTime;
