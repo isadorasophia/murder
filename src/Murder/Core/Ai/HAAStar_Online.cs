@@ -6,7 +6,7 @@ namespace Murder.Core.Ai
 {
     public partial class HAAStar
     {
-        public ComplexDictionary<Point, Point> Search(Map map, Point initial, Point target)
+        public ComplexDictionary<Point, Point> Search(Map map, Point initial, Point target, int collisionMask)
         {
             if (_pendingCalculate != null && !_pendingCalculate.IsCompleted)
             {
@@ -14,8 +14,8 @@ namespace Murder.Core.Ai
                 return Astar.FindPath(map, initial, target, false);
             }
 
-            (Node nInitial, bool discardInitial) = InsertNode(map, initial);
-            (Node nTarget, bool discardTarget) = InsertNode(map, target);
+            (Node nInitial, bool discardInitial) = InsertNode(map, initial, collisionMask);
+            (Node nTarget, bool discardTarget) = InsertNode(map, target, collisionMask);
 
             ComplexDictionary<Point, Point> path = SearchForPath(nInitial, nTarget);
 
@@ -32,7 +32,7 @@ namespace Murder.Core.Ai
             return path;
         }
 
-        private (Node node, bool discardNodeAfter) InsertNode(Map map, Point p)
+        private (Node node, bool discardNodeAfter) InsertNode(Map map, Point p, int collisionMask)
         {
             bool discardNodeAfter = true;
 
@@ -45,13 +45,13 @@ namespace Murder.Core.Ai
             else
             {
                 n = AddNode(p, map.WeightAt(p));
-                ConnectToBorder(map, n);
+                ConnectToBorder(map, n, collisionMask);
             }
 
             return (n, discardNodeAfter);
         }
 
-        private void ConnectToBorder(Map map, Node o)
+        private void ConnectToBorder(Map map, Node o, int collisionMask)
         {
             foreach (Point p in _nodesPerCluster[o.Cluster])
             {
@@ -61,7 +61,18 @@ namespace Murder.Core.Ai
                     continue;
                 }
 
-                var (path, cost) = Astar.FindPathWithCost(map, o.P, p, false);
+                double cost;
+                ComplexDictionary<Point, Point> path;
+
+                // perf: check if we have line of sight prio to calculate the pathfind!
+                if (map.HasLineOfSight(o.P, p, excludeEdges: false, blocking: collisionMask))
+                {
+                    (path, cost) = (PathfindServices.StraightLine(o.P, p), (o.P - p).Length());
+                }
+                else
+                {
+                    (path, cost) = Astar.FindPathWithCost(map, o.P, p, false);
+                }
 
                 if (cost < int.MaxValue)
                 {

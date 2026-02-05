@@ -42,7 +42,7 @@ namespace Murder.Core.Ai
                         return [];
                     }
 
-                    return haastar.Search(map, initial, target);
+                    return haastar.Search(map, initial, target, collisionMask);
 
                 case PathfindAlgorithmKind.None:
                 default:
@@ -50,7 +50,7 @@ namespace Murder.Core.Ai
             }
         }
 
-        private static ComplexDictionary<Point, Point> StraightLine(Point initial, Point target)
+        public static ComplexDictionary<Point, Point> StraightLine(Point initial, Point target)
         {
             ComplexDictionary<Point, Point> builder = [];
             builder.Add(initial, target);

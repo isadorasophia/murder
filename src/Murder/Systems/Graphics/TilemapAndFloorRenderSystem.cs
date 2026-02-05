@@ -13,7 +13,7 @@ using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
 
-namespace Murder.Systems.Graphics;
+namespace Murder.Systems;
 
 
 /// <summary>
