@@ -597,6 +597,13 @@ namespace Murder.Utilities
         {
             return new Vector2(Lerp(origin.X, target.X, factor), Lerp(origin.Y, target.Y, factor));
         }
+        public static Vector2 LerpSnap(Vector2 origin, Vector2 target, float factor, float threshold = 0.01f)
+        {
+            return new Vector2(
+                LerpSnap(origin.X, target.X, factor, threshold),
+                LerpSnap(origin.Y, target.Y, factor, threshold)
+            );
+        }
 
         public static int LerpInt(float origin, float target, float factor)
         {
