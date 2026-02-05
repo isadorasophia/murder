@@ -25,7 +25,7 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
     private bool _showDiagnostics = false;
 
     private string _systemsFilter = "";
-    private Dictionary<int, SmoothCounter>? _stats;
+    private Dictionary<int, PerfSmoothCounter>? _stats;
 
     private enum IncidentTypes
     {
@@ -344,7 +344,7 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
         ImGui.Separator();
     }
 
-    private void DrawTab(MonoWorld world, IDictionary<int, SmoothCounter> stats, Dictionary<int, (string label, double size)> statistics)
+    private void DrawTab(MonoWorld world, IDictionary<int, PerfSmoothCounter> stats, Dictionary<int, (string label, double size)> statistics)
     {
         ImGui.InputTextWithHint("", "Filter", ref _systemsFilter, 256);
 
@@ -428,7 +428,7 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
         _timePerSystems[(int)TargetView.Startup] = world.StartCounters.Sum(k => k.Value.MaximumTime);
     }
 
-    private Dictionary<int, (string name, double size)> CalculateStatistics(MonoWorld world, double overallTime, IDictionary<int, SmoothCounter> stats)
+    private Dictionary<int, (string name, double size)> CalculateStatistics(MonoWorld world, double overallTime, IDictionary<int, PerfSmoothCounter> stats)
     {
         Dictionary<int, (string name, double size)> statistics = new();
         foreach (var (systemId, counter) in stats)
@@ -617,7 +617,7 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
         }
 
         // Check for last frame duration
-        if (Game.Instance.LastFrameDuration > 1 / 59f)
+        if (Game.Instance.LastFrameDuration >= 1 / 58f)
         {
             if (_incidentReports.Count > 0 && _incidentReports[^1].SampleIndex == -1 &&
                 _incidentReports[^1].IncidentType == IncidentTypes.General)

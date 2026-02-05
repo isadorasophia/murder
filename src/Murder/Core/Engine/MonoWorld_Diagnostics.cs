@@ -14,19 +14,19 @@ namespace Murder.Core
         /// This has the duration of each reactive system (id) to its corresponding time (in ms).
         /// See <see cref="World.IdToSystem"/> on how to fetch the actual system.
         /// </summary>
-        public readonly Dictionary<int, SmoothCounter> PreRenderCounters = new();
+        public readonly Dictionary<int, PerfSmoothCounter> PreRenderCounters = new();
 
         /// <summary>
         /// This has the duration of each render system (id) to its corresponding time (in ms).
         /// See <see cref="World.IdToSystem"/> on how to fetch the actual system.
         /// </summary>
-        public readonly Dictionary<int, SmoothCounter> RenderCounters = new();
+        public readonly Dictionary<int, PerfSmoothCounter> RenderCounters = new();
 
         /// <summary>
         /// This has the duration of each gui render system (id) to its corresponding time (in ms).
         /// See <see cref="World.IdToSystem"/> on how to fetch the actual system.
         /// </summary>
-        public readonly Dictionary<int, SmoothCounter> GuiCounters = new();
+        public readonly Dictionary<int, PerfSmoothCounter> GuiCounters = new();
 
         protected override void ClearDiagnosticsCountersForSystem(int id)
         {
