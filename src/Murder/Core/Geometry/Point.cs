@@ -186,12 +186,12 @@ namespace Murder.Core.Geometry
         public static Point operator -(Point p) => new(-p.X, -p.Y);
 
         /// <summary>
-        /// Sums both the X and Y values of the point <paramref name="b"/> with the X and Y values of the <see cref="IMurderTransformComponent"/> <paramref name="a"/>.
+        /// Sums both the X and Y values of the point <paramref name="b"/> with the X and Y values of the <see cref="PositionComponent"/> <paramref name="a"/>.
         /// </summary>
         public static Vector2 operator +(PositionComponent a, Point b) => new(a.X + b.X, a.Y + b.Y);
 
         /// <summary>
-        /// Subtracts both the X and Y values of the point <paramref name="b"/> by the X and Y values of the <see cref="IMurderTransformComponent"/> <paramref name="a"/>.
+        /// Subtracts both the X and Y values of the point <paramref name="b"/> by the X and Y values of the <see cref="PositionComponent"/> <paramref name="a"/>.
         /// </summary>
         public static Vector2 operator -(PositionComponent a, Point b) => new(a.X - b.X, a.Y - b.Y);
 

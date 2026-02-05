@@ -97,7 +97,7 @@ namespace Murder.Core.Physics
                     PushAway.Insert(e.EntityId,
                         (
                             e,
-                            e.GetGlobalPosition(),
+                            pos,
                             e.GetPushAway(),
                             e.TryGetVelocity()?.Velocity ?? Vector2.Zero
                         ), new Rectangle(pos.X, pos.Y, pushAway.Size, pushAway.Size));
