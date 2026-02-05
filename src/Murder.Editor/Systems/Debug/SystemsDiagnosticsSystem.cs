@@ -27,15 +27,22 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
     private string _systemsFilter = "";
     private Dictionary<int, SmoothCounter>? _stats;
 
-    private readonly struct IncidentReport
+    private enum IncidentTypes
     {
+        SystemPeak,
+        General
+    }
+    private readonly struct IncidentReport()
+    {
+        public readonly IncidentTypes IncidentType { get; init; }
         public readonly int SystemId { get; init; }
         public readonly float StallTime { get; init; }
         public readonly TargetView Where { get; init; }
         public int SampleIndex { get; init; }
+        public int Repeat { get; init; } = 0;
     }
 
-    private List<IncidentReport> _incidentReports = new List<IncidentReport>(200);
+    private readonly List<IncidentReport> _incidentReports = new List<IncidentReport>(200);
     /// <summary>
     /// This is only used for rendering the entity components during the game (on debug mode).
     /// </summary>
@@ -199,8 +206,44 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
                 for (int i = 0; i < _incidentReports.Count; i++)
                 {
                     IncidentReport report = _incidentReports[i];
-                    Type tSystem = world.IdToSystem[report.SystemId].GetType();
-                    ImGui.TextColored(Game.Profile.Theme.Accent, $"{tSystem.Name} stalled for {report.StallTime:0.00} ms during {report.Where}");
+
+                    if (report.IncidentType == IncidentTypes.SystemPeak)
+                    {
+                        Type tSystem = world.IdToSystem[report.SystemId].GetType();
+                        Vector4 color;
+
+                        switch (report.Where)
+                        {
+                            case TargetView.Update:
+                                color = new Vector4(0.4f, 0.6f, 1f, 1f);
+                                break;
+                            case TargetView.FixedUpdate:
+                                color = new Vector4(0.4f, 1f, 0.6f, 1f);
+                                break;
+                            case TargetView.Reactive:
+                                color = new Vector4(1f, 0.6f, 0.4f, 1f);
+                                break;
+                            case TargetView.PreRender:
+                                color = new Vector4(1f, 0.4f, 0.6f, 1f);
+                                break;
+                            case TargetView.Render:
+                                color = new Vector4(0.6f, 1f, 0.4f, 1f);
+                                break;
+                        }
+
+                        ImGui.TextColored(Game.Profile.Theme.Accent, $"{tSystem.Name} stalled for {report.StallTime:0.00} ms during {report.Where}");
+                    }
+                    else if (report.IncidentType == IncidentTypes.General)
+                    {
+                        if (report.Repeat > 0)
+                        {
+                            ImGui.TextColored(Game.Profile.Theme.Red, $"Frame stalled {report.Repeat} times with a max of {report.StallTime:0.00} ms");
+                        }
+                        else
+                        {
+                            ImGui.TextColored(Game.Profile.Theme.Red, $"Frame stalled for {report.StallTime:0.00} ms");
+                        }
+                    }
 
                     if (i == _incidentReports.Count - 1)
                     {
@@ -428,6 +471,7 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
             {
                 _incidentReports.Add(new IncidentReport
                 {
+                    IncidentType = IncidentTypes.SystemPeak,
                     SystemId = systemId,
                     StallTime = (float)counter.CurrentTime / 1000f,
                     Where = TargetView.Update,
@@ -455,6 +499,7 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
             {
                 _incidentReports.Add(new IncidentReport
                 {
+                    IncidentType = IncidentTypes.SystemPeak,
                     SystemId = systemId,
                     StallTime = (float)counter.CurrentTime / 1000f,
                     Where = TargetView.FixedUpdate,
@@ -482,9 +527,36 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
             {
                 _incidentReports.Add(new IncidentReport
                 {
+                    IncidentType = IncidentTypes.SystemPeak,
                     SystemId = systemId,
                     StallTime = (float)counter.CurrentTime / 1000f,
                     Where = TargetView.Reactive,
+                    SampleIndex = counter.CurrentIndex
+                });
+            }
+        }
+
+        foreach (var (systemId, counter) in world.PreRenderCounters)
+        {
+            if (counter.CurrentIndex <= 2) // Ignore first few frames.
+            {
+                continue;
+            }
+            if (_incidentReports.Count > 0 && _incidentReports[^1].SampleIndex == counter.CurrentIndex &&
+                _incidentReports[^1].SystemId == systemId &&
+                _incidentReports[^1].Where == TargetView.PreRender)
+            {
+                // Already reported on another phase.
+                continue;
+            }
+            if (counter.CurrentTime > stallTreshold)
+            {
+                _incidentReports.Add(new IncidentReport
+                {
+                    IncidentType = IncidentTypes.SystemPeak,
+                    SystemId = systemId,
+                    StallTime = (float)counter.CurrentTime / 1000f,
+                    Where = TargetView.PreRender,
                     SampleIndex = counter.CurrentIndex
                 });
             }
@@ -497,7 +569,7 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
                 continue;
             }
 
-            if (_incidentReports.Count>0 && _incidentReports[^1].SampleIndex == counter.CurrentIndex &&
+            if (_incidentReports.Count > 0 && _incidentReports[^1].SampleIndex == counter.CurrentIndex &&
                 _incidentReports[^1].SystemId == systemId &&
                 _incidentReports[^1].Where == TargetView.Render)
             {
@@ -509,6 +581,7 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
             {
                 _incidentReports.Add(new IncidentReport
                 {
+                    IncidentType = IncidentTypes.SystemPeak,
                     SystemId = systemId,
                     StallTime = (float)counter.CurrentTime / 1000f,
                     Where = TargetView.Render,
@@ -517,5 +590,55 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
             }
         }
 
+        foreach (var (systemId, counter) in world.GuiCounters)
+        {
+            if (counter.CurrentIndex <= 2) // Ignore first few frames.
+            {
+                continue;
+            }
+            if (_incidentReports.Count > 0 && _incidentReports[^1].SampleIndex == counter.CurrentIndex &&
+                _incidentReports[^1].SystemId == systemId &&
+                _incidentReports[^1].Where == TargetView.GuiRender)
+            {
+                // Already reported on another phase.
+                continue;
+            }
+            if (counter.CurrentTime > stallTreshold)
+            {
+                _incidentReports.Add(new IncidentReport
+                {
+                    IncidentType = IncidentTypes.SystemPeak,
+                    SystemId = systemId,
+                    StallTime = (float)counter.CurrentTime / 1000f,
+                    Where = TargetView.GuiRender,
+                    SampleIndex = counter.CurrentIndex
+                });
+            }
+        }
+
+        // Check for last frame duration
+        if (Game.Instance.LastFrameDuration > 1 / 59f)
+        {
+            if (_incidentReports.Count > 0 && _incidentReports[^1].SampleIndex == -1 &&
+                _incidentReports[^1].IncidentType == IncidentTypes.General)
+            {
+                // Already reported on another phase. Incement
+                var lastIncident = _incidentReports[^1];
+                _incidentReports[^1] = lastIncident with
+                {
+                    Repeat = lastIncident.Repeat + 1,
+                    StallTime = Math.Max(lastIncident.StallTime, Game.Instance.LastFrameDuration * 1000f)
+                };
+                return;
+            }
+
+            _incidentReports.Add(new IncidentReport
+            {
+                IncidentType = IncidentTypes.General,
+                StallTime = Game.Instance.LastFrameDuration * 1000f,
+                Where = TargetView.Total,
+                SampleIndex = -1
+            });
+        }
     }
 }
