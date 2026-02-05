@@ -20,10 +20,22 @@ namespace Murder.Editor.Systems;
 [DoNotPause]
 [OnlyShowOnDebugView]
 [Filter(ContextAccessorFilter.None)]
-public class SystemsDiagnosticsSystem : IGuiSystem
+public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
 {
     private bool _showDiagnostics = false;
 
+    private string _systemsFilter = "";
+    private Dictionary<int, SmoothCounter>? _stats;
+
+    private readonly struct IncidentReport
+    {
+        public readonly int SystemId { get; init; }
+        public readonly float StallTime { get; init; }
+        public readonly TargetView Where { get; init; }
+        public int SampleIndex { get; init; }
+    }
+
+    private List<IncidentReport> _incidentReports = new List<IncidentReport>(200);
     /// <summary>
     /// This is only used for rendering the entity components during the game (on debug mode).
     /// </summary>
@@ -86,49 +98,49 @@ public class SystemsDiagnosticsSystem : IGuiSystem
 
                 ImGui.TableNextColumn();
 
-                Dictionary<int, SmoothCounter>? stats = default;
+                _stats = default;
                 switch (_targetView)
                 {
                     case TargetView.Total:
                         break;
 
                     case TargetView.Update:
-                        stats = world.UpdateCounters;
+                        _stats = world.UpdateCounters;
                         break;
 
                     case TargetView.FixedUpdate:
-                        stats = world.FixedUpdateCounters;
+                        _stats = world.FixedUpdateCounters;
                         break;
 
                     case TargetView.Reactive:
-                        stats = world.ReactiveCounters;
+                        _stats = world.ReactiveCounters;
                         break;
 
                     case TargetView.PreRender:
-                        stats = world.PreRenderCounters;
+                        _stats = world.PreRenderCounters;
                         break;
 
                     case TargetView.Render:
-                        stats = world.RenderCounters;
+                        _stats = world.RenderCounters;
                         break;
 
                     case TargetView.GuiRender:
-                        stats = world.GuiCounters;
+                        _stats = world.GuiCounters;
                         break;
 
                     case TargetView.Startup:
-                        stats = world.StartCounters;
+                        _stats = world.StartCounters;
                         break;
                 }
 
-                if (stats is not null)
+                if (_stats is not null)
                 {
-                    Dictionary<int, (string label, double size)> statistics = CalculateStatistics(world, _timePerSystems[(int)_targetView], stats);
+                    Dictionary<int, (string label, double size)> statistics = CalculateStatistics(world, _timePerSystems[(int)_targetView], _stats);
 
                     // Histogram is 25px tall
                     ImGui.BeginChild("target", new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y - 2 - 35));
 
-                    DrawTab(world, stats, statistics);
+                    DrawTab(world, _stats, statistics);
 
                     ImGui.EndChild();
 
@@ -175,6 +187,31 @@ public class SystemsDiagnosticsSystem : IGuiSystem
             ImGui.EndTabItem();
         }
 
+        if (ImGui.BeginTabItem("Diagnostics Log"))
+        {
+            if (ImGui.Button("Clear"))
+            {
+                _incidentReports.Clear();
+            }
+            // Draw a little box with all incident reports.
+            ImGui.BeginChild("diagnostic_logs");
+            {
+                for (int i = 0; i < _incidentReports.Count; i++)
+                {
+                    IncidentReport report = _incidentReports[i];
+                    Type tSystem = world.IdToSystem[report.SystemId].GetType();
+                    ImGui.TextColored(Game.Profile.Theme.Accent, $"{tSystem.Name} stalled for {report.StallTime:0.00} ms during {report.Where}");
+
+                    if (i == _incidentReports.Count - 1)
+                    {
+                        ImGui.SetScrollHereY();
+                    }
+                }
+            }
+            ImGui.EndChild();
+
+            ImGui.EndTabItem();
+        }
         // Diagnostics tab .Begin()
         ImGui.End();
     }
@@ -264,7 +301,6 @@ public class SystemsDiagnosticsSystem : IGuiSystem
         ImGui.Separator();
     }
 
-    private string _systemsFilter = "";
     private void DrawTab(MonoWorld world, IDictionary<int, SmoothCounter> stats, Dictionary<int, (string label, double size)> statistics)
     {
         ImGui.InputTextWithHint("", "Filter", ref _systemsFilter, 256);
@@ -367,4 +403,119 @@ public class SystemsDiagnosticsSystem : IGuiSystem
     private string PrintTime(TargetView target) => PrintTime(_timePerSystems[(int)target]);
 
     private static string PrintTime(double microsseconds) => (microsseconds / 1000f).ToString("0.00");
+
+    public void Update(Context context)
+    {
+        MonoWorld world = (MonoWorld)context.World;
+
+        float stallTreshold = 10f * 1000; // milliseconds
+        foreach (var (systemId, counter) in world.UpdateCounters)
+        {
+            if (counter.CurrentIndex <= 2) // Ignore first few frames.
+            {
+                continue;
+            }
+
+            if (_incidentReports.Count > 0 && _incidentReports[^1].SampleIndex == counter.CurrentIndex &&
+                _incidentReports[^1].SystemId == systemId &&
+                _incidentReports[^1].Where == TargetView.Update)
+            {
+                // Already reported on another phase.
+                continue;
+            }
+
+            if (counter.CurrentTime > stallTreshold)
+            {
+                _incidentReports.Add(new IncidentReport
+                {
+                    SystemId = systemId,
+                    StallTime = (float)counter.CurrentTime / 1000f,
+                    Where = TargetView.Update,
+                    SampleIndex = counter.CurrentIndex
+                });
+            }
+        }
+
+        foreach (var (systemId, counter) in world.FixedUpdateCounters)
+        {
+            if (counter.CurrentIndex <= 2) // Ignore first few frames.
+            {
+                continue;
+            }
+
+            if (_incidentReports.Count > 0 && _incidentReports[^1].SampleIndex == counter.CurrentIndex &&
+                _incidentReports[^1].SystemId == systemId &&
+                _incidentReports[^1].Where == TargetView.FixedUpdate)
+            {
+                // Already reported on another phase.
+                continue;
+            }
+
+            if (counter.CurrentTime > stallTreshold)
+            {
+                _incidentReports.Add(new IncidentReport
+                {
+                    SystemId = systemId,
+                    StallTime = (float)counter.CurrentTime / 1000f,
+                    Where = TargetView.FixedUpdate,
+                    SampleIndex = counter.CurrentIndex
+                });
+            }
+        }
+
+        foreach (var (systemId, counter) in world.ReactiveCounters)
+        {
+            if (counter.CurrentIndex <= 2) // Ignore first few frames.
+            {
+                continue;
+            }
+
+            if (_incidentReports.Count > 0 && _incidentReports[^1].SampleIndex == counter.CurrentIndex &&
+                _incidentReports[^1].SystemId == systemId &&
+                _incidentReports[^1].Where == TargetView.Reactive)
+            {
+                // Already reported on another phase.
+                continue;
+            }
+
+            if (counter.CurrentTime > stallTreshold)
+            {
+                _incidentReports.Add(new IncidentReport
+                {
+                    SystemId = systemId,
+                    StallTime = (float)counter.CurrentTime / 1000f,
+                    Where = TargetView.Reactive,
+                    SampleIndex = counter.CurrentIndex
+                });
+            }
+        }
+
+        foreach (var (systemId, counter) in world.RenderCounters)
+        {
+            if (counter.CurrentIndex <= 2) // Ignore first few frames.
+            {
+                continue;
+            }
+
+            if (_incidentReports.Count>0 && _incidentReports[^1].SampleIndex == counter.CurrentIndex &&
+                _incidentReports[^1].SystemId == systemId &&
+                _incidentReports[^1].Where == TargetView.Render)
+            {
+                // Already reported on another phase.
+                continue;
+            }
+
+            if (counter.CurrentTime > stallTreshold)
+            {
+                _incidentReports.Add(new IncidentReport
+                {
+                    SystemId = systemId,
+                    StallTime = (float)counter.CurrentTime / 1000f,
+                    Where = TargetView.Render,
+                    SampleIndex = counter.CurrentIndex
+                });
+            }
+        }
+
+    }
 }
