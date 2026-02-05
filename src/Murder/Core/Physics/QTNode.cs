@@ -5,16 +5,20 @@ using Murder.Core.Graphics;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Diagnostics;
+using System.Reflection.Emit;
 
 namespace Murder.Core.Physics
 {
     public readonly struct NodeInfo<T> where T : notnull
     {
+        public readonly int Id;
         public readonly T EntityInfo;
         public readonly Rectangle BoundingBox;
 
-        public NodeInfo(T info, Rectangle boundingBox)
+        public NodeInfo(int id, T info, IntRectangle boundingBox)
         {
+            Id = id;
             EntityInfo = info;
             BoundingBox = boundingBox;
         }
@@ -25,38 +29,48 @@ namespace Murder.Core.Physics
         private const int MAX_OBJECTS = 32;
         private const int MAX_LEVELS = 6;
 
-        public ImmutableArray<QTNode<T>> Nodes = [];
-        public readonly Rectangle Bounds;
-        public readonly int Level;
+
+        // Children don't exist until split, then always length 4
+        private QTNode<T>[]? _nodes;
+        private readonly IntRectangle _bounds;
+        private readonly int _level;
 
         /// <summary>
         /// Entities are indexed by their entity ID number
         /// </summary>
-        public readonly Dictionary<int, NodeInfo<T>> Entities = new(MAX_OBJECTS);
+        public readonly Dictionary<int, NodeInfo<T>> _entities = new(MAX_OBJECTS);
 
-        public QTNode(int level, Rectangle bounds)
+        // entity ID -> which node contains it (shared across all nodes)
+        private readonly Dictionary<int, QTNode<T>>? _entityLookup;
+
+        // Root constructor
+        public QTNode(int level, IntRectangle bounds) : this(level, bounds, new Dictionary<int, QTNode<T>>(256)) { }
+
+        // Child constructor
+        private QTNode(int level, IntRectangle bounds, Dictionary<int, QTNode<T>> entityLookup)
         {
-            Bounds = bounds;
-            Level = level;
+            _bounds = bounds;
+            _level = level;
+            _entityLookup = level == 0 ? entityLookup : null; // Only root owns lookup
         }
 
         public void DrawDebug(Batch2D spriteBatch)
         {
-            var depthColor = new Color(1 - 1f / (1f + Level), 1f / (1f + Level), 2 - 2f / (2f + Level));
-            var bounds = Bounds;
+            var depthColor = new Color(1 - 1f / (1f + _level), 1f / (1f + _level), 2 - 2f / (2f + _level));
+            var bounds = _bounds;
 
             spriteBatch.DrawRectangleOutline(bounds, depthColor);
-            RenderServices.DrawText(spriteBatch, MurderFonts.PixelFont, Entities.Count.ToString(), bounds.TopLeft.Point() + new Point(4, 4) * (1 + Level),
+            RenderServices.DrawText(spriteBatch, MurderFonts.PixelFont, _entities.Count.ToString(), bounds.TopLeft + new Point(4, 4) * (1 + _level),
                 new DrawInfo(0)
                 {
                     Color = depthColor
                 });
 
-            if (!Nodes.IsDefaultOrEmpty)
+            if (_nodes is not null)
             {
-                for (int i = 0; i < Nodes.Length; i++)
+                for (int i = 0; i < _nodes.Length; i++)
                 {
-                    Nodes[i].DrawDebug(spriteBatch);
+                    _nodes[i].DrawDebug(spriteBatch);
                 }
             }
         }
@@ -66,16 +80,17 @@ namespace Murder.Core.Physics
         /// </summary>
         public void Clear()
         {
-            Entities.Clear();
-            Nodes = [];
+            _entities.Clear();
 
-            if (!Nodes.IsDefaultOrEmpty)
+            if (_nodes is not null)
             {
-                for (int i = 0; i < Nodes.Length; i++)
+                for (int i = 0; i < 4; i++)
                 {
-                    Nodes[i].Clear();
+                    _nodes[i].Clear();
                 }
             }
+
+            _entityLookup?.Clear();
         }
 
         /// <summary>
@@ -83,24 +98,25 @@ namespace Murder.Core.Physics
         /// </summary>
         public void Reset()
         {
-            Entities.Clear();
-            Nodes = [];
+            _entities.Clear();
+            _nodes = null;
+            _entityLookup?.Clear();
         }
 
-        public void Split()
+        private void Split()
         {
-            var builder = ImmutableArray.CreateBuilder<QTNode<T>>(4);
-            int subWidth = Calculator.RoundToInt(Bounds.Width / 2);
-            int subHeight = Calculator.RoundToInt(Bounds.Height / 2);
-            int x = Calculator.RoundToInt(Bounds.X);
-            int y = Calculator.RoundToInt(Bounds.Y);
+            int subWidth = _bounds.Width / 2;
+            int subHeight = _bounds.Height / 2;
+            int x = _bounds.X;
+            int y = _bounds.Y;
 
-            builder.Add(new QTNode<T>(Level + 1, new Rectangle(x + subWidth, y, subWidth, subHeight)));
-            builder.Add(new QTNode<T>(Level + 1, new Rectangle(x, y, subWidth, subHeight)));
-            builder.Add(new QTNode<T>(Level + 1, new Rectangle(x, y + subHeight, subWidth, subHeight)));
-            builder.Add(new QTNode<T>(Level + 1, new Rectangle(x + subWidth, y + subHeight, subWidth, subHeight)));
-
-            Nodes = builder.ToImmutableArray();
+            _nodes =
+            [
+                new QTNode<T>(_level + 1, new Rectangle(x + subWidth, y, subWidth, subHeight)),
+                new QTNode<T>(_level + 1, new Rectangle(x, y, subWidth, subHeight)),
+                new QTNode<T>(_level + 1, new Rectangle(x, y + subHeight, subWidth, subHeight)),
+                new QTNode<T>(_level + 1, new Rectangle(x + subWidth, y + subHeight, subWidth, subHeight))
+            ];
         }
 
         /// <summary>
@@ -113,8 +129,8 @@ namespace Murder.Core.Physics
         private int GetIndex(Rectangle boundingBox)
         {
             int index = -1;
-            float verticalMidpoint = Bounds.X + (Bounds.Width / 2f);
-            float horizontalMidpoint = Bounds.Y + (Bounds.Height / 2f);
+            float verticalMidpoint = _bounds.X + (_bounds.Width / 2f);
+            float horizontalMidpoint = _bounds.Y + (_bounds.Height / 2f);
 
             // Object can completely fit within the top quadrants
             bool topQuadrant = (boundingBox.Top < horizontalMidpoint && boundingBox.Bottom < horizontalMidpoint);
@@ -157,16 +173,16 @@ namespace Murder.Core.Physics
         public bool Remove(int entityId)
         {
             bool success = false;
-            if (Entities.Remove(entityId))
+            if (_entities.Remove(entityId))
             {
                 success = true;
             }
 
-            if (!Nodes.IsDefaultOrEmpty)
+            if (_nodes is not null)
             {
-                for (int i = 0; i < Nodes.Length; i++)
+                for (int i = 0; i < _nodes.Length; i++)
                 {
-                    if (Nodes[i].Remove(entityId))
+                    if (_nodes[i].Remove(entityId))
                     {
                         success = true;
                     }
@@ -183,64 +199,112 @@ namespace Murder.Core.Physics
         /// </summary>
         public void Insert(int entityId, T info, Rectangle boundingBox)
         {
-            if (!Nodes.IsDefaultOrEmpty)
+            InsertInternal(entityId, info, boundingBox, _entityLookup);
+        }
+
+        private void InsertInternal(int entityId, T info, Rectangle boundingBox, Dictionary<int, QTNode<T>>? lookup)
+        {
+            // Try to insert into child node
+            if (_nodes is not null)
             {
                 int index = GetIndex(boundingBox);
-
                 if (index != -1)
                 {
-                    Nodes[index].Insert(entityId, info, boundingBox);
-
+                    _nodes[index].InsertInternal(entityId, info, boundingBox, lookup);
                     return;
                 }
             }
 
-            Entities[entityId] = new NodeInfo<T>(info, boundingBox);
+            // Doesn't fit inside a child or no children exist
+            // Let's add it here
+            _entities[entityId] = new NodeInfo<T>(entityId, info, boundingBox);
+            lookup?.TryAdd(entityId, this);
 
-            if (Entities.Count > MAX_OBJECTS && Level < MAX_LEVELS)
+            // Split if needed
+            if (_entities.Count > MAX_OBJECTS && _level < MAX_LEVELS && _nodes is null)
             {
-                if (Nodes.IsDefaultOrEmpty)
-                {
-                    Split();
-                }
+                Split();
 
-                foreach (var e in Entities)
+                // Can I give any of my entities to my children?
+                // If so share them downwards!
+                Span<int> keysToMove = stackalloc int[_entities.Count];
+                int moveCount = 0;
+
+                foreach (var kvp in _entities)
                 {
-                    var bb = e.Value.BoundingBox;
-                    int index = GetIndex(bb);
+                    int index = GetIndex(kvp.Value.BoundingBox);
                     if (index != -1)
                     {
-                        Nodes[index].Insert(e.Key, e.Value.EntityInfo, bb);
-                        Entities.Remove(e.Key);
+                        keysToMove[moveCount++] = kvp.Key;
                     }
+                }
+
+                for (int i = 0; i < moveCount; i++)
+                {
+                    int key = keysToMove[i];
+                    var nodeInfo = _entities[key];
+                    int index = GetIndex(nodeInfo.BoundingBox);
+
+                    _entities.Remove(key);
+
+                    Debug.Assert(_nodes is not null, "This should never be null here!");
+                    _nodes[index].InsertInternal(key, nodeInfo.EntityInfo, nodeInfo.BoundingBox, lookup);
                 }
             }
         }
+        public void Update(int entityId, T info, Rectangle newBounds)
+        {
+            if (_entityLookup is not null && _entityLookup.TryGetValue(entityId, out var currentNode))
+            {
+                // Check if entity still fits in current node
+                if (currentNode.GetIndex(newBounds) == -1 && currentNode._bounds.Contains(newBounds))
+                {
+                    // Still fits, just update in place
+                    currentNode._entities[entityId] = new NodeInfo<T>(entityId, info, newBounds);
+                    return;
+                }
+
+                // Needs to move
+                currentNode._entities.Remove(entityId);
+                _entityLookup.Remove(entityId);
+            }
+
+            Insert(entityId, info, newBounds);
+        }
 
         /// <summary>
-        /// Return all objects that could collide with the given object at <paramref name="returnEntities"/>.
+        /// Return all objects that could collide with the given object at <paramref name="results"/>.
         /// </summary>
-        public void Retrieve(Rectangle boundingBox, List<NodeInfo<T>> returnEntities)
+        public void Retrieve(Rectangle boundingBox, List<NodeInfo<T>> results)
         {
-            if (!Nodes.IsDefaultOrEmpty)
+            // Add entities from this node that actually overlap
+            foreach (var kvp in _entities)
             {
-                int index = GetIndex(boundingBox);
-                if (index != -1) // This bounding box can be contained inside a single node
+                if (kvp.Value.BoundingBox.Touches(boundingBox))
                 {
-                    Nodes[index].Retrieve(boundingBox, returnEntities);
-                }
-                else
-                {
-                    for (int i = 0; i <= 3; i++) // The Bounding box is to big to be contained by a single node
-                    {
-                        Nodes[i].Retrieve(boundingBox, returnEntities);
-                    }
+                    results.Add(kvp.Value);
                 }
             }
 
-            foreach (var item in Entities)
+            if (_nodes is null)
+                return;
+
+            int index = GetIndex(boundingBox);
+            if (index != -1)
             {
-                returnEntities.Add(item.Value);
+                // Query fits in single child
+                _nodes[index].Retrieve(boundingBox, results);
+            }
+            else
+            {
+                // Query spans multiple children, check all that overlap
+                for (int i = 0; i < 4; i++)
+                {
+                    if (_nodes[i]._bounds.Touches(boundingBox))
+                    {
+                        _nodes[i].Retrieve(boundingBox, results);
+                    }
+                }
             }
         }
     }

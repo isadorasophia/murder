@@ -9,7 +9,10 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Physics;
 using Murder.Diagnostics;
+using Murder.Services;
+using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Systems;
 
@@ -17,77 +20,88 @@ namespace Murder.Systems;
 [Watch(typeof(PositionComponent), typeof(ColliderComponent))]
 public class QuadtreeCalculatorSystem : IReactiveSystem, IStartupSystem
 {
-    private readonly HashSet<int> _entitiesOnWatch = new(516);
-
+    private readonly HashSet<int> _toUpdate = new(256);
+    private readonly HashSet<int> _toRemove = new(64);
     public void OnAdded(World world, ImmutableArray<Entity> entities)
     {
         for (int i = 0; i < entities.Length; i++)
-        {
-            _entitiesOnWatch.Add(entities[i].EntityId);
-        }
+            _toUpdate.Add(entities[i].EntityId);
+    }
+
+    public void OnModified(World world, ImmutableArray<Entity> entities)
+    {
+        for (int i = 0; i < entities.Length; i++)
+            _toUpdate.Add(entities[i].EntityId);
+    }
+
+    public void OnActivated(World world, ImmutableArray<Entity> entities)
+    {
+        for (int i = 0; i < entities.Length; i++)
+            _toUpdate.Add(entities[i].EntityId);
     }
 
     public void OnRemoved(World world, ImmutableArray<Entity> entities)
     {
         for (int i = 0; i < entities.Length; i++)
         {
-            _entitiesOnWatch.Add(entities[i].EntityId);
+            int id = entities[i].EntityId;
+            _toUpdate.Remove(id);  // Don't update if also removing
+            _toRemove.Add(id);
         }
     }
 
-    public void OnModified(World world, ImmutableArray<Entity> entities)
-    {
-        for (int i = 0; i < entities.Length; i++)
-        {
-            _entitiesOnWatch.Add(entities[i].EntityId);
-        }
-    }
-
-    public void OnActivated(World world, ImmutableArray<Entity> entities)
-    {
-        for (int i = 0; i < entities.Length; i++)
-        {
-            _entitiesOnWatch.Add(entities[i].EntityId);
-        }
-    }
     public void OnDeactivated(World world, ImmutableArray<Entity> entities)
     {
         for (int i = 0; i < entities.Length; i++)
         {
-            _entitiesOnWatch.Add(entities[i].EntityId);
+            int id = entities[i].EntityId;
+            _toUpdate.Remove(id);
+            _toRemove.Add(id);
         }
     }
-
     public void OnAfterTrigger(World world)
     {
-        if (_entitiesOnWatch.Count == 0)
-        {
+        if (_toUpdate.Count == 0 && _toRemove.Count == 0)
             return;
-        }
 
         Quadtree qt = Quadtree.GetOrCreateUnique(world);
-        foreach (int entityId in _entitiesOnWatch)
+
+        // Handle removals
+        foreach (int entityId in _toRemove)
         {
-            if (world.TryGetEntity(entityId) is Entity entity && entity.IsActive && entity.HasCollider())
+            qt.RemoveFromCollisionQuadTree(entityId);
+        }
+
+        // Handle updates/additions
+        foreach (int entityId in _toUpdate)
+        {
+            if (world.TryGetEntity(entityId) is Entity entity && entity.IsActive)
             {
-                qt.RemoveFromCollisionQuadTree(entityId);
-                qt.AddToCollisionQuadTree(entity);
-            }
-            else
-            {
-                // This entity was removed from the world.
-                qt.RemoveFromCollisionQuadTree(entityId);
+                Vector2 pos = entity.GetGlobalPosition();
+                ColliderComponent collider = entity.GetCollider();
+                Rectangle bounds = collider.GetBoundingBox(pos, entity.FetchScale());
+                
+                qt.Collision.Update(entityId, entity, bounds);
+
+                // Same for PushAway
+                if (entity.TryGetPushAway() is PushAwayComponent pushAway)
+                {
+                    float halfSize = pushAway.Size * 0.5f;
+                    Rectangle pushBounds = new(pos.X - halfSize, pos.Y - halfSize, pushAway.Size, pushAway.Size);
+                    qt.PushAway.Update(entityId, (entity, pos, pushAway, entity.TryGetVelocity()?.Velocity ?? Vector2.Zero), pushBounds);
+                }
             }
         }
 
-        _entitiesOnWatch.Clear();
+        _toUpdate.Clear();
+        _toRemove.Clear();
     }
 
     public void Start(Context context)
     {
         foreach (Entity e in context.Entities)
         {
-            _entitiesOnWatch.Add(e.EntityId);
+            _toUpdate.Add(e.EntityId);
         }
     }
 }

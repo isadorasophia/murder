@@ -37,7 +37,7 @@ public class RuntimeAtlas : IDisposable
         Size = new Vector2(finalAtlasSize.X, finalAtlasSize.Y);
         _chunkSize = chunkSize;
 
-        _chunkBrush = new RenderTarget2D(Game.GraphicsDevice, chunkSize.X, chunkSize.Y);
+        _chunkBrush = new RenderTarget2D(Game.GraphicsDevice, chunkSize.X, chunkSize.Y, false, SurfaceFormat.Color, DepthFormat.None);
         _chunkBrush.Name = $"{name}_brush";
 
         _atlasRenderTarget = new RenderTarget2D(Game.GraphicsDevice, finalAtlasSize.X, finalAtlasSize.Y, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
