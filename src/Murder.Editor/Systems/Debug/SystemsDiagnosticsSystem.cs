@@ -41,7 +41,7 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
         public readonly TargetView Where { get; init; }
         public int SampleIndex { get; init; }
         public int Repeat { get; init; } = 0;
-        public string Message { get; init; }
+        public string? Message { get; init; }
     }
 
     private readonly List<IncidentReport> _incidentReports = new List<IncidentReport>(200);

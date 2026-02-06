@@ -567,7 +567,7 @@ namespace Murder
 
             // This will keep the camera and other render positions in sync with the fixed update.
             _graphics.SynchronizeWithVerticalRetrace = Profile.IsVSyncEnabled; // vsync handles frame pacing
-            IsFixedTimeStep = false; // call Update/Draw as fast as vsync allows.
+            IsFixedTimeStep = true; // call Update/Draw as fast as vsync allows.
 
             ApplyGameSettingsImpl();
             _graphics.ApplyChanges();
@@ -762,27 +762,11 @@ namespace Murder
         /// <summary>
         /// Implements core update logic, including frame freezing, world transitions, input handling, and time scaling.
         /// </summary>
-        protected void UpdateImpl(double xnaDeltaTime)
+        protected void UpdateImpl(double deltaTime)
         {
             DoPendingExitGame();
             DoPendingWorldTransition();
             
-            if (UseXnaGameTime)
-            {
-                IsFixedTimeStep = true; // Let XNA handle the fixed timestep, delta time will already be fixed and they will call Update the correct amount of times.
-                UpdateXnaTime(xnaDeltaTime);
-            }
-            else
-            {
-                IsFixedTimeStep = false; // Not using the XNA timestep, we will handle it ourselves. I do not recomend using this option yet, just trust XNA for now.
-                double deltaTime = AdvanceElapsedTimeMurder();
-                UpdateMurderTime(deltaTime);
-            }
-        }
-
-
-        protected void UpdateXnaTime(double deltaTime)
-        {
             GameLogger.Verify(ActiveScene is not null);
 
             if (_freezeFrameCount > 0)
@@ -795,48 +779,8 @@ namespace Murder
                 }
                 return;
             }
-
-            _unscaledPreviousElapsedTime = _unscaledElapsedTime;
-            _scaledPreviousElapsedTime = _scaledElapsedTime;
-
-            // Advance clocks
-            _unscaledElapsedTime += deltaTime;
-            _unscaledDeltaTime = deltaTime;
-
-            double scaledDeltaTime = IsPaused ? 0 : deltaTime * TimeScale;
-            _scaledElapsedTime += scaledDeltaTime;
-            _scaledDeltaTime = scaledDeltaTime;
-            _lastFixedUpdateTime = scaledDeltaTime;
-
-            _playerInput.Update();
-        
-            //SimulateRandomStalls();
-            if (_preload is null)
-            {
-                ActiveScene.FixedUpdate();
-                ActiveScene.Update();
-            }
-
-            _game?.OnUpdate();
-        }
-
-        protected void UpdateMurderTime(double deltaTime)
-        {
-            GameLogger.Verify(ActiveScene is not null);
 
             SlowdownDetected = deltaTime > _fixedUpdateDelta * 1.5f;
-
-            if (_freezeFrameCount > 0)
-            {
-                _freezeFrameTime += deltaTime;
-                if (_freezeFrameTime >= _fixedUpdateDelta)
-                {
-                    _freezeFrameCount--;
-                    _freezeFrameTime = 0;
-                }
-                return;
-            }
-
             _unscaledPreviousElapsedTime = _unscaledElapsedTime;
             _scaledPreviousElapsedTime = _scaledElapsedTime;
 
@@ -894,14 +838,6 @@ namespace Murder
             }
 
             _game?.OnUpdate();
-        }
-
-        private double AdvanceElapsedTimeMurder()
-        {
-            long currentTicks = _gameTimer.Elapsed.Ticks;
-            TimeSpan timeAdvanced = TimeSpan.FromTicks(currentTicks - _previousGameTimerTicks);
-            _previousGameTimerTicks = currentTicks;
-            return timeAdvanced.TotalSeconds;
         }
 
         /// <summary>
