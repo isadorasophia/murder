@@ -57,9 +57,6 @@ namespace Murder.Editor
 
         protected override IPreloadGame? TryCreatePreloadScreen() => null;
 
-        /* *** SDL helpers *** */
-        private const int SDL_WINDOW_MAXIMIZED = 0x00000080;
-
         /* *** Architect state *** */
         private bool _isPlayingGame = false;
 
