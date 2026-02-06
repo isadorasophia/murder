@@ -91,7 +91,14 @@ namespace Murder.Editor.Data
                     continue;
                 }
 
-                result[data.Value.String] = new(data.Value.Guid);
+                if (result.TryGetValue(data.Value.String, out PreviousStringData? previous))
+                {
+                    previous.AddString(data.Value.Guid);
+                }
+                else
+                {
+                    result[data.Value.String] = new(data.Value.Guid);
+                }
             }
 
             return result;
@@ -150,8 +157,6 @@ namespace Murder.Editor.Data
             {
                 _nextStrings ??= [];
                 _nextStrings.Add(new(guid));
-
-                _nextIndex++;
             }
 
             public LocalizedString? Consume()
