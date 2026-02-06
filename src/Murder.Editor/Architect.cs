@@ -65,8 +65,6 @@ namespace Murder.Editor
 
         private StartPlayGameInfo? _queueStartPlayGame = null;
 
-        protected override bool AlwaysUpdateBeforeFixed => _isPlayingGame;
-
         public bool IsPlayingGame => _isPlayingGame;
 
         protected override bool IsDiagnosticEnabled => true;
@@ -569,7 +567,7 @@ namespace Murder.Editor
             // This will allow us to run as many updates as possible in editor, for debugging.
             // keywords: Framerate, FPS, VSync
             _graphics.SynchronizeWithVerticalRetrace = Architect.EditorSettings.LockFramerate;
-            IsFixedTimeStep = Architect.EditorSettings.LockFramerate;
+            // IsFixedTimeStep = Architect.EditorSettings.LockFramerate;
         }
 
         protected override void Dispose(bool isDisposing)

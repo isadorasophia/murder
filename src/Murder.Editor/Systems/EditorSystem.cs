@@ -232,8 +232,6 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                     ImGui.Text($"   Sound: {Game.Instance.SoundUpdateTime * 1000:00.00}");
                     dl.AddCircleFilled(ImGui.GetItemRectMin() + new Vector2(10, 6), 5, Color.ToUint(Game.Profile.Theme.Green), 12);
 
-                    ImGui.Text($"Total: {Game.Instance.LastFrameDuration * 1000:00.00}");
-
                     ImGui.Dummy(new Vector2(0, 24));
                     Vector2 start = ImGui.GetItemRectMin();
                     Vector2 end = ImGui.GetItemRectMax();
@@ -365,11 +363,11 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
 
         if (ImGui.IsWindowHovered())
         {
-            _hovered = Calculator.Approach(_hovered, 1, Game.Instance.LastFrameDuration * 5);
+            _hovered = Calculator.Approach(_hovered, 1, Game.UnscaledDeltaTime * 5);
         }
         else
         {
-            _hovered = Calculator.Approach(_hovered, 0, Game.Instance.LastFrameDuration * 5);
+            _hovered = Calculator.Approach(_hovered, 0, Game.UnscaledDeltaTime * 5);
         }
 
         ImGui.End();
@@ -440,7 +438,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
 
     public void Update(Context context)
     {
-        _frameRate.Update(Game.Instance.LastFrameDuration);
+        _frameRate.Update(Game.DeltaTime);
 
         MonoWorld world = (MonoWorld)context.World;
         EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
@@ -515,6 +513,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         }
     }
 
+    private float _lastSlowdown = -1f;
     private int _previousGCGen1Count = 0;
     private int _previousGCGen2Count = 0;
     /// <summary>
@@ -541,13 +540,40 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         {
             GcTracker.Update(0f);
         }
+
         if (Game.IsRunningSlowly)
         {
-            ImGui.TextColored(Game.Profile.Theme.Red, "Running slowly!");
+            _lastSlowdown = Game.NowUnscaled;
+        }
+
+        float timeSinceSlowdown = Game.NowUnscaled - _lastSlowdown;
+        if (timeSinceSlowdown <= 0.01f)
+        {
+            ImGui.TextColored(Game.Profile.Theme.Red, "Running slowly! (just now)");
+        }
+        else if (timeSinceSlowdown <= 8f)
+        {
+            ImGui.TextColored(timeSinceSlowdown < 1 ? Game.Profile.Theme.Red : Game.Profile.Theme.Yellow, $"Running slowly! ({timeSinceSlowdown:0.0}s ago)");
+        }
+        else
+        {
+            ImGui.TextColored(Game.Profile.Theme.Green, "Game running well.");
+        }
+
+        ImGui.Text($"Max frames lost: {Game.MaxLostFrames}");
+        float target = 1f / 60f;
+        float maxDeltaTimePercent = (Game.MaxDeltaTime / target) * 100f;
+        ImGui.Text($"Max delta time: {Game.MaxDeltaTime * 1000:0.000}");
+        ImGui.SameLine();
+        ImGui.Text($"({maxDeltaTimePercent:0.0}%%)");
+        
+        if (ImGui.Button("Clear##ClearMaxDeltaTime"))
+        {
+            Game.MaxLostFrames = 0;
+            Game.MaxDeltaTime = 0;
         }
 
         PlotSlowdowGraph();
-
         ImGui.PlotHistogram("##GC_histogram", ref GcTracker.Sample[0], GcTracker.Length, 0, "GC Collection", 0, 1000, new Vector2(ImGui.GetContentRegionAvail().X, 20));
 
         // ImGui.Text($"Gen 1/Gen 2 GC Count: {gen1Count}, {gen2Count}");

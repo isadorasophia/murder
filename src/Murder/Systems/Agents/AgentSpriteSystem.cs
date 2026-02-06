@@ -30,8 +30,6 @@ namespace Murder.Systems
         {
             bool issueSlowdownWarning = false;
 
-            float lerpFactor = (Game.Now - Game.PreviousFixedUpdateTime) / Game.FixedDeltaTime * Game.Instance.TimeScale;
-
             foreach (var e in context.Entities)
             {
                 Vector2 transform = e.GetGlobalPosition();

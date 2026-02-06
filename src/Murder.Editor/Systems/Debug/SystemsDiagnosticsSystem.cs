@@ -617,7 +617,7 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
         }
 
         // Check for last frame duration
-        if (Game.Instance.LastFrameDuration >= 1 / 58f)
+        if (Game.DeltaTime >= 1 / 30f)
         {
             if (_incidentReports.Count > 0 && _incidentReports[^1].SampleIndex == -1 &&
                 _incidentReports[^1].IncidentType == IncidentTypes.General)
@@ -627,7 +627,7 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
                 _incidentReports[^1] = lastIncident with
                 {
                     Repeat = lastIncident.Repeat + 1,
-                    StallTime = Math.Max(lastIncident.StallTime, Game.Instance.LastFrameDuration * 1000f)
+                    StallTime = Math.Max(lastIncident.StallTime, Game.DeltaTime * 1000f)
                 };
                 return;
             }
@@ -635,7 +635,7 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
             _incidentReports.Add(new IncidentReport
             {
                 IncidentType = IncidentTypes.General,
-                StallTime = Game.Instance.LastFrameDuration * 1000f,
+                StallTime = Game.DeltaTime * 1000f,
                 Where = TargetView.Total,
                 SampleIndex = -1
             });

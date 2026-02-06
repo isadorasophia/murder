@@ -84,20 +84,15 @@ namespace Murder
         /// The time difference between current and last update, scaled by pause and other time scaling. Value is reliable only during the Update().
         /// This value will be zero during render.
         /// </summary>
-        public static float DeltaTime => (float)Instance._scaledDeltaTime;
+        public static float DeltaTime => (float)(Instance._scaledDeltaTime);
         /// <summary>
         /// De time difference between current and last update. Value is reliable only during the Update().
         /// </summary>
         public static float UnscaledDeltaTime => (float)Instance._unscaledDeltaTime;
         /// <summary>
-        /// Gets the current scaled elapsed time.
+        /// Frame clock, updated once per frame
         /// </summary>
         public static float Now => (float)Instance._scaledElapsedTime;
-
-        /// <summary>
-        /// Gets the elapsed time from the previous fixed update.
-        /// </summary>
-        public static float PreviousFixedUpdateTime => (float)Instance._previousFixedUpdateTime;
 
         /// <summary>
         /// Gets the scaled elapsed time from the previous fixed update.
@@ -110,11 +105,6 @@ namespace Murder
         public static float NowUnscaled => (float)Instance._unscaledElapsedTime;
 
         /// <summary>
-        /// Gets the absolute time since the game started. This is not affected by pause, freeze frames or time scaling.
-        /// </summary>
-        public static float NowAbsolute => (float)Instance._absoluteElapsedTime;
-
-        /// <summary>
         /// Time from previous fixed update.
         /// </summary>
         public static float PreviousNowUnscaled => (float)Instance._unscaledPreviousElapsedTime;
@@ -125,18 +115,14 @@ namespace Murder
         public static float FixedDeltaTime => Instance._fixedUpdateDelta;
 
         public static bool IsRunningSlowly { get; private set; } = false;
+        public static int MaxLostFrames { get; set; } = 0;
+        public static float MaxDeltaTime { get; set; } = 0;
 
         /// <summary>
         /// Whether the game support saving game progress.
         /// </summary>
         public static bool CanSave => Instance._game?.CanSave ?? false;
 
-        /// <summary>
-        /// Total time in seconds that the game has been running since the last update.
-        /// Useful for calculating the total time of the game, including pauses and freezes.
-        /// DO NOT rely on this for critical effects or operations.
-        /// </summary>
-        public float LastFrameDuration { get; private set; } = 0f;
         private readonly Stopwatch _lastFrameStopwatch = new();
 
         private readonly Stopwatch _updateStopwatch = new();
@@ -269,11 +255,6 @@ namespace Murder
         /// </summary>
         private bool _initialiazedAfterContentLoaded = false;
 
-        /// <summary>
-        /// Always run update before fixed update. Override this for a different behavior.
-        /// </summary>
-        protected virtual bool AlwaysUpdateBeforeFixed => true;
-
         private Point _windowedSize = Point.Zero;
         private bool _windowSettingsDirty = true;
 
@@ -325,17 +306,16 @@ namespace Murder
 
         // Update properties.
         private float _fixedUpdateDelta;
-        private double _previousFixedUpdateTime = 0;
 
         private double _scaledElapsedTime = 0;
         private double _unscaledElapsedTime = 0;
-        private double _absoluteElapsedTime = 0;
+        private double _scaledDeltaTime = 0;
+        private double _unscaledDeltaTime = 0;
+
+        private double _lastFixedUpdateTime = 0;
 
         private double _scaledPreviousElapsedTime = 0;
         private double _unscaledPreviousElapsedTime = 0;
-
-        private double _scaledDeltaTime = 0;
-        private double _unscaledDeltaTime = 0;
 
         /// <summary>
         /// This is the underlying implementation of the game. This listens to the murder game events.
@@ -573,11 +553,10 @@ namespace Murder
             _grid = new GridConfiguration(Profile.DefaultGridCellSize);
 
             // This will keep the camera and other render positions in sync with the fixed update.
-            _graphics.SynchronizeWithVerticalRetrace = true;
-            IsFixedTimeStep = true;
+            _graphics.SynchronizeWithVerticalRetrace = true; // vsync handles frame pacing
+            IsFixedTimeStep = false; // call Update/Draw as fast as vsync allows.
 
             ApplyGameSettingsImpl();
-
             _graphics.ApplyChanges();
         }
 
@@ -688,12 +667,14 @@ namespace Murder
         /// </summary>
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            LastFrameDuration = Math.Clamp((float)_lastFrameStopwatch.Elapsed.TotalSeconds, 0, FixedDeltaTime * 2);
+            base.Update(gameTime);
+
+            float rawDeltaTime = (float)_lastFrameStopwatch.Elapsed.TotalSeconds;
             _lastFrameStopwatch.Restart();
 
             if (_waitForSaveComplete && !CanResumeAfterSaveComplete())
             {
-                UpdateUnscaledDeltaTime(gameTime.ElapsedGameTime.TotalSeconds);
+                UpdateUnscaledDeltaTime(gameTime.ElapsedGameTime.TotalSeconds); // Using XNA GameTime, because this is called before the actual update logic
 
                 // Don't do any logic operation yet, we are waiting for the save to complete.
                 return;
@@ -720,15 +701,11 @@ namespace Murder
                 _updateStopwatch.Start();
             }
 
-            UpdateImpl(gameTime);
-
-            // Absolute time is ALWAYS updated.
-            _absoluteElapsedTime += gameTime.ElapsedGameTime.TotalSeconds;
+            UpdateImpl(rawDeltaTime);
 
             while (_isSkippingDeltaTimeOnUpdate)
             {
-                UpdateImpl(gameTime);
-
+                UpdateImpl(FixedDeltaTime);
                 ActiveScene?.OnBeforeDraw();
             }
 
@@ -754,100 +731,85 @@ namespace Murder
         /// <summary>
         /// Implements core update logic, including frame freezing, world transitions, input handling, and time scaling.
         /// </summary>
-        protected void UpdateImpl(Microsoft.Xna.Framework.GameTime gameTime)
+        protected void UpdateImpl(float deltaTime)
         {
-            IsRunningSlowly = gameTime.IsRunningSlowly;
+            GameLogger.Verify(ActiveScene is not null);
+            IsRunningSlowly = deltaTime > _fixedUpdateDelta * 1.5f;
 
-            // If this is set, the game has been frozen for some frames.
-            // We will simply wait until this returns properly.
             if (_freezeFrameCount > 0)
             {
-                _freezeFrameTime += gameTime.ElapsedGameTime.TotalSeconds;
-
+                _freezeFrameTime += deltaTime;
                 if (_freezeFrameTime >= _fixedUpdateDelta)
                 {
                     _freezeFrameCount--;
                     _freezeFrameTime = 0;
                 }
-
                 return;
             }
 
-            GameLogger.Verify(ActiveScene is not null);
-
             _unscaledPreviousElapsedTime = _unscaledElapsedTime;
             _scaledPreviousElapsedTime = _scaledElapsedTime;
-    
-            double deltaTime = LastFrameDuration;
-            if (_isSkippingDeltaTimeOnUpdate)
-            {
-                deltaTime = LastFrameDuration;
-            }
-            else
-            {
-                deltaTime = Math.Clamp(LastFrameDuration, 0, FixedDeltaTime * 2);
-            }
 
-            UpdateUnscaledDeltaTime(deltaTime);
+            double scaledDeltaTime = IsPaused ? 0 : deltaTime * TimeScale;
 
-            double scaledDeltaTime = deltaTime * TimeScale;
+            // Advance clocks
+            _unscaledElapsedTime += deltaTime;
+            _unscaledDeltaTime = deltaTime;
+            _scaledElapsedTime += scaledDeltaTime;
+            _scaledDeltaTime = scaledDeltaTime;
 
-            if (IsPaused)
-            {
-                // Make sure we don't update the scaled delta time.
-                scaledDeltaTime = 0;
-            }
-
-            UpdateScaledDeltaTime(scaledDeltaTime);
-            UpdateInputAndScene();
-
-            int maxRecoverFrames = 3;
-            double timeSinceLastFixedUpdate = _scaledElapsedTime - _previousFixedUpdateTime;
+            // Fixed update
+            double timeSinceLastFixedUpdate = _scaledElapsedTime - _lastFixedUpdateTime;
             int fixedUpdatesRequired = (int)Math.Floor(timeSinceLastFixedUpdate / _fixedUpdateDelta);
-            if (fixedUpdatesRequired > maxRecoverFrames)
-            {
-                fixedUpdatesRequired = maxRecoverFrames; // Don't run too many fixed updates, just slow down the game.
-            }
-            double remainingTime = timeSinceLastFixedUpdate - fixedUpdatesRequired * _fixedUpdateDelta;
-            _previousFixedUpdateTime = _scaledElapsedTime - remainingTime;
+            MaxLostFrames = Math.Max(MaxLostFrames, fixedUpdatesRequired);
+            MaxDeltaTime = Math.Max(MaxDeltaTime, deltaTime);
+            fixedUpdatesRequired = Math.Clamp(fixedUpdatesRequired, 0, 3);
 
-            for (int fixedUpdateCount = 0; fixedUpdateCount < fixedUpdatesRequired; fixedUpdateCount++)
+            DoPendingExitGame();
+            DoPendingWorldTransition();
+
+            _playerInput.Update();  // poll once per frame
+
+            for (int i = 0; i < fixedUpdatesRequired; i++)
             {
+                _lastFixedUpdateTime += _fixedUpdateDelta;
+
                 if (_preload is null)
                 {
-                    ActiveScene.FixedUpdate(); // <==== Update all FixedUpdate systems
-                }
-
-                if (AlwaysUpdateBeforeFixed)
-                {
-                    // Update must always run before FixedUpdate
-                    // Since we are running update again we must reset delta time to zero (no time passed since that update)
-                    _scaledDeltaTime = 0;
-                    _unscaledDeltaTime = 0;
-                    UpdateInputAndScene(); // <==== Update all Update systems (and input
+                    //SimulateRandomStalls();
+                    ActiveScene.FixedUpdate();
                 }
             }
 
-            base.Update(gameTime); // Monogame/XNA internal Update
+            // If we're still significantly behind after the clamped catch-up,
+            if (_scaledElapsedTime - _lastFixedUpdateTime > _fixedUpdateDelta)
+            {
+                _lastFixedUpdateTime = _scaledElapsedTime;
+            }
+
+
+            // --- Update (once per frame) ---
+            if (_preload is null)
+            {
+                //SimulateRandomStalls();
+                ActiveScene.Update();
+            }
 
             _game?.OnUpdate();
         }
 
         /// <summary>
-        /// Updates player input and the active scene.
+        /// Call this to simulate random frame spikes for testing.
         /// </summary>
-        private void UpdateInputAndScene()
+        [Conditional("DEBUG")]
+        private void SimulateRandomStalls()
         {
-            GameLogger.Verify(ActiveScene is not null);
-
-            DoPendingExitGame();
-            DoPendingWorldTransition();
-
-            _playerInput.Update();
-
-            if (_preload is null)
+            // ~2% chance of a stall each frame
+            if (Random.NextDouble() < 0.02)
             {
-                ActiveScene.Update();
+                // Random stall between 1-4 fixed updates worth of time
+                int ms = (int)(_fixedUpdateDelta * 1000 * (1 + Random.NextDouble() * 3));
+                Thread.Sleep(ms);
             }
         }
 
@@ -868,7 +830,7 @@ namespace Murder
             {
                 OnLoadingDraw(renderContext);
             }
-
+            //SimulateRandomStalls();
             DrawScene();
 
             base.Draw(gameTime); // Monogame/XNA internal Draw
@@ -996,13 +958,6 @@ namespace Murder
         private void UpdateUnscaledDeltaTime(double deltaTime)
         {
             _unscaledElapsedTime += deltaTime;
-            _unscaledDeltaTime = deltaTime;
-        }
-
-        private void UpdateScaledDeltaTime(double deltaTime)
-        {
-            _scaledElapsedTime += deltaTime;
-            _scaledDeltaTime = deltaTime;
         }
 
         private void SetTargetFps(int fps)
