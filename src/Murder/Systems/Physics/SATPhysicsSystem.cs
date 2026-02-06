@@ -171,6 +171,18 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                         }
                         else
                         {
+                            // No collision found, we can move to the desired position.
+
+                            // Round position if we're not moving in that axis so we avoid jittering in the long run.
+                            if (velocity.X == 0)
+                            {
+                                endPosition.X = MathF.Round(endPosition.X);
+                            }
+                            if (velocity.Y == 0)
+                            {
+                                endPosition.Y = MathF.Round(endPosition.Y);
+                            }
+
                             e.SetGlobalPosition(endPosition);
                         }
 
@@ -237,6 +249,10 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                 else
                 {
                     e.RemoveVelocity();
+                    if (e.GetGlobalPositionIfValid() is Vector2 globalPosition)
+                    {
+                        e.SetGlobalPosition(globalPosition.Round());
+                    }
                 }
             }
         }

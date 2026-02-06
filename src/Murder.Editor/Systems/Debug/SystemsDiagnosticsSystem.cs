@@ -11,6 +11,7 @@ using Murder.Editor.Systems.Debug;
 using Murder.Editor.Utilities;
 using Murder.Utilities;
 using System.Numerics;
+using static Bang.Generator.Metadata.TypeMetadata;
 
 namespace Murder.Editor.Systems;
 
@@ -40,6 +41,7 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
         public readonly TargetView Where { get; init; }
         public int SampleIndex { get; init; }
         public int Repeat { get; init; } = 0;
+        public string Message { get; init; }
     }
 
     private readonly List<IncidentReport> _incidentReports = new List<IncidentReport>(200);
@@ -231,17 +233,17 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
                                 break;
                         }
 
-                        ImGui.TextColored(Game.Profile.Theme.Accent, $"{tSystem.Name} stalled for {report.StallTime:0.00} ms during {report.Where}");
+                        ImGui.TextColored(Game.Profile.Theme.Accent, $"{tSystem.Name} stalled for {report.StallTime:0.00} ms during {report.Where} ({report.Message})");
                     }
                     else if (report.IncidentType == IncidentTypes.General)
                     {
                         if (report.Repeat > 0)
                         {
-                            ImGui.TextColored(Game.Profile.Theme.Red, $"Frame stalled {report.Repeat} times with a max of {report.StallTime:0.00} ms");
+                            ImGui.TextColored(Game.Profile.Theme.Red, $"{report.Repeat} stalls. Max of {report.StallTime:0.00}ms ({report.Message})");
                         }
                         else
                         {
-                            ImGui.TextColored(Game.Profile.Theme.Red, $"Frame stalled for {report.StallTime:0.00} ms");
+                            ImGui.TextColored(Game.Profile.Theme.Red, $"Frame stalled: {report.StallTime:0.00}ms ({report.Message})");
                         }
                     }
 
@@ -475,7 +477,8 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
                     SystemId = systemId,
                     StallTime = (float)counter.CurrentTime / 1000f,
                     Where = TargetView.Update,
-                    SampleIndex = counter.CurrentIndex
+                    SampleIndex = counter.CurrentIndex,
+                    Message = $"Entities: {counter.CurrentEntities}"
                 });
             }
         }
@@ -503,7 +506,8 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
                     SystemId = systemId,
                     StallTime = (float)counter.CurrentTime / 1000f,
                     Where = TargetView.FixedUpdate,
-                    SampleIndex = counter.CurrentIndex
+                    SampleIndex = counter.CurrentIndex,
+                    Message = $"Entities: {counter.CurrentEntities}"
                 });
             }
         }
@@ -531,7 +535,8 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
                     SystemId = systemId,
                     StallTime = (float)counter.CurrentTime / 1000f,
                     Where = TargetView.Reactive,
-                    SampleIndex = counter.CurrentIndex
+                    SampleIndex = counter.CurrentIndex,
+                    Message = $"Entities: {counter.CurrentEntities}"
                 });
             }
         }
@@ -557,7 +562,8 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
                     SystemId = systemId,
                     StallTime = (float)counter.CurrentTime / 1000f,
                     Where = TargetView.PreRender,
-                    SampleIndex = counter.CurrentIndex
+                    SampleIndex = counter.CurrentIndex,
+                    Message = $"Entities: {counter.CurrentEntities}"
                 });
             }
         }
@@ -585,7 +591,8 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
                     SystemId = systemId,
                     StallTime = (float)counter.CurrentTime / 1000f,
                     Where = TargetView.Render,
-                    SampleIndex = counter.CurrentIndex
+                    SampleIndex = counter.CurrentIndex,
+                    Message = $"Entities: {counter.CurrentEntities}"
                 });
             }
         }
@@ -611,33 +618,44 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
                     SystemId = systemId,
                     StallTime = (float)counter.CurrentTime / 1000f,
                     Where = TargetView.GuiRender,
-                    SampleIndex = counter.CurrentIndex
+                    SampleIndex = counter.CurrentIndex,
+                    Message = $"Entities: {counter.CurrentEntities}"
                 });
             }
         }
 
         // Check for last frame duration
-        if (Game.DeltaTime >= 1 / 30f)
+        if (Game.SlowdownDetected)
         {
             if (_incidentReports.Count > 0 && _incidentReports[^1].SampleIndex == -1 &&
                 _incidentReports[^1].IncidentType == IncidentTypes.General)
             {
                 // Already reported on another phase. Incement
                 var lastIncident = _incidentReports[^1];
+                string? newMessage = null;
+                if (lastIncident.StallTime > _incidentReports[^1].StallTime)
+                {
+                    newMessage = $"Upd: {_timePerSystems[(int)TargetView.Update]:0.}, F.Upd:{_timePerSystems[(int)TargetView.FixedUpdate]:0.}, React:{_timePerSystems[(int)TargetView.Reactive]:0.}, Rndr: {_timePerSystems[(int)TargetView.Render]:0.}";
+                }
+
                 _incidentReports[^1] = lastIncident with
                 {
                     Repeat = lastIncident.Repeat + 1,
-                    StallTime = Math.Max(lastIncident.StallTime, Game.DeltaTime * 1000f)
+                    StallTime = Math.Max(lastIncident.StallTime, Game.DeltaTime * 1000f),
+                    Message = newMessage == null ? lastIncident.Message : newMessage
                 };
                 return;
             }
+
+            string message = $"Upd: {_timePerSystems[(int)TargetView.Update]:0.}, F.Upd:{_timePerSystems[(int)TargetView.FixedUpdate]:0.}, React:{_timePerSystems[(int)TargetView.Reactive]:0.}, Rndr: {_timePerSystems[(int)TargetView.Render]:0.}";
 
             _incidentReports.Add(new IncidentReport
             {
                 IncidentType = IncidentTypes.General,
                 StallTime = Game.DeltaTime * 1000f,
                 Where = TargetView.Total,
-                SampleIndex = -1
+                SampleIndex = -1,
+                Message = message
             });
         }
     }

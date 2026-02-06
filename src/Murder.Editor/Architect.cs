@@ -551,7 +551,7 @@ namespace Murder.Editor
             }
 
             // TODO: Figure out how to listen to drop file events
-            SDL3.SDL.SDL_SetEventEnabled((uint)SDL3.SDL.SDL_EventType.SDL_EVENT_DROP_FILE, true);
+            // SDL3.SDL.SDL_SetEventEnabled((uint)SDL3.SDL.SDL_EventType.SDL_EVENT_DROP_FILE, true);
             UpdateCursor();
         }
 
@@ -561,14 +561,6 @@ namespace Murder.Editor
         }
 
         protected override void OnLoadingDraw(RenderContext renderContext) { }
-
-        protected override void ApplyGameSettingsImpl()
-        {
-            // This will allow us to run as many updates as possible in editor, for debugging.
-            // keywords: Framerate, FPS, VSync
-            _graphics.SynchronizeWithVerticalRetrace = Architect.EditorSettings.LockFramerate;
-            // IsFixedTimeStep = Architect.EditorSettings.LockFramerate;
-        }
 
         protected override void Dispose(bool isDisposing)
         {

@@ -623,8 +623,8 @@ namespace Murder.Utilities
         /// <summary>
         /// Smoothly interpolates between two vectors over time using a linear interpolation method.
         /// </summary>
-        /// <param name="a">The starting vector.</param>
-        /// <param name="b">The target vector.</param>
+        /// <param name="current">The starting vector.</param>
+        /// <param name="target">The target vector.</param>
         /// <param name="deltaTime">The elapsed time since the last interpolation step.</param>
         /// <param name="halfLife">The half-life period, representing the time it takes to reach half of the remaining distance to the target vector.</param>
         /// <returns>A new vector that is the result of the smooth interpolation between the starting and target vectors.</returns>
@@ -633,14 +633,14 @@ namespace Murder.Utilities
         /// It is similar to a regular linear interpolation (lerp) but is designed to work effectively even when not using a fixed timestep.
         /// This makes it particularly useful for smooth transitions in animations or physics simulations where the update interval can vary.
         /// </remarks>
-        public static Vector2 LerpSmooth(Vector2 a, Vector2 b, float deltaTime, float halfLife)
+        public static Vector2 LerpSmooth(Vector2 current, Vector2 target, float deltaTime, float halfLife)
         {
-            return new Vector2(LerpSmooth(a.X, b.X, deltaTime, halfLife), LerpSmooth(a.Y, b.Y, deltaTime, halfLife));
+            return new Vector2(LerpSmooth(current.X, target.X, deltaTime, halfLife), LerpSmooth(current.Y, target.Y, deltaTime, halfLife));
         }
 
-        public static Vector2 LerpSmoothSnap(Vector2 a, Vector2 b, float deltaTime, float halfLife, float threshold)
+        public static Vector2 LerpSmoothSnap(Vector2 current, Vector2 target, float deltaTime, float halfLife, float threshold)
         {
-            return new Vector2(LerpSmoothSnap(a.X, b.X, deltaTime, halfLife, threshold), LerpSmoothSnap(a.Y, b.Y, deltaTime, halfLife, threshold));
+            return new Vector2(LerpSmoothSnap(current.X, target.X, deltaTime, halfLife, threshold), LerpSmoothSnap(current.Y, target.Y, deltaTime, halfLife, threshold));
         }
 
         /// <summary>
@@ -687,9 +687,9 @@ namespace Murder.Utilities
             return LerpSmoothSnap(a, b, deltaTime, halfLife, 0.001f);
         }
 
-        public static float LerpSmoothSnap(float a, float b, float deltaTime, float halfLife, float threshold)
+        public static float LerpSmoothSnap(float current, float target, float deltaTime, float halfLife, float threshold)
         {
-            return Math.Abs(a - b) < threshold ? b : b + (a - b) * float.Exp2(-deltaTime / halfLife);
+            return Math.Abs(target - current) < threshold ? target : current + (target - current) * float.Exp2(-deltaTime / halfLife);
         }
 
         public static int FloorToInt(float v) => (int)MathF.Floor(v);

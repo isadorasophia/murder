@@ -513,7 +513,8 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         }
     }
 
-    private float _lastSlowdown = -1f;
+    private float _lastSlowdown = -10f;
+    private float _lastTimeLoosingFrames = -10f;
     private int _previousGCGen1Count = 0;
     private int _previousGCGen2Count = 0;
     /// <summary>
@@ -541,7 +542,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
             GcTracker.Update(0f);
         }
 
-        if (Game.IsRunningSlowly)
+        if (Game.SlowdownDetected)
         {
             _lastSlowdown = Game.NowUnscaled;
         }
@@ -560,7 +561,26 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
             ImGui.TextColored(Game.Profile.Theme.Green, "Game running well.");
         }
 
-        ImGui.Text($"Max frames lost: {Game.MaxLostFrames}");
+        if (Game.LoosingFrames)
+        {
+            _lastTimeLoosingFrames = Game.NowUnscaled;
+        }
+
+        float timeSinceLoosingFrames = Game.NowUnscaled - _lastTimeLoosingFrames;
+        if (timeSinceLoosingFrames <= 0.01f)
+        {
+            ImGui.TextColored(Game.Profile.Theme.Red, "Loosing frames! (just now)");
+        }
+        else if (timeSinceLoosingFrames <= 8f)
+        {
+            ImGui.TextColored(timeSinceLoosingFrames < 1 ? Game.Profile.Theme.Red : Game.Profile.Theme.Yellow, $"Loosing frames! ({timeSinceLoosingFrames:0.0}s ago)");
+        }
+        else
+        {
+            ImGui.TextColored(Game.Profile.Theme.Green, "No frame loss detected.");
+        }
+
+        ImGui.Text($"Max frames lost: {Game.MaxFixedUpdatesInASingleFrame}");
         float target = 1f / Game.Profile.TargetFps;
         float maxDeltaTimePercent = (Game.MaxDeltaTime / target) * 100f;
         ImGui.Text($"Max delta time: {Game.MaxDeltaTime * 1000:0.000} of {Game.Profile.TargetFps} FPS)");
@@ -569,7 +589,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         
         if (ImGui.Button("Clear##ClearMaxDeltaTime"))
         {
-            Game.MaxLostFrames = 0;
+            Game.MaxFixedUpdatesInASingleFrame = 0;
             Game.MaxDeltaTime = 0;
         }
 
