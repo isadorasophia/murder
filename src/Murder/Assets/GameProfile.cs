@@ -166,7 +166,12 @@ namespace Murder.Assets
         public bool ScalingFilter => _scalingFilter;
 
         public readonly int TargetFps = 60;
-        public readonly bool IsVSyncEnabled = false;
+
+        /// <summary>
+        /// Turning this off might cause a lot of tearing.
+        /// </summary>
+        public readonly bool IsVSyncEnabled = true;
+
         public readonly bool ShowUiDebug = true;
         public readonly float PushAwayInterval = 0.05f;
         public readonly int DefaultGridCellSize = 24;
