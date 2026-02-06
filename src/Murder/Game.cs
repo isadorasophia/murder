@@ -781,9 +781,9 @@ namespace Murder
                 }
             }
 
-            // If we're still significantly behind after the clamped catch-up,
-            if (_scaledElapsedTime - _lastFixedUpdateTime > _fixedUpdateDelta)
+            if (_scaledElapsedTime - _lastFixedUpdateTime > _fixedUpdateDelta * 1.5f)
             {
+                // This is too much debt, we need to catch up.
                 _lastFixedUpdateTime = _scaledElapsedTime;
             }
 

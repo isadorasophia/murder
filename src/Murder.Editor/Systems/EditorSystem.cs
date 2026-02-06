@@ -561,9 +561,9 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         }
 
         ImGui.Text($"Max frames lost: {Game.MaxLostFrames}");
-        float target = 1f / 60f;
+        float target = 1f / Game.Profile.TargetFps;
         float maxDeltaTimePercent = (Game.MaxDeltaTime / target) * 100f;
-        ImGui.Text($"Max delta time: {Game.MaxDeltaTime * 1000:0.000}");
+        ImGui.Text($"Max delta time: {Game.MaxDeltaTime * 1000:0.000} of {Game.Profile.TargetFps} FPS)");
         ImGui.SameLine();
         ImGui.Text($"({maxDeltaTimePercent:0.0}%%)");
         
