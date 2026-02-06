@@ -4,6 +4,7 @@ using Murder.Assets.Graphics;
 using Murder.Assets.Localization;
 using Murder.Attributes;
 using Murder.Data;
+using Murder.Serialization;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
@@ -75,7 +76,7 @@ public class FilteredAssetsForLocalization
         _localizationCandidates = Convert(builder);
     }
 
-    public void FetchLatestAssets()
+    public void FetchLatestAssets(bool startedEnabled)
     {
         if (_localizationCandidates is null)
         {
@@ -90,7 +91,7 @@ public class FilteredAssetsForLocalization
             for (int i = 0; i < properties.Assets.Length; ++i)
             {
                 AssetPropertiesForEditor assetProperties = properties.Assets[i];
-                assetsInQuickCheck[assetProperties.Guid] = assetProperties.Show;
+                assetsInQuickCheck[assetProperties.Guid] = assetProperties.Show && startedEnabled;
             }
 
             currentResources[label] = (properties.IsSelected, assetsInQuickCheck);
@@ -140,7 +141,7 @@ public class FilteredAssetsForLocalization
                 GameAsset assetA = Game.Data.GetAsset(a.Guid);
                 GameAsset assetB = Game.Data.GetAsset(b.Guid);
 
-                return assetA.Name.CompareTo(assetB.Name);
+                return FileHelper.EscapePath(assetA.Name).CompareTo(FileHelper.EscapePath(assetB.Name));
             });
 
             candidates.Add((type, list));
@@ -210,9 +211,9 @@ public class FilterLocalizationAsset : GameAsset
 
     public void FetchLatestAssets()
     {
-        foreach ((_, FilteredAssetsForLocalization f) in Filters)
+        foreach ((string name, FilteredAssetsForLocalization f) in Filters)
         {
-            f.FetchLatestAssets();
+            f.FetchLatestAssets(startedEnabled: string.Equals(name, DefaultFilterName));
         }
     }
 
