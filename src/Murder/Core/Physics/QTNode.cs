@@ -172,6 +172,19 @@ namespace Murder.Core.Physics
         /// <returns></returns>
         public bool Remove(int entityId)
         {
+            if (_entityLookup is not null && _entityLookup.TryGetValue(entityId, out var node))
+            {
+                node._entities.Remove(entityId);
+                _entityLookup.Remove(entityId);
+                return true;
+            }
+            // fallback for non-root calls (shouldn't happen if you always call from root)
+            return RemoveSlow(entityId);
+        }
+
+
+        private bool RemoveSlow(int entityId)
+        {
             bool success = false;
             if (_entities.Remove(entityId))
             {

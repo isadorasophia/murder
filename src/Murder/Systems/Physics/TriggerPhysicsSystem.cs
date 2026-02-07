@@ -124,7 +124,7 @@ namespace Murder.Systems.Physics
             }
 
             // Clear the list for the next frame.
-            
+
             _entitiesOnWatch.Clear();
         }
 
@@ -158,8 +158,16 @@ namespace Murder.Systems.Physics
             qt.Collision.Retrieve(boundingBox, _others);
 
             CollisionCacheComponent collisionCache = e.TryGetCollisionCache() ?? new CollisionCacheComponent();
-
             bool changed = false;
+
+            // Just sends messages and updates the *other* entity's cache.
+            // Does NOT touch our local collisionCache or call SetCollisionCache on e.
+            void NotifyRemoval(Entity other)
+            {
+                PhysicsServices.RemoveFromCollisionCache(other, e.EntityId);
+                SendCollisionMessages(isActorOrHitbox ? other : e, isActorOrHitbox ? e : other, CollisionDirection.Exit);
+            }
+
             bool RemoveFromCollisionCache(Entity e, Entity? other)
             {
                 // Start by notifying the other entity.
@@ -192,12 +200,8 @@ namespace Murder.Systems.Physics
             {
                 NodeInfo<Entity> node = _others[i];
                 Entity other = node.EntityInfo;
-                if (!other.IsActive)
-                {
-                    continue;
-                }
 
-                if (other.EntityId == e.EntityId)
+                if (!other.IsActive || other.EntityId == e.EntityId)
                 {
                     continue;
                 }
@@ -215,9 +219,12 @@ namespace Murder.Systems.Physics
                 bool isOtherActorOrHitbox = IsActorOrHitbox(other);
                 bool isOtherTrigger = IsTrigger(other);
 
-                bool validCollider = (isActorOrHitbox && isOtherTrigger) || (isTrigger && isOtherActorOrHitbox);
-                if (!validCollider)
+                if (!(isActorOrHitbox && isOtherTrigger) && !(isTrigger && isOtherActorOrHitbox))
                 {
+                    // Collider is not a valid pair, so we skip it.
+                    // Valid pairs are:
+                    // - Actor/Hitbox -> Trigger
+                    // - Trigger -> Actor/Hitbox
                     continue;
                 }
 
@@ -226,7 +233,7 @@ namespace Murder.Systems.Physics
                 // Check if there's a previous collision happening here
                 if (!collisionCache.HasId(other.EntityId))
                 {
-                    if (PhysicsServices.CollidesWith(e, other)) // This is the actual physics check
+                    if (PhysicsServices.CollidesWith(e, other)) // <=== This is the actual (and expensive) physics check
                     {
                         // If no previous collision is detected, send messages and add this ID to current collision cache.
                         SendCollisionMessages(isActorOrHitbox ? other : e, isActorOrHitbox ? e : other, CollisionDirection.Enter);
@@ -238,7 +245,10 @@ namespace Murder.Systems.Physics
                 }
                 else if (!PhysicsServices.CollidesWith(e, other))
                 {
-                    RemoveFromCollisionCache(e, other);
+                    // Remove from our local copy, notify the other guy
+                    collisionCache = collisionCache.Remove(other.EntityId);
+                    changed = true;
+                    NotifyRemoval(other);
                 }
             }
 
@@ -247,12 +257,17 @@ namespace Murder.Systems.Physics
             {
                 if (_collisionVisitedEntities.Contains(entityId))
                 {
-                    // Already verified.
+                    // Already verified, go away
                     continue;
                 }
 
-                Entity? other = world.TryGetEntity(entityId);
-                RemoveFromCollisionCache(e, other);
+                if (world.TryGetEntity(entityId) is Entity other)
+                {
+                    NotifyRemoval(other);
+                }
+
+                collisionCache = collisionCache.Remove(entityId);
+                changed = true;
             }
 
             if (changed)

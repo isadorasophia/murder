@@ -321,7 +321,7 @@ public static class PhysicsServices
             if (world.TryGetEntity(id) is Entity entity)
             {
                 _ignoreEntitiesWithChildren.Add(id);
-                _ignoreEntitiesWithChildren.AddRange(EntityServices.GetAllChildren(world, entity));
+                EntityServices.GetAllChildren(world, entity, _ignoreEntitiesWithChildren);
             }
         }
 
@@ -1554,7 +1554,7 @@ public static class PhysicsServices
 
                     var botRight = new Point(
                         Calculator.CeilToInt((position.X + circle.Offset.X + circle.Radius) / Grid.CellSize),
-                        Calculator.CeilToInt((position.Y + circle.Offset.X + circle.Radius) / Grid.CellSize));
+                        Calculator.CeilToInt((position.Y + circle.Offset.Y + circle.Radius) / Grid.CellSize));
 
                     if (map.HasCollisionAt(topLeft.X, topLeft.Y, botRight.X - topLeft.X, botRight.Y - topLeft.Y, mask) is Point point)
                         return true;

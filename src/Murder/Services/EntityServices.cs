@@ -162,6 +162,25 @@ public static class EntityServices
             }
         }
     }
+    internal static void GetAllChildren(World world, Entity entity, List<int> list)
+    {
+        foreach (int childId in entity.Children)
+        {
+            if (world.TryGetEntity(childId) is not Entity child)
+            {
+                // Child died...?
+                continue;
+            }
+
+            // Return the child and its children
+            foreach (int entityIdInTree in GetAllTreeOfEntities(world, child))
+            {
+                list.Add(entityIdInTree);
+                GetAllChildren(world, child, list); // recursive call to get the children of the child of the child of the child
+            }
+        }
+    }
+
 
     public static Entity FindRootEntity(Entity e)
     {
