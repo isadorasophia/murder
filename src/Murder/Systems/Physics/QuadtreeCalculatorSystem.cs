@@ -4,11 +4,8 @@ using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
-using Murder.Components.Effects;
-using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Physics;
-using Murder.Diagnostics;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
@@ -25,19 +22,25 @@ public class QuadtreeCalculatorSystem : IReactiveSystem, IStartupSystem
     public void OnAdded(World world, ImmutableArray<Entity> entities)
     {
         for (int i = 0; i < entities.Length; i++)
+        {
             _toUpdate.Add(entities[i].EntityId);
+        }
     }
 
     public void OnModified(World world, ImmutableArray<Entity> entities)
     {
         for (int i = 0; i < entities.Length; i++)
+        {
             _toUpdate.Add(entities[i].EntityId);
+        }
     }
 
     public void OnActivated(World world, ImmutableArray<Entity> entities)
     {
         for (int i = 0; i < entities.Length; i++)
+        {
             _toUpdate.Add(entities[i].EntityId);
+        }
     }
 
     public void OnRemoved(World world, ImmutableArray<Entity> entities)
@@ -78,9 +81,14 @@ public class QuadtreeCalculatorSystem : IReactiveSystem, IStartupSystem
             if (world.TryGetEntity(entityId) is Entity entity && entity.IsActive)
             {
                 Vector2 pos = entity.GetGlobalPosition();
-                ColliderComponent collider = entity.GetCollider();
-                Rectangle bounds = collider.GetBoundingBox(pos, entity.FetchScale());
-                
+                ColliderComponent? collider = entity.TryGetCollider();
+                if (collider is null)
+                {
+                    qt.RemoveFromCollisionQuadTree(entityId);
+                    continue;
+                }
+
+                Rectangle bounds = collider.Value.GetBoundingBox(pos, entity.FetchScale());
                 qt.Collision.Update(entityId, entity, bounds);
 
                 // Same for PushAway
