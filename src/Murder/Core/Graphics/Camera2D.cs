@@ -103,8 +103,8 @@ namespace Murder.Core.Graphics
 
                 if (ShakeTime > 0)
                 {
-                    float shakeX = (float)Math.Sin((Game.NowAbsolute * 200f) * 31) * 2 - 1; // The numbers here can be adjusted for different shake patterns
-                    float shakeY = (float)Math.Sin((Game.NowAbsolute * 200f) * 17) * 2 - 1; // These should ideally be irrational numbers
+                    float shakeX = (float)Math.Sin((Game.NowUnscaled * 200f) * 31) * 2 - 1; // The numbers here can be adjusted for different shake patterns
+                    float shakeY = (float)Math.Sin((Game.NowUnscaled * 200f) * 17) * 2 - 1; // These should ideally be irrational numbers
                     _cachedWorldViewProjection = null;
 
                     return _position + new Vector2(shakeX, shakeY) * ShakeIntensity + new Vector2(0, bump * _bump);

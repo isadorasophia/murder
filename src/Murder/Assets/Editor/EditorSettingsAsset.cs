@@ -258,9 +258,6 @@ public class EditorSettingsAsset : GameAsset
 
     public float DpiScale = 1f;
 
-    [Tooltip("Requires editor restart")]
-    public bool LockFramerate = true;
-
     [Serialize]
     public bool CheckForPackedAssetsIntegrity = false;
 

@@ -57,15 +57,10 @@ namespace Murder.Editor
 
         protected override IPreloadGame? TryCreatePreloadScreen() => null;
 
-        /* *** SDL helpers *** */
-        private const int SDL_WINDOW_MAXIMIZED = 0x00000080;
-
         /* *** Architect state *** */
         private bool _isPlayingGame = false;
 
         private StartPlayGameInfo? _queueStartPlayGame = null;
-
-        protected override bool AlwaysUpdateBeforeFixed => _isPlayingGame;
 
         public bool IsPlayingGame => _isPlayingGame;
 
@@ -563,14 +558,6 @@ namespace Murder.Editor
         }
 
         protected override void OnLoadingDraw(RenderContext renderContext) { }
-
-        protected override void ApplyGameSettingsImpl()
-        {
-            // This will allow us to run as many updates as possible in editor, for debugging.
-            // keywords: Framerate, FPS, VSync
-            _graphics.SynchronizeWithVerticalRetrace = Architect.EditorSettings.LockFramerate;
-            IsFixedTimeStep = Architect.EditorSettings.LockFramerate;
-        }
 
         protected override void Dispose(bool isDisposing)
         {
