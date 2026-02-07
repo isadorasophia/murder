@@ -15,6 +15,7 @@ namespace Murder.Systems.Physics
     [Filter(ContextAccessorFilter.AllOf, typeof(PositionComponent), typeof(ColliderComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(IgnoreTriggersUntilComponent))]
     [Watch(typeof(PositionComponent))]
+    [Requires(typeof(QuadtreeCalculatorSystem))]
     public class TriggerPhysicsSystem : IReactiveSystem
     {
         private readonly List<NodeInfo<Entity>> _others = [];
@@ -123,6 +124,7 @@ namespace Murder.Systems.Physics
             }
 
             // Clear the list for the next frame.
+            
             _entitiesOnWatch.Clear();
         }
 
