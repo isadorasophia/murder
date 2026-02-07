@@ -444,7 +444,7 @@ namespace Murder.Utilities
         /// </remarks>
         public static float ClampTime(float elapsed, float duration)
         {
-            if (duration==0)
+            if (duration == 0)
                 return 1;
             return Calculator.Clamp01(Math.Clamp(elapsed, 0, Math.Max(0, duration)) / duration);
         }
@@ -469,7 +469,7 @@ namespace Murder.Utilities
 
             if (elapsed < inDuration)
             {
-                return ClampTime(elapsed, inDuration); 
+                return ClampTime(elapsed, inDuration);
             }
 
             if (elapsed < inDuration + delayDuration)
@@ -585,9 +585,9 @@ namespace Murder.Utilities
 
         public static float Remap(float input, float min, float max)
         {
-            return min + (input) * (max - min) ;
+            return min + (input) * (max - min);
         }
-        
+
         public static float Lerp(float origin, float target, float factor)
         {
             return origin * (1 - factor) + target * factor;
@@ -689,7 +689,9 @@ namespace Murder.Utilities
 
         public static float LerpSmoothSnap(float current, float target, float deltaTime, float halfLife, float threshold)
         {
-            return Math.Abs(target - current) < threshold ? target : current + (target - current) * float.Exp2(-deltaTime / halfLife);
+            return Math.Abs(target - current) < threshold
+                ? target
+                : current + (target - current) * (1 - float.Exp2(-deltaTime / halfLife));
         }
 
         public static int FloorToInt(float v) => (int)MathF.Floor(v);

@@ -123,6 +123,7 @@ namespace Murder
         public static bool LoosingFrames { get; private set; } = false;
         public static int MaxFixedUpdatesInASingleFrame { get; set; } = 0;
         public static float MaxDeltaTime { get; set; } = 0;
+        public static bool UseXnaGameTime { get; set; } = true;
 
         /// <summary>
         /// Whether the game support saving game progress.
@@ -678,16 +679,19 @@ namespace Murder
         /// </summary>
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
+            _preload?.Update();
+
             if (DIAGNOSTICS_MODE)
             {
                 _updateDiagnosticStopwatch.Start();
             }
 
             base.Update(gameTime);
+            double rawDeltaTime = gameTime.ElapsedGameTime.TotalSeconds;
 
             if (_waitForSaveComplete && !CanResumeAfterSaveComplete())
             {
-                UpdateUnscaledDeltaTime(gameTime.ElapsedGameTime.TotalSeconds); // Using XNA GameTime, because this is called before the actual update logic
+                _unscaledElapsedTime += gameTime.ElapsedGameTime.TotalSeconds; // Using XNA GameTime, because this is called before the actual update logic
 
                 // Don't do any logic operation yet, we are waiting for the save to complete.
                 return;
@@ -707,9 +711,6 @@ namespace Murder
                 }
             }
 
-            _preload?.Update();
-
-            double rawDeltaTime = gameTime.ElapsedGameTime.TotalSeconds;
             UpdateImpl(rawDeltaTime);
 
             while (_isSkippingDeltaTimeOnUpdate)
@@ -831,11 +832,26 @@ namespace Murder
             // --- Update (once per frame) ---
             if (_preload is null)
             {
-                // SimulateRandomStalls();
+                //SimulateRandomStalls();
                 ActiveScene.Update();
             }
 
             _game?.OnUpdate();
+        }
+
+        /// <summary>
+        /// Call this to simulate random frame spikes for testing.
+        /// </summary>
+        [Conditional("DEBUG")]
+        private void SimulateRandomStalls()
+        {
+            // ~2% chance of a stall each frame
+            if (Random.NextDouble() < 0.02)
+            {
+                // Random stall between 1-4 fixed updates worth of time
+                int ms = (int)(_fixedUpdateDelta * 1000 * (1 + Random.NextDouble() * 3));
+                Thread.Sleep(ms);
+            }
         }
 
         /// <summary>
@@ -960,11 +976,6 @@ namespace Murder
             base.Dispose(isDisposing);
         }
 
-        private void UpdateUnscaledDeltaTime(double deltaTime)
-        {
-            _unscaledElapsedTime += deltaTime;
-        }
-
         private void SetTargetFixedFramerate(int fixedFps)
         {
             _fixedUpdateDelta = 1f / fixedFps;
@@ -993,21 +1004,5 @@ namespace Murder
             Haptics.ClearAll();
             _game?.OnClose();
         }
-
-#if DEBUG
-        /// <summary>
-        /// Call this to simulate random frame spikes for testing.
-        /// </summary>
-        private void SimulateRandomStalls()
-        {
-            // ~2% chance of a stall each frame
-            if (Random.NextDouble() < 0.02)
-            {
-                // Random stall between 1-4 fixed updates worth of time
-                int ms = (int)(_fixedUpdateDelta * 1000 * (1 + Random.NextDouble() * 3));
-                Thread.Sleep(ms);
-            }
-        }
-#endif
     }
 }
