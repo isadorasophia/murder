@@ -710,8 +710,9 @@ namespace Murder
                     _initialiazedAfterContentLoaded = true;
                 }
             }
-
-            UpdateImpl(rawDeltaTime);
+            // We clamp the delta time to avoid huge spikes that can cause instability in the physics and other systems.
+            // 3 fixed updates sounds reasonable, if we are running that far behind we are probably better off just skipping frames and not trying to catch up.
+            UpdateImpl(Math.Min(rawDeltaTime, FixedDeltaTime * 3));
 
             while (_isSkippingDeltaTimeOnUpdate)
             {
@@ -765,7 +766,7 @@ namespace Murder
         {
             DoPendingExitGame();
             DoPendingWorldTransition();
-            
+
             GameLogger.Verify(ActiveScene is not null);
 
             if (_freezeFrameCount > 0)
