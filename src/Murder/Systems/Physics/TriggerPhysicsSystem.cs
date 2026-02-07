@@ -168,34 +168,6 @@ namespace Murder.Systems.Physics
                 SendCollisionMessages(isActorOrHitbox ? other : e, isActorOrHitbox ? e : other, CollisionDirection.Exit);
             }
 
-            bool RemoveFromCollisionCache(Entity e, Entity? other)
-            {
-                // Start by notifying the other entity.
-                if (other is null)
-                {
-                    return false;
-                }
-
-                bool shouldAlert = PhysicsServices.RemoveFromCollisionCache(other, e.EntityId);
-
-                // And check the entity itself.
-                if (collisionCache.CollidingWith.Contains(other.EntityId))
-                {
-                    collisionCache = collisionCache.Remove(other.EntityId);
-                    e.SetCollisionCache(collisionCache);
-
-                    changed = true;
-                    shouldAlert = true;
-                }
-
-                if (shouldAlert)
-                {
-                    SendCollisionMessages(isActorOrHitbox ? other : e, isActorOrHitbox ? e : other, CollisionDirection.Exit);
-                }
-
-                return true;
-            }
-
             for (int i = 0; i < _others.Count; i++)
             {
                 NodeInfo<Entity> node = _others[i];
