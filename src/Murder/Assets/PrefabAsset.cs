@@ -48,7 +48,11 @@ namespace Murder.Assets
         /// This will replace an existing entity in the world.
         /// It keeps some elements of the original entity: position and target id components.
         /// </summary>
-        public void Replace(World world, Entity e) => _entity.Create(world, e);
+        public void Replace(World world, Entity e)
+        {
+            _entity.Create(world, e);
+            e.SendOnReplacedMessage();
+        }
 
         /// <summary>
         /// This will replace an existing entity in the world.

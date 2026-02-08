@@ -55,7 +55,6 @@ public static class AssetServices
         }
 
         asset.Replace(world, e);
-
         return true;
     }
 
