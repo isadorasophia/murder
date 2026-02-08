@@ -52,14 +52,12 @@ namespace Murder.Systems
                 }
 
                 FacingComponent facing = e.GetFacing();
-                Vector2 impulse = Vector2.Zero;
-
-                if (e.TryGetAgentImpulse() is AgentImpulseComponent imp) impulse = imp.Impulse;
+                bool isMoving = EntityServices.IsMoving(e);
 
                 float start = NoiseHelper.Value1D(e.EntityId * 10) * 5f;
                 var prefix = sprite.IdlePrefix;
 
-                if (impulse.HasValue() && !e.HasDisableAgent() && !e.HasAgentPause())
+                if (isMoving && !e.HasDisableAgent() && !e.HasAgentPause())
                 {
                     prefix = sprite.WalkPrefix;
                     SetParticleWalk(context.World, e, isWalking: true);
@@ -183,7 +181,7 @@ namespace Murder.Systems
                 if (e.TryGetCustomTargetSpriteBatch() is CustomTargetSpriteBatchComponent renderTarget)
                     target = renderTarget.TargetBatch;
 
-                if (impulse.HasValue() && spriteAsset.Animations.TryGetValue(prefix + sprite.WalkPrefix + suffix, out _) && !e.HasDisableAgent() && !e.HasAgentPause())
+                if (isMoving && spriteAsset.Animations.TryGetValue(prefix + sprite.WalkPrefix + suffix, out _) && !e.HasDisableAgent() && !e.HasAgentPause())
                 {
                     prefix += sprite.WalkPrefix;
                 }

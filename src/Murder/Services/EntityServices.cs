@@ -41,6 +41,15 @@ public static class EntityServices
         TurnFaceTowards(entity, targetFacing, duration);
     }
 
+    /// <summary>
+    /// Returns whether <paramref name="e"/> is still walking towards a path.
+    /// </summary>
+    /// <remarks>
+    /// We can't rely on impulse.
+    /// </remarks>
+    public static bool IsMoving(Entity e) =>
+        e.HasVelocity() || e.HasAgentImpulse() || e.HasMoveTo() || e.HasPathfind() || e.HasMoveToPerfect();
+
     public static void TurnFaceTowards(this Entity entity, Direction targetDirection, float duration)
     {
         Direction currentFacing = entity.TryGetFacing()?.Direction ?? Direction.Up;

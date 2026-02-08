@@ -167,7 +167,7 @@ namespace Murder.Systems
                 return false;
             }
 
-            return e.HasVelocity() || e.HasAgentImpulse() || e.HasMoveToPerfect();
+            return EntityServices.IsMoving(e);
         }
 
         private void Play(SoundEventId sound, Entity e)
