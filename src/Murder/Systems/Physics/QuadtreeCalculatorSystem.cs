@@ -19,6 +19,7 @@ public class QuadtreeCalculatorSystem : IReactiveSystem, IStartupSystem
 {
     private readonly HashSet<int> _toUpdate = new(256);
     private readonly HashSet<int> _toRemove = new(64);
+
     public void OnAdded(World world, ImmutableArray<Entity> entities)
     {
         for (int i = 0; i < entities.Length; i++)
@@ -62,10 +63,13 @@ public class QuadtreeCalculatorSystem : IReactiveSystem, IStartupSystem
             _toRemove.Add(id);
         }
     }
+
     public void OnAfterTrigger(World world)
     {
         if (_toUpdate.Count == 0 && _toRemove.Count == 0)
+        {
             return;
+        }
 
         Quadtree qt = Quadtree.GetOrCreateUnique(world);
 

@@ -30,6 +30,8 @@ public class SATPhysicsSystem : IFixedUpdateSystem
     private readonly HashSet<int> _ignore = new();
     private readonly HashSet<int> _hitCounter = new();
 
+    private readonly List<PhysicEntityCachedInfo> _cachedCandidates = [];
+
     public void FixedUpdate(Context context)
     {
         Map map = context.World.GetUniqueMap().Map;
@@ -131,17 +133,14 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                 {
                     _entityList.Clear();
                     _hitCounter.Clear();
+                    _cachedCandidates.Clear();
 
                     IntRectangle boundingBox = collider!.Value.GetBoundingBox(startPosition + velocity, e.FetchScale());
-                    ImmutableArray<PhysicEntityCachedInfo> collisionEntities;
-                    if (ignoreCollisions)
-                    {
-                        collisionEntities = [];
-                    }
-                    else
+
+                    if (!ignoreCollisions)
                     {
                         qt.GetCollisionEntitiesAt(boundingBox, _entityList);
-                        collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(_entityList, _ignore, mask);
+                        PhysicsServices.FilterPositionAndColliderEntities(_entityList, _ignore, mask, result: _cachedCandidates);
                     }
 
                     int exhaustCounter = ExhaustLimit;
@@ -154,7 +153,7 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                     bool Step(Vector2 moveToPosition)
                     {
                         // If the velocity is low, we can just check the full velocity.
-                        while (PhysicsServices.GetFirstMtvAt(map, collider.Value, startPosition, moveToPosition, collisionEntities, mask, out int id, out int layer, out pushout)
+                        while (PhysicsServices.GetFirstMtvAt(map, collider.Value, startPosition, moveToPosition, _cachedCandidates, mask, out int id, out int layer, out pushout)
                             && exhaustCounter-- > 0)
                         {
                             moveToPosition = moveToPosition - pushout;

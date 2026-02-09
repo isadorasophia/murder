@@ -10,6 +10,7 @@ using Murder.Core.Physics;
 using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -441,7 +442,9 @@ public static class PhysicsServices
         CheckTarget = 0b1000
     }
 
-    private readonly static HashSet<Vector2> _checkedPositionsCache = new();
+    private readonly static HashSet<Vector2> _checkedPositionsCache = [];
+    private readonly static List<PhysicEntityCachedInfo> _cachedEntityInfo = [];
+
     /// <summary>
     /// Find an eligible position to place an entity <paramref name="e"/> in the world that does not collide
     /// with other entities and targets <paramref name="target"/>.
@@ -456,12 +459,15 @@ public static class PhysicsServices
         NextAvailablePositionFlags flags = NextAvailablePositionFlags.CheckTarget | NextAvailablePositionFlags.CheckNeighbours | NextAvailablePositionFlags.CheckRecursiveNeighbours)
     {
         Map map = world.GetUniqueMap().Map;
-        var collisionEntities = FilterPositionAndColliderEntities(
-            world,
-            layerMask);
-        _checkedPositionsCache.Clear();
 
-        return FindNextAvailablePosition(world, e, center, target, map, collisionEntities, _checkedPositionsCache, flags, layerMask);
+        _cachedEntityInfo.Clear();
+        FilterPositionAndColliderEntities(
+            world,
+            layerMask,
+            /* ref */ result: _cachedEntityInfo);
+
+        _checkedPositionsCache.Clear();
+        return FindNextAvailablePosition(world, e, center, target, map, _cachedEntityInfo, _checkedPositionsCache, flags, layerMask);
     }
 
     public static bool CollidesAt(
@@ -471,24 +477,26 @@ public static class PhysicsServices
         int layerMask)
     {
         Map map = world.GetUniqueMap().Map;
-        var collisionEntities = FilterPositionAndColliderEntities(
+
+        _cachedEntityInfo.Clear();
+        FilterPositionAndColliderEntities(
             world,
-            layerMask);
+            layerMask,
+            /* ref */ result: _cachedEntityInfo);
 
         if (e.TryGetCollider() is ColliderComponent collider)
         {
             Vector2 scale = e.FetchScale();
-            return CollidesAt(map, e.EntityId, collider, position, scale, collisionEntities, layerMask, out int _);
+            return CollidesAt(map, e.EntityId, collider, position, scale, _cachedEntityInfo, layerMask, out int _);
         }
         else
         {
             GameLogger.Warning("Creating a collider on the fly, is this really what you want?");
+
             // Check using a single point
-            return CollidesAt(map, e.EntityId, new ColliderComponent(new PointShape(), CollisionLayersBase.NONE, Color.Gray), position, Vector2.One, collisionEntities, layerMask, out int _);
+            return CollidesAt(map, e.EntityId, new ColliderComponent(new PointShape(), CollisionLayersBase.NONE, Color.Gray), position, Vector2.One, _cachedEntityInfo, layerMask, out int _);
         }
     }
-
-
 
     /// <summary>
     /// Position to check for collision used by <c>FindNextAvailablePosition</c>.
@@ -501,7 +509,7 @@ public static class PhysicsServices
         Vector2 center,
         Vector2 target,
         Map map,
-        ImmutableArray<PhysicEntityCachedInfo> collisionEntities,
+        IList<PhysicEntityCachedInfo> collisionEntities,
         HashSet<Vector2> checkedPositions,
         NextAvailablePositionFlags flags,
         int layerMask)
@@ -583,24 +591,30 @@ public static class PhysicsServices
         return position.Neighbours(width * Grid.CellSize, height * Grid.CellSize, unit);
     }
 
-    public static ImmutableArray<PhysicEntityCachedInfo> FilterPositionAndColliderEntities(List<NodeInfo<Entity>> entities, HashSet<int> ignore, int layerMask)
+    public static void FilterPositionAndColliderEntities(List<NodeInfo<Entity>> entities, HashSet<int> ignore, int layerMask, /* ref */ List<PhysicEntityCachedInfo> result)
     {
-        _physicsInfoCacheBuilder.Clear();
         for (int i = 0; i < entities.Count; i++)
         {
-            var e = entities[i];
+            NodeInfo<Entity> e = entities[i];
 
             if (ignore.Contains(e.EntityInfo.EntityId))
+            {
                 continue;
+            }
 
-            if (e.EntityInfo.IsDestroyed || !e.EntityInfo.HasCollider())
+            if (!e.EntityInfo.IsActive || !e.EntityInfo.HasCollider())
+            {
+                GameLogger.Warning($"Why is entity {e.EntityInfo.EntityId} still at the quadtree?");
                 continue;
+            }
 
-            var collider = e.EntityInfo.GetCollider();
+            ColliderComponent collider = e.EntityInfo.GetCollider();
             if ((collider.Layer & layerMask) == 0)
+            {
                 continue;
+            }
 
-            _physicsInfoCacheBuilder.Add(
+            result.Add(
                 new PhysicEntityCachedInfo(
                     e.EntityInfo.EntityId,
                     e.EntityInfo.FetchScale(),
@@ -608,21 +622,26 @@ public static class PhysicsServices
                     collider
                 ));
         }
-        var collisionEntities = _physicsInfoCacheBuilder.ToImmutable();
-        return collisionEntities;
     }
 
 
-    public static ImmutableArray<PhysicEntityCachedInfo> FilterPositionAndColliderEntities(IEnumerable<Entity> entities, int layerMask)
+    public static void FilterPositionAndColliderEntities(IEnumerable<Entity> entities, int layerMask, /* ref */ List<PhysicEntityCachedInfo> result)
     {
-        _physicsInfoCacheBuilder.Clear();
-        foreach (var e in entities)
+        foreach (Entity e in entities)
         {
-            var collider = e.GetCollider();
-            if ((collider.Layer & layerMask) == 0)
+            if (!e.IsActive || !e.HasCollider())
+            {
+                GameLogger.Warning($"Why is entity {e.EntityId} still being passed on for collision?");
                 continue;
+            }
 
-            _physicsInfoCacheBuilder.Add(
+            ColliderComponent collider = e.GetCollider();
+            if ((collider.Layer & layerMask) == 0)
+            {
+                continue;
+            }
+
+            result.Add(
                 new PhysicEntityCachedInfo(
                     e.EntityId,
                     e.FetchScale(),
@@ -630,40 +649,44 @@ public static class PhysicsServices
                     collider
                 ));
         }
-        var collisionEntities = _physicsInfoCacheBuilder.ToImmutable();
-        return collisionEntities;
     }
 
-    public static ImmutableArray<PhysicEntityCachedInfo> FilterPositionAndColliderEntities(World world, Func<Entity, bool> filter)
+    public static void FilterPositionAndColliderEntities(World world, Func<Entity, bool> filter, /* ref */ List<PhysicEntityCachedInfo> result)
     {
-        _physicsInfoCacheBuilder.Clear();
-        foreach (var e in world.GetEntitiesWith(ContextAccessorFilter.AllOf, typeof(ColliderComponent), typeof(PositionComponent)))
+        result.Clear();
+
+        ImmutableArray<Entity> entities = GetColliderEntities(world);
+        foreach (Entity e in entities)
         {
-            var collider = e.GetCollider();
-            if (filter(e))
+            ColliderComponent collider = e.GetCollider();
+            if (!filter(e))
             {
-                _physicsInfoCacheBuilder.Add(new PhysicEntityCachedInfo(
-                    e.EntityId,
-                    e.FetchScale(),
-                    e.GetGlobalPosition().ToPoint(),
-                    collider
-                    ));
+                continue;
             }
+
+            result.Add(new PhysicEntityCachedInfo(
+                e.EntityId,
+                e.FetchScale(),
+                e.GetGlobalPosition().ToPoint(),
+                collider
+                ));
         }
-        var collisionEntities = _physicsInfoCacheBuilder.ToImmutable();
-        return collisionEntities;
     }
 
-    public static ImmutableArray<PhysicEntityCachedInfo> FilterPositionAndColliderEntities(World world, int layerMask)
+    public static void FilterPositionAndColliderEntities(World world, int layerMask, /* ref */ List<PhysicEntityCachedInfo> result)
     {
-        _physicsInfoCacheBuilder.Clear();
-        foreach (var e in world.GetEntitiesWith(ContextAccessorFilter.AllOf, typeof(ColliderComponent), typeof(PositionComponent)))
-        {
-            var collider = e.GetCollider();
-            if ((collider.Layer & layerMask) == 0)
-                continue;
+        result.Clear();
 
-            _physicsInfoCacheBuilder.Add(
+        ImmutableArray<Entity> entities = GetColliderEntities(world);
+        foreach (Entity e in entities)
+        {
+            ColliderComponent collider = e.GetCollider();
+            if ((collider.Layer & layerMask) == 0)
+            {
+                continue;
+            }
+
+            result.Add(
                 new PhysicEntityCachedInfo
                 (
                 e.EntityId,
@@ -672,50 +695,69 @@ public static class PhysicsServices
                 collider
                 ));
         }
-        var collisionEntities = _physicsInfoCacheBuilder.ToImmutable();
-        return collisionEntities;
     }
 
-    public static ImmutableArray<Entity> FilterEntities(World world, int layerMask)
-    {
-        var builder = ImmutableArray.CreateBuilder<Entity>();
-        foreach (var e in world.GetEntitiesWith(ContextAccessorFilter.AllOf, typeof(ColliderComponent), typeof(PositionComponent)))
-        {
-            var collider = e.GetCollider();
-            if ((collider.Layer & layerMask) == 0)
-                continue;
+    private static int _colliderAndPositionContextId = -1;
 
-            builder.Add(e);
-        }
-        var collisionEntities = builder.ToImmutable();
-        return collisionEntities;
+    private static int CreateColliderContext(World world)
+    {
+        return world.GetOrCreateContextIdFrom(
+                ContextAccessorFilter.AllOf, typeof(ColliderComponent), typeof(PositionComponent));
     }
 
-    public static ImmutableArray<(int id, ColliderComponent collider, Vector2 position)> FilterPositionAndColliderEntities(World world, int layerMask, params Type[] requireComponents)
+    /// <summary>
+    /// Return all entities that have a collider and a position component.
+    /// </summary>
+    private static ImmutableArray<Entity> GetColliderEntities(World world)
     {
-        var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent collider, Vector2 position)>();
-        Type[] filter = new Type[requireComponents.Length + 2];
-        filter[0] = typeof(ColliderComponent);
-        filter[1] = typeof(PositionComponent);
-        for (int i = 0; i < requireComponents.Length; i++)
+        if (_colliderAndPositionContextId == -1)
         {
-            filter[i + 2] = requireComponents[i];
+            _colliderAndPositionContextId = CreateColliderContext(world);
         }
 
-        foreach (var e in world.GetEntitiesWith(ContextAccessorFilter.AllOf, filter))
+        if (!world.TryGetEntitiesFrom(_colliderAndPositionContextId, out ImmutableArray<Entity>? entities))
         {
-            var collider = e.GetCollider();
+            // this likely means that this context was never created in this world, although we persist from something else.
+            _colliderAndPositionContextId = CreateColliderContext(world);
+            entities = world.GetEntitiesFrom(_colliderAndPositionContextId);
+        }
+
+        return entities.Value;
+    }
+
+    public static void FilterPositionAndColliderEntities(World world, int layerMask, Type[]? requireComponents, /* ref */ List<(int id, ColliderComponent collider, Vector2 position)> result)
+    {
+        ImmutableArray<Entity> entities;
+        if (requireComponents is not null)
+        {
+            Type[] filter = new Type[2 + requireComponents.Length + 2];
+            filter[0] = typeof(ColliderComponent);
+            filter[1] = typeof(PositionComponent);
+
+            for (int i = 0; i < requireComponents.Length; i++)
+            {
+                filter[i + 2] = requireComponents[i];
+            }
+
+            entities = world.GetEntitiesWith(ContextAccessorFilter.AllOf, filter);
+        }
+        else
+        {
+            entities = GetColliderEntities(world);
+        }
+
+        foreach (Entity e in entities)
+        {
+            ColliderComponent collider = e.GetCollider();
             if (collider.Layer != layerMask)
             {
-                builder.Add((
+                result.Add((
                     e.EntityId,
                     collider,
                     e.GetGlobalPosition()
                     ));
             }
         }
-        var collisionEntities = builder.ToImmutable();
-        return collisionEntities;
     }
 
     private static readonly List<NodeInfo<Entity>> _cachedCollisions = new();
@@ -763,7 +805,7 @@ public static class PhysicsServices
         ColliderComponent collider,
         Vector2 fromPosition,
         Vector2 toPosition,
-        ImmutableArray<PhysicEntityCachedInfo> others,
+        IList<PhysicEntityCachedInfo> others,
         int mask,
         out int hitId,
         out int layer,
@@ -870,7 +912,7 @@ public static class PhysicsServices
     /// <summary>
     /// Checks for collision at a position, returns the minimum translation vector (MTV) to resolve the collision.
     /// </summary>
-    public static Vector2 GetFirstMtv(int entityId, ColliderComponent collider, Vector2 position, IEnumerable<PhysicEntityCachedInfo> others, out int hitId)
+    public static Vector2 GetFirstMtv(int entityId, ColliderComponent collider, Vector2 position, IList<PhysicEntityCachedInfo> others, out int hitId)
     {
         hitId = -1;
 
@@ -989,7 +1031,7 @@ public static class PhysicsServices
         return mtvs;
     }
 
-    public static bool CollidesAt(in Map map, int ignoreId, ColliderComponent collider, Vector2 position, Vector2 scale, ImmutableArray<PhysicEntityCachedInfo> others, int mask, out int hitId)
+    public static bool CollidesAt(in Map map, int ignoreId, ColliderComponent collider, Vector2 position, Vector2 scale, IList<PhysicEntityCachedInfo> others, int mask, out int hitId)
     {
         hitId = -1;
 
