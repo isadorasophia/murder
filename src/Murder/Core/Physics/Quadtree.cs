@@ -61,13 +61,18 @@ namespace Murder.Core.Physics
 
         public void RemoveFromCollisionQuadTree(int entityId)
         {
-            bool removed = Collision.Remove(entityId);
-            if (!removed)
+            if (!TryRemoveFromCollisionQuadTree(entityId))
             {
                 GameLogger.Warning($"Failed to remove entity {entityId} from the quadtree?");
             }
+        }
 
+        public bool TryRemoveFromCollisionQuadTree(int entityId)
+        {
+            bool removed = Collision.Remove(entityId);
             PushAway.Remove(entityId);
+
+            return removed;
         }
 
         public void RemoveFromCollisionQuadTree(IEnumerable<Entity> entities)

@@ -95,7 +95,7 @@ public class QuadtreeCalculatorSystem : IReactiveSystem, IStartupSystem
             if (world.TryGetEntity(entityId) is not Entity entity || !entity.IsActive || 
                 entity.TryGetCollider() is not ColliderComponent collider)
             {
-                qt.RemoveFromCollisionQuadTree(entityId);
+                qt.TryRemoveFromCollisionQuadTree(entityId); // it might never been added in the first place, which is fine.
                 continue;
             }
 
