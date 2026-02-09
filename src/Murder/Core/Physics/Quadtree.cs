@@ -61,7 +61,12 @@ namespace Murder.Core.Physics
 
         public void RemoveFromCollisionQuadTree(int entityId)
         {
-            Collision.Remove(entityId);
+            bool removed = Collision.Remove(entityId);
+            if (!removed)
+            {
+                GameLogger.Warning($"Failed to remove entity {entityId} from the quadtree?");
+            }
+
             PushAway.Remove(entityId);
         }
 
@@ -69,13 +74,12 @@ namespace Murder.Core.Physics
         {
             foreach (var e in entities)
             {
-                Collision.Remove(e.EntityId);
-                PushAway.Remove(e.EntityId);
+                RemoveFromCollisionQuadTree(e.EntityId);
             }
         }
 
         /// <summary>
-        /// Completelly clears and rebuilds the quad tree and pushAway quad tree using a given list of entities
+        /// Completely clears and rebuilds the quad tree and pushAway quad tree using a given list of entities
         /// We should avoid this if possible
         /// </summary>
         /// <param name="entities"></param>
