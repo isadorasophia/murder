@@ -263,6 +263,7 @@ namespace Murder.Core.Physics
                     int index = GetIndex(nodeInfo.BoundingBox);
 
                     _entities.Remove(key);
+                    lookup?.Remove(key);
 
                     Debug.Assert(_nodes is not null, "This should never be null here!");
                     _nodes[index].InsertInternal(key, nodeInfo.EntityInfo, nodeInfo.BoundingBox, lookup);
