@@ -178,8 +178,12 @@ namespace Murder.Core.Physics
                 _entityLookup.Remove(entityId);
                 return true;
             }
+
+            return false;
+
+            // *not* sure if we need this path anymore.
             // fallback for non-root calls (shouldn't happen if you always call from root)
-            return RemoveSlow(entityId);
+            // return RemoveSlow(entityId);
         }
 
 

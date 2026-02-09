@@ -6,9 +6,11 @@ using Bang.Systems;
 using Murder.Components;
 using Murder.Core.Geometry;
 using Murder.Core.Physics;
+using Murder.Diagnostics;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace Murder.Systems;
@@ -19,6 +21,14 @@ public class QuadtreeCalculatorSystem : IReactiveSystem, IStartupSystem
 {
     private readonly HashSet<int> _toUpdate = new(256);
     private readonly HashSet<int> _toRemove = new(64);
+
+    public void Start(Context context)
+    {
+        foreach (Entity e in context.Entities)
+        {
+            _toUpdate.Add(e.EntityId);
+        }
+    }
 
     public void OnAdded(World world, ImmutableArray<Entity> entities)
     {
@@ -82,38 +92,28 @@ public class QuadtreeCalculatorSystem : IReactiveSystem, IStartupSystem
         // Handle updates/additions
         foreach (int entityId in _toUpdate)
         {
-            if (world.TryGetEntity(entityId) is Entity entity && entity.IsActive)
+            if (world.TryGetEntity(entityId) is not Entity entity || !entity.IsActive || 
+                entity.TryGetCollider() is not ColliderComponent collider)
             {
-                Vector2 pos = entity.GetGlobalPosition();
-                ColliderComponent? collider = entity.TryGetCollider();
-                if (collider is null)
-                {
-                    qt.RemoveFromCollisionQuadTree(entityId);
-                    continue;
-                }
+                qt.RemoveFromCollisionQuadTree(entityId);
+                continue;
+            }
 
-                Rectangle bounds = collider.Value.GetBoundingBox(pos, entity.FetchScale());
-                qt.Collision.Update(entityId, entity, bounds);
+            Vector2 pos = entity.GetGlobalPosition();
 
-                // Same for PushAway
-                if (entity.TryGetPushAway() is PushAwayComponent pushAway)
-                {
-                    float halfSize = pushAway.Size * 0.5f;
-                    Rectangle pushBounds = new(pos.X - halfSize, pos.Y - halfSize, pushAway.Size, pushAway.Size);
-                    qt.PushAway.Update(entityId, (entity, pos, pushAway, entity.TryGetVelocity()?.Velocity ?? Vector2.Zero), pushBounds);
-                }
+            Rectangle bounds = collider.GetBoundingBox(pos, entity.FetchScale());
+            qt.Collision.Update(entityId, entity, bounds);
+
+            // Same for PushAway
+            if (entity.TryGetPushAway() is PushAwayComponent pushAway)
+            {
+                float halfSize = pushAway.Size * 0.5f;
+                Rectangle pushBounds = new(pos.X - halfSize, pos.Y - halfSize, pushAway.Size, pushAway.Size);
+                qt.PushAway.Update(entityId, (entity, pos, pushAway, entity.TryGetVelocity()?.Velocity ?? Vector2.Zero), pushBounds);
             }
         }
 
         _toUpdate.Clear();
         _toRemove.Clear();
-    }
-
-    public void Start(Context context)
-    {
-        foreach (Entity e in context.Entities)
-        {
-            _toUpdate.Add(e.EntityId);
-        }
     }
 }

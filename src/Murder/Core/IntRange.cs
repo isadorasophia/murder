@@ -26,10 +26,14 @@ namespace Murder.Components
 
         public int GetRandom(Random random)
         {
-            GameLogger.Verify(Start < End, "Why is GetRandom() start bigger than end?");
+            if (Start == End)
+            {
+                return Start;
+            }
 
             if (Start >= End)
             {
+                GameLogger.Verify(false, "Why is GetRandom() start bigger than end?");
                 return End;
             }
 
