@@ -186,10 +186,22 @@ namespace Murder.Services
 
             if (info.Outline != null)
             {
-                Draw9SliceImpl(batch, texture, core, finalTarget + new Point(0, 1), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true, style);
-                Draw9SliceImpl(batch, texture, core, finalTarget + new Point(1, 0), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true, style);
-                Draw9SliceImpl(batch, texture, core, finalTarget + new Point(0, -1), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true, style);
-                Draw9SliceImpl(batch, texture, core, finalTarget + new Point(-1, 0), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true, style);
+                if (info.OutlineStyle.HasFlag(OutlineStyle.Bottom))
+                {
+                    Draw9SliceImpl(batch, texture, core, finalTarget + new Point(0, 1), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true, style);
+                }
+                if (info.OutlineStyle.HasFlag(OutlineStyle.Right))
+                {
+                    Draw9SliceImpl(batch, texture, core, finalTarget + new Point(1, 0), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true, style);
+                }
+                if (info.OutlineStyle.HasFlag(OutlineStyle.Top))
+                {
+                    Draw9SliceImpl(batch, texture, core, finalTarget + new Point(0, -1), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true, style);
+                }
+                if (info.OutlineStyle.HasFlag(OutlineStyle.Left))
+                {
+                    Draw9SliceImpl(batch, texture, core, finalTarget + new Point(-1, 0), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true, style);
+                }
 
                 if (info.Shadow != null)
                 {
