@@ -2,6 +2,7 @@ using Murder.Diagnostics;
 using Murder.Utilities;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Numerics;
 using System.Text.RegularExpressions;
 
 namespace Murder.Core.Graphics
@@ -16,17 +17,17 @@ namespace Murder.Core.Graphics
         /// Opaque color with 0 red, green or blue.
         /// </summary>
         public static Color Black { get; } = new(0, 0, 0);
-        
+
         /// <summary>
         /// Opaque color with max red, green and blue.
         /// </summary>
         public static Color White { get; } = new(1, 1, 1);
-        
+
         /// <summary>
         /// Opaque color with 50% red, green and blue.
         /// </summary>
         public static Color Gray { get; } = new(0.5f, 0.5f, 0.5f);
-        
+
         /// <summary>
         /// Opaque color with 65% red, 75% green and 75% blue.
         /// </summary>
@@ -37,47 +38,47 @@ namespace Murder.Core.Graphics
         /// </summary>
 
         public static Color ColdGray { get; } = new(0.45f, 0.5f, 0.55f);
-        
+
         /// <summary>
         /// Like <see cref="Gray"/> but with a red-ish tint.
         /// </summary>
         public static Color WarmGray { get; } = new(0.55f, 0.5f, 0.45f);
-        
+
         /// <summary>
         /// <see cref="Black"/> but with 0 alpha.
         /// </summary>
         public static Color Transparent { get; } = new(0, 0, 0, 0);
-        
+
         /// <summary>
         /// Pure red (no green or blue).
         /// </summary>
         public static Color Red { get; } = new(1, 0, 0);
-        
+
         /// <summary>
         /// A shade of orange.
         /// </summary>
         public static Color Orange { get; } = new(1, 0.6f, 0.1f);
-        
+
         /// <summary>
         /// Pure yellow (max red and green, no blue).
         /// </summary>
         public static Color Yellow { get; } = new(1, 1, 0);
-        
+
         /// <summary>
         /// Pure green (no red or blue).
         /// </summary>
         public static Color Green { get; } = new(0, 1, 0);
-        
+
         /// <summary>
         /// Pure cyan (max green and blue, no red).
         /// </summary>
         public static Color Cyan { get; } = new(0, 1, 1);
-        
+
         /// <summary>
         /// Pure blue (no red or green).
         /// </summary>
         public static Color Blue { get; } = new(0, 0, 1);
-        
+
         /// <summary>
         /// Pure magenta (max red and blue, no green).
         /// </summary>
@@ -92,12 +93,12 @@ namespace Murder.Core.Graphics
         /// Amount of green in this color.
         /// </summary>
         public readonly float G = 0;
-        
+
         /// <summary>
         /// Amount of blue in this color.
         /// </summary>
         public readonly float B = 0;
-        
+
         /// <summary>
         /// Transparency of this color.
         /// </summary>
@@ -121,7 +122,7 @@ namespace Murder.Core.Graphics
             B = b;
             A = a;
         }
-        
+
         /// <summary>
         /// Keeps all color values equal except for the alpha which is multiplied by <param ref="factor"/>
         /// </summary>
@@ -141,7 +142,7 @@ namespace Murder.Core.Graphics
         public static Color CreateFrom256(byte r, byte g, byte b) =>
             new(r / 256f, g / 256f, b / 256f);
 
-        
+
         /// <summary>
         /// Creates a color using values from 0 to 255.
         /// </summary>
@@ -157,7 +158,7 @@ namespace Murder.Core.Graphics
         /// Converts the XNA color <param ref="c"/> into a murder color.
         /// </summary>
         public static implicit operator Color(Microsoft.Xna.Framework.Color c) => new(c.R / 255f, c.G / 255f, c.B / 255f, c.A / 255f);
-        
+
         /// <summary>
         /// Converts the Vector4 into a murder color (X = R, Y = G, Z = B, W = A).
         /// </summary>
@@ -177,7 +178,7 @@ namespace Murder.Core.Graphics
         /// Multiplies each color value in color <param ref="l"/> by their correspondent counterpart in color <param ref="r"/>
         /// </summary>
         public static Color operator *(Color l, Color r) => new(l.R * r.R, l.G * r.G, l.B * r.B, l.A * r.A);
-        
+
         /// <summary>
         /// Checks if two colors are equal.
         /// </summary>
@@ -218,7 +219,7 @@ namespace Murder.Core.Graphics
             Console.WriteLine("No match found.");
             return Magenta;
         }
-        
+
         /// <inheritdoc cref="Object"/>
         public override string ToString()
         {
@@ -324,6 +325,11 @@ namespace Murder.Core.Graphics
         /// Interprets the Vector4 <paramref name="color"/> as a color and return the unsigned integer representation of that color.
         /// </summary>
         public static uint ToUint(System.Numerics.Vector4 color)
-            => (uint)(new Color(color.X,color.Y, color.Z, color.W));
+            => (uint)(new Color(color.X, color.Y, color.Z, color.W));
+
+        public Microsoft.Xna.Framework.Vector3 ToVector3()
+        {
+            return new Microsoft.Xna.Framework.Vector3(this.R, this.G, this.B);
+        }
     }
 }
