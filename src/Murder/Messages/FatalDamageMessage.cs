@@ -2,6 +2,13 @@
 
 namespace Murder.Messages
 {
+    [Flags]
+    public enum FatalDamageFlags
+    {
+        None = 0,
+        IgnoreDrop = 1,
+    }
+
     /// <summary>
     /// A message signaling that this entity should be killed
     /// </summary>
@@ -19,7 +26,11 @@ namespace Murder.Messages
         /// </summary>
         public readonly int DamagedEntityId = -1;
 
+        public readonly FatalDamageFlags Flags = FatalDamageFlags.None;
+
         public FatalDamageMessage() { }
+
+        public FatalDamageMessage(FatalDamageFlags flags) => Flags = flags;
 
         public FatalDamageMessage(int fromId, int damagedEntityId)
         {
