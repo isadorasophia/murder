@@ -442,7 +442,7 @@ public class PlayerInput
         return PressedAndConsume(MurderInputButtons.Submit);
     }
 
-    public bool HorizontalMenu(ref MenuInfo currentInfo)
+    public bool HorizontalMenu(ref MenuInfo currentInfo, SimpleMenuFlags flags = SimpleMenuFlags.None)
     {
         MenuUpdate(ref currentInfo);
 
@@ -454,7 +454,7 @@ public class PlayerInput
         currentInfo.JustMoved = false;
         VirtualAxis axis = GetAxis(MurderInputAxis.Ui);
 
-        bool pressed = HorizontalOrVerticalMenu(ref currentInfo, input: axis.TickX ? axis.IntValue.X : null);
+        bool pressed = HorizontalOrVerticalMenu(ref currentInfo, input: axis.TickX ? axis.IntValue.X : null, flags);
 
         // Check for vertical overflow
         currentInfo.OverflowY = axis.TickY ? axis.IntValue.Y : 0;
