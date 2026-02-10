@@ -115,6 +115,7 @@ namespace Murder.Systems.Physics
                             otherCached.SendOnCollisionMessage(entityId, CollisionDirection.Exit);
                         }
                     }
+                    entity.RemoveCollisionCache();
                 }
                 else
                 {

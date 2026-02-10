@@ -270,15 +270,24 @@ namespace Murder.Core.Geometry
                 // a line formed between the two vertices
                 Line2 line = new Line2(vc, vn);
                 if (line.IntersectsRect(rect))
+                {
                     return true;
+                }
             }
             // the above algorithm only checks if the rectangle
             // is touching the edges of the polygon
 
             // Now check if the rectangle is fully contained within the polygon without touching the edges
             if (Contains(rect.TopLeft, polygonScale))
+            {
                 return true;
+            }
 
+            // also check if the polygon is fully contained inside the rectangle
+            if (rect.Contains(Vertices[0]))
+            {
+                return true;
+            }
             return false;
         }
 
@@ -737,7 +746,7 @@ namespace Murder.Core.Geometry
         {
             if (_boundingBox.IsEmpty)
             {
-                float minX = float.MaxValue, minY = float.MaxValue, maxX = 0, maxY = 0;
+                float minX = float.MaxValue, minY = float.MaxValue, maxX = float.MinValue, maxY = float.MinValue;
                 foreach (Vector2 p in Vertices)
                 {
                     if (p.X < minX)
