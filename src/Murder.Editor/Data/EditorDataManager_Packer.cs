@@ -273,4 +273,79 @@ public partial class EditorDataManager
 
         return false;
     }
+
+    /// <summary>
+    /// Convert a packed save slot content:
+    /// - save_data.gz
+    /// - saved_assets.gz
+    /// - saved.gz
+    /// into unpacked content:
+    /// - save_data.json
+    /// - saved_assets.json
+    /// - saved.json
+    /// </summary>
+    private bool ConvertPackedSaveToUnpackedSave(string path, string slotPath)
+    {
+        string trackerPath = Path.Join(path, "save_data.gz");
+        string saveDataPath = Path.Join(slotPath, "saved.gz");
+        string saveDataAssetsPath = Path.Join(slotPath, "saved_assets.gz");
+
+        string trackerUnpackedPath = Path.Join(path, "save_data.json");
+        string saveDataUnpackedPath = Path.Join(slotPath, "saved.json");
+        string saveDataAssetsUnpackedPath = Path.Join(slotPath, "saved_assets.json");
+
+        if (!File.Exists(trackerPath) || !File.Exists(saveDataPath) || !File.Exists(saveDataAssetsPath))
+        {
+            return false;
+        }
+
+        string trackerJson = EditorFileManager.UnpackContentAsJson(trackerPath);
+
+        _ = Game.Data.FileManager.SaveTextAsync(trackerJson, trackerUnpackedPath);
+
+        string packedDataJson = EditorFileManager.UnpackContentAsJson(saveDataPath);
+        string packedAssetsDataJson = EditorFileManager.UnpackContentAsJson(saveDataAssetsPath);
+
+        _ = Game.Data.FileManager.SaveTextAsync(packedDataJson, saveDataUnpackedPath);
+        _ = Game.Data.FileManager.SaveTextAsync(packedAssetsDataJson, saveDataAssetsUnpackedPath);
+
+        return true;
+    }
+
+    /// <summary>
+    /// Convert an unpacked save slot content:
+    /// - save_data.json
+    /// - saved_assets.json
+    /// - saved.json
+    /// into a packed content:
+    /// - save_data.gz
+    /// - saved_assets.gz
+    /// - saved.gz
+    /// </summary>
+    private bool ConvertUnpackedSaveToPackedSave(string path, string slotPath)
+    {
+        string trackerUnpackedPath = Path.Join(path, "save_data.json");
+        string saveDataUnpackedPath = Path.Join(slotPath, "saved.json");
+        string saveDataAssetsUnpackedPath = Path.Join(slotPath, "saved_assets.json");
+
+        string trackerPath = Path.Join(path, "save_data.gz");
+        string saveDataPath = Path.Join(slotPath, "saved.gz");
+        string saveDataAssetsPath = Path.Join(slotPath, "saved_assets.gz");
+
+        if (!File.Exists(trackerUnpackedPath) || !File.Exists(saveDataUnpackedPath) || !File.Exists(saveDataAssetsUnpackedPath))
+        {
+            return false;
+        }
+
+        SaveDataTracker tracker = EditorFileManager.DeserializeFromJsonPath<SaveDataTracker>(trackerUnpackedPath);
+        FileManager.PackContent(tracker, trackerPath);
+
+        PackedSaveData? packedData = EditorFileManager.DeserializeFromJsonPath<PackedSaveData>(saveDataUnpackedPath);
+        PackedSaveAssetsData? packedAssetsData = EditorFileManager.DeserializeFromJsonPath<PackedSaveAssetsData>(saveDataAssetsUnpackedPath);
+
+        FileManager.PackContent(packedData, saveDataPath);
+        FileManager.PackContent(packedAssetsData, saveDataAssetsPath);
+
+        return true;
+    }
 }

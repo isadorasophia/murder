@@ -1,6 +1,7 @@
 ﻿using Murder.Diagnostics;
 using Murder.Editor;
 using System.Diagnostics;
+using System.IO.Compression;
 
 namespace Murder.Serialization;
 
@@ -173,5 +174,31 @@ public class EditorFileManager : FileManager
         }
 
         return Directory.EnumerateFiles(path, filter, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).AsParallel();
+    }
+
+    public static T? DeserializeFromJsonPath<T>(string jsonPath)
+    {
+        using StreamReader stream = new(jsonPath);
+
+        string content = stream.ReadToEnd();
+        T? result = DeserializeFromJson<T>(content);
+        stream.Close();
+
+        return result;
+    }
+
+    public static string UnpackContentAsJson(string path)
+    {
+        using FileStream stream = File.OpenRead(path);
+        using GZipStream gzipStream = new(stream, CompressionMode.Decompress);
+
+        using StreamReader reader = new(gzipStream);
+        string content = reader.ReadToEnd();
+
+        reader.Close();
+        gzipStream.Close();
+        stream.Close();
+
+        return content;
     }
 }
