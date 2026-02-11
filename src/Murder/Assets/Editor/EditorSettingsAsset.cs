@@ -26,8 +26,6 @@ public class EditorSettingsAsset : GameAsset
     public string AssetNamePattern = " ({0})";
     public string NewAssetDefaultName = "New {0}";
 
-    public bool StartOnEditor = true;
-
     /// <summary>
     /// This points to the directory in the bin path.
     /// </summary>

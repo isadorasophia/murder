@@ -331,22 +331,6 @@ namespace Murder.Editor
         protected override async Task LoadSceneAsync(bool waitForAllContent)
         {
             GameLogger.Verify(_sceneLoader is not null);
-
-            if (!EditorData.EditorSettings.StartOnEditor)
-            {
-                if (Profile.StartingScene == Guid.Empty)
-                {
-                    GameLogger.Error("Unable to start the game, please specify a valid starting scene on \"Game Profile\".");
-                    return;
-                }
-                else
-                {
-                    // Switch scene to game.
-                    _sceneLoader.SwitchScene(Profile.StartingScene);
-                    GameLogger.Log($"Game will start!");
-                }
-            }
-
             await base.LoadSceneAsync(waitForAllContent);
 
             if (ActiveScene?.World is World world)
