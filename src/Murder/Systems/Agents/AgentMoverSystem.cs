@@ -36,6 +36,7 @@ namespace Murder.Systems
 
                 if (!e.HasStrafing() &&
                     !e.HasFacingTurn() &&
+                    impulse.Impulse != Vector2.Zero &&
                     impulse.Direction != null &&
                     !impulse.Flags.HasFlag(AgentImpulseFlags.IgnoreFacing))
                 {
