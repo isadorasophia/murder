@@ -524,6 +524,8 @@ public class PlayerInput
 
         if (input is not null)
         {
+            currentInfo.LastMoved = Game.NowUnscaled;
+
             // Fist check if we are clamping the menu
             if (flags.HasFlag(SimpleMenuFlags.Clamp))
             {
