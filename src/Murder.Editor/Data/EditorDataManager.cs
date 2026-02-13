@@ -548,8 +548,12 @@ namespace Murder.Editor.Data
         public void SaveAsset<T>(T asset) where T : GameAsset
         {
 #if NO_SOURCE
-            GameLogger.Log("Skipping save asset since there is no source available!");
-            return;
+            // still save the editor settings!
+            if (asset is not EditorSettingsAsset)
+            {
+                GameLogger.Log("Skipping save asset since there is no source available!");
+                return;
+            }
 #endif
 
             if (asset.IsSavePacked)
