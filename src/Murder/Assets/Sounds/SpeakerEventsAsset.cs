@@ -1,6 +1,7 @@
 ﻿using Bang;
 using Murder.Components;
 using Murder.Utilities;
+using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 using System.Text.Json.Serialization;
 
@@ -14,8 +15,9 @@ public class SpeakerEventsAsset : GameAsset
 
     public override System.Numerics.Vector4 EditorColor => new(0.5f, 1, 0.2f, 1);
 
+    [Folder]
     [Serialize]
-    private readonly ImmutableArray<SpriteEventInfo> _emotes = [];
+    private ImmutableArray<SpriteEventInfo> _emotes = [];
 
     [JsonConstructor]
     public SpeakerEventsAsset(ImmutableArray<SpriteEventInfo> emotes) => _emotes = emotes;
@@ -34,6 +36,23 @@ public class SpeakerEventsAsset : GameAsset
             _cache = WorldHelper.ToEventListener(_emotes);
             return _cache;
         }
+    }
+
+    /// <summary>
+    /// Used by editor tools.
+    /// </summary>
+    public ImmutableArray<SpriteEventInfo> FetchEvents()
+    {
+        return _emotes;
+    }
+
+    /// <summary>
+    /// Used by editor tools.
+    /// </summary>
+    public void ReplaceEvents(ImmutableArray<SpriteEventInfo> emotes)
+    {
+        _emotes = emotes;
+        FileChanged = true;
     }
 
     protected override void OnModified()
