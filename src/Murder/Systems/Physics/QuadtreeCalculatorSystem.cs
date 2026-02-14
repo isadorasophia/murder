@@ -6,16 +6,14 @@ using Bang.Systems;
 using Murder.Components;
 using Murder.Core.Geometry;
 using Murder.Core.Physics;
-using Murder.Diagnostics;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Numerics;
 
 namespace Murder.Systems;
 
-[Filter(typeof(ColliderComponent), typeof(PositionComponent))]
+[Filter(typeof(PositionComponent), typeof(ColliderComponent))]
 [Watch(typeof(PositionComponent), typeof(ColliderComponent))]
 public class QuadtreeCalculatorSystem : IReactiveSystem, IStartupSystem
 {
@@ -26,7 +24,7 @@ public class QuadtreeCalculatorSystem : IReactiveSystem, IStartupSystem
     {
         foreach (Entity e in context.Entities)
         {
-            _toUpdate.Add(e.EntityId);
+            TriggerAppropriateAction(e);
         }
     }
 
@@ -34,7 +32,7 @@ public class QuadtreeCalculatorSystem : IReactiveSystem, IStartupSystem
     {
         for (int i = 0; i < entities.Length; i++)
         {
-            _toUpdate.Add(entities[i].EntityId);
+            TriggerAppropriateAction(entities[i]);
         }
     }
 
@@ -42,7 +40,7 @@ public class QuadtreeCalculatorSystem : IReactiveSystem, IStartupSystem
     {
         for (int i = 0; i < entities.Length; i++)
         {
-            _toUpdate.Add(entities[i].EntityId);
+            TriggerAppropriateAction(entities[i]);
         }
     }
 
@@ -50,7 +48,7 @@ public class QuadtreeCalculatorSystem : IReactiveSystem, IStartupSystem
     {
         for (int i = 0; i < entities.Length; i++)
         {
-            _toUpdate.Add(entities[i].EntityId);
+            TriggerAppropriateAction(entities[i]);
         }
     }
 
@@ -58,9 +56,7 @@ public class QuadtreeCalculatorSystem : IReactiveSystem, IStartupSystem
     {
         for (int i = 0; i < entities.Length; i++)
         {
-            int id = entities[i].EntityId;
-            _toUpdate.Remove(id);  // Don't update if also removing
-            _toRemove.Add(id);
+            TriggerAppropriateAction(entities[i]);
         }
     }
 
@@ -68,9 +64,23 @@ public class QuadtreeCalculatorSystem : IReactiveSystem, IStartupSystem
     {
         for (int i = 0; i < entities.Length; i++)
         {
-            int id = entities[i].EntityId;
-            _toUpdate.Remove(id);
+            TriggerAppropriateAction(entities[i]);
+        }
+    }
+
+    private void TriggerAppropriateAction(Entity e)
+    {
+        int id = e.EntityId;
+
+        if (e is null || !e.IsActive || !e.HasPosition() || !e.HasCollider())
+        {
             _toRemove.Add(id);
+            _toUpdate.Remove(id);
+        }
+        else
+        {
+            _toUpdate.Add(id);
+            _toRemove.Remove(id);
         }
     }
 
