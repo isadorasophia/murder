@@ -257,13 +257,22 @@ public partial class FileManager
     {
         GameLogger.Verify(Path.IsPathRooted(path));
 
-        if (Directory.Exists(path))
+        if (!Directory.Exists(path))
         {
-            Directory.Delete(path, true);
-            return true;
+            return false;
         }
 
-        return false;
+        try
+        {
+            Directory.Delete(path, true);
+        }
+        catch (Exception ex)
+        {
+            GameLogger.Warning($"Unable to delete directory at {path} due to {ex.GetType().Name}");
+            return false;
+        }
+
+        return true;
     }
 
     /// <summary>
