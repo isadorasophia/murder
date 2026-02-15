@@ -767,7 +767,7 @@ public class PlayerInput
         bool pressed = false;
         if (PressedAndConsume(MurderInputButtons.Submit))
         {
-            lastPressed = Game.NowUnscaled;
+            currentInfo.LastPressed = Game.NowUnscaled;
             pressed = true;
         }
 
