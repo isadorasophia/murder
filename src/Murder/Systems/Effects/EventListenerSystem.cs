@@ -37,7 +37,7 @@ public class EventListenerSystem : IMessagerSystem
         ImmutableDictionary<string, SpriteEventInfo> events = entity.GetEventListener().Events;
 
         bool alwaysPlay = entity.HasPlayEvenOffScreen() || entity.HasUi() || entity.HasCutsceneAnchors();
-        bool canPlay = alwaysPlay || entity.IsInCamera(world);
+        bool canPlay = alwaysPlay || CanPlayFromEntity(world, entity);
 
         if (!alwaysPlay && canPlay && entity.TryGetAlpha()?.Alpha == 0)
         {
@@ -89,6 +89,14 @@ public class EventListenerSystem : IMessagerSystem
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Override whether you want to customize determining whether this message event can trigger a sound.
+    /// </summary>
+    protected virtual bool CanPlayFromEntity(World world, Entity e)
+    {
+        return e.IsInCamera(world);
     }
 
     /// <summary>
