@@ -13,7 +13,8 @@ public readonly struct FadeWhenInAreaComponent : IComponent
     public enum FadeWhenInAreaStyle
     {
         HideWhenInArea,
-        ShowWhenInArea
+        ShowWhenInArea,
+        HideForeverAfterInArea
     }
 
     public readonly float Duration = 0;
