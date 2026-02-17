@@ -5,6 +5,7 @@ using Murder.Utilities;
 using Bang.Systems;
 using Murder.Components.Effects;
 using Murder.Components;
+using System.Numerics;
 
 namespace Murder.Systems.Effects;
 
@@ -22,7 +23,15 @@ public class FadeSpriteSystem : IMonoPreRenderSystem
             float alpha = Calculator.Lerp(fade.StartAlpha, fade.EndAlpha, delta);
 
             // e.SetTint(Color.White * alpha);
-            e.SetAlpha(alpha);
+            if (fade.FadeSpriteFlags.HasFlag(FadeSpriteFlags.Alpha))
+            {
+                e.SetAlpha(alpha);
+            }
+
+            if (fade.FadeSpriteFlags.HasFlag(FadeSpriteFlags.Scale))
+            {
+                e.SetScale(Vector2.One * alpha);
+            }
 
             if (delta >= 1)
             {

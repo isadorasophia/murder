@@ -27,7 +27,7 @@ namespace Murder.Utilities
         {
             float x = seed * smoothness;
             float y = 0.5f;
-            float z = 0.5f; 
+            float z = 0.5f;
 
             return PerlinNoise.Noise(x, y, z);
         }
@@ -128,6 +128,11 @@ namespace Murder.Utilities
         public static Vector2 Direction(this Random r, float minAngle, float maxAngle)
         {
             return Vector2Helper.FromAngle(r.NextFloat(minAngle, maxAngle));
+        }
+
+        public static Vector2 Direction(this Random r)
+        {
+            return Vector2Helper.FromAngle(r.NextFloat(0, 2 * MathF.PI));
         }
 
         public static Vector2 DistributedDirection(this Random r, int currentStep, int totalSteps, float min, float max) =>
