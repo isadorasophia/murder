@@ -127,7 +127,7 @@ namespace Murder.Systems
         }
 
         protected bool IsValidCarve(Entity e, ColliderComponent collider, CarveComponent carve) =>
-            !e.IsDestroyed && (collider.Layer == CollisionLayersBase.SOLID ||
+            e.IsActive && (collider.Layer == CollisionLayersBase.SOLID ||
                                collider.Layer == CollisionLayersBase.PATHFIND || carve.ClearPath);
 
         private IntRectangle GetCarveBoundingBox(Entity e)
