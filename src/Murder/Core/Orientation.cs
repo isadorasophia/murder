@@ -19,6 +19,12 @@ public static class OrientationHelper
         return (absX > absY) ? Orientation.Horizontal : Orientation.Vertical;
     }
 
+    /// <summary>
+    /// Calculate how much a vector is in the given orientation
+    /// </summary>
+    /// <param name="vector">the vector</param>
+    /// <param name="orientation">horizontal, vertical or both</param>
+    /// <returns>a value between 0 and 1 where 0 represents not at all / orthogonal, and 1 represents completely aligned</returns>
     public static float GetOrientationAmount(Vector2 vector, Orientation orientation)
     {
         if (orientation == Orientation.Both)

@@ -545,15 +545,25 @@ namespace Murder.Utilities
                 return Math.Min(from + amount, target);
         }
 
+        /// <summary>
+        /// Apply a constant (linear) step change towards a target
+        /// </summary>
+        /// <param name="from">the vector we want to update</param>
+        /// <param name="target">what we want from to eventually become</param>
+        /// <param name="amount">the constant scale amount to move the vector by (e.g 0.5 is move half way to the target)</param>
+        /// <returns></returns>
         public static Vector2 Approach(in Vector2 from, in Vector2 target, float amount)
         {
             if (from == target)
                 return target;
 
             var diff = target - from;
+            // avoid overshooting the target
             if (diff.LengthSquared() <= amount * amount)
+                // if close enough to the target to reach in one step, immediately jump to it
                 return target;
             else
+                // move towards the target by the specified factor
                 return from + diff.NormalizedWithSanity() * amount;
         }
 
