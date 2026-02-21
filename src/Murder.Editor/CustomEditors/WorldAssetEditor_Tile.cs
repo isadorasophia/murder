@@ -1,16 +1,19 @@
 ﻿using Bang.Components;
+using Bang.Contexts;
 using ImGuiNET;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
+using Murder.Editor.Components;
 using Murder.Editor.CustomFields;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Stages;
 using Murder.Editor.Utilities;
 using Murder.Prefabs;
 using Murder.Utilities;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Numerics;
 
@@ -331,6 +334,13 @@ namespace Murder.Editor.CustomEditors
 
                 ReplaceComponent(parent: null, e, new TileGridComponent(newGrid));
             }
+
+            // TODO: Move pathfind map.
+            //entities = stage.FindEntitiesWith(typeof(PathfindMapComponent));
+            //foreach (IEntity e in entities)
+            //{
+            //    PathfindMapComponent pathfind = e.GetComponent<PathfindMapComponent>();
+            //}
 
             MoveAllEntities(offset, Instances);
         }
