@@ -206,7 +206,18 @@ public abstract class CustomField
                 {
                     ImGui.PopStyleColor();
                 }
-                ImGui.SetItemTooltip("Create with default value");
+
+                string tooltipText;
+                if (AttributeExtensions.TryGetAttribute(member, out TooltipAttribute? tooltipAttribute))
+                {
+                    tooltipText = tooltipAttribute.Text;
+                }
+                else
+                {
+                    tooltipText = "Create with default value";
+                }
+
+                ImGui.SetItemTooltip(tooltipText);
 
                 // When this is an interface, select the most appropriate instance.
                 (bool modified, object? result)? selectedType = DrawCreateDefaultValue(targetType);

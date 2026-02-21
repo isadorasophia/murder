@@ -150,7 +150,10 @@ namespace Murder.Core.Dialogs
                 if (dialog.IsChoice)
                 {
                     // We will continue to be in a choice until DoChoice gets kicked off.
-                    DoActiveLineSounds(dialog.Lines[_activeLine]);
+
+                    // don't do sounds for choices, actually.
+                    // DoActiveLineSounds(dialog.Lines[_activeLine]);
+
                     return new(FormatChoice(dialog));
                 }
 
@@ -168,6 +171,7 @@ namespace Murder.Core.Dialogs
 
                         TrackInteracted();
                         DoActiveLineSounds(line);
+                        DoActionsBeforeActiveLine(world, target, line);
 
                         _activeLine++;
 
@@ -457,11 +461,11 @@ namespace Murder.Core.Dialogs
         private bool DoActionsForActiveDialog(World? world, Entity? target)
         {
             // First, do all the actions for this dialog.
-            if (_currentDialog != null && ActiveDialog.Actions is ImmutableArray<DialogAction> actions)
+            if (_currentDialog != null && ActiveDialog.Actions is ImmutableArray<DialogAction> actions &&
+                Game.Data.TryGetActiveSaveData()?.BlackboardTracker is BlackboardTracker tracker)
             {
                 Entity? actionEntity = null;
 
-                BlackboardTracker tracker = Game.Data.ActiveSaveData.BlackboardTracker;
                 foreach (DialogAction action in actions)
                 {
                     if (world is not null && action.ComponentValue is not null)
@@ -498,6 +502,22 @@ namespace Murder.Core.Dialogs
             }
 
             _ = SoundServices.PlayFromListenerPosition(sound.Value);
+            return true;
+        }
+
+        private bool DoActionsBeforeActiveLine(World? world, Entity? entity, Line line)
+        {
+            if (line.ActBeforeWith is null)
+            {
+                return false;
+            }
+
+            if (Game.Data.TryGetActiveSaveData()?.BlackboardTracker is not BlackboardTracker tracker)
+            {
+                return false;
+            }
+
+            DoAction(world, entity, tracker, line.ActBeforeWith.Value);
             return true;
         }
 

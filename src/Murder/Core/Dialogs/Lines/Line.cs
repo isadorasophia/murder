@@ -26,6 +26,13 @@ namespace Murder.Core.Dialogs
         /// </summary>
         public readonly float? Delay = null;
 
+        /// <summary>
+        /// Optional action before the line is executed.
+        /// </summary>
+        [Default("\uf70c")]
+        [Tooltip("Before line is fired...")]
+        public readonly DialogAction? ActBeforeWith { get; init; } = null;
+
         public Line() { }
 
         public Line(Guid? speaker) => Speaker = speaker;

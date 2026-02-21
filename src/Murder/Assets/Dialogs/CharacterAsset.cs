@@ -151,6 +151,16 @@ public class CharacterAsset : GameAsset
         FileChanged = true;
     }
 
+    public void SetActionAt(DialogueId id, DialogAction? action)
+    {
+        int index = GetOrCreateDataAt(id);
+
+        DialogueLineInfo data = _dialogueData[index];
+        _dialogueData = _dialogueData.SetItem(index, data with { Info = data.Info with { ActionBeforeLine = action } });
+
+        FileChanged = true;
+    }
+
     public void SetEventInfoAt(DialogueId id, LineInfoProperties flags)
     {
         int index = GetOrCreateDataAt(id);

@@ -35,6 +35,11 @@ public readonly struct LineInfo
     public string? Event { get; init; } = null;
 
     /// <summary>
+    /// Optional action from this same line.
+    /// </summary>
+    public DialogAction? ActionBeforeLine { get; init; } = null;
+
+    /// <summary>
     /// Component modified within a dialog.
     /// </summary>
     public IComponent? Component { get; init; } = null;

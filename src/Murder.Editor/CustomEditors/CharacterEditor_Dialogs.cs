@@ -5,6 +5,7 @@ using Murder.Assets.Sounds;
 using Murder.Components;
 using Murder.Core.Dialogs;
 using Murder.Core.Sounds;
+using Murder.Editor.CustomComponents;
 using Murder.Editor.CustomFields;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
@@ -51,6 +52,26 @@ namespace Murder.Editor.CustomEditors
             return line;
         }
 
+        private Line? ModifyActionAt(DialogueId id, int lineIndex, DialogAction? action)
+        {
+            if (_script is null || !FetchActiveSituation(out Situation? situation))
+            {
+                return null;
+            }
+
+            Dialog dialog = situation.Value.Dialogs[id.DialogId];
+
+            Line line = dialog.Lines[lineIndex] with { ActBeforeWith = action };
+            dialog = dialog.WithLineAt(lineIndex, line);
+
+            _script.SetSituation(situation.Value.WithDialogAt(id.DialogId, dialog));
+            _script.SetActionAt(
+                id: id,
+                action);
+
+            return line;
+        }
+
         private Line? ModifyEventAt(DialogueId id, int lineIndex, string? @event)
         {
             if (_script is null || !FetchActiveSituation(out Situation? situation))
@@ -64,7 +85,7 @@ namespace Murder.Editor.CustomEditors
             dialog = dialog.WithLineAt(lineIndex, line);
 
             _script.SetSituation(situation.Value.WithDialogAt(id.DialogId, dialog));
-            _script?.SetEventInfoAt(
+            _script.SetEventInfoAt(
                 id: id,
                 @event);
 
@@ -364,11 +385,11 @@ namespace Murder.Editor.CustomEditors
 
                     speaker ??= _script is null ? null : Game.Data.TryGetAsset<SpeakerAsset>(_script.Owner);
 
+                    DialogueId id = new(info.ActiveSituation, info.ActiveDialog, id: i);
+
                     // -- Optional event sound --
                     if (speaker?.Events is not null && speaker.Events?.TryAsset is SpeakerEventsAsset speakerEvents)
                     {
-                        DialogueId id = new(info.ActiveSituation, info.ActiveDialog, id: i);
-
                         bool chooseSound = true;
 
                         if (_script is not null &&
@@ -453,6 +474,14 @@ namespace Murder.Editor.CustomEditors
 
                             ImGui.PopItemWidth();
                             ImGui.PopStyleColor();
+                        }
+                    }
+
+                    // -- Optional action --
+                    {
+                        if (CustomField.DrawValue(ref line, nameof(Line.ActBeforeWith)))
+                        {
+                            _ = ModifyActionAt(id, i, line.ActBeforeWith) ?? line;
                         }
                     }
                 }
