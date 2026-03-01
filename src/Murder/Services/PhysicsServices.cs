@@ -270,42 +270,36 @@ public static class PhysicsServices
         return false;
     }
 
-    public static bool HasLineOfSight(World world, Entity from, Entity to)
+    private static readonly List<int> _lineOfSightCache = [];
+
+    public static bool HasLineOfSight(World world, Entity from, Entity to, int mask)
     {
-        if (from.TryGetPosition()?.Vector2 is not Vector2 origin)
+        _lineOfSightCache.Clear();
+
+        _lineOfSightCache.Add(from.EntityId);
+        _lineOfSightCache.Add(to.EntityId);
+
+        Vector2 origin = from.GetGlobalPosition();
+        Vector2 target = to.GetGlobalPosition();
+
+        if (Raycast(world, origin, target, mask, _lineOfSightCache, out RaycastHit hit))
         {
             return false;
         }
 
-        if (to.TryGetPosition()?.Vector2 is not Vector2 target)
-        {
-            return false;
-        }
-
-        if (Raycast(world, origin, target, CollisionLayersBase.BLOCK_VISION,
-            Enumerable.Empty<int>(), out RaycastHit hit))
-        {
-            if (hit.Entity?.EntityId == to.EntityId)
-            {
-                return true;
-            }
-        }
-        else
-        {
-            // No obstacles! This means it has line of sight.
-            return true;
-        }
-
-        return false;
+        // No obstacles! This means it has line of sight.
+        return true;
     }
+
     public static bool Raycast(World world, Vector2 startPosition, Vector2 endPosition, float minHitDistance, int layerMask, IEnumerable<int> ignoreEntities, out RaycastHit hit)
     {
         Vector2 newStartPosition = startPosition + (endPosition - startPosition).Normalized() * minHitDistance;
         return Raycast(world, newStartPosition, endPosition, layerMask, ignoreEntities, out hit);
     }
 
-    static readonly List<int> _ignoreEntitiesWithChildren = new List<int>();
-    static readonly List<NodeInfo<Entity>> _possibleEntities = new();
+    static readonly List<int> _ignoreEntitiesWithChildren = [];
+    static readonly List<NodeInfo<Entity>> _possibleEntities = [];
+
     public static bool Raycast(World world, Vector2 startPosition, Vector2 endPosition, int layerMask, IEnumerable<int> ignoreEntities, out RaycastHit hit)
     {
         hit = default;
@@ -317,10 +311,15 @@ public static class PhysicsServices
         _ignoreEntitiesWithChildren.Clear();
         _possibleEntities.Clear();
 
-        foreach (var id in ignoreEntities)
+        foreach (int id in ignoreEntities)
         {
             if (world.TryGetEntity(id) is Entity entity)
             {
+                if (entity.Parent is int parentId && parentId != -1)
+                {
+                    _ignoreEntitiesWithChildren.Add(parentId);
+                }
+
                 _ignoreEntitiesWithChildren.Add(id);
                 EntityServices.GetAllChildren(world, entity, _ignoreEntitiesWithChildren);
             }
