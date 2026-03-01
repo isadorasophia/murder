@@ -41,6 +41,12 @@ public static class EntityServices
         TurnFaceTowards(entity, targetFacing, duration);
     }
 
+    public static void TurnFaceTowards(this Entity entity, Vector2 goal, float duration)
+    {
+        Direction targetFacing = DirectionHelper.LookAtPosition(entity, goal);
+        TurnFaceTowards(entity, targetFacing, duration);
+    }
+
     /// <summary>
     /// Returns whether <paramref name="e"/> is still walking towards a path.
     /// </summary>
