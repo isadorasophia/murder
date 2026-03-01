@@ -1,5 +1,4 @@
 ﻿using Bang;
-using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.StateMachines;
@@ -8,7 +7,7 @@ using System.Collections.Immutable;
 
 namespace Murder.Systems
 {
-    [Filter(kind: ContextAccessorKind.Read, typeof(IStateMachineComponent))]
+    [Filter(typeof(IStateMachineComponent))]
     [Watch(typeof(IStateMachineComponent))]
     public class StateMachineSystem : IStartupSystem, IUpdateSystem, IReactiveSystem, IExitSystem
     {
