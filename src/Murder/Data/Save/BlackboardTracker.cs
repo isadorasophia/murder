@@ -398,7 +398,16 @@ namespace Murder.Save
             GameLogger.Verify(f.FieldType.IsEnum || f.FieldType == typeof(T) || typeof(T) == typeof(object),
                 "Wrong type for dialog variable!");
 
-            return (T)value!;
+            try
+            {
+                return (T)value!;
+            }
+            catch (Exception e)
+            {
+                // while this is bad, we can't really crash either.
+                GameLogger.Error($"Unable to read value {fieldName} due to {e.Message}!");
+                return default!;
+            }
         }
 
         /// <summary>
