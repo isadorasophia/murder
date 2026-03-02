@@ -33,8 +33,8 @@ namespace Murder.Core.Ai
         {
             var builder = ImmutableDictionary.CreateBuilder<Point, Cluster>();
 
-            ClusterWidth = Calculator.CeilToInt(width / CLUSTER_SIZE);
-            ClusterHeight = Calculator.CeilToInt(height / CLUSTER_SIZE);
+            ClusterWidth = Calculator.CeilToInt(width / CLUSTER_SIZE) + 1;
+            ClusterHeight = Calculator.CeilToInt(height / CLUSTER_SIZE) + 1;
 
             for (int y = 0; y < ClusterHeight; y++)
             {
