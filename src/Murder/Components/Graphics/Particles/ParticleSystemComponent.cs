@@ -9,7 +9,7 @@ namespace Murder.Components
         [GameAssetId(typeof(ParticleSystemAsset))]
         public readonly Guid Asset;
 
-        public readonly bool DestroyWhenEmpty;
+        public readonly bool DestroyWhenEmpty { get; init; }
 
         public ParticleSystemComponent(Guid asset, bool destroy)
         {
