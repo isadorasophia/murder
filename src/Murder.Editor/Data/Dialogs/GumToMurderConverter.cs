@@ -306,12 +306,13 @@ namespace Murder.Editor.Data
             {
                 @event = eventInfo.Event;
 
-                if (eventInfo.Speaker != Guid.Empty || eventInfo.Portrait != null)
+                if (eventInfo.Speaker != Guid.Empty || eventInfo.Portrait != null || eventInfo.ActionBeforeLine != null)
                 {
                     // If this matches, it means that the user previously set the portrait with a custom value.
                     // We override whatever was set in the dialog.
                     _matchedPortraits.Add(id);
-                    return new(eventInfo.Speaker, eventInfo.Portrait, TryGetLocalizedString(eventInfo.Speaker, gumLine.Text), gumLine.Delay, @event);
+                    return new(eventInfo.Speaker, eventInfo.Portrait, TryGetLocalizedString(eventInfo.Speaker, gumLine.Text), gumLine.Delay, @event) 
+                        { ActBeforeWith = eventInfo.ActionBeforeLine };
                 }
             }
 
