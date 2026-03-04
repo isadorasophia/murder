@@ -625,7 +625,7 @@ public static class EntityServices
 
     public static void PauseAgent(Entity e)
     {
-        if (e.TryGetAgentPause() is AgentPauseComponent agentPause)
+        if (e.TryGetAgentPauseRuntime() is AgentPauseRuntimeComponent agentPause)
         {
             agentPause = agentPause.Add();
         }
@@ -634,12 +634,12 @@ public static class EntityServices
             agentPause = new();
         }
 
-        e.SetAgentPause(agentPause);
+        e.SetAgentPauseRuntime(agentPause);
     }
 
     public static void UnpauseAgent(Entity e)
     {
-        if (e.TryGetAgentPause() is not AgentPauseComponent agentPause)
+        if (e.TryGetAgentPauseRuntime() is not AgentPauseRuntimeComponent agentPause)
         {
             return;
         }
@@ -647,11 +647,11 @@ public static class EntityServices
         agentPause = agentPause.Remove();
         if (agentPause.Count == 0)
         {
-            e.RemoveAgentPause();
+            e.RemoveAgentPauseRuntime();
         }
         else
         {
-            e.SetAgentPause(agentPause);
+            e.SetAgentPauseRuntime(agentPause);
         }
     }
 

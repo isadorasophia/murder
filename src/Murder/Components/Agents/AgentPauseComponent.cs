@@ -1,15 +1,23 @@
 ﻿using Bang.Components;
+using Murder.Attributes;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Components;
 
 public readonly struct AgentPauseComponent : IComponent
 {
+    public AgentPauseComponent() { }
+}
+
+[RuntimeOnly]
+public readonly struct AgentPauseRuntimeComponent : IComponent
+{
     public readonly int Count = 1;
 
-    public AgentPauseComponent() { }
+    public AgentPauseRuntimeComponent() { }
 
-    public AgentPauseComponent(int count) => Count = count;
+    public AgentPauseRuntimeComponent(int count) => Count = count;
 
-    public AgentPauseComponent Add() => new(Count + 1);
-    public AgentPauseComponent Remove() => new(Count - 1);
+    public AgentPauseRuntimeComponent Add() => new(Count + 1);
+    public AgentPauseRuntimeComponent Remove() => new(Count - 1);
 }

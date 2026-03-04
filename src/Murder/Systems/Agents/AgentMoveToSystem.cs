@@ -13,7 +13,7 @@ namespace Murder.Systems.Agents
     /// </summary>
     [Filter(typeof(PositionComponent))]
     [Filter(ContextAccessorFilter.AnyOf, typeof(MoveToComponent), typeof(MoveToTargetComponent))]
-    [Filter(ContextAccessorFilter.NoneOf, typeof(AgentPauseComponent))]
+    [Filter(ContextAccessorFilter.NoneOf, typeof(AgentPauseComponent), typeof(AgentPauseRuntimeComponent))]
     public class AgentMoveToSystem : IUpdateSystem
     {
         public void Update(Context context)
