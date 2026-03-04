@@ -29,6 +29,7 @@ namespace Murder.Editor.Data.Graphics
             public int Repeat;
 
             public UserData UserData { get; set; }
+            public Guid Guid { get; set; }
         }
 
     }

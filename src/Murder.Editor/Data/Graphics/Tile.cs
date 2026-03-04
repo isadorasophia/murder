@@ -7,6 +7,8 @@
 // Note: I didn't test with with Indexed or Grayscale colors
 // Only implemented the stuff I needed / wanted, other stuff is ignored
 
+using Microsoft.Xna.Framework;
+
 namespace Murder.Editor.Data.Graphics
 {
     public partial class Aseprite

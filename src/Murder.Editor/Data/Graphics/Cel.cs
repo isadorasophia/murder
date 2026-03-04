@@ -26,6 +26,7 @@ namespace Murder.Editor.Data.Graphics
             public float Alpha;
             public int? Link;
             public UserData UserData { get; set; }
+            public Guid Guid { get; set; }
         }
 
     }

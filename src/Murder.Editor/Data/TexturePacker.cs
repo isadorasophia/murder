@@ -1,17 +1,13 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
-using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Editor.Data.Graphics;
 using Murder.Editor.Services;
 using Murder.Serialization;
 using Murder.Services;
 using Murder.Utilities;
-using System.Collections;
-using System.Collections.Immutable;
 using System.Diagnostics;
-using System.IO;
 using static Murder.Editor.Data.Graphics.Aseprite;
 
 namespace Murder.Editor.Data
@@ -384,23 +380,30 @@ namespace Murder.Editor.Data
             {
                 for (int slice = 0; slice < Math.Max(1, ase.Slices.Count); slice++)
                 {
-                    if (ase.SplitLayers)
+                    for (int i = 0; i < ase.FrameCount; i++)
                     {
-                        for (int layer = 0; layer < ase.Layers.Count; layer++)
-                            for (int i = 0; i < ase.FrameCount; i++)
-                            {
-                                if (!ase.Layers[layer].Name.Equals("REF", StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    ScanAsepriteFrame(path, ase, i, layer, slice);
-                                }
-                            }
-                    }
-                    else
-                    {
-                        for (int i = 0; i < ase.FrameCount; i++)
+                        // First we export all layers that have a GUID
+                        for (int layerIndex = 0; layerIndex < ase.Layers.Count; layerIndex++)
                         {
-                            ScanAsepriteFrame(path, ase, i, -1, slice);
+                            Layer currentLayer = ase.Layers[layerIndex];
+
+                            // We skip reference layers
+                            if (currentLayer.Name.Equals("REF", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                continue;
+                            }
+
+                            // We skip empty Guid layers for now, they will be flattened in the next step
+                            if (currentLayer.Guid == Guid.Empty)
+                            {
+                                continue;
+                            }
+
+                            ScanAsepriteFrame(path, ase, i, layerIndex, slice);
                         }
+
+                        // Now we try to export all the layers without a guid, merged down
+                        ScanAsepriteFrame(path, ase, i, -1, slice);
                     }
                 }
             }
@@ -424,9 +427,17 @@ namespace Murder.Editor.Data
 
             var startingCrop = new IntRectangle(slice.OriginX, slice.OriginY, slice.Width, slice.Height);
 
-            Microsoft.Xna.Framework.Color[] pixels = layer >= 0
-                ? GetPixelsFromLayer(ase, frame, layer)
-                : ase.Frames[frame].Pixels;
+            Microsoft.Xna.Framework.Color[] pixels;
+
+            if (layer >= 0)
+            {
+
+                pixels = GetPixelsFromLayer(ase, frame, layer);
+            }
+            else
+            {
+                pixels = ase.Frames[frame].Pixels;
+            }
 
             ti.CroppedBounds = CalculateCrop(pixels, new(ase.Width, ase.Height), startingCrop);
 
@@ -739,10 +750,36 @@ namespace Murder.Editor.Data
             return sourceImg;
         }
 
-        private static Microsoft.Xna.Framework.Color[] GetPixelsFromLayer(Aseprite ase, int frame, int layer)
+        private static Microsoft.Xna.Framework.Color[] GetPixelsFromLayer(Aseprite ase, int frameIndex, int layerIndex)
         {
-            if (ase.Frames[frame].Cels.TryGetValue(layer, out var cel))
+            // Is this layer a group? If so this will be a whole thing.
+            if (ase.Layers[layerIndex].Type == Layer.Types.Group)
             {
+                return ase.MergeGroup(frameIndex, layerIndex);
+            }
+
+            // We can simplify this since it's just a single layer, we don't need to do any merging
+            Frame frame = ase.Frames[frameIndex];
+
+            if (frame.Cels.TryGetValue(layerIndex, out var cel))
+            {
+                if (cel.Link != null)
+                {
+                    if (cel.Pixels != null)
+                    {
+                        GameLogger.Warning($"Warning: Cel at frame {frame}, layer {layerIndex} is a linked cel but also has pixel data. This is unexpected, but we'll use the pixels from the linked cel.");
+                    }
+
+                    var pixels = ase.Frames[cel.Link.Value].Cels[layerIndex].Pixels;
+                    if (pixels != null)
+                    {
+                        return pixels;
+                    }
+
+                    GameLogger.Warning("Linked cell is empty, this is not great");
+                    return new Microsoft.Xna.Framework.Color[ase.Width * ase.Height];
+                }
+
                 return cel.Pixels ?? new Microsoft.Xna.Framework.Color[ase.Width * ase.Height];
             }
 

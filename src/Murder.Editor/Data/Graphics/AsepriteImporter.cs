@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
+using static Murder.Editor.Data.Graphics.Aseprite;
 using Color = Microsoft.Xna.Framework.Color;
 
 // Gist from:
@@ -60,7 +61,6 @@ public partial class Aseprite
     public readonly int Height;
     public readonly int FrameCount;
     public readonly UserData UserData;
-    public readonly bool SplitLayers;
 
     public List<Tileset> Tilesets = new();
     public List<Layer> Layers = new();
@@ -347,6 +347,7 @@ public partial class Aseprite
                         if (last is IUserData target)
                         {
                             target.UserData = userData;
+                            target.Guid = target.GetGuid();
                             last = null;
                         }
                         else if (Tags.Count > 0 && nextTagUserData < Tags.Count)
@@ -356,8 +357,6 @@ public partial class Aseprite
                         else // This file's userdata
                         {
                             UserData = userData;
-                            if (UserData.Text != null && UserData.Text.Equals("split", StringComparison.InvariantCultureIgnoreCase))
-                                SplitLayers = true;
                         }
                     }
                     // SLICE
@@ -471,6 +470,12 @@ public partial class Aseprite
                 if (!frame.Cels.TryGetValue(layerIndex, out Cel? cel))
                     continue;
 
+                // This is a tricky one, we need to go up the layer tree, and see if any of the parent layers have a guid, if so, skip this.
+                if (DoesLayerHasGuidOrParentGuid(cel.Layer.Index))
+                {
+                    continue;
+                }
+
                 // If the cel is linked, we need to copy the pixels from the linked cel
                 // to the current cel.
                 if (cel.Link != null)
@@ -482,15 +487,10 @@ public partial class Aseprite
                         continue;
                     }
 
-                    if (SplitLayers)
                     {
                         // I  don't understand why I need to do this, but it seems to be the only way to get the liked cel to work on split layers
                         CelToCel(cel, sourceCel, Width, Height);
                         CelToFrame(frame, cel);
-                    }
-                    else
-                    {
-                        CelToFrame(frame, sourceCel);
                     }
                 }
                 else
@@ -514,6 +514,44 @@ public partial class Aseprite
                 Height = Height
             });
         }
+    }
+
+    private bool DoesLayerHasGuidOrParentGuid(int index)
+    {
+        int currentIndex = index;
+        int currentChildLevel = Layers[currentIndex].ChildLevel;
+
+        if (Layers[currentIndex].Guid != Guid.Empty)
+            return true;
+
+        if (currentChildLevel == 0)
+            return false; // No parent, stop search
+
+        // Go up the layer tree until we find a layer with a guid or we reach the top
+        while (currentChildLevel > 0)
+        {
+            currentIndex--;
+            if (currentIndex < 0)
+            {
+                // This means that something is broken,
+                // It shouldn't be possibble for a layer at position 0 to have child index >0
+                GameLogger.Error("Error loading aseprite file, layer tree is broken. This is likely a bug in the importer.");
+                break; // Safety check to prevent out of bounds
+            }
+
+            if (Layers[currentIndex].ChildLevel < currentChildLevel) // This must be a parent layer
+            {
+                if (Layers[currentIndex].Guid != Guid.Empty)
+                    return true;
+                currentChildLevel = Layers[currentIndex].ChildLevel; // We take the parent's level, and keep going up
+
+                if (currentChildLevel == 0)
+                    return false; // No parent, stop search
+            }
+
+        }
+
+        return false; // This only happens if the tree fails
     }
 
     #endregion
@@ -688,9 +726,6 @@ public partial class Aseprite
     /// <param name="height"></param>
     private void CelToCel(Cel target, Cel source, int width, int height)
     {
-        if (!SplitLayers) // Cel data is only used when the aseprite file individual layers are required
-            return;       // we can safely skip this to save time.
-
         if (source.Pixels == null)
             return;
 
@@ -741,29 +776,54 @@ public partial class Aseprite
 
     internal IEnumerable<SpriteAsset> CreateAssets(string atlas)
     {
-        if (SplitLayers)
-            for (int i = 0; i < Layers.Count; i++)
+        int layersToExtract = Layers.Count;
+
+        for (int i = 0; i < Layers.Count; i++)
+        {
+            Layer layer = Layers[i];
+
+            if (layer.Name.Equals("ref", StringComparison.OrdinalIgnoreCase))
             {
-                if (!Layers[i].Name.Equals("ref", StringComparison.InvariantCultureIgnoreCase))
-                    foreach (var ase in CreateAssetsFromSlices(i, atlas))
-                        yield return ase;
+                // We don't want to export reference layers and we don't care for merging them
+                layersToExtract--;
+                continue;
             }
-        else
+            if (layer.Guid == Guid.Empty)
+            {
+                // We only export individual layers if they have a baked guid
+                continue;
+            }
+
+            layersToExtract--;
+
+            foreach (var ase in CreateAssetsFromSlices(i, atlas))
+                yield return ase;
+        }
+
+        if (layersToExtract > 0)
+        {
+            // Merge the remaining layers
             foreach (var ase in CreateAssetsFromSlices(-1, atlas))
                 yield return ase;
+        }
     }
 
-    internal IEnumerable<SpriteAsset> CreateAssetsFromSlices(int layer, string atlas)
+    internal IEnumerable<SpriteAsset> CreateAssetsFromSlices(int layerIndex, string atlas)
     {
         for (int i = 0; i < Slices.Count; i++)
         {
-            yield return CreateAsset(layer, i, atlas);
+            if (layerIndex >= 0) // -1 means all layers without a GUID, flattened
+            {
+                Layer layer = Layers[layerIndex];
+            }
+
+            yield return CreateAsset(layerIndex, i, atlas);
         }
     }
 
 
     /// <summary>
-    /// Creates a new aseprite asset from the current aseprite file.
+    /// kCreates a new aseprite asset from the current aseprite file.
     /// </summary>
     /// <param name="layer">The current layer to use, -1 means all layers.</param>
     /// <returns></returns>
@@ -985,15 +1045,6 @@ public partial class Aseprite
             {
                 return (true, new Guid(UserData.Text.Substring(keywordLength)));
             }
-
-            // Finally look for guids in one of the layers
-            foreach (var layer in Layers)
-            {
-                if (layer.UserData.Text != null && layer.UserData.Text.StartsWith(keyword, StringComparison.OrdinalIgnoreCase))
-                {
-                    return (true, new Guid(layer.UserData.Text.Substring(keywordLength)));
-                }
-            }
         }
 
         // No baked guids were found. Create one on the fly based on the file name.
@@ -1034,4 +1085,67 @@ public partial class Aseprite
         string contentFolder = FileHelper.GetPath(Architect.EditorSettings.RawResourcesPath, relativePath);
         return Path.GetRelativePath(contentFolder, path);
     }
+
+    internal Color[] MergeGroup(int frame, int layerIndex)
+    {
+        int currentLayerChildLevel = Layers[layerIndex].ChildLevel;
+        int currentLayerIndex = layerIndex;
+        Color[] mergedPixels = new Color[Width * Height];
+        // start from a transparent base
+        for (int i = 0; i < mergedPixels.Length; i++)
+        {
+            mergedPixels[i] = Color.Transparent;
+        }
+
+        while (currentLayerIndex < Layers.Count)
+        {
+            currentLayerIndex++;
+            Layer currentLayer = Layers[currentLayerIndex];
+            if (currentLayer.ChildLevel <= currentLayerChildLevel)
+            {
+                break;
+            }
+
+            Frame currentFrame = Frames[frame];
+
+            if (currentFrame.Cels.TryGetValue(currentLayerIndex, out Cel? cel))
+            {
+                Color[] pixels;
+                if (cel.Link != null)
+                {
+                    Cel sourceCel = Frames[cel.Link.Value].Cels[cel.Layer.Index];
+                    if (sourceCel == null)
+                    {
+                        Console.Error.WriteLine($"Aseprite file {Source} has a cel that is linked to a cel that doesn't exist. Cel: {cel.Link.Value}");
+                        continue;
+                    }
+                    pixels = sourceCel.Pixels ?? Array.Empty<Color>();
+                }
+                else
+                {
+                    pixels = cel.Pixels ?? Array.Empty<Color>();
+                }
+
+                for (int cx = 0; cx < cel.Width; cx++)
+                {
+                    for (int cy = 0; cy < cel.Height; cy++)
+                    {
+                        var framePosition = new Point(cel.X + cx, cel.Y + cy);
+                        if (framePosition.X < 0 || framePosition.Y < 0 || framePosition.X >= Width || framePosition.Y >= Height)
+                            continue;
+                        Color pixel = pixels[cx + cy * cel.Width];
+                        if (pixel.A == 0)
+                            continue;
+                        var opacity = (byte)(cel.Alpha * cel.Layer.Alpha * 255);
+                        var blend = _blendModes[cel.Layer.BlendMode];
+                        blend(ref mergedPixels[framePosition.X + framePosition.Y * Width], pixel, opacity);
+                    }
+                }
+
+            }
+        }
+
+        return mergedPixels;
+    }
+
 }

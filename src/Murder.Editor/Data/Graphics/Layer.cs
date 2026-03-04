@@ -41,6 +41,7 @@ namespace Murder.Editor.Data.Graphics
             public int BlendMode;
             public float Alpha;
             public UserData UserData { get; set; }
+            public Guid Guid { get; set; }
         }
 
     }

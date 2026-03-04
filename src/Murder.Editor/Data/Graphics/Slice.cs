@@ -25,6 +25,7 @@ namespace Murder.Editor.Data.Graphics
             public Rectangle? NineSlice;
 
             public UserData UserData { get; set; }
+            public Guid Guid { get; set; }
         }
 
     }
