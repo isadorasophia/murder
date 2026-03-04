@@ -13,7 +13,8 @@ public enum OnEnterOnExitKind
     Player = 1,
     Actors = 0x10,
     Npc = Actors | 0x100,
-    SkipIfActorInside = 0x1000
+    SkipIfActorInside = 0x1000,
+    IgnoreOnDeactivate = 0x10000
 }
 
 [CustomName($"\uf70c {nameof(OnEnterOnExitComponent)}")]
