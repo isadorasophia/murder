@@ -91,12 +91,12 @@ namespace Murder.Systems
             Cleanup(entities);
         }
 
-        private void Cleanup(ImmutableArray<Entity> entities)
+        private void Cleanup(ImmutableArray<Entity> _)
         {
-            foreach (Entity e in entities)
-            {
-                e.RemovePauseStateMachineUpdate();
-            }
+            //foreach (Entity e in entities)
+            //{
+            //    e.RemovePauseStateMachineUpdate();
+            //}
         }
     }
 }
