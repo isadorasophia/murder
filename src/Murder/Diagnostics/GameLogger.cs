@@ -338,16 +338,17 @@ public class GameLogger
     /// <summary>
     /// Used to filter exceptions once a crash is yet to happen.
     /// </summary>
-    public static bool CaptureCrash(string logFile = "crash.log")
+    public static bool CaptureCrash()
     {
-        string currentDirectory = Environment.CurrentDirectory;
-        string logFilePath = Path.Join(currentDirectory, logFile);
+        string logFilePath = GetCrashLogPath();
 
         StringBuilder content = new(GetCurrentLog());
+        File.AppendAllTextAsync(logFilePath, content.ToString());
 
-        File.WriteAllTextAsync(logFilePath, content.ToString());
         return false;
     }
+
+    public static string GetCrashLogPath() => Path.Join(Game.Data.SaveBasePath, "crash.log");
 
     public static string GetCurrentLog()
     {
@@ -359,6 +360,7 @@ public class GameLogger
 
         return content.ToString();
     }
+
     public virtual void TrackImpl(string variableName, object value)
     {
         // Not implemented by game, only by editor.

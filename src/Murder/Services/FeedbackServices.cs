@@ -164,6 +164,14 @@ public static class FeedbackServices
             return false; // Do not send feedback if the URL is not set.
         }
 
+        string crashLogPath = GameLogger.GetCrashLogPath();
+        string previousCrashLog = string.Empty;
+
+        if (File.Exists(crashLogPath))
+        {
+            await File.ReadAllTextAsync(crashLogPath);
+        }
+
         using (HttpClient _client = new())
         using (MultipartFormDataContent content = new())
         {
@@ -171,6 +179,8 @@ public static class FeedbackServices
 
             content.Add(new StringContent(title, Encoding.UTF8), "Title");
             content.Add(new StringContent(description, Encoding.UTF8), "Description");
+
+            content.Add(new StringContent(previousCrashLog, Encoding.UTF8), "Crash");
             content.Add(new StringContent(GameLogger.GetCurrentLog(), Encoding.UTF8), "Log");
 
             foreach (var f in files)
