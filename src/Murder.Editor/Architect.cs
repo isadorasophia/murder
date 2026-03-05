@@ -145,6 +145,12 @@ namespace Murder.Editor
 
         private bool ApplyPreviousEditorWindowSetting()
         {
+            if (Fullscreen)
+            {
+                Fullscreen = false;
+                return true;
+            }
+
             if (!IsMaximized() && EditorSettings.StartMaximized)
             {
                 MaximizeWindow();
