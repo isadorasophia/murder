@@ -11,7 +11,8 @@ namespace Murder.Components
         RemoveSolid = 2,
         None = 3,
         RemoveDeactivateHighlight = 4,
-        AlphaZero = 5
+        AlphaZero = 5,
+        RemoveSprite = 6
     }
 
     public readonly struct DestroyOnAnimationCompleteComponent : IComponent
