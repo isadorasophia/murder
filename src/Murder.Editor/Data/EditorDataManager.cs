@@ -687,7 +687,7 @@ namespace Murder.Editor.Data
 
         public string GetNextName(Type type, string name, string pattern)
         {
-            string tmp = string.Format(pattern, 1);
+            string tmp = StringHelper.FormatSafe(pattern, 1);
             if (tmp == pattern)
             {
                 throw new ArgumentException("The pattern must include an index place-holder like '{0}'", "pattern");
@@ -713,7 +713,7 @@ namespace Murder.Editor.Data
             else
             {
                 // First time instantiating a candidate, use the format.
-                candidate = name + string.Format(pattern, min);
+                candidate = name + StringHelper.FormatSafe(pattern, min);
             }
 
             for (int i = min; i < max; i++)
@@ -779,7 +779,7 @@ namespace Murder.Editor.Data
                 return false;
             }
 
-            string binOutputFilePath = FileHelper.GetPath(PackedBinDirectoryPath, string.Format(ShaderRelativePath, path));
+            string binOutputFilePath = FileHelper.GetPath(PackedBinDirectoryPath, StringHelper.FormatSafe(ShaderRelativePath, path));
             
             // NOTE: In Unix systems, absolute paths usually start with a slash:/
             // which causes the fxc compiler to mistakenly recognize the path parameters as fxc options,
@@ -849,7 +849,7 @@ namespace Murder.Editor.Data
             }
 
             // Copy the output to the source directory as well.
-            string sourceOutputFilePath = Path.Join(PackedSourceDirectoryPath, string.Format(ShaderRelativePath, path));
+            string sourceOutputFilePath = Path.Join(PackedSourceDirectoryPath, StringHelper.FormatSafe(ShaderRelativePath, path));
 
             FileManager.CreateDirectoryPathIfNotExists(sourceOutputFilePath);
             File.Copy(binOutputFilePath, sourceOutputFilePath, true);

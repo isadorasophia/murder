@@ -1,5 +1,6 @@
 ﻿// Code taken from: MonoGame - Copyright (C) The MonoGame Team.
 
+using Murder.Utilities;
 using System.Diagnostics;
 
 namespace Murder.Editor.Utilities
@@ -16,7 +17,7 @@ namespace Murder.Editor.Utilities
             string stdout, stderr;
             var result = Run(command, arguments, out stdout, out stderr);
             if (result < 0)
-                throw new Exception(string.Format("{0} returned exit code {1}", command, result));
+                throw new Exception(StringHelper.FormatSafe("{0} returned exit code {1}", command, result));
 
             return result;
         }
@@ -29,7 +30,7 @@ namespace Murder.Editor.Utilities
             string? fullPath = FindCommand(command);
             if (string.IsNullOrEmpty(fullPath))
             {
-                throw new InvalidOperationException(string.Format("Couldn't locate external tool '{0}'.", command));
+                throw new InvalidOperationException(StringHelper.FormatSafe("Couldn't locate external tool '{0}'.", command));
             }
 
             // We can't reference ref or out parameters from within

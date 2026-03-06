@@ -6,6 +6,7 @@ using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
+using Murder.Utilities;
 using Murder.Utilities.Attributes;
 using System.Collections.Generic;
 using System.Numerics;
@@ -293,7 +294,7 @@ namespace Murder.Editor
         {
             ImGui.OpenPopup(CreatePopupAssetForType(t, path));
 
-            _newAssetName = string.Format(
+            _newAssetName = StringHelper.FormatSafe(
                 Architect.EditorSettings.NewAssetDefaultName,
                 t == typeof(GameAsset) ? "asset" : Prettify.FormatAssetName(t.Name));
         }

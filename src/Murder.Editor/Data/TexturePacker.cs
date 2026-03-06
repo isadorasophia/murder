@@ -323,7 +323,7 @@ namespace Murder.Editor.Data
             int height = 0;
             foreach (Atlas atlas in Atlasses)
             {
-                string suffix = string.Format("{0:000}" + TextureServices.QOI_GZ_EXTENSION, atlasCount);
+                string suffix = StringHelper.FormatSafe("{0:000}" + TextureServices.QOI_GZ_EXTENSION, atlasCount);
                 string filePath = targetFilePathWithoutExtension + suffix;
 
                 // 1: Save images

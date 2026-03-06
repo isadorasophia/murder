@@ -1,5 +1,7 @@
 ﻿using Murder.Core.Graphics;
+using Murder.Diagnostics;
 using System.ComponentModel;
+using System.Globalization;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -213,5 +215,57 @@ namespace Murder.Utilities
 
         [GeneratedRegex("(?<!\n)\n(?!\n)")]
         private static partial Regex CleanupReturnsCharacters();
+
+        public static string FormatSafe(string toFormat, object? str1)
+        {
+            try
+            {
+                return string.Format(CultureInfo.InvariantCulture, toFormat, str1);
+            }
+            catch (FormatException)
+            {
+                GameLogger.Error($"Unable to format {toFormat} with {str1}!");
+                return toFormat;
+            }
+        }
+
+        public static string FormatSafe(string toFormat, object? str1, object? str2)
+        {
+            try
+            {
+                return string.Format(CultureInfo.InvariantCulture, toFormat, str1, str2);
+            }
+            catch (FormatException)
+            {
+                GameLogger.Error($"Unable to format {toFormat} with {str1} and {str2}!");
+                return toFormat;
+            }
+        }
+
+        public static string FormatSafe(string toFormat, object? str1, object? str2, object? str3)
+        {
+            try
+            {
+                return string.Format(CultureInfo.InvariantCulture, toFormat, str1, str2, str3);
+            }
+            catch (FormatException)
+            {
+                GameLogger.Error($"Unable to format {toFormat} with {str1} and {str2}!");
+                return toFormat;
+            }
+        }
+
+        public static string FormatSafe(string toFormat, object? str1, object? str2, object? str3, object? str4)
+        {
+            try
+            {
+                return string.Format(CultureInfo.InvariantCulture, toFormat, str1, str2, str3, str4);
+            }
+            catch (FormatException)
+            {
+                GameLogger.Error($"Unable to format {toFormat} with {str1} and {str2}!");
+                return toFormat;
+            }
+        }
     }
 }

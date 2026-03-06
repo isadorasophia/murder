@@ -346,7 +346,7 @@ namespace Murder.Data
         {
             await Task.Yield();
 
-            string path = Path.Join(PublishedPackedAssetsFullPath, string.Format(PackedGameData.Name, index));
+            string path = Path.Join(PublishedPackedAssetsFullPath, StringHelper.FormatSafe(PackedGameData.Name, index));
             if (!File.Exists(path))
             {
                 GameLogger.Warning("Unable to load game content. Did you pack the game assets?");
@@ -494,7 +494,7 @@ namespace Murder.Data
         private string OutputPathForShaderOfName(string name, string? path = default)
         {
             GameLogger.Verify(_packedBinDirectoryPath is not null, "Why hasn't LoadContent() been called?");
-            return Path.Join(path ?? _packedBinDirectoryPath, string.Format(ShaderRelativePath, name));
+            return Path.Join(path ?? _packedBinDirectoryPath, StringHelper.FormatSafe(ShaderRelativePath, name));
         }
 
         private bool TryLoadShaderFromFile(string name, [NotNullWhen(true)] out Effect? result)

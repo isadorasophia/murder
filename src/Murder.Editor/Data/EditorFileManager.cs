@@ -1,5 +1,6 @@
 ﻿using Murder.Diagnostics;
 using Murder.Editor;
+using Murder.Utilities;
 using System.Diagnostics;
 using System.IO.Compression;
 
@@ -13,7 +14,7 @@ public class EditorFileManager : FileManager
 
         if (!Directory.Exists(path))
         {
-            GameLogger.Error(string.Format("{0} Directory does not exist!", path));
+            GameLogger.Error(StringHelper.FormatSafe("{0} Directory does not exist!", path));
         }
 
         ProcessStartInfo startInfo;

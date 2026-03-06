@@ -109,7 +109,7 @@ public partial class EditorDataManager
             int totalAssets = 0;
             for (int i = 0; i < packedGameData.Length; i++)
             {
-                string packedGameDataPath = Path.Join(PublishedPackedAssetsFullPath, string.Format(PackedGameData.Name, i));
+                string packedGameDataPath = Path.Join(PublishedPackedAssetsFullPath, StringHelper.FormatSafe(PackedGameData.Name, i));
                 FileManager.PackContent(packedGameData[i], packedGameDataPath);
 
                 totalAssets += packedGameData[i].Assets.Count;
@@ -133,7 +133,7 @@ public partial class EditorDataManager
         Dictionary<Guid, string> packedJsonContent = [];
         for (int i = 0; i < total; i++)
         {
-            string packedGameDataPath = Path.Join(PublishedPackedAssetsFullPath, string.Format(PackedGameData.Name, i));
+            string packedGameDataPath = Path.Join(PublishedPackedAssetsFullPath, StringHelper.FormatSafe(PackedGameData.Name, i));
             PackedGameData? data = FileManager.UnpackContent<PackedGameData>(packedGameDataPath);
             if (data is null)
             {

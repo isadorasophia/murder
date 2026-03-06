@@ -223,7 +223,7 @@ namespace Murder.Core.Graphics
         /// <inheritdoc cref="Object"/>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "Color({0}, {1}, {2}, {3})", R, G, B, A);
+            return StringHelper.FormatSafe("Color({0}, {1}, {2}, {3})", R, G, B, A);
         }
 
         /// <summary>
