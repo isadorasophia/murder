@@ -1097,7 +1097,7 @@ public partial class Aseprite
             mergedPixels[i] = Color.Transparent;
         }
 
-        while (currentLayerIndex < Layers.Count)
+        while (currentLayerIndex < Layers.Count - 1)
         {
             currentLayerIndex++;
             Layer currentLayer = Layers[currentLayerIndex];
