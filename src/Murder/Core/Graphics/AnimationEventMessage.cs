@@ -25,6 +25,11 @@ namespace Murder.Core.Graphics
             return eventId.Equals(Event, StringComparison.InvariantCultureIgnoreCase);
         }
 
+        public bool Starts(string eventId)
+        {
+            return Event.StartsWith(eventId, StringComparison.InvariantCultureIgnoreCase);
+        }
+
         public AnimationEventMessage(string eventId)
         {
             Event = eventId;
