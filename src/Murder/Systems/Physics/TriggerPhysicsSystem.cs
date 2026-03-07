@@ -248,6 +248,8 @@ namespace Murder.Systems.Physics
                 e.SetCollisionCache(collisionCache);
             }
 
+            // notify any systems that need to calculate after the collision is sent.
+            e.SendAfterMessage();
             _collisionVisitedEntities.Clear();
         }
 

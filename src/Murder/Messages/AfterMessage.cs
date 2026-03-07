@@ -1,0 +1,7 @@
+﻿using Bang.Components;
+
+namespace Murder.Messages;
+
+public readonly struct AfterMessage : IMessage
+{
+}
