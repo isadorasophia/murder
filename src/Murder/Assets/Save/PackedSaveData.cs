@@ -1,4 +1,7 @@
-﻿using System.Text.Json.Serialization;
+﻿using Bang;
+using Murder.Diagnostics;
+using System.Collections.Immutable;
+using System.Text.Json.Serialization;
 
 namespace Murder.Assets.Save;
 
@@ -28,17 +31,16 @@ public class SaveDataInfo
 }
 
 [Serializable]
-public struct SaveDataTracker
+public class SaveDataTracker
 {
     public const string Name = "save_data.gz";
 
-    public readonly Dictionary<int, SaveDataInfo> Info = [];
+    [Serialize]
+    public ImmutableDictionary<int, SaveDataInfo> Data = ImmutableDictionary<int, SaveDataInfo>.Empty;
 
-    [JsonConstructor]
-    public SaveDataTracker(Dictionary<int, SaveDataInfo> info)
-    {
-        Info = info;
-    }
+    public SaveDataTracker() { }
+
+    public virtual void OnBeforeSave() { }
 }
 
 [Serializable]

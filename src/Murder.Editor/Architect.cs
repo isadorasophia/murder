@@ -225,7 +225,7 @@ namespace Murder.Editor
 
             // Here, let's mock what a real "quit" would do.
             // Manually unload and load all saves.
-            Data.UnloadAllSaves();
+            Data.UnloadActiveSave();
             Data.LoadAllSaves();
 
             (_gameData as EditorDataManager)?.RefreshAfterSave();

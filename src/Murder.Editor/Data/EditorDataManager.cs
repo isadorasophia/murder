@@ -316,14 +316,8 @@ namespace Murder.Editor.Data
 
             using PerfTimeRecorder recorder = new("Loading Saves (for editor)");
 
-            string trackerPath = Path.Join(SaveBasePath, SaveDataTracker.Name);
-            if (!File.Exists(trackerPath))
-            {
-                return;
-            }
-
-            SaveDataTracker tracker = FileManager.UnpackContent<SaveDataTracker>(trackerPath);
-            foreach ((int slot, SaveDataInfo save) in tracker.Info)
+            SaveDataTracker tracker = Tracker;
+            foreach ((int slot, SaveDataInfo save) in tracker.Data)
             {
                 string saveDataPath = SaveDataInfo.GetFullPackedSavePath(slot);
                 string saveDataAssetsPath = SaveDataInfo.GetFullPackedAssetsSavePath(slot);
@@ -374,14 +368,8 @@ namespace Murder.Editor.Data
                 return;
             }
 
-            string trackerPath = Path.Join(SaveBasePath, SaveDataTracker.Name);
-            if (!File.Exists(trackerPath))
-            {
-                return;
-            }
-
-            SaveDataTracker tracker = FileManager.UnpackContent<SaveDataTracker>(trackerPath);
-            foreach ((int slot, SaveDataInfo save) in tracker.Info)
+            SaveDataTracker tracker = Tracker;
+            foreach ((int slot, SaveDataInfo save) in tracker.Data)
             {
                 string saveDataPath = SaveDataInfo.GetFullPackedSavePath(slot);
                 string saveDataAssetsPath = SaveDataInfo.GetFullPackedAssetsSavePath(slot);
@@ -409,7 +397,7 @@ namespace Murder.Editor.Data
                 }
 
                 // Override the save slot, which came from the editor data.
-                _allSavedData[slot] = save;
+                _runtimeSaveSlots[slot] = save;
 
                 if (!_saveAssetsForEditor.TryGetValue(packedData.Data.Guid, out GameAsset? packedSaveData))
                 {

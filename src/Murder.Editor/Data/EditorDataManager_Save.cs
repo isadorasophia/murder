@@ -87,16 +87,13 @@ public partial class EditorDataManager
             fSaveSlot.SetValue(saveData, slot);
         }
 
-        _allSavedData.Add(slot, new SaveDataInfo(saveData.SaveVersion, saveData.SaveName));
+        _runtimeSaveSlots.Add(slot, new SaveDataInfo(saveData.SaveVersion, saveData.SaveName));
 
         // Immediately serialize the tracker and the save file.
-        SaveDataTracker tracker = new(_allSavedData);
-
-        string trackerJson = Serialization.FileManager.SerializeToJson(tracker);
         string packedDataJson = Serialization.FileManager.SerializeToJson(packedSaveData);
 
         await Task.WhenAll(
-            FileManager.PackContentAsync(trackerJson, path: Path.Join(Game.Data.SaveBasePath, SaveDataTracker.Name)),
+            SerializeSaveTrackerAsync(),
             FileManager.PackContentAsync(packedDataJson, path: SaveDataInfo.GetFullPackedSavePath(slot)));
 
         await LoadAllSaveAssets();

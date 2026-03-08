@@ -20,7 +20,7 @@ namespace Murder.Save
         public LanguageId Language { get; protected set; } = LanguageId.English;
 
         [Serialize]
-        public float AllVolume { get; protected set; } = 1;
+        public float AllVolume { get; protected set; } = .5f;
 
         [Serialize]
         public float SoundVolume { get; protected set; } = 1;

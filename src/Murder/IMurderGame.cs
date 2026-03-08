@@ -59,6 +59,11 @@ namespace Murder
         /// <summary>
         /// Creates save data for the game.
         /// </summary>
+        public SaveDataTracker CreateSaveTracker() => new();
+
+        /// <summary>
+        /// Creates save data for the game.
+        /// </summary>
         public SaveData CreateSaveData(int slot) => new(slot, Version);
 
         /// <summary>
