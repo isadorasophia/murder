@@ -1,5 +1,4 @@
 using Bang;
-using Murder.Assets.Input;
 using Murder.Assets.Localization;
 using Murder.Core.Input;
 using System.Collections.Immutable;
@@ -18,28 +17,25 @@ namespace Murder.Save
         private readonly static string _path = Path.Join(Game.Data.SaveBasePath, _filename);
 
         [Serialize]
-        protected float _soundVolume = 1;
+        public LanguageId Language { get; protected set; } = LanguageId.English;
 
         [Serialize]
-        protected float _musicVolume = 1;
+        public float AllVolume { get; protected set; } = 1;
 
         [Serialize]
-        protected bool _showFps = false;
+        public float SoundVolume { get; protected set; } = 1;
 
         [Serialize]
-        protected LanguageId _language = LanguageId.English;
+        public float MusicVolume { get; protected set; } = 1;
 
         [Serialize]
-        protected bool _fullscreen = true;
+        public bool Fullscreen { get; protected set; } = true;
 
         [Serialize]
-        protected ImmutableArray<ButtonBindingsInfo> _buttonBindingsInfos = ImmutableArray<ButtonBindingsInfo>.Empty;
+        public ImmutableArray<ButtonBindingsInfo> ButtonBindingsInfos { get; private set; } = [];
 
         [Serialize]
-        protected ImmutableArray<AxisBindingsInfo> _axisBindingsInfos = ImmutableArray<AxisBindingsInfo>.Empty;
-
-        public ImmutableArray<ButtonBindingsInfo> ButtonBindingsInfos => _buttonBindingsInfos;
-        public ImmutableArray<AxisBindingsInfo> AxisBindingsInfos => _axisBindingsInfos;
+        public ImmutableArray<AxisBindingsInfo> AxisBindingsInfos { get; private set; } = [];
 
         internal static GamePreferences? TryFetchPreferences()
         {
@@ -63,90 +59,53 @@ namespace Murder.Save
             Game.Data.FileManager.DeleteFileIfExists(_path);
         }
 
-        public bool FullScreen => _fullscreen;
-
-        public float SoundVolume => _soundVolume;
-
-        public float MusicVolume => _musicVolume;
-
-        public LanguageId Language => _language;
-
-        public bool ShowFps => _showFps;
-
         public void SetButtonBindingsInfos(ImmutableArray<ButtonBindingsInfo> buttonBindingsInfos)
         {
-            _buttonBindingsInfos = buttonBindingsInfos;
+            ButtonBindingsInfos = buttonBindingsInfos;
             OnPreferencesChanged();
         }
 
-        /// <summary>
-        /// This toggles the volume to the opposite of the current setting.
-        /// Immediately serialize (and save) afterwards.
-        /// </summary>
-        public float ToggleSoundVolumeAndSave()
+        public float SetAllVolume(float value)
         {
-            return SetSoundVolume(_soundVolume == 1 ? 0 : 1);
+            AllVolume = value;
+            OnPreferencesChanged();
+
+            return value;
         }
 
         public float SetSoundVolume(float value)
         {
-            _soundVolume = value;
-
+            SoundVolume = value;
             OnPreferencesChanged();
-            return _soundVolume;
-        }
 
-        /// <summary>
-        /// This toggles the volume to the opposite of the current setting.
-        /// Immediately serialize (and save) afterwards.
-        /// </summary>
-        public float ToggleMusicVolumeAndSave()
-        {
-            return SetMusicVolume(_musicVolume == 1 ? 0 : 1);
+            return value;
         }
 
         public float SetMusicVolume(float value)
         {
-            _musicVolume = value;
-
+            MusicVolume = value;
             OnPreferencesChanged();
-            return _musicVolume;
-        }
 
-        public bool ToggleShowFps()
-        {
-            SetShowFps(!_showFps);
-            return _showFps;
+            return value;
         }
 
         public void SetLanguage(LanguageId id)
         {
-            if (_language == id)
+            if (Language == id)
             {
                 return;
             }
 
-            _language = id;
+            Language = id;
             OnPreferencesChanged();
         }
 
         public bool SetFullScreen(bool value)
         {
-            _fullscreen = value;
+            Fullscreen = value;
             OnPreferencesChanged();
 
-            return _fullscreen;
-        }
-
-        private void SetShowFps(bool showFps)
-        {
-            if (_showFps == showFps)
-            {
-                return;
-            }
-
-            _showFps = showFps;
-            OnPreferencesChanged();
+            return Fullscreen;
         }
 
         public void OnPreferencesChanged()

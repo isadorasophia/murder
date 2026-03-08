@@ -272,7 +272,7 @@ namespace Murder
         /// </summary>
         public bool Fullscreen
         {
-            get => Preferences.FullScreen;
+            get => Preferences.Fullscreen;
             set
             {
                 if (Fullscreen == value)
