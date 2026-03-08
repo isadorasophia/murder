@@ -8,6 +8,7 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using Murder.Systems.Effects;
+using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Reflection;
 
@@ -17,13 +18,13 @@ namespace Murder.Editor.CustomComponents
     internal class EventListenerEditor : CustomComponent
     {
         private static string _eventInput = string.Empty;
-
+        private static string _searchField = string.Empty;
         protected override bool DrawAllMembersWithTable(ref object target)
         {
             EventListenerEditorComponent listener = (EventListenerEditorComponent)target;
 
             (string[] Animations, HashSet<string> Events)? entityProperties = StageHelpers.GetEventsForSelectedEntity();
-            
+
             bool changed = DrawEventsListener(
                 ref listener, drawPlayAnimations: true, entityProperties?.Animations, entityProperties?.Events);
 
@@ -67,7 +68,7 @@ namespace Murder.Editor.CustomComponents
                     events = events.Add(info);
                 }
             }
-            
+
             // ======
             // Add new event.
             // ======
@@ -108,6 +109,39 @@ namespace Murder.Editor.CustomComponents
             // Draw current events.
             // ======
             {
+                if (events.Length > 5)
+                {
+                    int popColors = 0;
+                    ImGui.BeginGroup();
+                    if (string.IsNullOrWhiteSpace(_searchField))
+                    {
+                        ImGui.PushStyleColor(ImGuiCol.FrameBg, Game.Profile.Theme.Bg);
+                        popColors++;
+                    }
+
+                    ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Bg);
+                    ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.Bg);
+                    ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.BgFaded);
+                    if (ImGui.SmallButton(string.IsNullOrEmpty(_searchField) ? "" : ""))
+                    {
+                        _searchField = string.Empty;
+                    }
+                    ImGui.PopStyleColor(3);
+
+                    ImGui.SameLine();
+
+                    // Draw the search field
+                    ImGui.PushItemWidth(-1);
+
+                    ImGui.InputTextWithHint($"##search_field", "Filter...", ref _searchField, 256);
+
+                    ImGui.PopItemWidth();
+
+                    ImGui.PopStyleColor(popColors);
+                    ImGui.EndGroup();
+                    ImGui.GetWindowDrawList().AddRect(ImGui.GetItemRectMin(), ImGui.GetItemRectMax(), ImGuiHelpers.MakeColor32(Game.Profile.Theme.BgFaded), 3f);
+                }
+
                 using TableMultipleColumns table = new($"events_editor_component",
                     flags: ImGuiTableFlags.NoBordersInBody,
                     (-1, ImGuiTableColumnFlags.WidthFixed), (-1, ImGuiTableColumnFlags.WidthFixed), (-1, ImGuiTableColumnFlags.WidthStretch), (-1, ImGuiTableColumnFlags.WidthFixed));
@@ -115,6 +149,11 @@ namespace Murder.Editor.CustomComponents
                 for (int i = 0; i < events.Length; ++i)
                 {
                     SpriteEventInfo info = events[i];
+
+                    if (!string.IsNullOrWhiteSpace(_searchField) && !StringHelper.FuzzyMatch(_searchField, info.Id))
+                    {
+                        continue;
+                    }
 
                     ImGui.TableNextRow();
                     ImGui.TableNextColumn();
