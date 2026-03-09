@@ -32,6 +32,12 @@ namespace Murder.Save
         public bool Fullscreen { get; protected set; } = true;
 
         [Serialize]
+        public float Haptics { get; private set; } = 1;
+
+        [Serialize]
+        public float ScreenShake { get; private set; } = 1;
+
+        [Serialize]
         public ImmutableArray<ButtonBindingsInfo> ButtonBindingsInfos { get; private set; } = [];
 
         [Serialize]
@@ -106,6 +112,22 @@ namespace Murder.Save
             OnPreferencesChanged();
 
             return Fullscreen;
+        }
+
+        public float SetHapticsMultiplier(float value)
+        {
+            Haptics = value;
+            OnPreferencesChanged();
+
+            return value;
+        }
+
+        public float SetScreenShakeMultiplier(float value)
+        {
+            ScreenShake = value;
+            OnPreferencesChanged();
+
+            return value;
         }
 
         public void OnPreferencesChanged()

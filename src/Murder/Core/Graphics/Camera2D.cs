@@ -107,7 +107,7 @@ namespace Murder.Core.Graphics
                     float shakeY = (float)Math.Sin((Game.NowUnscaled * 200f) * 17) * 2 - 1; // These should ideally be irrational numbers
                     _cachedWorldViewProjection = null;
 
-                    return _position + new Vector2(shakeX, shakeY) * ShakeIntensity + new Vector2(0, bump * _bump);
+                    return _position + new Vector2(shakeX, shakeY) * ShakeIntensity * Game.Preferences.ScreenShake + new Vector2(0, bump * _bump);
                 }
 
                 return _position + new Vector2(0, bump * _bump);

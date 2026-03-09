@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Input;
+using Murder.Save;
 using Murder.Utilities;
 
 namespace Murder.Core.Input;
@@ -49,6 +50,8 @@ public class HapticsManager
             }
         }
 
+        float multiplier = Game.Preferences.Haptics;
+
         for (int i = 0; i < MAX_CONTROLLERS; i++)
         {
             if (!GamePad.GetState((Microsoft.Xna.Framework.PlayerIndex)i).IsConnected)
@@ -56,7 +59,7 @@ public class HapticsManager
                 continue;
             }
 
-            GamePad.SetVibration((Microsoft.Xna.Framework.PlayerIndex)i, _leftVibration[i], _rightVibration[i]);
+            GamePad.SetVibration((Microsoft.Xna.Framework.PlayerIndex)i, _leftVibration[i] * multiplier, _rightVibration[i] * multiplier);
         }
     }
 

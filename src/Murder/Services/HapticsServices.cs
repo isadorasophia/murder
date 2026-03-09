@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 namespace Murder.Services
 {
@@ -47,7 +46,6 @@ namespace Murder.Services
                 BalanceStart = 1f,
                 BalanceMiddle = 0.5f,
                 BalanceEnd = 0.65f,
-
             });
         }
 
