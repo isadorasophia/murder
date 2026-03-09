@@ -306,7 +306,16 @@ namespace Murder.Systems
                         }
                         else
                         {
-                            e.SendAnimationCompleteMessage();
+                            if (!overload.Value.Loop)
+                            {
+                                e.RemoveAnimationOverload();
+                                e.SendAnimationCompleteMessage(AnimationCompleteStyle.Sequence);
+                            }
+                            else
+                            {
+                                e.SendAnimationCompleteMessage();
+                            }
+
                             e.SetAnimationComplete();
                         }
                     }
