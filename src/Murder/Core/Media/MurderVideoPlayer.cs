@@ -56,6 +56,8 @@ public class MurderVideoPlayer : IDisposable
         Video video = Video.FromUriEXT(uri: new(fullPath, UriKind.Absolute), Game.GraphicsDevice);
 
         _videoPlayer = new();
+
+        _videoPlayer.Volume = Game.Data.Preferences.AllVolume;
         _videoPlayer.IsLooped = false;
         _videoPlayer.Play(video);
 
