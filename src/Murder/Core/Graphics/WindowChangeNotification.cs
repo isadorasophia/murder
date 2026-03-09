@@ -8,7 +8,8 @@ public enum ScreenUpdatedKind
     NotifyOnly = 0,
     Reset = 1,
     FullScreen = 2,
-    NotifyAndApply = 3
+    NotifyAndApply = 3,
+    ScalePreferenceModified = 4
 }
 
 public readonly struct WindowChangeNotification

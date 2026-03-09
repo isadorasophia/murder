@@ -126,6 +126,8 @@ namespace Murder.Data
             }
         }
 
+        public GamePreferences? TryFetchPreferences() => _preferences;
+
         public GamePreferences Preferences
         {
             get

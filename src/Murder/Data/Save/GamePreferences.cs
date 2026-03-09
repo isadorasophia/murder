@@ -1,11 +1,21 @@
 using Bang;
 using Murder.Assets.Localization;
+using Murder.Core;
 using Murder.Core.Input;
 using System.Collections.Immutable;
 using System.Text.Json;
 
 namespace Murder.Save
 {
+    public enum ScalingKind
+    {
+        Auto = 0,
+        Large = 1,
+        OneX = 2,
+        TwoX = 3,
+        ThreeX = 4
+    }
+
     /// <summary>
     /// Tracks preferences of the current session. This is unique per run.
     /// Used to track the game settings that are not tied to any game run (for example, volume).
@@ -36,6 +46,9 @@ namespace Murder.Save
 
         [Serialize]
         public float ScreenShake { get; private set; } = 1;
+
+        [Serialize]
+        public ScalingKind Scaling { get; private set; } = ScalingKind.Auto;
 
         [Serialize]
         public ImmutableArray<ButtonBindingsInfo> ButtonBindingsInfos { get; private set; } = [];
@@ -128,6 +141,19 @@ namespace Murder.Save
             OnPreferencesChanged();
 
             return value;
+        }
+
+        public void SetScalingKind(ScalingKind scaling)
+        {
+            if (scaling == Scaling)
+            {
+                return;
+            }
+
+            Scaling = scaling;
+
+            Game.Instance.OnWindowChange(new(ScreenUpdatedKind.ScalePreferenceModified));
+            OnPreferencesChanged();
         }
 
         public void OnPreferencesChanged()

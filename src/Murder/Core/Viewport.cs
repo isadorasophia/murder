@@ -1,5 +1,6 @@
 ﻿using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Save;
 using Murder.Utilities;
 using System.Numerics;
 
@@ -36,7 +37,7 @@ public readonly struct Viewport
 
     public readonly bool FailedConstraints;
 
-    public Viewport(Point viewportSize, Point nativeResolution, ViewportResizeStyle resizeStyle)
+    public Viewport(Point viewportSize, Point nativeResolution, ViewportResizeStyle resizeStyle, ScalingKind _ /* TODO */)
     {
         Size = viewportSize;
         NativeResolution = nativeResolution;
@@ -157,6 +158,7 @@ public readonly struct Viewport
                         Calculator.RoundToInt(nativeResolution.X * 1.2f),
                         Calculator.RoundToInt(nativeResolution.Y * 1.2f)
                     );
+
                     Vector2 stretchedScale = new Vector2(viewportSize.X / (float)nativeResolution.X, viewportSize.Y / (float)nativeResolution.Y);
                     int targetScale = (int)Math.Ceiling(Math.Max(stretchedScale.Y - 0.05f, 1));
                     Vector2 outputSize = nativeResolution.ToVector2() * targetScale;
@@ -169,7 +171,6 @@ public readonly struct Viewport
                         Calculator.CeilingToInt(nativeResolution.X + missingPixels.X),
                         Calculator.CeilingToInt(nativeResolution.Y + missingPixels.Y)
                         );
-
 
                     if (newNativeResolution.X < minRes.X || newNativeResolution.Y < minRes.Y)
                     {
@@ -190,7 +191,6 @@ public readonly struct Viewport
                             );
                     }
 
-
                     if (newNativeResolution.X > maxRes.X || newNativeResolution.Y > maxRes.Y)
                     {
                         newNativeResolution = new Point(
@@ -200,7 +200,7 @@ public readonly struct Viewport
 
                     // Set the scale and output rectangle based on the new native resolution
                     Scale = new Vector2(targetScale);
-                    OutputRectangle = CenterOutput(newNativeResolution.ToVector2() * (Scale), viewportSize);
+                    OutputRectangle = CenterOutput(newNativeResolution.ToVector2() * Scale, viewportSize);
                     NativeResolution = newNativeResolution;
                     break;
                 }
