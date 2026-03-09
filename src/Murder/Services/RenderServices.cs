@@ -135,7 +135,7 @@ public static partial class RenderServices
             easedPosition = selectorPosition;
         else
             easedPosition = Vector2.Lerp(previousSelectorPosition, selectorPosition,
-            Ease.Evaluate(Calculator.ClampTime(Game.NowUnscaled - menuInfo.LastMoved, style.SelectorMoveTime), style.Ease));
+                Ease.Evaluate(Calculator.ClampTime(Game.NowUnscaled - menuInfo.LastMoved, style.SelectorMoveTime), style.Ease));
 
         return new DrawMenuInfo()
         {
