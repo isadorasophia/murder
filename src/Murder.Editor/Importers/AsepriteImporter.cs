@@ -114,7 +114,7 @@ namespace Murder.Editor.Importers
                     continue;
 
                 // Load metadata only - no pixel data
-                var ase = new Aseprite(file, loadImageData: false);
+                var ase = packer.GetOrLoadAseprite(file);
 
                 foreach (SpriteAsset asset in ase.CreateAssets(targetAtlasName))
                 {
@@ -161,7 +161,7 @@ namespace Murder.Editor.Importers
                 if (!IsAsepriteFile(file))
                     continue;
 
-                var ase = new Aseprite(file, loadImageData: false);
+                var ase = packer.GetOrLoadAseprite(file);
 
                 foreach (SpriteAsset asset in ase.CreateAssets(targetAtlasName))
                 {
@@ -183,6 +183,9 @@ namespace Murder.Editor.Importers
                     Game.Data.AddAsset(asset);
                 }
             }
+
+            // Done with pixel data
+            packer.ClearCache();
 
             _pendingPacker = packer;
         }
@@ -294,7 +297,7 @@ namespace Murder.Editor.Importers
                     {
                         FileManager.DeleteDirectoryIfExists(sourceAtlasSubAtlasPath);
                     }
-                    
+
                     if (binAtlasSubAtlasPath is not null)
                     {
                         FileManager.DeleteDirectoryIfExists(binAtlasSubAtlasPath);

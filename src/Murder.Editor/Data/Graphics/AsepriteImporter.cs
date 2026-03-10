@@ -488,9 +488,11 @@ public partial class Aseprite
                     }
 
                     {
-                        // I  don't understand why I need to do this, but it seems to be the only way to get the liked cel to work on split layers
-                        CelToCel(cel, sourceCel, Width, Height);
-                        CelToFrame(frame, cel);
+                        cel.X = 0;
+                        cel.Y = 0;
+                        cel.Width = Width;
+                        cel.Height = Height;
+                        CelToFrame(frame, sourceCel);
                     }
                 }
                 else
@@ -1111,37 +1113,55 @@ public partial class Aseprite
             if (currentFrame.Cels.TryGetValue(currentLayerIndex, out Cel? cel))
             {
                 Color[] pixels;
+                int celX, celY, celW, celH;
+
                 if (cel.Link != null)
                 {
-                    Cel sourceCel = Frames[cel.Link.Value].Cels[cel.Layer.Index];
-                    if (sourceCel == null)
+                    if (!Frames[cel.Link.Value].Cels.TryGetValue(cel.Layer.Index, out Cel? sourceCel)
+                        || sourceCel == null)
                     {
-                        Console.Error.WriteLine($"Aseprite file {Source} has a cel that is linked to a cel that doesn't exist. Cel: {cel.Link.Value}");
+                        GameLogger.Error($"Aseprite file {Source} has a cel linked to frame " +
+                                         $"{cel.Link.Value} layer {cel.Layer.Index} but that cel doesn't exist.");
                         continue;
                     }
+
+                    Debug.Assert(sourceCel.Pixels != null, "Linked cels should always have pixel information. Something went wrong");
+
                     pixels = sourceCel.Pixels ?? Array.Empty<Color>();
+                    celX = sourceCel.X;
+                    celY = sourceCel.Y;
+                    celW = sourceCel.Width;
+                    celH = sourceCel.Height;
                 }
                 else
                 {
                     pixels = cel.Pixels ?? Array.Empty<Color>();
+                    celX = cel.X;
+                    celY = cel.Y;
+                    celW = cel.Width;
+                    celH = cel.Height;
                 }
 
-                for (int cx = 0; cx < cel.Width; cx++)
+                if (pixels.Length == 0)
+                    continue;
+
+                var opacity = (byte)(cel.Alpha * cel.Layer.Alpha * 255);
+                var blend = _blendModes[cel.Layer.BlendMode];
+
+                for (int cx = 0; cx < celW; cx++)
                 {
-                    for (int cy = 0; cy < cel.Height; cy++)
+                    for (int cy = 0; cy < celH; cy++)
                     {
-                        var framePosition = new Point(cel.X + cx, cel.Y + cy);
-                        if (framePosition.X < 0 || framePosition.Y < 0 || framePosition.X >= Width || framePosition.Y >= Height)
+                        var framePosition = new Point(celX + cx, celY + cy);
+                        if (framePosition.X < 0 || framePosition.Y < 0 ||
+                            framePosition.X >= Width || framePosition.Y >= Height)
                             continue;
-                        Color pixel = pixels[cx + cy * cel.Width];
+                        Color pixel = pixels[cx + cy * celW];
                         if (pixel.A == 0)
                             continue;
-                        var opacity = (byte)(cel.Alpha * cel.Layer.Alpha * 255);
-                        var blend = _blendModes[cel.Layer.BlendMode];
                         blend(ref mergedPixels[framePosition.X + framePosition.Y * Width], pixel, opacity);
                     }
                 }
-
             }
         }
 

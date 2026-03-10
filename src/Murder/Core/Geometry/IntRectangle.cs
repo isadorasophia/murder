@@ -169,5 +169,18 @@ namespace Murder.Core.Geometry
         {
             return new Rectangle(0, 0, Width, Height);
         }
+
+        public IntRectangle Intersection(IntRectangle other)
+        {
+            int left = Math.Max(X, other.X);
+            int top = Math.Max(Y, other.Y);
+            int right = Math.Min(Right, other.Right);
+            int bottom = Math.Min(Bottom, other.Bottom);
+
+            if (right <= left || bottom <= top)
+                return IntRectangle.Empty;
+
+            return new IntRectangle(left, top, right - left, bottom - top);
+        }
     }
 }

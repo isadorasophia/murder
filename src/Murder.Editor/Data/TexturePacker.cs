@@ -136,7 +136,9 @@ namespace Murder.Editor.Data
         /// Used to create atlas coordinate aliases for deduplicated frames.
         /// </summary>
         public Dictionary<string, string> DuplicateFrameMapping { get; } = new();
+
         private readonly Dictionary<TextureInfo, ulong> _textureHashes = new();
+        public readonly Dictionary<string, Aseprite> _asepriteCache = new();
 
         public Packer()
         {
@@ -162,8 +164,10 @@ namespace Murder.Editor.Data
             // 2: Deduplicate across entire atlas
             DeduplicateTextures();
 
-            // 3: Clear hashes
-            _textureHashes.Clear();
+            // 3: Clear hashes and aseprite caches
+            //_textureHashes.Clear();
+            //_asepriteCache.Clear();
+            // Moved this to ProcessAllFiles
 
             // 4: Filter and pack
             List<TextureInfo> textures = SourceTextures
@@ -244,10 +248,8 @@ namespace Murder.Editor.Data
                 }
             }
 
-            foreach (var ti in duplicates)
-            {
-                SourceTextures.Remove(ti);
-            }
+            var duplicateSet = new HashSet<TextureInfo>(duplicates);
+            SourceTextures = SourceTextures.Where(t => !duplicateSet.Contains(t)).ToList();
 
             if (duplicateCount > 0)
             {
@@ -373,8 +375,8 @@ namespace Murder.Editor.Data
         }
         private void ScanAsepriteFile(string path)
         {
-            // GameDebugger.Log($"Loading the file {fi.FullName}.");
             var ase = new Aseprite(path);
+            _asepriteCache[path] = ase;
 
             if (ase.Width <= _atlasSize && ase.Height <= _atlasSize)
             {
@@ -426,6 +428,7 @@ namespace Murder.Editor.Data
             ti.SliceSize = new(slice.Width, slice.Height);
 
             var startingCrop = new IntRectangle(slice.OriginX, slice.OriginY, slice.Width, slice.Height);
+            startingCrop = startingCrop.Intersection(new IntRectangle(0, 0, ase.Width, ase.Height));
 
             Microsoft.Xna.Framework.Color[] pixels;
 
@@ -635,15 +638,10 @@ namespace Murder.Editor.Data
 
         private Texture2D CreateAtlasImage(Atlas atlas)
         {
-            var graphicsDevice = Architect.GraphicsDevice;
-            var image = new RenderTarget2D(graphicsDevice, atlas.Width, atlas.Height, false, SurfaceFormat.Color, DepthFormat.None);
-            graphicsDevice.SetRenderTarget(image);
-            graphicsDevice.Clear(Color.Transparent);
+            //  This works on the CPU
+            // I'm still weighting the pros and cons of using the GPU for this
+            var pixels = new Microsoft.Xna.Framework.Color[atlas.Width * atlas.Height];
 
-            if (_debugMode)
-            {
-                RenderServices.DrawQuad(new Rectangle(0, 0, atlas.Width, atlas.Height), Color.Gray);
-            }
             var nodesBySource = atlas.Nodes
                 .Where(n => n.Texture != null)
                 .GroupBy(n => n.Texture!.Source);
@@ -657,67 +655,101 @@ namespace Murder.Editor.Data
                 {
                     case ".ase":
                     case ".aseprite":
-                        // Load once for all frames from this file
-                        var ase = new Aseprite(source);
-
-                        foreach (var node in group)
                         {
-                            using var sourceImg = CreateTextureFromAseprite(node, ase);
-                            if (sourceImg != null)
+                            var ase = GetOrLoadAseprite(source);
+
+                            foreach (var node in group)
                             {
-                                RenderServices.DrawTextureQuad(sourceImg,
-                                    source: node.Texture!.CroppedBounds,
-                                    destination: new Rectangle(node.Bounds.X, node.Bounds.Y,
-                                        node.Texture.CroppedBounds.Width, node.Texture.CroppedBounds.Height),
-                                    Color.White, BlendState.AlphaBlend);
+                                var ti = node.Texture!;
+                                Microsoft.Xna.Framework.Color[]? sourcePixels = ti.Layer == -1
+                                    ? ase.Frames[ti.Frame].Pixels
+                                    : GetPixelsFromLayer(ase, ti.Frame, ti.Layer);
+
+
+                                if (sourcePixels == null)
+                                {
+                                    Error.WriteLine($"No pixel data for {ti.Source}");
+                                    continue;
+                                }
+
+                                // srcStride must be the full canvas width
+                                int expectedLength = ase.Width * ase.Height;
+                                if (sourcePixels.Length != expectedLength)
+                                {
+                                    Error.WriteLine($"Data length of {ti.Source} ({sourcePixels.Length}) " +
+                                                    $"doesn't match canvas size ({expectedLength}).");
+                                    continue;
+                                }
+
+                                // Blit just the cropped region directly into the atlas buffer
+                                BlitCropped(
+                                    pixels, atlas.Width,
+                                    sourcePixels, ase.Width,
+                                    destX: (int)node.Bounds.X,
+                                    destY: (int)node.Bounds.Y,
+                                    crop: ti.CroppedBounds
+                                );
                             }
-                            else
-                            {
-                                DrawMissingImage(node.Bounds);
-                            }
+                            break;
                         }
 
-                        // ase goes out of scope - pixel data freed
-                        break;
-
-                    case TextureServices.QOI_GZ_EXTENSION:
                     case TextureServices.PNG_EXTENSION:
+                    case TextureServices.QOI_GZ_EXTENSION:
                         {
                             foreach (var node in group)
                             {
-                                using var sourceImg = TextureServices.FromFile(graphicsDevice, source);
+                                var ti = node.Texture!;
+                                using var sourceImg = TextureServices.FromFile(Architect.GraphicsDevice, source);
                                 if (sourceImg != null)
                                 {
-                                    RenderServices.DrawTextureQuad(sourceImg,
-                                        source: node.Texture!.CroppedBounds,
-                                        destination: new Rectangle(node.Bounds.X, node.Bounds.Y,
-                                            node.Texture.CroppedBounds.Width, node.Texture.CroppedBounds.Height),
-                                        Color.White, BlendState.AlphaBlend);
+                                    var sourcePixels = new Microsoft.Xna.Framework.Color[sourceImg.Width * sourceImg.Height];
+                                    sourceImg.GetData(sourcePixels);
+
+                                    BlitCropped(
+                                        pixels, atlas.Width,
+                                        sourcePixels, sourceImg.Width,
+                                        destX: (int)node.Bounds.X,
+                                        destY: (int)node.Bounds.Y,
+                                        crop: ti.CroppedBounds
+                                    );
                                 }
                                 else
                                 {
-                                    DrawMissingImage(node.Bounds);
+                                    Error.WriteLine($"Failed to load image '{source}'.");
                                 }
                             }
                             break;
                         }
+
                     case ".clip":
                     case ".psd":
-                        // We ignore PSD and CLIP files
                         break;
 
                     default:
                         Error.WriteLine($"Image '{source}' has an unknown extension '{extension}'.");
-                        foreach (var node in group)
-                        {
-                            DrawMissingImage(node.Bounds);
-                        }
                         break;
                 }
             }
 
-            graphicsDevice.SetRenderTarget(null);
-            return image;
+            // Single GPU upload at the very end
+            var texture = new Texture2D(Architect.GraphicsDevice, atlas.Width, atlas.Height);
+            texture.SetData(pixels);
+            return texture;
+        }
+
+        private static void BlitCropped(
+            Microsoft.Xna.Framework.Color[] dest, int destStride,
+            Microsoft.Xna.Framework.Color[] src, int srcStride,
+            int destX, int destY,
+            IntRectangle crop)
+        {
+            for (int y = 0; y < crop.Height; y++)
+            {
+                int srcOffset = (crop.Y + y) * srcStride + crop.X;
+                int dstOffset = (destY + y) * destStride + destX;
+
+                Array.Copy(src, srcOffset, dest, dstOffset, crop.Width);
+            }
         }
 
         private Texture2D? CreateTextureFromAseprite(Node n, Aseprite ase)
@@ -880,9 +912,19 @@ namespace Murder.Editor.Data
             return cropArea;
         }
 
-        private static void DrawMissingImage(Rectangle rectangle)
+        public Aseprite GetOrLoadAseprite(string path)
         {
-            RenderServices.DrawQuad(rectangle, Color.Magenta);
+            if (!_asepriteCache.TryGetValue(path, out var ase))
+            {
+                ase = new Aseprite(path);
+                _asepriteCache[path] = ase;
+            }
+            return ase;
+        }
+        public void ClearCache()
+        {
+            _asepriteCache.Clear();
+            _textureHashes.Clear();
         }
     }
 }
