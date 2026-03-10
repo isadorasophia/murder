@@ -147,7 +147,7 @@ namespace Murder.Systems.Graphics
                     UseScaledTime = !e.HasPauseAnimation() && !s.UseUnscaledTime,
                     Loop =
                         s.NextAnimations.Length <= 1 &&              // if this is a sequence, don't loop
-                        animation.NextAnimation.Length == 0 &&      //
+                        !animation.HasNextAnimation &&              //
                         !e.HasDoNotLoop() &&                       // if this has the DoNotLoop component, don't loop
                         !e.HasDestroyOnAnimationComplete() &&     // if you want to destroy this, don't loop
                         (overload == null || (overload.Value.AnimationCount == 1 && overload.Value.Loop)),
@@ -249,7 +249,7 @@ namespace Murder.Systems.Graphics
                 // Animations do not send complete messages until the current sequence is done
                 if (frameInfo.Complete)
                 {
-                    if (frameInfo.Animation.NextAnimation.Length > 0)
+                    if (frameInfo.Animation.HasNextAnimation)
                     {
                         // Handle animation sequences imported by Aseprite and baked into the asset
                         if (frameInfo.Animation.GetNextAnimation(Game.Random, out string next))

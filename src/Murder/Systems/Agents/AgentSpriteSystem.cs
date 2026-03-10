@@ -199,13 +199,15 @@ namespace Murder.Systems
                 // Make sure overloaded animations don't loop if they have a sequence.
                 if (overload != null)
                 {
-                    if (!spriteAsset.Animations.TryGetValue(animationInfo.Name, out var animation))
+                    if (!spriteAsset.Animations.TryGetValue(animationInfo.Name, out Animation animation))
                     {
                         GameLogger.Log($"Couldn't find animation {animationInfo.Name} for {spriteAsset.Guid}.");
-                        continue;
+
+                        CompleteAnimationOverload(e, overload.Value, frameInfo: null, speedOverload);
+                        overload = null;
                     }
 
-                    if (!animation.NextAnimation.IsEmpty)
+                    if (animation.HasNextAnimation && animationInfo.Loop)
                     {
                         animationInfo = animationInfo with { Loop = false };
                     }
@@ -297,59 +299,7 @@ namespace Murder.Systems
                 // The animation overload is now done
                 if (frameInfo.Complete && overload != null)
                 {
-                    if (overload.Value.AnimationCount > 1)
-                    {
-                        if (overload.Value.Current < overload.Value.AnimationCount - 1)
-                        {
-                            e.SetAnimationOverload(overload.Value.PlayNext());
-                            e.SendAnimationCompleteMessage();
-                        }
-                        else
-                        {
-                            if (!overload.Value.Loop)
-                            {
-                                e.RemoveAnimationOverload();
-                                e.SendAnimationCompleteMessage(AnimationCompleteStyle.Sequence);
-                            }
-                            else
-                            {
-                                e.SendAnimationCompleteMessage();
-                            }
-
-                            e.SetAnimationComplete();
-                        }
-                    }
-                    else if (!frameInfo.Animation.NextAnimation.IsEmpty)
-                    {
-                        // This is a chained animation, e send the complete message and try to play the next one.
-                        e.SendAnimationCompleteMessage(AnimationCompleteStyle.Sequence);
-                        e.SetAnimationComplete();
-
-                        if (frameInfo.Animation.GetNextAnimation(Game.Random, out string next))
-                        {
-                            e.SetAnimationOverload(overload.Value.Play(next));
-                        }
-                        else
-                        {
-                            e.SetAnimationOverload(overload.Value with { Start = Game.Now });
-                        }
-                    }
-                    else if (!overload.Value.Loop)
-                    {
-                        e.RemoveAnimationOverload();
-                        e.SendAnimationCompleteMessage(AnimationCompleteStyle.Sequence);
-                        e.SetAnimationComplete();
-                    }
-                    else
-                    {
-                        e.SendAnimationCompleteMessage();
-                        e.SetAnimationComplete();
-                    }
-
-                    if (speedOverload is not null && speedOverload.Value.Persist)
-                    {
-                        e.RemoveAnimationSpeedOverload();
-                    }
+                    CompleteAnimationOverload(e, overload.Value, frameInfo, speedOverload);
                 }
                 else
                 {
@@ -360,6 +310,64 @@ namespace Murder.Systems
             if (issueSlowdownWarning)
             {
                 GameLogger.Warning("Animation event loop reached. Breaking out of loop. This was probably caused by a major slowdown.");
+            }
+        }
+
+        private void CompleteAnimationOverload(
+            Entity e, AnimationOverloadComponent overload, FrameInfo? frameInfo, AnimationSpeedOverload? speedOverload)
+        {
+            if (overload.AnimationCount > 1)
+            {
+                if (overload.Current < overload.AnimationCount - 1)
+                {
+                    e.SetAnimationOverload(overload.PlayNext());
+                    e.SendAnimationCompleteMessage();
+                }
+                else
+                {
+                    if (!overload.Loop)
+                    {
+                        e.RemoveAnimationOverload();
+                        e.SendAnimationCompleteMessage(AnimationCompleteStyle.Sequence);
+                    }
+                    else
+                    {
+                        e.SendAnimationCompleteMessage();
+                    }
+
+                    e.SetAnimationComplete();
+                }
+            }
+            else if (frameInfo is not null && frameInfo.Value.Animation.HasNextAnimation)
+            {
+                // This is a chained animation, e send the complete message and try to play the next one.
+                e.SendAnimationCompleteMessage(AnimationCompleteStyle.Sequence);
+                e.SetAnimationComplete();
+
+                if (frameInfo.Value.Animation.GetNextAnimation(Game.Random, out string next))
+                {
+                    e.SetAnimationOverload(overload.Play(next));
+                }
+                else
+                {
+                    e.SetAnimationOverload(overload with { Start = Game.Now });
+                }
+            }
+            else if (!overload.Loop)
+            {
+                e.RemoveAnimationOverload();
+                e.SendAnimationCompleteMessage(AnimationCompleteStyle.Sequence);
+                e.SetAnimationComplete();
+            }
+            else
+            {
+                e.SendAnimationCompleteMessage();
+                e.SetAnimationComplete();
+            }
+
+            if (speedOverload is not null && speedOverload.Value.Persist)
+            {
+                e.RemoveAnimationSpeedOverload();
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Murder.Core.Graphics;
 
@@ -43,47 +44,45 @@ public readonly struct AnimationSequence
         return builder.ToImmutableArray();
     }
 }
+
 public readonly struct Animation
 {
-    public static Animation Empty = new Animation(
+    public static Animation Empty = new(
         [1],
         [0f],
-        ImmutableDictionary<int, string>.Empty,
+        events: null,
         animationDuration: 0,
-        ImmutableArray<AnimationSequence>.Empty
-        );
+        sequence: null
+    );
 
     /// <summary>
     /// An array of integers representing the indices of the frames in the animation
     /// </summary>
-    public readonly ImmutableArray<int> Frames = ImmutableArray<int>.Empty;
+    public readonly ImmutableArray<int> Frames = [];
 
     /// <summary>
     /// An array of floats representing the duration of each frame in the animation, in milliseconds
     /// </summary>
-    public readonly ImmutableArray<float> FramesDuration = ImmutableArray<float>.Empty;
+    public readonly ImmutableArray<float> FramesDuration = [];
 
     /// <summary>
     /// A dictionary associating integer indices with event strings
     /// </summary>
-    public readonly ImmutableDictionary<int, string> Events = ImmutableDictionary<int, string>.Empty;
+    public readonly ImmutableDictionary<int, string>? Events = null;
 
     /// <summary>
     /// The total duration of the animation, in seconds
     /// </summary>
     public readonly float AnimationDuration = 1;
 
-    public readonly ImmutableArray<AnimationSequence> NextAnimation;
+    public readonly ImmutableArray<AnimationSequence>? NextAnimation = null;
 
-    public Animation()
-    {
-        Frames = ImmutableArray<int>.Empty;
-        FramesDuration = ImmutableArray<float>.Empty;
-        Events = ImmutableDictionary<int, string>.Empty;
-        NextAnimation = ImmutableArray<AnimationSequence>.Empty;
-    }
+    [MemberNotNullWhen(true, nameof(NextAnimation))]
+    public bool HasNextAnimation => NextAnimation is not null && NextAnimation.Value.Length > 0;
 
-    public Animation(ImmutableArray<int> frames, ImmutableArray<float> framesDuration, ImmutableDictionary<int, string> events, float animationDuration, ImmutableArray<AnimationSequence> sequence)
+    public Animation() { }
+
+    public Animation(ImmutableArray<int> frames, ImmutableArray<float> framesDuration, ImmutableDictionary<int, string>? events, float animationDuration, ImmutableArray<AnimationSequence>? sequence)
     {
         Frames = frames;
         FramesDuration = framesDuration;
@@ -92,11 +91,11 @@ public readonly struct Animation
         NextAnimation = sequence;
     }
 
-    public Animation(int[] frames, float[] framesDuration, Dictionary<int, string> events, ImmutableArray<AnimationSequence> sequence)
+    public Animation(int[] frames, float[] framesDuration, Dictionary<int, string>? events, ImmutableArray<AnimationSequence>? sequence)
     {
-        Frames = frames.ToImmutableArray();
-        FramesDuration = framesDuration.ToImmutableArray();
-        Events = events.ToImmutableDictionary();
+        Frames = [.. frames];
+        FramesDuration = [.. framesDuration];
+        Events = events?.ToImmutableDictionary();
         AnimationDuration = FramesDuration.Sum() / 1000f;
         NextAnimation = sequence;
     }
@@ -236,20 +235,26 @@ public readonly struct Animation
     /// <summary>
     /// Used by the editor when applying custom messages to an animation.
     /// </summary>
-    public Animation WithMessageAt(int frame, string message) => new(Frames, FramesDuration, Events.SetItem(frame, message), AnimationDuration, NextAnimation);
+    public Animation WithMessageAt(int frame, string message) => new(Frames, FramesDuration, Events?.SetItem(frame, message), AnimationDuration, NextAnimation);
 
     /// <summary>
     /// Used by the editor when applying custom messages to an animation.
     /// </summary>
-    public Animation WithoutMessageAt(int frame) => new(Frames, FramesDuration, Events.Remove(frame), AnimationDuration, NextAnimation);
+    public Animation WithoutMessageAt(int frame) => new(Frames, FramesDuration, Events?.Remove(frame), AnimationDuration, NextAnimation);
 
     public bool GetNextAnimation(Random random, out string nextAnimation)
     {
-        for (int i = 0; i < NextAnimation.Length; i++)
+        if (NextAnimation is null)
         {
-            if (random.NextFloat() <= NextAnimation[i].Chance)
+            nextAnimation = string.Empty;
+            return false;
+        }
+
+        for (int i = 0; i < NextAnimation.Value.Length; i++)
+        {
+            if (random.NextFloat() <= NextAnimation.Value[i].Chance)
             {
-                nextAnimation = NextAnimation[i].Next;
+                nextAnimation = NextAnimation.Value[i].Next;
                 return true;
             }
         }

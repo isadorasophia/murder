@@ -337,7 +337,7 @@ public partial class EditorDataManager
             return false;
         }
 
-        SaveDataTracker tracker = EditorFileManager.DeserializeFromJsonPath<SaveDataTracker>(trackerUnpackedPath);
+        SaveDataTracker? tracker = EditorFileManager.DeserializeFromJsonPath<SaveDataTracker>(trackerUnpackedPath);
         FileManager.PackContent(tracker, trackerPath);
 
         PackedSaveData? packedData = EditorFileManager.DeserializeFromJsonPath<PackedSaveData>(saveDataUnpackedPath);
