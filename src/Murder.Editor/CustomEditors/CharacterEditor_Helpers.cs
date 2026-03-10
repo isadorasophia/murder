@@ -75,17 +75,23 @@ namespace Murder.Editor.CustomEditors
             }
 
             string portraitName = GetPortraitName(speaker, line);
+            return TryDrawPortrait(speaker, portraitName);
+        }
+
+        public static bool TryDrawPortrait(SpeakerAsset speaker, string? name)
+        {
+            string portraitName = DialogueServices.GetPortraitName(speaker, name);
 
             if (!speaker.Portraits.TryGetValue(portraitName, out PortraitInfo portrait) ||
-                Game.Data.TryGetAsset<SpriteAsset>(portrait.Portrait.Sprite) is not SpriteAsset aseprite)
+                Game.Data.TryGetAsset<SpriteAsset>(portrait.Portrait.Sprite) is not SpriteAsset sprite)
             {
                 return false;
             }
 
-            EditorAssetHelpers.DrawPreview(aseprite, maxSize: 100, portrait.Portrait.AnimationId);
+            EditorAssetHelpers.DrawPreview(sprite, maxSize: 100, portrait.Portrait.AnimationId);
             return true;
         }
-        
+
         private string GetPortraitName(SpeakerAsset speaker, Line line)
         {
             return DialogueServices.GetPortraitName(speaker, line.Portrait, _script?.Portrait);

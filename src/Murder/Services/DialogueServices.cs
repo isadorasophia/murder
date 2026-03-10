@@ -195,6 +195,6 @@ public static class DialogueServices
             return fallback;
         }
 
-        return speaker.DefaultPortrait ?? speaker.Portraits.Keys.First();
+        return speaker.DefaultPortrait ?? speaker.Portraits.Keys.FirstOrDefault() ?? "Idle";
     }
 }
