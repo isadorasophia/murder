@@ -10,6 +10,7 @@ using Murder.Utilities;
 using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Murder.Data
@@ -389,7 +390,17 @@ namespace Murder.Data
                 return true;
             }
 
-            _tracker = FileManager.UnpackContent<SaveDataTracker>(trackerPath);
+            try
+            {
+                _tracker = FileManager.UnpackContent<SaveDataTracker>(trackerPath);
+            }
+            catch (Exception)
+            {
+                GameLogger.Error("Unable to recover SaveDataTracker. Creating a new one...");
+
+                _tracker = _game?.CreateSaveTracker() ?? new();
+                return true;
+            }
 
             // whatever tracker we had loaded, it might not be the same as the one
             // the game supports. double check that prior to any loading.
