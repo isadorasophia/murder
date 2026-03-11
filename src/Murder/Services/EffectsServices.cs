@@ -2,11 +2,14 @@
 using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
+using Bang.Interactions;
 using Murder.Components;
 using Murder.Components.Graphics;
 using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Core.Physics;
+using System;
+using System.Collections.Immutable;
 using System.Numerics;
 
 namespace Murder.Services
@@ -169,6 +172,14 @@ namespace Murder.Services
             if (target.TryGetCollider() is ColliderComponent collider && (collider.Layer & CollisionLayersBase.SOLID) != 0)
             {
                 target.SetCollider(collider.WithoutLayerFlag(CollisionLayersBase.SOLID));
+            }
+        }
+
+        public static void Fire(World world, Entity interactor, Entity? interacted, ImmutableArray<IInteractiveComponent> actions)
+        {
+            foreach (IInteractiveComponent a in actions)
+            {
+                a.Interact(world, interactor, interacted);
             }
         }
     }
