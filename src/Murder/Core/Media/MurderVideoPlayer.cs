@@ -8,6 +8,7 @@ using Murder.Serialization;
 using Murder.Services;
 using System.Numerics;
 using System.Text.Json.Serialization;
+using static Murder.Core.Graphics.RenderContext;
 
 namespace Murder.Media;
 
@@ -16,18 +17,20 @@ public class MurderVideoPlayer : IDisposable
     [JsonIgnore]
     private VideoPlayer? _videoPlayer = null;
 
-    private VertexInfo[]? _verts = null;
-    private short[]? _indices = null;
-    private Point _finalSize = Point.Zero; 
+    private Point _finalSize = Point.Zero;
 
     private readonly RenderContext _render;
 
     private readonly string _path;
     private readonly Point _videoSize;
 
-    public bool IsDone => _videoPlayer is null || _videoPlayer.State == MediaState.Stopped;
+    public Color FadeColor = Color.Green;
+    public float? FadeStart = null;
+    public float FadeDuration = 1f;
+    private float FadeDelta => FadeStart != null ? (Game.NowUnscaled - FadeStart.Value) / FadeDuration : 0;
+    public bool IsDone => _videoPlayer is null || _videoPlayer.State == MediaState.Stopped || FadeDelta >= 1;
 
-    public bool Started => _verts is not null;
+    public bool Started { get; private set; }
 
     public Point FinalSize => _finalSize;
 
@@ -64,21 +67,21 @@ public class MurderVideoPlayer : IDisposable
         _render.DoNotRender = true;
     }
 
-    public void OnDraw(RenderContext render)
+    public void OnDraw(Point size)
     {
         if (_videoPlayer is null)
         {
             return;
         }
 
+        Started = true;
         Texture2D videoTexture = _videoPlayer.GetTexture();
 
         Game.GraphicsDevice.SetRenderTarget(null);
         Game.GraphicsDevice.Clear(Color.Black);
 
-        if (_verts is null)
         {
-            _finalSize = render.Viewport.Size;
+            _finalSize = size;
 
             // Scale to fill the screen while keeping aspect ratio.
             // float scale = MathF.Max((float)cameraSize.X / _videoSize.X, (float)cameraSize.Y / _videoSize.Y);
@@ -86,14 +89,30 @@ public class MurderVideoPlayer : IDisposable
             Rectangle source = new(0, 0, _videoSize.X, _videoSize.Y);
             Rectangle destination = new(0, 0, _finalSize.X, _finalSize.Y);
 
-            (_verts, _indices) = RenderServices.MakeTexturedQuad(destination, source, new Vector2(source.Width, source.Height), Color.White, RenderServices.BLEND_NORMAL);
+            var (v, i) = RenderServices.GetSharedQuad(destination, source, new Vector2(source.Width, source.Height), Color.White, RenderServices.BLEND_NORMAL);
+            RenderServices.DrawIndexedVertices(
+                Game.GraphicsDevice, v, v.Length, i, i.Length / 3, Game.Data.ShaderSprite,
+                BlendState.AlphaBlend,
+                videoTexture,
+                true);
+
         }
 
-        RenderServices.DrawIndexedVertices(
-            Game.GraphicsDevice, _verts, _verts.Length, _indices!, _indices!.Length / 3, Game.Data.ShaderSprite,
-            BlendState.Opaque,
-            videoTexture,
-            true);
+        if (FadeStart != null)
+        {
+            // same thing but with a black texture, used for fading out the video.
+            Rectangle source = new(0, 0, _videoSize.X, _videoSize.Y);
+            Rectangle destination = new(0, 0, _finalSize.X, _finalSize.Y);
+            Color color = FadeColor * FadeDelta;
+
+            var (v, i) = RenderServices.GetSharedQuad(destination, Rectangle.One, Vector2.One, color, RenderServices.BLEND_COLOR_ONLY);
+
+            RenderServices.DrawIndexedVertices(
+                Game.GraphicsDevice, v, v.Length, i!, i!.Length / 3, Game.Data.ShaderSprite,
+                BlendState.AlphaBlend,
+                videoTexture,
+                true);
+        }
     }
 
     public void StopAndDispose()

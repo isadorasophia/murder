@@ -931,14 +931,14 @@ public static partial class RenderServices
 
     public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Color color, Effect? effect, BlendState blend, bool smoothing)
     {
-        (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BLEND_NORMAL);
+        (VertexInfo[] verts, short[] indices) = GetSharedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BLEND_NORMAL);
 
         DrawIndexedVertices(Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, effect, blend, texture, smoothing);
     }
 
     public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Color color, BlendState blend)
     {
-        (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BLEND_NORMAL);
+        (VertexInfo[] verts, short[] indices) = GetSharedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BLEND_NORMAL);
 
         if (blend == BlendState.Additive)
             Game.Data.ShaderSprite?.SetTechnique("Add");
@@ -956,7 +956,7 @@ public static partial class RenderServices
         => DrawTextureQuad(texture, source, destination, color, blend, shaderEffect, BLEND_NORMAL);
     public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Color color, BlendState blend, Effect? shaderEffect, Vector3 colorBlend)
     {
-        (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, colorBlend);
+        (VertexInfo[] verts, short[] indices) = GetSharedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, colorBlend);
 
         DrawIndexedVertices(
             Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, shaderEffect,
@@ -1074,7 +1074,7 @@ public static partial class RenderServices
         return (_cachedRectVertices, _cachedRectIndices);
     }
 
-    public static (VertexInfo[] vertices, short[] indices) MakeTexturedQuad(Rectangle destination, Rectangle source, Vector2 sourceSize, Color color, Vector3 BlendType)
+    public static (VertexInfo[] vertices, short[] indices) GetSharedQuad(Rectangle destination, Rectangle source, Vector2 sourceSize, Color color, Vector3 BlendType)
     {
         // 0---1
         // |\  |
