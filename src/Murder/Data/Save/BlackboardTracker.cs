@@ -502,7 +502,7 @@ namespace Murder.Save
             }
             else
             {
-                if (IsSameValueForField<T>(value, info.Blackboard, f))
+                if (IsSameValueForField<object>(value, info.Blackboard, f))
                 {
                     return false;
                 }
