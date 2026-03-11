@@ -154,8 +154,10 @@ public static class PhysicsServices
     /// </summary>
     public static bool RaycastTiles(
         World world,
-        Vector2 startPos, Vector2 endPos,
-        int flags, out RaycastHit hit)
+        Vector2 startPos,
+        Vector2 endPos,
+        int flags, 
+        out RaycastHit hit)
     {
         Map map = world.GetUniqueMap().Map;
 
@@ -185,12 +187,14 @@ public static class PhysicsServices
         float tDeltaY = (stepY != 0) ? 1f / MathF.Abs(endGrid.Y - startGrid.Y) : float.PositiveInfinity;
         Vector2 dir = endPos - startPos;
 
-        // handle start cell
-        if (map.IsInsideGrid(x, y) && map.At(x, y).HasFlag(flags))
-        {
-            hit = new RaycastHit(new Point(x, y), startPos);
-            return true;                                     // hit at t = 0
-        }
+        // Handle start cell...
+        // TODO: Do we need or want to include the start cell? This could potentially make
+        // something "blind" if it ended up at a tile that has the collision flag.
+        //if (map.IsInsideGrid(x, y) && map.At(x, y).HasFlag(flags))
+        //{
+        //    hit = new RaycastHit(new Point(x, y), startPos);
+        //    return true;                                     // hit at t = 0
+        //}
 
         // DDA traversal
         while (true)
@@ -324,7 +328,6 @@ public static class PhysicsServices
                 EntityServices.GetAllChildren(world, entity, _ignoreEntitiesWithChildren);
             }
         }
-
 
         if (RaycastTiles(world, startPosition, endPosition, layerMask, out var hitTile))
         {
