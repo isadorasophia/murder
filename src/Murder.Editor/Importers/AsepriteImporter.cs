@@ -192,6 +192,11 @@ namespace Murder.Editor.Importers
 
         private Packer? CreateAtlasPacker(string atlasId, List<string> files)
         {
+            if (files.Count == 0)
+            {
+                GameLogger.Log($"No files found to pack for atlas '{atlasId}' at path {GetRawResourcesPath()}");
+                return null;
+            }
             string sourcePackedPath = GetSourcePackedPath();   // Path where the atlas (.png/.json) will be saved in src.
             FileManager.GetOrCreateDirectory(sourcePackedPath); // Make sure it exists.
 
