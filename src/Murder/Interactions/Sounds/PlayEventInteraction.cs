@@ -11,7 +11,8 @@ namespace Murder.Interactions;
 public enum PlayEventSettings
 {
     None = 0,
-    IgnoreEntitySource = 1
+    IgnoreEntitySource = 1,
+    PlayOnInteracted = 2
 }
 
 [Sound]
@@ -33,7 +34,13 @@ public readonly struct PlayEventInteraction : IInteraction
             return;
         }
 
-        int entityId = Settings.HasFlag(PlayEventSettings.IgnoreEntitySource) ? -1 : interactor.EntityId;
+        Entity target = interactor;
+        if (Settings.HasFlag(PlayEventSettings.PlayOnInteracted) && interacted is not null)
+        {
+            target = interacted;
+        }
+
+        int entityId = Settings.HasFlag(PlayEventSettings.IgnoreEntitySource) ? -1 : target.EntityId;
 
         if (Properties.HasFlag(SoundProperties.StopOtherEventsInLayer))
         {
@@ -58,7 +65,7 @@ public readonly struct PlayEventInteraction : IInteraction
             }
             else
             {
-                _ = SoundServices.Play(Event.Value, interactor, Layer, properties);
+                _ = SoundServices.Play(Event.Value, target, Layer, properties);
             }
         }
     }
