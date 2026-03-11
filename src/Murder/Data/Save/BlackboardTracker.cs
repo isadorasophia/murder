@@ -463,25 +463,49 @@ namespace Murder.Save
             object underlyingValueWithMatchingType = value;
             if (f.FieldType != underlyingValueWithMatchingType.GetType())
             {
-                if (f.FieldType.IsEnum || f.FieldType == typeof(int))
+                if (f.FieldType.IsEnum)
                 {
                     underlyingValueWithMatchingType = Convert.ToInt32(value);
+
+                    // we don't know what the enum was. just skip checking the previous value.
+                    // actually, you shouldn't be passing an integer here.
+                    GameLogger.Warning($"Unable to check previous value when setting an integer for {fieldName}.");
+                }
+                else if (f.FieldType == typeof(int))
+                {
+                    underlyingValueWithMatchingType = Convert.ToInt32(value);
+
+                    if (IsSameValueForField<int>(underlyingValueWithMatchingType, info.Blackboard, f))
+                    {
+                        // Values are already the same, do not modify or broadcast information.
+                        return false;
+                    }
                 }
                 else if (f.FieldType == typeof(double))
                 {
                     underlyingValueWithMatchingType = Convert.ToDouble(value);
+                    if (IsSameValueForField<double>(underlyingValueWithMatchingType, info.Blackboard, f))
+                    {
+                        // Values are already the same, do not modify or broadcast information.
+                        return false;
+                    }
                 }
                 else if (f.FieldType == typeof(float))
                 {
                     underlyingValueWithMatchingType = Convert.ToSingle(value);
+                    if (IsSameValueForField<float>(underlyingValueWithMatchingType, info.Blackboard, f))
+                    {
+                        // Values are already the same, do not modify or broadcast information.
+                        return false;
+                    }
                 }
             }
-
-            T? previousValue = (T?)f.GetValue(info.Blackboard);
-            if (value.Equals(previousValue))
+            else
             {
-                // Values are already the same, do not modify or broadcast information.
-                return false;
+                if (IsSameValueForField<T>(value, info.Blackboard, f))
+                {
+                    return false;
+                }
             }
 
             f.SetValue(info.Blackboard, underlyingValueWithMatchingType);
@@ -505,6 +529,17 @@ namespace Murder.Save
             OnModified(info.Blackboard.Kind);
 
             return true;
+        }
+
+        private static bool IsSameValueForField<T>(object value, object fieldOwner, FieldInfo f) where T : notnull
+        {
+            T? previousValue = (T?)f.GetValue(fieldOwner);
+            if (value.Equals(previousValue))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
