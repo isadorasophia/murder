@@ -7,7 +7,6 @@ using Murder.Assets.Graphics;
 using Murder.Attributes;
 using Murder.Components;
 using Murder.Components.Graphics;
-using Murder.Components.Physics;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
@@ -17,7 +16,6 @@ using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
 using System;
-using System.Diagnostics;
 using System.Numerics;
 
 namespace Murder.Systems
@@ -259,23 +257,27 @@ namespace Murder.Systems
                 Color? outlineColor = e.HasDeactivateHighlightSprite() ? null :
                     e.TryGetHighlightSprite()?.Color;
 
-
+                Batch2D batch = render.GetBatch(target);
+                DrawInfo drawInfo = new(ySort)
+                {
+                    Clip = clip,
+                    ImageFlip = imageFlip,
+                    Color = color,
+                    Scale = scale,
+                    BlendMode = blend,
+                    Sort = ySort,
+                    Outline = outlineColor,
+                };
 
                 // Draw to the sprite batch
                 FrameInfo frameInfo = RenderServices.DrawSprite(
-                    render.GetBatch((int)target),
+                    batch,
                     spriteAsset,
                     position: renderPosition,
-                    new DrawInfo(ySort)
-                    {
-                        Clip = clip,
-                        ImageFlip = imageFlip,
-                        Color = color,
-                        Scale = scale,
-                        BlendMode = blend,
-                        Sort = ySort,
-                        Outline = outlineColor,
-                    }, animationInfo);
+                    drawInfo, 
+                    animationInfo);
+
+                AfterDraw(batch, e, renderPosition, ySortOffsetRaw, drawInfo, animationInfo);
 
                 issueSlowdownWarning = RenderServices.TriggerEventsIfNeeded(e, spriteAsset.Guid, animationInfo, frameInfo);
 
@@ -310,6 +312,28 @@ namespace Murder.Systems
             if (issueSlowdownWarning)
             {
                 GameLogger.Warning("Animation event loop reached. Breaking out of loop. This was probably caused by a major slowdown.");
+            }
+        }
+
+        protected virtual void AfterDraw(
+            Batch2D batch, 
+            Entity e,
+            Vector2 position, 
+            float ySortOffsetRaw, 
+            DrawInfo drawInfo, 
+            AnimationInfo animationInfo) { }
+
+        protected virtual void SetParticleWalk(World world, Entity e, bool isWalking)
+        {
+            Entity? walk = e.TryFetchChild("Particle");
+
+            if (isWalking)
+            {
+                walk?.RemoveDisableParticleSystem();
+            }
+            else
+            {
+                walk?.SetParticleSystem();
             }
         }
 
@@ -368,20 +392,6 @@ namespace Murder.Systems
             if (speedOverload is not null && speedOverload.Value.Persist)
             {
                 e.RemoveAnimationSpeedOverload();
-            }
-        }
-
-        protected virtual void SetParticleWalk(World world, Entity e, bool isWalking)
-        {
-            Entity? walk = e.TryFetchChild("Particle");
-
-            if (isWalking)
-            {
-                walk?.RemoveDisableParticleSystem();
-            }
-            else
-            {
-                walk?.SetParticleSystem();
             }
         }
     }

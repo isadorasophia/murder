@@ -104,7 +104,7 @@ public static class SoundServices
             return;
         }
 
-        if (layer.HasFlag(SoundLayer.Music))
+        if (layer.HasFlag(SoundLayer.Music) || layer.HasFlag(SoundLayer.Snapshot))
         {
             properties |= SoundProperties.Persist;
         }
