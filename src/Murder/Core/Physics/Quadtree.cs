@@ -63,7 +63,8 @@ namespace Murder.Core.Physics
         {
             if (!TryRemoveFromCollisionQuadTree(entityId))
             {
-                GameLogger.Warning($"Failed to remove entity {entityId} from the quadtree?");
+                // Likely already removed from a previous remove operation.
+                // GameLogger.Warning($"Failed to remove entity {entityId} from the quadtree?");
             }
         }
 
