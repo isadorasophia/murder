@@ -17,12 +17,12 @@ public readonly struct FireAfterInteraction : IInteraction
     {
         if (Seconds == 0)
         {
-            EffectsServices.Fire(world, interactor, interacted, Actions);
+            DialogueServices.Fire(world, interactor, interacted, Actions);
         }
         else
         {
             ImmutableArray<IInteractiveComponent> actions = Actions;
-            world.FireAfter(Seconds, () => EffectsServices.Fire(world, interactor, interacted, actions));
+            world.FireAfter(Seconds, () => DialogueServices.Fire(world, interactor, interacted, actions));
         }
     }
 }

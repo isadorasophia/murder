@@ -174,13 +174,5 @@ namespace Murder.Services
                 target.SetCollider(collider.WithoutLayerFlag(CollisionLayersBase.SOLID));
             }
         }
-
-        public static void Fire(World world, Entity interactor, Entity? interacted, ImmutableArray<IInteractiveComponent> actions)
-        {
-            foreach (IInteractiveComponent a in actions)
-            {
-                a.Interact(world, interactor, interacted);
-            }
-        }
     }
 }

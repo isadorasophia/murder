@@ -544,7 +544,8 @@ public static class StageHelpers
 
         events ??= [];
 
-        if (sprite.Animations.TryGetValue(portrait.AnimationId, out Animation animation))
+        if (sprite.Animations.TryGetValue(portrait.AnimationId, out Animation animation) && 
+            animation.Events is not null)
         {
             foreach ((_, var @event) in animation.Events)
             {
@@ -563,9 +564,12 @@ public static class StageHelpers
         {
             animations.Add(name);
 
-            foreach ((_, var @event) in animation.Events)
+            if (animation.Events is not null)
             {
-                events.Add(@event);
+                foreach ((_, var @event) in animation.Events)
+                {
+                    events.Add(@event);
+                }
             }
         }
 

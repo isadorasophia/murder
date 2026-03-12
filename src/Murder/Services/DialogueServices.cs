@@ -1,5 +1,6 @@
 ﻿using Bang;
 using Bang.Entities;
+using Bang.Interactions;
 using Murder.Assets;
 using Murder.Components;
 using Murder.Core.Dialogs;
@@ -196,5 +197,13 @@ public static class DialogueServices
         }
 
         return speaker.DefaultPortrait ?? speaker.Portraits.Keys.FirstOrDefault() ?? "Idle";
+    }
+
+    public static void Fire(World world, Entity interactor, Entity? interacted, ImmutableArray<IInteractiveComponent> actions)
+    {
+        foreach (IInteractiveComponent a in actions)
+        {
+            a.Interact(world, interactor, interacted);
+        }
     }
 }

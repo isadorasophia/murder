@@ -269,7 +269,8 @@ namespace Murder.Editor.CustomEditors
             Animation animation = _sprite.Animations[info.SelectedAnimation];
             for (int i = 0; i < animation.FrameCount; ++i)
             {
-                if (!animation.Events.TryGetValue(i, out string? message))
+                if (animation.Events is null || 
+                    !animation.Events.TryGetValue(i, out string? message))
                 {
                     continue;
                 }
@@ -402,7 +403,8 @@ namespace Murder.Editor.CustomEditors
                                 drawList.AddRectFilled(framePosition + new Vector2(padding, 0), framePosition + frameSize, frameColor, 8);
                             }
 
-                            if (selectedAnimation.Events.TryGetValue(i, out var @event))
+                            if (selectedAnimation.Events is not null &&
+                                selectedAnimation.Events.TryGetValue(i, out var @event))
                             {
                                 drawList.AddRect(framePosition + new Vector2(padding, 0), framePosition + frameSize, frameKeyColor, 8);
 
@@ -452,7 +454,9 @@ namespace Murder.Editor.CustomEditors
                 ImGui.EndChild();
 
                 targetAnimationFrame = _targetFrameForPopup ?? selectedAnimation.Evaluate(mouseRatio * selectedAnimation.AnimationDuration, false).InternalFrame;
-                selectedAnimation.Events.TryGetValue(targetAnimationFrame, out string? selectedMessage);
+
+                string? selectedMessage = null;
+                selectedAnimation.Events?.TryGetValue(targetAnimationFrame, out selectedMessage);
 
                 DrawAddMessageOnRightClick(info, targetAnimationFrame, selectedMessage);
             }
@@ -566,7 +570,7 @@ namespace Murder.Editor.CustomEditors
                 text.Append($"\"{info.SelectedAnimation}\"");
             }
 
-            if (animation.Events.Count == 0)
+            if (animation.Events is null || animation.Events.Count == 0)
             {
                 text.Append(" | 0 events");
             }
