@@ -125,6 +125,24 @@ public static partial class BlackboardHelpers
         return true;
     }
 
+    public static bool IsAnySatisfied(World world, ImmutableArray<ICondition> conditions)
+    {
+        if (conditions.Length == 0)
+        {
+            return true;
+        }
+
+        foreach (ICondition condition in conditions)
+        {
+            if (condition.IsSatisfiedBy(world))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static bool Match(World world, OnlyApplyOnRuleComponent onlyApplyWhen)
     {
         return Match(world, onlyApplyWhen.Requirements) && IsSatisfied(world, onlyApplyWhen.Conditions);
