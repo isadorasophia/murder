@@ -2,7 +2,6 @@
 using Bang.Interactions;
 using Murder.Attributes;
 using System.Collections.Immutable;
-using System.Text.Json.Serialization;
 
 namespace Murder.Components
 {
@@ -21,12 +20,7 @@ namespace Murder.Components
         /// </summary>
         Once = 1 << 1,
 
-        OnceEveryLoad = 1 << 2,
-
-        /// <summary>
-        /// Whether this will send a message once the object stop colliding.
-        /// </summary>
-        InteractOnEnterAndExit = 1 << 3
+        OnceEveryLoad = 1 << 2
     }
 
     public readonly struct InteractOnCollisionComponent : IComponent

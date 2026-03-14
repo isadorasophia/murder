@@ -53,14 +53,9 @@ public class InteractOnCollisionSystem : IMessagerSystem
 
         if (msg.Movement == CollisionDirection.Exit)
         {
-            foreach (var interaction in interactOnCollision.CustomExitMessages)
+            foreach (IInteractiveComponent interaction in interactOnCollision.CustomExitMessages)
             {
                 interaction.Interact(world, interactorEntity, interactiveEntity);
-            }
-
-            if (!interactOnCollision.Flags.HasFlag(InteractOnCollisionFlags.InteractOnEnterAndExit))
-            {
-                return;
             }
         }
         else if (msg.Movement == CollisionDirection.Enter)
@@ -69,23 +64,23 @@ public class InteractOnCollisionSystem : IMessagerSystem
             {
                 interaction.Interact(world, interactorEntity, interactiveEntity);
             }
+
+            // all right, we just entered, send that interact message.
+            interactiveEntity.SendInteractMessage(interactorEntity);
         }
-
-        // After all these checks, I thinks it's ok to send that message!            
-        // Trigger right away!
-
-        interactiveEntity.SendInteractMessage(interactorEntity);
 
         if (oncePerMap || interactOnCollision.Flags.HasFlag(InteractOnCollisionFlags.Once))
         {
             if (interactOnCollision.CustomExitMessages.Length > 0 && msg.Movement != CollisionDirection.Exit)
             {
+                // we still have things to do!!
                 // wait until we get out before we deactivate ourselves.
                 return;
             }
 
             if (oncePerMap)
             {
+                // make sure we don't interact again.
                 interactiveEntity.SetInteracted();
                 return;
             }
