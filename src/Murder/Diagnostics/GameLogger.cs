@@ -1,6 +1,7 @@
 ﻿using Bang;
 using Microsoft.Xna.Framework.Input;
 using Murder.Core.Graphics;
+using Murder.Save;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -338,14 +339,12 @@ public class GameLogger
     /// <summary>
     /// Used to filter exceptions once a crash is yet to happen.
     /// </summary>
-    public static bool CaptureCrash()
+    public static void CaptureCrash()
     {
         string logFilePath = GetCrashLogPath();
 
         StringBuilder content = new(GetCurrentLog());
-        File.AppendAllTextAsync(logFilePath, content.ToString());
-
-        return false;
+        File.AppendAllText(logFilePath, content.ToString());
     }
 
     public static string GetCrashLogPath() => Path.Join(Game.Data.SaveBasePath, "crash.log");

@@ -4,15 +4,12 @@ using Murder.Diagnostics;
 using Murder.Serialization;
 using Murder.Utilities;
 using System.IO.Compression;
-using System.Net.NetworkInformation;
 using System.Text;
 
 namespace Murder.Services;
 
 public static class FeedbackServices
 {
-    private static readonly HttpClient _client = new HttpClient();
-
     public readonly struct FileWrapper
     {
         public readonly byte[] Bytes;
@@ -169,10 +166,10 @@ public static class FeedbackServices
 
         if (File.Exists(crashLogPath))
         {
-            await File.ReadAllTextAsync(crashLogPath);
+            previousCrashLog = await File.ReadAllTextAsync(crashLogPath);
         }
 
-        using (HttpClient _client = new())
+        using (HttpClient client = new())
         using (MultipartFormDataContent content = new())
         {
             content.Add(new StringContent("MurderEngineFeedback", Encoding.UTF8), "feedback");
@@ -192,7 +189,7 @@ public static class FeedbackServices
 
             try
             {
-                HttpResponseMessage response = await _client.PostAsync(url, content);
+                HttpResponseMessage response = await client.PostAsync(url, content);
                 response.EnsureSuccessStatusCode();
 
                 string responseBody = await response.Content.ReadAsStringAsync();
@@ -276,7 +273,7 @@ public static class FeedbackServices
         }
     }
 
-    private static string GenerateFunnyName(int seed)
+    public static string GenerateFunnyName(int seed)
     {
         string[] consonants = { "b", "c", "d", "f", "g", "h", "j", "ck", "k", "lh", "l", "m", "n", "p", "qu", "r", "s", "t", "v", "w", "x", "z", "bh", "cz", "th" };
         string[] vowels = { "a", "e", "i", "o", "u", "y", "aa", "oo" };

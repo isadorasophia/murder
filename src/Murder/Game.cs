@@ -1035,6 +1035,8 @@ namespace Murder
             {
                 OnClose(sender, e);
                 GameLogger.CaptureCrash();
+
+                _game?.OnFatalException();
             }
         }
 

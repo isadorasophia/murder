@@ -107,6 +107,11 @@ namespace Murder
         public RenderContext CreateRenderContext(GraphicsDevice graphicsDevice, Camera2D camera, RenderContextFlags settings) =>
             new(graphicsDevice, camera, settings);
 
+        /// <summary>
+        /// Last resort before a fatal exception is thrown.
+        /// </summary>
+        public void OnFatalException() { }
+
         public bool HasCursor => true;
 
         /// <summary>
