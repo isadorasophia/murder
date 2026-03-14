@@ -31,7 +31,9 @@ public class GameLogger
     protected readonly string[] _lastInputs = new string[1024];
     protected int _lastInputIndex = 0;
 
+    private string? _lastExceptionCallstack = null;
     private string _lastInput = string.Empty;
+
     public static bool IsShowing => _instance?._showDebug ?? false;
 
     /// <summary>
@@ -329,12 +331,17 @@ public class GameLogger
     /// </summary>
     public static void SpewException(Exception ex)
     {
+        GameLogger logger = GetOrCreateInstance();
+        logger._lastExceptionCallstack = $"\n{ex.StackTrace}"; // used for reporting purposes.
+
         StringBuilder message = new();
         message.Append($"Exception was thrown! {ex.Message}");
-        message.Append($"\n{ex.StackTrace}");
+        message.Append(logger._lastExceptionCallstack);
 
         Warning(message.ToString());
     }
+
+    public static string? FetchLastExceptionCallStack() => _instance?._lastExceptionCallstack;
 
     /// <summary>
     /// Used to filter exceptions once a crash is yet to happen.

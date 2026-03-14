@@ -110,7 +110,7 @@ namespace Murder
         /// <summary>
         /// Last resort before a fatal exception is thrown.
         /// </summary>
-        public void OnFatalException() { }
+        public void OnFatalException(Exception ex) { }
 
         public bool HasCursor => true;
 

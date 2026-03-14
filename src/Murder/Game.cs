@@ -1036,7 +1036,10 @@ namespace Murder
                 OnClose(sender, e);
                 GameLogger.CaptureCrash();
 
-                _game?.OnFatalException();
+                if (unhandled.ExceptionObject is Exception ex)
+                {
+                    _game?.OnFatalException(ex);
+                }
             }
         }
 

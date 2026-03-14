@@ -3,6 +3,7 @@ using Murder.Assets;
 using Murder.Diagnostics;
 using Murder.Serialization;
 using Murder.Utilities;
+using System;
 using System.IO.Compression;
 using System.Text;
 
@@ -140,8 +141,24 @@ public static class FeedbackServices
         }
 
         string computerName = GenerateFunnyName(data.MachineId);
+        string previousCrashLog = string.Empty;
 
-        bool success = await SendFeedbackAsync(Game.Profile.FeedbackUrl, $"{StringHelper.CapitalizeFirstLetter(computerName)}: {data.Name}", data.Description, files);
+        string crashLogPath = GameLogger.GetCrashLogPath();
+        if (File.Exists(crashLogPath))
+        {
+            previousCrashLog = await File.ReadAllTextAsync(crashLogPath);
+        }
+
+        RawFeedbackData rawData = new(Game.Profile.FeedbackUrl)
+        {
+            Title = $"{StringHelper.CapitalizeFirstLetter(computerName)}: {data.Name}",
+            Description = data.Description,
+            Files = files,
+            CrashLog = previousCrashLog,
+            Log = GameLogger.GetCurrentLog()
+        };
+
+        bool success = await SendFeedbackAsync(rawData);
 
         if (data.Screenshots is not null)
         {
@@ -154,9 +171,26 @@ public static class FeedbackServices
         return success;
     }
 
-    public static async Task<bool> SendFeedbackAsync(string url, string title, string description, IEnumerable<(string name, FileWrapper file)> files)
+    public readonly struct RawFeedbackData
     {
-        if (string.IsNullOrWhiteSpace(url))
+        public readonly string Url = string.Empty;
+
+        public string Title { get; init; } = string.Empty;
+        public string Description { get; init; } = string.Empty;
+
+        public string CrashLog { get; init; } = string.Empty;
+        public string Callstack { get; init; } = string.Empty;
+
+        public string Log { get; init; } = string.Empty;
+
+        public IEnumerable<(string name, FileWrapper file)> Files { get; init; } = [];
+
+        public RawFeedbackData(string url) => Url = url;
+    }
+
+    public static async Task<bool> SendFeedbackAsync(RawFeedbackData data)
+    {
+        if (string.IsNullOrWhiteSpace(data.Url))
         {
             return false; // Do not send feedback if the URL is not set.
         }
@@ -174,13 +208,14 @@ public static class FeedbackServices
         {
             content.Add(new StringContent("MurderEngineFeedback", Encoding.UTF8), "feedback");
 
-            content.Add(new StringContent(title, Encoding.UTF8), "Title");
-            content.Add(new StringContent(description, Encoding.UTF8), "Description");
+            content.Add(new StringContent(data.Title, Encoding.UTF8), "Title");
+            content.Add(new StringContent(data.Description, Encoding.UTF8), "Description");
 
-            content.Add(new StringContent(previousCrashLog, Encoding.UTF8), "Crash");
-            content.Add(new StringContent(GameLogger.GetCurrentLog(), Encoding.UTF8), "Log");
+            content.Add(new StringContent(data.CrashLog, Encoding.UTF8), "Crash");
+            content.Add(new StringContent(data.Callstack, Encoding.UTF8), "Callstack");
+            content.Add(new StringContent(data.Log, Encoding.UTF8), "Log");
 
-            foreach (var f in files)
+            foreach (var f in data.Files)
             {
                 var byteArrayContent = new ByteArrayContent(f.file.Bytes);
                 byteArrayContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
@@ -189,7 +224,7 @@ public static class FeedbackServices
 
             try
             {
-                HttpResponseMessage response = await client.PostAsync(url, content);
+                HttpResponseMessage response = await client.PostAsync(data.Url, content);
                 response.EnsureSuccessStatusCode();
 
                 string responseBody = await response.Content.ReadAsStringAsync();
