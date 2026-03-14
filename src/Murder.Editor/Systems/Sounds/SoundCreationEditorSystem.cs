@@ -84,7 +84,7 @@ namespace Murder.Editor.Systems.Sounds
                 [
                     new PositionComponent(position),
                     new SoundParameterComponent(),
-                    new InteractOnCollisionComponent(playerOnly: true),
+                    new InteractOnCollisionComponent(InteractOnCollisionFlags.PlayerOnly),
                     new ColliderComponent(
                         shape: new BoxShape(Vector2.Zero, Point.Zero, width: Grid.CellSize * 2, height: Grid.CellSize * 2),
                         layer: CollisionLayersBase.TRIGGER,
@@ -101,7 +101,7 @@ namespace Murder.Editor.Systems.Sounds
                 [
                     new PositionComponent(position),
                     new SoundParameterComponent(),
-                    new InteractOnCollisionComponent(playerOnly: true),
+                    new InteractOnCollisionComponent(InteractOnCollisionFlags.PlayerOnly),
                     new ColliderComponent(
                         shape: new BoxShape(Vector2.Zero, Point.Zero, width: Grid.CellSize * 2, height: Grid.CellSize * 2),
                         layer: CollisionLayersBase.TRIGGER,
@@ -118,7 +118,7 @@ namespace Murder.Editor.Systems.Sounds
                 [
                     new PositionComponent(position),
                     new SoundParameterComponent(),
-                    new InteractOnCollisionComponent(playerOnly: true),
+                    new InteractOnCollisionComponent(InteractOnCollisionFlags.PlayerOnly),
                     new ColliderComponent(
                         shape: new BoxShape(Vector2.Zero, Point.Zero, width: Grid.CellSize * 2, height: Grid.CellSize * 2),
                         layer: CollisionLayersBase.TRIGGER,
@@ -135,7 +135,6 @@ namespace Murder.Editor.Systems.Sounds
                 [
                     new PositionComponent(position),
                     new SoundParameterComponent(),
-                    new InteractOnCollisionComponent(playerOnly: true, sendMessageOnExit: true),
                     new ColliderComponent(
                         shape: new BoxShape(Vector2.Zero, Point.Zero, width: Grid.CellSize * 2, height: Grid.CellSize * 2),
                         layer: CollisionLayersBase.TRIGGER,
@@ -167,7 +166,6 @@ namespace Murder.Editor.Systems.Sounds
                 [
                     new PositionComponent(position),
                     new SoundParameterComponent(),
-                    new InteractOnCollisionComponent(playerOnly: true, sendMessageOnExit: true),
                     new ColliderComponent(
                         shape: new BoxShape(Vector2.Zero, Point.Zero, width: Grid.CellSize * 2, height: Grid.CellSize * 2),
                         layer: CollisionLayersBase.TRIGGER,

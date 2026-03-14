@@ -1,42 +1,46 @@
 ﻿using Bang.Components;
 using Bang.Interactions;
 using Murder.Attributes;
-using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
+using System.Text.Json.Serialization;
 
 namespace Murder.Components
 {
+    [Flags]
+    public enum InteractOnCollisionFlags
+    { 
+        None = 0,
+
+        /// <summary>
+        /// Whether only a player is able to activate this.
+        /// </summary>
+        PlayerOnly = 1,
+
+        /// <summary>
+        /// Whether this should not be activated again.
+        /// </summary>
+        Once = 1 << 1,
+
+        OnceEveryLoad = 1 << 2,
+
+        /// <summary>
+        /// Whether this will send a message once the object stop colliding.
+        /// </summary>
+        InteractOnEnterAndExit = 1 << 3
+    }
+
     public readonly struct InteractOnCollisionComponent : IComponent
     {
-        [Tooltip("Whether this should be activated again.")]
-        public readonly bool OnlyOnce { get; init; } = false;
-
-        [Tooltip("Whether this will send a message once the object stop colliding.")]
-        public readonly bool SendMessageOnExit = false;
-
-        [Tooltip("Whether this will send a message every frame while colliding.")]
-        public readonly bool SendMessageOnStay = false;
-
         [Tooltip("Interactions that will be triggered in addition to interactions in this entity.")]
         public readonly ImmutableArray<IInteractiveComponent> CustomEnterMessages = ImmutableArray<IInteractiveComponent>.Empty;
 
         [Tooltip("Interactions that will be triggered in addition to interactions in this entity.")]
         public readonly ImmutableArray<IInteractiveComponent> CustomExitMessages = ImmutableArray<IInteractiveComponent>.Empty;
 
-        [Tooltip("Whether only a player is able to activate this.")]
-        public readonly bool PlayerOnly = false;
+        public readonly InteractOnCollisionFlags Flags { get; init; } = InteractOnCollisionFlags.None;
 
         public InteractOnCollisionComponent() { }
 
-        public InteractOnCollisionComponent(bool playerOnly)
-        {
-            PlayerOnly = playerOnly;
-        }
-
-        public InteractOnCollisionComponent(bool playerOnly, bool sendMessageOnExit)
-        {
-            PlayerOnly = playerOnly;
-            SendMessageOnExit = sendMessageOnExit;
-        }
+        public InteractOnCollisionComponent(InteractOnCollisionFlags flags) => Flags = flags;
     }
 }

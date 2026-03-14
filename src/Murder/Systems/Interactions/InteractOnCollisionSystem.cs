@@ -1,6 +1,7 @@
 ﻿using Bang;
 using Bang.Components;
 using Bang.Entities;
+using Bang.Interactions;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Messages.Physics;
@@ -38,6 +39,13 @@ public class InteractOnCollisionSystem : IMessagerSystem
         }
 
         InteractOnCollisionComponent interactOnCollision = interactiveEntity.GetInteractOnCollision();
+        bool oncePerMap = interactOnCollision.Flags.HasFlag(InteractOnCollisionFlags.OnceEveryLoad);
+
+        if (oncePerMap && interactiveEntity.HasInteracted())
+        {
+            return;
+        }
+
         if (!IsInteractAllowed(world, interactorEntity, interactiveEntity, interactOnCollision, msg))
         {
             return;
@@ -50,12 +58,14 @@ public class InteractOnCollisionSystem : IMessagerSystem
                 interaction.Interact(world, interactorEntity, interactiveEntity);
             }
 
-            if (!interactOnCollision.SendMessageOnExit)
+            if (!interactOnCollision.Flags.HasFlag(InteractOnCollisionFlags.InteractOnEnterAndExit))
+            {
                 return;
+            }
         }
         else if (msg.Movement == CollisionDirection.Enter)
         {
-            foreach (var interaction in interactOnCollision.CustomEnterMessages)
+            foreach (IInteractiveComponent interaction in interactOnCollision.CustomEnterMessages)
             {
                 interaction.Interact(world, interactorEntity, interactiveEntity);
             }
@@ -66,8 +76,20 @@ public class InteractOnCollisionSystem : IMessagerSystem
 
         interactiveEntity.SendInteractMessage(interactorEntity);
 
-        if (interactOnCollision.OnlyOnce)
+        if (oncePerMap || interactOnCollision.Flags.HasFlag(InteractOnCollisionFlags.Once))
         {
+            if (interactOnCollision.CustomExitMessages.Length > 0 && msg.Movement != CollisionDirection.Exit)
+            {
+                // wait until we get out before we deactivate ourselves.
+                return;
+            }
+
+            if (oncePerMap)
+            {
+                interactiveEntity.SetInteracted();
+                return;
+            }
+
             if (interactiveEntity.HasDeactivateAfterInteracted())
             {
                 interactiveEntity.Deactivate();

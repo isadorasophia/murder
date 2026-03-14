@@ -117,6 +117,11 @@ public static class SoundServices
         await Game.Sound.PlayEvent(id, new PlayEventInfo { Layer = SoundLayer.Music, Properties = SoundProperties.Persist });
     }
 
+    public static async ValueTask PlaySnapshot(SoundEventId id)
+    {
+        await Game.Sound.PlayEvent(id, new PlayEventInfo { Layer = SoundLayer.Snapshot, Properties = SoundProperties.Persist });
+    }
+
     public static void SetParameter<T>(ParameterId id, SoundEventId sound, T value)
     {
         try
