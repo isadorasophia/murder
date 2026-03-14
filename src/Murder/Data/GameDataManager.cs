@@ -973,7 +973,7 @@ namespace Murder.Data
 
             Texture2D texture = TextureServices.FromFile(Game.GraphicsDevice, fullPath);
 
-            GameLogger.Log($"Loaded texture {texture.Name} [{texture.Format}] ({texture.Width}x{texture.Height}) > {path}");
+            GameLogger.Log($"Loaded texture: {path} ({texture.Width}x{texture.Height})");
 
             texture.Name = path;
             CachedUniqueTextures[path] = texture;

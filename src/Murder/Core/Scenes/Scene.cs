@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Murder.Assets;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -36,6 +37,12 @@ namespace Murder.Core
         public void LoadContent()
         {
             LoadContentImpl();
+
+            if (World is not null && 
+                Game.Data.TryGetAsset<WorldAsset>(World.WorldAssetGuid) is WorldAsset worldAsset)
+            {
+                GameLogger.Log($"Loaded world: {worldAsset.Name}");
+            }
 
             _calledStart = false;
             Loaded = true;
