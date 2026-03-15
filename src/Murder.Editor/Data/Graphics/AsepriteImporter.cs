@@ -581,9 +581,12 @@ public partial class Aseprite
             // directly apply the source color modified by its effective alpha.
             if (dest.A == 0)
             {
-                dest.R = (byte)(src.R * srcEffectiveAlpha);
-                dest.G = (byte)(src.G * srcEffectiveAlpha);
-                dest.B = (byte)(src.B * srcEffectiveAlpha);
+                //dest.R = (byte)(src.R * srcEffectiveAlpha);
+                //dest.G = (byte)(src.G * srcEffectiveAlpha);
+                //dest.B = (byte)(src.B * srcEffectiveAlpha);
+                dest.R = (byte)(src.R);
+                dest.G = (byte)(src.G);
+                dest.B = (byte)(src.B);
                 dest.A = (byte)(src.A * normalizedOpacity);
             }
             // If the source is completely transparent or opacity is 0, leave dest as is.
@@ -596,6 +599,7 @@ public partial class Aseprite
                 // For non-transparent blending, calculate the final color.
                 // Pre-multiply source color components by their effective alpha.
                 // EDIT: We no longer pre-multiply
+                // EDIT: We pre-multiply again
                 //float srcPreR = src.R * srcEffectiveAlpha;
                 //float srcPreG = src.G * srcEffectiveAlpha;
                 //float srcPreB = src.B * srcEffectiveAlpha;

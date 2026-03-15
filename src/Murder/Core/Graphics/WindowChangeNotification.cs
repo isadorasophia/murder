@@ -17,7 +17,7 @@ public readonly struct WindowChangeNotification
     public readonly ScreenUpdatedKind Kind = ScreenUpdatedKind.NotifyOnly;
 
     public readonly Point? ApplySizeTo => ApplyToSettings?.Size;
-    public readonly WindowChangeSettings? ApplyToSettings = null;
+    public readonly WindowChangeSettings? ApplyToSettings { get; init; } = null;
 
     public WindowChangeNotification() { }
 

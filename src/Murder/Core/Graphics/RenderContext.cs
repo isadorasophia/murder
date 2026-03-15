@@ -675,7 +675,7 @@ public struct WindowChangeSettings
     public Point? NativeResolution { get; init; } = null;
 
     public ViewportResizeStyle? ResizeStyle { get; init; } = null;
-
+    public ScalingKind ScalingKind { get; init; } = ScalingKind.Auto;
     public bool Force { get; init; } = false;
 
     public WindowChangeSettings(Point size) => Size = size;

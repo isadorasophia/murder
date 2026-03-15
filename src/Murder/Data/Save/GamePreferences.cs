@@ -1,7 +1,10 @@
 using Bang;
 using Murder.Assets.Localization;
 using Murder.Core;
+using Murder.Core.Geometry;
+using Murder.Core.Graphics;
 using Murder.Core.Input;
+using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Text.Json;
 
@@ -13,7 +16,8 @@ namespace Murder.Save
         Large = 1,
         OneX = 2,
         TwoX = 3,
-        ThreeX = 4
+        ThreeX = 4,
+        Snap = 5
     }
 
     /// <summary>
@@ -152,7 +156,41 @@ namespace Murder.Save
 
             Scaling = scaling;
 
-            Game.Instance.OnWindowChange(new(ScreenUpdatedKind.ScalePreferenceModified));
+            Point minimumSize = new(Game.DefaultWidth, Game.DefaultHeight);
+            switch (scaling)
+            {
+                case ScalingKind.Auto:
+                    minimumSize = new(Game.DefaultWidth * 2, Game.DefaultHeight * 2);
+                    break;
+                case ScalingKind.Large:
+                    minimumSize = new(1280, 720);
+                    break;
+                case ScalingKind.OneX:
+                    minimumSize = new(Game.DefaultWidth, Game.DefaultHeight);
+                    break;
+                case ScalingKind.TwoX:
+                    minimumSize = new(Game.DefaultWidth * 2, Game.DefaultHeight * 2);
+                    break;
+                case ScalingKind.ThreeX:
+                    minimumSize = new(Game.DefaultWidth * 3, Game.DefaultHeight * 3);
+                    break;
+            }
+
+            // Clamp window size to the minimum required by the scaling.
+            var currentSize = Game.Instance.Window.ClientBounds.Size();
+            Point windowSize = new(
+                Math.Max(currentSize.X, minimumSize.X),
+                Math.Max(currentSize.Y, minimumSize.Y));
+
+            Game.Instance.OnWindowChange(
+                new WindowChangeNotification(ScreenUpdatedKind.ScalePreferenceModified)
+                {
+                    ApplyToSettings = new WindowChangeSettings(windowSize)
+                    {
+                        Force = true
+                    }
+                });
+
             OnPreferencesChanged();
         }
 

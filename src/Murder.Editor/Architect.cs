@@ -207,6 +207,9 @@ namespace Murder.Editor
             if (ActiveScene is GameScene)
             {
                 Debug.Assert(_editorScene is not null);
+                Data.Preferences.SetScalingKind(Murder.Save.ScalingKind.OneX); 
+                // TODO: we only support OneX in the editor window. We should instead force the editor scene
+                // to not fetch the ScalingKind from the preferences.
 
                 _sceneLoader.SwitchScene(_editorScene);
 
@@ -474,7 +477,7 @@ namespace Murder.Editor
         protected Point? GetWindowPosition()
         {
             // Not sure what is not supported here?
-            bool supportedOs = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || 
+            bool supportedOs = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ||
                 RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ||
                 RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
 
