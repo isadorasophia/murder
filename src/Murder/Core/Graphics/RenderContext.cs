@@ -7,6 +7,7 @@ using Murder.Services;
 using Murder.Utilities;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 using System.Numerics;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 
@@ -18,7 +19,7 @@ public class RenderContext : IDisposable
     /// The active camera used for rendering scenes.
     /// </summary>
     public readonly Camera2D Camera;
-    
+
     protected readonly RenderContextFlags Settings;
     protected static int DiagnosticsUpdateViewportCount = 0;
 
@@ -55,7 +56,7 @@ public class RenderContext : IDisposable
     protected RenderTarget2D? _floorBufferTarget;
     protected RenderTarget2D? _uiTarget;
     protected RenderTarget2D? _mainTarget;
-    
+
     public RenderTarget2D? MainTarget => _mainTarget;
 
     public BatchPreviewState PreviewState;
@@ -197,7 +198,7 @@ public class RenderContext : IDisposable
             BatchMode.DepthSortDescending,
             SamplerState.PointClamp
             ));
-        
+
         RegisterSpriteBatch(Batches2D.FloorBatchId,
             new("Floor",
             _graphicsDevice,
@@ -403,11 +404,6 @@ public class RenderContext : IDisposable
             _finalTarget is not null,
             "Did not initialize buffer targets before calling RenderContext.End()?");
 
-        // Setup the basic shader parameters
-
-        Game.Data.ShaderPixel?.TrySetParameter("viewportSize", (_tempTarget.Bounds.Size() * Viewport.Scale).ToXnaVector2());
-        Game.Data.ShaderPixel?.TrySetParameter("texelsScale", (Vector2.One / Viewport.Scale).ToXnaVector2());
-
         // =======================================================>
         // Draw the floor to a temp batch
         _graphicsDevice.SetRenderTarget(_tempTarget);
@@ -418,7 +414,7 @@ public class RenderContext : IDisposable
         _graphicsDevice.SetRenderTarget(_mainTarget);
         RenderServices.DrawTextureQuad(_tempTarget, _tempTarget.Bounds, _mainTarget.Bounds, Color.White, BlendState.Opaque, Game.Data.ShaderSimple);
         CreateDebugPreviewIfNecessary(BatchPreviewState.Step1, _mainTarget);
-        
+
         // Draw all the gameplay graphics to _mainTarget
         GameplayBatch.End();        // <=== Gameplay batch
         TakeScreenshotIfNecessary(_mainTarget);
@@ -444,17 +440,25 @@ public class RenderContext : IDisposable
             Camera.Position.Point().X - Camera.Position.X - CAMERA_BLEED / 2,
             Camera.Position.Point().Y - Camera.Position.Y - CAMERA_BLEED / 2) * Viewport.Scale;
 
+
         _graphicsDevice.SetRenderTarget(_finalTarget);
-        
-        Game.Data.ShaderPixel?.TrySetParameter("viewportSize", (_mainTarget.Bounds.Size() * Viewport.Scale).ToXnaVector2());
-        Game.Data.ShaderPixel?.TrySetParameter("textureSize", _mainTarget.Bounds.Size());
+
+        // Deprecated shader
+        // Game.Data.ShaderPixel?.TrySetParameter("viewportSize", (_mainTarget.Bounds.Size() * Viewport.Scale).ToXnaVector2());
+        // Game.Data.ShaderPixel?.TrySetParameter("texelsScale", _mainTarget.Bounds.Size());
+
+        var textureSize = _tempTarget.Bounds.Size();
+        float texelsScale = (textureSize / (_mainTarget.Bounds.Size() * Viewport.Scale)).X;
+        Game.Data.ShaderPixel?.TrySetParameter("textureSize", new Microsoft.Xna.Framework.Vector2(textureSize.X, textureSize.Y));
+        Game.Data.ShaderPixel?.TrySetParameter("texelsScale", texelsScale);
+
         RenderServices.DrawTextureQuad(_mainTarget,     // <=== Draws the game buffer to the final buffer using a optimized pixel shader
             _mainTarget.Bounds,
             new Rectangle(_subPixelOffset, _mainTarget.Bounds.Size() * Viewport.Scale),
             Color.White, Game.Data.ShaderPixel, BlendState.Opaque, true);
 
         CreateDebugPreviewIfNecessary(BatchPreviewState.Step2, _finalTarget);
-        
+
         _graphicsDevice.SetRenderTarget(_finalTarget);
 
         Game.Data.ShaderPixel?.TrySetParameter("viewportSize", (_uiTarget.Bounds.Size() * Viewport.Scale).ToXnaVector2());
@@ -516,7 +520,7 @@ public class RenderContext : IDisposable
             {
                 // Draw the final buffer to the viewport output rectangle
                 RenderServices.DrawTextureQuad(_finalTarget,
-                    _finalTarget.Bounds, 
+                    _finalTarget.Bounds,
                     Viewport.OutputRectangle,
                     Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
             }
@@ -616,7 +620,7 @@ public class RenderContext : IDisposable
     /// Override for custom unload implementations in derived classes.
     /// </summary>
     protected virtual void UnloadImpl() { }
-    
+
     /// <summary>
     /// Disposes of all associated resources.
     /// </summary>
@@ -651,7 +655,7 @@ public class RenderContext : IDisposable
                 Color.White, Game.Data.ShaderSimple, BlendState.NonPremultiplied, false);
         }
     }
-    
+
     /// <summary>
     /// Saves a screenshot of the specified camera area.
     /// </summary>
@@ -668,7 +672,7 @@ public class RenderContext : IDisposable
 
     public virtual void OnShadersReloaded()
     {
-        
+
     }
 }
 
