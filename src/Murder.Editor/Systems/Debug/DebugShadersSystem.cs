@@ -42,7 +42,7 @@ public class DebugShadersSystem : IGuiSystem
     private void DrawShaders()
     {
         using var table = new TableMultipleColumns("Shaders", ImGuiTableFlags.Borders, [0, -1]);
-        
+
         ImGui.TableNextColumn();
 
         for (int i = 0; i < Game.Data.CustomGameShaders.Length; i++)
@@ -56,10 +56,58 @@ public class DebugShadersSystem : IGuiSystem
             }
         }
 
-        ImGui.TableNextColumn();
+        int lastIndex = Game.Data.CustomGameShaders.Length - 1;
+        {
+            if (Game.Data.ShaderSimple is Effect s)
+            {
+                lastIndex++;
+                if (ImGui.Selectable(s.Name, _selectedShader == lastIndex))
+                {
+                    _selectedShader = lastIndex;
+                }
+            }
+        }
+        {
+            if (Game.Data.ShaderSprite is Effect s)
+            {
+                lastIndex++;
+                if (ImGui.Selectable(s.Name, _selectedShader == lastIndex))
+                {
+                    _selectedShader = lastIndex;
+                }
+            }
+        }
+        {
+            if (Game.Data.ShaderPixel is Effect s)
+            {
+                lastIndex++;
+                if (ImGui.Selectable(s.Name, _selectedShader == lastIndex))
+                {
+                    _selectedShader = lastIndex;
+                }
+            }
+        }
 
-        if (Game.Data.CustomGameShaders[_selectedShader] is Effect shader)
-        { 
+        ImGui.TableNextColumn();
+        Effect? shader;
+        if (_selectedShader < Game.Data.CustomGameShaders.Length && Game.Data.CustomGameShaders[_selectedShader] is Effect customShader)
+        {
+            shader = customShader;
+        }
+        else
+        {
+            int builtInIndex = _selectedShader - Game.Data.CustomGameShaders.Length;
+            shader = builtInIndex switch
+            {
+                0 => Game.Data.ShaderSimple,
+                1 => Game.Data.ShaderSprite,
+                2 => Game.Data.ShaderPixel,
+                _ => null
+            };
+        }
+
+        if (shader != null)
+        {
             foreach (var p in shader.Parameters)
             {
                 switch (p.ParameterType)
@@ -187,7 +235,7 @@ public class DebugShadersSystem : IGuiSystem
 
     private static string DrawFloatInt(EffectParameter? p)
     {
-        if ( p == null )
+        if (p == null)
         {
             ImGui.Text("Null parameter");
             return string.Empty;

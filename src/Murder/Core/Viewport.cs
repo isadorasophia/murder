@@ -105,12 +105,12 @@ public readonly struct Viewport
                         Math.Min(viewportSize.X / (nativeResolution.Y * targetAspectRatio),
                                  viewportSize.Y / (float)nativeResolution.Y),
                         1f);
-                    int snapedScale = Calculator.CeilingToInt(targetScale - 0.2f);
+                    float snapedScale = targetScale;// Calculator.CeilingToInt(targetScale - 0.2f);
 
                     // NOW derive the native resolution that fills the viewport at this integer scale
                     Point newNativeResolution = new Point(
-                        Calculator.CeilingToInt(viewportSize.X / (float)targetScale),
-                        Calculator.CeilingToInt(viewportSize.Y / (float)targetScale)
+                        Calculator.CeilingToInt(viewportSize.X / (float)snapedScale),
+                        Calculator.CeilingToInt(viewportSize.Y / (float)snapedScale)
                     );
 
                     Point outputSize = new Point(
