@@ -328,7 +328,7 @@ public class RenderContext : IDisposable
         ScalingKind scaling = Game.Data.TryFetchPreferences()?.Scaling ?? ScalingKind.Auto;
         if (Settings.HasFlag(RenderContextFlags.Editor))
         {
-            scaling = ScalingKind.OneX;
+            scaling = ScalingKind.ThreeX;
         }
 
         Viewport = new Viewport(settings.Size, nativeResolution, scaling);
