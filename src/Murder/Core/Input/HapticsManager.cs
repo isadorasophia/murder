@@ -20,6 +20,8 @@ public class HapticsManager
             _rightVibration[i] = 0;
         }
 
+        float multiplier = Game.Preferences.Haptics;
+
         for (int i = _currentOrders.Count - 1; i >= 0; i--)
         {
             var order = _currentOrders[i];
@@ -27,7 +29,14 @@ public class HapticsManager
             if (!GamePad.GetState(order.Player).IsConnected)
                 continue;
 
-            var delta = Calculator.ClampTime(order.StartTime, Game.NowUnscaled, order.EndTime - order.StartTime);
+            float duration = order.EndTime - order.StartTime;
+            if (multiplier > 1)
+            {
+                // when it's more intense, also make it last a little longer.
+                duration *= (multiplier * .75f);
+            }
+
+            float delta = Calculator.ClampTime(order.StartTime, Game.NowUnscaled, duration);
 
             if (delta >= 1)
             {
@@ -49,8 +58,6 @@ public class HapticsManager
                 _rightVibration[playerIndex] = Math.Max(rightVibration, currentRight);
             }
         }
-
-        float multiplier = Game.Preferences.Haptics;
 
         for (int i = 0; i < MAX_CONTROLLERS; i++)
         {
