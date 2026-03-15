@@ -19,7 +19,7 @@ public enum RenderContextFlags
     Debug = 0b10,
 
     /// <summary>
-    /// Whether it should set the debug batches.
+    /// Whether it should set the editor batches.
     /// </summary>
     Editor = 0b100
 

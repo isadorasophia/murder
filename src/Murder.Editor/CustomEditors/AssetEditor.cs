@@ -121,7 +121,6 @@ namespace Murder.Editor.CustomEditors
                     new WindowChangeSettings(info.Size) 
                     { 
                         NativeResolution = info.Size, 
-                        ResizeStyle = new ViewportResizeStyle(ViewportResizeMode.None),
                         Force = true
                     });
             }

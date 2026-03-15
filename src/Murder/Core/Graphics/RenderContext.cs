@@ -323,10 +323,14 @@ public class RenderContext : IDisposable
         }
 
         Point nativeResolution = settings.NativeResolution ?? new(Game.DefaultWidth, Game.DefaultHeight);
-        ViewportResizeStyle resizeStyle = settings.ResizeStyle ?? Game.Profile.ResizeStyle;
 
         ScalingKind scaling = Game.Data.TryFetchPreferences()?.Scaling ?? ScalingKind.Auto;
-        Viewport = new Viewport(settings.Size, nativeResolution, resizeStyle, scaling);
+        if (Settings.HasFlag(RenderContextFlags.Editor))
+        {
+            scaling = ScalingKind.OneX;
+        }
+
+        Viewport = new Viewport(settings.Size, nativeResolution, scaling);
 
         Camera.UpdateSize(Viewport.NativeResolution);
 
@@ -674,7 +678,6 @@ public struct WindowChangeSettings
 
     public Point? NativeResolution { get; init; } = null;
 
-    public ViewportResizeStyle? ResizeStyle { get; init; } = null;
     public ScalingKind ScalingKind { get; init; } = ScalingKind.Auto;
     public bool Force { get; init; } = false;
 

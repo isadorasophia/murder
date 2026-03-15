@@ -143,8 +143,6 @@ namespace Murder.Assets
         public readonly string FeedbackUrl = string.Empty;
         public readonly string FeedbackKey = "changeme";
 
-        public readonly ViewportResizeStyle ResizeStyle = new();
-
         [Serialize]
         private readonly bool _scalingFilter = false;
 

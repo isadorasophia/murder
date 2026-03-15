@@ -169,7 +169,6 @@ namespace Murder.Editor.Stages
                 bool updated = _renderContext.OnClientWindowChanged(new WindowChangeSettings(cameraSize)
                 {
                     NativeResolution = cameraSize,
-                    ResizeStyle = new ViewportResizeStyle(ViewportResizeMode.None),
                     Force = !_textureBound
                 });
 
