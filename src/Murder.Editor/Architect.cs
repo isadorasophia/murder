@@ -207,10 +207,6 @@ namespace Murder.Editor
             if (ActiveScene is GameScene)
             {
                 Debug.Assert(_editorScene is not null);
-                Data.Preferences.SetScalingKind(Murder.Save.ScalingKind.OneX); 
-                // TODO: we only support OneX in the editor window. We should instead force the editor scene
-                // to not fetch the ScalingKind from the preferences.
-
                 _sceneLoader.SwitchScene(_editorScene);
 
                 // Manually set things up in the editor scene.
