@@ -109,8 +109,8 @@ public readonly struct Viewport
 
                     // NOW derive the native resolution that fills the viewport at this integer scale
                     Point newNativeResolution = new Point(
-                        Calculator.CeilingToInt(viewportSize.X / (float)snapedScale),
-                        Calculator.CeilingToInt(viewportSize.Y / (float)snapedScale)
+                        Calculator.CeilingToInt(viewportSize.X / (float)targetScale),
+                        Calculator.CeilingToInt(viewportSize.Y / (float)targetScale)
                     );
 
                     Point outputSize = new Point(
@@ -118,7 +118,7 @@ public readonly struct Viewport
                         newNativeResolution.Y * snapedScale
                     );
 
-                    Scale = new Vector2(snapedScale);
+                    Scale = new Vector2(targetScale);
                     OutputRectangle = CenterOutput(outputSize, viewportSize);
                     NativeResolution = newNativeResolution;
                     break;
@@ -189,46 +189,6 @@ public readonly struct Viewport
         }
 
         Center = NativeResolution / 2f;
-    }
-
-    private static float SnapToInt(float scale, float snapToIntegerThreshold, RoundingMode roundingMode)
-    {
-        float remaining = scale - MathF.Round(scale);
-
-        if (remaining > 0 && remaining < snapToIntegerThreshold)
-        {
-            switch (roundingMode)
-            {
-                case RoundingMode.Round:
-                    return MathF.Round(scale);
-                case RoundingMode.Floor:
-                    return MathF.Floor(scale);
-                case RoundingMode.Ceiling:
-                    return scale;
-                case RoundingMode.None:
-                    return scale;
-                default:
-                    throw new Exception("Unknown rounding mode");
-            }
-        }
-        else if (remaining < 0 && remaining > -snapToIntegerThreshold)
-        {
-            switch (roundingMode)
-            {
-                case RoundingMode.Round:
-                    return MathF.Round(scale);
-                case RoundingMode.Floor:
-                    return scale;
-                case RoundingMode.Ceiling:
-                    return MathF.Ceiling(scale);
-                case RoundingMode.None:
-                    return scale;
-                default:
-                    throw new Exception("Unknown rounding mode");
-            }
-        }
-
-        return scale;
     }
 
     private static IntRectangle CenterOutput(Vector2 targetSize, Vector2 viewportSize)
