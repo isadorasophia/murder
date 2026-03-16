@@ -1,18 +1,10 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using Murder.Assets;
-using Murder.Assets.Graphics;
 using Murder.Assets.Input;
 using Murder.Core;
-using Murder.Core.Geometry;
-using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Diagnostics;
-using Murder.Services.Info;
-using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Numerics;
-using System.Security.Authentication.ExtendedProtection;
-using static Murder.Assets.InputGraphicsAsset;
 
 namespace Murder.Services;
 
