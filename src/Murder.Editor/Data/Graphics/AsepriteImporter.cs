@@ -584,9 +584,9 @@ public partial class Aseprite
                 //dest.R = (byte)(src.R * srcEffectiveAlpha);
                 //dest.G = (byte)(src.G * srcEffectiveAlpha);
                 //dest.B = (byte)(src.B * srcEffectiveAlpha);
-                dest.R = (byte)(src.R);
-                dest.G = (byte)(src.G);
-                dest.B = (byte)(src.B);
+                dest.R = (byte)(src.R * normalizedOpacity);
+                dest.G = (byte)(src.G * normalizedOpacity);
+                dest.B = (byte)(src.B * normalizedOpacity);
                 dest.A = (byte)(src.A * normalizedOpacity);
             }
             // If the source is completely transparent or opacity is 0, leave dest as is.
