@@ -60,6 +60,10 @@ public readonly struct Viewport
             case ScalingKind.Large:
                 {
                     Point scaledNativeResolution = nativeResolution * 0.81f;
+                    if (viewportSize.Y < (1080 - 20))
+                    {
+                        scaledNativeResolution = nativeResolution * 0.79f;
+                    }
 
                     AutoScale(viewportSize, scaledNativeResolution, out Point newNativeResolution, out float targetScale, out Vector2 outputSize);
 
@@ -83,7 +87,7 @@ public readonly struct Viewport
                     }
                     if (viewportSize.Y < (1080 - 20))
                     {
-                        scaledNativeResolution = nativeResolution * 0.88f;
+                        scaledNativeResolution = nativeResolution * 0.85f;
                     }
 
                     AutoScale(viewportSize, scaledNativeResolution, out Point newNativeResolution, out float targetScale, out Vector2 outputSize);
