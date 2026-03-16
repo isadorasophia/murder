@@ -2,8 +2,8 @@
 using Murder.Assets.Input;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
-using Murder.Helpers;
 using Murder.Save;
+using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Numerics;
@@ -989,6 +989,12 @@ public class PlayerInput
         if (c < 32)
         {
             // This means this was a special character. Bypass the event.
+            return;
+        }
+
+        // skip unicode characters by making sure we can render this character
+        if (MurderFontServices.MeasureText((int)MurderFonts.PixelFont, $"{c}", cultureInvariant: true).X == 0)
+        {
             return;
         }
 
