@@ -81,7 +81,7 @@ public readonly struct Viewport
                     {
                         scaledNativeResolution = nativeResolution * 0.95f;
                     }
-                    if (viewportSize.Y < (1080 + 20))
+                    if (viewportSize.Y < (1080 - 20))
                     {
                         scaledNativeResolution = nativeResolution * 0.9f;
                     }
