@@ -126,7 +126,7 @@ public readonly struct Viewport
                     Vector2 outputSize = newNativeResolution.ToVector2() * targetScale;
 
                     // Snap to integer scale if close enough.
-                    float snappedScale = MathF.Round(targetScale);
+                    float snappedScale = MathF.Round(targetScale + 0.32f);
                     targetScale = snappedScale;
                     newNativeResolution = (outputSize / targetScale).ToPoint();
 
