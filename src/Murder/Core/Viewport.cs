@@ -59,22 +59,9 @@ public readonly struct Viewport
                 break;
             case ScalingKind.Large:
                 {
-                    Point smallerNativeResolition = nativeResolution * 0.85f;
-                    Vector2 stretchedScale = new Vector2(viewportSize.X / (float)smallerNativeResolition.X, viewportSize.Y / (float)smallerNativeResolition.Y);
-                    float targetScale = (Math.Max(Math.Min(stretchedScale.X, stretchedScale.Y), 1));
-                    Vector2 outputSize = smallerNativeResolition.ToVector2() * targetScale;
+                    Point scaledNativeResolution = nativeResolution * 0.81f;
 
-                    Vector2 missingPixels = (viewportSize.ToVector2() - outputSize) / targetScale;
-                    float allowance = 0.025f;
-                    missingPixels.X = Calculator.Min(missingPixels.X, viewportSize.X * allowance);
-                    missingPixels.Y = Calculator.Min(missingPixels.Y, viewportSize.Y * allowance);
-
-                    Point newNativeResolution = new Point(
-                        Calculator.CeilingToInt(smallerNativeResolition.X + missingPixels.X),
-                        Calculator.CeilingToInt(smallerNativeResolition.Y + missingPixels.Y)
-                        );
-
-                    outputSize = newNativeResolution.ToVector2() * targetScale;
+                    AutoScale(viewportSize, scaledNativeResolution, out Point newNativeResolution, out float targetScale, out Vector2 outputSize);
 
                     // Set the scale and output rectangle based on the new native resolution
                     Scale = new Vector2(targetScale);
@@ -84,41 +71,22 @@ public readonly struct Viewport
                 }
             case ScalingKind.Auto:
                 {
-                    Point newNativeResolution = nativeResolution * 0.95f;
-                    Vector2 stretchedScale = new Vector2(viewportSize.X / (float)newNativeResolution.X, viewportSize.Y / (float)newNativeResolution.Y);
-                    float targetScale = (Math.Max(Math.Min(stretchedScale.X, stretchedScale.Y), 1));
-                    float snappedSccale = MathF.Floor(targetScale);
-                    float scaleDifference = targetScale - snappedSccale;
-                    if (scaleDifference < 0.25f && scaleDifference > 0)
+                    Point scaledNativeResolution = nativeResolution;
+
+                    if (viewportSize.Y < (1440 + 20))
                     {
-                        newNativeResolution = new Point(
-                            Calculator.CeilingToInt(newNativeResolution.X * (targetScale / snappedSccale)),
-                            Calculator.CeilingToInt(newNativeResolution.Y * (targetScale / snappedSccale))
-                        );
-                        targetScale = snappedSccale;
+                        scaledNativeResolution = nativeResolution * 0.95f;
                     }
-                    if (scaleDifference > 0.9f && scaleDifference < 1)
+                    if (viewportSize.Y < (1080 + 20))
                     {
-                        newNativeResolution = new Point(
-                            Calculator.CeilingToInt(newNativeResolution.X * (targetScale / (snappedSccale + 1))),
-                            Calculator.CeilingToInt(newNativeResolution.Y * (targetScale / (snappedSccale + 1)))
-                        );
-                        targetScale = snappedSccale + 1;
+                        scaledNativeResolution = nativeResolution * 0.9f;
+                    }
+                    if (viewportSize.Y < (1080 - 20))
+                    {
+                        scaledNativeResolution = nativeResolution * 0.88f;
                     }
 
-                    Vector2 outputSize = newNativeResolution.ToVector2() * targetScale;
-
-                    Vector2 missingPixels = (viewportSize.ToVector2() - outputSize) / targetScale;
-                    float allowance = 0.025f;
-                    missingPixels.X = Calculator.Min(missingPixels.X, viewportSize.X * allowance);
-                    missingPixels.Y = Calculator.Min(missingPixels.Y, viewportSize.Y * allowance);
-
-                    newNativeResolution = new Point(
-                        Calculator.CeilingToInt(newNativeResolution.X + missingPixels.X),
-                        Calculator.CeilingToInt(newNativeResolution.Y + missingPixels.Y)
-                        );
-
-                    outputSize = newNativeResolution.ToVector2() * targetScale;
+                    AutoScale(viewportSize, scaledNativeResolution, out Point newNativeResolution, out float targetScale, out Vector2 outputSize);
 
                     // Set the scale and output rectangle based on the new native resolution
                     Scale = new Vector2(targetScale);
@@ -128,61 +96,38 @@ public readonly struct Viewport
                 }
             case ScalingKind.Snap:
                 {
-                    float windowAspectRatio = viewportSize.X / (float)viewportSize.Y;
-                    float nativeAspectRatio = nativeResolution.X / (float)nativeResolution.Y;
+                    const float MinAspectRatio = 4f / 3f;
+                    const float MaxAspectRatio = 18f / 9f;
 
-                    // 1. What's the biggest integer scale that fits native inside the viewport?
-                    float rawScale = Math.Min(
-                        viewportSize.X / (float)nativeResolution.X,
-                        viewportSize.Y / (float)nativeResolution.Y);
-                    int snapedScale = Math.Max(Calculator.CeilingToInt(rawScale - 0.15f), 1);
-
-                    // 2. What's our dream output?
-                    Vector2 desiredOutput = new Point(
-                        nativeResolution.X * snapedScale,
-                        nativeResolution.Y * snapedScale
-                    );
-
-                    // 3. How different is that from our actual native aspect ratio?
-                    float allowance = 0.28f;
-                    float targetAspectRatio = nativeAspectRatio;
-                    if (windowAspectRatio > nativeAspectRatio)
+                    // clamp nativeResolution's aspect ratio to [MinAspectRatio, MaxAspectRatio],
+                    // preserving whichever dimension is larger.
+                    float viewportAspect = (float)viewportSize.X / viewportSize.Y;
+                    float clampedAspect = Math.Clamp(viewportAspect, MinAspectRatio, MaxAspectRatio);
+                    Point newNativeResolution = nativeResolution;
+                    if (nativeResolution.X >= nativeResolution.Y)
                     {
-                        targetAspectRatio = Calculator.Approach(nativeAspectRatio, windowAspectRatio, allowance);
+                        // Wider or square — fix width, adjust height.
+                        int newHeight = (int)Math.Round(nativeResolution.X / clampedAspect);
+                        newNativeResolution = new Point(nativeResolution.X, newHeight);
                     }
                     else
                     {
-                        // We allow less vertical expansion of the ratio
-                        targetAspectRatio = Calculator.Approach(nativeAspectRatio, windowAspectRatio, allowance * 0.1f);
+                        // Taller — fix height, adjust width.
+                        int newWidth = (int)Math.Round(nativeResolution.Y * clampedAspect);
+                        newNativeResolution = new Point(newWidth, nativeResolution.Y);
                     }
 
-                    float aspectDifference = targetAspectRatio - nativeAspectRatio;
+                    Vector2 stretchedScale = viewportSize.ToVector2() / newNativeResolution.ToVector2();
+                    float targetScale = Math.Max(Math.Min(stretchedScale.X, stretchedScale.Y), 1);
+                    Vector2 outputSize = newNativeResolution.ToVector2() * targetScale;
 
+                    // Snap to integer scale if close enough.
+                    float snappedScale = MathF.Round(targetScale);
+                    targetScale = snappedScale;
+                    newNativeResolution = (outputSize / targetScale).ToPoint();
 
-                    Point newNativeResolution = new Point(
-                        Calculator.CeilingToInt(viewportSize.X / snapedScale),
-                        Calculator.CeilingToInt(viewportSize.Y / snapedScale)
-                    );
-
-                    // We will have to trim the native resolution to achieve the target aspect ratio
-                    if (aspectDifference > 0)
-                    {
-                        // Window is wider than native, we need to trim width
-                        newNativeResolution.X = Calculator.CeilingToInt(newNativeResolution.Y * targetAspectRatio);
-                    }
-                    else
-                    {
-                        // Window is taller than native, we need to trim height
-                        newNativeResolution.Y = Calculator.CeilingToInt(newNativeResolution.X / targetAspectRatio);
-                    }
-
-                    // 5. Output — letterbox handles any remainder
-                    Point outputSize = new Point(
-                        newNativeResolution.X * snapedScale,
-                        newNativeResolution.Y * snapedScale
-                    );
-
-                    Scale = new Vector2(snapedScale);
+                    outputSize = newNativeResolution.ToVector2() * targetScale;
+                    Scale = new Vector2(targetScale);
                     OutputRectangle = CenterOutput(outputSize, viewportSize);
                     NativeResolution = newNativeResolution;
                     break;
@@ -192,6 +137,50 @@ public readonly struct Viewport
         }
 
         Center = NativeResolution / 2f;
+    }
+    private static void AutoScale(Point viewportSize, Point nativeResolution, out Point newNativeResolution, out float targetScale, out Vector2 outputSize)
+    {
+        const float MinAspectRatio = 4f / 3f;
+        const float MaxAspectRatio = 18f / 9f;
+
+        // clamp nativeResolution's aspect ratio to [MinAspectRatio, MaxAspectRatio],
+        // preserving whichever dimension is larger.
+        float viewportAspect = (float)viewportSize.X / viewportSize.Y;
+        float clampedAspect = Math.Clamp(viewportAspect, MinAspectRatio, MaxAspectRatio);
+
+        if (nativeResolution.X >= nativeResolution.Y)
+        {
+            // Wider or square — fix width, adjust height.
+            int newHeight = (int)Math.Round(nativeResolution.X / clampedAspect);
+            newNativeResolution = new Point(nativeResolution.X, newHeight);
+        }
+        else
+        {
+            // Taller — fix height, adjust width.
+            int newWidth = (int)Math.Round(nativeResolution.Y * clampedAspect);
+            newNativeResolution = new Point(newWidth, nativeResolution.Y);
+        }
+
+        Vector2 stretchedScale = viewportSize.ToVector2() / newNativeResolution.ToVector2();
+        targetScale = Math.Max(Math.Min(stretchedScale.X, stretchedScale.Y), 1);
+        outputSize = newNativeResolution.ToVector2() * targetScale;
+
+        // Snap to integer scale if close enough.
+        float snappedScale = MathF.Round(targetScale);
+        float diff = targetScale - snappedScale; // positive = above integer, negative = below
+
+        if (diff >= 0 && diff < 0.10f)
+        {
+            // e.g. 3.12 -> 3: snap down, outputSize stays, native gets larger.
+            targetScale = snappedScale;
+            newNativeResolution = (outputSize / targetScale).ToPoint();
+        }
+        else if (diff < 0 && diff > -0.15f)
+        {
+            // e.g. 0.75 -> 1: snap up by shrinking native so outputSize still fits.
+            targetScale = snappedScale;
+            newNativeResolution = (outputSize / targetScale).ToPoint();
+        }
     }
 
     private static IntRectangle CenterOutput(Vector2 targetSize, Vector2 viewportSize)
