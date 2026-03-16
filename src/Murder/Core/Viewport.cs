@@ -173,7 +173,7 @@ public readonly struct Viewport
         float snappedScale = MathF.Round(targetScale);
         float diff = targetScale - snappedScale; // positive = above integer, negative = below
 
-        if (diff >= 0 && diff < 0.10f)
+        if (diff >= 0 && diff < 0.22f)
         {
             // e.g. 3.12 -> 3: snap down, outputSize stays, native gets larger.
             targetScale = snappedScale;
