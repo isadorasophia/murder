@@ -490,14 +490,14 @@ namespace Murder
             Point? applySize = notification.ApplySizeTo;
             if (notification.Kind == ScreenUpdatedKind.FullScreen)
             {
-                applySize = new Point(Game.GraphicsDevice.Adapter.CurrentDisplayMode.Width, Game.GraphicsDevice.Adapter.CurrentDisplayMode.Height);
+                applySize = new Point(GraphicsDevice.Adapter.CurrentDisplayMode.Width, GraphicsDevice.Adapter.CurrentDisplayMode.Height);
             }
             else if (notification.Kind == ScreenUpdatedKind.Reset)
             {
                 applySize = new Point(DefaultWidth, DefaultHeight) * DefaultScale;
 
-                if (applySize.Value.X >= Window.ClientBounds.Width * .9f || 
-                    applySize.Value.Y >= Window.ClientBounds.Height * .9f)
+                if (applySize.Value.X >= GraphicsDevice.Adapter.CurrentDisplayMode.Width * .9f || 
+                    applySize.Value.Y >= Game.GraphicsDevice.Adapter.CurrentDisplayMode.Height * .9f)
                 {
                     float overrideScale = Math.Max(1, DefaultScale - 1);
                     applySize = new Point(DefaultWidth, DefaultHeight) * overrideScale;
