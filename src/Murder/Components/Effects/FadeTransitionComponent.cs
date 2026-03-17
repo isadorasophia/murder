@@ -28,7 +28,7 @@ public readonly struct FadeTransitionComponent : IComponent
 
     public FadeTransitionComponent(float duration, float startAlpha, float targetAlpha, bool destroyOnEnd)
     {
-        StartTime = Game.NowUnscaled;
+        StartTime = Game.Now;
 
         StartAlpha = startAlpha;
         TargetAlpha = targetAlpha;
