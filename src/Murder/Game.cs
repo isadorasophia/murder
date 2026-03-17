@@ -876,14 +876,14 @@ namespace Murder
                 LoosingFrames = false;
             }
 
+            _game?.OnUpdate();
+
             // --- Update (once per frame) ---
             if (_preload is null)
             {
                 //SimulateRandomStalls();
                 ActiveScene.Update();
             }
-
-            _game?.OnUpdate();
         }
 
         /// <summary>
