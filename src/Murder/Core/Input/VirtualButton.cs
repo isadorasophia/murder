@@ -172,6 +172,23 @@ public class VirtualButton : IVirtualInput
         }
     }
 
+    public void Deregister(Keys? key, Buttons? button)
+    {
+        for (int i = 0; i < Buttons.Length; ++i)
+        {
+            if (key is not null && Buttons[i].Keyboard == key)
+            {
+                Buttons = Buttons.RemoveAt(i);
+                --i;
+            }
+            else if (button is not null && Buttons[i].Gamepad == button)
+            {
+                Buttons = Buttons.RemoveAt(i);
+                --i;
+            }
+        }
+    }
+
     public void DeregisterAll()
     {
         Buttons = ImmutableArray<InputButton>.Empty;

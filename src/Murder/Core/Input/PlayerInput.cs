@@ -1084,6 +1084,12 @@ public class PlayerInput
         }
     }
 
+    public void ClearBindsForButtonWith(int id, Keys? key, Buttons? button)
+    {
+        var virtualButton = GetOrCreateButton(id);
+        virtualButton.Deregister(key, button);
+    }
+
     public void ClearButton(int id)
     {
         var virtualButton = GetOrCreateButton(id);
