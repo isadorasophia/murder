@@ -156,31 +156,43 @@ namespace Murder.Save
 
             Scaling = scaling;
 
-            Point minimumSize = new(Game.DefaultWidth, Game.DefaultHeight);
+            // Clamp window size to the minimum required by the scaling.
+            Point windowSize = Game.Instance.Window.ClientBounds.Size();
+            Point minimumSize;
+
             switch (scaling)
             {
                 case ScalingKind.Auto:
                     minimumSize = new(Game.DefaultWidth * 2, Game.DefaultHeight * 2);
+                    windowSize = new(Math.Max(windowSize.X, minimumSize.X), Math.Max(windowSize.Y, minimumSize.Y));
                     break;
+
                 case ScalingKind.Large:
                     minimumSize = new(1280, 720);
+                    windowSize = new(Math.Max(windowSize.X, minimumSize.X), Math.Max(windowSize.Y, minimumSize.Y));
                     break;
+
                 case ScalingKind.OneX:
-                    minimumSize = new(Game.DefaultWidth, Game.DefaultHeight);
+                    if (!Fullscreen)
+                    {
+                        windowSize = new(Game.DefaultWidth, Game.DefaultHeight);
+                    }
                     break;
+
                 case ScalingKind.TwoX:
-                    minimumSize = new(Game.DefaultWidth * 2, Game.DefaultHeight * 2);
+                    if (!Fullscreen)
+                    {
+                        windowSize = new(Game.DefaultWidth * 2, Game.DefaultHeight * 2);
+                    }
                     break;
+
                 case ScalingKind.ThreeX:
-                    minimumSize = new(Game.DefaultWidth * 3, Game.DefaultHeight * 3);
+                    if (!Fullscreen)
+                    {
+                        windowSize = new(Game.DefaultWidth * 3, Game.DefaultHeight * 3);
+                    }
                     break;
             }
-
-            // Clamp window size to the minimum required by the scaling.
-            var currentSize = Game.Instance.Window.ClientBounds.Size();
-            Point windowSize = new(
-                Math.Max(currentSize.X, minimumSize.X),
-                Math.Max(currentSize.Y, minimumSize.Y));
 
             Game.Instance.OnWindowChange(
                 new WindowChangeNotification(ScreenUpdatedKind.ScalePreferenceModified)

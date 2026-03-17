@@ -495,6 +495,13 @@ namespace Murder
             else if (notification.Kind == ScreenUpdatedKind.Reset)
             {
                 applySize = new Point(DefaultWidth, DefaultHeight) * DefaultScale;
+
+                if (applySize.Value.X >= Window.ClientBounds.Width * .9f || 
+                    applySize.Value.Y >= Window.ClientBounds.Height * .9f)
+                {
+                    float overrideScale = Math.Max(1, DefaultScale - 1);
+                    applySize = new Point(DefaultWidth, DefaultHeight) * overrideScale;
+                }
             }
             else if (notification.Kind == ScreenUpdatedKind.NotifyAndApply && applySize is null)
             {
