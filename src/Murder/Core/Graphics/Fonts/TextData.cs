@@ -549,8 +549,8 @@ public static partial class TextDataServices
         for (int i = 0; i < parsedText.Length - 1; ++i)
         {
             // For now, do this weird heuristic of not applying pause if the last character was uppercase.
-            bool shouldSkipPause = (i != 0 && (char.IsUpper(parsedText[i - 1])) || 
-                (i != parsedText.Length - 1 && IsPonctuationToIgnorePreviousPause(parsedText[i + 1])));
+            bool shouldSkipPause = (i > 0 && (char.IsUpper(parsedText[i - 1])) || 
+                IsPonctuationToIgnorePreviousPause(parsedText[i + 1]));
 
             if (shouldSkipPause)
             {
@@ -576,6 +576,22 @@ public static partial class TextDataServices
                     break;
 
                 case '.':
+                    // check if this is actually an ellipsis...
+                    if (parsedText[i + 1] == '.')
+                    {
+                        // pass on that pause
+                        letters[i + 1] = l with { Pause = l.Pause + 1 };
+
+                        // keep a small pause for ourselves
+                        letters[i] = l with { Pause = 0, SmallPause = l.SmallPause + 1 }; 
+                    }
+                    else if (l.Pause == 0)
+                    {
+                        letters[i] = l with { Pause = 1 };
+                    }
+
+                    break;
+
                 case '。':
                     if (l.Pause == 0)
                     {
