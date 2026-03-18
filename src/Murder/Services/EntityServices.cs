@@ -694,7 +694,9 @@ public static class EntityServices
                 Flip = properties.HasFlag(AnimationOverloadProperties.FlipHorizontal) ?
                         ImageFlip.Horizontal : ImageFlip.None,
                 SupportedDirections = properties.HasFlag(AnimationOverloadProperties.LockTo4Directions) ?
-                        4 : null
+                        4 : null,
+                SupportedOrientation = properties.HasFlag(AnimationOverloadProperties.LockHorizontal) ? Orientation.Horizontal : 
+                    properties.HasFlag(AnimationOverloadProperties.LockVertical) ? Orientation.Vertical : null
             };
 
         e.SetAnimationOverload(overload);
@@ -727,5 +729,7 @@ public enum AnimationOverloadProperties
     /// Not implemented yet.
     /// </summary>
     Once = 0x10000,
-    Disappear = Once | 0x100000
+    Disappear = Once | 0x100000,
+    LockHorizontal = 0x1000000,
+    LockVertical = 0x10000000
 }

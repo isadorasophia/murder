@@ -115,6 +115,36 @@ public static class DirectionHelper
         }
     }
 
+    public static Direction RoundToHorizontal(this Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.Up:
+            case Direction.UpRight:
+            case Direction.DownRight:
+            case Direction.Right:
+                return Direction.Right;
+
+            default:
+                return Direction.Left;
+        }
+    }
+
+    public static Direction RoundToVertical(this Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.Up:
+            case Direction.UpRight:
+            case Direction.UpLeft:
+            case Direction.Left:
+                return Direction.Up;
+
+            default:
+                return Direction.Down;
+        }
+    }
+
     public static ImmutableArray<string> Cardinal8 = ["e", "se", "s", "sw", "w", "nw", "n", "ne"];
     public static ImmutableArray<string> Cardinal4 = ["e", "s", "w", "n"];
     public static ImmutableArray<(string, bool)> Cardinal8Flipped = [

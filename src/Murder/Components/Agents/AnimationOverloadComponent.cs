@@ -16,7 +16,7 @@ namespace Murder.Components
         [Serialize]
         [Tooltip("If this is set, replace the animation id.")]
 #pragma warning disable IDE1006 // naming style
-        private readonly ImmutableArray<string> _nextAnimationsOverload = [];
+        private ImmutableArray<string> _nextAnimationsOverload { get; init; } = [];
 #pragma warning restore IDE1006
 
         [Tooltip("If this is set, replace the sprite animation.")]
@@ -29,19 +29,24 @@ namespace Murder.Components
 
         public readonly float Duration = -1.0f;
 
-        public readonly bool Loop;
+        public bool Loop { get; init; } = false;
 
-        public readonly bool IgnoreFacing;
+        public readonly bool IgnoreFacing { get; init; } = false;
 
         public readonly ImageFlip Flip { get; init; } = ImageFlip.None;
 
-        public readonly int Current = 0;
+        public readonly int Current { get; init; } = 0;
         public readonly float SortOffset { get; init; } = 0f;
 
         /// <summary>
         /// Supported facing directions, optional.
         /// </summary>
         public readonly int? SupportedDirections { get; init; } = null;
+
+        /// <summary>
+        /// Supported orientations, if applicable.
+        /// </summary>
+        public readonly Orientation? SupportedOrientation { get; init; } = null;
 
         // ===== getters =====
         public string AnimationId => _nextAnimationsOverload[0];
@@ -142,52 +147,14 @@ namespace Murder.Components
             supportedDirections: null)
         { }
 
-        public AnimationOverloadComponent Play(string animation) => new(
-            [animation],
-            _customSprite,
-            start: Game.Now,
-            Duration,
-            Loop,
-            IgnoreFacing,
-            Flip,
-            Current,
-            SortOffset,
-            SupportedDirections);
+        public AnimationOverloadComponent Play(string animation) => this with
+            { _nextAnimationsOverload = [animation], Start = Game.Now };
 
-        public AnimationOverloadComponent PlayNext() => new(
-            _nextAnimationsOverload,
-            _customSprite,
-            start: Game.Now,
-            Duration,
-            Loop,
-            IgnoreFacing,
-            Flip,
-            current: Math.Min(_nextAnimationsOverload.Length - 1, Current + 1),
-            SortOffset,
-            SupportedDirections);
+        public AnimationOverloadComponent PlayNext() => this with
+            { Start = Game.Now, Current = Math.Min(_nextAnimationsOverload.Length - 1, Current + 1) };
 
-        public AnimationOverloadComponent Now => new(
-            _nextAnimationsOverload,
-            _customSprite,
-            start: Game.Now,
-            Duration,
-            Loop,
-            IgnoreFacing,
-            Flip,
-            Current,
-            SortOffset,
-            SupportedDirections); 
-        
-        public AnimationOverloadComponent NoLoop => new(
-            _nextAnimationsOverload,
-            _customSprite,
-            start: Game.Now,
-            Duration,
-            loop: false,
-            IgnoreFacing,
-            Flip,
-            Current,
-            SortOffset,
-            SupportedDirections);
+        public AnimationOverloadComponent Now => this with { Start = Game.Now };
+
+        public AnimationOverloadComponent NoLoop => this with { Start = Game.Now, Loop = false };
     }
 }

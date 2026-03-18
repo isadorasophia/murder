@@ -99,21 +99,21 @@ namespace Murder.Systems.Graphics
                 string animationId = s.CurrentAnimation;
                 float startTime = e.TryGetAnimationStarted()?.StartTime ?? (s.UseUnscaledTime ? Game.Now : Game.NowUnscaled);
 
-                AnimationOverloadComponent? overload = null;
-                if (e.TryGetAnimationOverload() is AnimationOverloadComponent o)
+                AnimationOverloadComponent? overload = e.TryGetAnimationOverload();
+                if (overload is not null)
                 {
-                    startTime = o.Start;
-                    if (o.CustomSprite is SpriteAsset customSprite)
+                    startTime = overload.Value.Start;
+                    if (overload.Value.CustomSprite is SpriteAsset customSprite)
                     {
                         asset = customSprite;
                     }
 
-                    if (asset.Animations.ContainsKey(o.CurrentAnimation))
+                    if (asset.Animations.ContainsKey(overload.Value.CurrentAnimation))
                     {
-                        animationId = o.CurrentAnimation;
+                        animationId = overload.Value.CurrentAnimation;
                     }
 
-                    ySortOffsetRaw += o.SortOffset;
+                    ySortOffsetRaw += overload.Value.SortOffset;
                 }
 
                 float yPositionForYSort = position.Y;
@@ -150,7 +150,7 @@ namespace Murder.Systems.Graphics
                         !animation.HasNextAnimation &&              //
                         !e.HasDoNotLoop() &&                       // if this has the DoNotLoop component, don't loop
                         !e.HasDestroyOnAnimationComplete() &&     // if you want to destroy this, don't loop
-                        (overload == null || (overload.Value.AnimationCount == 1 && overload.Value.Loop)),
+                        (overload is null || (overload.Value.AnimationCount == 1 && overload.Value.Loop)),
                     ForceFrame = forceFrame
                 };
 
@@ -261,9 +261,16 @@ namespace Murder.Systems.Graphics
                         {
                             e.PlaySpriteAnimation(animationId);
                         }
-
                     }
-                    RenderServices.DealWithCompleteAnimations(e, s);
+
+                    if (overload is not null)
+                    {
+                        RenderServices.CompleteAnimationOverload(e, overload.Value, frameInfo, speedOverload: null);
+                    }
+                    else
+                    {
+                        RenderServices.DealWithCompleteAnimations(e, s);
+                    }
                 }
             }
 

@@ -92,6 +92,14 @@ namespace Murder.Systems
                     {
                         angle = facing.Direction.RoundTo4Directions(Orientation.Both).ToAngle();
                     }
+                    else if (o.SupportedOrientation == Orientation.Vertical)
+                    {
+                        angle = facing.Direction.RoundToVertical().ToAngle();
+                    }
+                    else if (o.SupportedOrientation == Orientation.Horizontal)
+                    {
+                        angle = facing.Direction.RoundToHorizontal().ToAngle();
+                    }
                 }
 
                 if (e.TryGetOverrideYOffset() is OverrideYOffsetComponent overrideYOffset)
@@ -201,7 +209,7 @@ namespace Murder.Systems
                     {
                         GameLogger.Log($"Couldn't find animation {animationInfo.Name} for {spriteAsset.Guid}.");
 
-                        CompleteAnimationOverload(e, overload.Value, frameInfo: null, speedOverload);
+                        RenderServices.CompleteAnimationOverload(e, overload.Value, frameInfo: null, speedOverload);
                         overload = null;
                     }
 
@@ -301,7 +309,7 @@ namespace Murder.Systems
                 // The animation overload is now done
                 if (frameInfo.Complete && overload != null)
                 {
-                    CompleteAnimationOverload(e, overload.Value, frameInfo, speedOverload);
+                    RenderServices.CompleteAnimationOverload(e, overload.Value, frameInfo, speedOverload);
                 }
                 else
                 {
@@ -334,64 +342,6 @@ namespace Murder.Systems
             else
             {
                 walk?.SetParticleSystem();
-            }
-        }
-
-        private void CompleteAnimationOverload(
-            Entity e, AnimationOverloadComponent overload, FrameInfo? frameInfo, AnimationSpeedOverload? speedOverload)
-        {
-            if (overload.AnimationCount > 1)
-            {
-                if (overload.Current < overload.AnimationCount - 1)
-                {
-                    e.SetAnimationOverload(overload.PlayNext());
-                    e.SendAnimationCompleteMessage();
-                }
-                else
-                {
-                    if (!overload.Loop)
-                    {
-                        e.RemoveAnimationOverload();
-                        e.SendAnimationCompleteMessage(AnimationCompleteStyle.Sequence);
-                    }
-                    else
-                    {
-                        e.SendAnimationCompleteMessage();
-                    }
-
-                    e.SetAnimationComplete();
-                }
-            }
-            else if (frameInfo is not null && frameInfo.Value.Animation.HasNextAnimation)
-            {
-                // This is a chained animation, e send the complete message and try to play the next one.
-                e.SendAnimationCompleteMessage(AnimationCompleteStyle.Sequence);
-                e.SetAnimationComplete();
-
-                if (frameInfo.Value.Animation.GetNextAnimation(Game.Random, out string next))
-                {
-                    e.SetAnimationOverload(overload.Play(next));
-                }
-                else
-                {
-                    e.SetAnimationOverload(overload with { Start = Game.Now });
-                }
-            }
-            else if (!overload.Loop)
-            {
-                e.RemoveAnimationOverload();
-                e.SendAnimationCompleteMessage(AnimationCompleteStyle.Sequence);
-                e.SetAnimationComplete();
-            }
-            else
-            {
-                e.SendAnimationCompleteMessage();
-                e.SetAnimationComplete();
-            }
-
-            if (speedOverload is not null && speedOverload.Value.Persist)
-            {
-                e.RemoveAnimationSpeedOverload();
             }
         }
     }
