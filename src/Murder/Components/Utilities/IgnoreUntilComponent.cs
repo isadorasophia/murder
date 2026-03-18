@@ -15,6 +15,10 @@ public readonly struct IgnoreUntilComponent : IComponent
     /// </summary>
     public readonly float Until = 0;
 
+    /// <summary>
+    /// Whether we allow to interact with this. This is sometimes the case when we want to stop
+    /// displaying, but still give a feedback that it was interacted.
+    /// </summary>
     public readonly bool AllowInteract = false;
 
     public IgnoreUntilComponent(float until)
