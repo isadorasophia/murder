@@ -16,7 +16,7 @@ namespace Murder.Components
         [Serialize]
         [Tooltip("If this is set, replace the animation id.")]
 #pragma warning disable IDE1006 // naming style
-        private ImmutableArray<string> _nextAnimationsOverload { get; init; } = [];
+        private readonly ImmutableArray<string> _nextAnimationsOverload = [];
 #pragma warning restore IDE1006
 
         [Tooltip("If this is set, replace the sprite animation.")]
@@ -49,7 +49,7 @@ namespace Murder.Components
         public readonly Orientation? SupportedOrientation { get; init; } = null;
 
         // ===== getters =====
-        public string AnimationId => _nextAnimationsOverload[0];
+        public string AnimationId => _nextAnimationsOverload.Length == 0 ? string.Empty : _nextAnimationsOverload[0];
 
         [ShowInEditor]
         public string CurrentAnimation
@@ -90,8 +90,9 @@ namespace Murder.Components
         [JsonConstructor]
         public AnimationOverloadComponent() { }
 
-        public AnimationOverloadComponent(ImmutableArray<string> nextAnimationsOverload, Guid customSprite, float start,
-            float duration, bool loop, bool ignoreFacing, ImageFlip flip, int current, float sortOffset, int? supportedDirections) 
+        public AnimationOverloadComponent(
+            ImmutableArray<string> nextAnimationsOverload, Guid customSprite, float start, float duration, 
+            bool loop, bool ignoreFacing, ImageFlip flip, int current, float sortOffset, int? supportedDirections, Orientation? orientation) 
         {
             _nextAnimationsOverload = nextAnimationsOverload;
             _customSprite = customSprite;
@@ -107,6 +108,8 @@ namespace Murder.Components
             Current = current;
             SortOffset = sortOffset;
             SupportedDirections = supportedDirections;
+
+            SupportedOrientation = orientation;
         }
 
         public AnimationOverloadComponent(ImmutableArray<string> nextAnimationsOverload, Guid customSprite, bool loop, bool ignoreFacing)
@@ -144,11 +147,22 @@ namespace Murder.Components
             flip: ImageFlip.None,
             current: 0,
             sortOffset: 0,
-            supportedDirections: null)
+            supportedDirections: null,
+            orientation: null)
         { }
 
-        public AnimationOverloadComponent Play(string animation) => this with
-            { _nextAnimationsOverload = [animation], Start = Game.Now };
+        public AnimationOverloadComponent Play(string animation) =>
+            new([animation],
+                _customSprite,
+                start: Game.Now,
+                Duration,
+                Loop,
+                IgnoreFacing,
+                Flip,
+                current: 0,
+                SortOffset,
+                SupportedDirections,
+                SupportedOrientation);
 
         public AnimationOverloadComponent PlayNext() => this with
             { Start = Game.Now, Current = Math.Min(_nextAnimationsOverload.Length - 1, Current + 1) };
