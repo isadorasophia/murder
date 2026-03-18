@@ -17,10 +17,7 @@ namespace Murder.Services
             None = 0,
             Button = 1,
             AxisAnalogue = 2,
-            AxisDigitalUp = 3,
-            AxisDigitalLeft = 4,
-            AxisDigitalDown = 5,
-            AxisDigitalRight = 6,
+            AxisDigitalPress = 3
         }
 
         public InputMenuOption(string text, InputStyle style, int? buttonId)

@@ -60,22 +60,9 @@ public static class InputServices
                 builder.Add(new InputMenuOption(text + " (analogue)", InputMenuOption.InputStyle.AxisAnalogue, axisInfo.AxisId));
             }
 
-
-            if (axisInfo.Vertical)
+            if (axisInfo.Vertical || axisInfo.Horizontal)
             {
-                builder.Add(new InputMenuOption(text + " (up)", InputMenuOption.InputStyle.AxisDigitalUp, axisInfo.AxisId));
-            }
-            if (axisInfo.Horizontal)
-            {
-                builder.Add(new InputMenuOption(text + " (left)", InputMenuOption.InputStyle.AxisDigitalLeft, axisInfo.AxisId));
-            }
-            if (axisInfo.Vertical)
-            {
-                builder.Add(new InputMenuOption(text + " (down)", InputMenuOption.InputStyle.AxisDigitalDown, axisInfo.AxisId));
-            }
-            if (axisInfo.Horizontal)
-            {
-                builder.Add(new InputMenuOption(text + " (right)", InputMenuOption.InputStyle.AxisDigitalRight, axisInfo.AxisId));
+                builder.Add(new InputMenuOption(text, InputMenuOption.InputStyle.AxisDigitalPress, axisInfo.AxisId));
             }
         }
 
