@@ -15,8 +15,15 @@ public readonly struct IgnoreUntilComponent : IComponent
     /// </summary>
     public readonly float Until = 0;
 
+    public readonly bool AllowInteract = false;
+
     public IgnoreUntilComponent(float until)
     {
         Until = until;
+    }
+
+    public IgnoreUntilComponent(bool allowInteract, float until) : this(until)
+    {
+        AllowInteract = allowInteract;
     }
 }
