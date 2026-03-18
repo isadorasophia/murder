@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace Murder.Core.Input;
 
-public readonly struct InputButton
+public readonly struct InputButton : IEquatable<InputButton>
 {
     public readonly InputSource Source = InputSource.None;
     [Serialize]
@@ -226,5 +226,18 @@ public readonly struct InputButton
             default:
                 return "?";
         }
+    }
+
+    public bool Equals(InputButton other)
+    {
+        if (_keyboard == other._keyboard &&
+            _axis == other._axis &&
+            _mouse == other._mouse &&
+            _gamepad == other._gamepad)
+        {
+            return true;
+        }
+
+        return false;
     }
 }
