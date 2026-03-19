@@ -91,6 +91,20 @@ namespace Murder.Systems
             Cleanup(entities);
         }
 
+        public void OnDeactivated(World world, ImmutableArray<Entity> entities) 
+        {
+            foreach (Entity e in entities)
+            {
+                if (e.TryGetStateMachine() is not IStateMachineComponent stateMachine)
+                {
+                    continue;
+                }
+
+                // make sure we clean up any states on deactivate... or it gets dangerous
+                stateMachine.Reset();
+            }
+        }
+
         private void Cleanup(ImmutableArray<Entity> _)
         {
             //foreach (Entity e in entities)
