@@ -50,6 +50,7 @@ namespace Murder.Assets
         /// </summary>
         public void Replace(World world, Entity e)
         {
+            e.SendOnBeforeReplaceMessage();
             _entity.Create(world, e);
             e.SendOnReplacedMessage();
         }

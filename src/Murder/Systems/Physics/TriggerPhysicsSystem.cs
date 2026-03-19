@@ -6,6 +6,7 @@ using Bang.Systems;
 using Murder.Components;
 using Murder.Core.Geometry;
 using Murder.Core.Physics;
+using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
@@ -16,7 +17,8 @@ namespace Murder.Systems.Physics
     [Filter(ContextAccessorFilter.NoneOf, typeof(IgnoreTriggersUntilComponent))]
     [Watch(typeof(PositionComponent))]
     [Requires(typeof(QuadtreeCalculatorSystem))]
-    public class TriggerPhysicsSystem : IReactiveSystem
+    [Messager(typeof(OnBeforeReplaceMessage))]
+    public class TriggerPhysicsSystem : IReactiveSystem, IMessagerSystem
     {
         private readonly List<NodeInfo<Entity>> _others = [];
 
@@ -89,6 +91,28 @@ namespace Murder.Systems.Physics
         public void OnModified(World world, ImmutableArray<Entity> entities)
         {
             WatchEntities(entities, world);
+        }
+
+        public void OnMessage(World world, Entity entity, IMessage message)
+        {
+            if (message is not OnBeforeReplaceMessage)
+            {
+                return;
+            }
+
+            // Immediately prior to a replace, send an exit notification to everyone.
+            // Otherwise, we won't have a cllision cache and won't know who to send to.
+            // 
+            if (entity.TryGetCollisionCache() is not CollisionCacheComponent collisionCache)
+            {
+                return;
+            }
+
+            foreach (Entity other in collisionCache.GetCollidingEntities(world))
+            {
+                entity.SendOnCollisionMessage(other.EntityId, CollisionDirection.Exit);
+                other.SendOnCollisionMessage(entity.EntityId, CollisionDirection.Exit);
+            }
         }
 
         public void OnAfterTrigger(World world)
