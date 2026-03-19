@@ -13,18 +13,8 @@
   "AssetResourcesPath": "assets/",
   "ContentECSPath": "ecs/",
   "GenericAssetsPath": "data/",
-  "GameWidth": 320,
-  "GameHeight": 180,
-  "GameScale": 2,
   "FeedbackUrl": "",
   "FeedbackKey": "changeme",
-  "ResizeStyle": {
-    "ResizeMode": 1,
-    "SnapToInteger": 0.25,
-    "RoundingMode": 0,
-    "PositiveApectRatioAllowance": 0.5,
-    "NegativeApectRatioAllowance": 0.1
-  },
   "TargetFps": 60,
   "IsVSyncEnabled": false,
   "PushAwayInterval": 0.05,
