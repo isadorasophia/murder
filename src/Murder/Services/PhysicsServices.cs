@@ -601,14 +601,15 @@ public static class PhysicsServices
         {
             NodeInfo<Entity> e = entities[i];
 
-            if (ignore.Contains(e.EntityInfo.EntityId))
+            if (ignore.Contains(e.EntityInfo.EntityId) || !e.EntityInfo.IsActive)
             {
                 continue;
             }
 
-            if (!e.EntityInfo.IsActive || !e.EntityInfo.HasCollider())
+            if (!e.EntityInfo.HasCollider())
             {
-                GameLogger.Warning($"Why is entity {e.EntityInfo.EntityId} still at the quadtree?");
+                // it might have been deactivated this frame, we'll fix by the end of the frame.
+                // GameLogger.Warning($"Why is entity {e.EntityInfo.EntityId} still at the quadtree?");
                 continue;
             }
 
