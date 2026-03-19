@@ -278,7 +278,7 @@ namespace Murder.Editor.Data
             if (Directory.GetFiles(FontImporter.SourcePackedPath).Length > 0 &&
                 !FileLoadHelpers.ShouldRecalculate(ttfFontsPath, FontImporter.SourcePackedPath))
             {
-                //return;
+                return;
             }
 
             // Load the "config" file with all the fonts settings.
