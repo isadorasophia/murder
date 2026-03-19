@@ -355,7 +355,7 @@ public partial class EditorScene
     {
         AssetsFilter.RefreshCache();
         ReflectionHelper.ClearCache();
-        InputServices.ClearCache();
+        // InputServices.ClearCache();
     }
 
     private static void ReloadShaders()
