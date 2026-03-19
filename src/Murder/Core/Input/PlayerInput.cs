@@ -1149,6 +1149,14 @@ public class PlayerInput
             virtualButton.Register([key]);
         }
 
+        if (OperatingSystem.IsMacOS())
+        {
+            foreach (var key in button.DefaultKeyboardMac)
+            {
+                virtualButton.Register([key]);
+            }
+        }
+
         foreach (var gamepad in button.DefaultGamePadButtons)
         {
             virtualButton.Register([gamepad]);

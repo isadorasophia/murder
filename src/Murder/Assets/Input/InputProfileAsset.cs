@@ -20,6 +20,10 @@ public readonly struct InputInformation
 
     [Search]
     public readonly ImmutableArray<Keys> DefaultKeyboard = [];
+
+    [Search]
+    public readonly ImmutableArray<Keys> DefaultKeyboardMac = [];
+
     [Search]
     public readonly ImmutableArray<Buttons> DefaultGamePadButtons = [];
     ///[Search]
