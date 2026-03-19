@@ -353,8 +353,10 @@ public static class PhysicsServices
             if (_ignoreEntitiesWithChildren.Contains(e.EntityInfo.EntityId))
                 continue;
 
-            if (e.EntityInfo.IsDestroyed)
-                continue;
+            // I believe that, if this is the case, we should assume that the entity still exists
+            // as of this frame and should be acknowledged as such.
+            // if (e.EntityInfo.IsDestroyed)
+            //     continue;
 
             Vector2 position = e.EntityInfo.GetGlobalPosition();
             if (e.EntityInfo.TryGetCollider() is ColliderComponent collider)
