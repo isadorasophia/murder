@@ -715,6 +715,16 @@ public static class EntityServices
             entity.SetVerticalPosition(new VerticalPositionComponent(1, zVelocity, true));
         }
     }
+
+    public static bool IsAnimatingStartingWith(this Entity e, string animation)
+    {
+        if (e.TryGetAnimationOverload() is not AnimationOverloadComponent animationOverload)
+        {
+            return false;
+        }
+
+        return animationOverload.CurrentAnimation.StartsWith(animation);
+    }
 }
 
 [Flags]
