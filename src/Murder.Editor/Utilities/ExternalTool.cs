@@ -123,12 +123,12 @@ namespace Murder.Editor.Utilities
 
             // For Linux check specific subfolder
             var lincom = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "linux", command);
-            if (CurrentPlatform.OS == OS.Linux && File.Exists(lincom))
+            if (OperatingSystem.IsLinux() && File.Exists(lincom))
                 return lincom;
 
             // For Mac check specific subfolder
             var maccom = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "osx", command);
-            if (CurrentPlatform.OS == OS.MacOSX && File.Exists(maccom))
+            if (OperatingSystem.IsMacOS() && File.Exists(maccom))
                 return maccom;
 
             // We don't have a full path, so try running through the system path to find it.
@@ -143,7 +143,7 @@ namespace Murder.Editor.Utilities
                 if (File.Exists(fullName))
                     return fullName;
 
-                if (CurrentPlatform.OS == OS.Windows)
+                if (OperatingSystem.IsWindows())
                 {
                     var fullExeName = string.Concat(fullName, ".exe");
                     if (File.Exists(fullExeName))

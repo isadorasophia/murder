@@ -23,14 +23,22 @@ public class InputGraphicsAsset : GameAsset
     public Portrait MouseDefault = new();
     public Portrait GamepadAxisDefault = new();
 
+    public readonly struct PlatformSpecificInput
+    {
+        public readonly string? Text = null;
+        public readonly Platforms Platform = Platforms.All;
+
+        public PlatformSpecificInput() { }
+    }
+
     public readonly struct ButtonGraphics
     {
         public readonly Portrait Icon = new();
         public readonly InputButton InputButton = new();
         public readonly string? Text = null;
-        public ButtonGraphics()
-        {
 
-        }
+        public readonly ImmutableArray<PlatformSpecificInput>? OverrideOnPlatforms = null;
+
+        public ButtonGraphics() { }
     }
 }
