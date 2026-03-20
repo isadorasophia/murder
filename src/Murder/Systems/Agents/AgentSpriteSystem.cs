@@ -56,7 +56,7 @@ namespace Murder.Systems
                 float start = NoiseHelper.Value1D(e.EntityId * 10) * 5f;
                 var prefix = sprite.IdlePrefix;
 
-                if (isMoving && !e.HasDisableAgent() && !e.HasAgentPause())
+                if (isMoving && !e.HasDisableAgent() && !e.HasAgentPause() && !e.HasAgentPauseRuntime())
                 {
                     prefix = sprite.WalkPrefix;
                     SetParticleWalk(context.World, e, isWalking: true);
