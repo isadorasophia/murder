@@ -21,8 +21,8 @@
   </ItemGroup>
 
   <!-- Only copy the root files out of resources and packed content. -->
-  <ItemGroup Condition="'$(Configuration)' != 'Debug'">
-    <Content Include="resources\*" CopyToOutputDirectory="PreserveNewest" LinkBase="resources" />
+  <ItemGroup Condition="'$(EDITOR)' != 'true'">
+    <Content Include="resources\game_config" CopyToOutputDirectory="PreserveNewest" LinkBase="resources" />
     <Content Include="packed\**\*.gz" CopyToOutputDirectory="PreserveNewest" TargetPath="resources\%(RecursiveDir)\%(Filename)%(Extension)" />
     <Content Include="packed\**\*.qoi.gz" CopyToOutputDirectory="PreserveNewest" TargetPath="resources\%(RecursiveDir)\%(Filename)%(Extension)" />
     <Content Include="packed\atlas\*.json" CopyToOutputDirectory="PreserveNewest" TargetPath="resources\atlas\%(RecursiveDir)\%(Filename)%(Extension)" />

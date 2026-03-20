@@ -16,7 +16,7 @@ public partial class EditorDataManager
     {
         _preloadRelativePaths ??= [
             Path.Join(GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath, "Generated/", "preload_images"),
-                Path.Join(GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath, "Libraries")];
+            Path.Join(GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath, "Libraries")];
 
         foreach (string relativePath in _preloadRelativePaths)
         {
