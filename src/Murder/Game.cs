@@ -293,7 +293,8 @@ namespace Murder
         {
             get
             {
-                if (Window.ClientBounds.Width <= 0 || Window.ClientBounds.Height <= 0)
+                Point windowSize = Game.Instance.GetWindowSize();
+                if (windowSize.X <= 0 || windowSize.Y <= 0)
                 {
                     return Vector2.One;
                 }
@@ -304,8 +305,8 @@ namespace Murder
                 }
 
                 return new(
-                    ((float)_screenSize.X / Window.ClientBounds.Width) / DefaultScale,
-                    ((float)_screenSize.Y / Window.ClientBounds.Height) / DefaultScale);
+                    ((float)_screenSize.X / windowSize.X) / DefaultScale,
+                    ((float)_screenSize.Y / windowSize.Y) / DefaultScale);
             }
         }
 
@@ -396,7 +397,7 @@ namespace Murder
                 }
 
                 if (_lastWindowChange is WindowChangeNotification lastChange &&
-                    lastChange.ApplySizeTo == window.ClientBounds.Size())
+                    lastChange.ApplySizeTo == Game.Instance.GetWindowSize())
                 {
                     return;
                 }
@@ -505,7 +506,7 @@ namespace Murder
             }
             else if (notification.Kind == ScreenUpdatedKind.NotifyAndApply && applySize is null)
             {
-                applySize = new Point(Window.ClientBounds.Width, Window.ClientBounds.Height);
+                applySize = GetWindowSize();
             }
 
             if (applySize is not null)
@@ -514,7 +515,7 @@ namespace Murder
             }
 
             // update internal size.
-            _screenSize = applySize ?? new Point(Window.ClientBounds.Width, Window.ClientBounds.Height);
+            _screenSize = applySize ?? GetWindowSize();
 
             if (!Fullscreen)
             {
@@ -535,6 +536,12 @@ namespace Murder
 
             _lastWindowChange = notification;
             _pendingWindowChange = null;
+        }
+
+        public Point GetWindowSize()
+        {
+            SDL3.SDL.SDL_GetWindowSizeInPixels(Window.Handle, out int width, out int height);
+            return (width > 0 && height > 0) ? new Point(width, height) : new Point(Window.ClientBounds.Width, Window.ClientBounds.Height);
         }
 
         /// <summary>

@@ -157,7 +157,7 @@ namespace Murder.Save
             Scaling = scaling;
 
             // Clamp window size to the minimum required by the scaling.
-            Point windowSize = Game.Instance.Window.ClientBounds.Size();
+            Point windowSize = Game.Instance.GetWindowSize();
             Point minimumSize;
 
             switch (scaling)

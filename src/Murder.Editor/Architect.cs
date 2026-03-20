@@ -78,6 +78,11 @@ namespace Murder.Editor
 
         protected override void Initialize()
         {
+            if (Environment.GetEnvironmentVariable("FNA_GRAPHICS_ENABLE_HIGHDPI") != "1")
+            {
+                GameLogger.Warning("High DPI support is disabled. To enable it, set the environment variable 'FNA_GRAPHICS_ENABLE_HIGHDPI' to '1'.");
+                GameLogger.LogDebug("""You can do so by adding `Environment.SetEnvironmentVariable("FNA_GRAPHICS_ENABLE_HIGHDPI", "1");` to your Program.cs in both your editor and game project.""");
+            }
             Instance = this;
 
             _playerInput.Register(MurderInputAxis.EditorCamera,
@@ -430,7 +435,7 @@ namespace Murder.Editor
             if (!isMaximized && GetWindowPosition() is Point position)
             {
                 EditorSettings.WindowStartPosition = position;
-                EditorSettings.WindowSize = Window.ClientBounds.Size();
+                EditorSettings.WindowSize = GetWindowSize();
             }
 
             EditorSettings.StartMaximized = isMaximized;

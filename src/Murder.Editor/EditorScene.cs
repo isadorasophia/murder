@@ -164,7 +164,7 @@ namespace Murder.Editor
 
         public override void DrawGui()
         {
-            var screenSize = new Vector2(Architect.Instance.Window.ClientBounds.Width, Architect.Instance.Window.ClientBounds.Height) / Architect.EditorSettings.DpiScale;
+            Vector2 screenSize = Game.Instance.GetWindowSize().ToVector2() / Architect.EditorSettings.DpiScale;
 
             var staticWindowFlags =
                 ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoDecoration |

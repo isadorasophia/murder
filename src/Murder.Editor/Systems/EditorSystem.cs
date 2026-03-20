@@ -215,6 +215,8 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
 
                 if (ImGui.BeginTabItem("Details"))
                 {
+                    Point clientWindowSize = Game.Instance.GetWindowSize();
+
                     ImGui.SeparatorText("Performance");
                     var dl = ImGui.GetWindowDrawList();
 
@@ -308,8 +310,8 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
 
                     if (ImGui.IsWindowAppearing())
                     {
-                        _windowWidth = Game.Instance.Window.ClientBounds.Width;
-                        _windowHeight = Game.Instance.Window.ClientBounds.Height;
+                        _windowWidth = clientWindowSize.X;
+                        _windowHeight = clientWindowSize.Y;
                         _windowSize = $"{_windowWidth}px, {_windowHeight}px";
                     }
 
@@ -324,8 +326,8 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
 
                     if (ImGui.Button("Refresh Resolution"))
                     {
-                        _windowWidth = Game.Instance.Window.ClientBounds.Width;
-                        _windowHeight = Game.Instance.Window.ClientBounds.Height;
+                        _windowWidth = clientWindowSize.X;
+                        _windowHeight = clientWindowSize.Y;
                         Point windowSize = new Point(_windowWidth, _windowHeight);
 
                         render.OnClientWindowChanged(new WindowChangeSettings(windowSize)
@@ -584,7 +586,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         ImGui.Text($"Max delta time: {Game.MaxDeltaTime * 1000:0.000} of {Game.Profile.TargetFps} FPS)");
         ImGui.SameLine();
         ImGui.Text($"({maxDeltaTimePercent:0.0}%%)");
-        
+
         if (ImGui.Button("Clear##ClearMaxDeltaTime"))
         {
             Game.MaxFixedUpdatesInASingleFrame = 0;
