@@ -549,8 +549,14 @@ namespace Murder
         {
             uint currentDisplayIndex = SDL3.SDL.SDL_GetDisplayForWindow(Window.Handle);
             SDL3.SDL.SDL_GetDisplayBounds(currentDisplayIndex, out var rect);
-            int width = rect.w;
-            int height = rect.h;
+            
+            // Find the DPI scale by comparing the real window size and the pixel sizes
+            SDL3.SDL.SDL_GetWindowSizeInPixels(Window.Handle, out int pixelWidth, out int pixelHeight);
+            float dpiScaleX = (float)pixelWidth / Game.Instance.Window.ClientBounds.Width;
+            
+            int width = (int)(rect.w * dpiScaleX);
+            int height = (int)(rect.h * dpiScaleX);
+
             return (width > 0 && height > 0) ? new Point(width, height) : new Point(Window.ClientBounds.Width, Window.ClientBounds.Height);
         }
 
