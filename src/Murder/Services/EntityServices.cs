@@ -666,6 +666,9 @@ public static class EntityServices
         if (properties.HasFlag(AnimationOverloadProperties.Disappear))
         {
             animations = [animation, "_"];
+
+            // we will loop at the end
+            properties |= AnimationOverloadProperties.Loop;
         }
         else
         {
