@@ -188,7 +188,8 @@ namespace Murder.Systems
                 if (e.TryGetCustomTargetSpriteBatch() is CustomTargetSpriteBatchComponent renderTarget)
                     target = renderTarget.TargetBatch;
 
-                if (isMoving && spriteAsset.Animations.TryGetValue(prefix + sprite.WalkPrefix + suffix, out _) && !e.HasDisableAgent() && !e.HasAgentPause())
+                if (isMoving && spriteAsset.Animations.TryGetValue(prefix + sprite.WalkPrefix + suffix, out _) && 
+                    !e.HasDisableAgent() && !e.HasAgentPause() && !e.HasAgentPauseRuntime())
                 {
                     prefix += sprite.WalkPrefix;
                 }

@@ -623,6 +623,38 @@ public static class EntityServices
         return world.TryGetEntity(id.Value);
     }
 
+    public static void AddDisableAgent(Entity e)
+    {
+        if (e.TryGetDisableAgent() is DisableAgentComponent disableAgent)
+        {
+            disableAgent = disableAgent.Add();
+        }
+        else
+        {
+            disableAgent = new();
+        }
+
+        e.SetDisableAgent(disableAgent);
+    }
+
+    public static void RemoveDisableAgent(Entity e)
+    {
+        if (e.TryGetDisableAgent() is not DisableAgentComponent disableAgent)
+        {
+            return;
+        }
+
+        disableAgent = disableAgent.Remove();
+        if (disableAgent.Count == 0)
+        {
+            e.RemoveDisableAgent();
+        }
+        else
+        {
+            e.SetDisableAgent(disableAgent);
+        }
+    }
+
     public static void PauseAgent(Entity e)
     {
         if (e.TryGetAgentPauseRuntime() is AgentPauseRuntimeComponent agentPause)

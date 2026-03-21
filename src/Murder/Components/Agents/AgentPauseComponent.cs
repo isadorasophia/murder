@@ -9,6 +9,12 @@ public readonly struct AgentPauseComponent : IComponent
     public AgentPauseComponent() { }
 }
 
+/// <summary>
+/// This will disable any conversion from impulse to velocity, but it will
+/// apply friction every frame according to <see cref="FrictionComponent"/>
+/// set on the entity.
+/// If you want to control the velocity of the agent without friction, use <see cref="DisableAgentComponent"/>.
+/// </summary>
 [RuntimeOnly]
 public readonly struct AgentPauseRuntimeComponent : IComponent
 {
