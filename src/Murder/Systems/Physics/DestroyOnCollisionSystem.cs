@@ -17,7 +17,7 @@ namespace Murder.Systems.Physics
             {
                 if (entity.GetDestroyOnCollision().KillInstead)
                 {
-                    entity.SendMessage(new FatalDamageMessage());
+                    entity.SendFatalDamageMessage();
                 }
                 else
                 {
