@@ -104,7 +104,7 @@ namespace Murder.Editor.CustomEditors
                 }
             }
 
-            ImGuiHelpers.HelpTooltip("Group all sound entities under the sound folder in the world");
+            ImGuiHelpers.HelpTooltip("Group all entities under 'Sounds' folder");
 
             ImGui.PushItemWidth(-1);
             ImGui.SameLine();
