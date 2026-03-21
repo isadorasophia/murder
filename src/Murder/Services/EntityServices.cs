@@ -662,20 +662,7 @@ public static class EntityServices
         int offset = 0,
         Guid? customSprite = null)
     {
-        ImmutableArray<string> animations;
-        if (properties.HasFlag(AnimationOverloadProperties.Disappear))
-        {
-            animations = [animation, "_"];
-
-            // we will loop at the end
-            properties |= AnimationOverloadProperties.Loop;
-        }
-        else
-        {
-            animations = [animation];
-        }
-
-        PlayAnimationOverload(e, animations, properties, offset, customSprite);
+        PlayAnimationOverload(e, [animation], properties, offset, customSprite);
     }
 
     public static void PlayAnimationOverload(
@@ -685,6 +672,14 @@ public static class EntityServices
         int offset = 0,
         Guid? customSprite = null)
     {
+        if (properties.HasFlag(AnimationOverloadProperties.Disappear))
+        {
+            animations = animations.Add("_");
+
+            // we will loop at the end
+            properties |= AnimationOverloadProperties.Loop;
+        }
+
         AnimationOverloadComponent overload =
             new AnimationOverloadComponent(
                 animations,
