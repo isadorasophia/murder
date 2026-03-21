@@ -64,6 +64,10 @@ public readonly struct Viewport
                     {
                         scaledNativeResolution = nativeResolution * 0.79f;
                     }
+                    if (viewportSize.Y <= (810))
+                    {
+                        scaledNativeResolution = nativeResolution * 0.74f;
+                    }
 
                     AutoScale(viewportSize, scaledNativeResolution, out Point newNativeResolution, out float targetScale, out Vector2 outputSize);
 
@@ -83,11 +87,11 @@ public readonly struct Viewport
                     }
                     if (viewportSize.Y < (1080 - 20))
                     {
-                        scaledNativeResolution = nativeResolution * 0.9f;
-                    }
-                    if (viewportSize.Y < (1080 - 20))
-                    {
                         scaledNativeResolution = nativeResolution * 0.85f;
+                    }
+                    if (viewportSize.Y <= (810))
+                    {
+                        scaledNativeResolution = nativeResolution * 0.8f;
                     }
 
                     AutoScale(viewportSize, scaledNativeResolution, out Point newNativeResolution, out float targetScale, out Vector2 outputSize);
