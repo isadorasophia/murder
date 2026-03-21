@@ -94,12 +94,24 @@ namespace Murder.Editor.CustomEditors
                 List<IEntity> entities = stage.FindEntitiesWithAttribute<SoundAttribute>();
                 foreach (IEntity e in entities)
                 {
+                    if (_world.BelongsToAnyGroup(e.Guid))
+                    {
+                        // skip entities already assigned to a group.
+                        continue;
+                    }
+
                     MoveToGroup("Sounds", e.Guid);
                 }
 
                 entities = stage.FindEntitiesWithAttribute<SoundPlayerAttribute>();
                 foreach (IEntity e in entities)
                 {
+                    if (_world.BelongsToAnyGroup(e.Guid))
+                    {
+                        // skip entities already assigned to a group.
+                        continue;
+                    }
+
                     MoveToGroup("Sounds", e.Guid);
                 }
             }

@@ -912,6 +912,12 @@ namespace Murder.Editor.CustomEditors
                 return;
             }
 
+            if (_world is not null && activeTab == WorldTab.Sound)
+            {
+                // make sure all sound entities are visible when changing tabs.
+                SwitchGroupVisibility("Sounds", show: true);
+            }
+
             // First, deactivate previous systems.
             foreach ((WorldTab tab, Type attr) in _tabToAttributeToDeactivate)
             {
