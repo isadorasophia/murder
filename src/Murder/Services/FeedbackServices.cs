@@ -11,6 +11,13 @@ namespace Murder.Services;
 
 public static class FeedbackServices
 {
+    public static bool FeedbackUrlFail = false;
+    public enum FeedbackStyle
+    {
+        Crash,
+        Save
+    }
+
     public readonly struct FileWrapper
     {
         public readonly byte[] Bytes;
@@ -149,13 +156,13 @@ public static class FeedbackServices
             previousCrashLog = await File.ReadAllTextAsync(crashLogPath);
         }
 
-        RawFeedbackData rawData = new(Game.Profile.FeedbackUrl)
+        RawFeedbackData rawData = new($"{Game.FeedbackUrl}{FeedbackStyle.Save.ToString().ToLower()}")
         {
             Title = $"{StringHelper.CapitalizeFirstLetter(computerName)}: {data.Name}",
             Description = data.Description,
             Files = files,
             CrashLog = previousCrashLog,
-            Log = GameLogger.GetCurrentLog()
+            Log = GameLogger.GetCurrentLog(),
         };
 
         bool success = await SendFeedbackAsync(rawData);
@@ -190,7 +197,7 @@ public static class FeedbackServices
 
     public static async Task<bool> SendFeedbackAsync(RawFeedbackData data)
     {
-        if (string.IsNullOrWhiteSpace(data.Url))
+        if (string.IsNullOrWhiteSpace(data.Url) || FeedbackUrlFail)
         {
             return false; // Do not send feedback if the URL is not set.
         }
@@ -233,6 +240,8 @@ public static class FeedbackServices
             }
             catch (HttpRequestException e)
             {
+                FeedbackUrlFail = true;
+
                 GameLogger.Warning($"Sending feedback failed: {e.Message}");
                 return false;
             }
@@ -278,7 +287,7 @@ public static class FeedbackServices
 
         return new(
             identifier: "screenshot",
-            file: fw, 
+            file: fw,
             texture: screenshotTexture);
     }
 

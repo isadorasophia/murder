@@ -137,12 +137,6 @@ namespace Murder.Assets
         [HideInEditor]
         public readonly string GenericAssetsPath = "data/";
 
-        /// <summary>
-        /// Used for reporting bugs and feedback.
-        /// </summary>
-        public readonly string FeedbackUrl = string.Empty;
-        public readonly string FeedbackKey = "changeme";
-
         [Serialize]
         private readonly bool _scalingFilter = false;
 

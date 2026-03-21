@@ -148,5 +148,10 @@ namespace Murder
         /// Game scaling factor.
         /// </summary>
         public float Scale => 2;
+
+        /// <summary>
+        /// Used for reporting bugs and feedback.
+        /// </summary>
+        public string FeedbackUrl => string.Empty;
     }
 }

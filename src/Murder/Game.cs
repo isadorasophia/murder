@@ -266,6 +266,8 @@ namespace Murder
 
         private Point _windowedSize = Point.Zero;
 
+        public static string FeedbackUrl => Instance._game?.FeedbackUrl ?? string.Empty;
+
         /// <summary>
         /// Gets or sets the fullscreen mode of the game.
         /// When set, it updates the game's window to reflect the new mode.
@@ -497,7 +499,7 @@ namespace Murder
             {
                 applySize = new Point(DefaultWidth, DefaultHeight) * DefaultScale;
 
-                if (applySize.Value.X >= GraphicsDevice.Adapter.CurrentDisplayMode.Width * .9f || 
+                if (applySize.Value.X >= GraphicsDevice.Adapter.CurrentDisplayMode.Width * .9f ||
                     applySize.Value.Y >= Game.GraphicsDevice.Adapter.CurrentDisplayMode.Height * .9f)
                 {
                     float overrideScale = Math.Max(1, DefaultScale - 1);
