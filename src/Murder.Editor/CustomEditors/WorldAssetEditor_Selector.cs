@@ -35,7 +35,7 @@ namespace Murder.Editor.CustomEditors
             }
 
             ImGuiHelpers.HelpTooltip("Create a new folder");
-            
+
             DrawCreateOrRenameGroupPopup(popupName);
 
             ImGui.SameLine();
@@ -104,13 +104,27 @@ namespace Murder.Editor.CustomEditors
                 ImmutableSortedDictionary<string, ImmutableArray<Guid>>.Empty;
 
             string? hoveredGroup = stage.EditorHook.HoveringGroup;
-            
+
+            string selectedEntityGroup = string.Empty;
+            if (SelectedEntity?.Guid is Guid selectedEntityGui)
+            {
+                GameLogger.Verify(_world is not null);
+                selectedEntityGroup = _world.GetGroupOf(SelectedEntity.Guid) ?? string.Empty;
+            }
+
             foreach ((string name, ImmutableArray<Guid> entities) in folders)
             {
                 bool hovered = name.Equals(hoveredGroup, StringComparison.InvariantCultureIgnoreCase);
                 ImGui.BeginGroup();
-
+                int popColor = 2;
+                ImGui.PushStyleColor(ImGuiCol.Header, Game.Profile.Theme.BgHeader);
                 ImGui.PushStyleColor(ImGuiCol.HeaderHovered, Game.Profile.Theme.Foreground);
+                if (selectedEntityGroup == name)
+                {
+                    ImGui.PushStyleColor(ImGuiCol.Header, Game.Profile.Theme.Selected);
+                    popColor++;
+                }
+
                 if (ImGui.TreeNodeEx($"###{name} ({entities.Length})", ImGuiTreeNodeFlags.AllowOverlap | ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.Bullet))
                 {
                     DrawGroupToggles($"{name} ({entities.Length})", name);
@@ -172,13 +186,15 @@ namespace Murder.Editor.CustomEditors
 
                     dl.AddRect(min, max, Color.ToUint(Game.Profile.Theme.White), 5);
                 }
+
+                // Pop color on tree hover
+                ImGui.PopStyleColor(popColor);
             }
         }
 
+
         private void DrawGroupToggles(string label, string groupName)
         {
-            // Pop color on tree hover
-            ImGui.PopStyleColor();
 
             ImGui.SameLine();
             ImGui.PushStyleColor(ImGuiCol.Button, Vector4.Zero);
@@ -661,7 +677,7 @@ namespace Murder.Editor.CustomEditors
                     HideInstanceInEditor(parent: null, g);
                 }
             }
-            
+
             SavePersistentWorldInfo(info);
         }
     }

@@ -41,7 +41,7 @@ namespace Murder.Editor.Stages
         public string? FocusOnGroup = null;
 
         private readonly HashSet<int> _hiddenIds = [];
-        
+
         /// <summary>
         /// Is the scene texture bound to the screen?
         /// </summary>
@@ -56,7 +56,8 @@ namespace Murder.Editor.Stages
         }
 
         public Stage(ImGuiRenderer imGuiRenderer, RenderContext renderContext, StageType type, Guid? guid = null) :
-            this(imGuiRenderer, renderContext, hook: new(type.HasFlag(StageType.PlayMode)), type, guid) { }
+            this(imGuiRenderer, renderContext, hook: new(type.HasFlag(StageType.PlayMode)), type, guid)
+        { }
 
         public Stage(ImGuiRenderer imGuiRenderer, RenderContext renderContext, EditorHook hook, StageType type, Guid? guid = null)
         {
@@ -151,7 +152,7 @@ namespace Murder.Editor.Stages
             if (_world.GetUnique<EditorComponent>() is EditorComponent editorComponent)
             {
                 editorComponent.EditorHook.Offset = (topLeft * Architect.EditorSettings.DpiScale).Point();
-                editorComponent.EditorHook.StageSize = (rectToDrawStage?.Size ?? 
+                editorComponent.EditorHook.StageSize = (rectToDrawStage?.Size ??
                     Rectangle.FromCoordinates(topLeft, bottomRight).Size) * Architect.EditorSettings.DpiScale;
             }
 
@@ -217,7 +218,7 @@ namespace Murder.Editor.Stages
             {
                 ImGui.SetNextWindowPos(topLeft);
                 ImGui.SetNextWindowBgAlpha(0.85f);
-                if (ImGui.Begin("Stage Info", 
+                if (ImGui.Begin("Stage Info",
                     ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoCollapse |
                     ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoNav |
                     ImGuiWindowFlags.NoDecoration))
@@ -426,7 +427,7 @@ namespace Murder.Editor.Stages
                     }
                 }
 
-                if(entity.TryGetCollider() is ColliderComponent collider)
+                if (entity.TryGetCollider() is ColliderComponent collider)
                 {
                     ImGui.SameLine();
                     ImGui.TextColored(collider.DebugColor.ToSysVector4(), $"[{collider.Shapes.Length} shapes]");
@@ -453,9 +454,20 @@ namespace Murder.Editor.Stages
         }
 
         private float _targetFixedUpdateTime = 0;
+        private Point? _lerpCamera;
 
         private void DrawWorld()
         {
+            if (_lerpCamera is Point target)
+            {
+                _renderContext.Camera.Position = Calculator.LerpSmooth(_renderContext.Camera.Position, target, Game.DeltaTime, 0.05f);
+                if ((_renderContext.Camera.Position - target).LengthSquared() < 1)
+                {
+                    _renderContext.Camera.Position = target;
+                    _lerpCamera = null;
+                }
+            }
+
             _renderContext.Begin();
             _world.Draw(_renderContext);
             _world.DrawGui(_renderContext);
@@ -477,6 +489,17 @@ namespace Murder.Editor.Stages
         internal void CenterCamera()
         {
             _renderContext.Camera.Position = -_renderContext.Camera.Size / 2f;
+        }
+        internal void CenterCamera(Point position, bool lerp)
+        {
+            if (lerp)
+            {
+                _lerpCamera = position - _renderContext.Camera.Size / 2f;
+            }
+            else
+            {
+                _renderContext.Camera.Position = position - _renderContext.Camera.Size / 2f;
+            }
         }
         internal void CenterCamera(Vector2 size)
         {

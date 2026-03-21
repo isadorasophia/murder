@@ -20,6 +20,7 @@ using Murder.Utilities;
 using Murder.Utilities.Attributes;
 using System;
 using System.Collections.Immutable;
+using System.Drawing;
 using System.Numerics;
 
 namespace Murder.Editor.CustomEditors
@@ -118,9 +119,9 @@ namespace Murder.Editor.CustomEditors
             {
                 renderContext.Camera.Position = info.Position;
                 renderContext.OnClientWindowChanged(
-                    new WindowChangeSettings(info.Size) 
-                    { 
-                        NativeResolution = info.Size, 
+                    new WindowChangeSettings(info.Size)
+                    {
+                        NativeResolution = info.Size,
                         Force = true
                     });
             }
@@ -297,21 +298,43 @@ namespace Murder.Editor.CustomEditors
                     {
                         ImGui.OpenPopup($"Rename#{entityInstance.Guid}");
                     }
+                    ImGui.SameLine();
 
                     ImGuiHelpers.HelpTooltip("Rename");
                 }
 
                 if (instance is not null && parent is null && entityInstance is not PrefabEntityInstance)
                 {
-                    ImGui.SameLine(); 
-                    
                     if (ImGuiHelpers.IconButton('\uf5c2', $"create_{entityInstance.Guid}"))
                     {
                         DrawTurnIntoPrefab(parent, instance);
                     }
+                    ImGui.SameLine();
 
                     ImGuiHelpers.HelpTooltip("Turn into a prefab");
                 }
+
+                if (instance is not null)
+                {
+                    ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 100);
+                    ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.Selected);
+                    ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Faded);
+                    if (ImGui.Button(""))
+                    {
+                        if (instance.HasComponent(typeof(PositionComponent)) &&
+                            instance.GetComponent(typeof(PositionComponent)) is PositionComponent position &&
+                            Architect.Instance.ActiveScene is EditorScene scene &&
+                            Stages.TryGetValue(scene.CurrentSelectedAsset, out var stage)
+                            )
+                        {
+                            stage.CenterCamera(position.ToPoint(), true);
+                        }
+                    }
+                    ImGuiHelpers.HelpTooltip("Center camera");
+                    ImGui.PopStyleColor(2);
+                    ImGui.PopStyleVar();
+                }
+
 
                 if (ImGui.BeginPopup($"Rename#{entityInstance.Guid}"))
                 {
@@ -967,7 +990,7 @@ namespace Murder.Editor.CustomEditors
             return false;
         }
 
-        protected virtual void Duplicate(EntityInstance instance) {}
+        protected virtual void Duplicate(EntityInstance instance) { }
 
         protected bool DrawTurnIntoPrefab(IEntity? parent, EntityInstance instance)
         {
@@ -1016,7 +1039,7 @@ namespace Murder.Editor.CustomEditors
             {
                 parent.AddChild(newInstance);
             }
-            
+
             if (modified)
             {
                 // If the world is saved, also save this now.
