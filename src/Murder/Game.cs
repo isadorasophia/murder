@@ -493,7 +493,7 @@ namespace Murder
             Point? applySize = notification.ApplySizeTo;
             if (notification.Kind == ScreenUpdatedKind.FullScreen)
             {
-                applySize = new Point(GraphicsDevice.Adapter.CurrentDisplayMode.Width, GraphicsDevice.Adapter.CurrentDisplayMode.Height);
+                applySize = GetDisplaySize();
             }
             else if (notification.Kind == ScreenUpdatedKind.Reset)
             {
@@ -545,6 +545,14 @@ namespace Murder
             SDL3.SDL.SDL_GetWindowSizeInPixels(Window.Handle, out int width, out int height);
             return (width > 0 && height > 0) ? new Point(width, height) : new Point(Window.ClientBounds.Width, Window.ClientBounds.Height);
         }
+        public Point GetDisplaySize()
+        {
+            uint currentDisplayIndex = SDL3.SDL.SDL_GetDisplayForWindow(Window.Handle);
+            SDL3.SDL.SDL_GetDisplayBounds(currentDisplayIndex, out var rect);
+            int width = rect.w;
+            int height = rect.h;
+            return (width > 0 && height > 0) ? new Point(width, height) : new Point(Window.ClientBounds.Width, Window.ClientBounds.Height);
+        }
 
         /// <summary>
         /// Sets the window size for the game based on the specified screen size and full screen settings.
@@ -559,7 +567,7 @@ namespace Murder
             if (Fullscreen)
             {
                 // TODO: Do we really want to save our last size?
-                _windowedSize = _graphics.GraphicsDevice.Viewport.Bounds.Size();
+                _windowedSize = GetWindowSize();
 
                 Window.IsBorderlessEXT = true;
                 _graphics.IsFullScreen = true;
