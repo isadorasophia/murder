@@ -87,12 +87,31 @@ namespace Murder.Editor.CustomEditors
 
             ImGuiHelpers.HelpTooltip("Create a new filter");
 
+            ImGui.SameLine();
+
+            if (ImGui.Button("Group all"))
+            {
+                List<IEntity> entities = stage.FindEntitiesWithAttribute<SoundAttribute>();
+                foreach (IEntity e in entities)
+                {
+                    MoveToGroup("Sounds", e.Guid);
+                }
+
+                entities = stage.FindEntitiesWithAttribute<SoundPlayerAttribute>();
+                foreach (IEntity e in entities)
+                {
+                    MoveToGroup("Sounds", e.Guid);
+                }
+            }
+
+            ImGuiHelpers.HelpTooltip("Group all sound entities under the sound folder in the world");
+
             ImGui.PushItemWidth(-1);
             ImGui.SameLine();
             ImGui.InputTextWithHint("##search_assets", "Search...", ref _searchInstanceText, 256);
             ImGui.PopItemWidth();
 
-            if (TreeEntityGroupNode("Area Triggers", Game.Profile.Theme.Yellow, icon: '\uf025', flags: ImGuiTreeNodeFlags.DefaultOpen))
+            if (TreeEntityGroupNode("Area triggers", Game.Profile.Theme.Yellow, icon: '\uf025', flags: ImGuiTreeNodeFlags.DefaultOpen))
             {
                 List<IEntity> entities = stage.FindEntitiesWithAttribute<SoundAttribute>();
                 DrawEntityList(stage, entities, filterGroup: null);

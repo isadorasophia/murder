@@ -24,6 +24,11 @@ namespace Murder.Editor.Systems.Sounds
         public void Draw(RenderContext render, Context context)
         {
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
+            if (hook.DrawCollisions)
+            {
+                // we're busy!
+                return;
+            }
 
             DrawAddEntity(hook);
         }

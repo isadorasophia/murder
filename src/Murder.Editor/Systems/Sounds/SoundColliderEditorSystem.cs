@@ -15,7 +15,7 @@ namespace Murder.Editor.Systems.Sounds
     [OnlyShowOnDebugView]
     [Filter(typeof(ColliderComponent), typeof(PositionComponent))]
     [Filter(ContextAccessorFilter.AnyOf, typeof(SoundComponent), typeof(SoundParameterComponent))]
-    public class SoundColliderEditorSystem : IUpdateSystem, IMurderRenderSystem
+    public class SoundColliderEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem
     {
         private bool _wasClicking = false;
 
@@ -33,6 +33,11 @@ namespace Murder.Editor.Systems.Sounds
         public void Draw(RenderContext render, Context context)
         {
             DebugColliderRenderSystem.DrawImpl(render, context, allowEditingByDefault: false, ref _wasClicking);
+        }
+
+        public void DrawGui(RenderContext render, Context context)
+        {
+            DebugColliderRenderSystem.DrawGuiImpl(render, context);
         }
     }
 }

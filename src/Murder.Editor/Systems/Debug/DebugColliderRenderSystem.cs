@@ -31,7 +31,7 @@ namespace Murder.Editor.Systems
     [WorldEditor(startActive: true)]
     [OnlyShowOnDebugView]
     [Filter(kind: ContextAccessorKind.Read, typeof(ColliderComponent), typeof(PositionComponent))]
-    [Filter(ContextAccessorFilter.NoneOf, typeof(CutsceneAnchorsComponent), typeof(SoundParameterComponent))] // Skip cutscene and sounds.
+    [Filter(ContextAccessorFilter.NoneOf, typeof(CutsceneAnchorsComponent))] // Skip cutscenes.
     public class DebugColliderRenderSystem : IMurderRenderSystem, IGuiSystem
     {
         private static int? _wasEditing = null;
@@ -270,6 +270,11 @@ namespace Murder.Editor.Systems
 
         public void DrawGui(RenderContext render, Context context)
         {
+            DrawGuiImpl(render, context);
+        }
+
+        public static void DrawGuiImpl(RenderContext _, Context context)
+        {
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
             if (hook.EditorMode != EditorHook.EditorModes.EditMode)
             {
@@ -332,7 +337,6 @@ namespace Murder.Editor.Systems
             {
                 _contextMenuOpened = false;
             }
-
         }
 
         private static Type DrawShapeButtons()
