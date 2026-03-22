@@ -35,11 +35,6 @@ public static class MurderFontServices
         PixelFont f = Game.Data.GetFont(text.Font);
         return f.PixelFontSize.HeightOf(text.Text);
     }
-    public static float GetLineHeight(int font, string text)
-    {
-        PixelFont f = Game.Data.GetFont(font);
-        return f.PixelFontSize.HeightOf(text);
-    }
 
     public static float GetLineWidth(int font, string text)
     {
@@ -52,12 +47,6 @@ public static class MurderFontServices
     public static float GetLineWidth(this MurderFonts font, string text)
     {
         return GetLineWidth((int)font, text);
-    }
-
-    public static int GetFontHeight(this MurderFonts font, bool cultureInvariant = false)
-    {
-        PixelFont f = Game.Data.GetFont((int)font, cultureInvariant);
-        return f.LineHeight;
     }
 
     public static Portrait? TryGetIconForText(string id)
