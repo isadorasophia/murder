@@ -23,4 +23,7 @@ public readonly struct LocalizedString
 
     public override string ToString() =>
         LocalizationServices.GetLocalizedString(this);
+
+    public string ToInvariantString() =>
+        LocalizationServices.GetLocalizedString(this, LocalizationFlags.ForceDefault);
 }
