@@ -11,6 +11,7 @@ using Murder.Core.Input;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.Core;
+using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using Murder.Services;
@@ -195,7 +196,7 @@ namespace Murder.Editor.Systems
 
                         foreach (var save in allSaves.Keys)
                         {
-                            if (ImGui.MenuItem($"Slot {save}"))
+                            if (ImGuiHelpers.MenuItem($"Slot {save}"))
                             {
                                 hook.Cursor = CursorStyle.Normal;
 
@@ -236,7 +237,7 @@ namespace Murder.Editor.Systems
                                 ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Yellow);
                             }
 
-                            if (ImGui.MenuItem((isFavorite ? " " : "") + name))
+                            if (ImGuiHelpers.MenuItem((isFavorite ? " " : "") + name))
                             {
                                 hook.Cursor = CursorStyle.Normal;
 

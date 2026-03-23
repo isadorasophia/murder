@@ -86,7 +86,7 @@ namespace Murder.Editor.CustomEditors
         {
             bool modified = false;
 
-            if (ImGui.Button("New cutscene!"))
+            if (ImGuiHelpers.Button("New cutscene!"))
             {
                 EntityInstance empty = EntityBuilder.CreateInstance(Guid.Empty, "Cutscene");
 

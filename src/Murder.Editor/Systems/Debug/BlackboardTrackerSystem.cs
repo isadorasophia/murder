@@ -38,7 +38,7 @@ namespace Murder.Editor.Systems.Debug
 
             if (ImGui.BeginMenu("Show"))
             {
-                ImGui.MenuItem("Blackboard", "", ref _showBlackboard);
+                ImGuiHelpers.MenuItem("Blackboard", "", ref _showBlackboard);
                 ImGui.EndMenu();
             }
 

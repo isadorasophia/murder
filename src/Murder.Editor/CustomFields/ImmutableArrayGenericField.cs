@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
@@ -13,7 +14,7 @@ namespace Murder.Editor.CustomFields
         {
             element = default!;
 
-            if (ImGui.Button("Add item"))
+            if (ImGuiHelpers.Button("Add item"))
             {
                 element = CreateNewInstance()!;
                 return true;

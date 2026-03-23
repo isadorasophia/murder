@@ -37,7 +37,7 @@ namespace Murder.Editor.CustomFields
             {
                 ImGui.SameLine();
 
-                if (ImGui.Button("Reorder"))
+                if (ImGuiHelpers.Button("Reorder"))
                 {
                     Reorder(ref elements);
                     modified = true;
@@ -134,7 +134,7 @@ namespace Murder.Editor.CustomFields
             ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
             ImGui.PushStyleColor(ImGuiCol.ButtonHovered, System.Numerics.Vector4.Zero);
             ImGui.PushStyleColor(ImGuiCol.ButtonActive, System.Numerics.Vector4.Zero);
-            ImGui.Button("\uf256");
+            ImGuiHelpers.Button("\uf256");
             ImGui.PopStyleColor(4);
             ImGuiHelpers.HelpTooltip("Drag to reorder");
 

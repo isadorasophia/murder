@@ -8,6 +8,7 @@ using ImGuiNET;
 using Murder.Serialization;
 using Murder.Utilities;
 using Murder.Services;
+using Murder.Editor.ImGuiExtended;
 
 namespace Murder.Editor.Systems;
 
@@ -86,18 +87,18 @@ internal class ScreenshotShortcutListener : IMurderRenderSystem, IUpdateSystem, 
 
             if (ImGui.BeginMenu("Screenshot"))
             {
-                if (ImGui.MenuItem("Take screenshot", "F10"))
+                if (ImGuiHelpers.MenuItem("Take screenshot", "F10"))
                 {
                     StartScreenshot();
                 }
 
-                if (ImGui.MenuItem("Open screenshot folder", ""))
+                if (ImGuiHelpers.MenuItem("Open screenshot folder", ""))
                 {
                     FileHelper.OpenFolderOnOS(FileHelper.GetScreenshotFolder());
                 }
 
-                ImGui.MenuItem("Take multiple", "", ref _menuTakeMultipleSelected);
-                ImGui.MenuItem("Delay", "", ref _menuDelaySelected);
+                ImGuiHelpers.MenuItem("Take multiple", "", ref _menuTakeMultipleSelected);
+                ImGuiHelpers.MenuItem("Delay", "", ref _menuDelaySelected);
 
                 ImGui.EndMenu();
             }

@@ -4,6 +4,7 @@ using ImGuiNET;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Editor.Attributes;
+using Murder.Editor.ImGuiExtended;
 using System.Numerics;
 
 namespace Murder.Editor.Systems.Debug
@@ -21,7 +22,7 @@ namespace Murder.Editor.Systems.Debug
 
             if (ImGui.BeginMenu("Show"))
             {
-                ImGui.MenuItem("Graph Debugger", "", ref _showHierarchy);
+                ImGuiHelpers.MenuItem("Graph Debugger", "", ref _showHierarchy);
                 ImGui.EndMenu();
             }
 
@@ -48,7 +49,7 @@ namespace Murder.Editor.Systems.Debug
                     {
                         ImGui.Text("Use GameLogger.PlotGraph(float value) to start plottting!");
                     }
-                    else if (ImGui.Button("Clear All"))
+                    else if (ImGuiHelpers.Button("Clear All"))
                     {
                         GameLogger.ClearAllGraphs();
                     }

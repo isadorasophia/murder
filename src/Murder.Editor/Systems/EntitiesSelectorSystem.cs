@@ -7,6 +7,7 @@ using Murder.Components.Cutscenes;
 using Murder.Core.Graphics;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
+using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
 using Murder.Systems;
 using System.Numerics;
@@ -59,7 +60,7 @@ public class EntitiesSelectorSystem : GenericSelectorSystem, IStartupSystem, IUp
                     {
                         foreach (string room in availableFolders)
                         {
-                            if (ImGui.MenuItem(room))
+                            if (ImGuiHelpers.MenuItem(room))
                             {
                                 hook.MoveEntitiesToFolder?.Invoke(room, hook.AllSelectedEntities.Keys);
                             }

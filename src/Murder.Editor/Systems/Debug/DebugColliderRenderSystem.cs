@@ -297,7 +297,7 @@ namespace Murder.Editor.Systems
 
                     var shape = entity.GetCollider().Shapes[_hoveringShape];
 
-                    if (ImGui.Button($"Delete {shape.GetType().Name}"))
+                    if (ImGuiHelpers.Button($"Delete {shape.GetType().Name}"))
                     {
                         entity.SetCollider(entity.GetCollider() with { Shapes = entity.GetCollider().Shapes.RemoveAt(_hoveringShape) });
                         ImGui.CloseCurrentPopup();
@@ -342,27 +342,27 @@ namespace Murder.Editor.Systems
         private static Type DrawShapeButtons()
         {
             Type? result = null;
-            if (ImGui.Button("Box"))
+            if (ImGuiHelpers.Button("Box"))
             {
                 result = typeof(BoxShape);
             }
             ImGui.SameLine();
-            if (ImGui.Button("Polygon"))
+            if (ImGuiHelpers.Button("Polygon"))
             {
                 result = typeof(PolygonShape);
             }
             ImGui.SameLine();
-            if (ImGui.Button("Circle"))
+            if (ImGuiHelpers.Button("Circle"))
             {
                 result = typeof(CircleShape);
             }
             //ImGui.SameLine();
-            //if (ImGui.Button("Line"))
+            //if (ImGuiHelpers.Button("Line"))
             //{
             //    result = typeof(LineShape);
             //}
             ImGui.SameLine();
-            if (ImGui.Button("Lazy"))
+            if (ImGuiHelpers.Button("Lazy"))
             {
                 result = typeof(LazyShape);
             }

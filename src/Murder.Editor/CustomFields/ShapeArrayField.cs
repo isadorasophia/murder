@@ -168,7 +168,7 @@ namespace Murder.Editor.CustomFields
                 else
                 {
                     ImGui.TextColored(Game.Profile.Theme.Warning, $"POLYGON IS NOT CONVEX");
-                    if (ImGui.Button("Slice it!"))
+                    if (ImGuiHelpers.Button("Slice it!"))
                     {
                         return (false, sliceIt: true);
                     }

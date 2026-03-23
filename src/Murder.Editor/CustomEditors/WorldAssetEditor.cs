@@ -334,7 +334,7 @@ namespace Murder.Editor.CustomEditors
 
                         ImGui.DragInt2("##MoveRoom", ref _moveRoomAmount[0], 1);
                         ImGui.SameLine();
-                        if (ImGui.Button("Move whole map"))
+                        if (ImGuiHelpers.Button("Move whole map"))
                         {
                             MoveMap(currentStage, new(_moveRoomAmount[0], _moveRoomAmount[1]));
                         }
@@ -342,7 +342,7 @@ namespace Murder.Editor.CustomEditors
                         ImGuiHelpers.ColorIcon('\uf0ad', Game.Profile.Theme.Accent);
                         ImGui.SameLine();
 
-                        if (ImGui.Button("Clear missing entities..."))
+                        if (ImGuiHelpers.Button("Clear missing entities..."))
                         {
                             _world?.ClearAllMissingInstances();
                         }

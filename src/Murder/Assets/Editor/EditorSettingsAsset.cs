@@ -259,6 +259,9 @@ public class EditorSettingsAsset : GameAsset
     [Serialize]
     public bool CheckForPackedAssetsIntegrity = false;
 
+    [HideInEditor]
+    public bool MuteEditorSounds = false;
+
     public void FavoriteAsset(Guid guid)
     {
         _favoriteAssets.Add(guid);

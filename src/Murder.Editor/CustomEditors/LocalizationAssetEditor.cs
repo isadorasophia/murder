@@ -335,7 +335,7 @@ namespace Murder.Editor.CustomEditors
                 }
                 else
                 {
-                    submit |= ImGui.Button("Add");
+                    submit |= ImGuiHelpers.Button("Add");
                 }
 
                 if (submit)
@@ -407,7 +407,7 @@ namespace Murder.Editor.CustomEditors
             foreach ((string label, AssetInfoPropertiesForEditor info) in resources)
             {
                 bool selected = info.IsSelected;
-                if (ImGui.Checkbox(label: $"##{label}", ref selected))
+                if (ImGuiHelpers.Checkbox(label: $"##{label}", ref selected))
                 {
                     info.IsSelected = selected;
                     modified = true;
@@ -439,7 +439,7 @@ namespace Murder.Editor.CustomEditors
                         }
 
                         bool selectedAsset = assetInfo.Show;
-                        if (ImGui.Checkbox(label: $"##{assetInfo.Guid}", ref selectedAsset))
+                        if (ImGuiHelpers.Checkbox(label: $"##{assetInfo.Guid}", ref selectedAsset))
                         {
                             assetInfo.Show = selectedAsset;
                             modified = true;

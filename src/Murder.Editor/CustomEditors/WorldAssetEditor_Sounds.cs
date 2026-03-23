@@ -89,7 +89,7 @@ namespace Murder.Editor.CustomEditors
 
             ImGui.SameLine();
 
-            if (ImGui.Button("Group all"))
+            if (ImGuiHelpers.Button("Group all"))
             {
                 List<IEntity> entities = stage.FindEntitiesWithAttribute<SoundAttribute>();
                 foreach (IEntity e in entities)
@@ -173,7 +173,7 @@ namespace Murder.Editor.CustomEditors
                 if (!string.IsNullOrWhiteSpace(_groupName) && _world is not null &&
                     !_world.FetchFilters().ContainsKey(_groupName))
                 {
-                    if (ImGui.Button(buttonLabel) || Game.Input.Pressed(Keys.Enter))
+                    if (ImGuiHelpers.Button(buttonLabel) || Game.Input.Pressed(Keys.Enter))
                     {
                         if (previousName is not null)
                         {

@@ -7,6 +7,7 @@ using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Editor.Components;
 using Murder.Editor.Core;
+using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
 using Murder.Services;
 using System.Numerics;
@@ -95,13 +96,13 @@ namespace Murder.Editor.Systems.Debug
             {
                 if (info.ScreenshotButtonArea.HasValue)
                 {
-                    if (ImGui.Button("Take Screenshot"))
+                    if (ImGuiHelpers.Button("Take Screenshot"))
                     {
                         editorHook.CursorIsBusy.Add(typeof(DebugShowCameraBoundsSystem));
                         _takeScreenshot = true;
                     }
 
-                    if (ImGui.Button("Reset Size"))
+                    if (ImGuiHelpers.Button("Reset Size"))
                     {
                         _cameraSize = Point.Zero;
                     }

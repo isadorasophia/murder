@@ -4,6 +4,7 @@ using ImGuiNET;
 using Murder.Core.Graphics;
 using Murder.Editor.Attributes;
 using Murder.Editor.Diagnostics;
+using Murder.Editor.ImGuiExtended;
 
 namespace Murder.Editor.Systems.Debug;
 
@@ -20,7 +21,7 @@ public class DebugTrackerSystemm : IGuiSystem
 
         if (ImGui.BeginMenu("Show"))
         {
-            ImGui.MenuItem("Variable Tracker", "", ref _showHierarchy);
+            ImGuiHelpers.MenuItem("Variable Tracker", "", ref _showHierarchy);
             ImGui.EndMenu();
         }
         ImGui.EndMainMenuBar();
@@ -30,7 +31,7 @@ public class DebugTrackerSystemm : IGuiSystem
         {
             if (ImGui.Begin("Tracker", ref _showHierarchy, ImGuiWindowFlags.AlwaysAutoResize))
             {
-                if (ImGui.Button("Clear"))
+                if (ImGuiHelpers.Button("Clear"))
                 {
                     EditorGameLogger.TrackedVariables.Clear();
                 }

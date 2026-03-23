@@ -227,7 +227,7 @@ namespace Murder.Editor.Stages
                     {
                         if (EditorHook.CanSwitchModes)
                         {
-                            if (ImGui.Button("Edit Mode"))
+                            if (ImGuiHelpers.Button("Edit Mode"))
                             {
                                 EditorHook.EditorMode = EditorHook.EditorModes.ObjectMode;
                             }
@@ -344,7 +344,7 @@ namespace Murder.Editor.Stages
                     {
                         if (EditorHook.AllSelectedEntities.Count > 0)
                         {
-                            if (ImGui.Button("Object Mode"))
+                            if (ImGuiHelpers.Button("Object Mode"))
                             {
                                 EditorHook.EditorMode = EditorHook.EditorModes.EditMode;
                             }
@@ -415,7 +415,7 @@ namespace Murder.Editor.Stages
             if (world.TryGetEntity(id) is Entity entity)
             {
                 bool isActive = !_hiddenIds.Contains(id);
-                if (ImGui.Checkbox($"{name}({id})", ref isActive))
+                if (ImGuiHelpers.Checkbox($"{name}({id})", ref isActive))
                 {
                     if (!isActive)
                     {

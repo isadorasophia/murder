@@ -32,7 +32,7 @@ internal class ImmutableArrayReferencedAtlasField : CustomField
             string text = current[i].Id;
 
             bool @checked = current[i].UnloadOnExit;
-            if (ImGui.Checkbox($"##unload_{i}", ref @checked))
+            if (ImGuiHelpers.Checkbox($"##unload_{i}", ref @checked))
             {
                 modified = true;
                 builder[i] = new(builder[i].Id, @checked);

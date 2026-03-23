@@ -99,7 +99,7 @@ public abstract class CustomField
 
             case bool flag:
                 return member.IsReadOnly ? DrawReadOnly(flag) :
-                    (ImGui.Checkbox("", ref flag), flag);
+                    (ImGuiHelpers.Checkbox("", ref flag), flag);
 
             case object obj:
                 Type? t = value.GetType();
@@ -170,7 +170,7 @@ public abstract class CustomField
                 Type targetType = Nullable.GetUnderlyingType(member.Type) ?? member.Type;
 
                 ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.BgFaded);
-                if (ImGui.Button(text))
+                if (ImGuiHelpers.Button(text))
                 {
                     ImGui.PopStyleColor();
                     if (member.Type == typeof(string))
@@ -308,7 +308,7 @@ public abstract class CustomField
         ImGui.SameLine();
 
         ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 6);
-        if (ImGui.Button("-", new Vector2(14, 0)))
+        if (ImGuiHelpers.Button("-", new Vector2(14, 0)))
         {
             number--;
             changed = true;
@@ -319,7 +319,7 @@ public abstract class CustomField
         ImGui.SameLine();
 
         ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 6);
-        if (ImGui.Button("+", new Vector2(14, 0)))
+        if (ImGuiHelpers.Button("+", new Vector2(14, 0)))
         {
             number++;
             changed = true;

@@ -205,13 +205,13 @@ namespace Murder.Editor.CustomEditors
             if (isFocused)
             {
                 ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Green);
-                pressed = ImGui.Button($"\uf058##{groupName}");
+                pressed = ImGuiHelpers.Button($"\uf058##{groupName}");
                 ImGui.PopStyleColor();
             }
             else
             {
                 ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Accent);
-                pressed = ImGui.Button($"\uf058##{groupName}");
+                pressed = ImGuiHelpers.Button($"\uf058##{groupName}");
                 ImGui.PopStyleColor();
             }
 
@@ -227,12 +227,12 @@ namespace Murder.Editor.CustomEditors
             bool isVisible = IsGroupVisible(groupName);
             if (isVisible)
             {
-                pressed = ImGui.Button($"\uf06e##{groupName}");
+                pressed = ImGuiHelpers.Button($"\uf06e##{groupName}");
             }
             else
             {
                 ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Accent);
-                pressed = ImGui.Button($"\uf070##{groupName}");
+                pressed = ImGuiHelpers.Button($"\uf070##{groupName}");
                 ImGui.PopStyleColor();
             }
 
@@ -255,12 +255,12 @@ namespace Murder.Editor.CustomEditors
             bool isLocked = !IsGroupSkipped(groupName);
             if (!isLocked)
             {
-                pressed = ImGui.Button($"\uf023##{groupName}");
+                pressed = ImGuiHelpers.Button($"\uf023##{groupName}");
             }
             else
             {
                 ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Accent);
-                pressed = ImGui.Button($"\uf3c1##{groupName}");
+                pressed = ImGuiHelpers.Button($"\uf3c1##{groupName}");
                 ImGui.PopStyleColor();
             }
 
@@ -280,7 +280,7 @@ namespace Murder.Editor.CustomEditors
         private bool TreeEntitySoundGroupNode(string name, System.Numerics.Vector4 textColor, char icon = '\ue1b0', ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.None)
         {
             bool visible = IsSoundGroupVisible(name);
-            if (ImGui.Checkbox($"##{name}_checkbox", ref visible))
+            if (ImGuiHelpers.Checkbox($"##{name}_checkbox", ref visible))
             {
                 SwitchSoundGroupVisibility(name, show: visible);
             }
@@ -417,7 +417,7 @@ namespace Murder.Editor.CustomEditors
                 if (!string.IsNullOrWhiteSpace(_groupName) && _world is not null &&
                     !_world.FetchFolders().ContainsKey(_groupName))
                 {
-                    if (ImGui.Button(buttonLabel) || Game.Input.Pressed(Keys.Enter))
+                    if (ImGuiHelpers.Button(buttonLabel) || Game.Input.Pressed(Keys.Enter))
                     {
                         if (previousName is not null)
                         {

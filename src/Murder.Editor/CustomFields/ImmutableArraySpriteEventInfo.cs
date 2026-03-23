@@ -15,7 +15,7 @@ namespace Murder.Editor.CustomFields
 
         protected override bool Add(in EditorMember member, [NotNullWhen(true)] out SpriteEventInfo element)
         {
-            if (ImGui.Button("New event"))
+            if (ImGuiHelpers.Button("New event"))
             {
                 element = new();
                 return true;

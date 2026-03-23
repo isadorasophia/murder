@@ -389,7 +389,7 @@ namespace Murder.Editor
                 ImGui.Begin("Editor is not focused!", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize);
                 ImGui.BeginDisabled();
                 ImGui.PushStyleColor(ImGuiCol.Button, Profile.Theme.Faded);
-                ImGui.Button("Murder Engine is not focused.");
+                ImGuiHelpers.Button("Murder Engine is not focused.");
                 ImGui.PopStyleColor();
                 ImGui.EndDisabled();
                 ImGui.SetWindowPos(new System.Numerics.Vector2());

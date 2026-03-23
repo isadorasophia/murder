@@ -22,7 +22,7 @@ namespace Murder.Editor.CustomFields
             int number = tags.Flags;
 
             bool all = tags.All;
-            if (ImGui.Checkbox($"All##{member.Name}-all-tag", ref all))
+            if (ImGuiHelpers.Checkbox($"All##{member.Name}-all-tag", ref all))
             {
                 modified = true;
             }
@@ -47,7 +47,7 @@ namespace Murder.Editor.CustomFields
                 {
                     bool isChecked = (list[i].Id & number) != 0;
 
-                    if (ImGui.Checkbox($"##{member.Name}-{i}-tag", ref isChecked))
+                    if (ImGuiHelpers.Checkbox($"##{member.Name}-{i}-tag", ref isChecked))
                     {
                         if (isChecked)
                         {

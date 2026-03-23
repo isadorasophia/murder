@@ -198,7 +198,7 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
 
         if (ImGui.BeginTabItem("Diagnostics Log"))
         {
-            if (ImGui.Button("Clear"))
+            if (ImGuiHelpers.Button("Clear"))
             {
                 _incidentReports.Clear();
             }
@@ -387,7 +387,7 @@ public class SystemsDiagnosticsSystem : IGuiSystem, IUpdateSystem
             }
 
             bool isSelected = world.IsSystemActive(tSystem);
-            if (ImGui.Checkbox($"##{systemId}", ref isSelected))
+            if (ImGuiHelpers.Checkbox($"##{systemId}", ref isSelected))
             {
                 if (isSelected) world.ActivateSystem(tSystem);
                 else world.DeactivateSystem(tSystem);

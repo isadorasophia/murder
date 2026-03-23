@@ -53,7 +53,7 @@ namespace Murder.Editor
                         {
                             for (int i = 0; i < assetTypes.Count; i++)
                             {
-                                if (ImGui.MenuItem(assetTypes[i].Name))
+                                if (ImGuiHelpers.MenuItem(assetTypes[i].Name))
                                 {
                                     _selectedAssetToCreate = i;
                                 }
@@ -76,7 +76,7 @@ namespace Murder.Editor
                     {
                         if (createAssetOfType.GetConstructor(Type.EmptyTypes) != null)
                         {
-                            if (ImGui.Button("Create") || Architect.Input.Pressed(Keys.Enter))
+                            if (ImGuiHelpers.Button("Create") || Architect.Input.Pressed(Keys.Enter))
                             {
                                 GameAsset asset = Architect.EditorData.CreateNewAsset(createAssetOfType, _newAssetName.Trim());
 
@@ -118,7 +118,7 @@ namespace Murder.Editor
                     ImGui.Text("No asset type found!\n(You should create one on the C# project)");
                 }
 
-                if (ImGui.Button("Cancel") || Architect.Input.Pressed(Keys.Escape))
+                if (ImGuiHelpers.Button("Cancel") || Architect.Input.Pressed(Keys.Escape))
                 {
                     ImGui.CloseCurrentPopup();
                 }
@@ -327,19 +327,19 @@ namespace Murder.Editor
                 ImGui.TextColored(Game.Profile.Theme.Faded, asset.Name);
                 ImGui.Separator();
 
-                if (ImGui.MenuItem("Open"))
+                if (ImGuiHelpers.MenuItem("Open"))
                 {
                     OpenAssetEditor(asset, false);
                     ImGui.CloseCurrentPopup();
                 }
 
-                if (ImGui.MenuItem("Save"))
+                if (ImGuiHelpers.MenuItem("Save"))
                 {
                     Architect.EditorData.SaveAsset(asset);
                     ImGui.CloseCurrentPopup();
                 }
 
-                if (asset is PrefabAsset prefab && ImGui.MenuItem("Create instance"))
+                if (asset is PrefabAsset prefab && ImGuiHelpers.MenuItem("Create instance"))
                 {
                     string instanceName = Architect.EditorData.GetNextName(
                         typeof(PrefabAsset), $"{prefab.Name} Instance", Architect.EditorSettings.AssetNamePattern);
@@ -350,7 +350,7 @@ namespace Murder.Editor
                     ImGui.CloseCurrentPopup();
                 }
 
-                if (ImGui.MenuItem("Duplicate"))
+                if (ImGuiHelpers.MenuItem("Duplicate"))
                 {
                     string duplicateName = Architect.EditorData.GetNextName(
                         asset.GetType(), asset.Name, Architect.EditorSettings.AssetNamePattern);

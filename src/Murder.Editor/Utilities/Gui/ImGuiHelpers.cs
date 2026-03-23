@@ -78,7 +78,7 @@ public static class ImGuiHelpers
                 {
                     ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
 
-                    if (ImGui.MenuItem("-empty-"))
+                    if (ImGuiHelpers.MenuItem("-empty-"))
                     {
                         selected = item;
                         itemWasSelectedByUser = true;
@@ -89,7 +89,7 @@ public static class ImGuiHelpers
                 }
                 else
                 {
-                    if (ImGui.MenuItem(itemName))
+                    if (ImGuiHelpers.MenuItem(itemName))
                     {
                         selected = item;
                         itemWasSelectedByUser = true;
@@ -177,7 +177,7 @@ public static class ImGuiHelpers
         ImGui.PushStyleColor(ImGuiCol.ButtonActive, new Vector4(.6f, 0.6f, 0.6f, .5f));
         ImGui.PushStyleColor(ImGuiCol.ButtonHovered, new Vector4(0.6f, 0.6f, 0.6f, 0.1f));
 
-        ImGui.Button(id, new Vector2(!split_vertically ? thickness : size, split_vertically ? thickness : size));
+        ImGuiHelpers.Button(id, new Vector2(!split_vertically ? thickness : size, split_vertically ? thickness : size));
 
         Vector2 min = ImGui.GetItemRectMin();
         Vector2 max = ImGui.GetItemRectMax();
@@ -232,7 +232,7 @@ public static class ImGuiHelpers
         ImGui.PushStyleColor(ImGuiCol.ButtonActive, new Vector4(.6f, 0.6f, 0.6f, .5f));
         ImGui.PushStyleColor(ImGuiCol.ButtonHovered, new Vector4(0.6f, 0.6f, 0.6f, 0.1f));
 
-        ImGui.Button(id, new Vector2(!split_vertically ? thickness : size, split_vertically ? thickness : size));
+        ImGuiHelpers.Button(id, new Vector2(!split_vertically ? thickness : size, split_vertically ? thickness : size));
 
         Vector2 min = ImGui.GetItemRectMin();
         Vector2 max = ImGui.GetItemRectMax();
@@ -291,7 +291,7 @@ public static class ImGuiHelpers
         }
 
         bool down = false;
-        if (ImGui.Button(label))
+        if (ImGuiHelpers.Button(label))
         {
             pressed = !pressed;
             down = true;
@@ -312,7 +312,7 @@ public static class ImGuiHelpers
         ImGui.PushStyleColor(ImGuiCol.ButtonHovered, color.Value);
         ImGui.PushStyleColor(ImGuiCol.ButtonActive, color.Value);
 
-        var pressed = ImGui.Button(label);
+        var pressed = ImGuiHelpers.Button(label);
 
         ImGui.PopStyleColor();
         ImGui.PopStyleColor();
@@ -343,7 +343,7 @@ public static class ImGuiHelpers
         ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(0.5f, 0.5f, 0, 1));
         ImGui.PushStyleColor(ImGuiCol.ButtonHovered, new Vector4(0.3f, 0.5f, 0, 1));
         ImGui.PushStyleColor(ImGuiCol.ButtonActive, new Vector4(1, 1, 0.25f, 1));
-        var pressed = ImGui.Button(label);
+        var pressed = ImGuiHelpers.Button(label);
         ImGui.PopStyleColor();
         ImGui.PopStyleColor();
         ImGui.PopStyleColor();
@@ -494,7 +494,7 @@ public static class ImGuiHelpers
         }
 
         ImGui.PushID(id);
-        var result = ImGui.Button(icon.ToString());
+        var result = ImGuiHelpers.Button(icon.ToString());
         ImGui.PopID();
 
         if (color is not null)
@@ -529,7 +529,7 @@ public static class ImGuiHelpers
         ImGui.PushStyleColor(ImGuiCol.ButtonActive, backgroundColor);
 
         ImGui.PushID(id);
-        var result = ImGui.Button(icon.ToString());
+        var result = ImGuiHelpers.Button(icon.ToString());
         ImGui.PopID();
 
         ImGui.PopStyleColor();
@@ -549,7 +549,7 @@ public static class ImGuiHelpers
         ImGui.PushStyleColor(ImGuiCol.ButtonHovered, color.Value);
         ImGui.PushStyleColor(ImGuiCol.ButtonActive, color.Value);
 
-        var pressed = ImGui.Button(icon.ToString());
+        var pressed = ImGuiHelpers.Button(icon.ToString());
 
         ImGui.PopStyleColor();
         ImGui.PopStyleColor();
@@ -559,7 +559,7 @@ public static class ImGuiHelpers
     }
 
     public static void DisabledButton(string text)
-        => DisabledButton(() => ImGui.Button(text));
+        => DisabledButton(() => ImGuiHelpers.Button(text));
 
     public static void DisabledButton(Action button)
     {
@@ -725,7 +725,7 @@ public static class ImGuiHelpers
             {
                 ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.BgFaded);
                 ImGui.BeginDisabled(intValue == 0);
-                if (ImGui.Button($"{emptyText}##{id}-clear"))
+                if (ImGuiHelpers.Button($"{emptyText}##{id}-clear"))
                 {
                     intValue = 0;
                     modified = true;
@@ -740,7 +740,7 @@ public static class ImGuiHelpers
             {
                 ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.BgFaded);
                 ImGui.BeginDisabled(intValue == allFlags);
-                if (ImGui.Button($"{allText}##{id}-all"))
+                if (ImGuiHelpers.Button($"{allText}##{id}-all"))
                 {
                     intValue = GetAllFlagsValue(enumType);
                     modified = true;
@@ -826,7 +826,7 @@ public static class ImGuiHelpers
                     bool isChecked = (value & intValue) != 0;
 
                     bool changed = false;
-                    changed |= ImGui.Checkbox($"##{id}-{i}-layer", ref isChecked);
+                    changed |= ImGuiHelpers.Checkbox($"##{id}-{i}-layer", ref isChecked);
                     ImGui.SameLine();
                     if (ImGui.Selectable(prettyNames[i], isChecked, ImGuiSelectableFlags.NoAutoClosePopups))
                     {
@@ -914,7 +914,7 @@ public static class ImGuiHelpers
                 bool originalState = isChecked;
 
                 // Draw checkbox
-                if (ImGui.Checkbox($"##{id}-{i}", ref isChecked))
+                if (ImGuiHelpers.Checkbox($"##{id}-{i}", ref isChecked))
                 {
                     // Checkbox was clicked (isChecked already toggled by ImGui)
                 }
@@ -977,7 +977,7 @@ public static class ImGuiHelpers
             bool isChecked = ~(~value | intValue) == 0;
 
             ImGui.BeginGroup();
-            if (ImGui.Checkbox($"##{id}-{i}-col-layer", ref isChecked))
+            if (ImGuiHelpers.Checkbox($"##{id}-{i}-col-layer", ref isChecked))
             {
                 if (isChecked)
                 {
@@ -1164,7 +1164,7 @@ public static class ImGuiHelpers
     /// <summary>
     /// Draw a bar graph with the given values.
     /// </summary>
-    internal static void DrawBarsGraph(ImmutableArray<(string id, float time)> values, int height)
+    internal static void DrawBarsGraph(ImmutableArray<(string id, float time)> _, int height)
     {
         ImDrawListPtr drawList = ImGui.GetWindowDrawList();
         var entries = DebugSnapshot.GetAllEntries().Sort((a, b) => b.time.CompareTo(a.time)).ToArray();
@@ -1215,5 +1215,80 @@ public static class ImGuiHelpers
         }
 
         ImGuiHelpers.HelpTooltip("Open asset");
+    }
+
+    public static bool Button(string label, Vector2? size = null)
+    {
+        bool pressed = size is null ? ImGui.Button(label) : ImGui.Button(label, size.Value);
+        if (pressed)
+        {
+            EditorCosmetics.Play("select");
+            return true;
+        }
+
+        return false;
+    }
+
+    public static bool Checkbox(string label, ref bool v)
+    {
+        if (ImGui.Checkbox(label, ref v))
+        {
+            EditorCosmetics.Play("toggle");
+            return true;
+        }
+
+        return false;
+    }
+
+    public static bool MenuItem(string label)
+    {
+        if (ImGui.MenuItem(label))
+        {
+            EditorCosmetics.Play("select");
+            return true;
+        }
+
+        return false;
+    }
+
+    public static bool MenuItem(string label, string shortcut)
+    {
+        if (ImGui.MenuItem(label, shortcut))
+        {
+            EditorCosmetics.Play("select");
+            return true;
+        }
+
+        return false;
+    }
+
+    public static bool MenuItem(string label, bool selected)
+    {
+        if (ImGui.MenuItem(label, selected))
+        {
+            EditorCosmetics.Play("select");
+            return true;
+        }
+
+        return false;
+    }
+
+    public static bool MenuItem(string label, string shortcut, ref bool selected)
+    {
+        if (ImGui.MenuItem(label, shortcut, ref selected))
+        {
+            if (selected)
+            {
+                EditorCosmetics.Play("submenu-open");
+            }
+            else
+            {
+                EditorCosmetics.Play("submenu-back");
+            }
+
+            return true;
+        }
+
+        return false;
     }
 }

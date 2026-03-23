@@ -2,6 +2,7 @@
 using ImGuiNET;
 using Murder.Diagnostics;
 using Murder.Editor.Attributes;
+using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using System.Reflection;
@@ -57,7 +58,7 @@ namespace Murder.Editor.CustomComponents
                 {
                     foreach (string s in states)
                     {
-                        if (ImGui.MenuItem(s))
+                        if (ImGuiHelpers.MenuItem(s))
                         {
                             persistedState.SetValue(stateMachine, s);
                             modified = true;

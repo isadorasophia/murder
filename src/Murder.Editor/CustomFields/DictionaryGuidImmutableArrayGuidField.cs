@@ -35,7 +35,7 @@ namespace Murder.Editor.CustomFields
                 SearchBox.SearchAsset(ref _new, gameAssetId.Key, SearchBoxFlags.None, dictionary.Keys);
                 ImGui.EndChild();
 
-                if (ImGui.Button("Create"))
+                if (ImGuiHelpers.Button("Create"))
                 {
                     ImGui.CloseCurrentPopup();
 

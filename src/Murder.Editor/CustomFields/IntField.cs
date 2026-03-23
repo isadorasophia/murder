@@ -101,7 +101,7 @@ namespace Murder.Editor.CustomFields
             {
                 bool isChecked = (list[i].Id & number) != 0;
 
-                if (ImGui.Checkbox($"##{member.Name}-{i}-col-layer", ref isChecked))
+                if (ImGuiHelpers.Checkbox($"##{member.Name}-{i}-col-layer", ref isChecked))
                 {
                     if (isChecked)
                     {

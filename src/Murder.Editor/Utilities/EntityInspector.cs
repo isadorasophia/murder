@@ -123,7 +123,7 @@ namespace Murder.Editor.Utilities
             ImGui.SameLine();
 
             bool isEntityActive = entity.IsActive;
-            if (ImGui.Checkbox($"##Entity_Inspector_Checkbox_{entity.EntityId}", ref isEntityActive))
+            if (ImGuiHelpers.Checkbox($"##Entity_Inspector_Checkbox_{entity.EntityId}", ref isEntityActive))
             {
                 if (isEntityActive)
                 {
@@ -140,7 +140,7 @@ namespace Murder.Editor.Utilities
             if (world.TryGetUniqueEntityCameraFollow() is not Entity cameraMan)
             {
                 ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Faded);
-                ImGui.Button("");
+                ImGuiHelpers.Button("");
                 ImGui.PopStyleColor();
                 ImGui.SameLine();
             }
@@ -149,7 +149,7 @@ namespace Murder.Editor.Utilities
                 if (cameraMan.HasIdTarget())
                 {
                     ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Green);
-                    if (ImGui.Button(""))
+                    if (ImGuiHelpers.Button(""))
                     {
                         cameraMan.RemoveIdTarget();
                     }
@@ -158,7 +158,7 @@ namespace Murder.Editor.Utilities
                 else
                 {
                     ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Faded);
-                    if (ImGui.Button(""))
+                    if (ImGuiHelpers.Button(""))
                     {
                         cameraMan.SetIdTarget(entity.EntityId);
                     }
@@ -171,7 +171,7 @@ namespace Murder.Editor.Utilities
                 if (entity.Parent == null)
                 {
                     ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.Red);
-                    if (ImGui.Button(""))
+                    if (ImGuiHelpers.Button(""))
                     {
                         entity.Destroy();
                     }

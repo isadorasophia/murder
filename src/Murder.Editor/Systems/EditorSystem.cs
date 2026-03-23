@@ -111,42 +111,42 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                     PlotSlowdowGraph();
 
                     ImGui.SeparatorText("Window Scale");
-                    if (ImGui.Button("1x"))
+                    if (ImGuiHelpers.Button("1x"))
                     {
                         ResizeWindow(1, render);
                     }
                     ImGui.SameLine();
-                    if (ImGui.Button("2x"))
+                    if (ImGuiHelpers.Button("2x"))
                     {
                         ResizeWindow(2, render);
                     }
 
                     ImGui.SameLine();
-                    if (ImGui.Button("3x"))
+                    if (ImGuiHelpers.Button("3x"))
                     {
                         ResizeWindow(3, render);
                     }
 
 
                     ImGui.SameLine();
-                    if (ImGui.Button("4x"))
+                    if (ImGuiHelpers.Button("4x"))
                     {
                         ResizeWindow(4, render);
                     }
 
-                    if (ImGui.Button("1080p"))
+                    if (ImGuiHelpers.Button("1080p"))
                     {
                         ResizeWindow(render, new Point(1920, 1080));
                     }
 
                     ImGui.SameLine();
-                    if (ImGui.Button("1440p"))
+                    if (ImGuiHelpers.Button("1440p"))
                     {
                         ResizeWindow(render, new Point(2560, 1440));
                     }
 
                     ImGui.SameLine();
-                    if (ImGui.Button("vertical"))
+                    if (ImGuiHelpers.Button("vertical"))
                     {
                         ResizeWindow(render, new Point(1080, 1920));
                     }
@@ -162,7 +162,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                         Game.Instance.TimeScale = timeScale;
                     }
                     ImGui.SameLine();
-                    if (ImGui.Button("Reset"))
+                    if (ImGuiHelpers.Button("Reset"))
                     {
                         Game.Instance.TimeScale = 1;
                     }
@@ -186,15 +186,15 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                 {
                     ImGui.SeparatorText("Gizmos");
 
-                    ImGui.Checkbox("Collisions", ref hook.DrawCollisions);
-                    ImGui.Checkbox("Grid", ref hook.DrawGrid);
-                    ImGui.Checkbox("Pathfind", ref hook.DrawPathfind);
-                    ImGui.Checkbox("States", ref hook.ShowStates);
-                    ImGui.Checkbox("Interactions", ref hook.DrawTargetInteractions);
-                    ImGui.Checkbox("AnimationEvents", ref hook.DrawAnimationEvents);
+                    ImGuiHelpers.Checkbox("Collisions", ref hook.DrawCollisions);
+                    ImGuiHelpers.Checkbox("Grid", ref hook.DrawGrid);
+                    ImGuiHelpers.Checkbox("Pathfind", ref hook.DrawPathfind);
+                    ImGuiHelpers.Checkbox("States", ref hook.ShowStates);
+                    ImGuiHelpers.Checkbox("Interactions", ref hook.DrawTargetInteractions);
+                    ImGuiHelpers.Checkbox("AnimationEvents", ref hook.DrawAnimationEvents);
 
                     ImGuiHelpers.DrawEnumField("Draw QuadTree", ref hook.DrawQuadTree);
-                    if (ImGui.Button("Recover Camera"))
+                    if (ImGuiHelpers.Button("Recover Camera"))
                     {
                         hook.CurrentZoomLevel = EditorHook.STARTING_ZOOM;
                         foreach (var e in context.World.GetEntitiesWith(typeof(CameraFollowComponent)))
@@ -208,7 +208,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                     {
                         render.PreviewState = _renderPreview;
                     }
-                    ImGui.Checkbox("Stretch", ref render.PreviewStretch);
+                    ImGuiHelpers.Checkbox("Stretch", ref render.PreviewStretch);
 
                     ImGui.EndTabItem();
                 }
@@ -317,14 +317,14 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
 
                     ImGui.InputText("WindowSize##Window", ref _windowSize, 32);
                     ImGui.SameLine();
-                    if (ImGui.Button("Resize Window")) // "Resize Window
+                    if (ImGuiHelpers.Button("Resize Window")) // "Resize Window
                     {
                         Game.Instance.Fullscreen = false;
                         Point windowSize = Calculator.ParsePixelSize(_windowSize);
                         ResizeWindow(render, windowSize);
                     }
 
-                    if (ImGui.Button("Refresh Resolution"))
+                    if (ImGuiHelpers.Button("Refresh Resolution"))
                     {
                         _windowWidth = clientWindowSize.X;
                         _windowHeight = clientWindowSize.Y;
@@ -340,17 +340,17 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                 }
                 if (ImGui.BeginTabItem("Snapshots"))
                 {
-                    if (ImGui.Button("Snapshot (Single)"))
+                    if (ImGuiHelpers.Button("Snapshot (Single)"))
                     {
                         DebugSnapshot.TakeSnapShot(1);
                     }
 
-                    if (ImGui.Button("Snapshot (30)"))
+                    if (ImGuiHelpers.Button("Snapshot (30)"))
                     {
                         DebugSnapshot.TakeSnapShot(30);
                     }
 
-                    if (ImGui.Button("Snapshot (120)"))
+                    if (ImGuiHelpers.Button("Snapshot (120)"))
                     {
                         DebugSnapshot.TakeSnapShot(120);
                     }
@@ -587,7 +587,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         ImGui.SameLine();
         ImGui.Text($"({maxDeltaTimePercent:0.0}%%)");
 
-        if (ImGui.Button("Clear##ClearMaxDeltaTime"))
+        if (ImGuiHelpers.Button("Clear##ClearMaxDeltaTime"))
         {
             Game.MaxFixedUpdatesInASingleFrame = 0;
             Game.MaxDeltaTime = 0;

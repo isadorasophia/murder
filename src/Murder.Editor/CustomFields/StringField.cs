@@ -27,7 +27,7 @@ namespace Murder.Editor.CustomFields
 
                 ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.BgFaded);
 
-                if (ImGui.Button(buttonText))
+                if (ImGuiHelpers.Button(buttonText))
                 {
                     modified = true;
                     text = string.Empty;

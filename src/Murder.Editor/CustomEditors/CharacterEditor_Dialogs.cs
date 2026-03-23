@@ -513,7 +513,7 @@ namespace Murder.Editor.CustomEditors
 
             if (_script.TryFetchSituation(dialog.GoTo) is Situation target)
             {
-                if (ImGui.Button(target.Name))
+                if (ImGuiHelpers.Button(target.Name))
                 {
                     SwitchSituation(info, target);
                 }

@@ -73,7 +73,7 @@ namespace Murder.Editor.CustomFields
                 ImGui.TextColored(Game.Profile.Theme.Faded, "Low alpha detected!");
                 ImGui.SameLine();
 
-                if (ImGui.Button("Set Alpha to 1"))
+                if (ImGuiHelpers.Button("Set Alpha to 1"))
                 {
                     return true;
                 }

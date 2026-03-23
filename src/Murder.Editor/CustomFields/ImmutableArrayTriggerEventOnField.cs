@@ -22,7 +22,7 @@ namespace Murder.Editor.CustomFields
 
             bool modified = false;
 
-            if (ImGui.Button("Add new trigger!"))
+            if (ImGuiHelpers.Button("Add new trigger!"))
             {
                 ImGui.OpenPopup("choose_new_trigger");
             }
@@ -33,7 +33,7 @@ namespace Murder.Editor.CustomFields
                 ImGui.SameLine();
                 ImGui.InputText("##AddWorldEvent_new_name", ref _newEvent, 128);
 
-                if (ImGui.Button("Create"))
+                if (ImGuiHelpers.Button("Create"))
                 {
                     element = new(_newEvent);
                     _newEvent = DefaultName;

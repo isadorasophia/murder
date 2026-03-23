@@ -33,7 +33,7 @@ namespace Murder.Editor.CustomFields
 
             ImGui.PushID($"Add ${member.Name}");
 
-            if (candidateResources.Count != 0 && ImGui.Button("Add"))
+            if (candidateResources.Count != 0 && ImGuiHelpers.Button("Add"))
             {
                 if (assets is ImmutableDictionary<Guid, int> immutable)
                 {

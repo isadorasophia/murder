@@ -67,7 +67,7 @@ namespace Murder.Editor.CustomEditors
                 ImGui.EndTable();
             }
 
-            if (ImGui.Button("Add Entry"))
+            if (ImGuiHelpers.Button("Add Entry"))
             {
                 target.Titles = target.Titles.Add("New Entry");
                 target.Values = target.Values.Add(0);

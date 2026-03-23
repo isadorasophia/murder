@@ -254,7 +254,7 @@ public static class EditorAssetHelpers
 
         if (texturePtr is null)
         {
-            return ImGui.Button("Recover image?");
+            return ImGuiHelpers.Button("Recover image?");
         }
 
         if (pressed)
@@ -358,7 +358,7 @@ public static class EditorAssetHelpers
                         continue;
                     }
 
-                    if (ImGui.MenuItem(value))
+                    if (ImGuiHelpers.MenuItem(value))
                     {
                         animationId = value;
                         modified = true;

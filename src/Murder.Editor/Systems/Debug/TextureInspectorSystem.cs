@@ -28,7 +28,7 @@ namespace Murder.Editor.Systems
 
             if (ImGui.BeginMenu("Show"))
             {
-                ImGui.MenuItem("Texture Inspector", "", ref _show);
+                ImGuiHelpers.MenuItem("Texture Inspector", "", ref _show);
                 ImGui.EndMenu();
             }
 

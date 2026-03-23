@@ -27,7 +27,7 @@ internal class LocalizedStringField : CustomField
             bool create = false;
 
             ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.BgFaded);
-            if (ImGui.Button("\uf002"))
+            if (ImGuiHelpers.Button("\uf002"))
             {
                 ImGui.OpenPopup(searchId);
             }
@@ -35,7 +35,7 @@ internal class LocalizedStringField : CustomField
             ImGuiHelpers.HelpTooltip("Search existing localized string");
 
             ImGui.SameLine();
-            if (ImGui.Button("\uf15e"))
+            if (ImGuiHelpers.Button("\uf15e"))
             {
                 create = true;
             }

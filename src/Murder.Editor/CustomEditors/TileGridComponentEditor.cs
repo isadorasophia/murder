@@ -22,7 +22,7 @@ namespace Murder.Editor.CustomEditors
             bool fileChanged = false;
             ImGui.SameLine();
             ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Faded);
-            if (ImGui.Button("Open Tileset tab"))
+            if (ImGuiHelpers.Button("Open Tileset tab"))
             {
                 if (Architect.Instance.ActiveScene is EditorScene editor)
                 {

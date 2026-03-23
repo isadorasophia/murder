@@ -111,7 +111,7 @@ namespace Murder.Editor.CustomEditors
 
                     ImGui.SameLine();
                     bool isActiveInput = isActive;
-                    if (ImGui.Checkbox(label: $"##{name}", ref isActiveInput))
+                    if (ImGuiHelpers.Checkbox(label: $"##{name}", ref isActiveInput))
                     {
                         SetAt(ref newList, row, isActiveInput);
                         changed = true;
@@ -293,7 +293,7 @@ namespace Murder.Editor.CustomEditors
 
                 ImGui.SameLine();
                 bool isActiveInput = isActive;
-                if (ImGui.Checkbox(label: $"##{name}", ref isActiveInput))
+                if (ImGuiHelpers.Checkbox(label: $"##{name}", ref isActiveInput))
                 {
                     SetAt(ref newList, row, isActiveInput);
                     changed = true;

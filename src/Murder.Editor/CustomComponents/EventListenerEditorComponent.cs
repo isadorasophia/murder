@@ -86,7 +86,7 @@ namespace Murder.Editor.CustomComponents
                 {
                     ImGuiHelpers.SelectedButton("Track event!");
                 }
-                else if (ImGui.Button("Track event!"))
+                else if (ImGuiHelpers.Button("Track event!"))
                 {
                     events = events.Add(new(_eventInput));
                     fileChanged = true;
@@ -196,7 +196,7 @@ namespace Murder.Editor.CustomComponents
                     if (layer is null)
                     {
                         bool isPersist = false;
-                        if (ImGui.Checkbox($"##dropdown_checkbox_{i}", ref isPersist))
+                        if (ImGuiHelpers.Checkbox($"##dropdown_checkbox_{i}", ref isPersist))
                         {
                             events = events.SetItem(i, info.WithPersist(SoundLayer.Ambience));
                             fileChanged = true;

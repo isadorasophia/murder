@@ -337,11 +337,11 @@ namespace Murder.Editor.CustomEditors
             {
                 if (_sprite.Animations.TryGetValue(info.SelectedAnimation, out Animation selectedAnimation))
                 {
-                    if (info.Hook.IsPaused && (ImGui.Button("\uf04b") || Game.Input.Pressed(MurderInputButtons.Space)))
+                    if (info.Hook.IsPaused && (ImGuiHelpers.Button("\uf04b") || Game.Input.Pressed(MurderInputButtons.Space)))
                     {
                         info.Hook.IsPaused = false;
                     }
-                    else if (!info.Hook.IsPaused && (ImGui.Button("\uf04c") || Game.Input.Pressed(MurderInputButtons.Space)))
+                    else if (!info.Hook.IsPaused && (ImGuiHelpers.Button("\uf04c") || Game.Input.Pressed(MurderInputButtons.Space)))
                     {
                         info.Hook.IsPaused = true;
                     }
@@ -477,7 +477,7 @@ namespace Murder.Editor.CustomEditors
                 {
                     ImGuiHelpers.SelectedButton("Ok!");
                 }
-                else if (ImGui.Button("Ok!") || Game.Input.Pressed(MurderInputButtons.Submit))
+                else if (ImGuiHelpers.Button("Ok!") || Game.Input.Pressed(MurderInputButtons.Submit))
                 {
                     AddMessage(info.SelectedAnimation, frame, _message);
 
@@ -538,7 +538,7 @@ namespace Murder.Editor.CustomEditors
                 {
                     ImGuiHelpers.SelectedButton("Add");
                 }
-                else if (ImGui.Button("Add") || Game.Input.Pressed(MurderInputButtons.Submit))
+                else if (ImGuiHelpers.Button("Add") || Game.Input.Pressed(MurderInputButtons.Submit))
                 {
                     AddMessage(info.SelectedAnimation, frame, _message);
 

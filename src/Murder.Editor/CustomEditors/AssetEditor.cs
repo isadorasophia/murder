@@ -247,7 +247,7 @@ namespace Murder.Editor.CustomEditors
                 {
                     bool active = !instance.IsDeactivated;
                     ImGui.PushStyleColor(ImGuiCol.Text, active ? Architect.Profile.Theme.White : Architect.Profile.Theme.Faded);
-                    if (ImGui.Checkbox($"##{entityInstance.Guid}", ref active))
+                    if (ImGuiHelpers.Checkbox($"##{entityInstance.Guid}", ref active))
                     {
                         EnableEntity(parent?.Guid, instance, active);
                     }
@@ -319,7 +319,7 @@ namespace Murder.Editor.CustomEditors
                     ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 100);
                     ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.Selected);
                     ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Faded);
-                    if (ImGui.Button(""))
+                    if (ImGuiHelpers.Button(""))
                     {
                         if (instance.HasComponent(typeof(PositionComponent)) &&
                             instance.GetComponent(typeof(PositionComponent)) is PositionComponent position &&
@@ -477,7 +477,7 @@ namespace Murder.Editor.CustomEditors
 
             if (!entityInstance.HasComponent(typeof(PositionComponent)))
             {
-                if (ImGui.Button("+\uf0b2"))
+                if (ImGuiHelpers.Button("+\uf0b2"))
                 {
                     AddComponent(parent, entityInstance, typeof(PositionComponent));
                 }
@@ -487,7 +487,7 @@ namespace Murder.Editor.CustomEditors
 
             if (!entityInstance.HasComponent(typeof(SpriteComponent)))
             {
-                if (ImGui.Button("+\uf03e"))
+                if (ImGuiHelpers.Button("+\uf03e"))
                 {
                     AddComponent(parent, entityInstance, typeof(SpriteComponent));
                 }
@@ -497,7 +497,7 @@ namespace Murder.Editor.CustomEditors
 
             if (!entityInstance.HasComponent(typeof(ColliderComponent)))
             {
-                if (ImGui.Button("+\uf0c8"))
+                if (ImGuiHelpers.Button("+\uf0c8"))
                 {
                     if (!entityInstance.HasComponent(typeof(PositionComponent)))
                     {
@@ -511,7 +511,7 @@ namespace Murder.Editor.CustomEditors
 
             if (entityInstance.Components.Length <= 1)
             {
-                if (ImGui.Button("+\uf001"))
+                if (ImGuiHelpers.Button("+\uf001"))
                 {
                     AddComponent(parent, entityInstance, typeof(SoundShapeComponent));
                     AddComponent(parent, entityInstance, typeof(AmbienceComponent));
@@ -550,7 +550,7 @@ namespace Murder.Editor.CustomEditors
                 // Always support adding more children...
                 Guid? targetChild = default;
 
-                if (ImGui.Button("Add Empty Child"))
+                if (ImGuiHelpers.Button("Add Empty Child"))
                 {
                     targetChild = Guid.Empty;
                 }
@@ -975,7 +975,7 @@ namespace Murder.Editor.CustomEditors
 
             if (isValidName)
             {
-                if (ImGui.Button("Ok!") || Game.Input.Pressed(Keys.Enter))
+                if (ImGuiHelpers.Button("Ok!") || Game.Input.Pressed(Keys.Enter))
                 {
                     e.SetName(_tempRename);
                     return true;

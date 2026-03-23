@@ -201,7 +201,7 @@ namespace Murder.Editor.CustomEditors
                     }
                 }
 
-                if (ImGui.Button("Ok!") || Game.Input.Pressed(MurderInputButtons.Submit))
+                if (ImGuiHelpers.Button("Ok!") || Game.Input.Pressed(MurderInputButtons.Submit))
                 {
                     ImGui.CloseCurrentPopup();
                 }

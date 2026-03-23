@@ -42,7 +42,7 @@ namespace Murder.Editor
 
                 ImGui.PushFont(Fonts.LargeIcons);
 
-                if (ImGui.Button($"{tab.Icon}", new Vector2(-4, 36)))
+                if (ImGuiHelpers.Button($"{tab.Icon}", new Vector2(-4, 36)))
                 {
                     _selectedExplorerWindow = isSelected ? null : tab;
 

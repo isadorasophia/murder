@@ -2,6 +2,7 @@
 using Murder.Components;
 using Murder.Core.Graphics;
 using Murder.Editor.Attributes;
+using Murder.Editor.ImGuiExtended;
 using Murder.Helpers;
 using Murder.Utilities;
 using System.Collections.Immutable;
@@ -29,19 +30,19 @@ public class SpriteFacingComponentEditor : CustomComponent
 
         if (sprite.FacingInfo.Length == 0)
         {
-            if (ImGui.Button("Auto 2 Directions"))
+            if (ImGuiHelpers.Button("Auto 2 Directions"))
             {
                 ImGui.OpenPopup("auto_sure");
                 _makeAuto = 2;
             }
             ImGui.SameLine();
-            if (ImGui.Button("Auto 4 Directions"))
+            if (ImGuiHelpers.Button("Auto 4 Directions"))
             {
                 ImGui.OpenPopup("auto_sure");
                 _makeAuto = 4;
             }
             ImGui.SameLine();
-            if (ImGui.Button("Auto 8 Directions"))
+            if (ImGuiHelpers.Button("Auto 8 Directions"))
             {
                 ImGui.OpenPopup("auto_sure");
                 _makeAuto = 8;
@@ -51,14 +52,14 @@ public class SpriteFacingComponentEditor : CustomComponent
             if (ImGui.BeginPopupModal("auto_sure", ref _, ImGuiWindowFlags.AlwaysAutoResize))
             {
                 ImGui.Text("Are you sure you want to override this component?");
-                if(ImGui.Button("yes"))
+                if(ImGuiHelpers.Button("yes"))
                 {
                     fileChanged = true;
                     sprite = MakeAutomatic(_makeAuto);
                     ImGui.CloseCurrentPopup();
                 }
                 ImGui.SameLine();
-                if (ImGui.Button("cancel"))
+                if (ImGuiHelpers.Button("cancel"))
                 {
                     ImGui.CloseCurrentPopup();
                 }
@@ -219,7 +220,7 @@ public class SpriteFacingComponentEditor : CustomComponent
         }
 
         bool flip = info.Flip;
-        if (ImGui.Checkbox($"Flip##{selected}_flip", ref flip))
+        if (ImGuiHelpers.Checkbox($"Flip##{selected}_flip", ref flip))
         {
             fileChanged = true;
             sprite = sprite with
@@ -258,7 +259,7 @@ public class SpriteFacingComponentEditor : CustomComponent
         }
 
         bool flip = sprite.DefaultFlip;
-        if (ImGui.Checkbox("Flip", ref flip))
+        if (ImGuiHelpers.Checkbox("Flip", ref flip))
         {
             fileChanged = true;
             sprite = sprite with

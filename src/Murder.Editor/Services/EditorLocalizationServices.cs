@@ -126,7 +126,7 @@ internal static class EditorLocalizationServices
                 asset.SetResource(data with { Notes = text });
             }
 
-            if (ImGui.Button("Ok!") || Game.Input.Pressed(MurderInputButtons.Submit))
+            if (ImGuiHelpers.Button("Ok!") || Game.Input.Pressed(MurderInputButtons.Submit))
             {
                 ImGui.CloseCurrentPopup();
             }

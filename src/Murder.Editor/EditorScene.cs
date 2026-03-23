@@ -487,7 +487,7 @@ namespace Murder.Editor
                     _clearedFoldersOnSearch = true;
                 }
 
-                if (ImGui.Button(""))
+                if (ImGuiHelpers.Button(""))
                 {
                     _colapseAll = true;
                 }
@@ -601,7 +601,7 @@ namespace Murder.Editor
                         ImGui.SetKeyboardFocusHere();
                     ImGui.InputText("", ref _newAssetName, 64, ImGuiInputTextFlags.AutoSelectAll);
 
-                    if (ImGui.Button("Rename") || Architect.Input.Pressed(Keys.Enter))
+                    if (ImGuiHelpers.Button("Rename") || Architect.Input.Pressed(Keys.Enter))
                     {
                         asset.Name = _newAssetName;
                         asset.Rename = true;
@@ -610,7 +610,7 @@ namespace Murder.Editor
                         closed = true;
                     }
                     ImGui.SameLine();
-                    if (ImGui.Button("Cancel") || Architect.Input.Pressed(Keys.Escape))
+                    if (ImGuiHelpers.Button("Cancel") || Architect.Input.Pressed(Keys.Escape))
                     {
                         ImGui.CloseCurrentPopup();
                         closed = true;
@@ -626,7 +626,7 @@ namespace Murder.Editor
             if (ImGui.BeginPopup("Delete?"))
             {
                 ImGui.Text("Are you sure you want to delete this asset?");
-                if (ImGui.Button("Delete"))
+                if (ImGuiHelpers.Button("Delete"))
                 {
                     Architect.EditorData.RemoveAsset(asset);
                     CloseTab(asset);
@@ -634,7 +634,7 @@ namespace Murder.Editor
                     closed = true;
                 }
                 ImGui.SameLine();
-                if (ImGui.Button("Cancel"))
+                if (ImGuiHelpers.Button("Cancel"))
                 {
                     ImGui.CloseCurrentPopup();
                     closed = true;
@@ -650,7 +650,7 @@ namespace Murder.Editor
             if (ImGui.BeginPopup("Discard?"))
             {
                 ImGui.Text("Are you sure you want to discard all changes?");
-                if (ImGui.Button("Discard"))
+                if (ImGuiHelpers.Button("Discard"))
                 {
                     DiscardAsset(asset);
 
@@ -658,7 +658,7 @@ namespace Murder.Editor
                     closed = true;
                 }
                 ImGui.SameLine();
-                if (ImGui.Button("Cancel"))
+                if (ImGuiHelpers.Button("Cancel"))
                 {
                     ImGui.CloseCurrentPopup();
                     closed = true;

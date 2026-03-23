@@ -55,6 +55,16 @@ namespace Murder.Editor.Systems
             if (Game.Input.Shortcut(Keys.F2))
             {
                 _showEditorSystems = !_showEditorSystems;
+
+                if (_showEditorSystems)
+                {
+                    EditorCosmetics.Play("f2-open");
+                }
+                else
+                {
+                    EditorCosmetics.Play("f2-close");
+                }
+
                 editorHook.ShowDebug = _showEditorSystems;
                 editorHook.StageSize = new Point(
                     Game.GraphicsDevice.Viewport.Width,

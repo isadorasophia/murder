@@ -16,7 +16,7 @@ namespace Murder.Editor.CustomFields
 
         protected override bool Add(IList<T> candidates, [NotNullWhen(true)] out (T Key, V Value)? element)
         {
-            if (ImGui.Button("Add Item"))
+            if (ImGuiHelpers.Button("Add Item"))
             {
                 _new = default!;
                 ImGui.OpenPopup("Add Item##dictionary");
@@ -30,7 +30,7 @@ namespace Murder.Editor.CustomFields
                 {
                     ImGuiHelpers.SelectedButton("Create");
                 }
-                else if (ImGui.Button("Create"))
+                else if (ImGuiHelpers.Button("Create"))
                 {
                     ImGui.CloseCurrentPopup();
                     element = (_new.Key, default!);

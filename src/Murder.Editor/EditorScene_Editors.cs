@@ -154,7 +154,7 @@ namespace Murder.Editor
                 if (isFavorite)
                 {
                     ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Yellow);
-                    if (ImGui.Button("\uf005###favouriteStar"))
+                    if (ImGuiHelpers.Button("\uf005###favouriteStar"))
                     {
                         Architect.EditorSettings.UnfavoriteAsset(asset.Guid);
                     }
@@ -162,7 +162,7 @@ namespace Murder.Editor
                 else
                 {
                     ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
-                    if (ImGui.Button("\uf005###favouriteStar"))
+                    if (ImGuiHelpers.Button("\uf005###favouriteStar"))
                     {
                         Architect.EditorSettings.FavoriteAsset(asset.Guid);
                     }
@@ -210,7 +210,7 @@ namespace Murder.Editor
                 ImGui.TextColored(Microsoft.Xna.Framework.Color.DarkGray.ToSysVector4(), $"({asset.GetType().Name})");
                 ImGui.SameLine();
 
-                if (asset.CanBeSaved && (ImGui.Button("Save Asset")))
+                if (asset.CanBeSaved && (ImGuiHelpers.Button("Save Asset")))
                 {
                     customEditor?.Editor.PrepareForSaveAsset();
 
@@ -227,7 +227,7 @@ namespace Murder.Editor
                 if (asset.CanBeDeleted)
                 {
                     ImGui.SameLine();
-                    if (ImGui.Button("Delete Asset") || Architect.Input.Shortcut(Keys.Delete, InputHelpers.OSActionModifier))
+                    if (ImGuiHelpers.Button("Delete Asset") || Architect.Input.Shortcut(Keys.Delete, InputHelpers.OSActionModifier))
                     {
                         ImGui.OpenPopup("Delete?");
                     }
@@ -236,7 +236,7 @@ namespace Murder.Editor
                 if (asset.CanBeRenamed)
                 {
                     ImGui.SameLine();
-                    if (ImGui.Button("Rename") || Architect.Input.Shortcut(Keys.R, InputHelpers.OSActionModifier))
+                    if (ImGuiHelpers.Button("Rename") || Architect.Input.Shortcut(Keys.R, InputHelpers.OSActionModifier))
                     {
                         _newAssetName = asset.Name;
                         ImGui.OpenPopup("Asset Name");
@@ -244,7 +244,7 @@ namespace Murder.Editor
                 }
 
                 ImGui.SameLine();
-                if (ImGui.Button("Open Folder"))
+                if (ImGuiHelpers.Button("Open Folder"))
                 {
                     string? path = asset.GetEditorAssetDirectoryPath();
                     if (path is not null)
@@ -260,7 +260,7 @@ namespace Murder.Editor
                 if (asset.IsSavePacked)
                 {
                     ImGui.SameLine();
-                    if (ImGui.Button("Save as Text"))
+                    if (ImGuiHelpers.Button("Save as Text"))
                     {
                         string outputPath = Path.GetTempPath();
                         string outputFile = Path.Combine(Path.GetTempPath(), "save.json");
@@ -273,7 +273,7 @@ namespace Murder.Editor
                 }
 
                 ImGui.SameLine();
-                if (ImGui.Button("Discard Changes"))
+                if (ImGuiHelpers.Button("Discard Changes"))
                 {
                     ImGui.OpenPopup("Discard?");
                 }
@@ -291,19 +291,19 @@ namespace Murder.Editor
                 {
                     ImGui.SameLine();
                     bool showColliders = assetEditor.ShowColliders;
-                    ImGui.Checkbox("\uf0c8", ref showColliders);
+                    ImGuiHelpers.Checkbox("\uf0c8", ref showColliders);
                     ImGui.SetItemTooltip("Show colliders");
                     assetEditor.ShowColliders = showColliders;
 
                     ImGui.SameLine();
                     bool showGrid = assetEditor.ShowGrid;
-                    ImGui.Checkbox("\uf84c", ref showGrid);
+                    ImGuiHelpers.Checkbox("\uf84c", ref showGrid);
                     ImGui.SetItemTooltip("Show grid");
                     assetEditor.ShowGrid = showGrid;
 
                     ImGui.SameLine();
                     bool showReflection = assetEditor.ShowReflection;
-                    ImGui.Checkbox("\uf24d", ref showReflection);
+                    ImGuiHelpers.Checkbox("\uf24d", ref showReflection);
                     ImGui.SetItemTooltip($"{(showReflection ? "Show" : "Hide")} reflections");
                     assetEditor.ShowReflection = showReflection;
                 }
@@ -312,35 +312,35 @@ namespace Murder.Editor
                 {
                     ImGui.SameLine();
                     bool showDeactivated = false;
-                    if (ImGui.Checkbox($"\uf6e2", ref showDeactivated))
+                    if (ImGuiHelpers.Checkbox($"\uf6e2", ref showDeactivated))
                     {
 
                     }
                     ImGui.SetItemTooltip($"{(showDeactivated ? "Show" : "Hide")} deactivated entities");
 
                     ImGui.SameLine();
-                    if (ImGui.Button("\uf2a8 Reveal all"))
+                    if (ImGuiHelpers.Button("\uf2a8 Reveal all"))
                     {
                         // [TODO] Actually reveal objects
                     }
 
 
                     ImGui.SameLine();
-                    if (ImGui.Button("Reset Camera") || Game.Input.Shortcut(Keys.F12))
+                    if (ImGuiHelpers.Button("Reset Camera") || Game.Input.Shortcut(Keys.F12))
                     {
                         worldEditor.ResetCamera();
                     }
 
                     ImGui.SameLine();
                     bool showCamera = worldEditor.ShowCameraBounds;
-                    ImGui.Checkbox("Show Camera Bounds", ref showCamera);
+                    ImGuiHelpers.Checkbox("Show Camera Bounds", ref showCamera);
 
                     worldEditor.ShowCameraBounds = showCamera;
 
                     if (worldEditor.ShowCameraBounds)
                     {
                         ImGui.SameLine();
-                        if (ImGui.Button("Reset Camera Bounds"))
+                        if (ImGuiHelpers.Button("Reset Camera Bounds"))
                         {
                             worldEditor.ResetCameraBounds();
                         }

@@ -110,7 +110,7 @@ namespace Murder.Editor.Diagnostics
                 ImGui.PushStyleColor(ImGuiCol.Text, color * 0.7f);
             }
 
-            if (ImGui.Button(label))
+            if (ImGuiHelpers.Button(label))
             {
                 _activeFilters ^= filter; // Toggle
             }
@@ -121,7 +121,7 @@ namespace Murder.Editor.Diagnostics
         {
             if (ImGui.BeginChild("top_console", new(-1, ImGui.GetFontSize() * 1.75f)))
             {
-                if (ImGui.Button("Clear"))
+                if (ImGuiHelpers.Button("Clear"))
                 {
                     ClearLog();
                 }
@@ -129,11 +129,11 @@ namespace Murder.Editor.Diagnostics
                 ImGui.SameLine();
                 ImGuiHelpers.HelpTooltip("Clear all the log output!");
 
-                copy = ImGui.Button("Copy");
+                copy = ImGuiHelpers.Button("Copy");
                 ImGui.SameLine();
                 ImGuiHelpers.HelpTooltip("Copy the whole log!");
 
-                if (ImGui.Button("Close"))
+                if (ImGuiHelpers.Button("Close"))
                 {
                     Toggle(false);
                 }
@@ -149,7 +149,7 @@ namespace Murder.Editor.Diagnostics
                 }
 
                 ImGui.SameLine();
-                if (ImGui.Button("×##clearfilter"))
+                if (ImGuiHelpers.Button("×##clearfilter"))
                 {
                     _filterText = string.Empty;
                 }
@@ -175,12 +175,12 @@ namespace Murder.Editor.Diagnostics
                 ImGui.Spacing();
                 ImGui.SameLine();
 
-                if (ImGui.Button("All"))
+                if (ImGuiHelpers.Button("All"))
                 {
                     _activeFilters = LogFilter.All;
                 }
                 ImGui.SameLine();
-                if (ImGui.Button("None"))
+                if (ImGuiHelpers.Button("None"))
                 {
                     _activeFilters = LogFilter.None;
                 }
@@ -195,7 +195,7 @@ namespace Murder.Editor.Diagnostics
             ImGui.PushStyleColor(ImGuiCol.ButtonHovered, new Vector4(0.7f, 0.7f, 0.7f, 0.5f));
             ImGui.PushStyleColor(ImGuiCol.ButtonActive, new Vector4(0.9f, 0.9f, 0.9f, 0.7f));
 
-            ImGui.Button("##resize", new Vector2(-1, 6));
+            ImGuiHelpers.Button("##resize", new Vector2(-1, 6));
 
             if (ImGui.IsItemActive())
             {

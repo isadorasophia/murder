@@ -20,6 +20,7 @@ using Microsoft.Xna.Framework.Input;
 using Murder.Editor.Messages;
 using Murder.Prefabs;
 using Bang.Components;
+using Murder.Editor.ImGuiExtended;
 
 namespace Murder.Editor.Systems;
 
@@ -77,7 +78,7 @@ public class GenericSelectorSystem
 
         if (ImGui.BeginMenu("Show"))
         {
-            ImGui.MenuItem("Hierarchy", "", ref _showHierarchy);
+            ImGuiHelpers.MenuItem("Hierarchy", "", ref _showHierarchy);
             ImGui.EndMenu();
         }
 
@@ -451,6 +452,8 @@ public class GenericSelectorSystem
                 float distance = (cursorPosition - _dragStart.Value).Length();
                 if (distance > 4)
                 {
+                    EditorCosmetics.Play("grab");
+
                     _dragging = _startedDragging;
                     _offset = _startedDragging.GetGlobalPosition().ToPoint() - cursorPosition;
 
@@ -564,6 +567,7 @@ public class GenericSelectorSystem
                     e.AddOrReplaceComponent(new EditorTween(Game.NowUnscaled, 0.7f, EditorTweenType.Place));
                 }
 
+                EditorCosmetics.Play("release");
 
                 // The user stopped clicking, so no longer drag anything.
                 _dragging = null;

@@ -20,7 +20,7 @@ namespace Murder.Editor.CustomFields
 
         protected override bool Add(in EditorMember member, [NotNullWhen(true)] out PortraitInfo element)
         {
-            if (ImGui.Button("New portrait"))
+            if (ImGuiHelpers.Button("New portrait"))
             {
                 element = new();
                 return true;

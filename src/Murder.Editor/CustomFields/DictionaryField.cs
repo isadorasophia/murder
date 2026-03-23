@@ -100,7 +100,7 @@ namespace Murder.Editor.CustomFields
             {
                 using RectangleBox box = new();
 
-                if (ImGui.Button($"\uf1f8 Delete Item##{index}"))
+                if (ImGuiHelpers.Button($"\uf1f8 Delete Item##{index}"))
                 {
                     if (dictionary is ImmutableDictionary<T, U> immutable)
                     {
@@ -175,7 +175,7 @@ namespace Murder.Editor.CustomFields
                 if (!ShouldAutomaticallySubmitKey() && CanModifyKeys())
                 {
                     ImGui.SameLine();
-                    submitKeyChange = ImGui.Button("Ok!") || ImGui.IsKeyPressed(ImGuiKey.Enter);
+                    submitKeyChange = ImGuiHelpers.Button("Ok!") || ImGui.IsKeyPressed(ImGuiKey.Enter);
                 }
 
                 if (submitKeyChange && _cachedModifiedKey is not null)

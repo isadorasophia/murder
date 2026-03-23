@@ -198,12 +198,12 @@ namespace Murder.Editor.CustomEditors
 
                         ImGui.Dummy(new Vector2(1, 0));
                         ImGui.SameLine();
-                        if (ImGui.Button(" ", new Vector2(22, 22)))
+                        if (ImGuiHelpers.Button(" ", new Vector2(22, 22)))
                         {
                             ImGui.OpenPopup("delete_tile");
                         }
                         ImGui.SameLine();
-                        if (ImGui.Button("", new Vector2(22, 22)))
+                        if (ImGuiHelpers.Button("", new Vector2(22, 22)))
                         {
                             ImGui.OpenPopup("replace_tile");
                         }

@@ -22,7 +22,7 @@ public class DebugShadersSystem : IGuiSystem
 
         if (ImGui.BeginMenu("Show"))
         {
-            ImGui.MenuItem("Shaders", "", ref _show);
+            ImGuiHelpers.MenuItem("Shaders", "", ref _show);
             ImGui.EndMenu();
         }
 
@@ -117,7 +117,7 @@ public class DebugShadersSystem : IGuiSystem
                         break;
                     case Microsoft.Xna.Framework.Graphics.EffectParameterType.Bool:
                         bool boolValue = p.GetValueBoolean();
-                        if (ImGui.Checkbox($"{p.Name}({p.ParameterType}): {boolValue}", ref boolValue))
+                        if (ImGuiHelpers.Checkbox($"{p.Name}({p.ParameterType}): {boolValue}", ref boolValue))
                         {
                             p.SetValue(boolValue);
                         }

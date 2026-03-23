@@ -543,6 +543,7 @@ namespace Murder.Editor.ImGuiExtended
                         clicked = true;
                     }
                 }
+
                 if (clicked)
                 {
                     ImGui.OpenPopup(id + "_search");
@@ -597,7 +598,7 @@ namespace Murder.Editor.ImGuiExtended
 
                 var itemsAvailableSize = ImGui.GetContentRegionAvail();
                 ImGui.BeginChild("##Searchbox_containter_items", itemsAvailableSize, ImGuiChildFlags.None);
-                if (settings.DefaultInitialization is (string defaultValueName, T value) && ImGui.Button(defaultValueName))
+                if (settings.DefaultInitialization is (string defaultValueName, T value) && ImGuiHelpers.Button(defaultValueName))
                 {
                     modified = true;
                     result = value;
