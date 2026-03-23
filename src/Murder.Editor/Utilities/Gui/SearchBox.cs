@@ -580,6 +580,8 @@ namespace Murder.Editor.ImGuiExtended
             {
                 if (ImGui.IsWindowAppearing())
                 {
+                    EditorCosmetics.Play("submenu-open");
+
                     _tempSearchText = string.Empty;
                     _searchBoxSelection = 0;
                 }
@@ -658,6 +660,8 @@ namespace Murder.Editor.ImGuiExtended
                         ImGui.PushID("comboItem" + name);
                         if (ImGui.Selectable(name, item_selected) || (enterPressed && item_selected))
                         {
+                            EditorCosmetics.Play("submenu-back");
+
                             modified = true;
                             result = asset;
                             _tempSearchText = string.Empty;
