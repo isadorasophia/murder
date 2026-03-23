@@ -287,6 +287,8 @@ namespace Murder.Data
 
             PreloadFontTextures();
             TryFetchAtlas(AtlasIdentifiers.Gameplay)?.LoadTextures();
+
+            _game?.OnAfterContentLoaded();
         }
 
         protected virtual Task LoadContentAsyncImpl() => Task.CompletedTask;

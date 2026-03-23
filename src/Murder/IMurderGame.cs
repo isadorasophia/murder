@@ -37,6 +37,12 @@ namespace Murder
         public Task LoadContentAsync() => Task.CompletedTask;
 
         /// <summary>
+        /// Called after content finishes loading.
+        /// This is called *synchronously*, can use the main thread.
+        /// </summary>
+        public void OnAfterContentLoaded() { }
+
+        /// <summary>
         /// Called after each update.
         /// </summary>
         public void OnUpdate() { }
