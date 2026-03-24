@@ -44,7 +44,7 @@ public readonly struct PlayEventInteraction : IInteraction
 
         if (Properties.HasFlag(SoundProperties.StopOtherEventsInLayer))
         {
-            SoundServices.Stop(id: null, fadeOut: true);
+            SoundServices.Stop(Layer, fadeOut: true);
         }
 
         SoundProperties properties = Properties;

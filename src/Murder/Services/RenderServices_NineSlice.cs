@@ -13,14 +13,15 @@ namespace Murder.Services
     {
         public static Point Draw9SliceWithText(
             Batch2D batch, Guid sprite, string text, int font, Rectangle target, 
-            DrawInfo textDrawInfo, DrawInfo sliceDrawInfo, AnimationInfo sliceAnimationInfo)
+            DrawInfo textDrawInfo, DrawInfo sliceDrawInfo, AnimationInfo sliceAnimationInfo,
+            int padding, int textPadding)
         {
             int width = (int)target.Width - 5;
             int height = Calculator.RoundToInt(MurderFontServices.GetLineHeight(font, text, width));
 
-            target.Height = height + 10;
+            target.Height = height + padding;
 
-            _ = DrawText(batch, font, text, target.Center, width, textDrawInfo);
+            _ = DrawText(batch, font, text, new Vector2(target.Center.X, target.Y + textPadding), width, textDrawInfo);
             Draw9Slice(batch, sprite, target, sliceDrawInfo, sliceAnimationInfo);
 
             return new(width, height);
