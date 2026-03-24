@@ -39,7 +39,7 @@ namespace Murder.Systems
             foreach (Entity e in context.Entities)
             {
                 MoveToPerfectComponent moveToPerfect = e.GetMoveToPerfect();
-                if (moveToPerfect.AvoidActors)
+                if (moveToPerfect.Settings.HasFlag(MoveToPerfectSettings.AvoidActors))
                 {
                     anyActorAvoidant = true;
                     PhysicsServices.FilterPositionAndColliderEntities(context.World, CollisionLayersBase.ACTOR, result: _cachedCandidates);
@@ -67,7 +67,8 @@ namespace Murder.Systems
                 Vector2 current = Vector2Helper.LerpSnap(startPosition, moveToPerfect.Target, easedDelta);
                 e.SetGlobalPosition(current.Point());
 
-                if (anyActorAvoidant && moveToPerfect.AvoidActors && _cachedCandidates.Count != 0 && e.TryGetCollider() is ColliderComponent collider)
+                if (anyActorAvoidant && moveToPerfect.Settings.HasFlag(MoveToPerfectSettings.AvoidActors) && 
+                    _cachedCandidates.Count != 0 && e.TryGetCollider() is ColliderComponent collider)
                 {
                     Vector2 position = e.GetGlobalPosition();
 
