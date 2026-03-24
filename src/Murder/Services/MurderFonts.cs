@@ -20,8 +20,9 @@ public static class MurderFontServices
     public static Point MeasureText(int font, string text, bool cultureInvariant = false)
     {
         PixelFont f = Game.Data.GetFont(font, cultureInvariant);
+        RuntimeTextData runtimeText = TextDataServices.GetOrCreateText(font, text, new TextSettings());
 
-        return new Point(f.GetLineWidth(text), f.PixelFontSize.LineHeight);
+        return new Point(f.GetLineWidth(runtimeText.Text), f.PixelFontSize.LineHeight);
     }
 
     public static float GetLineWidth(this MurderFonts font, ReadOnlySpan<char> text)
