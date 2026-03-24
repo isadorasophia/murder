@@ -11,14 +11,21 @@ namespace Murder.Services
     /// Some of the code based on https://github.com/z2oh/C3.MonoGame.Primitives2D/blob/master/Primitives2D.cs
     public static partial class RenderServices
     {
-
-        public static void Draw9SliceWithText(Batch2D batch, Guid sprite, string text, int font, Rectangle target, DrawInfo textDrawInfo, DrawInfo sliceDrawInfo, AnimationInfo sliceAnimationInfo)
+        public static Point Draw9SliceWithText(
+            Batch2D batch, Guid sprite, string text, int font, Rectangle target, 
+            DrawInfo textDrawInfo, DrawInfo sliceDrawInfo, AnimationInfo sliceAnimationInfo)
         {
-            RenderServices.Draw9Slice(batch, sprite, target, sliceDrawInfo, sliceAnimationInfo);
+            int width = (int)target.Width - 5;
+            int height = Calculator.RoundToInt(MurderFontServices.GetLineHeight(font, text, width));
 
-            // Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth
-            RenderServices.DrawText(batch, font, text, target.Center, (int)target.Width, textDrawInfo);
+            target.Height = height + 10;
+
+            _ = DrawText(batch, font, text, target.Center, width, textDrawInfo);
+            Draw9Slice(batch, sprite, target, sliceDrawInfo, sliceAnimationInfo);
+
+            return new(width, height);
         }
+
         public static void Draw3Slice(
             Batch2D batch,
             AtlasCoordinates texture,
