@@ -170,5 +170,18 @@ namespace Murder.Components
         public AnimationOverloadComponent Now => this with { Start = Game.Now };
 
         public AnimationOverloadComponent NoLoop => this with { Start = Game.Now, Loop = false };
+
+        public AnimationOverloadComponent FinishCurrentNoLoop =>
+            new([CurrentAnimation],
+                _customSprite,
+                Start,
+                Duration,
+                loop: false,
+                IgnoreFacing,
+                Flip,
+                current: 0,
+                SortOffset,
+                SupportedDirections,
+                SupportedOrientation);
     }
 }
