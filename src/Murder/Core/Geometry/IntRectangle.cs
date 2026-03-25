@@ -13,7 +13,7 @@ namespace Murder.Core.Geometry
         public int Height;
 
         public static IntRectangle Empty { get; } = new();
-        public static IntRectangle One{ get; } = new(0, 0, 1, 1);
+        public static IntRectangle One { get; } = new(0, 0, 1, 1);
 
         // Quick Helpers
         public Point TopLeft => new Point(X, Y);
@@ -181,6 +181,20 @@ namespace Murder.Core.Geometry
                 return IntRectangle.Empty;
 
             return new IntRectangle(left, top, right - left, bottom - top);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="IntRectangle"/> that is the union of the two given rectangles. The resulting rectangle will be the smallest rectangle that contains both input rectangles.
+        /// </summary>
+        internal static IntRectangle Union(IntRectangle startBox, IntRectangle endBox)
+        {
+            return new IntRectangle
+            {
+                X = Math.Min(startBox.X, endBox.X),
+                Y = Math.Min(startBox.Y, endBox.Y),
+                Width = Math.Max(startBox.Right, endBox.Right) - Math.Min(startBox.X, endBox.X),
+                Height = Math.Max(startBox.Bottom, endBox.Bottom) - Math.Min(startBox.Y, endBox.Y)
+            };
         }
     }
 }

@@ -135,7 +135,11 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                     _hitCounter.Clear();
                     _cachedCandidates.Clear();
 
-                    IntRectangle boundingBox = collider!.Value.GetBoundingBox(startPosition + velocity, e.FetchScale());
+                    IntRectangle startBox = collider!.Value.GetBoundingBox(startPosition, e.FetchScale());
+                    IntRectangle endBox = collider.Value.GetBoundingBox(startPosition + velocity, e.FetchScale());
+                    IntRectangle boundingBox = IntRectangle.Union(startBox, endBox);
+
+                    //IntRectangle boundingBox = collider!.Value.GetBoundingBox(startPosition + velocity, e.FetchScale());
 
                     if (!ignoreCollisions)
                     {
@@ -149,9 +153,9 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                     int hitId = -1;
                     int hitLayer = -1;
 
-                    Vector2 pushout;
                     bool Step(Vector2 moveToPosition)
                     {
+                        Vector2 pushout = Vector2.Zero;
                         // If the velocity is low, we can just check the full velocity.
                         while (PhysicsServices.GetFirstMtvAt(map, collider.Value, startPosition, moveToPosition, _cachedCandidates, mask, out int id, out int layer, out pushout)
                             && exhaustCounter-- > 0)
@@ -213,6 +217,7 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                     {
                         // If the velocity is too high, we need to split it up into smaller steps.
                         bool fail = false;
+                        Vector2 currentPos = startPosition;
                         for (int i = 0; i < velocityLength; i += minStepSize)
                         {
                             Vector2 step = velocity.Normalized() * minStepSize;
@@ -223,6 +228,8 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                                 fail = true;
                                 break;
                             }
+
+                            currentPos = e.GetGlobalPosition();
                         }
 
                         if (!fail)

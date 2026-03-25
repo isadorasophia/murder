@@ -222,6 +222,12 @@ public static class FeedbackServices
             content.Add(new StringContent(data.Callstack, Encoding.UTF8), "Callstack");
             content.Add(new StringContent(data.Log, Encoding.UTF8), "Log");
 
+#if DEBUG
+            content.Add(new StringContent("editor", Encoding.UTF8), "Environment");
+#else
+            content.Add(new StringContent("game", Encoding.UTF8), "Environment");
+#endif
+
             foreach (var f in data.Files)
             {
                 var byteArrayContent = new ByteArrayContent(f.file.Bytes);
