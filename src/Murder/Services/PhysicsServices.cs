@@ -301,7 +301,7 @@ public static class PhysicsServices
         return Raycast(world, newStartPosition, endPosition, layerMask, ignoreEntities, out hit);
     }
 
-    static readonly List<int> _ignoreEntitiesWithChildren = [];
+    static readonly HashSet<int> _ignoreEntitiesWithChildren = [];
     static readonly List<NodeInfo<Entity>> _possibleEntities = [];
 
     public static bool Raycast(World world, Vector2 startPosition, Vector2 endPosition, int layerMask, IEnumerable<int> ignoreEntities, out RaycastHit hit)
@@ -319,6 +319,7 @@ public static class PhysicsServices
         {
             if (world.TryGetEntity(id) is Entity entity)
             {
+                // TODO: Do we really want this?
                 if (entity.Parent is int parentId && parentId != -1)
                 {
                     _ignoreEntitiesWithChildren.Add(parentId);

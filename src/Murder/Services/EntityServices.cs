@@ -177,7 +177,8 @@ public static class EntityServices
             }
         }
     }
-    internal static void GetAllChildren(World world, Entity entity, List<int> list)
+
+    internal static void GetAllChildren(World world, Entity entity, HashSet<int> list)
     {
         foreach (int childId in entity.Children)
         {
