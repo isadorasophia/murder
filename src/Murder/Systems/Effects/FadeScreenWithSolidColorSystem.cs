@@ -93,7 +93,6 @@ namespace Murder.Systems
 
         public void OnRemoved(World world, ImmutableArray<Entity> entities) { }
 
-
         public void Draw(RenderContext render, Context context)
         {
             if (_fadeInTime != -1 || _fadeOutTime != -1)
@@ -120,6 +119,8 @@ namespace Murder.Systems
 
                 if (_currentAlpha == 0)
                 {
+                    OnBeforeAlphaUpdate(render, alpha: 0);
+
                     render.ScreenFade = 0;
                     return;
                 }
@@ -135,8 +136,26 @@ namespace Murder.Systems
                 _color * _currentAlpha,
                 _currentSort);
 
+            OnBeforeAlphaUpdate(render, _currentAlpha);
+
             render.ScreenFade = _currentAlpha;
         }
+
+        private void OnBeforeAlphaUpdate(RenderContext render, float alpha)
+        {
+            // round this up
+            float ratioBefore = float.Round(render.ScreenFade, 2);
+            float ratio = float.Round(alpha, 2);
+
+            if (ratioBefore == ratio)
+            {
+                return;
+            }
+
+            OnAlphaUpdateImpl(ratio);
+        }
+
+        protected virtual void OnAlphaUpdateImpl(float alpha) { }
 
         public void Exit(Context context)
         {
