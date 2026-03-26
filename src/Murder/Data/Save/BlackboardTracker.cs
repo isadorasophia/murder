@@ -476,7 +476,7 @@ namespace Murder.Save
 
                     // we don't know what the enum was. just skip checking the previous value.
                     // actually, you shouldn't be passing an integer here.
-                    GameLogger.Warning($"Unable to check previous value when setting an integer for {fieldName}.");
+                    GameLogger.Log($"Skip checking previous value when setting an integer for {fieldName}.");
                 }
                 else if (f.FieldType == typeof(int))
                 {
