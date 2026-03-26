@@ -415,6 +415,18 @@ namespace Murder.Editor.CustomEditors
 
                     ImGui.SameLine();
                     bool open = ImGui.TreeNodeEx(componentName, ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.SpanAvailWidth);
+                    if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
+                    {
+                        if (t.GetGenericArguments().Length > 0)
+                        {
+                            ImGui.SetClipboardText(t.GetGenericArguments()[0].Name);
+                        }
+                        else
+                        {
+                            ImGui.SetClipboardText(t.Name);
+                        }
+                    }
+
                     if (open)
                     {
                         ImGui.TreePop();
