@@ -197,8 +197,15 @@ namespace Murder.Save
                 FieldInfo? f = info.Type.GetField(fieldName);
                 if (f is not null)
                 {
-                    // Found our blackboard value!
-                    return f.GetValue(info.Blackboard)?.ToString();
+                    object? value = f.GetValue(info.Blackboard);
+                    if (value is string strValue)
+                    {
+                        // make sure we're returning something valid...
+                        return ValidateStringField(fieldName, strValue);
+                    }
+
+                    // Anyway, found our blackboard value!
+                    return value?.ToString();
                 }
             }
 
@@ -921,6 +928,12 @@ namespace Murder.Save
                 Type = t;
             }
         }
+
+        /// <summary>
+        /// This validates an existing string field. E.g. if it's valid under the
+        /// current language settings.
+        /// </summary>
+        public virtual string ValidateStringField(string fieldName, string @string) => @string;
 
         public void CacheFormattedText(string text, string result)
         {

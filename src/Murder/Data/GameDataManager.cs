@@ -167,6 +167,11 @@ namespace Murder.Data
 
         public LocalizationAsset Localization => GetLocalization(CurrentLocalization.Id);
 
+        /// <summary>
+        /// Get default font (LOCALIZED) that should be used for validation purposes.
+        /// </summary>
+        public int DefaultFont => _game?.GetDefaultFont() ?? (int)MurderFonts.PixelFont;
+
         public LocalizationAsset GetDefaultLocalization() => GetLocalization(LanguageId.English);
 
         protected virtual LocalizationAsset GetLocalization(LanguageId id)

@@ -103,6 +103,11 @@ namespace Murder
         public WorldProcessor CreateWorldProcessor() => new();
 
         /// <summary>
+        /// Get default localization font that should be used for validating characters.
+        /// </summary>
+        public int GetDefaultFont();
+
+        /// <summary>
         /// Allow the game to override a font based on localization settings.
         /// </summary>
         public int GetLocalizedFont(int index) => index;

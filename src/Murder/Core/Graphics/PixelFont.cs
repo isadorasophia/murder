@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets.Graphics;
+using Murder.Core.Dialogs;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
 using Murder.Services;
@@ -136,6 +137,16 @@ public class PixelFontSize
             size.X = currentLineWidth;
 
         return size;
+    }
+
+    public float GetCharacterWidth(char c)
+    {
+        if (Characters.TryGetValue(c, out PixelFontCharacter? pixelCharacter))
+        {
+            return pixelCharacter.XAdvance;
+        }
+
+        return 0;
     }
 
     public float WidthToNextLine(ReadOnlySpan<char> text, int start, bool trimWhitespace = true)
@@ -656,6 +667,17 @@ public class PixelFont
 
         // add font size
         _pixelFontSize = fontSize;
+    }
+
+    public float GetCharacterWidth(char c)
+    {
+        if (_pixelFontSize is null)
+        {
+            GameLogger.Error("Pixel font size was not initialized.");
+            return 0;
+        }
+
+        return _pixelFontSize.GetCharacterWidth(c);
     }
 
     public float GetLineWidth(ReadOnlySpan<char> text)

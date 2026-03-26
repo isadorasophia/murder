@@ -993,7 +993,7 @@ public class PlayerInput
         }
 
         // skip unicode characters by making sure we can render this character
-        if (MurderFontServices.MeasureText((int)MurderFonts.PixelFont, $"{c}", cultureInvariant: true).X == 0)
+        if (!MurderFontServices.IsValidCharacter(c))
         {
             return;
         }
