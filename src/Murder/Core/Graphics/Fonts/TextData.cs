@@ -544,9 +544,11 @@ public static partial class TextDataServices
             parsedText = result.ToString();
         }
 
+        int indexForPause = 0;
+
         // Now, manually apply pauses according to the pontuaction.
         // We don't bother adding this to very last character, though.
-        for (int i = 0; i < parsedText.Length - 1; ++i)
+        for (int i = 0; i < parsedText.Length - 1 && indexForPause < parsedText.Length; ++i, ++indexForPause)
         {
             // For now, do this weird heuristic of not applying pause if the last character was uppercase.
             bool shouldSkipPause = (i > 0 && (char.IsUpper(parsedText[i - 1])) || 
@@ -558,6 +560,11 @@ public static partial class TextDataServices
             }
 
             char c = parsedText[i];
+            if (c == '\n')
+            {
+                indexForPause = Math.Max(0, indexForPause - 1);
+            }
+
             if (!letters.TryGetValue(i, out RuntimeLetterProperties l))
             {
                 l = new();
@@ -572,22 +579,22 @@ public static partial class TextDataServices
                 case '?':
                 case '？':
                 case '、':
-                    letters[i] = l with { SmallPause = l.SmallPause + 1 };
+                    letters[indexForPause] = l with { SmallPause = l.SmallPause + 1 };
                     break;
 
                 case '.':
                     // check if this is actually an ellipsis...
-                    if (parsedText[i + 1] == '.')
+                    if (parsedText[indexForPause + 1] == '.')
                     {
                         // pass on that pause
-                        letters[i + 1] = l with { Pause = l.Pause + 1 };
+                        letters[indexForPause + 1] = l with { Pause = l.Pause + 1 };
 
                         // keep a small pause for ourselves
-                        letters[i] = l with { Pause = 0, SmallPause = l.SmallPause + 1 }; 
+                        letters[indexForPause] = l with { Pause = 0, SmallPause = l.SmallPause + 1 }; 
                     }
                     else if (l.Pause == 0)
                     {
-                        letters[i] = l with { Pause = 1 };
+                        letters[indexForPause] = l with { Pause = 1 };
                     }
 
                     break;
@@ -595,7 +602,7 @@ public static partial class TextDataServices
                 case '。':
                     if (l.Pause == 0)
                     {
-                        letters[i] = l with { Pause = 1 };
+                        letters[indexForPause] = l with { Pause = 1 };
                     }
 
                     break;
@@ -603,7 +610,7 @@ public static partial class TextDataServices
                 case '…':
                     if (l.Pause == 0)
                     {
-                        letters[i] = l with { Pause = 2 };
+                        letters[indexForPause] = l with { Pause = 2 };
                     }
 
                     break;
