@@ -668,6 +668,9 @@ namespace Murder
                 }
 
                 _sceneLoader.LoadContent();
+
+                // Load game input binding after all data is ready
+                Game.Input.LoadFromPreferences(Game.Data.Preferences);
             }
             catch (Exception ex)
             {

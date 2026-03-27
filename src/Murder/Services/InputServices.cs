@@ -15,8 +15,9 @@ public static class InputServices
     /// </summary>  
     /// <param name="reset">Optional text for an option to reset all bidings to default ones</param>
     /// <param name="exitText">Optional text for the exit option in the menu.</param>  
+    /// <param name="swapSubmit">Optional text for swap submit/cancel buttons</param>
     /// <returns>A <see cref="GenericMenuInfo{InputMenuOption}"/> containing the input bindings menu options.</returns>  
-    public static GenericMenuInfo<InputMenuOption> CreateBindingsMenuInfo(string? reset, string? exitText)
+    public static GenericMenuInfo<InputMenuOption> CreateBindingsMenuInfo(string? reset, string? exitText, string? swapSubmit)
     {
         var builder = ImmutableArray.CreateBuilder<InputMenuOption>();
 
@@ -57,13 +58,19 @@ public static class InputServices
 
             if (axisInfo.Horizontal && axisInfo.Vertical)
             {
-                builder.Add(new InputMenuOption(text + " (analogue)", InputMenuOption.InputStyle.AxisAnalogue, axisInfo.AxisId));
+                // Skip for now, since we don't allow customization
+                //builder.Add(new InputMenuOption(text + " (analogue)", InputMenuOption.InputStyle.AxisAnalogue, axisInfo.AxisId));
             }
 
             if (axisInfo.Vertical || axisInfo.Horizontal)
             {
                 builder.Add(new InputMenuOption(text, InputMenuOption.InputStyle.AxisDigitalPress, axisInfo.AxisId));
             }
+        }
+
+        if (swapSubmit != null)
+        {
+            builder.Add(new InputMenuOption(swapSubmit, InputMenuOption.InputStyle.SwapSubmitAndCancel, null));
         }
 
         if (reset != null)
