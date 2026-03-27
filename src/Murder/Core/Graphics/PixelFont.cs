@@ -566,10 +566,11 @@ public class PixelFontSize
             if (overflow)
             {
                 bool applyLineBreak = true;
-                if (!lineBreakOnSpace && TextDataServices.IsPonctuation(text[cursor]))
+                if (!lineBreakOnSpace && TextDataServices.IsPonctuation(text[cursor]) && maxWidth - offset.X > 2)
                 {
-                    // If this is a ponctuation right at the end of the sentence or before a new line,
+                    // If this is a pontuaction right at the end of the sentence or before a new line,
                     // we should be okay overflowing. It's better than the alternative.
+                    // BUT only if we're very close to the end.
                     applyLineBreak = false;
                 }
 
