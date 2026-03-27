@@ -10,6 +10,13 @@ public class InputProfileAsset : GameAsset
     public ImmutableArray<InputAxisInformation> Axis = ImmutableArray<InputAxisInformation>.Empty;
     public ImmutableArray<InputInformation> Buttons = ImmutableArray<InputInformation>.Empty;
 }
+public enum KeyboardTemplate
+{
+    QWERTY = 0,
+    AZERTY = 1,
+    Colemak = 2,
+    Dvorak = 3,
+}
 
 public readonly struct InputInformation
 {
@@ -17,6 +24,8 @@ public readonly struct InputInformation
 
     public readonly bool AllowPlayerCustomization;
     public readonly LocalizedString LocalizedName;
+
+    public readonly KeyboardTemplate DefaultKeyboardTemplate = KeyboardTemplate.QWERTY;
 
     [Search]
     public readonly ImmutableArray<Keys> DefaultKeyboard = [];
@@ -28,6 +37,8 @@ public readonly struct InputInformation
     public readonly ImmutableArray<Buttons> DefaultGamePadButtons = [];
     ///[Search]
     public readonly ImmutableArray<MouseButtons> DefaultMouseButtons = [];
+
+    public readonly ImmutableArray<InputButtonAxis> DefaultAxes = [];
 
     public InputInformation()
     {

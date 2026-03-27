@@ -1097,6 +1097,12 @@ public class PlayerInput
         virtualButton.DeregisterAll();
     }
 
+    public void ClearAxis(int id)
+    {
+        var virtualAxis = GetOrCreateAxis(id);
+        virtualAxis.DeregisterAll();
+    }
+
     public void RestoreDefaults(int id)
     {
         if (Game.Data.GetAsset<InputProfileAsset>(Game.Profile.InputProfile) is not InputProfileAsset inputProfile)
@@ -1243,6 +1249,7 @@ public class PlayerInput
             GameLogger.Warning("Skiping input config, InputProfile not found, did you set it in GameProfile?");
             return;
         }
+
         foreach (var button in inputProfile.Buttons)
         {
             var virtualButton = GetOrCreateButton(button.ButtonId);
@@ -1252,12 +1259,6 @@ public class PlayerInput
             RegisterAll(virtualButton, button);
         }
 
-        foreach (var axis in inputProfile.Axis)
-        {
-            var virtualAxes = GetOrCreateAxis(axis.AxisId);
-
-            // not implemented yet!
-        }
     }
 
     private readonly static Buttons[] _allButtons = 

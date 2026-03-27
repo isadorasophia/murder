@@ -21,7 +21,7 @@ public class VirtualButton : IVirtualInput
     public event Action<InputState>? OnPress;
 
     public float FlickerProtection { get; private set; } = 0;
-    
+
     public void Update(InputState inputState)
     {
         Previous = Down;
@@ -145,14 +145,42 @@ public class VirtualButton : IVirtualInput
     {
         foreach (var key in keys)
         {
+            bool alreadyAdded = false;
+            foreach (var button in Buttons)
+            {
+                if (button.Keyboard == key)
+                {
+                    alreadyAdded = true;
+                    break;
+                }
+            }
+            if (alreadyAdded)
+            {
+                continue;
+            }
+
             Buttons = Buttons.Add(new InputButton(key));
         }
     }
 
     internal void Register(Buttons[] buttons)
     {
+        bool alreadyAdded = false;
         foreach (var button in buttons)
         {
+            foreach (var b in Buttons)
+            {
+                if (b.Gamepad == button)
+                {
+                    alreadyAdded = true;
+                    break;
+                }
+            }
+            if (alreadyAdded)
+            {
+                continue;
+            }
+
             Buttons = Buttons.Add(new InputButton(button));
         }
     }
