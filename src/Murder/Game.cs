@@ -670,7 +670,8 @@ namespace Murder
                 _sceneLoader.LoadContent();
 
                 // Load game input binding after all data is ready
-                Game.Input.LoadFromPreferences(Game.Data.Preferences);
+                // I don't think we need this, it's the game's responsibility to load the input bindings, not the engine's.
+                //Game.Input.LoadFromPreferences(Game.Data.Preferences);
             }
             catch (Exception ex)
             {

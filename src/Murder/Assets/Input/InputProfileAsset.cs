@@ -25,8 +25,6 @@ public readonly struct InputInformation
     public readonly bool AllowPlayerCustomization;
     public readonly LocalizedString LocalizedName;
 
-    public readonly KeyboardTemplate DefaultKeyboardTemplate = KeyboardTemplate.QWERTY;
-
     [Search]
     public readonly ImmutableArray<Keys> DefaultKeyboard = [];
 

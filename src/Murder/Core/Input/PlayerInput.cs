@@ -1214,28 +1214,30 @@ public class PlayerInput
             else
             {
                 // Horizontal or vertical only, doesn't matter, duplicate the same value
-                switch (digital[0].Source)
+                if (digital.Length > 0)
                 {
-                    case InputSource.Keyboard:
-                        {
-                            if (digital[0].Keyboard is Keys up && digital[1].Keyboard is Keys down)
+                    switch (digital[0].Source)
+                    {
+                        case InputSource.Keyboard:
                             {
-                                virtualAxis.Register([new InputButtonAxis(up, up, down, down)]);
+                                if (digital[0].Keyboard is Keys up && digital[1].Keyboard is Keys down)
+                                {
+                                    virtualAxis.Register([new InputButtonAxis(up, up, down, down)]);
+                                }
                             }
-                        }
-                        break;
-                    case InputSource.Gamepad:
-                        {
-                            if (digital[0].Gamepad is Buttons up && digital[1].Gamepad is Buttons down)
+                            break;
+                        case InputSource.Gamepad:
                             {
-                                virtualAxis.Register([new InputButtonAxis(up, up, down, down)]);
+                                if (digital[0].Gamepad is Buttons up && digital[1].Gamepad is Buttons down)
+                                {
+                                    virtualAxis.Register([new InputButtonAxis(up, up, down, down)]);
+                                }
                             }
-                        }
-                        break;
-                    default:
-                        GameLogger.Warning("Not implemented yet!");
-                        break;
-
+                            break;
+                        default:
+                            GameLogger.Warning("Not implemented yet!");
+                            break;
+                    }
                 }
             }
         }
@@ -1261,13 +1263,13 @@ public class PlayerInput
 
     }
 
-    private readonly static Buttons[] _allButtons = 
-        [Buttons.DPadUp, Buttons.DPadDown, Buttons.DPadLeft, Buttons.DPadRight, 
-         Buttons.Start, Buttons.Back, Buttons.LeftStick, Buttons.RightStick, 
-         Buttons.LeftShoulder, Buttons.RightShoulder, Buttons.BigButton, 
-         Buttons.A, Buttons.B, Buttons.X, Buttons.Y, Buttons.LeftThumbstickLeft, 
-         Buttons.RightTrigger, Buttons.LeftTrigger, Buttons.RightThumbstickUp, 
-         Buttons.RightThumbstickDown, Buttons.RightThumbstickRight, 
+    private readonly static Buttons[] _allButtons =
+        [Buttons.DPadUp, Buttons.DPadDown, Buttons.DPadLeft, Buttons.DPadRight,
+         Buttons.Start, Buttons.Back, Buttons.LeftStick, Buttons.RightStick,
+         Buttons.LeftShoulder, Buttons.RightShoulder, Buttons.BigButton,
+         Buttons.A, Buttons.B, Buttons.X, Buttons.Y, Buttons.LeftThumbstickLeft,
+         Buttons.RightTrigger, Buttons.LeftTrigger, Buttons.RightThumbstickUp,
+         Buttons.RightThumbstickDown, Buttons.RightThumbstickRight,
          Buttons.RightThumbstickLeft, Buttons.LeftThumbstickUp, Buttons.LeftThumbstickDown,
          Buttons.LeftThumbstickRight];
 
