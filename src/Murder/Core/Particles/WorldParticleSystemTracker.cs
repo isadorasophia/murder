@@ -178,8 +178,9 @@ namespace Murder.Core.Particles
             for (int i = 0; i < _currentLength; ++i)
             {
                 int entityId = _indexToEntityId[i];
-                Vector2 position = world.GetEntity(entityId).TryGetGlobalPosition() ?? Vector2.Zero;
-                _poolTrackers[i].Step(_activeParticleSystems.Contains(entityId), position, cameraArea ,entityId);
+                Entity entity = world.GetEntity(entityId);
+                Vector2 position = entity.TryGetGlobalPosition() ?? Vector2.Zero;
+                _poolTrackers[i].Step(_activeParticleSystems.Contains(entityId), position, entity.HasAlwaysInCamera() ? null : cameraArea, entityId);
             }
         }
 

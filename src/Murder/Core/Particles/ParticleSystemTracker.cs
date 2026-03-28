@@ -63,7 +63,7 @@ namespace Murder.Core.Particles
         /// <param name="emitterPosition">Emitter position in game where the particles are fired from.</param>
         /// <param name="cameraArea">Emmiters outside of this area won't step</param>
         /// <param name="id">Entity id, used when generating the correct seed for the particle.</param>
-        public void Step(bool allowSpawn, Vector2 emitterPosition, Rectangle cameraArea, int id)
+        public void Step(bool allowSpawn, Vector2 emitterPosition, Rectangle? cameraArea, int id)
         {
             _lastEmitterPosition = emitterPosition;
 
@@ -73,7 +73,7 @@ namespace Murder.Core.Particles
             }
 
             float dt = Emitter.ScaledTime ? Game.DeltaTime : Game.UnscaledDeltaTime;
-            
+
             for (int i = 0; i < _currentLength; ++i)
             {
                 _particles[i].Step(Particle, _time, dt);
@@ -97,10 +97,13 @@ namespace Murder.Core.Particles
 
             _time += dt;
 
-            Rectangle boundingBox = Emitter.BoundingBoxSize().AddPosition(emitterPosition);
-            if (!boundingBox.Touches(cameraArea))
+            if (cameraArea != null)
             {
-                return;
+                Rectangle boundingBox = Emitter.BoundingBoxSize().AddPosition(emitterPosition);
+                if (!boundingBox.Touches(cameraArea.Value))
+                {
+                    return;
+                }
             }
 
             if (allowSpawn)
