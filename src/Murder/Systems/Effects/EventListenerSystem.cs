@@ -46,7 +46,7 @@ public class EventListenerSystem : IMessagerSystem
         }
 
         // this is sort of wrong right now. we should find a better threshold and propagation from parent.
-        if (canPlay && entity.TryFetchParent()?.TryGetAlpha()?.Alpha < .25f)
+        if (!alwaysPlay && canPlay && entity.TryFetchParent()?.TryGetAlpha()?.Alpha < .25f)
         {
             // don't play events for invisible entities!
             canPlay = false;
