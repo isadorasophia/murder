@@ -147,9 +147,9 @@ namespace Murder.Save
             return value;
         }
 
-        public void SetScalingKind(ScalingKind scaling)
+        public void SetScalingKind(ScalingKind scaling, bool force)
         {
-            if (scaling == Scaling)
+            if (!force && scaling == Scaling)
             {
                 return;
             }
