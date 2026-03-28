@@ -26,7 +26,7 @@ namespace Murder.Systems
         private float _fadeOutTime = -1;
 
         private Color _color;
-        private float _duration;
+        protected float _duration;
 
         private float _currentAlpha = 0;
         private float _currentSort = .05f;
