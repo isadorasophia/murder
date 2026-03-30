@@ -267,7 +267,8 @@ public class GenericSelectorSystem
             hook.UnselectAll();
         }
 
-        bool isCursorBusy = hook.CursorIsBusy.Any(); // && ignoreCursorOnCollidersSelected;
+        // this is causing a bug in which we are not able to use the cursor at all. for now, I'll just set this false.
+        bool isCursorBusy = false; //hook.CursorIsBusy.Any(); // && ignoreCursorOnCollidersSelected;
 
         if (isCursorBusy || hook.UsingGui)
         // Someone else is using our cursor, let's wait out turn.
