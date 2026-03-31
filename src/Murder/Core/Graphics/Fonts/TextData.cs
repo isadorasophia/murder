@@ -475,6 +475,8 @@ public static partial class TextDataServices
 
         ImmutableDictionary<int, RuntimeLetterProperties>.Builder? letters = ImmutableDictionary.CreateBuilder<int, RuntimeLetterProperties>();
 
+        int indexForPause = 0;
+
         string parsedText;
         if (allocatedLengthForSpecialCharacters == 0)
         {
@@ -529,11 +531,26 @@ public static partial class TextDataServices
                     continue;
                 }
 
-                // if this letter was skipped, we likely want to apply to the one right before it.
                 int indexInFinalString = indices[i];
-                if (skippedLetters[i] != LetterSkipMetadataFlag.None)
+
+                // Now, we need to do a workaround (I'm sorry). We are actually bypassing the last index when applying a pause.
+                // So, if the current character is skipped, we actually want to apply the pause to one index BEFORE.
+                if (indexInFinalString > 0 && skippedLetters[i] != LetterSkipMetadataFlag.None && properties.Pause > 0)
                 {
-                    indexInFinalString = Math.Max(0, indexInFinalString - 1);
+                    indexForPause = indexInFinalString - 1;
+
+                    RuntimeLetterProperties propertiesButWithPauseOnly = new() { Pause = properties.Pause };
+                    if (letters.TryGetValue(indexForPause, out RuntimeLetterProperties previousPropertiesToApplyPause))
+                    {
+                        letters[indexForPause] = previousPropertiesToApplyPause.CombineWith(propertiesButWithPauseOnly);
+                    }
+                    else
+                    {
+                        letters[indexForPause] = propertiesButWithPauseOnly;
+                    }
+
+                    // finally, remove the pause from our current property...
+                    properties = properties with { Pause = 0 };
                 }
 
                 if (letters.TryGetValue(indexInFinalString, out RuntimeLetterProperties previousProperties))
@@ -549,7 +566,7 @@ public static partial class TextDataServices
             parsedText = result.ToString();
         }
 
-        int indexForPause = 0;
+        indexForPause = 0;
 
         // Now, manually apply pauses according to the pontuaction.
         // We don't bother adding this to very last character, though.
