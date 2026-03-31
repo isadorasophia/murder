@@ -30,6 +30,11 @@ namespace Murder.Editor.CustomDiagnostics
                         GameLogger.Warning($"\uf071 Found invalid component of type '{t.Name}' on '{identifier}'.");
                     }
                 }
+
+                if (!targetDiagnostic.Propagate)
+                {
+                    return false;
+                }
             }
 
             IList<(string, EditorMember)> members = CustomComponent.GetMembersOf(target.GetType(), exceptForMembers: null);
@@ -57,7 +62,7 @@ namespace Murder.Editor.CustomDiagnostics
 
                         if (outputResult)
                         {
-                            GameLogger.Warning($"\uf071 Found invalid field '{name}' of type '{t.Name}' on '{identifier}'.");
+                            GameLogger.Warning($"\uf071 Found invalid field '{name}' of type '{t.Name}' on '{identifier}' at {target.GetType().Name}.");
                         }
                     }
                 }
