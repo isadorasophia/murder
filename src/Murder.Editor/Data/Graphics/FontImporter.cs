@@ -213,10 +213,12 @@ internal class FontImporter
                 characters: characters,
                 [.. kernings],
                 lineHeight: (int)fontMetrics.CapHeight - 1 + padding.Y, // Legacy code 
-                // lineHeight: Calculator.CeilToInt(fontMetrics.Descent - fontMetrics.Ascent + fontMetrics.Leading) + padding.Y, // TODO: Fix this?
+                                                                        // lineHeight: Calculator.CeilToInt(fontMetrics.Descent - fontMetrics.Ascent + fontMetrics.Leading) + padding.Y, // TODO: Fix this?
                 texturePath: fontPath,
                 baseline: -fontMetrics.Ascent - fontMetrics.Descent,
                 offset: fontOffset);
+
+            fontAsset.MakeGuid();
 
             // Save characters to JSON
             Game.Data.FileManager.SaveSerialized<GameAsset>(fontAsset, jsonSourcePackedPath);

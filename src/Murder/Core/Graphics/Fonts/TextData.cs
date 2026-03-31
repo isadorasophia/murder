@@ -280,7 +280,7 @@ public static partial class TextDataServices
                 float shake = 1;
                 if (match.Groups.Count > 1)
                 {
-                    shake = float.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+                    shake = InputServices.ParseFloatSafe(match.Groups[1].Value);
                 }
 
                 lettersBuilder[index] = lettersBuilder[index] with { Shake = shake };
@@ -303,14 +303,14 @@ public static partial class TextDataServices
                 float glitch = 1;
                 if (match.Groups[3].Length == 0)
                 {
-                    glitch = float.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+                    glitch = InputServices.ParseFloatSafe(match.Groups[1].Value);
 
                     int index = Math.Min(lettersBuilder.Length - 1, match.Index + match.Length);
                     lettersBuilder[index] = lettersBuilder[index] with { Glitch = glitch };
                 }
                 else
                 {
-                    glitch = float.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
+                    glitch = InputServices.ParseFloatSafe(match.Groups[2].Value);
 
                     Group textGroup = match.Groups[3];
                     for (int j = 0; j < textGroup.Length; ++j)
@@ -346,13 +346,13 @@ public static partial class TextDataServices
                 if (match.Groups[3].Length == 0)
                 {
                     int index = Math.Min(lettersBuilder.Length - 1, match.Index + match.Length);
-                    speed = float.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+                    speed = InputServices.ParseFloatSafe(match.Groups[1].Value);
 
                     lettersBuilder[index] = lettersBuilder[index] with { Speed = speed };
                 }
                 else
                 {
-                    speed = float.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
+                    speed = InputServices.ParseFloatSafe(match.Groups[2].Value);
 
                     Group textGroup = match.Groups[3];
                     for (int j = 0; j < textGroup.Length; ++j)

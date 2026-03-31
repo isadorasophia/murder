@@ -1,4 +1,5 @@
 using Murder.Diagnostics;
+using Murder.Services;
 using Murder.Utilities;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
@@ -207,10 +208,10 @@ namespace Murder.Core.Graphics
 
             if (match.Success)
             {
-                float r = float.Parse(match.Groups["r"].Value);
-                float g = float.Parse(match.Groups["g"].Value);
-                float b = float.Parse(match.Groups["b"].Value);
-                float a = float.Parse(match.Groups["a"].Value);
+                float r = InputServices.ParseFloatSafe(match.Groups["r"].Value);
+                float g = InputServices.ParseFloatSafe(match.Groups["g"].Value);
+                float b = InputServices.ParseFloatSafe(match.Groups["b"].Value);
+                float a = InputServices.ParseFloatSafe(match.Groups["a"].Value);
 
                 Console.WriteLine($"r: {r}, g: {g}, b: {b}, a: {a}");
                 return new Color(r, g, b, a);
@@ -272,7 +273,7 @@ namespace Murder.Core.Graphics
         public static Color FromHex(string hex)
         {
             // Parse the hexadecimal string into an integer
-            int hexValue = int.Parse(hex.TrimStart('#'), NumberStyles.HexNumber);
+            int hexValue = InputServices.ParseIntSafe(hex.TrimStart('#'), NumberStyles.HexNumber);
 
             // Extract the red, green, and blue color values from the integer
             int r = (hexValue >> 16) & 0xFF;
@@ -297,10 +298,10 @@ namespace Murder.Core.Graphics
             Match match = ColorRegex().Match(value);
             if (match.Success)
             {
-                float r = float.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
-                float g = float.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
-                float b = float.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
-                float a = float.Parse(match.Groups[4].Value, CultureInfo.InvariantCulture);
+                float r = InputServices.ParseFloatSafe(match.Groups[1].Value);
+                float g = InputServices.ParseFloatSafe(match.Groups[2].Value);
+                float b = InputServices.ParseFloatSafe(match.Groups[3].Value);
+                float a = InputServices.ParseFloatSafe(match.Groups[4].Value);
                 return new Color(r, g, b, a);
             }
 

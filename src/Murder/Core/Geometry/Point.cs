@@ -1,5 +1,6 @@
 ﻿using Bang.Components;
 using Murder.Components;
+using Murder.Services;
 using Murder.Utilities;
 using System.Numerics;
 
@@ -92,7 +93,7 @@ namespace Murder.Core.Geometry
         public static explicit operator Point(string p)
         {
             var split = p.Trim('(', ')').Split(',');
-            return new Point(int.Parse(split[0]), int.Parse(split[1]));
+            return new Point(InputServices.ParseIntSafe(split[0]), InputServices.ParseIntSafe(split[1]));
         }
 
         /// <summary>

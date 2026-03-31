@@ -5,6 +5,8 @@ using Murder.Core;
 using Murder.Core.Input;
 using Murder.Diagnostics;
 using System.Collections.Immutable;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Murder.Services;
 
@@ -106,4 +108,29 @@ public static class InputServices
         return null;
     }
 
+    public static float ParseFloatSafe(string s)
+    {
+        try
+        {
+            return float.Parse(s, CultureInfo.InvariantCulture);
+        }
+        catch
+        {
+            GameLogger.Log($"Error while parsing float {s}! Returning 1...");
+            return 1;
+        }
+    }
+
+    public static int ParseIntSafe(string s, NumberStyles style = NumberStyles.Integer)
+    {
+        try
+        {
+            return int.Parse(s, style, CultureInfo.InvariantCulture);
+        }
+        catch
+        {
+            GameLogger.Log($"Error while parsing int {s}! Returning 1...");
+            return 1;
+        }
+    }
 }
