@@ -223,7 +223,7 @@ namespace Murder.Editor.Importers
 
             if (atlas.CountEntries == 0)
             {
-                GameLogger.Error($"I didn't find any content to pack! ({rawResourcesPath})");
+                GameLogger.Warning($"I didn't find any content to pack! ({rawResourcesPath})");
                 atlas.Dispose();
 
                 return null;

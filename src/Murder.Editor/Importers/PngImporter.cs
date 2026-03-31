@@ -91,7 +91,7 @@ namespace Murder.Editor.Importers
 
             if (atlas.CountEntries == 0)
             {
-                GameLogger.Error($"I didn't find any content to pack! ({inputPath})");
+                GameLogger.Warning($"I didn't find any content to pack! ({inputPath})");
             }
 
             // Make sure we also have the atlas save at the binaries path.
