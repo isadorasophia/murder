@@ -529,7 +529,12 @@ public static partial class TextDataServices
                     continue;
                 }
 
+                // if this letter was skipped, we likely want to apply to the one right before it.
                 int indexInFinalString = indices[i];
+                if (skippedLetters[i] != LetterSkipMetadataFlag.None)
+                {
+                    indexInFinalString = Math.Max(0, indexInFinalString - 1);
+                }
 
                 if (letters.TryGetValue(indexInFinalString, out RuntimeLetterProperties previousProperties))
                 {
