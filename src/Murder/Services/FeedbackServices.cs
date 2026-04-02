@@ -113,6 +113,7 @@ public static class FeedbackServices
         public readonly string Description { get; init; } = string.Empty;
         public readonly int MachineId { get; init; } = 0;
 
+        public readonly string Version { get; init; } = string.Empty;
         public readonly ScreenshotFeedbackData?[]? Screenshots { get; init; } = null;
 
         public FeedbackData() { }
@@ -163,6 +164,7 @@ public static class FeedbackServices
             Files = files,
             CrashLog = previousCrashLog,
             Log = GameLogger.GetCurrentLog(),
+            Version = data.Version
         };
 
         bool success = await SendFeedbackAsync(rawData);
