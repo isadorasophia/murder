@@ -318,7 +318,7 @@ public static class FeedbackServices
         catch (Exception ex)
         {
             // Handle exceptions
-            GameLogger.Error($"An error occurred while getting the sccreenshot: {ex.Message}");
+            GameLogger.Error($"An error occurred while getting the screenshot: {ex.Message}");
             return null;
         }
     }
