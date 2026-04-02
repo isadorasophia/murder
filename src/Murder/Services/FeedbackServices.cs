@@ -189,6 +189,7 @@ public static class FeedbackServices
         public string Callstack { get; init; } = string.Empty;
 
         public string Log { get; init; } = string.Empty;
+        public string Version { get; init; } = string.Empty;
 
         public IEnumerable<(string name, FileWrapper file)> Files { get; init; } = [];
 
@@ -221,6 +222,7 @@ public static class FeedbackServices
             content.Add(new StringContent(data.CrashLog, Encoding.UTF8), "Crash");
             content.Add(new StringContent(data.Callstack, Encoding.UTF8), "Callstack");
             content.Add(new StringContent(data.Log, Encoding.UTF8), "Log");
+            content.Add(new StringContent(data.Version, Encoding.UTF8), "Version");
 
 #if DEBUG
             content.Add(new StringContent("editor", Encoding.UTF8), "Environment");
