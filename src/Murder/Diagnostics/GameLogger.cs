@@ -355,7 +355,7 @@ public class GameLogger
         string logFilePath = GetCrashLogPath();
 
         StringBuilder content = new(GetCurrentLog());
-        File.AppendAllText(logFilePath, content.ToString());
+        File.WriteAllTextAsync(logFilePath, content.ToString());
     }
 
     public static string GetCrashLogPath() => Path.Join(Game.Data.SaveBasePath, "crash.log");
@@ -375,6 +375,7 @@ public class GameLogger
     {
         // Not implemented by game, only by editor.
     }
+
     public static void Track(string variableName, object value)
     {
         GameLogger._instance?.TrackImpl(variableName, value);
