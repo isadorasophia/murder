@@ -125,6 +125,79 @@ internal static class LocalizationExporter
         return true;
     }
 
+    public static bool ExportToTxt(LocalizationAsset asset)
+    {
+        _isExporting = true;
+
+        // create a copy so we don't modify the actual asset
+        LocalizationAsset target = SerializationHelper.DeepCopy(asset);
+
+        StringBuilder builder = new();
+
+        HashSet<Guid> dialogueResources = new();
+        foreach (LocalizationAsset.ResourceDataForAsset data in target.DialogueResources)
+        {
+            foreach (LocalizedDialogueData g in data.DataResources)
+            {
+                dialogueResources.Add(g.Guid);
+            }
+        }
+
+        foreach (LocalizedStringData data in target.Resources)
+        {
+            if (dialogueResources.Contains(data.Guid))
+            {
+                // Add this separately
+                continue;
+            }
+
+            LocalizedStringData? referenceData = target.TryGetResource(data.Guid);
+            builder.AppendLine(referenceData?.String);
+        }
+
+        // Now, put all these right at the end of the document.
+        // Why, do you ask? Absolutely no reason. It just seemed reasonable that generated strings came later.
+        foreach (LocalizationAsset.ResourceDataForAsset dialogueData in target.DialogueResources)
+        {
+            // Sometimes, an entire dialogue might have been skipped out and its data has been removed from the resource.
+            // we do a sanity check here.
+            bool hasAnyLineAvailable = false;
+            foreach (LocalizedDialogueData localizedDialogueData in dialogueData.DataResources)
+            {
+                LocalizedStringData? data = target.TryGetResource(localizedDialogueData.Guid);
+                if (data is not null)
+                {
+                    hasAnyLineAvailable = true;
+                    break;
+                }
+            }
+
+            if (!hasAnyLineAvailable)
+            {
+                continue;
+            }
+
+            foreach (LocalizedDialogueData localizedDialogueData in dialogueData.DataResources)
+            {
+                LocalizedStringData? data = target.TryGetResource(localizedDialogueData.Guid);
+                if (data is null)
+                {
+                    continue;
+                }
+
+                builder.AppendLine(data?.String);
+            }
+        }
+
+        string fullPath = Path.Combine(GetFullRawLocalizationPath(), "all.txt");
+        FileManager.CreateDirectoryPathIfNotExists(fullPath);
+
+        _ = File.WriteAllTextAsync(fullPath, builder.ToString(), Encoding.UTF8);
+
+        _isExporting = false;
+        return true;
+    }
+
     public static bool ImportFromCsv(LocalizationAsset asset)
     {
         if (_isExporting)

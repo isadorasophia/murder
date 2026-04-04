@@ -170,10 +170,27 @@ namespace Murder.Editor.CustomEditors
 
                     ImGuiHelpers.HelpTooltip("Validate strings from a ref.csv file.");
                     ImGui.SameLine();
+
+                    if (ImGuiHelpers.IconButton('\uf1ea', $"export_{_localization.Guid}"))
+                    {
+                        _currentlyRunningOnLocalization = true;
+
+                        Task.Run(() =>
+                        {
+                            LocalizationExporter.ExportToTxt(_localization);
+                            _currentlyRunningOnLocalization = false;
+                        });
+                    }
+
+                    ImGuiHelpers.HelpTooltip("Export all strings to a all.txt file.");
+                    ImGui.SameLine();
                 }
                 else
                 {
                     ImGuiHelpers.SelectedIconButton('\uf462');
+                    ImGui.SameLine();
+
+                    ImGuiHelpers.SelectedIconButton('\uf1ea');
                     ImGui.SameLine();
                 }
             }
