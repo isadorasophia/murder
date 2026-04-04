@@ -48,9 +48,6 @@ namespace Murder.Components
         /// </summary>
         public readonly Orientation? SupportedOrientation { get; init; } = null;
 
-        // ===== getters =====
-        public string AnimationId => _nextAnimationsOverload.Length == 0 ? string.Empty : _nextAnimationsOverload[0];
-
         [ShowInEditor]
         public string CurrentAnimation
         {
