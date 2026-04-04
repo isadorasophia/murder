@@ -76,6 +76,11 @@ namespace Murder.Systems
                     Color color = tracker.Particle.CalculateColor(delta) * particle.Alpha;
                     Vector2 scale = tracker.Particle.CalculateScale(delta);
                     float ySort = RenderServices.YSort(particle.Position.Y + tracker.Particle.SortOffset);
+                    float rotation = particle.StartRotation + particle.Rotation;
+                    if (tracker.Particle.RotateWithVelocity)
+                    {
+                        rotation = (float)Math.Atan2(particle.Velocity * Math.Sin(rotation), particle.Velocity * Math.Cos(rotation));
+                    }
 
                     switch (texture.Kind)
                     {
@@ -93,8 +98,14 @@ namespace Murder.Systems
 
                             RenderServices.DrawRectangle(
                                 batch,
-                                new Rectangle(rectangle.TopLeft - rectangle.Size * scale * 0.5f, rectangle.Size * scale),
-                                new DrawInfo(ySort) { Color = color, BlendState = tracker.Particle.BlendState }
+                                new Rectangle(rectangle.TopLeft, rectangle.Size * scale),
+                                new DrawInfo(ySort)
+                                {
+                                    Color = color,
+                                    BlendState = tracker.Particle.BlendState,
+                                    Rotation = rotation,
+                                    Origin = Vector2.One * 0.5f
+                                }
                                 );
                             break;
 
@@ -137,7 +148,7 @@ namespace Murder.Systems
                                 animationLoop: true,
                                 origin: Vector2.Zero,
                                 imageFlip: ImageFlip.None,
-                                rotation: particle.Rotation,
+                                rotation: rotation,
                                 scale: scale,
                                 color,
                                 blend: RenderServices.BLEND_NORMAL,
@@ -156,7 +167,7 @@ namespace Murder.Systems
                                     new Microsoft.Xna.Framework.Vector2(simpleTexture.Bounds.Width, simpleTexture.Bounds.Height),
                                     simpleTexture.Bounds,
                                     ySort,
-                                    particle.Rotation,
+                                    rotation,
                                     scale.ToXnaVector2(),
                                     ImageFlip.None,
                                     color,

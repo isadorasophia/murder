@@ -743,7 +743,7 @@ public static partial class RenderServices
             targetSize: Point.One,
             sourceRectangle: default,
             sort: drawInfo.Sort,
-            rotation: 0,
+            rotation: drawInfo.Rotation,
             scale: rectangle.Size.ToXnaVector2(),
             flip: ImageFlip.None,
             color: drawInfo.Color,
