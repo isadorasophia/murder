@@ -283,7 +283,8 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
                 },
                 animationInfo);
 
-            issueSlowdownWarning = RenderServices.TriggerEventsIfNeeded(e, asset.Guid, animationInfo, frameInfo);
+            // I don't think we need events in the editor
+            // issueSlowdownWarning = RenderServices.TriggerEventsIfNeeded(e, asset.Guid, animationInfo, frameInfo);
 
             RenderServices.UpdateRenderedSpriteCache(e, new RenderedSpriteCache() with
             {
