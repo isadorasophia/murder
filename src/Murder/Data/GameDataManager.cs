@@ -430,7 +430,7 @@ namespace Murder.Data
 
             if (LoadShader("sprite2d", out result, breakOnFail, forceReload)) ShaderSprite = result;
             if (LoadShader("simple", out result, breakOnFail, forceReload)) ShaderSimple = result;
-            if (LoadShader("pixel_art", out result, breakOnFail, forceReload)) ShaderPixel = result;
+            if (LoadShader("pixel_art_murder", out result, breakOnFail, forceReload)) ShaderPixel = result;
 
             if (_game is IShaderProvider { Shaders.Length: > 0 } provider)
             {
