@@ -100,6 +100,10 @@ public readonly struct InputButton : IEquatable<InputButton>
             case InputSource.Gamepad:
                 return state.GamePadState.IsButtonDown(_gamepad!.Value);
             case InputSource.Mouse:
+                if (!Game.Instance.IsActive)
+                {
+                    return false;
+                }
                 switch (_mouse!.Value)
                 {
                     case MouseButtons.Left:
