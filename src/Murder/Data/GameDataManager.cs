@@ -88,7 +88,7 @@ namespace Murder.Data
         public string PackedBinDirectoryPath => _packedBinDirectoryPath!;
 
         public string BinResourcesDirectoryPath => _binResourcesDirectory;
-        
+
         public GameProfile GameProfile
         {
             get
@@ -626,7 +626,7 @@ namespace Murder.Data
                 GameLogger.Warning($"Error loading [{path}]:{ex}");
                 return null;
             }
-            
+
             if (_errorLoadingLastAsset)
             {
                 _errorLoadingLastAsset = false;
@@ -968,7 +968,10 @@ namespace Murder.Data
         {
             if (CachedUniqueTextures.TryGetValue(path, out Texture2D? value))
             {
-                return value;
+                if (!value.IsDisposed)
+                {
+                    return value;
+                }
             }
 
             string fullPath = Path.Join(_packedBinDirectoryPath, $"{path.EscapePath()}{TextureServices.QOI_GZ_EXTENSION}");
@@ -976,6 +979,12 @@ namespace Murder.Data
             {
                 // We also support .png
                 fullPath = Path.Join(_packedBinDirectoryPath, $"{path.EscapePath()}{TextureServices.PNG_EXTENSION}");
+
+                if (!File.Exists(fullPath))
+                {
+                    GameLogger.Error($"Unable to find texture at path: {path}");
+                    throw new FileNotFoundException($"Unable to find texture at path: {path}");
+                }
             }
 
             Texture2D texture = TextureServices.FromFile(Game.GraphicsDevice, fullPath);
