@@ -189,6 +189,12 @@ public class PlayerInput
         b.Register(buttons);
     }
 
+    public void RegisterButton(int button, params MouseButtons[] buttons)
+    {
+        VirtualButton b = GetOrCreateButton(button);
+        b.Register(buttons);
+    }
+
     /// <summary>
     /// Set a minimum cooldown for input on this button.
     /// </summary>
@@ -1285,6 +1291,30 @@ public class PlayerInput
                     return button;
                 }
             }
+        }
+
+        return null;
+    }
+
+    public MouseButtons? GetAnyMouseButton()
+    {
+        MouseState mouseState = Mouse.GetState();
+        if (!Game.Instance.IsActive)
+        {
+            return null;
+        }
+
+        if (mouseState.LeftButton == ButtonState.Pressed)
+        {
+            return MouseButtons.Left;
+        }
+        if (mouseState.MiddleButton == ButtonState.Pressed)
+        {
+            return MouseButtons.Middle;
+        }
+        if (mouseState.RightButton == ButtonState.Pressed)
+        {
+            return MouseButtons.Right;
         }
 
         return null;
