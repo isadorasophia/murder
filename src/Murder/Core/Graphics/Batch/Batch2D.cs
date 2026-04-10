@@ -410,6 +410,11 @@ public class Batch2D
         void WriteBatchItemToBuffers(SpriteBatchItem batchItem, ref int verticesIndex, ref int indicesIndex)
         {
             int vertexOffset = verticesIndex;
+            int indexCount = (batchItem.VertexCount - 2) * 3;
+            if (indexCount <= 0)
+            {
+                return; // Bail out
+            }
 
             // Pre-check and resize
             int requiredVertexCapacity = verticesIndex + batchItem.VertexCount;
@@ -428,7 +433,6 @@ public class Batch2D
 
 
             // Indices
-            int indexCount = (batchItem.VertexCount - 2) * 3;
             int requiredIndexCapacity = indicesIndex + indexCount;
             if (requiredIndexCapacity > _indices.Length)
             {

@@ -600,7 +600,7 @@ public static partial class RenderServices
             Animation = animation
         };
 
-        var image = asset.GetFrame(frameInfo.Frame);
+        AtlasCoordinates image = asset.GetFrame(frameInfo.Frame);
         Vector2 offset = (asset.Origin + drawInfo.Origin * image.Size).Round();
         Vector2 roundedPosition = position.Round();
         void DrawImageAt(Vector2 pos, Color color, bool wash, float sort)

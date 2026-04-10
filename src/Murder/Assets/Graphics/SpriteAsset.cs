@@ -3,6 +3,7 @@ using Murder.Attributes;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Data;
+using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Immutable;
 
@@ -92,6 +93,11 @@ public class SpriteAsset : GameAsset, IPreview
 
     public AtlasCoordinates GetFrame(int frame)
     {
+        if (frame < 0 || frame >= Frames.Length)
+        {
+            GameLogger.Error($"Trying to get frame {frame} from sprite {Name} which only has {Frames.Length} frames. Returning empty coordinates.");
+            return AtlasCoordinates.Empty;
+        }
         return Frames[frame];
     }
 
