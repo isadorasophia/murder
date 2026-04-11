@@ -18,8 +18,9 @@ public static class InputServices
     /// <param name="reset">Optional text for an option to reset all bidings to default ones</param>
     /// <param name="exitText">Optional text for the exit option in the menu.</param>  
     /// <param name="swapSubmit">Optional text for swap submit/cancel buttons</param>
+    /// <param name="allowMouse">Optional text for allowing mouse as submit/cancel</param>
     /// <returns>A <see cref="GenericMenuInfo{InputMenuOption}"/> containing the input bindings menu options.</returns>  
-    public static GenericMenuInfo<InputMenuOption> CreateBindingsMenuInfo(string? reset, string? exitText, string? swapSubmit)
+    public static GenericMenuInfo<InputMenuOption> CreateBindingsMenuInfo(string? reset, string? exitText, string? swapSubmit, string? allowMouse)
     {
         var builder = ImmutableArray.CreateBuilder<InputMenuOption>();
 
@@ -73,6 +74,11 @@ public static class InputServices
         if (swapSubmit != null)
         {
             builder.Add(new InputMenuOption(swapSubmit, InputMenuOption.InputStyle.SwapSubmitAndCancel, null));
+        }
+
+        if (allowMouse != null)
+        {
+            builder.Add(new InputMenuOption(allowMouse, InputMenuOption.InputStyle.AllowMouseClicks, null));
         }
 
         if (reset != null)

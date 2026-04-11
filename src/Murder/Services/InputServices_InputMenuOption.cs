@@ -19,6 +19,7 @@ namespace Murder.Services
             AxisAnalogue = 2,
             AxisDigitalPress = 3,
             SwapSubmitAndCancel = 4,
+            AllowMouseClicks = 5,
         }
 
         public InputMenuOption(string text, InputStyle style, int? buttonId)
