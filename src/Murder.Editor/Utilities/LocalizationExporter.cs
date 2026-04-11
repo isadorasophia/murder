@@ -261,7 +261,9 @@ internal static class LocalizationExporter
                 /* string original = tokens[1]; */
 
                 string translated = tokens.Length > 3 ? tokens[3] : string.Empty;
-                string? notes = tokens.Length > 4 ? tokens[4] : null;
+
+                // TODO: Honestly, I'm not sure if we want to import notes. Probably not.
+                string? notes = null; // tokens.Length > 4 ? tokens[4] : null;
 
                 bool updated = asset.UpdateOrSetResource(guid, translated, notes);
                 if (!updated && !string.IsNullOrEmpty(translated))
