@@ -16,7 +16,6 @@ using Murder.Editor.Diagnostics;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Systems.Debug;
 using Murder.Editor.Utilities;
-using Murder.Utilities;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -72,7 +71,7 @@ namespace Murder.Editor
 
         public CursorStyle Cursor { get; set; } = CursorStyle.Normal;
 
-        protected override bool HasCursor => true;
+        public override bool HasCursor => true;
 
         public Architect(IMurderArchitect? game = null, EditorDataManager? editorDataManager = null) : base(game, editorDataManager ?? new EditorDataManager(game)) { }
 

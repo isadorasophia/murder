@@ -253,15 +253,33 @@ public class PlayerInput
         var scale = Game.Instance.GameScale;
 
 #if DEBUG
-        if (MouseConsumed)
+        if (Game.Instance.HasCursor && MouseConsumed)
         {
             _buttons[MurderInputButtons.Debug].Update(inputState);
         }
 #endif
 
-        foreach (var button in _buttons)
+        bool hasAnyMouseBinding = false;
+
+        foreach ((int id, VirtualButton button) in _buttons)
         {
-            button.Value.Update(inputState);
+            button.Update(inputState);
+
+            // do not lock based on murder input buttons.
+            if (button.UsingMouse &&
+                id != MurderInputButtons.LeftClick && 
+                id != MurderInputButtons.RightClick &&
+                id != MurderInputButtons.MiddleClick)
+            {
+                hasAnyMouseBinding = true;
+            }
+        }
+
+        // if we are using mouse, make sure we stay locked in the game screen.
+        if (hasAnyMouseBinding && !Game.Instance.HasCursor && Game.Instance.IsActive)
+        {
+            Point center = Game.Instance.ScreenSize / 2f;
+            Mouse.SetPosition(center.X, center.Y);
         }
 
         foreach (var axis in _axis)
