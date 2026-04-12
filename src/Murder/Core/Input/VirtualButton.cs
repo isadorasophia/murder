@@ -6,7 +6,7 @@ namespace Murder.Core.Input;
 
 public class VirtualButton : IVirtualInput
 {
-    public ImmutableArray<InputButton> Buttons = ImmutableArray<InputButton>.Empty;
+    public ImmutableArray<InputButton> Buttons = [];
     public InputButton?[] _lastPressedButton = new InputButton?[2];
 
     public bool Pressed => Down && !Previous && !Consumed;
@@ -20,15 +20,28 @@ public class VirtualButton : IVirtualInput
     public float HeldTime = 0f;
     public event Action<InputState>? OnPress;
 
+    /// <summary>
+    /// Whether we are using mouse as an input source for this button.
+    /// </summary>
+    public bool UsingMouse = false;
+
     public float FlickerProtection { get; private set; } = 0;
 
     public void Update(InputState inputState)
     {
         Previous = Down;
         Down = false;
+        UsingMouse = false;
 
-        foreach (var button in Buttons)
+        foreach (InputButton button in Buttons)
         {
+            // if we got to this point using the mouse, make sure we're taking it
+            // into account.
+            if (button.Mouse.HasValue)
+            {
+                UsingMouse = true;
+            }
+
             if (button.Check(inputState))
             {
                 Down = true;

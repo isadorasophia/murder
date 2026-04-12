@@ -312,7 +312,12 @@ namespace Murder
             }
         }
 
-        protected virtual bool HasCursor => false;
+        /// <summary>
+        /// Raw size of the screen.
+        /// </summary>
+        public Point ScreenSize => _screenSize;
+
+        public virtual bool HasCursor => false;
 
         /// <summary>
         /// Whether there is a pending screen update to modify the size.
@@ -545,6 +550,7 @@ namespace Murder
             SDL3.SDL.SDL_GetWindowSizeInPixels(Window.Handle, out int width, out int height);
             return (width > 0 && height > 0) ? new Point(width, height) : new Point(Window.ClientBounds.Width, Window.ClientBounds.Height);
         }
+
         public Point GetDisplaySize()
         {
             uint currentDisplayIndex = SDL3.SDL.SDL_GetDisplayForWindow(Window.Handle);
