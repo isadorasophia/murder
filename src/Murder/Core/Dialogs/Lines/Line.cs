@@ -55,17 +55,17 @@ namespace Murder.Core.Dialogs
         public Line(Guid? speaker, string? portrait, LocalizedString? text, float? delay, string? @event) : this(speaker) =>
             (Portrait, Text, Delay, Event) = (portrait, text, delay, @event);
 
-        public Line WithText(LocalizedString text) => new(Speaker, Portrait, text, Delay, Event);
+        public Line WithText(LocalizedString text) => new(Speaker, Portrait, text, Delay, Event) { ActBeforeWith = ActBeforeWith };
 
-        public Line WithDelay(float delay) => new(Speaker, Portrait, Text, delay, Event);
+        public Line WithDelay(float delay) => new(Speaker, Portrait, Text, delay, Event) { ActBeforeWith = ActBeforeWith };
 
-        public Line WithSpeaker(Guid speaker) => new(speaker, Portrait, Text, Delay, Event);
+        public Line WithSpeaker(Guid speaker) => new(speaker, Portrait, Text, Delay, Event) { ActBeforeWith = ActBeforeWith };
 
-        public Line WithSpeakerAndPortrait(Guid speaker, string? portrait) => new(speaker, portrait, Text, Delay, Event);
+        public Line WithSpeakerAndPortrait(Guid speaker, string? portrait) => new(speaker, portrait, Text, Delay, Event) { ActBeforeWith = ActBeforeWith };
 
-        public Line WithPortrait(string? portrait) => new(Speaker, portrait, Text, Delay, Event);
+        public Line WithPortrait(string? portrait) => new(Speaker, portrait, Text, Delay, Event) { ActBeforeWith = ActBeforeWith };
 
-        public Line WithEvent(string? @event) => new(Speaker, Portrait, Text, Delay, @event);
+        public Line WithEvent(string? @event) => new(Speaker, Portrait, Text, Delay, @event) { ActBeforeWith = ActBeforeWith };
 
         [MemberNotNullWhen(true, nameof(Text))]
         public bool IsText => Text is not null;
