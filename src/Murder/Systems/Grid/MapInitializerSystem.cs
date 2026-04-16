@@ -61,6 +61,7 @@ namespace Murder.Systems
                 RoomComponent room = gridEntities[i].GetRoom();
 
                 InitializeMap(map, grid, room, assets);
+                InitializeRoom(gridEntities[i], grid, room);
             }
 
             InitializeEmptyTiles(map, gridEntities);
@@ -92,6 +93,8 @@ namespace Murder.Systems
                 }
             }
         }
+
+        protected virtual void InitializeRoom(Entity e, TileGrid grid, RoomComponent room) { }
 
         protected virtual void InitializeTile(Map map, int x, int y, ITileProperties? iProperties) { }
 

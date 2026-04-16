@@ -4,6 +4,13 @@ using Murder.Attributes;
 
 namespace Murder.Components
 {
+    [Flags]
+    public enum RoomFlags
+    {
+        None = 0,
+        ClampCamera = 1
+    }
+
     /// <summary>
     /// This describes a room component properties.
     /// </summary>
@@ -12,8 +19,10 @@ namespace Murder.Components
     {
         [GameAssetId(typeof(FloorAsset))]
         public readonly Guid Floor = Guid.Empty;
+        public readonly RoomFlags Flags = RoomFlags.None;
 
         public RoomComponent() { }
+
         public RoomComponent(Guid floor) { Floor = floor; }
     }
 }
