@@ -332,11 +332,7 @@ public class GameLogger
     public static void SpewException(Exception ex)
     {
         GameLogger logger = GetOrCreateInstance();
-
-        // We skip the 2 first frames since they are related to the logger itself
-        System.Diagnostics.StackTrace t = new System.Diagnostics.StackTrace(2, true);
-
-        logger._lastExceptionCallstack = t.ToString();
+        logger._lastExceptionCallstack = ex.ToString();
 
         StringBuilder message = new();
         message.Append($"Exception was thrown! {ex.Message}");
