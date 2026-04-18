@@ -335,7 +335,7 @@ public class GameLogger
         logger._lastExceptionCallstack = ex.ToString();
 
         StringBuilder message = new();
-        message.Append($"Exception was thrown! {ex.Message}");
+        message.Append($"Exception was thrown! {ex.Message}\n");
         message.Append(logger._lastExceptionCallstack);
 
         Warning(message.ToString());
