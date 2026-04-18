@@ -19,6 +19,9 @@ namespace Murder.Core.Particles
         public float Friction;
 
         public Vector2 Gravity;
+        public float Attraction;
+
+        public Vector2 CurrentVelocity { get; private set; }
 
         /// <summary>
         /// This is the lifetime of the particle over 0 to 1.
@@ -45,6 +48,7 @@ namespace Murder.Core.Particles
             Vector2 position,
             Vector2 fromPosition,
             Vector2 gravity,
+            float attraction,
             float startAlpha,
             float startVelocity,
             float startRotation,
@@ -67,6 +71,7 @@ namespace Murder.Core.Particles
             Friction = startFriction;
             RotationSpeed = startRotationSpeed;
             Gravity = gravity;
+            Attraction = attraction;
 
             _fromAlpha = fromAlpha;
         }
@@ -86,8 +91,9 @@ namespace Murder.Core.Particles
         /// </summary>
         /// <param name="particle">Value on the particle based on the asset.</param>
         /// <param name="currentTime">Current time that the particle system exists.</param>
+        /// <param name="particleSystemCenter">The center of the particle system, used for attraction.</param>
         /// <param name="dt">Delta time since the last Step call.</param>
-        public void Step(in Particle particle, float currentTime, float dt)
+        public void Step(in Particle particle, float currentTime, Vector2 particleSystemCenter, float dt)
         {
             if (Lifetime == 0)
             {
@@ -109,7 +115,16 @@ namespace Murder.Core.Particles
             // Apply friction.
             Velocity = Velocity - Velocity * Friction * Friction * dt;
 
-            _localPosition += Vector2Helper.FromAngle(StartRotation + Rotation) * Velocity * dt + Gravity * dt;
+            CurrentVelocity = Vector2Helper.FromAngle(StartRotation + Rotation) * Velocity;
+
+            // Attract towards the center of the particle system.
+            if (Attraction != 0)
+            {
+                Vector2 toCenter = (particleSystemCenter - Position).NormalizedWithSanity();
+                CurrentVelocity += toCenter * Attraction * dt;
+            }
+
+            _localPosition += CurrentVelocity * dt + Gravity * dt;
         }
     }
 }

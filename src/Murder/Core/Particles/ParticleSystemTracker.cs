@@ -76,7 +76,7 @@ namespace Murder.Core.Particles
 
             for (int i = 0; i < _currentLength; ++i)
             {
-                _particles[i].Step(Particle, _time, dt);
+                _particles[i].Step(Particle, _time, emitterPosition, dt);
 
                 if (Particle.FollowEntityPosition)
                 {
@@ -160,10 +160,11 @@ namespace Murder.Core.Particles
                 Emitter.Shape.GetRandomPosition(_random), // Implement something based on the shape and angle.
                 fromPosition: emitterPosition,
                 gravity: Particle.Gravity.GetRandomValue(_random),
+                attraction: Particle.Attraction.GetValueAt(0),
                 startAlpha: Particle.Alpha.GetValueAt(0),
                 Emitter.Speed.GetRandomValue(_random) + Particle.StartVelocity.GetValueAt(0),
                 Emitter.Angle.GetRandomValue(_random),
-                Particle.Acceleration.GetValueAt(0),
+                Particle.Acceleration.GetRandomValue(_random),
                 Particle.Friction.GetValueAt(0),
                 Particle.RotationSpeed.GetValueAt(0),
                 fromAlpha: Alpha

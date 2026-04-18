@@ -17,8 +17,11 @@ public readonly struct Particle
     [Tooltip("This is how long this particle lives.")]
     public readonly ParticleValueProperty LifeTime = ParticleValueProperty.Empty;
 
-    [Tooltip("Constant velocity applied to the particles.")]
+    [Tooltip("Constant velocity applied to the particles towards a direction.")]
     public readonly ParticleVectorValueProperty Gravity = ParticleVectorValueProperty.Empty;
+
+    [Tooltip("Constant velocity applied to the particles towards the center of the particle system")]
+    public readonly ParticleValueProperty Attraction = new ParticleValueProperty(0);
 
     [Tooltip("Whether this particle has a fixed position or it will follow the entity.")]
     public readonly bool FollowEntityPosition = false;

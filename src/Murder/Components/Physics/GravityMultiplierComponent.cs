@@ -1,18 +1,17 @@
 ﻿using Bang.Components;
 
-namespace Murder.Components.Physics
+namespace Murder.Components.Physics;
+
+public readonly struct GravityMultiplierComponent : IComponent
 {
-    public readonly struct GravityMultiplierComponent : IComponent
+    public readonly float Multiply = 1f;
+
+    public GravityMultiplierComponent()
     {
-        public readonly float Multiply = 1f;
+    }
 
-        public GravityMultiplierComponent()
-        {
-        }
-
-        public GravityMultiplierComponent(float multiply)
-        {
-            Multiply = multiply;
-        }
+    public GravityMultiplierComponent(float multiply)
+    {
+        Multiply = multiply;
     }
 }

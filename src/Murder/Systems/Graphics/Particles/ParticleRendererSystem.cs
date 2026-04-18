@@ -79,7 +79,7 @@ namespace Murder.Systems
                     float rotation = particle.StartRotation + particle.Rotation;
                     if (tracker.Particle.RotateWithVelocity)
                     {
-                        rotation = (float)Math.Atan2(particle.Velocity * Math.Sin(rotation), particle.Velocity * Math.Cos(rotation));
+                        rotation = particle.CurrentVelocity.Angle();
                     }
 
                     switch (texture.Kind)
