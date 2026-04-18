@@ -447,7 +447,9 @@ namespace Murder
 
             // Subscribe events
             AppDomain.CurrentDomain.ProcessExit += OnClose;
-            AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+
+            // capture on the top level Run()
+            // AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 
             // Editor input
             _playerInput.RegisterButton(MurderInputButtons.Debug, Keys.F1);
@@ -1069,21 +1071,20 @@ namespace Murder
             base.Exit();
         }
 
-        protected virtual void OnUnhandledException(object? sender, EventArgs e)
+        public virtual void OnUnhandledException(Exception ex)
         {
-            if (e is UnhandledExceptionEventArgs unhandled && unhandled.IsTerminating)
-            {
-                OnClose(sender, e);
-                GameLogger.CaptureCrash();
+            OnCloseImpl();
+            GameLogger.CaptureCrash();
 
-                if (unhandled.ExceptionObject is Exception ex)
-                {
-                    _game?.OnFatalException(ex);
-                }
-            }
+            _game?.OnFatalException(ex);
         }
 
         protected virtual void OnClose(object? sender, EventArgs e)
+        {
+            OnCloseImpl();
+        }
+
+        protected virtual void OnCloseImpl()
         {
             // right before the game itself closes.
             Haptics.ClearAll();
