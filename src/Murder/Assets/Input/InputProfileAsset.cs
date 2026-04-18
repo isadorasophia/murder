@@ -16,6 +16,7 @@ public enum KeyboardTemplate
     AZERTY = 1,
     Colemak = 2,
     Dvorak = 3,
+    QWERTY_IJKL = 4
 }
 
 public readonly struct InputInformation
