@@ -1,5 +1,6 @@
 ﻿using Gum;
 using Murder.Assets;
+using Murder.Assets.Editor;
 using Murder.Assets.Graphics;
 using Murder.Core.Graphics;
 using Murder.Data;
@@ -7,6 +8,7 @@ using Murder.Diagnostics;
 using Murder.Editor.Assets;
 using Murder.Editor.Data;
 using Murder.Editor.Data.Graphics;
+using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using Murder.Serialization;
 using System.IO;
@@ -101,13 +103,21 @@ namespace Murder.Editor.Importers
             AtlasId targetAtlasId = AtlasId.Temporary;
             string targetAtlasName = GetAtlasName(targetAtlasId, subAtlas: null);
 
-            Packer? packer = CreateAtlasPacker(targetAtlasName, files: [.. _reloadedSprites]);
+            // First we need to include all the merge partners to filesToReload
+            HashSet<string> filesToReload = new();
+            foreach (var file in _reloadedSprites)
+            {
+                filesToReload.UnionWith(FindMergePartners(file));
+                filesToReload.Add(file);
+            }
+
+            Packer? packer = CreateAtlasPacker(targetAtlasName, files: [.. filesToReload]);
             if (packer is null)
             {
                 return;
             }
 
-            foreach (string file in _reloadedSprites)
+            foreach (string file in filesToReload)
             {
                 string ext = Path.GetExtension(file).ToLowerInvariant();
                 if (!IsAsepriteFile(file))
@@ -129,6 +139,12 @@ namespace Murder.Editor.Importers
             }
 
             SerializeAtlas(targetAtlasName, packer, SerializeAtlasFlags.None);
+        }
+
+        // Return all the files that need to be updated when a file changes.
+        private IEnumerable<string> FindMergePartners(string changedFile)
+        {
+            yield break;
         }
 
         private static bool IsAsepriteFile(string path)
@@ -155,6 +171,8 @@ namespace Murder.Editor.Importers
             // NOW create assets by reloading files WITHOUT pixel data
             bool skipLoadingWarnings = Game.Data.IsPathOnSkipLoading(GetSourceResourcesPath());
             bool hasCleanedDirectory = false;
+            SpritePathsTrackerAsset? spritePaths = ImporterServices.CreateNewSpritePathsTracker();
+            spritePaths?.Clear();
 
             foreach (string file in AllFiles)
             {
@@ -174,13 +192,21 @@ namespace Murder.Editor.Importers
 
                     SaveAsset(asset, cleanDirectoryBeforeSaving);
 
-                    if (!skipLoadingWarnings && Game.Data.HasAsset<SpriteAsset>(asset.Guid))
+                    if (Game.Data.TryGetAsset<SpriteAsset>(asset.Guid) is SpriteAsset previousSprite)
                     {
-                        GameLogger.Warning($"Found a duplicated slice at {asset.Name}.");
-                        continue;
+                        if (!skipLoadingWarnings)
+                        {
+                            GameLogger.Warning($"Found a duplicated slice at {asset.Name}. Will attempt to merge.");
+                        }
+                        previousSprite.MergeWith(asset);
+
+                    }
+                    else
+                    {
+                        Game.Data.AddAsset(asset);
                     }
 
-                    Game.Data.AddAsset(asset);
+                    spritePaths?.Link(asset.Guid, file);
                 }
             }
 

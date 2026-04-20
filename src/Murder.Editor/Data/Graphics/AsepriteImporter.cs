@@ -986,17 +986,6 @@ public partial class Aseprite
             nineSlice: slice?.NineSlice ?? Rectangle.Empty
         );
 
-        if (Architect.EditorSettings.SaveAsepriteInfoOnSpriteAsset)
-        {
-            asset.AsepriteFileInfo = new AsepriteFileInfo()
-            {
-                Source = FullSource,
-                Layer = layer,
-                SliceIndex = sliceIndex,
-                Baked = baked
-            };
-        }
-
         return asset;
     }
 

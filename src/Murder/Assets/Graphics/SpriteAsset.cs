@@ -16,7 +16,7 @@ public class SpriteAsset : GameAsset, IPreview
     public readonly string Atlas = string.Empty;
 
     [Serialize]
-    public readonly ImmutableArray<AtlasCoordinates> Frames = ImmutableArray<AtlasCoordinates>.Empty;
+    public ImmutableArray<AtlasCoordinates> Frames { get; private set; } = ImmutableArray<AtlasCoordinates>.Empty;
 
     [Serialize]
     public ImmutableDictionary<string, Animation> Animations { get; private set; } = ImmutableDictionary<string, Animation>.Empty;
@@ -42,9 +42,6 @@ public class SpriteAsset : GameAsset, IPreview
     [Serialize]
     [HideInEditor]
     private string _editorPath = _prefixGeneratedPath;
-
-    [Serialize]
-    public AsepriteFileInfo? AsepriteFileInfo = null;
 
     public SpriteAsset() { }
 
@@ -162,23 +159,82 @@ public class SpriteAsset : GameAsset, IPreview
         return true;
     }
 
-    public override int GetHashCode() => base.GetHashCode();
-
-    public override bool Equals(object? obj)
+    public void MergeWith(SpriteAsset other)
     {
-        if (obj is not SpriteAsset asset)
+        int frameOffset = Frames.Length;
+
+        Frames = Frames.AddRange(other.Frames);
+
+        // iterate other's animations, decide what to do per key.
+        var builder = Animations.ToBuilder();
+        foreach ((string name, Animation anim) in other.Animations)
         {
-            return false;
+            Animation remapped = ShiftAnimationFrames(anim, frameOffset);
+
+            if (name == string.Empty)
+            {
+                // We ignore the empty name animation.
+                // Concatenated sprites don't care about those since we couldn't deal with the order of frames.
+                continue;
+            }
+
+            // Named animation: error on collision, keep first.
+            if (builder.ContainsKey(name))
+            {
+                GameLogger.Warning(
+                    $"Merge conflict on sprite '{Name}' (GUID {Guid}): animation '{name}' " +
+                    $"exists in multiple source files. Keeping the first. " +
+                    $"Existing source: {this.Name}, " +
+                    $"rejected source: {other.Name}");
+                continue;
+            }
+
+            builder[name] = remapped;
+        }
+        Animations = builder.ToImmutable();
+
+        // keep ours, warn on drift.
+        // different names are fine
+        WarnIfDifferent(nameof(Origin), Origin, other.Origin);
+        WarnIfDifferent(nameof(Size), Size, other.Size);
+        WarnIfDifferent(nameof(NineSlice), NineSlice, other.NineSlice);
+    }
+
+    public void WarnIfDifferent(string whatsDifferent, Rectangle origin1, Rectangle origin2)
+    {
+        if (origin1 != origin2)
+        {
+            GameLogger.Warning($"Sprite '{Name}' (GUID {Guid}): {whatsDifferent} differs between sources. " +
+                               $"Existing: {origin1}, New: {origin2}");
+        }
+    }
+
+    private void WarnIfDifferent(string whatsDifferent, Point origin1, Point origin2)
+    {
+        if (origin1 != origin2)
+        {
+            GameLogger.Warning($"Sprite '{Name}' (GUID {Guid}): {whatsDifferent} differs between sources. " +
+                               $"Existing: {origin1}, New: {origin2}");
+        }
+    }
+
+    /// <summary>
+    /// Shifts an animation's Frames values by the given offset so they index
+    /// /// </summary>
+    private static Animation ShiftAnimationFrames(Animation anim, int globalFrameOffset)
+    {
+        var framesBuilder = ImmutableArray.CreateBuilder<int>(anim.Frames.Length);
+        for (int i = 0; i < anim.Frames.Length; i++)
+        {
+            framesBuilder.Add(anim.Frames[i] + globalFrameOffset);
         }
 
-        return Name == asset.Name &&
-               Guid.Equals(asset.Guid) &&
-               Atlas == asset.Atlas &&
-               Frames.Equals(asset.Frames) &&
-               Origin.Equals(asset.Origin) &&
-               Size.Equals(asset.Size) &&
-               NineSlice.Equals(asset.NineSlice) &&
-               EqualityComparer<ImmutableDictionary<string, Animation>>.Default.Equals(Animations, asset.Animations) &&
-               EqualityComparer<AsepriteFileInfo?>.Default.Equals(AsepriteFileInfo, asset.AsepriteFileInfo);
+        return new Animation(
+            framesBuilder.ToImmutable(),
+            anim.FramesDuration,
+            anim.Events,
+            anim.AnimationDuration,
+            anim.NextAnimation);
     }
+
 }

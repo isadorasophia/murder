@@ -57,9 +57,7 @@ public partial class EditorScene
                 new ActionShortcut("Save All Assets", Chord.None,
                     SaveAllAssets),
                 new ActionShortcut("Save All Assets of Type...", Chord.None,
-                    SaveAllAssetsOfCurrentAsset),
-                new ActionShortcut("Bake Aseprite Guids", new Chord(Keys.B, InputHelpers.OSActionModifier, Keys.LeftShift),
-                    BakeAsepriteGuids)
+                    SaveAllAssetsOfCurrentAsset)
             ],
             [ShortcutGroup.Reload] =
             [
@@ -389,11 +387,6 @@ public partial class EditorScene
 
             GameLogger.Log($"Finished saving assets of type {asset.GetType().Name}.");
         }
-    }
-
-    private static void BakeAsepriteGuids()
-    {
-        AsepriteServices.BakeAllAsepriteFileGuid();
     }
 
     private void StartGame()
