@@ -37,6 +37,7 @@ namespace Murder.Editor.CustomEditors
         protected Dictionary<Guid, SpriteInformation> ActiveEditors { get; private set; } = new();
 
         private SpriteAsset? _sprite = null;
+        private string _searchAnimation = string.Empty;
 
         public override object Target => _sprite!;
 
@@ -71,7 +72,7 @@ namespace Murder.Editor.CustomEditors
             string animation = animations.FirstOrDefault(s => !string.IsNullOrEmpty(s)) ?? string.Empty;
 
             Portrait portrait = new(_sprite.Guid, animation);
-            
+
             info.HelperId = stage.AddEntityWithoutAsset(new PositionComponent(), new SpriteComponent(portrait));
             info.SelectedAnimation = portrait.AnimationId;
 
@@ -221,12 +222,16 @@ namespace Murder.Editor.CustomEditors
             ImGui.TextColored(Game.Profile.Theme.Accent, $"\uf520 {_sprite.Name}");
             ImGui.Dummy(new(10, 10));
 
+            float availY = ImGui.GetContentRegionAvail().Y;
+
+            ImGui.BeginChild("Animations", new Vector2(0, availY));
             IEnumerable<string> keys = _sprite.Animations.Keys.Order();
 
+            ImGui.InputTextWithHint("##animation_search", "Search animation...", ref _searchAnimation, 128);
             bool displayed = false;
             foreach (string animation in keys)
             {
-                if (string.IsNullOrEmpty(animation))
+                if (string.IsNullOrEmpty(animation) || !_searchAnimation.IsWhiteSpace() && !StringHelper.FuzzyMatch(_searchAnimation, animation))
                 {
                     continue;
                 }
@@ -253,6 +258,7 @@ namespace Murder.Editor.CustomEditors
 
                 info.SelectedAnimation = string.Empty;
             }
+            ImGui.EndChild();
         }
 
         private void DrawMessages(SpriteInformation info)
@@ -269,7 +275,7 @@ namespace Murder.Editor.CustomEditors
             Animation animation = _sprite.Animations[info.SelectedAnimation];
             for (int i = 0; i < animation.FrameCount; ++i)
             {
-                if (animation.Events is null || 
+                if (animation.Events is null ||
                     !animation.Events.TryGetValue(i, out string? message))
                 {
                     continue;
@@ -292,7 +298,7 @@ namespace Murder.Editor.CustomEditors
 
                 ImGui.PushID($"sound_test_{i}");
 
-                if (member is not null && 
+                if (member is not null &&
                     CustomField.DrawValue(member, sound, out SoundEventId? result))
                 {
                     info.SoundTests[message] = result;
@@ -350,7 +356,7 @@ namespace Murder.Editor.CustomEditors
 
                     float rate = (info.Hook.Time % selectedAnimation.AnimationDuration) / selectedAnimation.AnimationDuration;
                     targetAnimationFrame = selectedAnimation.Evaluate(rate * selectedAnimation.AnimationDuration, false).InternalFrame;
-                    
+
                     DrawHeader(info, targetAnimationFrame, selectedAnimation);
 
                     if (ImGui.BeginChild("Timeline"))
@@ -585,7 +591,7 @@ namespace Murder.Editor.CustomEditors
                 currentTime += animation.FramesDuration[i];
             }
 
-            text.Append($" | current frame: {currentFrame} ({currentTime/1000f:0.00}s)");
+            text.Append($" | current frame: {currentFrame} ({currentTime / 1000f:0.00}s)");
 
             text.Append($" | {animation.AnimationDuration}s");
 

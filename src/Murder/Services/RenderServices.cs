@@ -580,6 +580,94 @@ public static partial class RenderServices
 
     //        return drawAt(position, drawInfo.Color, false, drawInfo.Sort);
     //    }
+
+    /// <summary>
+    /// Plays a sprite animation with a specific ratio, where 0 is the first frame and 1 is the last.
+    /// </summary>
+    /// <param name="batch"></param>
+    /// <param name="asset"></param>
+    /// <param name="position"></param>
+    /// <param name="drawInfo"></param>
+    /// <param name="animationName"></param>
+    /// <param name="animationRatio">From 0 to 1, first to last frame</param>
+    /// <returns></returns>
+    public static FrameInfo DrawSpriteAtRatio(this Batch2D batch, SpriteAsset asset, Vector2 position, DrawInfo drawInfo, string animationName, float animationRatio)
+    {
+        if (animationName == "_")
+        {
+            return new FrameInfo(0, 0, true, Animation.Empty);
+        }
+
+        if (!asset.Animations.TryGetValue(animationName, out var animation))
+        {
+            GameLogger.Log($"Couldn't find animation {animationName} for {asset.Guid}.");
+            return FrameInfo.Fail;
+        }
+
+        // Calculate frame info ONCE
+        var frameInfo = animation.EvaluateRatio(animationRatio) with
+        {
+            Animation = animation
+        };
+
+        AtlasCoordinates image = asset.GetFrame(frameInfo.Frame);
+        Vector2 offset = (asset.Origin + drawInfo.Origin * image.Size).Round();
+        Vector2 roundedPosition = position.Round();
+        void DrawImageAt(Vector2 pos, Color color, bool wash, float sort)
+        {
+            image.Draw(
+                spriteBatch: batch,
+                position: pos,
+                clip: drawInfo.Clip,
+                color: color,
+                offset: offset,
+                scale: drawInfo.Scale,
+                rotation: drawInfo.Rotation,
+                imageFlip: drawInfo.ImageFlip,
+                blend: wash ? BLEND_WASH : drawInfo.GetBlendMode(),
+                blendState: drawInfo.BlendState,
+                sort: sort
+            );
+        }
+
+        // Draw outline (if needed)
+        if (drawInfo.Outline.HasValue && drawInfo.OutlineStyle != OutlineStyle.None)
+        {
+            if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Bottom))
+                DrawImageAt(roundedPosition + new Vector2(0, 1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+
+            if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Top))
+                DrawImageAt(roundedPosition + new Vector2(0, -1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+
+            if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Left))
+                DrawImageAt(roundedPosition + new Vector2(-1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+
+            if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Right))
+                DrawImageAt(roundedPosition + new Vector2(1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+        }
+
+        // Draw shadow (if needed)
+        if (drawInfo.Shadow.HasValue)
+        {
+            int shadowOffset = drawInfo.Outline.HasValue && drawInfo.OutlineStyle.HasFlag(OutlineStyle.Bottom) ? 2 : 1;
+            DrawImageAt(roundedPosition + new Vector2(0, shadowOffset), drawInfo.Shadow.Value, true, drawInfo.Sort + 0.0002f);
+        }
+
+        // Draw main sprite
+        DrawImageAt(roundedPosition, drawInfo.Color, false, drawInfo.Sort);
+
+#if DEBUG
+        if (frameInfo.Failed)
+        {
+            DrawRectangle(batch, new Rectangle(position, new Vector2(32, 32)), Color.White * Calculator.Wave(10), drawInfo.Sort);
+            DrawText(batch, MurderFonts.PixelFont, $"<c=#ffffff>Sprite: </c>{asset.Name}\n\n<c=#ffffff>Animation:  </c>{animationName}",
+                position, new DrawInfo(0) { Color = Color.Orange, Outline = Color.Black });
+        }
+#endif
+
+        return frameInfo;
+    }
+
     public static FrameInfo DrawSprite(this Batch2D batch, SpriteAsset asset, Vector2 position, DrawInfo drawInfo, AnimationInfo animationInfo)
     {
         if (animationInfo.Name == "_")
@@ -1176,7 +1264,7 @@ public static partial class RenderServices
 
         return (_cachedRectVertices, _cachedRectIndices);
     }
-    
+
     public static void DrawIndexedVertices<T>(GraphicsDevice graphicsDevice, T[] vertices, int vertexCount, short[] indices, int primitiveCount, Effect? effect, BlendState? blendState = null, Texture2D? texture = null, bool smoothing = false) where T : struct, IVertexType
     {
         var b = blendState ?? BlendState.AlphaBlend;

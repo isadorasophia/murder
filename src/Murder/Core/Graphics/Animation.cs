@@ -146,6 +146,27 @@ public readonly struct Animation
     }
 
     /// <summary>
+    /// Returns the current frame of the animation based on a ratio (between 0 and 1) representing the progress through the animation.
+    /// </summary>
+    /// <param name="ratio"></param>
+    /// <returns></returns>
+    public FrameInfo EvaluateRatio(float ratio)
+    {
+        if (FrameCount > 0)
+        {
+            int frame = GetCurrentFrame(ratio * AnimationDuration, true, FramesDuration, AnimationDuration, 1f);
+            int clampedFrame = Math.Clamp(frame, 0, Frames.Length - 1);
+            return new FrameInfo(Frames[clampedFrame], clampedFrame, ratio >= 1f, this);
+        }
+        else
+        {
+            // Animation has no length, this shouldn't happen.
+            GameLogger.Error("Animation with no frames found!");
+            return new FrameInfo(0, 0, true, this);
+        }
+    }
+
+    /// <summary>
     /// Gets the current frame of an animation at a given time.
     /// </summary>
     /// <param name="currentTime">Current time in seconds</param>
