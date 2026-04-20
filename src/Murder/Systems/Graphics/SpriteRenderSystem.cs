@@ -9,16 +9,14 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
-using Murder.Prefabs;
 using Murder.Services;
 using Murder.Utilities;
 using System.Numerics;
-using System.Security.AccessControl;
 
 namespace Murder.Systems.Graphics
 {
     [Filter(ContextAccessorFilter.AllOf, typeof(SpriteComponent), typeof(PositionComponent), typeof(InCameraComponent))]
-    [Filter(ContextAccessorFilter.NoneOf, typeof(InvisibleComponent), typeof(ThreeSliceComponent))]
+    [Filter(ContextAccessorFilter.NoneOf, typeof(InvisibleComponent), typeof(ThreeSliceComponent), typeof(ForceSpriteDrawAtRatioComponent))]
     public class SpriteRenderSystem : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)
