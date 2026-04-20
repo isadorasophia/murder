@@ -189,6 +189,7 @@ public class RenderContext : IDisposable
             return;
         }
         _initialized = true;
+        OnClientWindowChanged(new WindowChangeSettings(Game.Instance.GetWindowSize()));
 
         RegisterSpriteBatch(Batches2D.GameplayBatchId,
             new("Gameplay",
@@ -246,6 +247,8 @@ public class RenderContext : IDisposable
             BatchMode.DepthSortDescending,
             SamplerState.PointClamp
             ));
+
+        RefreshWindow();
     }
 
     /// <summary>
@@ -448,9 +451,9 @@ public class RenderContext : IDisposable
         // Game.Data.ShaderPixel?.TrySetParameter("texelsScale", _mainTarget.Bounds.Size());
 
         var textureSize = _tempTarget.Bounds.Size();
-        float texelsScale = (textureSize / (_mainTarget.Bounds.Size() * Viewport.Scale)).X;
-        Game.Data.ShaderPixel?.TrySetParameter("textureSize", new Microsoft.Xna.Framework.Vector2(textureSize.X, textureSize.Y));
-        Game.Data.ShaderPixel?.TrySetParameter("texelsScale", texelsScale);
+        float texelsScale = (_tempTarget.Bounds.Size() / Viewport.OutputRectangle.Size).X;
+        Game.Data.ShaderPixel.TrySetParameter("textureSize", new Microsoft.Xna.Framework.Vector2(textureSize.X, textureSize.Y));
+        Game.Data.ShaderPixel.TrySetParameter("texelsScale", new Microsoft.Xna.Framework.Vector2(texelsScale, texelsScale));
 
         RenderServices.DrawTextureQuad(_mainTarget,     // <=== Draws the game buffer to the final buffer using a optimized pixel shader
             _mainTarget.Bounds,

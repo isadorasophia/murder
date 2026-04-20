@@ -2,7 +2,7 @@
 #include "murder.fxh"
 
 float2 textureSize;
-float texelsScale;
+float2 texelsScale;
 
 float4 MainPixelShader(VSOutput input) : SV_Target0
 {
