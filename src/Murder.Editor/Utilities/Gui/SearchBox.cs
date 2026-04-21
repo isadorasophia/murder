@@ -1,15 +1,18 @@
 ﻿using Bang.Components;
 using ImGuiNET;
 using Murder.Assets;
+using Murder.Assets.Editor;
 using Murder.Assets.Graphics;
 using Murder.Attributes;
 using Murder.Core.Dialogs;
 using Murder.Core.Geometry;
 using Murder.Core.Sounds;
 using Murder.Diagnostics;
+using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using Murder.Prefabs;
 using Murder.Utilities;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
@@ -474,25 +477,35 @@ namespace Murder.Editor.ImGuiExtended
                     if (settings.Selected is SpriteAsset spriteAsset)
                     {
                         ImGui.BeginGroup();
-                        if (spriteAsset.AsepriteFileInfo == null)
+
+                        IReadOnlySet<string>? source = ImporterServices.FetchSpritePathsForGuid(spriteAsset.Guid);
+                        if (source is null)
                         {
                             ImGui.BeginDisabled();
                         }
 
-                        if (ImGuiHelpers.IconButton('', $"search_{id}") && spriteAsset.AsepriteFileInfo != null)
+                        Vector2 popoupPosition = ImGui.GetCursorScreenPos();
+                        if (ImGuiHelpers.IconButton('', $"search_{id}") && source != null)
                         {
                             try
                             {
-                                var process = new Process
+                                if (source.Count == 1)
                                 {
-                                    StartInfo = new ProcessStartInfo
+                                    var process = new Process
                                     {
-                                        FileName = spriteAsset.AsepriteFileInfo.Value.Source,
-                                        UseShellExecute = true // Use the OS to open the file
-                                    }
-                                };
+                                        StartInfo = new ProcessStartInfo
+                                        {
+                                            FileName = source.FirstOrDefault(),
+                                            UseShellExecute = true // Use the OS to open the file
+                                        }
+                                    };
 
-                                process.Start();
+                                    process.Start();
+                                }
+                                else if (source.Count > 1)
+                                {
+                                    ImGui.OpenPopup($"aseprite_files_{id}");
+                                }
                             }
                             catch (Exception ex)
                             {
@@ -501,7 +514,40 @@ namespace Murder.Editor.ImGuiExtended
                             }
                         }
 
-                        if (spriteAsset.AsepriteFileInfo == null)
+                        if (ImGui.BeginPopup($"aseprite_files_{id}", ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoTitleBar) && source != null)
+                        {
+                            ImGui.SetWindowPos(popoupPosition);
+                            foreach (var filePath in source)
+                            {
+                                if (ImGui.Selectable(filePath))
+                                {
+                                    try
+                                    {
+                                        var process = new Process
+                                        {
+                                            StartInfo = new ProcessStartInfo
+                                            {
+                                                FileName = filePath,
+                                                UseShellExecute = true // Use the OS to open the file
+                                            }
+                                        };
+                                        process.Start();
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        // Handle exceptions like file not found, etc.
+                                        GameLogger.Error($"Exception: {ex.Message}");
+                                    }
+                                }
+                            }
+                            if (ImGui.Selectable("Cancel"))
+                            {
+                                ImGui.CloseCurrentPopup();
+                            }
+                            ImGui.EndPopup();
+                        }
+
+                        if (source is null)
                         {
                             ImGui.EndDisabled();
                             ImGui.EndGroup();

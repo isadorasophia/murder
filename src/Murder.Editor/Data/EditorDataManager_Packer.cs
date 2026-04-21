@@ -42,7 +42,6 @@ public partial class EditorDataManager
         int currentSplitSave = 0;
 
         List<List<GameAsset>> collectionOfAssets = [];
-
         foreach (GameAsset asset in _allAssets.Values)
         {
             string? path = asset.GetEditorAssetPath();
