@@ -1,7 +1,5 @@
 ﻿using Murder.Assets;
 using Murder.Assets.Editor;
-using Murder.Assets.Graphics;
-using Murder.Diagnostics;
 using Murder.Editor.Utilities;
 using Murder.Serialization;
 using Murder.Utilities;
@@ -10,43 +8,51 @@ namespace Murder.Editor.Services
 {
     public static class ImporterServices
     {
+        private readonly static object _trackerLock = new();
+        private static volatile SpritePathTrackerAsset? _tracker = null;
 
-        private static SpritePathsTrackerAsset? _tracker = null;
-
-        public static SpritePathsTrackerAsset CreateNewSpritePathsTracker()
+        public static SpritePathTrackerAsset GetOrCreateSpritePathTracker()
         {
-            SpritePathsTrackerAsset instance = new();
-            instance.Name = "_SpritePaths";
-            instance.MakeGuid();
+            lock (_trackerLock)
+            {
+                if (_tracker is null)
+                {
+                    foreach ((Guid g, GameAsset a) in Game.Data.FilterAllAssets(typeof(SpritePathTrackerAsset)))
+                    {
+                        _tracker = (SpritePathTrackerAsset)a;
+                        break;
+                    }
+                }
 
-            Architect.EditorData.SaveAsset(instance);
+                if (_tracker is null)
+                {
+                    _tracker = new();
 
-            _tracker = instance;
-            return _tracker;
+                    _tracker.MakeGuid();
+
+                    _tracker.Name = "_spritePathTracker";
+                    _tracker.FilePath = $"{_tracker.Name}.json";
+
+                    if (_tracker.GetEditorAssetPath(useBinPath: true) is string existingPath && File.Exists(existingPath))
+                    {
+                        // delete previous one
+                        File.Delete(existingPath);
+                    }
+                }
+
+                return _tracker;
+            }
         }
 
-        public static SpritePathsTrackerAsset? TryGetSpritePathTrackerAsset()
+        public static IReadOnlySet<string>? FetchSpritePathsForGuid(Guid guid)
         {
             if (Game.Data.LoadContentProgress is not null && !Game.Data.LoadContentProgress.IsCompleted)
             {
                 return null;
             }
 
-            if (_tracker is null)
-            {
-                foreach ((Guid g, GameAsset a) in Game.Data.FilterAllAssets(typeof(SpritePathsTrackerAsset)))
-                {
-                    _tracker = (SpritePathsTrackerAsset)a;
-                }
-            }
-
-            if (_tracker is SpritePathsTrackerAsset tracker)
-            {
-                return tracker;
-            }
-
-            // Otherwise, this means we need to actually create one...
-            return CreateNewSpritePathsTracker();
+            SpritePathTrackerAsset tracker = GetOrCreateSpritePathTracker();
+            return tracker.FetchAllPathsWith(guid);
         }
 
         // GUID backing is deprecated, for now

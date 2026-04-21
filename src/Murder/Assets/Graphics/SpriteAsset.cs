@@ -159,6 +159,9 @@ public class SpriteAsset : GameAsset, IPreview
         return true;
     }
 
+    /// <summary>
+    /// This will merge a sprite asset with an existing one.
+    /// </summary>
     public void MergeWith(SpriteAsset other)
     {
         int frameOffset = Frames.Length;
@@ -171,7 +174,7 @@ public class SpriteAsset : GameAsset, IPreview
         {
             Animation remapped = ShiftAnimationFrames(anim, frameOffset);
 
-            if (name == string.Empty)
+            if (string.IsNullOrEmpty(name))
             {
                 // We ignore the empty name animation.
                 // Concatenated sprites don't care about those since we couldn't deal with the order of frames.
@@ -185,12 +188,14 @@ public class SpriteAsset : GameAsset, IPreview
                     $"Merge conflict on sprite '{Name}' (GUID {Guid}): animation '{name}' " +
                     $"exists in multiple source files. Keeping the first. " +
                     $"Existing source: {this.Name}, " +
-                    $"rejected source: {other.Name}");
+                    $"Rejected source: {other.Name}");
+
                 continue;
             }
 
             builder[name] = remapped;
         }
+
         Animations = builder.ToImmutable();
 
         // keep ours, warn on drift.

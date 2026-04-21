@@ -1,5 +1,4 @@
-﻿using Gum;
-using Murder.Assets;
+﻿using Murder.Assets;
 using Murder.Assets.Editor;
 using Murder.Assets.Graphics;
 using Murder.Core.Graphics;
@@ -7,11 +6,9 @@ using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Editor.Assets;
 using Murder.Editor.Data;
-using Murder.Editor.Data.Graphics;
 using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using Murder.Serialization;
-using System.IO;
 using static Murder.Utilities.StringHelper;
 
 namespace Murder.Editor.Importers
@@ -72,7 +69,35 @@ namespace Murder.Editor.Importers
             if (changed)
             {
                 _reloadedSprites.Add(file);
+
+                // also reload all sprites that are related to this guid.
+                ReloadAllRelatedFiles(file);
             }
+        }
+
+        /// <summary>
+        /// This will add all the files that need to be updated when a file changes.
+        /// </summary>
+        private bool ReloadAllRelatedFiles(string changedFile)
+        {
+            SpritePathTrackerAsset spritePathTracker = ImporterServices.GetOrCreateSpritePathTracker();
+            if (spritePathTracker.FetchGuidFromPath(changedFile) is not Guid guid)
+            {
+                return false;
+            }
+
+            if (spritePathTracker.FetchAllPathsWith(guid) is not HashSet<string> allPaths)
+            {
+                return false;
+            }
+
+            bool added = false;
+            foreach (string p in allPaths)
+            {
+                added |= _reloadedSprites.Add(p);
+            }
+
+            return added;
         }
 
         internal override void Flush()
@@ -96,6 +121,8 @@ namespace Murder.Editor.Importers
             DeleteTemporaryAtlas = 0b10
         }
 
+        private readonly HashSet<Guid> _cleanedReloadedCache = [];
+
         private void ReloadChangedFiles()
         {
             using PerfTimeRecorder recorder = new("Reloading Changed Aseprites");
@@ -103,48 +130,52 @@ namespace Murder.Editor.Importers
             AtlasId targetAtlasId = AtlasId.Temporary;
             string targetAtlasName = GetAtlasName(targetAtlasId, subAtlas: null);
 
-            // First we need to include all the merge partners to filesToReload
-            HashSet<string> filesToReload = new();
-            foreach (var file in _reloadedSprites)
-            {
-                filesToReload.UnionWith(FindMergePartners(file));
-                filesToReload.Add(file);
-            }
-
-            Packer? packer = CreateAtlasPacker(targetAtlasName, files: [.. filesToReload]);
+            Packer? packer = CreateAtlasPacker(targetAtlasName, files: [.. _reloadedSprites]);
             if (packer is null)
             {
                 return;
             }
 
-            foreach (string file in filesToReload)
+            _cleanedReloadedCache.Clear();
+
+            foreach (string file in _reloadedSprites)
             {
                 string ext = Path.GetExtension(file).ToLowerInvariant();
                 if (!IsAsepriteFile(file))
+                {
                     continue;
+                }
 
                 // Load metadata only - no pixel data
-                var ase = packer.GetOrLoadAseprite(file);
+                Data.Graphics.Aseprite aseprite = packer.GetOrLoadAseprite(file);
 
-                foreach (SpriteAsset asset in ase.CreateAssets(targetAtlasName))
+                foreach (SpriteAsset asset in aseprite.CreateAssets(targetAtlasName))
                 {
-                    if (Game.Data.HasAsset<SpriteAsset>(asset.Guid))
+                    if (Game.Data.TryGetAsset<SpriteAsset>(asset.Guid) is SpriteAsset previousSprite)
                     {
-                        Game.Data.RemoveAsset<SpriteAsset>(asset.Guid);
+                        if (!_cleanedReloadedCache.Contains(asset.Guid))
+                        {
+                            // this was the non-reloaded file, so clean it up!
+                            Game.Data.RemoveAsset<SpriteAsset>(asset.Guid);
+                            _cleanedReloadedCache.Add(asset.Guid);
+                        }
+                        else
+                        {
+                            // otherwise, we need to merge with the asset that was just reloaded.
+                            previousSprite.MergeWith(asset);
+                            Architect.EditorData.SaveAsset(previousSprite);
+
+                            // get out of here.
+                            continue;
+                        }
                     }
 
-                    SaveAsset(asset, cleanDirectory: false);
+                    BakeAndSaveAsset(asset, cleanDirectory: false);
                     Game.Data.AddAsset(asset, true);
                 }
             }
 
             SerializeAtlas(targetAtlasName, packer, SerializeAtlasFlags.None);
-        }
-
-        // Return all the files that need to be updated when a file changes.
-        private IEnumerable<string> FindMergePartners(string changedFile)
-        {
-            yield break;
         }
 
         private static bool IsAsepriteFile(string path)
@@ -171,15 +202,16 @@ namespace Murder.Editor.Importers
             // NOW create assets by reloading files WITHOUT pixel data
             bool skipLoadingWarnings = Game.Data.IsPathOnSkipLoading(GetSourceResourcesPath());
             bool hasCleanedDirectory = false;
-            SpritePathsTrackerAsset? spritePaths = ImporterServices.CreateNewSpritePathsTracker();
-            spritePaths?.Clear();
 
+            SpritePathTrackerAsset spritePathTracker = ImporterServices.GetOrCreateSpritePathTracker();
             foreach (string file in AllFiles)
             {
                 if (!IsAsepriteFile(file))
+                {
                     continue;
+                }
 
-                var ase = packer.GetOrLoadAseprite(file);
+                Data.Graphics.Aseprite ase = packer.GetOrLoadAseprite(file);
 
                 foreach (SpriteAsset asset in ase.CreateAssets(targetAtlasName))
                 {
@@ -190,28 +222,40 @@ namespace Murder.Editor.Importers
                         hasCleanedDirectory = true;
                     }
 
-                    SaveAsset(asset, cleanDirectoryBeforeSaving);
+                    SpriteAsset targetAsset = asset;
 
-                    if (Game.Data.TryGetAsset<SpriteAsset>(asset.Guid) is SpriteAsset previousSprite)
+                    // We support having multiple aseprite files pointing to the same guid. If that is the case,
+                    // instead of creating a separate sprite file, merge with an existing one.
+                    if (Game.Data.TryGetAsset<SpriteAsset>(targetAsset.Guid) is SpriteAsset previousSprite)
                     {
                         if (!skipLoadingWarnings)
                         {
-                            GameLogger.Warning($"Found a duplicated slice at {asset.Name}. Will attempt to merge.");
+                            GameLogger.Warning($"Found a duplicated slice at {asset.Name}, attempting to merge.");
                         }
-                        previousSprite.MergeWith(asset);
 
+                        previousSprite.MergeWith(targetAsset);
+                        targetAsset = previousSprite;
+
+                        // otherwise, simply sync the latest asset state.
+                        Architect.EditorData.SaveAsset(targetAsset);
+
+                        spritePathTracker.AddPathToGuid(targetAsset.Guid, file, overwrite: false);
                     }
                     else
                     {
-                        Game.Data.AddAsset(asset);
-                    }
+                        Game.Data.AddAsset(targetAsset);
+                        BakeAndSaveAsset(targetAsset, cleanDirectoryBeforeSaving);
 
-                    spritePaths?.Link(asset.Guid, file);
+                        spritePathTracker.AddPathToGuid(targetAsset.Guid, file, @overwrite: true);
+                    }
                 }
             }
 
             // Done with pixel data
             packer.ClearCache();
+
+            // save asset path information.
+            Architect.EditorData.SaveAsset(spritePathTracker);
 
             _pendingPacker = packer;
         }
@@ -300,7 +344,7 @@ namespace Murder.Editor.Importers
             }
         }
 
-        private void SaveAsset(SpriteAsset asset, bool cleanDirectory)
+        private void BakeAndSaveAsset(SpriteAsset asset, bool cleanDirectory)
         {
             string sourceAtlasAssetPath = Path.Join(asset.GetEditorAssetPath()!, RelativeSourcePath);
             string binAtlasAssetPath = Path.Join(asset.GetEditorAssetPath(useBinPath: true)!, RelativeSourcePath);

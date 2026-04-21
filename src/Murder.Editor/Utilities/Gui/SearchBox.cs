@@ -477,13 +477,13 @@ namespace Murder.Editor.ImGuiExtended
                     if (settings.Selected is SpriteAsset spriteAsset)
                     {
                         ImGui.BeginGroup();
-                        SpritePathsTrackerAsset? spritePaths = ImporterServices.TryGetSpritePathTrackerAsset();
-                        ImmutableHashSet<string>? source = spritePaths?.TryGetPathFor(spriteAsset.Guid);
 
-                        if (source == null)
+                        IReadOnlySet<string>? source = ImporterServices.FetchSpritePathsForGuid(spriteAsset.Guid);
+                        if (source is null)
                         {
                             ImGui.BeginDisabled();
                         }
+
                         Vector2 popoupPosition = ImGui.GetCursorScreenPos();
                         if (ImGuiHelpers.IconButton('', $"search_{id}") && source != null)
                         {
@@ -547,7 +547,7 @@ namespace Murder.Editor.ImGuiExtended
                             ImGui.EndPopup();
                         }
 
-                        if (source == null)
+                        if (source is null)
                         {
                             ImGui.EndDisabled();
                             ImGui.EndGroup();
