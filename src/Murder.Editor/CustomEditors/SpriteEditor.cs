@@ -231,7 +231,8 @@ namespace Murder.Editor.CustomEditors
             bool displayed = false;
             foreach (string animation in keys)
             {
-                if (string.IsNullOrEmpty(animation) || !_searchAnimation.IsWhiteSpace() && !StringHelper.FuzzyMatch(_searchAnimation, animation))
+                if (string.IsNullOrEmpty(animation) || 
+                    (!string.IsNullOrWhiteSpace(_searchAnimation) && !StringHelper.FuzzyMatch(_searchAnimation, animation)))
                 {
                     continue;
                 }
