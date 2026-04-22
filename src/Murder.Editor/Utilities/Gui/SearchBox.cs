@@ -575,19 +575,34 @@ namespace Murder.Editor.ImGuiExtended
                     ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Accent);
                 }
 
-                ImGui.PushStyleColor(ImGuiCol.Header, Game.Profile.Theme.Bg);
-                ImGui.PushStyleColor(ImGuiCol.HeaderHovered, Game.Profile.Theme.Faded);
+                ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.White);
+                ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.BgFaded);
+                ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.Faded);
 
                 string selectedName = settings.InitialText;
 
                 const int padding = 6;
-                Vector2 size = new(_searchBoxWidth != -1 ? _searchBoxWidth : ImGui.GetContentRegionAvail().X - padding, ImGui.CalcTextSize(selectedName).Y);
+                Vector2 buttonSize = new(_searchBoxWidth != -1 ? _searchBoxWidth : ImGui.GetContentRegionAvail().X, ImGui.CalcTextSize(selectedName).Y + padding);
                 if (!flags.HasFlag(SearchBoxFlags.IconOnly))
                 {
-                    if (ImGui.Selectable(selectedName, true, ImGuiSelectableFlags.NoAutoClosePopups, size))
+                    ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 100);
+                    Vector2 buttonPos = ImGui.GetCursorScreenPos();
+                    if (ImGui.Button(selectedName, buttonSize))
                     {
                         clicked = true;
                     }
+                    ImGui.PopStyleVar();
+
+                    // Draw arrow on top of the button
+                    var drawList = ImGui.GetWindowDrawList();
+                    string arrow = "\uf0d7"; // down arrow
+                    Vector2 arrowSize = ImGui.CalcTextSize(arrow);
+                    Vector2 arrowPos = new(
+                        buttonPos.X + buttonSize.X - arrowSize.X - padding,
+                        buttonPos.Y + (buttonSize.Y - arrowSize.Y) * 0.5f
+                    );
+                    uint textColor = ImGui.GetColorU32(ImGuiCol.Text);
+                    drawList.AddText(arrowPos, textColor, arrow);
                 }
 
                 if (clicked)
@@ -596,7 +611,7 @@ namespace Murder.Editor.ImGuiExtended
                     _tempSearchText = string.Empty;
                     _searchBoxSelection = 0;
                 }
-                ImGui.PopStyleColor(3);
+                ImGui.PopStyleColor(4);
 
                 if (ImGui.IsItemHovered() && settings.HasInitialValue)
                 {

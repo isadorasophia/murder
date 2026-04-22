@@ -33,6 +33,8 @@ namespace Murder.Editor.CustomEditors
 
         public override GameAsset Target => _asset!;
 
+        private string _filterText = string.Empty;
+
         protected Dictionary<Guid, Stage> Stages { get; private set; } = new();
 
         /// <summary>
@@ -105,6 +107,8 @@ namespace Murder.Editor.CustomEditors
 
         public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target, bool overwrite)
         {
+            _filterText = string.Empty;
+
             Guid targetGuid = ((GameAsset)target).Guid;
             if (!overwrite)
             {
@@ -231,8 +235,6 @@ namespace Murder.Editor.CustomEditors
                 ImGui.PushStyleColor(ImGuiCol.Header, Game.Profile.Theme.Foreground);
                 if (!ImGui.TreeNodeEx(entityInstance.Name, ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.SpanAvailWidth))
                 {
-                    ImGui.PushStyleColor(ImGuiCol.Header, Game.Profile.Theme.BgFaded);
-
                     ImGui.PopStyleColor();
                     return;
                 }
@@ -335,6 +337,11 @@ namespace Murder.Editor.CustomEditors
                     ImGui.PopStyleVar();
                 }
 
+                ImGui.SameLine();
+                ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 100);
+                ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
+                ImGui.InputTextWithHint("##filter", "Search components...", ref _filterText, 100);
+                ImGui.PopStyleVar();
 
                 if (ImGui.BeginPopup($"Rename#{entityInstance.Guid}"))
                 {
@@ -358,9 +365,16 @@ namespace Murder.Editor.CustomEditors
             // Draw components!
             ImGui.BeginGroup();
             {
+                int hidden = 0;
                 foreach (IComponent c in components)
                 {
                     Type t = c.GetType();
+
+                    if (!_filterText.IsWhiteSpace() && !StringHelper.FuzzyMatch(_filterText, t.Name))
+                    {
+                        hidden++;
+                        continue;
+                    }
 
                     // Check if this is an aseprite component.
                     // This defines whether we will draw it on the stage.
@@ -480,6 +494,17 @@ namespace Murder.Editor.CustomEditors
                             Stages[_asset.Guid].RemoveComponentForInstance(parent?.Guid, entityInstance.Guid, typeof(ShowColliderHandlesComponent));
                         }
                     }
+                }
+
+                if (hidden > 0)
+                {
+                    ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.BgFaded);
+                    ImGui.SetCursorPosX(42);
+                    if (ImGui.SmallButton($"+ {hidden} component{(hidden > 1 ? "s" : "")}"))
+                    {
+                        _filterText = string.Empty;
+                    }
+                    ImGui.PopStyleColor();
                 }
             }
             ImGui.EndGroup();
@@ -632,7 +657,7 @@ namespace Murder.Editor.CustomEditors
 
                         if (hasDropped)
                         {
-                            GameLogger.Log($"Drooped {_draggedChildren} into {i}");
+                            GameLogger.Log($"Droped {_draggedChildren} into {i}");
                         }
 
                         ImGui.EndDragDropTarget();
