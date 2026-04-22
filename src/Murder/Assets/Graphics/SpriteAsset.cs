@@ -6,6 +6,7 @@ using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Xml.Serialization;
 
 namespace Murder.Assets.Graphics;
 
@@ -198,11 +199,35 @@ public class SpriteAsset : GameAsset, IPreview
 
         Animations = builder.ToImmutable();
 
+        // When merging we need to choose the asset name
+        // If one of the names ends with underscore, we skip it (it's just an extension), otherwise we keep the shortest one.
+        if (Name.EndsWith('_') && !other.Name.EndsWith('_'))
+        {
+            Name = other.Name;
+        }
+        else if (!Name.EndsWith('_') && other.Name.EndsWith('_'))
+        {
+            // keep ours
+        }
+        else
+        {
+            Name = Name.Length <= other.Name.Length ? Name : other.Name;
+        }
+
         // keep ours, warn on drift.
         // different names are fine
+        WarnIfDifferent(nameof(Name), Name, other.Name);
         WarnIfDifferent(nameof(Origin), Origin, other.Origin);
         WarnIfDifferent(nameof(Size), Size, other.Size);
         WarnIfDifferent(nameof(NineSlice), NineSlice, other.NineSlice);
+    }
+    public void WarnIfDifferent(string whatsDifferent, string origin1, string origin2)
+    {
+        if (origin1 != origin2)
+        {
+            GameLogger.Warning($"Sprite '{Name}' (GUID {Guid}): {whatsDifferent} differs between sources. " +
+                               $"Existing: {origin1}, New: {origin2}");
+        }
     }
 
     public void WarnIfDifferent(string whatsDifferent, Rectangle origin1, Rectangle origin2)
