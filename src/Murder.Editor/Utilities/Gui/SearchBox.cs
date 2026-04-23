@@ -585,13 +585,18 @@ namespace Murder.Editor.ImGuiExtended
                 Vector2 buttonSize = new(_searchBoxWidth != -1 ? _searchBoxWidth : ImGui.GetContentRegionAvail().X, ImGui.CalcTextSize(selectedName).Y + padding);
                 if (!flags.HasFlag(SearchBoxFlags.IconOnly))
                 {
-                    ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 100);
+                    bool alignLeft = buttonSize.X > 400;
+                    ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 5);
+                    if (alignLeft)
+                    {
+                        ImGui.PushStyleVar(ImGuiStyleVar.ButtonTextAlign, new Vector2(0, 0.5f));
+                    }
                     Vector2 buttonPos = ImGui.GetCursorScreenPos();
                     if (ImGui.Button(selectedName, buttonSize))
                     {
                         clicked = true;
                     }
-                    ImGui.PopStyleVar();
+                    ImGui.PopStyleVar(alignLeft ? 2 : 1);
 
                     // Draw arrow on top of the button
                     var drawList = ImGui.GetWindowDrawList();
