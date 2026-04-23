@@ -9,6 +9,7 @@ using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Reflection;
@@ -264,7 +265,8 @@ public abstract class CustomField
     {
         if (AttributeExtensions.TryGetAttribute(member, out SliderAttribute? slider))
         {
-            return ImGui.SliderFloat("", ref number, slider.Minimum, slider.Maximum);
+            ImGui.SetNextItemWidth(-1);
+            return ImGui.SliderFloat($"##slider_{member.Name}", ref number, slider.Minimum, slider.Maximum);
         }
 
         if (member.IsReadOnly)
@@ -273,57 +275,67 @@ public abstract class CustomField
             return false;
         }
 
+        float step = 1f;
+        float buttonSize = ImGui.GetFrameHeight();
+        float dragHandleSize = buttonSize;
+        float spacing = ImGui.GetStyle().ItemInnerSpacing.X;
+
+        ImGui.PushID(member.Name);
         bool changed = false;
-        ImGui.PushItemWidth(ImGui.GetContentRegionAvail().X - 49);
-        ImGui.BeginGroup();
-        changed = ImGui.InputFloat("", ref number);
 
+        float inputWidth = ImGui.GetContentRegionAvail().X
+            - dragHandleSize - buttonSize * 2 - spacing * 3;
+        ImGui.SetNextItemWidth(inputWidth);
+        changed |= ImGui.InputFloat("##input", ref number, 0, 0, "%.3f",
+            ImGuiInputTextFlags.EnterReturnsTrue);
 
-        ImGui.SameLine();
-        ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 6);
+        ImGui.SameLine(0, spacing);
 
-        ImGui.SetNextItemWidth(14);
+        // Drag handle
+        Vector2 dragPos = ImGui.GetCursorScreenPos();
+        ImGui.SetNextItemWidth(dragHandleSize);
         ImGui.PushStyleColor(ImGuiCol.Text, 0);
         ImGui.PushStyleColor(ImGuiCol.FrameBg, 0);
         ImGui.PushStyleColor(ImGuiCol.FrameBgActive, 0);
         ImGui.PushStyleColor(ImGuiCol.FrameBgHovered, 0);
-        changed |= ImGui.DragFloat("###Drag", ref number, 1f);
+        changed |= ImGui.DragFloat("##drag", ref number, step);
+        bool dragHovered = ImGui.IsItemHovered();
         ImGui.PopStyleColor(4);
-        ImGuiHelpers.HelpTooltip("Drag to change value");
 
-        uint dragColor;
-        if (ImGui.IsItemHovered())
+        if (dragHovered)
         {
-            dragColor= Color.ToUint(Game.Profile.Theme.Accent);
-        }
-        else
-        {
-            dragColor = Color.ToUint(Game.Profile.Theme.Faded);
+            ImGui.SetMouseCursor(ImGuiMouseCursor.ResizeEW);
         }
 
-            var dl = ImGui.GetForegroundDrawList();
-        dl.AddText(ImGui.GetFont(), ImGui.GetFontSize(), new Vector2(ImGui.GetItemRectMin().X, ImGui.GetItemRectMin().Y + 3), dragColor, "");
+        // Draw glyph on window draw list
+        uint dragColor = Color.ToUint(dragHovered
+            ? Game.Profile.Theme.Accent
+            : Game.Profile.Theme.Faded);
 
+        var dl = ImGui.GetWindowDrawList();
+        Vector2 glyphPos = new(
+            dragPos.X + (dragHandleSize - ImGui.GetFontSize()) * 0.5f,
+            dragPos.Y + ImGui.GetStyle().FramePadding.Y
+        );
+        dl.AddText(ImGui.GetFont(), ImGui.GetFontSize(), glyphPos, dragColor, "\uf07e"); // or whatever glyph
 
-        ImGui.SameLine();
-
-        ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 6);
-        if (ImGuiHelpers.Button("-", new Vector2(14, 0)))
+        ImGui.SameLine(0, spacing);
+        if (ImGuiHelpers.Button("-", new Vector2(buttonSize, buttonSize)))
         {
-            number--;
+            number -= step;
             changed = true;
         }
+
+        ImGui.SameLine(0, spacing);
+        if (ImGuiHelpers.Button("+", new Vector2(buttonSize, buttonSize)))
+        {
+            number += step;
+            changed = true;
+        }
+
         ImGui.EndGroup();
-        ImGui.PopItemWidth();
+        ImGui.PopID();
 
-        ImGui.SameLine();
-
-        ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 6);
-        if (ImGuiHelpers.Button("+", new Vector2(14, 0)))
-        {
-            number++;
-            changed = true;
-        }
         return changed;
     }
 

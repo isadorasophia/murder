@@ -1006,12 +1006,13 @@ namespace Murder.Editor.CustomEditors
 
             if (ImGui.IsWindowAppearing())
                 ImGui.SetKeyboardFocusHere();
-            ImGui.InputText($"##newName_{e.Guid}", ref _tempRename, 128, ImGuiInputTextFlags.AutoSelectAll | ImGuiInputTextFlags.AlwaysOverwrite);
+            ImGui.InputText($"##newName_{e.Guid}", ref _tempRename, 128, ImGuiInputTextFlags.AutoSelectAll);
 
             bool isValidName = parent is null || (parent is not null && !parent.FetchChildren().Any(child => e != child && child.Name == _tempRename));
 
             if (isValidName)
             {
+                ImGui.SameLine();
                 if (ImGuiHelpers.Button("Ok!") || Game.Input.Pressed(Keys.Enter))
                 {
                     e.SetName(_tempRename);
