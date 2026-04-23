@@ -281,17 +281,16 @@ public abstract class CustomField
         float spacing = ImGui.GetStyle().ItemInnerSpacing.X;
 
         ImGui.PushID(member.Name);
+        ImGui.BeginGroup();
         bool changed = false;
 
-        float inputWidth = ImGui.GetContentRegionAvail().X
-            - dragHandleSize - buttonSize * 2 - spacing * 3;
+        float inputWidth = ImGui.GetContentRegionAvail().X - dragHandleSize - buttonSize * 2 - spacing * 3;
         ImGui.SetNextItemWidth(inputWidth);
-        changed |= ImGui.InputFloat("##input", ref number, 0, 0, "%.3f",
-            ImGuiInputTextFlags.EnterReturnsTrue);
+        changed |= ImGui.InputFloat("##input", ref number, 0, 0, "%.3f", ImGuiInputTextFlags.EnterReturnsTrue);
 
         ImGui.SameLine(0, spacing);
 
-        // Drag handle
+        //// Drag handle
         Vector2 dragPos = ImGui.GetCursorScreenPos();
         ImGui.SetNextItemWidth(dragHandleSize);
         ImGui.PushStyleColor(ImGuiCol.Text, 0);
@@ -307,7 +306,7 @@ public abstract class CustomField
             ImGui.SetMouseCursor(ImGuiMouseCursor.ResizeEW);
         }
 
-        // Draw glyph on window draw list
+        //// Draw glyph on window draw list
         uint dragColor = Color.ToUint(dragHovered
             ? Game.Profile.Theme.Accent
             : Game.Profile.Theme.Faded);

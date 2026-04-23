@@ -509,7 +509,6 @@ namespace Murder.Editor.CustomEditors
             }
             ImGui.EndGroup();
 
-
             ImGui.Separator();
 
             if (!entityInstance.HasComponent(typeof(PositionComponent)))

@@ -586,7 +586,7 @@ namespace Murder.Editor.ImGuiExtended
                 if (!flags.HasFlag(SearchBoxFlags.IconOnly))
                 {
                     bool alignLeft = buttonSize.X > 400;
-                    ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 5);
+                    ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 100);
                     if (alignLeft)
                     {
                         ImGui.PushStyleVar(ImGuiStyleVar.ButtonTextAlign, new Vector2(0, 0.5f));
