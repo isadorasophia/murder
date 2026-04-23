@@ -286,7 +286,12 @@ public abstract class CustomField
 
         float inputWidth = ImGui.GetContentRegionAvail().X - dragHandleSize - buttonSize * 2 - spacing * 3;
         ImGui.SetNextItemWidth(inputWidth);
-        changed |= ImGui.InputFloat("##input", ref number, 0, 0, "%.3f", ImGuiInputTextFlags.EnterReturnsTrue);
+        float newValue = number;
+        changed |= ImGui.InputFloat("##input", ref newValue, 0, 0, "%.3f", ImGuiInputTextFlags.EnterReturnsTrue);
+        if (changed)
+        {
+            number = newValue;
+        }
 
         ImGui.SameLine(0, spacing);
 

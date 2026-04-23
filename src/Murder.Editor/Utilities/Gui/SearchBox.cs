@@ -450,6 +450,7 @@ namespace Murder.Editor.ImGuiExtended
             bool modified = false;
             bool clicked = false;
             bool isUnfolded = flags.HasFlag(SearchBoxFlags.Unfolded);
+            ImGui.PushStyleVar(ImGuiStyleVar.ChildRounding, 12);
 
             // No selector for unfolded search
             if (!isUnfolded)
@@ -790,6 +791,8 @@ namespace Murder.Editor.ImGuiExtended
                 {
                     ImGui.EndPopup();
                 }
+
+                ImGui.PopStyleVar();
             }
 
             return modified;
