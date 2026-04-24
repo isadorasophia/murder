@@ -13,9 +13,15 @@ namespace Murder.Components
         /// <summary>
         /// High friction means stopping fast
         /// </summary>
-        public FrictionComponent(float amount) : this()
+        public FrictionComponent(float amount)
         {
             Amount = amount;
+        }
+
+        public FrictionComponent(float ground, float air)
+        {
+            Amount = ground;
+            AirFriction = air;
         }
     }
 }
