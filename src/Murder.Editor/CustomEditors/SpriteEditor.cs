@@ -231,7 +231,7 @@ namespace Murder.Editor.CustomEditors
             bool displayed = false;
             foreach (string animation in keys)
             {
-                if (string.IsNullOrEmpty(animation) || 
+                if (string.IsNullOrEmpty(animation) ||
                     (!string.IsNullOrWhiteSpace(_searchAnimation) && !StringHelper.FuzzyMatch(_searchAnimation, animation)))
                 {
                     continue;
@@ -439,8 +439,8 @@ namespace Murder.Editor.CustomEditors
                         }
 
                         mouseRatio = Calculator.Clamp01(mouseX / (area.X - padding * 2));
-
-                        if (new Rectangle(position, area).Contains(ImGui.GetMousePos()) && ImGui.IsMouseDown(ImGuiMouseButton.Left) && !info.Hook.IsPopupOpen)
+                        bool mouseDown = ImGui.IsMouseDown(ImGuiMouseButton.Left) || ImGui.IsMouseDown(ImGuiMouseButton.Right);
+                        if (new Rectangle(position, area).Contains(ImGui.GetMousePos()) && mouseDown && !info.Hook.IsPopupOpen)
                         {
                             info.AnimationProgress = mouseRatio;
                             rate = info.AnimationProgress;
@@ -500,52 +500,36 @@ namespace Murder.Editor.CustomEditors
 
         private void DrawAddMessageOnRightClick(SpriteInformation info, int frame, string? message)
         {
-            bool open = false;
             if (ImGui.BeginPopupContextItem())
             {
-                _targetFrameForPopup ??= frame;
-
-                info.Hook.IsPopupOpen = true;
-
-                string text = string.IsNullOrEmpty(message) ? "Add message..." : "Rename";
-                if (ImGui.Selectable(text))
+                if (_targetFrameForPopup is null)
                 {
-                    open = true;
+                    _targetFrameForPopup = frame;
+                    _message = message ?? string.Empty;
                 }
-
-                if (!string.IsNullOrEmpty(message) && ImGui.Selectable("Delete"))
-                {
-                    DeleteMessage(info.SelectedAnimation, frame);
-                }
-
-                ImGui.EndPopup();
-            }
-            else
-            {
-                info.Hook.IsPopupOpen = false;
-            }
-
-            if (open)
-            {
-                ImGui.OpenPopup("add_message_to_frame");
-                _message = message ?? string.Empty;
-            }
-
-            if (ImGui.BeginPopup("add_message_to_frame"))
-            {
-                _targetFrameForPopup ??= frame;
 
                 ImGui.PushItemWidth(170);
                 info.Hook.IsPopupOpen = true;
 
-                ImGui.Text($"Fire message at frame {_targetFrameForPopup.Value}:");
-                ImGui.InputText("##add_new_message_input", ref _message, 128);
+                bool submit = false;
 
+                ImGui.Text($"Fire message at frame {_targetFrameForPopup.Value}:");
+                ImGui.Separator();
+                if (ImGui.InputText("##add_new_message_input", ref _message, 128, ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll))
+                {
+                    submit = true;
+                }
+                if (ImGui.IsWindowAppearing())
+                {
+                    ImGui.SetKeyboardFocusHere(-1);
+                }
+
+                ImGui.SameLine();
                 if (string.IsNullOrEmpty(_message))
                 {
                     ImGuiHelpers.SelectedButton("Add");
                 }
-                else if (ImGuiHelpers.Button("Add") || Game.Input.Pressed(MurderInputButtons.Submit))
+                else if (ImGuiHelpers.Button(!string.IsNullOrEmpty(message) ? "Rename" : "Add") || submit)
                 {
                     AddMessage(info.SelectedAnimation, frame, _message);
 
@@ -554,9 +538,18 @@ namespace Murder.Editor.CustomEditors
 
                     ImGui.CloseCurrentPopup();
                 }
+                if (!string.IsNullOrEmpty(message) && ImGui.Button("Delete", new Vector2(ImGui.GetContentRegionAvail().X, 0)))
+                {
+                    DeleteMessage(info.SelectedAnimation, frame);
+                    ImGui.CloseCurrentPopup();
+                }
 
                 ImGui.PopItemWidth();
                 ImGui.EndPopup();
+            }
+            else
+            {
+                info.Hook.IsPopupOpen = false;
             }
 
             if (!info.Hook.IsPopupOpen)
