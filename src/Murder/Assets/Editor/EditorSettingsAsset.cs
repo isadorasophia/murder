@@ -112,16 +112,6 @@ public class EditorSettingsAsset : GameAsset
     public float WasdCameraSpeed = 100;
 
     [Serialize]
-    public string AsepritePath = "Aseprite";
-
-    [Serialize]
-    public bool SaveAsepriteInfoOnSpriteAsset = false;
-
-    [Serialize]
-    [Tooltip("Path for the lua scripts relative to RawResourcesPath.")]
-    public string LuaScriptsPath = "lua";
-
-    [Serialize]
     [Tooltip("Custom path for fxc.exe, if applicable")]
     public string? FxcPath = null;
 

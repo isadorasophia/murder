@@ -216,18 +216,9 @@ public class SpriteAsset : GameAsset, IPreview
 
         // keep ours, warn on drift.
         // different names are fine
-        WarnIfDifferent(nameof(Name), Name, other.Name);
         WarnIfDifferent(nameof(Origin), Origin, other.Origin);
         WarnIfDifferent(nameof(Size), Size, other.Size);
         WarnIfDifferent(nameof(NineSlice), NineSlice, other.NineSlice);
-    }
-    public void WarnIfDifferent(string whatsDifferent, string origin1, string origin2)
-    {
-        if (origin1 != origin2)
-        {
-            GameLogger.Warning($"Sprite '{Name}' (GUID {Guid}): {whatsDifferent} differs between sources. " +
-                               $"Existing: {origin1}, New: {origin2}");
-        }
     }
 
     public void WarnIfDifferent(string whatsDifferent, Rectangle origin1, Rectangle origin2)
