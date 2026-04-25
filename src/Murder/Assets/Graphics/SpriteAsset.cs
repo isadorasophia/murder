@@ -185,7 +185,7 @@ public class SpriteAsset : GameAsset, IPreview
             // Named animation: error on collision, keep first.
             if (builder.ContainsKey(name))
             {
-                GameLogger.Warning(
+                GameLogger.Error(
                     $"Merge conflict on sprite '{Name}' (GUID {Guid}): animation '{name}' " +
                     $"exists in multiple source files. Keeping the first. " +
                     $"Existing source: {this.Name}, " +

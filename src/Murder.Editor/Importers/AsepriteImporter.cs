@@ -230,7 +230,7 @@ namespace Murder.Editor.Importers
                     {
                         if (!skipLoadingWarnings)
                         {
-                            GameLogger.Warning($"Found a duplicated slice at {asset.Name}, attempting to merge.");
+                            GameLogger.Log($"Found a duplicated slice at {asset.Name}, attempting to merge.");
                         }
 
                         previousSprite.MergeWith(targetAsset);
