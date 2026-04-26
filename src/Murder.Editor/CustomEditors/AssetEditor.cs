@@ -370,7 +370,7 @@ namespace Murder.Editor.CustomEditors
                 {
                     Type t = c.GetType();
 
-                    if (!_filterText.IsWhiteSpace() && !StringHelper.FuzzyMatch(_filterText, t.Name))
+                    if (!string.IsNullOrWhiteSpace(_filterText) && !StringHelper.FuzzyMatch(_filterText, t.Name))
                     {
                         hidden++;
                         continue;
