@@ -163,7 +163,9 @@ public class SpriteAsset : GameAsset, IPreview
     /// <summary>
     /// This will merge a sprite asset with an existing one.
     /// </summary>
-    public void MergeWith(SpriteAsset other)
+    /// <param name="other">Other sprite which will be merged.</param>
+    /// <param name="overwrite">Whether we allow overwriting on collision. Otherwise, emit an error and ignore.</param>
+    public void MergeWith(SpriteAsset other, bool overwrite)
     {
         int frameOffset = Frames.Length;
 
@@ -183,11 +185,11 @@ public class SpriteAsset : GameAsset, IPreview
             }
 
             // Named animation: error on collision, keep first.
-            if (builder.ContainsKey(name))
+            if (builder.ContainsKey(name) && overwrite is false)
             {
                 GameLogger.Error(
                     $"Merge conflict on sprite '{Name}' (GUID {Guid}): animation '{name}' " +
-                    $"exists in multiple source files. Keeping the first. " +
+                    $"exists in multiple source files. Keeping the first." +
                     $"Existing source: {this.Name}, " +
                     $"Rejected source: {other.Name}");
 

@@ -162,7 +162,7 @@ namespace Murder.Editor.Importers
                         else
                         {
                             // otherwise, we need to merge with the asset that was just reloaded.
-                            previousSprite.MergeWith(asset);
+                            previousSprite.MergeWith(asset, overwrite: false);
                             Architect.EditorData.SaveAsset(previousSprite);
 
                             // get out of here.
@@ -233,7 +233,10 @@ namespace Murder.Editor.Importers
                             GameLogger.Log($"Found a duplicated slice at {asset.Name}, attempting to merge.");
                         }
 
-                        previousSprite.MergeWith(targetAsset);
+                        // allow overwriting on merge when this came from the preload images, since this was already loaded
+                        // before the atlas building took place.
+                        bool overwrite = string.Equals(targetAtlasName, "preload");
+                        previousSprite.MergeWith(targetAsset, overwrite);
                         targetAsset = previousSprite;
 
                         // otherwise, simply sync the latest asset state.
