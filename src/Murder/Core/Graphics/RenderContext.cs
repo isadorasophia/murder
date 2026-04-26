@@ -452,8 +452,8 @@ public class RenderContext : IDisposable
 
         var textureSize = _tempTarget.Bounds.Size();
         float texelsScale = (_tempTarget.Bounds.Size() / Viewport.OutputRectangle.Size).X;
-        Game.Data.ShaderPixel.TrySetParameter("textureSize", new Microsoft.Xna.Framework.Vector2(textureSize.X, textureSize.Y));
-        Game.Data.ShaderPixel.TrySetParameter("texelsScale", new Microsoft.Xna.Framework.Vector2(texelsScale, texelsScale));
+        Game.Data.ShaderPixel?.TrySetParameter("textureSize", new Microsoft.Xna.Framework.Vector2(textureSize.X, textureSize.Y));
+        Game.Data.ShaderPixel?.TrySetParameter("texelsScale", new Microsoft.Xna.Framework.Vector2(texelsScale, texelsScale));
 
         RenderServices.DrawTextureQuad(_mainTarget,     // <=== Draws the game buffer to the final buffer using a optimized pixel shader
             _mainTarget.Bounds,
