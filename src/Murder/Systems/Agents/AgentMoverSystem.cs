@@ -62,7 +62,7 @@ namespace Murder.Systems
         {
             var newVelocity = currentVelocity;
 
-            if (impulse.Impulse.HasValue())
+            //if (impulse.Impulse.HasValue()) // Always true
             {
                 if (impulse.Impulse.X == 0 || !Calculator.SameSignOrSimilar(impulse.Impulse.X, currentVelocity.X))
                 {
@@ -116,8 +116,15 @@ namespace Murder.Systems
                 }
             }
 
+            Vector2 targetVelocity = finalImpulse * speed * multiplier;
+            float clampMagnetude = MathF.Max(speed * multiplier, currentVelocity.Length());
 
-            return Calculator.Approach(newVelocity, finalImpulse * speed * multiplier, accel * multiplier * Game.FixedDeltaTime);
+            if (targetVelocity.Length() > clampMagnetude)
+            {
+                targetVelocity = targetVelocity.Normalized() * clampMagnetude;
+            }
+
+            return Calculator.Approach(newVelocity, targetVelocity, accel * multiplier * Game.FixedDeltaTime);
         }
     }
 
