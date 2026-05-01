@@ -47,14 +47,7 @@ namespace Murder.Editor
 
             _shortcuts = CreateShortcutList();
 
-            _shortcutSearchValuesCache = null;
-
             FileDropEXT.DropFile += FileDropped;
-        }
-
-        public void ClearShortcutsCache()
-        {
-            _shortcutSearchValuesCache?.Clear();
         }
 
         protected void FileDropped(string path)

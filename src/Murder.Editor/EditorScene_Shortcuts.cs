@@ -28,7 +28,6 @@ public partial class EditorScene
     private readonly ImmutableDictionary<ShortcutGroup, List<Shortcut>> _shortcuts;
 
     private bool _commandPaletteIsVisible;
-    private Dictionary<string, Guid>? _shortcutSearchValuesCache = null;
 
     private ImmutableDictionary<ShortcutGroup, List<Shortcut>> CreateShortcutList() =>
         new Dictionary<ShortcutGroup, List<Shortcut>>
@@ -235,23 +234,21 @@ public partial class EditorScene
             }
 
             SearchBox.SearchBoxSettings<Guid> settings = new(initialText: "Type a command");
-            if (_shortcutSearchValuesCache == null)
+            Lazy<Dictionary<string, Guid>> shortcutSearchValuesCache = new(() =>
             {
-                _shortcutSearchValuesCache = new Dictionary<string, Guid>();
-            }
-
-            if (_shortcutSearchValuesCache.Count == 0)
-            {
+                Dictionary<string, Guid> result = [];
                 foreach (var asset in Game.Data.GetAllAssets())
                 {
-                    _shortcutSearchValuesCache[$"{asset.Icon} {asset.Name}"] = asset.Guid;
+                    result[$"{asset.Icon} {asset.Name}"] = asset.Guid;
                 }
-            }
+
+                return result;
+            });
 
             if (SearchBox.Search(
                 id: $"command_palette",
                 settings: settings,
-                values: _shortcutSearchValuesCache,
+                values: shortcutSearchValuesCache,
                 flags: SearchBoxFlags.Unfolded,
                 sizeConfiguration: _commandPaletteSizeConfiguration,
                 orderKeySelector: n => -Architect.EditorSettings.GetTimesOpenedAsset(n.Value),
