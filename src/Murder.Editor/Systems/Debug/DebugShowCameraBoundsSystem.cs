@@ -9,6 +9,7 @@ using Murder.Editor.Components;
 using Murder.Editor.Core;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
+using Murder.Serialization;
 using Murder.Services;
 using System.Numerics;
 
@@ -105,6 +106,20 @@ namespace Murder.Editor.Systems.Debug
                     if (ImGuiHelpers.Button("Reset Size"))
                     {
                         _cameraSize = Point.Zero;
+                    }
+
+                    if (ImGuiHelpers.Button("Open In Explorer"))
+                    {
+                        string filePath = FileHelper.GetScreenshotFolder();
+                        if (Directory.Exists(filePath))
+                        {
+                            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
+                            {
+                                FileName = filePath,
+                                UseShellExecute = true,
+                                Verb = "open"
+                            });
+                        }
                     }
                 }
                 ImGui.End();
