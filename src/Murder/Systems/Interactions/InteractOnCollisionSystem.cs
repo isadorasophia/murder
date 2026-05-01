@@ -4,6 +4,7 @@ using Bang.Entities;
 using Bang.Interactions;
 using Bang.Systems;
 using Murder.Components;
+using Murder.Core.Physics;
 using Murder.Messages.Physics;
 using Murder.Utilities;
 
@@ -51,11 +52,17 @@ public class InteractOnCollisionSystem : IMessagerSystem
             return;
         }
 
-        if (msg.Movement == CollisionDirection.Exit)
+        if (msg.Movement == CollisionDirection.Exit && interactOnCollision.CustomExitMessages.Length > 0)
         {
-            foreach (IInteractiveComponent interaction in interactOnCollision.CustomExitMessages)
+            bool skipSendingExitMessage = interactOnCollision.Flags.HasFlag(InteractOnCollisionFlags.SkipExitIfInteractorInside) && 
+                IsInteractorInside(world, entity, interactorEntity.EntityId);
+
+            if (!skipSendingExitMessage)
             {
-                interaction.Interact(world, interactorEntity, interactiveEntity);
+                foreach (IInteractiveComponent interaction in interactOnCollision.CustomExitMessages)
+                {
+                    interaction.Interact(world, interactorEntity, interactiveEntity);
+                }
             }
         }
         else if (msg.Movement == CollisionDirection.Enter)
@@ -94,6 +101,35 @@ public class InteractOnCollisionSystem : IMessagerSystem
                 interactiveEntity.RemoveInteractOnCollision();
             }
         }
+    }
+
+    private bool IsInteractorInside(World world, Entity e, int except)
+    {
+        if (e.TryGetCollisionCache() is not CollisionCacheComponent collisionCache)
+        {
+            return false;
+        }
+
+        foreach (int otherId in collisionCache.CollidingWith)
+        {
+            if (otherId == except)
+            {
+                continue;
+            }
+
+            Entity? other = world.TryGetEntity(otherId);
+            if (other is null)
+            {
+                continue;
+            }
+
+            if (other.HasAgent())
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     protected virtual bool IsInteractAllowed(

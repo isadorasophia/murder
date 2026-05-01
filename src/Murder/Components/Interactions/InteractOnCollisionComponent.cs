@@ -20,7 +20,12 @@ namespace Murder.Components
         /// </summary>
         Once = 1 << 1,
 
-        OnceEveryLoad = 1 << 2
+        OnceEveryLoad = 1 << 2,
+
+        /// <summary>
+        /// Skip notifying on exit if an actor is also inside.
+        /// </summary>
+        SkipExitIfInteractorInside = 1 << 3
     }
 
     public readonly struct InteractOnCollisionComponent : IComponent
