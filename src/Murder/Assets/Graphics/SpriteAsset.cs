@@ -32,8 +32,11 @@ public class SpriteAsset : GameAsset, IPreview
     public readonly Rectangle NineSlice;
 
     public override char Icon => '\uf1fc';
-    public override bool CanBeDeleted => false;
-    public override bool CanBeRenamed => false;
+
+    // we might rename when merging with another asset.
+    public override bool CanBeDeleted => true;
+    public override bool CanBeRenamed => true;
+
     public override bool CanBeCreated => false;
     public override string EditorFolder => _editorPath;
     public override System.Numerics.Vector4 EditorColor => Game.Profile.Theme.Faded;
@@ -214,6 +217,7 @@ public class SpriteAsset : GameAsset, IPreview
         else
         {
             Name = Name.Length <= other.Name.Length ? Name : other.Name;
+            Rename = true;
         }
 
         // keep ours, warn on drift.

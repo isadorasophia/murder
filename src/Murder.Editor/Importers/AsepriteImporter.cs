@@ -392,6 +392,7 @@ namespace Murder.Editor.Importers
                 }
             }
 
+            asset.FilePath = assetNameWithJson;
             Game.Data.FileManager.SaveSerialized<GameAsset>(asset, sourceFilePath);
 
             FileManager.CreateDirectoryPathIfNotExists(binFilePath);
