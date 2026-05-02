@@ -39,6 +39,13 @@ namespace Murder.Components
         [Default("Only clear layers...")]
         public readonly int? ClearLayers = null;
 
+        /// <summary>
+        /// Apply <see cref="CollisionLayersBase"/> values to this tile.
+        /// </summary>
+        [CollisionLayer]
+        [Default("Add layers...")]
+        public readonly int? ApplyLayers = null;
+
         public CarveComponent() { }
 
         public CarveComponent(bool blockVision, bool obstacle, bool clearPath, int weight) =>

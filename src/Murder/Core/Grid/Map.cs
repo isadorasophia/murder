@@ -232,6 +232,11 @@ namespace Murder.Core
                 collisionMask |= CollisionLayersBase.SOLID;
             }
 
+            if (carve.ApplyLayers is int extraLayers)
+            {
+                collisionMask = extraLayers;
+            }
+
             SetGridCollision(rect.X, rect.Y, rect.Width, rect.Height, collisionMask, @override, carve.Weight);
         }
 
