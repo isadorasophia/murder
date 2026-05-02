@@ -101,7 +101,7 @@ namespace Murder.Systems.Physics
             }
 
             // Immediately prior to a replace, send an exit notification to everyone.
-            // Otherwise, we won't have a cllision cache and won't know who to send to.
+            // Otherwise, we won't have a collision cache and won't know who to send to.
             // 
             if (entity.TryGetCollisionCache() is not CollisionCacheComponent collisionCache)
             {
@@ -112,6 +112,9 @@ namespace Murder.Systems.Physics
             {
                 entity.SendOnCollisionMessage(other.EntityId, CollisionDirection.Exit);
                 other.SendOnCollisionMessage(entity.EntityId, CollisionDirection.Exit);
+
+                // we are about to forever lose this collision cache, so update the other interaction.
+                PhysicsServices.RemoveFromCollisionCache(other, entity.EntityId);
             }
         }
 

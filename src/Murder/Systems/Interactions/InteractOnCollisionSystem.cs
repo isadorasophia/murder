@@ -103,7 +103,7 @@ public class InteractOnCollisionSystem : IMessagerSystem
         }
     }
 
-    private bool IsInteractorInside(World world, Entity e, int except)
+    public static bool IsInteractorInside(World world, Entity e, int except)
     {
         if (e.TryGetCollisionCache() is not CollisionCacheComponent collisionCache)
         {
