@@ -51,6 +51,7 @@ public class GenericSelectorSystem
     int _previousSelection = -1;
 
     private float _lastSpaceBarTime = 0;
+    private Vector2 _lastMousePositionAtSelection = new Vector2(-100);
 
     /// <summary>
     /// Share this across world instances.
@@ -424,10 +425,11 @@ public class GenericSelectorSystem
 
         if (!isCursorBusy)
         {
-            if (SelectSmallestEntity(world, cursorPosition, hook.Hovering, hook.AllSelectedEntities.Keys.ToImmutableArray(), released) is Entity entity)
+            if (clicked || (cycle && released && _dragStart == cursorPosition))
             {
-                if (clicked || (cycle && released && _dragStart == cursorPosition))
+                if (SelectClosestEntity(world, cursorPosition, hook.Hovering, hook.AllSelectedEntities.Keys.ToImmutableArray(), released) is Entity entity)
                 {
+                    _lastMousePositionAtSelection = cursorPosition;
                     if (!hook.IsEntitySelected(entity.EntityId))
                     {
                         _selectionStartTime = Game.NowUnscaled;
@@ -729,7 +731,56 @@ public class GenericSelectorSystem
 
         return result;
     }
-
+    private Entity? SelectClosestEntity(World world, Vector2 cursorPosition, ImmutableArray<int> hovering, ImmutableArray<int> selectedEntities, bool cycle)
+    {
+        float closestDistanceSq = float.MaxValue;
+        Entity? closest = null;
+        // If one entity is previously selected, we select the next hovered entity.
+        // We also check if the cursor moveds since last selection, when the user moves the cursor this usually means that they want to select the closest entity instead
+        if (selectedEntities.Length == 1 && Calculator.DistanceCheck(_lastMousePositionAtSelection, cursorPosition, 32))
+        {
+            int selected = selectedEntities[0];
+            if (cycle)
+            {
+                int hoveredIndex = hovering.IndexOf(selected);
+                if (hoveredIndex != -1)
+                {
+                    if (world.TryGetEntity(hovering[Calculator.WrapAround(hoveredIndex + 1, 0, hovering.Length - 1)]) is Entity entity)
+                    {
+                        return entity;
+                    }
+                }
+            }
+            else
+            {
+                int hoveredIndex = hovering.IndexOf(selected);
+                if (hoveredIndex >= 0 && world.TryGetEntity(selected) is Entity entity)
+                {
+                    return entity;
+                }
+            }
+        }
+        // No entity, or multiple entities are selected, so we can select the closest entity.
+        foreach (var eId in hovering)
+        {
+            if (world.TryGetEntity(eId) is not Entity entity)
+            {
+                continue;
+            }
+            if (!entity.HasPosition())
+            {
+                continue;
+            }
+            var position = entity.GetGlobalPosition();
+            var distance = Vector2.DistanceSquared(position, cursorPosition);
+            if (distance < closestDistanceSq)
+            {
+                closestDistanceSq = distance;
+                closest = entity;
+            }
+        }
+        return closest;
+    }
     private Entity? SelectSmallestEntity(World world, Vector2 cursor, ImmutableArray<int> hovering, ImmutableArray<int> selectedEntities, bool cycle)
     {
         float smallestBoxArea = float.MaxValue;
