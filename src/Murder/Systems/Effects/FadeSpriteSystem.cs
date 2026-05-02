@@ -22,6 +22,15 @@ public class FadeSpriteSystem : IMonoPreRenderSystem
 
             float alpha = Calculator.Lerp(fade.StartAlpha, fade.EndAlpha, delta);
 
+            if (fade.Flags.HasFlag(FadeSpriteFlags.Quantize8))
+            {
+                alpha = Calculator.Quantize(alpha, 8);
+            }
+            else if (fade.Flags.HasFlag(FadeSpriteFlags.Quantize16))
+            {
+                alpha = Calculator.Quantize(alpha, 16);
+            }
+
             // e.SetTint(Color.White * alpha);
             if (fade.Flags.HasFlag(FadeSpriteFlags.Alpha))
             {

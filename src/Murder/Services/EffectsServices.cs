@@ -2,7 +2,6 @@
 using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
-using Bang.Interactions;
 using Murder.Components;
 using Murder.Components.Graphics;
 using Murder.Core;

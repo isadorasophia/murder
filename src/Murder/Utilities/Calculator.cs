@@ -997,6 +997,17 @@ namespace Murder.Utilities
             return new Point(800, 600); // Or handle the error as needed
         }
 
+        /// <summary>
+        /// Quantizes a float value to the nearest step defined by the number of steps. For example, if steps is 4, the value will be quantized to the nearest 0.25 (1/4). If steps is 10, the value will be quantized to the nearest 0.1 (1/10).
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="steps"></param>
+        /// <returns></returns>
+        internal static float Quantize(float value, int steps)
+        {
+            return (float)Math.Round(value * steps) / steps;
+        }
+
         #endregion
     }
 }
