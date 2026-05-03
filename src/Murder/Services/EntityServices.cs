@@ -64,6 +64,12 @@ public static class EntityServices
             return;
         }
 
+        if (duration == 0)
+        {
+            entity.SetFacing(targetDirection);
+            return;
+        }
+
         entity.SetFacingTurn(Game.Now, Game.Now + duration, currentFacing, targetDirection);
     }
 
