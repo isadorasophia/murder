@@ -123,7 +123,9 @@ public class InteractOnCollisionSystem : IMessagerSystem
                 continue;
             }
 
-            if (other.HasAgent())
+            if (other.TryGetCollider() is ColliderComponent colliderComponent &&
+                (colliderComponent.HasLayer(CollisionLayersBase.HITBOX) || 
+                 colliderComponent.HasLayer(CollisionLayersBase.ACTOR)))
             {
                 return true;
             }
