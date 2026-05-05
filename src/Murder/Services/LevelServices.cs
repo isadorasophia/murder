@@ -20,8 +20,14 @@ namespace Murder.Services
 
         public static ValueTask SwitchSceneAfterSeconds(World world, Guid nextWorldGuid, float seconds)
         {
-            world.RunCoroutine(SwitchSceneOnSecondsCoroutine(nextWorldGuid, seconds));
+            if (seconds == 0)
+            {
+                // skip any coroutine.
+                SwitchScene(nextWorldGuid);
+                return default;
+            }
 
+            world.RunCoroutine(SwitchSceneOnSecondsCoroutine(nextWorldGuid, seconds));
             return default;
         }
 
