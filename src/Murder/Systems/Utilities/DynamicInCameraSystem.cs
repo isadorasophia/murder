@@ -137,9 +137,6 @@ public sealed class DynamicInCameraSystem : IMonoPreRenderSystem
             {
                 Rectangle worldBox = col.GetBoundingBox(pos, e.FetchScale());
 
-                // Cache once for static colliders
-                if (e.HasStatic())
-                    e.SetEntityBoundsCache(worldBox.AddPosition(-pos));
 
                 if (cameraBounds.Touches(worldBox))
                     e.SetInCamera();
@@ -154,10 +151,6 @@ public sealed class DynamicInCameraSystem : IMonoPreRenderSystem
                 e.SetInCamera();
             else
                 e.RemoveInCamera();
-
-            // Cache a 1-pixel box if it will never change
-            if (e.HasStatic())
-                e.SetEntityBoundsCache(Rectangle.One);
         }
     }
 }

@@ -44,13 +44,11 @@ internal class StaticInCameraSystem : IMonoPreRenderSystem
     {
         Camera2D camera = ((MonoWorld)context.World).Camera;
 
-        Rectangle bounds = camera.Bounds;
         Rectangle safeBounds = camera.SafeBounds;
 
         if (context.HasAnyEntity &&
             context.Entity.GetDisableSceneTransitionEffects().ForceCameraPosition is Vector2 position)
         {
-            bounds = bounds.SetPosition(position);
             safeBounds = safeBounds.SetPosition(position);
         }
 
@@ -68,7 +66,7 @@ internal class StaticInCameraSystem : IMonoPreRenderSystem
         qt.StaticRender.Retrieve(safeBounds, _sprites);
         foreach (var node in _sprites)
         {
-            if (bounds.Touches(node.BoundingBox) || node.EntityInfo.sprite.TargetSpriteBatch == Batches2D.UiBatchId)
+            if (safeBounds.Touches(node.BoundingBox) || node.EntityInfo.sprite.TargetSpriteBatch == Batches2D.UiBatchId)
             {
                 node.EntityInfo.entity.SetInCamera(node.EntityInfo.renderPosition);
             }
