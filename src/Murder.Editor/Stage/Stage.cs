@@ -223,6 +223,13 @@ namespace Murder.Editor.Stages
                     ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoNav |
                     ImGuiWindowFlags.NoDecoration))
                 {
+
+                    if (ImGuiHelpers.Button("Reset Camera"))
+                    {
+                        ResetCamera();
+                    }
+                    ImGui.SameLine();
+
                     if (EditorHook.EditorMode == EditorHook.EditorModes.EditMode)
                     {
                         if (EditorHook.CanSwitchModes)
