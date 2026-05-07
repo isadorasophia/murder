@@ -114,7 +114,7 @@ public class SpriteFacingComponentEditor : CustomComponent
 
             if (sprite.FacingInfo.Length > 0)
             {
-                ImGui.SliderInt("Selected Slice", ref _selectedSlice, 1, sprite.FacingInfo.Length + 1);
+                ImGui.SliderInt("Selected Slice##SelectedSlice1", ref _selectedSlice, 1, sprite.FacingInfo.Length + 1);
 
                 if (_selectedSlice <= sprite.FacingInfo.Length)
                 {
