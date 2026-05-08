@@ -3,26 +3,42 @@ using Bang.Components;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
-using Murder.Core.Physics;
 using Murder.Messages;
-using Murder.Prefabs;
 using Murder.Services;
+using System.Collections.Immutable;
 
 namespace Murder.Systems.Util
 {
     [Filter(typeof(DestroyOnAnimationCompleteComponent))]
     [Messager(typeof(AnimationCompleteMessage))]
-    internal class DestroyOnAnimationCompleteSystem : IMessagerSystem
+    [Watch(typeof(AnimationCompleteComponent))]
+    internal class DestroyOnAnimationCompleteSystem : IReactiveSystem, IMessagerSystem
     {
+        public void OnAdded(World world, ImmutableArray<Entity> entities)
+        {
+            foreach (Entity e in entities)
+            {
+                Complete(e);
+            }
+        }
+
+        public void OnModified(World world, ImmutableArray<Entity> entities) { }
+
+        public void OnRemoved(World world, ImmutableArray<Entity> entities) { }
+
         public void OnMessage(World world, Entity entity, IMessage message)
         {
-            var msg = (AnimationCompleteMessage)message;
-
+            AnimationCompleteMessage msg = (AnimationCompleteMessage)message;
             if (msg.CompleteStyle != AnimationCompleteStyle.Sequence)
             {
                 return;
             }
 
+            Complete(entity);
+        }
+
+        private void Complete(Entity entity)
+        {
             SpriteComponent? sprite = entity.TryGetSprite();
             if (sprite is not null && sprite.Value.NextAnimations.Length > 1)
             {
