@@ -156,7 +156,7 @@ public static class PhysicsServices
         World world,
         Vector2 startPos,
         Vector2 endPos,
-        int flags, 
+        int flags,
         out RaycastHit hit)
     {
         Map map = world.GetUniqueMap().Map;
@@ -492,14 +492,14 @@ public static class PhysicsServices
         if (e.TryGetCollider() is ColliderComponent collider)
         {
             Vector2 scale = e.FetchScale();
-            return CollidesAt(map, e.EntityId, collider, position, scale, _cachedEntityInfo, layerMask, out int _);
+            return CollidesAt(world, map, e.EntityId, collider, position, scale, _cachedEntityInfo, layerMask, out int _);
         }
         else
         {
             GameLogger.Warning("Creating a collider on the fly, is this really what you want?");
 
             // Check using a single point
-            return CollidesAt(map, e.EntityId, new ColliderComponent(new PointShape(), CollisionLayersBase.NONE, Color.Gray), position, Vector2.One, _cachedEntityInfo, layerMask, out int _);
+            return CollidesAt(world, map, e.EntityId, new ColliderComponent(new PointShape(), CollisionLayersBase.NONE, Color.Gray), position, Vector2.One, _cachedEntityInfo, layerMask, out int _);
         }
     }
 
@@ -545,7 +545,7 @@ public static class PhysicsServices
 
             bool CheckPosition(Vector2 position)
             {
-                if (!CollidesAt(map, ignoreId: e.EntityId, collider, position, scale, collisionEntities, layerMask, out int _))
+                if (!CollidesAt(world, map, ignoreId: e.EntityId, collider, position, scale, collisionEntities, layerMask, out int _))
                 {
                     if (!flags.HasFlag(NextAvailablePositionFlags.CheckLineOfSight) ||
                         map.HasLineOfSight(startGridPoint, position.ToGrid(), excludeEdges: true, layerMask))
@@ -1037,7 +1037,7 @@ public static class PhysicsServices
         return mtvs;
     }
 
-    public static bool CollidesAt(in Map map, int ignoreId, ColliderComponent collider, Vector2 position, Vector2 scale, IList<PhysicEntityCachedInfo> others, int mask, out int hitId)
+    public static bool CollidesAt(World world, in Map map, int ignoreId, ColliderComponent collider, Vector2 position, Vector2 scale, IList<PhysicEntityCachedInfo> others, int mask, out int hitId)
     {
         hitId = -1;
 
@@ -1059,8 +1059,16 @@ public static class PhysicsServices
                 {
                     if (CollidesWith(shape, position.Point(), scale, otherShape, other.GlobalPosition, other.Scale))
                     {
-                        hitId = other.EntityId;
-                        return true;
+                        if (world.TryGetEntity(other.EntityId) is Entity otherEntity)
+                        {
+                            if (!otherEntity.IsActive || !otherEntity.IsDestroyed)
+                            {
+                                continue;
+                            }
+
+                            hitId = other.EntityId;
+                            return true;
+                        }
                     }
                 }
             }
