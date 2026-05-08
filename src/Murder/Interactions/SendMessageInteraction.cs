@@ -26,7 +26,7 @@ public readonly struct SendMessageInteraction : IInteraction
             return; 
         }
 
-        Entity? target;     
+        Entity? target;
         switch (Target)
         {
             case TargetEntity.Self:
