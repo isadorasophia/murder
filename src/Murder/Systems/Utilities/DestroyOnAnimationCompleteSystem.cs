@@ -45,7 +45,12 @@ namespace Murder.Systems.Util
                 return;
             }
 
-            DestroyOnAnimationCompleteComponent destroyOnComplete = entity.GetDestroyOnAnimationComplete();
+            if (entity.TryGetDestroyOnAnimationComplete() is not DestroyOnAnimationCompleteComponent destroyOnComplete)
+            {
+                // already dealt with?
+                return;
+            }
+
             if (!destroyOnComplete.KeepComponentAfterTriggered)
             {
                 entity.RemoveDestroyOnAnimationComplete();
