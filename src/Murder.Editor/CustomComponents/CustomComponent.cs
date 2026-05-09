@@ -258,7 +258,7 @@ public class CustomComponent
         bool unfolded = true;
         if (AttributeExtensions.IsDefined(member, typeof(FolderAttribute)))
         {
-            string id = $"{memberName}";
+            string id = $"{target.GetHashCode()}_{memberName}";
 
             unfolded = _unfoldedFolders.Contains(id);
             ImGui.PushStyleColor(ImGuiCol.Text, unfolded ? Game.Profile.Theme.White: Game.Profile.Theme.Faded);
