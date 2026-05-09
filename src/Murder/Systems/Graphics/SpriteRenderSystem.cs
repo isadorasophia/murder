@@ -34,6 +34,12 @@ namespace Murder.Systems.Graphics
                     GameLogger.Error($"Sprite GUID not found {s.AnimationGuid}");
                     continue;
                 }
+                AnimationOverloadComponent? overload = e.TryGetAnimationOverload();
+
+                if (s.CurrentAnimation == "_" && overload is null)
+                {
+                    continue;
+                }
 
                 ImageFlip flip = ImageFlip.None;
 
@@ -97,7 +103,6 @@ namespace Murder.Systems.Graphics
                 string animationId = s.CurrentAnimation;
                 float startTime = e.TryGetAnimationStarted()?.StartTime ?? (s.UseUnscaledTime ? Game.Now : Game.NowUnscaled);
 
-                AnimationOverloadComponent? overload = e.TryGetAnimationOverload();
                 if (overload is not null)
                 {
                     startTime = overload.Value.Start;

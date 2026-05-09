@@ -12,7 +12,7 @@ public enum FadeSpriteFlags
     DestroyOnEnd = 1 << 2,
     DeactivateOnEnd = 1 << 3,
     Quantize8 = 1 << 4,
-    Quantize16 = 1 << 5,
+    Quantize16 = 1 << 5
 }
 
 /// <summary>
