@@ -56,9 +56,9 @@ public sealed class DynamicInCameraSystem : IMonoPreRenderSystem
         float radius = MathF.Sqrt(halfW * halfW + halfH * halfH);
 
         Vector2 min = new(position.X - radius, position.Y - radius);
-        int wh = (int)(radius * 2);
+        float wh = (int)(radius * 2);
 
-        return new Rectangle((int)min.X, (int)min.Y, wh, wh);
+        return new Rectangle(min.X, min.Y, wh, wh);
     }
 
     public void BeforeDraw(Context context)

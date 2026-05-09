@@ -13,8 +13,9 @@ namespace Murder.Systems;
 [Filter(typeof(DisableSceneTransitionEffectsComponent))]
 internal class StaticInCameraSystem : IMonoPreRenderSystem
 {
+    private HashSet<int> _previousEntities = new HashSet<int>();
+    private HashSet<int> _currentEntities = new HashSet<int>();
     private readonly List<NodeInfo<(Entity entity, SpriteComponent sprite, Vector2 renderPosition)>> _sprites = new();
-    private Rectangle _lastBounds = Rectangle.Empty;
 
     public void BeforeDraw(Context context)
     {
@@ -52,29 +53,30 @@ internal class StaticInCameraSystem : IMonoPreRenderSystem
             safeBounds = safeBounds.SetPosition(position);
         }
 
-        if (_lastBounds != safeBounds)
-        {
-            _lastBounds = safeBounds;
-        }
-        else
-        {
-            return;
-        }
-
         Quadtree qt = Quadtree.GetOrCreateUnique(context.World);
         _sprites.Clear();
         qt.StaticRender.Retrieve(safeBounds, _sprites);
+
+        _currentEntities.Clear();
         foreach (var node in _sprites)
         {
             if (safeBounds.Touches(node.BoundingBox) || node.EntityInfo.sprite.TargetSpriteBatch == Batches2D.UiBatchId)
             {
                 node.EntityInfo.entity.SetInCamera(node.EntityInfo.renderPosition);
-            }
-            else
-            {
-                node.EntityInfo.entity.RemoveInCamera();
+                _currentEntities.Add(node.Id);
             }
         }
+
+        foreach (int id in _previousEntities)
+        {
+            if (!_currentEntities.Contains(id))
+            {
+                context.World.TryGetEntity(id)?.RemoveInCamera();
+            }
+        }
+
+        // Copy _currentEntities to _previousEntities.
+        (_previousEntities, _currentEntities) = (_currentEntities, _previousEntities);
     }
 
 }
