@@ -528,6 +528,24 @@ public static class PhysicsServices
         return false;
     }
 
+    public static bool CollidesTile(
+        World world,
+        Vector2 position,
+        int layerMask)
+    {
+        Map map = world.GetUniqueMap().Map;
+
+        // First, check if there is a collision against a tile.
+        if (map.At((int)(position.X / Grid.CellSize), (int)(position.Y / Grid.CellSize)).HasFlag(layerMask))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+
+
     public static bool CollidesAt(
         World world,
         Entity e,
