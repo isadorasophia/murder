@@ -14,6 +14,8 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Murder.Services;
 
@@ -473,6 +475,57 @@ public static class PhysicsServices
 
         _checkedPositionsCache.Clear();
         return FindNextAvailablePosition(world, e, center, target, map, _cachedEntityInfo, _checkedPositionsCache, flags, layerMask);
+    }
+
+    /// <summary>
+    /// Checks if a position collides with the map or any entity with a collider in the world, based on the provided <paramref name="layerMask"/>.
+    /// Outs the center of the collider that is colliding, or if colliding with the map, the position of the center of the tile that is colliding.
+    /// </summary>
+    public static bool CollidesAtPoint(
+        World world,
+        Vector2 position,
+        int layerMask)
+    {
+        Map map = world.GetUniqueMap().Map;
+
+        _cachedEntityInfo.Clear();
+        FilterPositionAndColliderEntities(
+            world,
+            layerMask,
+            /* ref */ result: _cachedEntityInfo);
+
+        int hitId = -1;
+
+        // First, check if there is a collision against a tile.
+        if (map.At((int)(position.X / Grid.CellSize), (int)(position.Y / Grid.CellSize)).HasFlag(layerMask))
+        {
+            return true;
+        }
+
+        // Now, check against other entities.
+        foreach (var other in _cachedEntityInfo)
+        {
+            var otherCollider = other.Collider;
+
+            foreach (var otherShape in otherCollider.Shapes)
+            {
+                if (otherShape.GetPolygon().Polygon.Contains(position - other.GlobalPosition))
+                {
+                    if (world.TryGetEntity(other.EntityId) is Entity otherEntity)
+                    {
+                        if (!otherEntity.IsActive || !otherEntity.IsDestroyed)
+                        {
+                            continue;
+                        }
+
+                        hitId = other.EntityId;
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     public static bool CollidesAt(
