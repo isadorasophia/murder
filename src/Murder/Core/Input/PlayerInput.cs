@@ -800,6 +800,7 @@ public class PlayerInput
         bool pressed = false;
         if (PressedAndConsume(MurderInputButtons.Submit))
         {
+            currentInfo.LastMoved = Game.NowUnscaled;
             currentInfo.LastPressed = Game.NowUnscaled;
             pressed = true;
         }
