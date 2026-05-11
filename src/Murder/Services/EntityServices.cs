@@ -755,6 +755,11 @@ public static class EntityServices
 
     public static bool IsAnimatingStartingWith(this Entity e, string animation)
     {
+        if (e.TryGetSprite()?.CurrentAnimation is string currentAnimation && currentAnimation.StartsWith(animation))
+        {
+            return true;
+        }
+
         if (e.TryGetAnimationOverload() is not AnimationOverloadComponent animationOverload)
         {
             return false;
