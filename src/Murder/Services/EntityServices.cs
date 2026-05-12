@@ -755,7 +755,8 @@ public static class EntityServices
 
     public static bool IsAnimatingStartingWith(this Entity e, string animation)
     {
-        if (e.TryGetSprite()?.CurrentAnimation is string currentAnimation && currentAnimation.StartsWith(animation))
+        if (e.TryGetSprite()?.CurrentAnimation is string currentAnimation && 
+            currentAnimation.StartsWith(animation, StringComparison.InvariantCultureIgnoreCase))
         {
             return true;
         }
@@ -765,7 +766,7 @@ public static class EntityServices
             return false;
         }
 
-        return animationOverload.CurrentAnimation.StartsWith(animation);
+        return animationOverload.CurrentAnimation.StartsWith(animation, StringComparison.InvariantCultureIgnoreCase);
     }
 }
 
