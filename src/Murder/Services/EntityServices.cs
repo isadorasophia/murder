@@ -735,7 +735,6 @@ public static class EntityServices
                 SupportedOrientation = properties.HasFlag(AnimationOverloadProperties.LockHorizontal) ? Orientation.Horizontal : 
                     properties.HasFlag(AnimationOverloadProperties.LockVertical) ? Orientation.Vertical : null
             };
-
         e.SetAnimationOverload(overload);
         e.RemoveAnimationComplete();
         e.RemoveAnimationCompleteMessage();

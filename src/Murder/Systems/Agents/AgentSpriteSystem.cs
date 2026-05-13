@@ -3,6 +3,7 @@ using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
+using Murder.Assets.Editor;
 using Murder.Assets.Graphics;
 using Murder.Attributes;
 using Murder.Components;
@@ -200,8 +201,13 @@ namespace Murder.Systems
                     Start = start,
                     Duration = speed,
                     Loop = overload == null || (overload.Value.AtLast && overload.Value.Loop),
-                    UseScaledTime = true
+                    UseScaledTime = true,
                 };
+
+                if (e.TryGetSpritePaused() is SpritePausedComponent pauseAnimation)
+                {
+                    animationInfo = animationInfo with { OverrideCurrentTime = pauseAnimation.PausedAt };
+                }
 
                 // Make sure overloaded animations don't loop if they have a sequence.
                 if (overload != null)
