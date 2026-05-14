@@ -30,27 +30,37 @@ public class AgentMovementModifierSystem : IMessagerSystem
 
         if (msg.Movement == Murder.Utilities.CollisionDirection.Enter)
         {
-            if (actor.TryGetInsideMovementModArea() is InsideMovementModAreaComponent currentArea)
-            {
-                actor.SetInsideMovementModArea(currentArea.AddArea(area));
-            }
-            else
-            {
-                actor.SetInsideMovementModArea(area);
-            }
+            OnEnter(actor, originId: entity.EntityId, area);
         }
         else // On exit
         {
-            if (actor.TryGetInsideMovementModArea() is InsideMovementModAreaComponent currentArea)
+            OnExit(actor, originId: entity.EntityId, area);
+        }
+    }
+
+    public static void OnEnter(Entity interactor, int originId, MovementModAreaComponent area)
+    {
+        if (interactor.TryGetInsideMovementModArea() is InsideMovementModAreaComponent currentArea)
+        {
+            interactor.SetInsideMovementModArea(currentArea.AddArea(originId, area));
+        }
+        else
+        {
+            interactor.SetInsideMovementModArea(originId, area);
+        }
+    }
+
+    public static void OnExit(Entity interactor, int originId, MovementModAreaComponent area)
+    {
+        if (interactor.TryGetInsideMovementModArea() is InsideMovementModAreaComponent currentArea)
+        {
+            if (currentArea.RemoveArea(originId, area) is InsideMovementModAreaComponent newAreaInfo)
             {
-                if (currentArea.RemoveArea(area) is InsideMovementModAreaComponent newAreaInfo)
-                {
-                    actor.SetInsideMovementModArea(newAreaInfo);
-                }
-                else
-                {
-                    actor.RemoveInsideMovementModArea();
-                }
+                interactor.SetInsideMovementModArea(newAreaInfo);
+            }
+            else
+            {
+                interactor.RemoveInsideMovementModArea();
             }
         }
     }
