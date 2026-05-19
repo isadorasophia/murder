@@ -290,6 +290,14 @@ namespace Murder.Core.Graphics
             return new Color(rf, gf, bf);
         }
 
+        public static string ToHex(Color color)
+        {
+            int r = (int)(color.R * 255);
+            int g = (int)(color.G * 255);
+            int b = (int)(color.B * 255);
+            return $"#{r:X2}{g:X2}{b:X2}";
+        }
+
         [GeneratedRegex(@"\$?Color\(([\d.]+), ([\d.]+), ([\d.]+), ([\d.]+)\)")]
         private static partial Regex ColorRegex();
 
