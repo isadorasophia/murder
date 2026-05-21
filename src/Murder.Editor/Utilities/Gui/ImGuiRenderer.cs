@@ -158,7 +158,7 @@ namespace Murder.Editor.ImGuiExtended
             if (_loadedTextures.Count >= threshold)
             {
                 // Debugger.Break();
-                GameLogger.Error($"{nameof(ImGuiRenderer)}: You have loaded {_loadedTextures.Count} textures. This may cause performance issues. Consider unloading unused textures.");
+                GameLogger.Warning($"{nameof(ImGuiRenderer)}: You have loaded {_loadedTextures.Count} textures. This may cause performance issues. Consider unloading unused textures.");
             }
 
             AddTexture(id, texture);

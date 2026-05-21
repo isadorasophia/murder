@@ -422,6 +422,18 @@ public static class DirectionHelper
         return FromVector(direction);
     }
 
+    public static Direction LookAtPositionWith4Directions(Vector2 from, Vector2 to)
+    {
+        Vector2 direction = to - from;
+        return FromVectorWith4Directions(direction);
+    }
+
+    public static Direction LookAtEntityWith4Directions(Entity e, Entity target)
+    {
+        Vector2 direction = target.GetGlobalPosition() - e.GetGlobalPosition();
+        return FromVectorWith4Directions(direction);
+    }
+
     public static Direction LookAtPosition(Entity e, Vector2 target)
     {
         Vector2 direction = target - e.GetGlobalPosition();
