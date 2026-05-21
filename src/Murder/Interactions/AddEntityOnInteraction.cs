@@ -4,46 +4,70 @@ using Bang.Entities;
 using Bang.Interactions;
 using Murder.Assets;
 using Murder.Attributes;
-using Murder.Components;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Numerics;
 
-namespace Murder.Interactions
+namespace Murder.Interactions;
+
+public enum AddEntityFlags
 {
-    /// <summary>
-    /// This will trigger an effect by placing <see cref="_prefab"/> in the world.
-    /// </summary>
-    public readonly struct AddEntityOnInteraction : IInteraction
+    None = 0,
+    FromInteractor = 1,
+    FromInteracted = 1 << 1,
+    RemoveAfterTriggered = 1 << 2
+}
+
+/// <summary>
+/// This will trigger an effect by placing <see cref="Prefab"/> in the world.
+/// </summary>
+public readonly struct AddEntityOnInteraction : IInteraction
+{
+    [GameAssetId(typeof(PrefabAsset))]
+    [ShowInEditor]
+    public readonly Guid Prefab = Guid.Empty;
+
+    [ShowInEditor]
+    public readonly ImmutableArray<IComponent>? CustomComponents = null;
+
+    public AddEntityFlags Flags { get; init; } = AddEntityFlags.None;
+
+    public AddEntityOnInteraction() { }
+
+    public AddEntityOnInteraction(Guid prefab) => Prefab = prefab;
+
+    public void Interact(World world, Entity interactor, Entity? interacted)
     {
-        [GameAssetId(typeof(PrefabAsset))]
-        [ShowInEditor]
-        private readonly Guid _prefab = Guid.Empty;
+        Entity result = AssetServices.Create(world, Prefab);
 
-        [ShowInEditor]
-        private readonly ImmutableArray<IComponent> _customComponents = ImmutableArray<IComponent>.Empty;
-
-        public AddEntityOnInteraction() { }
-
-        public AddEntityOnInteraction(Guid prefab) => _prefab = prefab;
-
-        public void Interact(World world, Entity interactor, Entity? interacted)
+        if (CustomComponents is not null)
         {
-            Entity result = AssetServices.Create(world, _prefab);
-
-            foreach (IComponent c in _customComponents)
+            foreach (IComponent c in CustomComponents)
             {
                 // We need to guarantee that any modifiable components added here are safe.
                 IComponent component = c is IModifiableComponent ? SerializationHelper.DeepCopy(c) : c;
                 result.AddOrReplaceComponent(component, component.GetType());
             }
+        }
 
-            // Adjust the position, if applicable.
-            if (interacted?.TryGetPosition() is PositionComponent position)
-            {
-                result.SetPosition(position.Vector2);
-            }
+        // Adjust the position, if applicable.
+        Entity? target = null;
+        if (Flags.HasFlag(AddEntityFlags.FromInteractor))
+        {
+            target = interactor;
+        }
+        else if (Flags.HasFlag(AddEntityFlags.FromInteracted))
+        {
+            target = interacted;
+        }
 
-            // Remove after triggered.
+        if (target?.TryGetGlobalPosition() is Vector2 position)
+        {
+            result.SetPosition(position);
+        }
+
+        if (Flags.HasFlag(AddEntityFlags.RemoveAfterTriggered))
+        {
             interacted?.RemoveInteractive();
         }
     }

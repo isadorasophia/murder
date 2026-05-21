@@ -86,8 +86,9 @@ public class InteractOnRuleMatchSystem : IStartupSystem, IReactiveSystem
             {
                 Guid target = matched ? pickEntityOnStart.OnMatchPrefab : pickEntityOnStart.OnNotMatchPrefab;
 
-                e.SetInteractive(new InteractiveComponent<AddEntityOnInteraction>(new(target)));
-                e.SendInteractMessage(e);
+                e.SetInteractive(new InteractiveComponent<AddEntityOnInteraction>(
+                    new(target) { Flags = AddEntityFlags.FromInteractor | AddEntityFlags.RemoveAfterTriggered }));
+                e.SendInteractMessage(interactor: e);
 
                 triggered = true;
             }
