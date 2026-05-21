@@ -97,7 +97,7 @@ namespace Murder.Components
             NextAnimations = NextAnimations.AddRange(ids)
         };
 
-        public SpriteComponent Play(params string[] id) => this with 
+        public SpriteComponent Play(params string[] id) => this with
         {
             NextAnimations = [.. id]
         };
@@ -109,7 +109,7 @@ namespace Murder.Components
 
         public SpriteComponent Play(ImmutableArray<string> id, Guid? sprite = null) => this with
         {
-            NextAnimations = sprite is not null || HasAnimation(id[0]) ? id : [CurrentAnimation],
+            NextAnimations = sprite is not null || id[0] == "_" || HasAnimation(id[0]) ? id : [CurrentAnimation],
             AnimationGuid = sprite ?? AnimationGuid
         };
 
