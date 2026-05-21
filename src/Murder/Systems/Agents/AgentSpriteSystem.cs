@@ -161,6 +161,22 @@ namespace Murder.Systems
                     blend = BlendStyle.Normal;
                 }
 
+                MurderBlendState blendState;
+                if (e.TryGetSpriteBlend() is SpriteBlendComponent spriteBlend)
+                {
+                    // Override blend style if the component has a value for it
+                    if (spriteBlend.BlendStyle != null)
+                    {
+                        blend = spriteBlend.BlendStyle.Value;
+                    }
+
+                    blendState = spriteBlend.BlendState;
+                }
+                else
+                {
+                    blendState = MurderBlendState.AlphaBlend;
+                }
+
                 // Handle alpha
                 Color color;
                 if (e.TryGetAlpha() is AlphaComponent alphaComponent)
@@ -280,6 +296,7 @@ namespace Murder.Systems
                     Color = color,
                     Scale = scale,
                     BlendMode = blend,
+                    BlendState = blendState,
                     Sort = ySort,
                     Outline = outlineColor,
                 };

@@ -11,10 +11,16 @@ namespace Murder.Components.Graphics;
 
 public readonly struct SpriteBlendComponent : IComponent
 {
-    public readonly BlendStyle BlendStyle = BlendStyle.Normal;
+    public readonly BlendStyle? BlendStyle = null;
     public readonly Murder.Core.Graphics.MurderBlendState BlendState = Murder.Core.Graphics.MurderBlendState.AlphaBlend;
 
     public SpriteBlendComponent()
     {
+    }
+
+    public SpriteBlendComponent(BlendStyle blendStyle, Murder.Core.Graphics.MurderBlendState blendState)
+    {
+        BlendStyle = blendStyle;
+        BlendState = blendState;
     }
 }

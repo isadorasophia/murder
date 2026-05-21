@@ -91,6 +91,12 @@ namespace Murder.Systems.Graphics
                 MurderBlendState blendState;
                 if (e.TryGetSpriteBlend() is SpriteBlendComponent spriteBlend)
                 {
+                    // Override blend style if the component has a value for it
+                    if (spriteBlend.BlendStyle != null)
+                    {
+                        blend = spriteBlend.BlendStyle.Value;
+                    }
+
                     blendState = spriteBlend.BlendState;
                 }
                 else
