@@ -12,7 +12,7 @@ public readonly struct FacingComponent : IComponent
     /// <summary>
     /// The angle the agent is facing, in radians
     /// </summary>
-    public readonly float Angle;
+    public readonly float Angle { get; init; }
 
     /// <summary>
     /// The <see cref="Direction"/> that this entity is facing

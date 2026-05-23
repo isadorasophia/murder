@@ -256,6 +256,10 @@ public static class PhysicsServices
     {
         return HasLineOfSight(world, from, to, CollisionLayersBase.BLOCK_VISION);
     }
+    public static bool HasSolidLineOfSight(World world, Vector2 from, Vector2 to)
+    {
+        return HasLineOfSight(world, from, to, CollisionLayersBase.SOLID);
+    }
 
     /// <summary>
     /// Returns whether <paramref name="from"/> an see an entity <paramref name="targetEntityId"/> before

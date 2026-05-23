@@ -1008,6 +1008,24 @@ namespace Murder.Utilities
             return (float)Math.Round(value * steps) / steps;
         }
 
+        // Wraps an angle to [-π, π]
+        public static float WrapAngle(float angle)
+        {
+            angle = angle % (MathF.PI * 2);
+            if (angle > MathF.PI) angle -= MathF.PI * 2;
+            if (angle < -MathF.PI) angle += MathF.PI * 2;
+            return angle;
+        }
+
+        /// <summary>
+        /// Approach from an initial angle to a target angle by a certain amount, taking into account the circular nature of angles. The angles are expected to be in radians.
+        /// </summary>
+        public static float ApproachAngle(float initialAngle, float targetAngle, float maxAngle)
+        {
+            float delta = WrapAngle(targetAngle - initialAngle);
+            return initialAngle + Approach(0, delta, maxAngle);
+        }
+
         #endregion
     }
 }

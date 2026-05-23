@@ -530,4 +530,21 @@ public static class DirectionHelper
 
         return (Direction)result;
     }
+
+    public static float GetAngle(Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.Right: return 0f;
+            case Direction.DownRight: return MathF.PI / 4f;
+            case Direction.Down: return MathF.PI / 2f;
+            case Direction.DownLeft: return 3f * MathF.PI / 4f;
+            case Direction.Left: return MathF.PI;
+            case Direction.UpLeft: return -3f * MathF.PI / 4f;
+            case Direction.Up: return -MathF.PI / 2f;
+            case Direction.UpRight: return -MathF.PI / 4f;
+            default:
+                throw new Exception("Direction is not suported yet!");
+        }
+    }
 }
