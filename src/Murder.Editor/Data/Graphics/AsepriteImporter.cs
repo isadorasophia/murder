@@ -1045,7 +1045,7 @@ public partial class Aseprite
         // No baked guids were found. Create one on the fly based on the file name.
         using var md5 = MD5.Create();
         Guid guid = new Guid(md5.ComputeHash(Encoding.Default.GetBytes($"{EditorFileHelper.Normalize(Source)}_{Slices[sliceIndex].Name}")));
-        GameLogger.Log($"Aseprite file {Source} slice {Slices[sliceIndex].Name}, ({sliceIndex + 1}/{Slices.Count}), has no GUID. Consider baking: {guid}");
+        GameLogger.Log($"Aseprite file {Source} slice {Slices[sliceIndex].Name}, ({sliceIndex + 1}/{Slices.Count} at {Slices[sliceIndex].OriginX}, {Slices[sliceIndex].OriginY}), has no GUID. Consider baking: {guid}");
         return (false, guid);
     }
 
