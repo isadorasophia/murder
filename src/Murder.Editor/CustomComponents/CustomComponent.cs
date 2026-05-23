@@ -6,7 +6,6 @@ using Murder.Editor.CustomFields;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
-using Murder.Utilities;
 using Murder.Utilities.Attributes;
 
 namespace Murder.Editor.CustomComponents;
@@ -258,7 +257,7 @@ public class CustomComponent
         bool unfolded = true;
         if (AttributeExtensions.IsDefined(member, typeof(FolderAttribute)))
         {
-            string id = $"{target.GetHashCode()}_{memberName}";
+            string id = $"{target}_{memberName}";
 
             unfolded = _unfoldedFolders.Contains(id);
             ImGui.PushStyleColor(ImGuiCol.Text, unfolded ? Game.Profile.Theme.White: Game.Profile.Theme.Faded);
