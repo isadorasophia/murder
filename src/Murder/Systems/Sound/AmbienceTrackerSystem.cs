@@ -48,7 +48,7 @@ public class AmbienceTrackerSystem : IMessagerSystem, IReactiveSystem
             {
                 if (info.OnlyWhen is not null && !BlackboardHelpers.Match(world, info.OnlyWhen.Value))
                 {
-                    return;
+                    continue;
                 }
 
                 if (interactedEntity.HasSoundShape())
