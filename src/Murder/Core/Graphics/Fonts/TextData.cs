@@ -44,6 +44,11 @@ public enum RuntimeLetterPropertiesFlag
     /// Reset any glitch.
     /// </summary>
     ResetGlitch = 0b100000,
+
+    /// <summary>
+    /// Signalizes that a new information was presented with <new>info</new>.
+    /// </summary>
+    New = 0b1000000
 }
 
 /// <summary>
@@ -170,7 +175,8 @@ public static partial class TextDataServices
         Wave = 1 << 5,
         Fear = 1 << 6,
         Speed = 1 << 7,
-        Icon = 1 << 8
+        Icon = 1 << 8,
+        New = 1 << 9
     }
 
     // [Perf] Cache the last strings parsed.
@@ -220,6 +226,9 @@ public static partial class TextDataServices
         // Look for fear characters: <fear>text</fear>
         MatchCollection matchesForFear = FearTags().Matches(text);
 
+        // Look for fear characters: <new>text</new>
+        MatchCollection matchesForNew = NewTags().Matches(text);
+
         // Look for speed characters: <speed=.3/>
         MatchCollection matchesForSpeed = SpeedTags().Matches(text);
 
@@ -229,7 +238,7 @@ public static partial class TextDataServices
         int allocatedLengthForSpecialCharacters = 0;
         if (matchesForPauses.Count != 0 || matchesForShakes.Count != 0 || matchesForColors.Count != 0 ||
             matchesForWaves.Count != 0 || matchesForFear.Count != 0 || matchesForSpeed.Count != 0 || matchesForGlitches.Count != 0 ||
-            matchesForIcons.Count != 0)
+            matchesForIcons.Count != 0 || matchesForNew.Count != 0)
         {
             allocatedLengthForSpecialCharacters = text.Length;
         }
@@ -445,6 +454,30 @@ public static partial class TextDataServices
 
                     RuntimeLetterProperties l = lettersBuilder[index];
                     lettersBuilder[index] = l with { Properties = l.Properties | RuntimeLetterPropertiesFlag.Fear };
+                }
+            }
+        }
+
+        if (matchesForNew.Count > 0)
+        {
+            for (int i = 0; i < matchesForNew.Count; ++i)
+            {
+                Match match = matchesForNew[i];
+
+                for (int j = 0; j < match.Length; ++j)
+                {
+                    skippedLetters[match.Index + j] |= LetterSkipMetadataFlag.New;
+                }
+
+                Group group = match.Groups[1];
+
+                for (int j = 0; j < group.Length; ++j)
+                {
+                    int index = group.Index + j;
+                    skippedLetters[index] &= ~LetterSkipMetadataFlag.New;
+
+                    RuntimeLetterProperties l = lettersBuilder[index];
+                    lettersBuilder[index] = l with { Properties = l.Properties | RuntimeLetterPropertiesFlag.New };
                 }
             }
         }
@@ -701,6 +734,9 @@ public static partial class TextDataServices
 
     [GeneratedRegex("<fear>(.*?)<\\/fear>", RegexOptions.IgnoreCase)]
     private static partial Regex FearTags();
+
+    [GeneratedRegex("<new>(.*?)<\\/new>", RegexOptions.IgnoreCase)]
+    private static partial Regex NewTags();
 
     [GeneratedRegex("<speed=([^\\/]+)\\/>|<speed=([^>]+)>(.*?)</speed>", RegexOptions.IgnoreCase)]
     private static partial Regex SpeedTags();
