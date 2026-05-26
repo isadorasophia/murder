@@ -4,6 +4,7 @@ using Bang.Entities;
 using Bang.Systems;
 using Murder.Assets.Graphics;
 using Murder.Components;
+using Murder.Components.Graphics;
 using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
@@ -47,6 +48,24 @@ public class SpriteAtRatioRenderSystem : IMurderRenderSystem
             Batch2D batch2D = render.GetBatch(s.TargetSpriteBatch);
 
             FrameInfo frameInfo = batch2D.DrawSpriteAtRatio(spriteAsset, position, drawInfo, s.CurrentAnimation, ratio.Ratio);
+
+            // mock animation info for message events.
+            AnimationInfo animationInfo = new()
+            {
+                Name = s.CurrentAnimation,
+                Loop = false
+            };
+
+            _ = RenderServices.TriggerEventsIfNeeded(e, s.AnimationGuid, animationInfo, frameInfo);
+
+            RenderServices.UpdateRenderedSpriteCache(e, new RenderedSpriteCache() with
+            {
+                RenderedSprite = s.AnimationGuid,
+                CurrentAnimation = frameInfo.Animation,
+                AnimInfo = animationInfo,
+                LastFrameIndex = frameInfo.InternalFrame
+            });
+
             if (frameInfo.Complete)
             {
                 RenderServices.DealWithCompleteAnimations(e, s);

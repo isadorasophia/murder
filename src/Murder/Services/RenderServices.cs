@@ -1452,7 +1452,15 @@ public static partial class RenderServices
                 }
                 else
                 {
-                    int next = Math.Min(lastFrame + 1, currentAnimation.FrameCount - 1);
+                    int next;
+                    if (lastFrame < frameInfo.InternalFrame)
+                    {
+                        next = Math.Min(lastFrame + 1, currentAnimation.FrameCount - 1);
+                    }
+                    else
+                    {
+                        next = Math.Max(lastFrame - 1, 0);
+                    }
 
                     if (currentAnimation.Events.TryGetValue(next, out string? eventName))
                     {
