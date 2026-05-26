@@ -133,6 +133,14 @@ public struct Rectangle : IEquatable<Rectangle>
         Height = height;
     }
 
+    public Rectangle(Vector2 position, Vector2 size, Vector2 origin)
+    {
+        X = position.X - size.X * origin.X;
+        Y = position.Y - size.Y * origin.Y;
+        Width = size.X;
+        Height = size.Y;
+    }
+
     public Rectangle(Point p, int width, int height) : this(p.X, p.Y, width, height) { }
 
     public static Rectangle Intersection(Rectangle a, Rectangle b)

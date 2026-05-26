@@ -70,6 +70,15 @@ namespace Murder.Core.Geometry
             Width = size.X;
             Height = size.Y;
         }
+
+        public IntRectangle(Point position, Point size, Vector2 anchor)
+        {
+            X = position.X - Calculator.RoundToInt(size.X * anchor.X);
+            Y = position.Y - Calculator.RoundToInt(size.Y * anchor.Y);
+            Width = size.X;
+            Height = size.Y;
+        }
+
         public IntRectangle(float x, float y, float width, float height)
         {
             X = Calculator.RoundToInt(x);

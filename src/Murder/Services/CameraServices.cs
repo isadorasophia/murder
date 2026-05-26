@@ -19,6 +19,17 @@ public static class CameraServices
         camera.SetCameraFollow(follow);
     }
 
+    public static void RemoveSecondaryTarget(World world)
+    {
+        Entity camera = world.GetUniqueEntityCameraFollow();
+
+        CameraFollowComponent follow =
+            new CameraFollowComponent(true);
+
+        camera.RemoveIdTarget();
+        camera.SetCameraFollow(follow);
+    }
+
     public static void ShakeCamera(World world, float intensity, float time)
     {
         var w = (MonoWorld)world;
