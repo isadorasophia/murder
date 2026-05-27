@@ -789,6 +789,21 @@ public static partial class RenderServices
         }
         DrawLine(spriteBatch, points[points.Length - 1] * scale + position, points[0] * scale + position, color, thickness);
     }
+    public static void DrawPoints(this Batch2D spriteBatch, Vector2 position, Vector2 scale, ReadOnlySpan<Vector2> points, Color color, float thickness, float sort, bool closeShape)
+    {
+        if (points.Length < 2)
+            return;
+
+        for (int i = 1; i < points.Length; i++)
+        {
+            DrawLine(spriteBatch, points[i - 1] * scale + position, points[i] * scale + position, color, thickness, sort);
+        }
+        if (closeShape)
+        {
+            DrawLine(spriteBatch, points[points.Length - 1] * scale + position, points[0] * scale + position, color, thickness, sort);
+        }
+    }
+
 
     public static void DrawRectangleOutline(this Batch2D spriteBatch, Rectangle rectangle, Color color) =>
         DrawRectangleOutline(spriteBatch, rectangle, color, 1, 0);
@@ -971,6 +986,17 @@ public static partial class RenderServices
     #endregion
 
     #region Circle and Arcs
+
+    public static void DrawPartialCircleOutline(this Batch2D spriteBatch, Point center, float radius, int sides, int start, int end, float thickness, Color color, float sort = 1f, bool closeShape = true)
+    {
+        var points = GeometryServices.GetUnitCircle(sides);
+        if (start < 0 || end >= points.Length || start >= end)
+        {
+            return;
+        }
+        DrawPoints(spriteBatch, center.ToVector2(), Vector2.One * (radius), points.AsSpan(start, end - start + 1), color, thickness, sort, closeShape);
+    }
+
     public static void DrawCircleOutline(this Batch2D spriteBatch, Point center, float radius, int sides, Color color, float sort = 1f) =>
         DrawCircleOutline(spriteBatch, center.ToVector2(), radius, sides, color, sort);
 
