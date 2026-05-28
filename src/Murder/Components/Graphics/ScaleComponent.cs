@@ -6,7 +6,7 @@ namespace Murder.Components.Graphics;
 
 public readonly struct ScaleComponent : IComponent
 {
-    public readonly Vector2 Scale;
+    public readonly Vector2 Scale = Vector2.One;
     public ScaleComponent(Vector2 scale)
     {
         Scale = scale;
