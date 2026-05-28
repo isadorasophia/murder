@@ -990,7 +990,17 @@ public static partial class RenderServices
     public static void DrawPartialCircleOutline(this Batch2D spriteBatch, Point center, float radius, int sides, int start, int end, float thickness, Color color, float sort = 1f, bool closeShape = true)
     {
         var points = GeometryServices.GetUnitCircle(sides);
-        if (start < 0 || end >= points.Length || start >= end)
+        if (end >= points.Length)
+        {
+            end = points.Length - 1;
+        }
+
+        if (start < 0)
+        {
+            start = 0;
+        }
+
+        if (start >= end)
         {
             return;
         }
