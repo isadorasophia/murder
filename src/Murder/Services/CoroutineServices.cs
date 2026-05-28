@@ -2,6 +2,7 @@
 using Bang.Entities;
 using Bang.StateMachines;
 using Murder.Core;
+using Murder.Core.Dialogs;
 using Murder.Diagnostics;
 using Murder.StateMachines;
 
@@ -74,6 +75,23 @@ public static class CoroutineServices
         return murderWorld.RunCoroutine(WaitFramesAndRun(frames, action), flags);
     }
 
+    public static Coroutine FireForDuration(this World world, float duration, Action<float> action, CoroutineFlags flags = CoroutineFlags.None)
+    {
+        if (duration == 0)
+        {
+            GameLogger.Warning($"{nameof(RunForDuration)} with a duration of 0?");
+            return new();
+        }
+
+        if (world is not MonoWorld murderWorld)
+        {
+            GameLogger.Warning("Unable to run coroutine on a world that is not MonoWorld.");
+            return new();
+        }
+
+        return murderWorld.RunCoroutine(RunForDuration(duration, action), flags);
+    }
+
     private static IEnumerator<Wait> WaitAndRun(float seconds, Action action)
     {
         yield return Wait.ForSeconds(seconds);
@@ -84,5 +102,23 @@ public static class CoroutineServices
     {
         yield return Wait.ForFrames(frames);
         action.Invoke();
+    }
+
+    private static IEnumerator<Wait> RunForDuration(float duration, Action<float> action)
+    {
+        float startedAt = Game.Now;
+
+        while (true)
+        {
+            float elapsed = Math.Clamp(Game.Now - startedAt, 0, duration);
+            action(elapsed);
+
+            if (elapsed >= duration)
+            {
+                break;
+            }
+
+            yield return Wait.NextFrame;
+        }
     }
 }
