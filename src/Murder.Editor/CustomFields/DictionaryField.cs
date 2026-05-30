@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using Murder.Attributes;
+using Murder.Core.Graphics;
 using Murder.Core.Sounds;
 using Murder.Diagnostics;
 using Murder.Editor.ImGuiExtended;
@@ -7,6 +8,7 @@ using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 
 namespace Murder.Editor.CustomFields
 {
@@ -24,7 +26,6 @@ namespace Murder.Editor.CustomFields
         protected virtual bool AddNewKey(EditorMember member, ref IDictionary<T, U> dictionary)
         {
             bool added = false;
-
             List<T> candidateResources = GetCandidateKeys(member, dictionary);
 
             ImGui.PushID($"Add ${member.Name}");
@@ -98,9 +99,11 @@ namespace Murder.Editor.CustomFields
             int index = 0;
             foreach (var kv in values)
             {
-                using RectangleBox box = new();
+                var dl = ImGui.GetWindowDrawList();
+                dl.PopClipRect();
+                dl.AddText(ImGui.GetCursorScreenPos() + new Vector2(-ImGui.GetFontSize() * 1.5f, 4), Color.ToUint(Architect.Profile.Theme.Faded), "\uf084");
 
-                if (ImGuiHelpers.Button($"\uf1f8 Delete Item##{index}"))
+                if (ImGuiHelpers.DeleteButton($"delete_{index}"))
                 {
                     if (dictionary is ImmutableDictionary<T, U> immutable)
                     {
@@ -113,6 +116,7 @@ namespace Murder.Editor.CustomFields
 
                     return (true, dictionary);
                 }
+                ImGui.SameLine();
 
                 string? keyLabel = null;
                 string? valueLabel = null;

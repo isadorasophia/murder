@@ -436,6 +436,7 @@ namespace Murder.Editor.ImGuiExtended
                 (Name, Target) = (name, target);
         }
 
+        private static float _tweenStart = 0;
         public static bool Search<T>(
             string id,
             SearchBoxSettings<T> settings,
@@ -517,7 +518,6 @@ namespace Murder.Editor.ImGuiExtended
 
                         if (ImGui.BeginPopup($"aseprite_files_{id}", ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoTitleBar) && source != null)
                         {
-                            ImGui.SetWindowPos(popoupPosition);
                             foreach (var filePath in source)
                             {
                                 if (ImGui.Selectable(filePath))
@@ -571,12 +571,17 @@ namespace Murder.Editor.ImGuiExtended
                 }
                 else
                 {
+                    ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 100);
+                    ImGui.PushStyleColor(ImGuiCol.Button, Vector4.Zero);
                     clicked = ImGuiHelpers.IconButton('\uf055', $"search_{id}");
+                    ImGui.PopStyleColor();
+                    ImGui.PopStyleVar();
+
                     ImGui.SameLine();
-                    ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Accent);
+                    ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 8); // Slightly move back the text to be closer to the icon
+                    ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.White * 0.7f);
                 }
 
-                ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.White);
                 ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.BgFaded);
                 ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.Faded);
 
@@ -617,7 +622,7 @@ namespace Murder.Editor.ImGuiExtended
                     _tempSearchText = string.Empty;
                     _searchBoxSelection = 0;
                 }
-                ImGui.PopStyleColor(4);
+                ImGui.PopStyleColor(3);
 
                 if (ImGui.IsItemHovered() && settings.HasInitialValue)
                 {
@@ -648,16 +653,18 @@ namespace Murder.Editor.ImGuiExtended
                 if (ImGui.IsWindowAppearing())
                 {
                     EditorCosmetics.Play("submenu-open");
+                    _tweenStart = Game.NowUnscaled;
 
                     _tempSearchText = string.Empty;
                     _searchBoxSelection = 0;
                 }
 
+                float tween = Calculator.ClampTime(Game.NowUnscaled - _tweenStart, 0.15f);
+
                 pos = new(pos.X, pos.Y + Math.Min(0, ImGui.GetWindowViewport().Size.Y - pos.Y - 400));
                 ImGui.SetWindowPos(pos);
 
-                ImGui.BeginChild("##Searchbox_containter", sizeConfiguration.SearchBoxContainerSize, ImGuiChildFlags.Border);
-
+                ImGui.BeginChild("##Searchbox_containter", sizeConfiguration.SearchBoxContainerSize * new Vector2(1, Ease.BackOutSm(tween)), ImGuiChildFlags.Border);
                 if (ImGui.IsWindowAppearing())
                 {
                     ImGui.SetKeyboardFocusHere();

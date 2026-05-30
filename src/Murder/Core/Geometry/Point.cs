@@ -40,7 +40,7 @@ namespace Murder.Core.Geometry
         /// <summary>
         /// Represents half a cell on the current <see cref="Grid"/>.
         /// </summary>
-        public static Point HalfCell => new(Grid.CellSize / 2 + Grid.CellSize / 2);
+        public static Point HalfCell => new(Grid.CellSize / 2);
 
         /// <summary>
         /// The value of X in this point.

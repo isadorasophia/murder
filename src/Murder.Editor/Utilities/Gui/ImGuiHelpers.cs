@@ -618,81 +618,53 @@ public static class ImGuiHelpers
     public static bool DrawEnumFieldWithSearch(string id, Type t, ref int intValue)
     {
         bool modified = false;
-
         string[] fieldNames = Enum.GetNames(t);
         Array values = Enum.GetValues(t);
 
-        int selectedValue = 0;
-        int selectedIndex = 0;
-
-        // Find the right index (tentatively).
-        int i = 0;
-        foreach (var value in values)
+        // Find the selected index (tentatively).
+        int selectedValue = intValue;
+        int selectedIndex = -1;
+        for (int i = 0; i < values.Length; i++)
         {
-            int v = Convert.ToInt32(value);
-
-            if (v == intValue)
+            if (Convert.ToInt32(values.GetValue(i)) == intValue)
             {
-                selectedValue = v;
                 selectedIndex = i;
                 break;
             }
-
-            i++;
         }
+        string preview = selectedIndex >= 0 ? fieldNames[selectedIndex] : intValue.ToString();
 
-        bool clicked = ImGui.ArrowButton("##" + id, ImGuiDir.Down);
-        Vector2 startPosition = ImGui.GetItemRectMax();
-
-        float availableWidth = ImGui.GetContentRegionAvail().X;
-
-        ImGui.SameLine();
-
-        ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Accent);
-        ImGui.PushStyleColor(ImGuiCol.Header, Game.Profile.Theme.Bg);
-        ImGui.PushStyleColor(ImGuiCol.HeaderHovered, Game.Profile.Theme.Faded);
-        clicked |= ImGui.Selectable(fieldNames[selectedIndex], true, ImGuiSelectableFlags.None, new Vector2(availableWidth - 100, 0));
-        ImGui.PopStyleColor(3);
-
-
-        if (clicked)
+        ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
+        if (ImGui.BeginCombo($"##{id}", preview))
         {
-            ImGui.OpenPopup($"{id}_search");
-            ImGui.SetNextWindowPos(startPosition, ImGuiCond.Always);
-            _enumFilterCache = string.Empty;
-        }
-
-        if (ImGui.BeginPopup($"{id}_search", ImGuiWindowFlags.NoMove))
-        {
-            ImGui.SetWindowPos(startPosition, ImGuiCond.Appearing);
-
-            if (clicked)
+            // Focus the search box the frame the popup opens, and reset the filter.
+            if (ImGui.IsWindowAppearing())
             {
+                _enumFilterCache = string.Empty;
                 ImGui.SetKeyboardFocusHere();
             }
+
+            ImGui.SetNextItemWidth(-float.Epsilon); // fill the combo width
             ImGui.InputText($"##{id}-search-field", ref _enumFilterCache, 364);
 
             for (int index = 0; index < fieldNames.Length; index++)
             {
-                string EnumFieldName = fieldNames[index];
+                string enumFieldName = fieldNames[index];
                 int value = Convert.ToInt32(values.GetValue(index));
 
-                if (!string.IsNullOrWhiteSpace(EnumFieldName) && !StringHelper.FuzzyMatch(_enumFilterCache, EnumFieldName))
+                if (!string.IsNullOrWhiteSpace(enumFieldName) && !StringHelper.FuzzyMatch(_enumFilterCache, enumFieldName))
                 {
                     continue;
                 }
 
-                if (ImGui.Selectable(EnumFieldName, value == selectedValue, ImGuiSelectableFlags.None, new Vector2(0, 0)))
+                if (ImGui.Selectable(enumFieldName, value == selectedValue))
                 {
-                    selectedValue = value;
+                    intValue = value;
                     modified = true;
                 }
             }
 
-            intValue = selectedValue;
-
-
-            ImGui.EndPopup();
+            ImGui.EndCombo();
         }
 
         return modified;
