@@ -34,12 +34,12 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
     private static int TileChunkSize => 18;
 
     // Cache
-    TilesetAsset[]? _tilesetAssetsCache = null;
+    private static TilesetAsset[]? _tilesetAssetsCache = null;
 
     private static readonly RuntimeAtlas _atlas;
+    private static readonly Dictionary<Point, FloorChunk> _chunks = new();
 
-    private readonly Dictionary<int, FloorChunk> _chunks = new();
-    private readonly HashSet<int> _chunksToDraw = new();
+    private readonly HashSet<Point> _chunksToDraw = new();
 
     static FloorWithBatchOptimizationRenderSystem()
     {
@@ -90,7 +90,7 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
             {
                 for (int x = minChunkX; x <= maxChunkX; x++)
                 {
-                    int index = x + y * TileChunkSize;
+                    Point index = new Point(x, y);
                     if (!_chunks.ContainsKey(index) || !_atlas.HasCache(_chunks[index].Id))
                     {
                         if (failCount-- <= 4)
@@ -105,7 +105,7 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
         }
 
         // Draw the requested chunks.
-        foreach (int index in _chunksToDraw)
+        foreach (Point index in _chunksToDraw)
         {
             var chunk = _chunks[index];
             var success = _atlas.Draw(chunk.Id, render.FloorBatch, chunk.Position * TileChunkSize * Grid.CellSize, new DrawInfo(RenderServices.YSort((chunk.Position.Y - 2) * Grid.CellSize)));
@@ -224,6 +224,7 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
     {
         _chunks.Clear();
         _atlas.Cleanup();
+        _tilesetAssetsCache = null;
     }
 
     public void OnAdded(World world, ImmutableArray<Entity> entities)
@@ -236,5 +237,6 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
     {
         _chunks.Clear();
         _atlas.Cleanup();
+        _tilesetAssetsCache = null;
     }
 }
