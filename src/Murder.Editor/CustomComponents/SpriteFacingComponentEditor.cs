@@ -13,20 +13,14 @@ namespace Murder.Editor.CustomComponents;
 [CustomComponentOf(typeof(SpriteFacingComponent))]
 public class SpriteFacingComponentEditor : CustomComponent
 {
-    private int _selectedSlice = 1;
-    private int _lastSize = 0;
+
+    private Dictionary<uint, int> _selectedSlice = new Dictionary<uint, int>();
     private int _makeAuto = 0;
     protected override bool DrawAllMembersWithTable(ref object target)
     {
+
         bool fileChanged = false;
         SpriteFacingComponent sprite = (SpriteFacingComponent)target;
-
-        if (_lastSize!= sprite.FacingInfo.Length)
-        {
-            _lastSize = sprite.FacingInfo.Length;
-            _selectedSlice = Calculator.WrapAround(_selectedSlice, 0, sprite.FacingInfo.Length);
-            _selectedSlice = Math.Max(1, _selectedSlice);
-        }
 
         if (sprite.FacingInfo.Length == 0)
         {
@@ -52,7 +46,7 @@ public class SpriteFacingComponentEditor : CustomComponent
             if (ImGui.BeginPopupModal("auto_sure", ref _, ImGuiWindowFlags.AlwaysAutoResize))
             {
                 ImGui.Text("Are you sure you want to override this component?");
-                if(ImGuiHelpers.Button("yes"))
+                if (ImGuiHelpers.Button("yes"))
                 {
                     fileChanged = true;
                     sprite = MakeAutomatic(_makeAuto);
@@ -79,6 +73,13 @@ public class SpriteFacingComponentEditor : CustomComponent
             ImGui.TableNextColumn();
 
             ImGui.Dummy(new Vector2(100, 100));
+
+            uint currentID = ImGui.GetID("SpriteFacingEditor");
+            if (!_selectedSlice.ContainsKey(currentID))
+            {
+                _selectedSlice[currentID] = 1;
+            }
+
             var min = ImGui.GetItemRectMin();
             var max = ImGui.GetItemRectMax();
             var mid = Vector2.Lerp(min, max, 0.5f);
@@ -99,7 +100,7 @@ public class SpriteFacingComponentEditor : CustomComponent
                 };
             }
 
-            DrawCircle(sprite, mid, draw, faded, highlight);
+            DrawCircle(sprite, mid, draw, faded, highlight, currentID);
 
             ImGui.TableNextColumn();
 
@@ -109,17 +110,19 @@ public class SpriteFacingComponentEditor : CustomComponent
             if (ImGui.InputInt("##slices", ref slices))
             {
                 fileChanged = true;
-                
+
             }
 
             if (sprite.FacingInfo.Length > 0)
             {
-                ImGui.SliderInt("Selected Slice##SelectedSlice1", ref _selectedSlice, 1, sprite.FacingInfo.Length + 1);
+                int selected = _selectedSlice[currentID];
+                ImGui.SliderInt("Selected Slice##SelectSlice", ref selected, 1, sprite.FacingInfo.Length + 1);
+                _selectedSlice[currentID] = selected;
 
-                if (_selectedSlice <= sprite.FacingInfo.Length)
+                if (selected <= sprite.FacingInfo.Length)
                 {
                     // This is a regular slice
-                    DrawSelectedSlice(ref fileChanged, ref sprite);
+                    DrawSelectedSlice(ref fileChanged, ref sprite, currentID);
                 }
                 else
                 {
@@ -133,13 +136,13 @@ public class SpriteFacingComponentEditor : CustomComponent
                 DrawDefaultSlice(ref fileChanged, ref sprite);
             }
 
-            sprite = HandleSlicesChange(sprite, slices);
+            sprite = HandleSlicesChange(sprite, slices, currentID);
 
             if (fileChanged)
             {
                 target = sprite;
             }
-            
+
             ImGui.EndTable();
         }
 
@@ -177,9 +180,9 @@ public class SpriteFacingComponentEditor : CustomComponent
     }
 
 
-    private void DrawSelectedSlice(ref bool fileChanged, ref SpriteFacingComponent sprite)
+    private void DrawSelectedSlice(ref bool fileChanged, ref SpriteFacingComponent sprite, uint currentID)
     {
-        int selected = Math.Clamp(_selectedSlice - 1, 0, sprite.FacingInfo.Length);
+        int selected = Math.Clamp(_selectedSlice[currentID] - 1, 0, sprite.FacingInfo.Length);
 
         float currentAngle = 0;
         for (int i = 0; i < selected; i++)
@@ -269,11 +272,11 @@ public class SpriteFacingComponentEditor : CustomComponent
         }
     }
 
-    private void DrawCircle(SpriteFacingComponent sprite, Vector2 mid, ImDrawListPtr draw, uint faded, uint highlight)
+    private void DrawCircle(SpriteFacingComponent sprite, Vector2 mid, ImDrawListPtr draw, uint faded, uint highlight, uint id)
     {
         float currentAngle = sprite.AngleStart;
-
-        if (sprite.FacingInfo.Length + 1 == _selectedSlice)
+        int selectedSlice = _selectedSlice[id];
+        if (sprite.FacingInfo.Length + 1 == selectedSlice)
         {
             draw.AddLine(mid, mid + Vector2Helper.Right.Rotate(sprite.AngleStart) * 50, highlight, 3);
         }
@@ -281,7 +284,7 @@ public class SpriteFacingComponentEditor : CustomComponent
         {
             draw.AddLine(mid, mid + Vector2Helper.Right.Rotate(sprite.AngleStart) * 50, faded);
         }
-        
+
         for (int i = 0; i < sprite.FacingInfo.Length; i++)
         {
             var info = sprite.FacingInfo[i];
@@ -291,16 +294,17 @@ public class SpriteFacingComponentEditor : CustomComponent
             Vector2 text = Vector2Helper.Right.Rotate(Calculator.Lerp(currentAngle, currentAngle + info.AngleSize, 0.5f));
 
             string suffix = info.Suffix ?? string.Empty;
-            draw.AddText(mid + text * 30 - new Vector2(suffix.Length * 4, 8), faded, suffix);
-            
-            if (i == _selectedSlice - 1)
+
+            if (i == selectedSlice - 1)
             {
                 draw.AddLine(mid, mid + previous * 50, highlight, 3);
                 draw.AddLine(mid, mid + line * 50, highlight, 3);
+                draw.AddText(mid + text * 30 - new Vector2(suffix.Length * 4, 8), highlight, suffix);
             }
             else
             {
-                if (sprite.FacingInfo.Length + 1 == _selectedSlice && i == sprite.FacingInfo.Length - 1)
+                draw.AddText(mid + text * 30 - new Vector2(suffix.Length * 4, 8), faded, suffix);
+                if (sprite.FacingInfo.Length + 1 == selectedSlice && i == sprite.FacingInfo.Length - 1)
                 {
                     draw.AddLine(mid, mid + line * 50, highlight, 3);
                 }
@@ -312,13 +316,19 @@ public class SpriteFacingComponentEditor : CustomComponent
             currentAngle += info.AngleSize;
         }
 
+        if (selectedSlice - 1 == sprite.FacingInfo.Length)
+        {
+            Vector2 text = Vector2Helper.Right.Rotate(Calculator.Lerp(currentAngle, 2 * MathF.PI, 0.5f) + sprite.AngleStart / 2f);
+            draw.AddText(mid + text * 30 - new Vector2(sprite.DefaultSuffix.Length * 4, 8), highlight, sprite.DefaultSuffix);
+        }
+        else
         {
             Vector2 text = Vector2Helper.Right.Rotate(Calculator.Lerp(currentAngle, 2 * MathF.PI, 0.5f) + sprite.AngleStart / 2f);
             draw.AddText(mid + text * 30 - new Vector2(sprite.DefaultSuffix.Length * 4, 8), faded, sprite.DefaultSuffix);
         }
     }
 
-    private SpriteFacingComponent HandleSlicesChange(SpriteFacingComponent sprite, int slices)
+    private SpriteFacingComponent HandleSlicesChange(SpriteFacingComponent sprite, int slices, uint currentID)
     {
         if (sprite.FacingInfo.Length == slices)
         {
@@ -326,8 +336,8 @@ public class SpriteFacingComponentEditor : CustomComponent
         }
         else
         {
-            var newSprite = sprite.Resize(_selectedSlice, Math.Max(0, slices));
-            _selectedSlice += slices - sprite.FacingInfo.Length;
+            var newSprite = sprite.Resize(_selectedSlice[currentID], Math.Max(0, slices));
+            _selectedSlice[currentID] += slices - sprite.FacingInfo.Length;
 
             return newSprite;
         }
