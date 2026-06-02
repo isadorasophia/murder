@@ -31,6 +31,7 @@ public readonly struct CameraFollowComponent : IComponent
     /// <summary>
     /// Force to centralize the camera without a dead zone.
     /// </summary>
+    [JsonIgnore]
     public readonly CameraStyle Style = CameraStyle.DeadZone;
 
     [HideInEditor]
