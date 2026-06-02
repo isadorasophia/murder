@@ -50,6 +50,11 @@ public readonly struct PlayEventInteraction : IInteraction
         SoundProperties properties = Properties;
         if (Properties.HasFlag(SoundProperties.Persist))
         {
+            properties |= SoundProperties.Persist;
+        }
+        
+        if (Properties.HasFlag(SoundProperties.SkipIfAlreadyPlaying))
+        {
             properties |= SoundProperties.SkipIfAlreadyPlaying;
         }
 
