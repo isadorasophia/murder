@@ -26,6 +26,7 @@ namespace Murder.Editor.CustomFields
         protected virtual bool AddNewKey(EditorMember member, ref IDictionary<T, U> dictionary)
         {
             bool added = false;
+
             List<T> candidateResources = GetCandidateKeys(member, dictionary);
 
             ImGui.PushID($"Add ${member.Name}");
@@ -99,9 +100,7 @@ namespace Murder.Editor.CustomFields
             int index = 0;
             foreach (var kv in values)
             {
-                var dl = ImGui.GetWindowDrawList();
-                dl.PopClipRect();
-                dl.AddText(ImGui.GetCursorScreenPos() + new Vector2(-ImGui.GetFontSize() * 1.5f, 4), Color.ToUint(Architect.Profile.Theme.Faded), "\uf084");
+                using RectangleBox box = new();
 
                 if (ImGuiHelpers.DeleteButton($"delete_{index}"))
                 {
@@ -116,6 +115,7 @@ namespace Murder.Editor.CustomFields
 
                     return (true, dictionary);
                 }
+
                 ImGui.SameLine();
 
                 string? keyLabel = null;
