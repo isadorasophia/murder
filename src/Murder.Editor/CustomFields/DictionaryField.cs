@@ -100,9 +100,8 @@ namespace Murder.Editor.CustomFields
             foreach (var kv in values)
             {
                 var dl = ImGui.GetWindowDrawList();
-                dl.PushClipRectFullScreen();
-                dl.AddText(ImGui.GetCursorScreenPos() + new Vector2(-ImGui.GetFontSize() * 1.5f, 4), Color.ToUint(Architect.Profile.Theme.Faded), "\uf084");
                 dl.PopClipRect();
+                dl.AddText(ImGui.GetCursorScreenPos() + new Vector2(-ImGui.GetFontSize() * 1.5f, 4), Color.ToUint(Architect.Profile.Theme.Faded), "\uf084");
 
                 if (ImGuiHelpers.DeleteButton($"delete_{index}"))
                 {

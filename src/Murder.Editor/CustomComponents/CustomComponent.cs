@@ -21,7 +21,7 @@ public enum CustomComponentsFlags
 public class CustomComponent
 {
     private readonly Dictionary<string, string> _searchField = [];
-    private static readonly HashSet<uint> _unfoldedFolders = [];
+    private static readonly HashSet<string> _unfoldedFolders = [];
 
     public static bool ShowEditorOf<T>(ref T target, CustomComponentsFlags _ = CustomComponentsFlags.None)
     {
@@ -106,7 +106,7 @@ public class CustomComponent
         }
 
 
-        if (!flags.HasFlag(EditorFieldFlags.NoFilter) && members.Count > 5)
+        if (!flags.HasFlag(EditorFieldFlags.NoFilter) && members.Count > 5) 
         {
             ImGui.BeginGroup();
 
@@ -136,7 +136,7 @@ public class CustomComponent
             {
                 _searchField[name] = filter;
             }
-
+            
             ImGui.PopItemWidth();
 
             ImGui.PopStyleColor(popColors);
@@ -257,10 +257,11 @@ public class CustomComponent
         bool unfolded = true;
         if (AttributeExtensions.IsDefined(member, typeof(FolderAttribute)))
         {
-            uint id = ImGui.GetID($"{target}_{memberName}");
+            string id = $"{target}_{memberName}";
+
             unfolded = _unfoldedFolders.Contains(id);
-            ImGui.PushStyleColor(ImGuiCol.Text, unfolded ? Game.Profile.Theme.White : Game.Profile.Theme.Faded);
-            if (ImGui.Selectable($"{(unfolded ? "\uf07c" : "\uf07b")} {Prettify.FormatName(memberName)}{(unfolded ? ":" : "")}", unfolded))
+            ImGui.PushStyleColor(ImGuiCol.Text, unfolded ? Game.Profile.Theme.White: Game.Profile.Theme.Faded);
+            if (ImGui.Selectable($"{(unfolded ? "\uf07c" : "\uf07b")} {Prettify.FormatName(memberName)}{(unfolded ? ":" : "")}", unfolded)) 
             {
                 if (unfolded)
                 {
@@ -273,7 +274,6 @@ public class CustomComponent
             }
 
             ImGui.PopStyleColor();
-            ImGui.PopID();
         }
         else
         {
@@ -351,6 +351,7 @@ public class CustomComponent
         }
 
         ImGui.PopID();
+
         return fileChanged;
     }
 

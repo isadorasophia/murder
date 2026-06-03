@@ -1,6 +1,7 @@
 ﻿using Bang.Components;
 using ImGuiNET;
 using Murder.Assets;
+using Murder.Assets.Editor;
 using Murder.Assets.Graphics;
 using Murder.Attributes;
 using Murder.Core.Dialogs;
@@ -468,7 +469,6 @@ namespace Murder.Editor.ImGuiExtended
                     if (!ImGui.IsItemVisible())
                     {
                         ImGui.PopStyleColor();
-                        ImGui.PopStyleVar();
                         return false;
                     }
 
@@ -799,9 +799,9 @@ namespace Murder.Editor.ImGuiExtended
                     ImGui.EndPopup();
                 }
 
+                ImGui.PopStyleVar();
             }
 
-            ImGui.PopStyleVar();
             return modified;
         }
 

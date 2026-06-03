@@ -131,8 +131,7 @@ public abstract class CustomField
                                     result = defaultValue;
                                 }
                             }
-                            
-                            ImGui.TreePop();
+
                             return (modified, result);
                         }
 

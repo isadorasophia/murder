@@ -23,7 +23,7 @@ namespace Murder.Editor.CustomFields
             ImmutableArray<T> elements = (ImmutableArray<T>)fieldValue!;
             if (elements.IsDefault) elements = ImmutableArray<T>.Empty;
 
-            ImGui.PushID($"Add{member.Member.ReflectedType}_{member.Name}");
+            ImGui.PushID($"Add ${member.Member.ReflectedType}");
 
             if (Add(member, out T? element))
             {
@@ -52,78 +52,73 @@ namespace Murder.Editor.CustomFields
             int maxLength = 1024;
             string id = $"{member.Member.ReflectedType}";
             ImGui.BeginGroup();
+            ImGui.Dummy(new System.Numerics.Vector2(2, 2));
+            ImGui.SameLine();
+            ImGui.BeginGroup();
+            ImGui.Dummy(new System.Numerics.Vector2(2, 2));
+            for (int index = 0; index < Math.Min(maxLength, elements.Length); index++)
             {
-                ImGui.Dummy(new System.Numerics.Vector2(2, 2));
-                ImGui.SameLine();
+                
+                ImGui.PushID($"{id}_{index}");
+                element = elements[index];
+
                 ImGui.BeginGroup();
                 {
-                    ImGui.Dummy(new System.Numerics.Vector2(2, 2));
-                    for (int index = 0; index < Math.Min(maxLength, elements.Length); index++)
+                    ImGui.TextDisabled($"{index}");
+                    ImGui.SameLine();
+                    ImGui.SetCursorPos(ImGui.GetCursorPos() + new System.Numerics.Vector2(-4, 0));
+
+                    ImGuiHelpers.IconButton('\uf0c9', $"{member.Name}_alter", Game.Data.GameProfile.Theme.Bg);
+
+                    if (ImGui.IsItemHovered())
                     {
-
-                        ImGui.PushID($"{id}_{index}");
-                        element = elements[index];
-
-                        ImGui.BeginGroup();
-                        {
-                            ImGui.TextDisabled($"{index}");
-                            ImGui.SameLine();
-                            ImGui.SetCursorPos(ImGui.GetCursorPos() + new System.Numerics.Vector2(-4, 0));
-
-                            ImGuiHelpers.IconButton('\uf0c9', $"{member.Name}_alter", Game.Data.GameProfile.Theme.Bg);
-
-                            if (ImGui.IsItemHovered())
-                            {
-                                ImGui.OpenPopup($"{member.Member.ReflectedType}_{index}_extras");
-                                ImGui.SetNextWindowPos(ImGui.GetItemRectMin() + new System.Numerics.Vector2(-12, -2));
-                            }
-                            ImGui.SameLine();
-                            ImGui.SetCursorPos(ImGui.GetCursorPos() + new System.Numerics.Vector2(-8, 0));
-
-                            DrawDragHandle(ref modified, ref elements, id, index);
-
-                            if (ImGui.BeginPopup($"{member.Member.ReflectedType}_{index}_extras"))
-                            {
-                                ImGui.BeginGroup();
-                                if (ImGuiHelpers.IconButton('', $"{member.Name}_remove", Game.Data.GameProfile.Theme.Bg))
-                                {
-                                    elements = elements.RemoveAt(index);
-                                    modified = true;
-                                }
-                                ImGuiHelpers.HelpTooltip("Remove");
-                                ImGui.SameLine();
-
-                                if (ImGuiHelpers.IconButton('', $"{member.Name}_duplicate", Game.Data.GameProfile.Theme.Bg))
-                                {
-                                    elements = elements.Insert(index, elements[index]);
-                                    modified = true;
-                                }
-                                ImGuiHelpers.HelpTooltip("Duplicate");
-
-                                ImGui.EndGroup();
-                                if (!ImGui.IsWindowAppearing() && ImGui.IsWindowFocused() && !ImGui.IsMouseHoveringRect(ImGui.GetWindowPos(), ImGui.GetWindowPos() + ImGui.GetWindowSize()))
-                                    ImGui.CloseCurrentPopup();
-                                ImGui.EndPopup();
-                            }
-
-                            if (DrawElement(ref element, member, index))
-                            {
-                                elements = elements.SetItem(index, element!);
-                                modified = true;
-                            }
-                        }
-                        ImGui.EndGroup();
-                        ImGui.PopID();
+                        ImGui.OpenPopup($"{member.Member.ReflectedType}_{index}_extras");
+                        ImGui.SetNextWindowPos(ImGui.GetItemRectMin() + new System.Numerics.Vector2(-12, -2));
                     }
-                    ImGui.Dummy(new System.Numerics.Vector2(2, 2));
-                    ImGui.EndGroup();
+                    ImGui.SameLine();
+                    ImGui.SetCursorPos(ImGui.GetCursorPos() + new System.Numerics.Vector2(-8, 0));
+
+                    DrawDragHandle(ref modified, ref elements, id, index);
+
+                    if (ImGui.BeginPopup($"{member.Member.ReflectedType}_{index}_extras"))
+                    {
+                        ImGui.BeginGroup();
+                        if (ImGuiHelpers.IconButton('', $"{member.Name}_remove", Game.Data.GameProfile.Theme.Bg))
+                        {
+                            elements = elements.RemoveAt(index);
+                            modified = true;
+                        }
+                        ImGuiHelpers.HelpTooltip("Remove");
+                        ImGui.SameLine();
+
+                        if (ImGuiHelpers.IconButton('', $"{member.Name}_duplicate", Game.Data.GameProfile.Theme.Bg))
+                        {
+                            elements = elements.Insert(index, elements[index]);
+                            modified = true;
+                        }
+                        ImGuiHelpers.HelpTooltip("Duplicate");
+
+                        ImGui.EndGroup();
+                        if (!ImGui.IsWindowAppearing() && ImGui.IsWindowFocused() && !ImGui.IsMouseHoveringRect(ImGui.GetWindowPos(), ImGui.GetWindowPos() + ImGui.GetWindowSize()))
+                            ImGui.CloseCurrentPopup();
+                        ImGui.EndPopup();
+                    }
+
+                    if (DrawElement(ref element, member, index))
+                    {
+                        elements = elements.SetItem(index, element!);
+                        modified = true;
+                    }
                 }
-                ImGui.SameLine();
-                ImGui.Dummy(new System.Numerics.Vector2(2, 2));
-
+                ImGui.EndGroup();
+                ImGui.PopID();
             }
+            ImGui.Dummy(new System.Numerics.Vector2(2,2));
             ImGui.EndGroup();
+            ImGui.SameLine();
+            ImGui.Dummy(new System.Numerics.Vector2(2, 2));
 
+            ImGui.EndGroup();
             ImGuiHelpers.DrawBorderOnPreviousItem(Game.Profile.Theme.BgFaded, 1);
 
             if (elements.Length >= maxLength)
@@ -166,7 +161,7 @@ namespace Murder.Editor.CustomFields
                 if (hasDropped)
                 {
                     // Make sure we can insert the dragged element at the new index.
-                    if (elements.Length > _draggedIndex && elements.Length > index)
+                    if (elements.Length > _draggedIndex && elements.Length>index)
                     {
                         elements = elements.RemoveAt(_draggedIndex).Insert(index, elements[_draggedIndex]);
                         modified = true;
