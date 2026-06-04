@@ -74,4 +74,11 @@ namespace Murder.Components.Graphics
 
         public Point SpriteSize { get; init; }
     }
+
+    [Flags]
+    public enum AnimationEventsTriggerFlag
+    {
+        None = 0,
+        AllowReverse = 1
+    }
 }

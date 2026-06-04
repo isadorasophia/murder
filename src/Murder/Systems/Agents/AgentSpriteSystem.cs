@@ -17,6 +17,7 @@ using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
 using System;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace Murder.Systems
@@ -28,8 +29,6 @@ namespace Murder.Systems
     {
         public void Draw(RenderContext render, Context context)
         {
-            bool issueSlowdownWarning = false;
-
             foreach (var e in context.Entities)
             {
                 Vector2 transform = e.GetGlobalPosition();
@@ -311,7 +310,7 @@ namespace Murder.Systems
 
                 AfterDraw(batch, e, renderPosition, ySortOffsetRaw, drawInfo, animationInfo);
 
-                issueSlowdownWarning = RenderServices.TriggerEventsIfNeeded(e, spriteAsset.Guid, animationInfo, frameInfo);
+                RenderServices.TriggerEventsIfNeeded(e, spriteAsset.Guid, animationInfo, frameInfo, AnimationEventsTriggerFlag.None);
 
                 RenderServices.UpdateRenderedSpriteCache(e, new RenderedSpriteCache() with
                 {
@@ -339,11 +338,6 @@ namespace Murder.Systems
                 {
                     e.RemoveAnimationComplete();
                 }
-            }
-
-            if (issueSlowdownWarning)
-            {
-                GameLogger.Warning("Animation event loop reached. Breaking out of loop. This was probably caused by a major slowdown.");
             }
         }
 

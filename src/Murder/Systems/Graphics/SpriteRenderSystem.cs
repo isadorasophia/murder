@@ -22,8 +22,6 @@ namespace Murder.Systems.Graphics
         public void Draw(RenderContext render, Context context)
         {
             DebugSnapshot.StartStopwatch("Sprite Render System");
-            bool issueSlowdownWarning = false;
-
             foreach (Entity e in context.Entities)
             {
                 Vector2 position = e.GetGlobalPosition();
@@ -229,7 +227,7 @@ namespace Murder.Systems.Graphics
                         }, animationInfo);
                 }
 
-                issueSlowdownWarning = RenderServices.TriggerEventsIfNeeded(e, s.AnimationGuid, animationInfo, frameInfo);
+                RenderServices.TriggerEventsIfNeeded(e, s.AnimationGuid, animationInfo, frameInfo, AnimationEventsTriggerFlag.None);
 
                 RenderServices.UpdateRenderedSpriteCache(e, new RenderedSpriteCache() with
                 {
@@ -281,11 +279,6 @@ namespace Murder.Systems.Graphics
                         RenderServices.DealWithCompleteAnimations(e, s);
                     }
                 }
-            }
-
-            if (issueSlowdownWarning)
-            {
-                GameLogger.Warning("Animation event loop reached. Breaking out of loop. This was probably caused by a major slowdown.");
             }
 
             DebugSnapshot.PauseStopwatch();

@@ -39,8 +39,6 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
 
     public void Draw(RenderContext render, Context context)
     {
-        bool issueSlowdownWarning = false;
-
         EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
 
         float overrideCurrentTime = -1;
@@ -284,7 +282,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
                 animationInfo);
 
             // I don't think we need events in the editor
-            issueSlowdownWarning = RenderServices.TriggerEventsIfNeeded(e, asset.Guid, animationInfo, frameInfo);
+            RenderServices.TriggerEventsIfNeeded(e, asset.Guid, animationInfo, frameInfo, AnimationEventsTriggerFlag.None);
 
             RenderServices.UpdateRenderedSpriteCache(e, new RenderedSpriteCache() with
             {
@@ -368,12 +366,6 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
                         new AnimationInfo(animationId, start) with { OverrideCurrentTime = overrideCurrentTime });
                 }
             }
-        }
-
-        if (issueSlowdownWarning)
-        {
-            // Do nothing! But we could issue an warning somewhere.
-            GameLogger.Warning("SpriteRenderDebugSystem: Slowdown detected! You might miss some animation events");
         }
     }
 

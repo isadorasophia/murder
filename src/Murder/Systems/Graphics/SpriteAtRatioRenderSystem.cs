@@ -56,7 +56,7 @@ public class SpriteAtRatioRenderSystem : IMurderRenderSystem
                 Loop = false
             };
 
-            _ = RenderServices.TriggerEventsIfNeeded(e, s.AnimationGuid, animationInfo, frameInfo);
+            RenderServices.TriggerEventsIfNeeded(e, s.AnimationGuid, animationInfo, frameInfo, AnimationEventsTriggerFlag.AllowReverse);
 
             RenderServices.UpdateRenderedSpriteCache(e, new RenderedSpriteCache() with
             {

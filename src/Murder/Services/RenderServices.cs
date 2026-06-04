@@ -1438,19 +1438,19 @@ public static partial class RenderServices
         return rt;
     }
 
-    public static bool TriggerEventsIfNeeded(Entity e, Guid currentAnimationGuid, AnimationInfo animationInfo, Core.FrameInfo frameInfo)
+    public static bool TriggerEventsIfNeeded(Entity e, Guid currentAnimationGuid, AnimationInfo animationInfo, FrameInfo frameInfo, AnimationEventsTriggerFlag flags)
     {
-        // Check for animation events
-        // First, assume that we are starting a new animation
         RenderedSpriteCacheComponent? previousCache = e.TryGetRenderedSpriteCache();
-        int previousFrame = previousCache?.LastFrameIndex ?? -1;
 
-        // Make sure we didn't change animations
-        if (previousCache is not RenderedSpriteCacheComponent cache ||
-            cache.RenderedSprite != currentAnimationGuid ||
-            !string.Equals(cache.AnimInfo.Name, animationInfo.Name, StringComparison.Ordinal))
+        int previousFrame;
+        if (previousCache is RenderedSpriteCacheComponent cache &&
+            cache.RenderedSprite == currentAnimationGuid &&
+            string.Equals(cache.AnimInfo.Name, animationInfo.Name, StringComparison.Ordinal))
         {
-            // We changed animations, so we need to reset to -1 so we can trigger the first frame event
+            previousFrame = cache.LastFrameIndex;
+        }
+        else
+        {
             previousFrame = frameInfo.InternalFrame - 1;
         }
 
@@ -1489,13 +1489,14 @@ public static partial class RenderServices
                 else
                 {
                     int next;
-                    if (lastFrame < frameInfo.InternalFrame)
-                    {
-                        next = Math.Min(lastFrame + 1, currentAnimation.FrameCount - 1);
-                    }
-                    else
+                    if (lastFrame >= frameInfo.InternalFrame && flags.HasFlag(AnimationEventsTriggerFlag.AllowReverse))
                     {
                         next = Math.Max(lastFrame - 1, 0);
+                    }
+                    else // lastFrame < frameInfo.InternalFrame
+                    {
+                        // we might as well be dealing with a last frame from a previous animation that did not loop. so just ignore it.
+                        next = Math.Min(lastFrame + 1, currentAnimation.FrameCount - 1);
                     }
 
                     if (currentAnimation.Events.TryGetValue(next, out string? eventName))
@@ -1510,12 +1511,11 @@ public static partial class RenderServices
                         return false;
                     }
                 }
-
             }
         }
         return false;
     }
-
+    
     public static string? CheckForEvents(
         RenderedSpriteCache? previous,
         Guid currentAnimationGuid,
