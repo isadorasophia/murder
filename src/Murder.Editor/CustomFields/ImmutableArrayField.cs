@@ -1,6 +1,7 @@
 ﻿using Gum;
 using ImGuiNET;
 using Murder.Assets;
+using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using System.Collections.Immutable;
@@ -178,11 +179,16 @@ namespace Murder.Editor.CustomFields
         {
             bool modified = false;
 
+            string previousValue = CustomComponent.LastIdOnCallStack;
+            CustomComponent.LastIdOnCallStack = $"e_{index}";
+
             if (DrawValue(member.CreateFrom(typeof(T), "Value", element: default), element, out T? modifiedValue))
             {
                 element = modifiedValue;
                 modified = true;
             }
+
+            CustomComponent.LastIdOnCallStack = previousValue;
 
             return modified;
         }

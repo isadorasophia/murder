@@ -360,6 +360,17 @@ public static class ImGuiHelpers
         return result;
     }
 
+    public static bool TreeEntityGroupNode(string name, Vector4 textColor, char icon = '\uf07c' /* folder icon */, ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.None)
+    {
+        return ImGuiHelpers.TreeNodeWithIconAndColor(
+            icon: icon,
+            label: name,
+            flags: ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.FramePadding | flags,
+            text: textColor,
+            background: Game.Profile.Theme.BgFaded,
+            active: Game.Profile.Theme.Bg);
+    }
+
     public static bool TreeNodeWithIconAndColor(
         char icon, string label, ImGuiTreeNodeFlags flags, Vector4 text, Vector4 background, Vector4 active)
     {

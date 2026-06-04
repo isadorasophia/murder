@@ -23,6 +23,11 @@ public class CustomComponent
     private readonly Dictionary<string, string> _searchField = [];
     private static readonly HashSet<string> _unfoldedFolders = [];
 
+    /// <summary>
+    /// Used when calling a tree of fields which compound.
+    /// </summary>
+    public static string LastIdOnCallStack = string.Empty;
+
     public static bool ShowEditorOf<T>(ref T target, CustomComponentsFlags _ = CustomComponentsFlags.None)
     {
         if (target is null)
@@ -257,7 +262,7 @@ public class CustomComponent
         bool unfolded = true;
         if (AttributeExtensions.IsDefined(member, typeof(FolderAttribute)))
         {
-            string id = $"{target}_{memberName}";
+            string id = $"{LastIdOnCallStack}_{target}_{memberName}";
 
             unfolded = _unfoldedFolders.Contains(id);
             ImGui.PushStyleColor(ImGuiCol.Text, unfolded ? Game.Profile.Theme.White: Game.Profile.Theme.Faded);
