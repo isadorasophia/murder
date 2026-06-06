@@ -42,6 +42,12 @@ namespace Murder.Editor.Systems
             return tRoutineField!;
         }
 
+        public static StateMachine? GetUnderlyingStateMachine(IStateMachineComponent component)
+        {
+            FieldInfo field = GetRoutineField(component.GetType());
+            return field.GetValue(component) as StateMachine;
+        }
+
         private static MethodInfo OnStartMethod()
         {
             Type tStateMachcine = typeof(StateMachine);
@@ -59,9 +65,7 @@ namespace Murder.Editor.Systems
         {
             _onStartMethod ??= OnStartMethod();
 
-            FieldInfo field = GetRoutineField(stateMachine.GetType());
-            StateMachine? routine = field.GetValue(stateMachine) as StateMachine;
-
+            StateMachine? routine = GetUnderlyingStateMachine(stateMachine);
             _onStartMethod?.Invoke(routine, parameters: Array.Empty<object>());
         }
     }
