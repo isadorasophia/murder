@@ -1026,6 +1026,14 @@ namespace Murder.Utilities
             return initialAngle + Approach(0, delta, maxAngle);
         }
 
+        /// <summary>
+        /// Returns the shortest difference between two angles.
+        /// </summary>
+        public static float DeltaAngle(float initialDirection, float angle)
+        {
+            return WrapAngle(angle - initialDirection);
+        }
+
         #endregion
     }
 }

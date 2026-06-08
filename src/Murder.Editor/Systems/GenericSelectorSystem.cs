@@ -686,16 +686,19 @@ public class GenericSelectorSystem
 
         if (e.TryGetSprite() is SpriteComponent sprite && Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid) is SpriteAsset spriteAsset)
         {
+            Rectangle box = new Rectangle(position - spriteAsset.Origin - sprite.Offset * spriteAsset.Size, spriteAsset.Size);
             HasBox = true;
+            if (e.TryGetScale() is ScaleComponent scale)
+            {
+                box = new Rectangle(position - spriteAsset.Origin * scale.Scale, box.Size * scale.Scale);
+            }
+
             if (e.TryGetParallax() is ParallaxComponent parallax)
             {
                 var parallaxOffset = ((MonoWorld)world).Camera.Position * (1 - parallax.Factor);
-                return new Rectangle(position + parallaxOffset - spriteAsset.Origin - sprite.Offset * spriteAsset.Size, spriteAsset.Size);
+                box = new Rectangle(box.X + parallaxOffset.X, box.Y + parallaxOffset.Y, box.Width, box.Height);
             }
-            else
-            {
-                return new Rectangle(position - spriteAsset.Origin - sprite.Offset * spriteAsset.Size, spriteAsset.Size);
-            }
+            return box;
         }
 
         HasBox = false;
