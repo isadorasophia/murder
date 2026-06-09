@@ -81,22 +81,6 @@ public sealed class DynamicInCameraSystem : IMonoPreRenderSystem
         {
             Vector2 pos = e.GetGlobalPosition();
 
-            // ------------  cached bounds -------------------------------------
-            if (e.TryGetEntityBoundsCache() is EntityBoundsCacheComponent cache)
-            {
-                Rectangle worldBounds = cache.Bounds;
-                if (cameraBounds.Touches(worldBounds))
-                {
-                    e.SetInCamera();
-                }
-                else
-                {
-                    e.RemoveInCamera();
-                }
-
-                continue;
-            }
-
             // ------------ Sprite  ------------------------------------------------
             if (e.TryGetSprite() is SpriteComponent sprite &&
                 Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid) is SpriteAsset asset)
@@ -120,13 +104,38 @@ public sealed class DynamicInCameraSystem : IMonoPreRenderSystem
                     flip);
 
                 // Cache bounds for future frames if entity is static
-                if (sprite.TargetSpriteBatch == Batches2D.UiBatchId || cameraBounds.Touches(aabb))
+                bool inCamera = (sprite.TargetSpriteBatch == Batches2D.UiBatchId || cameraBounds.Touches(aabb));
+
+                if (inCamera != e.HasInCamera())
                 {
-                    e.SetInCamera();
+                    if (inCamera)
+                    {
+                        e.SetInCamera();
+                    }
+                    else
+                    {
+                        e.RemoveInCamera();
+                    }
                 }
-                else
+
+                continue;
+            }
+
+            // ------------  cached bounds -------------------------------------
+            if (e.TryGetEntityBoundsCache() is EntityBoundsCacheComponent cache)
+            {
+                Rectangle worldBounds = cache.Bounds;
+                bool inCamera = cameraBounds.Touches(worldBounds);
+                if (inCamera != e.HasInCamera())
                 {
-                    e.RemoveInCamera();
+                    if (inCamera)
+                    {
+                        e.SetInCamera();
+                    }
+                    else
+                    {
+                        e.RemoveInCamera();
+                    }
                 }
 
                 continue;
@@ -137,20 +146,37 @@ public sealed class DynamicInCameraSystem : IMonoPreRenderSystem
             {
                 Rectangle worldBox = col.GetBoundingBox(pos, e.FetchScale());
 
-
-                if (cameraBounds.Touches(worldBox))
-                    e.SetInCamera();
-                else
-                    e.RemoveInCamera();
+                bool inCamera = (cameraBounds.Touches(worldBox));
+                if (inCamera != e.HasInCamera())
+                {
+                    if (inCamera)
+                    {
+                        e.SetInCamera();
+                    }
+                    else
+                    {
+                        e.RemoveInCamera();
+                    }
+                }
 
                 continue;
             }
 
             // ------------ Fallback: 1-pixel -------------------------------------
-            if (cameraBounds.Contains(pos.ToPoint()))
-                e.SetInCamera();
-            else
-                e.RemoveInCamera();
+            {
+                bool inCamera = cameraBounds.Contains(pos.ToPoint());
+                if (inCamera != e.HasInCamera())
+                {
+                    if (inCamera)
+                    {
+                        e.SetInCamera();
+                    }
+                    else
+                    {
+                        e.RemoveInCamera();
+                    }
+                }
+            }
         }
     }
 }
