@@ -693,6 +693,17 @@ public class GenericSelectorSystem
                 box = new Rectangle(position - spriteAsset.Origin * scale.Scale, box.Size * scale.Scale);
             }
 
+            if (e.TryGetRotation() is RotationComponent rotation && rotation.Rotation != 0)
+            {
+                // We need to calculate the bounding box of the rotated sprite.
+                box = box.GetRotatedBounds(rotation.Rotation, spriteAsset.Origin);
+            }
+
+            if (sprite.RotateWithFacing && e.TryGetFacing() is FacingComponent facing)
+            {
+                box = box.GetRotatedBounds(facing.Angle, spriteAsset.Origin);
+            }
+
             if (e.TryGetParallax() is ParallaxComponent parallax)
             {
                 var parallaxOffset = ((MonoWorld)world).Camera.Position * (1 - parallax.Factor);

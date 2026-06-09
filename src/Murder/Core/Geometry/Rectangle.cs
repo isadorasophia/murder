@@ -340,4 +340,32 @@ public struct Rectangle : IEquatable<Rectangle>
     {
         return new Rectangle(X, Y + down, Width, Height - down);
     }
+
+    /// <summary>
+    /// Locally rotates this rectangle by <paramref name="angle"/> (in radians) around <paramref name="origin"/>
+    /// and returns the smallest rectangle that fully contains the rotated result.
+    /// </summary>
+    public Rectangle GetRotatedBounds(float angle, Vector2 origin)
+    {
+        float cos = MathF.Cos(angle);
+        float sin = MathF.Sin(angle);
+
+        // Rotate the rectangle's center around the pivot.
+        Vector2 delta = -origin;
+        Vector2 rotatedCenter = new(
+            origin.X + delta.X * cos - delta.Y * sin,
+            origin.Y + delta.X * sin + delta.Y * cos);
+
+        // Half-extents of the AABB containing the rotated rectangle.
+        float absCos = MathF.Abs(cos);
+        float absSin = MathF.Abs(sin);
+
+        float width = absCos * Width + absSin * Height;
+        float height = absSin * Width + absCos * Height;
+
+        return new Rectangle(
+            Center.X - width/2f,
+            Center.Y - height/2f,
+            width, height);
+    }
 }
