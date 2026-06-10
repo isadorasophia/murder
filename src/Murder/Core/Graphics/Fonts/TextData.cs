@@ -614,15 +614,15 @@ public static partial class TextDataServices
                 continue;
             }
 
-            char c = parsedText[i];
-            if (c == '\n')
-            {
-                indexForPause = Math.Max(0, indexForPause - 1);
-            }
-
             if (!letters.TryGetValue(i, out RuntimeLetterProperties l))
             {
                 l = new();
+            }
+
+            char c = parsedText[i];
+            if (c == '\n' && !l.Properties.HasFlag(RuntimeLetterPropertiesFlag.DoNotSkipLineEnding))
+            {
+                indexForPause = Math.Max(0, indexForPause - 1);
             }
 
             switch (c)
