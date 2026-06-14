@@ -112,7 +112,7 @@ namespace Murder.Editor.CustomEditors
 
                 foreach (string group in info.HiddenGroups)
                 {
-                    SwitchGroupVisibility(group, false); 
+                    SwitchGroupVisibility(group, false);
                 }
             }
             else
@@ -238,7 +238,7 @@ namespace Murder.Editor.CustomEditors
                     }
 
                     bool always = true;
-                    if (ImGui.BeginTabItem($"{Icons.Tiles} Tiles", ref always, _switchToTilesetsTab? ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None))
+                    if (ImGui.BeginTabItem($"{Icons.Tiles} Tiles", ref always, _switchToTilesetsTab ? ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None))
                     {
                         _switchToTilesetsTab = false;
                         ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);

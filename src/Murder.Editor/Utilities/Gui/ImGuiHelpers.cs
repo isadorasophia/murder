@@ -17,6 +17,35 @@ public static class ImGuiHelpers
     private static string _genericComboFilterId = string.Empty;
     private static int _genericComboFilterSelectedIndex = 0;
 
+    public static void LoadingSpinner(float radius, float thickness, uint color)
+    {
+        ImGuiStylePtr style = ImGui.GetStyle();
+        Vector2 pos = ImGui.GetCursorScreenPos();
+        Vector2 size = new(radius * 2f, (radius + style.FramePadding.Y) * 2f);
+
+        ImGui.Dummy(size);   // reserve layout space so SameLine works
+
+        ImDrawListPtr drawList = ImGui.GetWindowDrawList();
+        drawList.PathClear();
+
+        const int numSegments = 30;
+        float time = Game.NowUnscaled;
+        int start = (int)MathF.Abs(MathF.Sin(time * 1.8f) * (numSegments - 5));
+
+        float aMin = MathF.PI * 2f * start / numSegments;
+        float aMax = MathF.PI * 2f * (numSegments - 3) / numSegments;
+        Vector2 centre = new(pos.X + radius, pos.Y + radius + style.FramePadding.Y);
+
+        for (int i = 0; i <= numSegments; i++)
+        {
+            float a = aMin + ((float)i / numSegments) * (aMax - aMin);
+            drawList.PathLineTo(new Vector2(
+                centre.X + MathF.Cos(a + time * 8f) * radius,
+                centre.Y + MathF.Sin(a + time * 8f) * radius));
+        }
+
+        drawList.PathStroke(color, ImDrawFlags.None, thickness);
+    }
     public static bool FilteredCombo<T>(string id, string previewValue, IEnumerable<T> items, Func<T, int, string> findItemName, out T selected)
     {
         selected = default(T)!;

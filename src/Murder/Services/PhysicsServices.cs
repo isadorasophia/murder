@@ -38,6 +38,14 @@ public static class PhysicsServices
     }
     private static readonly ImmutableArray<PhysicEntityCachedInfo>.Builder _physicsInfoCacheBuilder = ImmutableArray.CreateBuilder<PhysicEntityCachedInfo>();
 
+    public static bool IsCollidingWith(this Entity a, Entity b)
+    {
+        if (a.TryGetCollisionCache() is CollisionCacheComponent collisionCache)
+        {
+            return collisionCache.CollidingWith.Contains(b.EntityId);
+        }
+        return false;
+    }
     public static Map? TryGetMap(World world)
     {
         return world.TryGetUniqueMap()?.Map;

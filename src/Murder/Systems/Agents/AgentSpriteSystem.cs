@@ -204,7 +204,7 @@ namespace Murder.Systems
                 if (e.TryGetCustomTargetSpriteBatch() is CustomTargetSpriteBatchComponent renderTarget)
                     target = renderTarget.TargetBatch;
 
-                if (isMoving && spriteAsset.Animations.TryGetValue(prefix + sprite.WalkPrefix + suffix, out _) && 
+                if (isMoving && spriteAsset.Animations.TryGetValue(prefix + sprite.WalkPrefix + suffix, out _) &&
                     !e.HasDisableAgent() && !e.HasAgentPause() && !e.HasAgentPauseRuntime())
                 {
                     prefix += sprite.WalkPrefix;
@@ -216,7 +216,7 @@ namespace Murder.Systems
                     Start = start,
                     Duration = speed,
                     Loop = overload == null || (overload.Value.AtLast && overload.Value.Loop),
-                    UseScaledTime = true,
+                    UseScaledTime = !e.HasUnscaledDeltaTime(),
                 };
 
                 if (e.TryGetSpritePaused() is SpritePausedComponent pauseAnimation)
@@ -305,7 +305,7 @@ namespace Murder.Systems
                     batch,
                     spriteAsset,
                     position: renderPosition,
-                    drawInfo, 
+                    drawInfo,
                     animationInfo);
 
                 AfterDraw(batch, e, renderPosition, ySortOffsetRaw, drawInfo, animationInfo);
@@ -342,12 +342,13 @@ namespace Murder.Systems
         }
 
         protected virtual void AfterDraw(
-            Batch2D batch, 
+            Batch2D batch,
             Entity e,
-            Vector2 position, 
-            float ySortOffsetRaw, 
-            DrawInfo drawInfo, 
-            AnimationInfo animationInfo) { }
+            Vector2 position,
+            float ySortOffsetRaw,
+            DrawInfo drawInfo,
+            AnimationInfo animationInfo)
+        { }
 
         protected virtual void SetParticleWalk(World world, Entity e, bool isWalking)
         {

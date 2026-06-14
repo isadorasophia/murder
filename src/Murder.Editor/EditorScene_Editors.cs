@@ -12,6 +12,7 @@ using Murder.Utilities;
 using System.Collections.Immutable;
 using System.IO;
 using System.Numerics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Murder.Editor
 {
@@ -54,6 +55,7 @@ namespace Murder.Editor
         private CustomEditorInstance? _lastActiveEditorInstance = null;
 
         private float _lastTimeSavedEditorSettings;
+        public bool ShowReferencesWindow = false;
 
         private void UpdateSelectedEditor()
         {
@@ -208,6 +210,19 @@ namespace Murder.Editor
                 }
 
                 ImGui.TextColored(Microsoft.Xna.Framework.Color.DarkGray.ToSysVector4(), $"({asset.GetType().Name})");
+
+                ImGui.SameLine();
+                ImGui.PushStyleColor(ImGuiCol.Button, Vector4.Zero);
+                ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.BgFaded);
+                ImGui.PushStyleColor(ImGuiCol.ButtonActive, Vector4.Zero);
+                ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
+                if (ImGui.Button("\uf0c1"))
+                {
+                    ShowReferencesWindow = !ShowReferencesWindow;
+                }
+                ImGui.PopStyleColor(4);
+                ImGuiHelpers.HelpTooltip("Show all references to this asset");
+
                 ImGui.SameLine();
 
                 if (asset.CanBeSaved && (ImGuiHelpers.Button("Save Asset")))
@@ -319,13 +334,6 @@ namespace Murder.Editor
                     ImGui.SetItemTooltip($"{(showDeactivated ? "Show" : "Hide")} deactivated entities");
 
                     ImGui.SameLine();
-                    if (ImGuiHelpers.Button("\uf2a8 Reveal all"))
-                    {
-                        // [TODO] Actually reveal objects
-                    }
-
-
-                    ImGui.SameLine();
                     if (ImGuiHelpers.Button("Reset Camera") || Game.Input.Shortcut(Keys.F12))
                     {
                         worldEditor.ResetCamera();
@@ -358,6 +366,8 @@ namespace Murder.Editor
                 }
 
                 customEditor.Editor.DrawEditor();
+
+                DrawReferencesWindow(asset.Guid);
             }
             else
             {
@@ -365,6 +375,87 @@ namespace Murder.Editor
             }
 
             ImGui.EndChild();
+        }
+
+        private Guid? _referencesFetchGuid;
+        private Task<List<Guid>>? _referencesTask;
+        private void DrawReferencesWindow(Guid guid)
+        {
+            if (ShowReferencesWindow)
+            {
+                ShowReferencesWindow = false;
+                _referencesTask = null;
+                ImGui.OpenPopup("##ReferencesPopup");
+            }
+
+            if (ImGui.BeginPopup("##ReferencesPopup"))
+            {
+                DrawReferencesContents(guid);
+                ImGui.EndPopup();
+            }
+            else
+            {
+                _referencesTask = null;
+            }
+        }
+
+        private void DrawReferencesContents(Guid guid)
+        {
+            if (_referencesTask is null || _referencesFetchGuid != guid)
+            {
+                _referencesFetchGuid = guid;
+                _referencesTask = Task.Run(() => FilteredAssetsForCrossReference.FetchAssetReferences(guid));
+            }
+
+            if (!_referencesTask.IsCompleted)
+            {
+                ImGuiHelpers.LoadingSpinner(8f, 3f, ImGui.GetColorU32(Game.Profile.Theme.Faded));
+                ImGui.SameLine();
+                ImGui.TextColored(Game.Profile.Theme.Faded, "Searching for references...");
+                return;
+            }
+
+            if (!_referencesTask.IsCompletedSuccessfully)
+            {
+                ImGui.TextColored(Game.Profile.Theme.Red, "Failed to fetch references.");
+                return;
+            }
+
+            List<Guid> references = _referencesTask.Result;
+            if (references.Count == 0)
+            {
+                ImGui.TextColored(Game.Profile.Theme.Faded, "This item is not found anywhere else!");
+                return;
+            }
+
+            bool any = false;
+            foreach (Guid g in references)
+            {
+                if (g == guid)
+                {
+                    continue; // Skip self reference
+                }
+
+                if (Game.Data.TryGetAsset(g) is not GameAsset asset)
+                {
+                    continue;
+                }
+
+                any = true;
+                string path = string.Join('/', asset.GetSplitNameWithEditorPath());
+
+                if (ImGui.Selectable($"{path}##{g}"))
+                {
+                    OpenOnTreeView(asset, true);
+                    OpenAssetEditor(asset, false);
+                    ImGui.CloseCurrentPopup();
+                }
+            }
+
+            if (!any)
+            {
+                ImGui.TextColored(Game.Profile.Theme.Faded, "This item is not found anywhere else!");
+            }
         }
 
         private CustomEditorInstance? GetOrCreateAssetEditor(GameAsset asset)
