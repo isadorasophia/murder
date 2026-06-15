@@ -334,18 +334,18 @@ namespace Murder
         /* *** Private instance fields *** */
 
         // Update properties.
-        private float _fixedUpdateDelta;
+        protected float _fixedUpdateDelta;
 
-        private double _scaledElapsedTime = 0;
-        private double _unscaledElapsedTime = 0;
-        private double _scaledDeltaTime = 0;
-        private double _unscaledDeltaTime = 0;
+        protected double _scaledElapsedTime = 0;
+        protected double _unscaledElapsedTime = 0;
+        protected double _scaledDeltaTime = 0;
+        protected double _unscaledDeltaTime = 0;
 
-        private double _lastFixedUpdateTime = 0;
-        private double _fixedAccumulatorSeconds = 0;
+        protected double _lastFixedUpdateTime = 0;
+        protected double _fixedAccumulatorSeconds = 0;
 
-        private double _scaledPreviousElapsedTime = 0;
-        private double _unscaledPreviousElapsedTime = 0;
+        protected double _scaledPreviousElapsedTime = 0;
+        protected double _unscaledPreviousElapsedTime = 0;
 
         /// <summary>
         /// This is the underlying implementation of the game. This listens to the murder game events.
