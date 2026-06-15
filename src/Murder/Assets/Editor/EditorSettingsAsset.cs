@@ -41,17 +41,17 @@ public class EditorSettingsAsset : GameAsset
     /// <summary>
     /// This points to the packed directory which will be synchronized in source.
     /// </summary>
-    public string SourcePackedPath => Path.Join(GameSourcePath, "packed");
+    public virtual string SourcePackedPath => Path.Join(GameSourcePath, "packed");
 
     /// <summary>
     /// This points to the resources which will be synchronized in source.
     /// </summary>
-    public string SourceResourcesPath => Path.Join(GameSourcePath, "resources");
+    public virtual string SourceResourcesPath => Path.Join(GameSourcePath, "resources");
 
     /// <summary>
     /// This points to the resources raw path, before we get to process the contents to <see cref="SourceResourcesPath"/>.
     /// </summary>
-    public string RawResourcesPath => Path.Join(GameSourcePath, "../../resources");
+    public virtual string RawResourcesPath => Path.Join(GameSourcePath, "../../resources");
 
     [HideInEditor]
     public bool StartMaximized = false;
