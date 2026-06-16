@@ -85,6 +85,7 @@ namespace Murder.Systems
                 if (delta >= 1)
                 {
                     e.RemoveMoveToPerfect();
+                    e.RemoveIsStuck();
                     // Send message?
                 }
             }

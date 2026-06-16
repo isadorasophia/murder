@@ -1144,7 +1144,7 @@ public static class PhysicsServices
                     {
                         if (world.TryGetEntity(other.EntityId) is Entity otherEntity)
                         {
-                            if (!otherEntity.IsActive || !otherEntity.IsDestroyed)
+                            if (!otherEntity.IsActive || otherEntity.IsDestroyed)
                             {
                                 continue;
                             }
@@ -1703,8 +1703,8 @@ public static class PhysicsServices
 
             case PolygonShape polygon:
                 {
-                    var rect = new IntRectangle(Grid.FloorToGrid(polygon.Rect.X), Grid.FloorToGrid(polygon.Rect.Y),
-                        Grid.CeilToGrid(polygon.Rect.Width) + 2, Grid.CeilToGrid(polygon.Rect.Height) + 2)
+                    var rect = new IntRectangle(Grid.RoundToGrid(polygon.Rect.X), Grid.RoundToGrid(polygon.Rect.Y),
+                        Grid.RoundToGrid(polygon.Rect.Width) + 2, Grid.RoundToGrid(polygon.Rect.Height) + 2)
                         .AddPosition(position.ToGridPoint());
                     foreach (var tile in map.GetStaticCollisions(rect))
                     {
