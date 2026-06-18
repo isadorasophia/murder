@@ -2,11 +2,13 @@
 using Bang.Entities;
 using Bang.Interactions;
 using Murder.Services;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Interactions;
 
 public readonly struct EnableChildrenInteraction : IInteraction
 {
+    [Target]
     public readonly string? Target = null;
 
     public EnableChildrenInteraction() { }
