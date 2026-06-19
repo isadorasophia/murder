@@ -62,7 +62,6 @@ namespace Murder.Core.Input
             return option;
         }
 
-
         public void Select(int index, float now)
         {
             JustMoved = Selection != index;
@@ -461,7 +460,7 @@ namespace Murder.Core.Input
         public void Reset()
         {
             Selection = 0;
-            LastMoved = Game.NowUnscaled;
+            LastMoved = LastMovedSucessfully = Game.NowUnscaled;
             PreviousSelection = -1;
         }
 
