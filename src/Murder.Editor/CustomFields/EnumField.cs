@@ -33,15 +33,15 @@ namespace Murder.Editor.CustomFields
 
             bool modified = false;
 
-            if (AttributeExtensions.TryGetAttribute<SearchAttribute>(member, out var _searchAttribute) || Enum.GetValues(t).Length > 10)
-            {
-                modified = ImGuiHelpers.DrawEnumFieldWithSearch($"##{member.Name}", t, ref intValue);
-                return (modified, Enum.ToObject(t, intValue));
-            }
-
             if (Attribute.IsDefined(t, typeof(FlagsAttribute)))
             {
                 modified |= ImGuiHelpers.DrawEnumFieldAsDropdown(member.Name, t, ref intValue);
+                return (modified, Enum.ToObject(t, intValue));
+            }
+
+            if (AttributeExtensions.TryGetAttribute<SearchAttribute>(member, out var _searchAttribute) || Enum.GetValues(t).Length > 10)
+            {
+                modified = ImGuiHelpers.DrawEnumFieldWithSearch($"##{member.Name}", t, ref intValue);
                 return (modified, Enum.ToObject(t, intValue));
             }
 
