@@ -437,7 +437,7 @@ public class Batch2D
             if (requiredIndexCapacity > _indices.Length)
             {
                 int newSize = Math.Max(_indices.Length * 2, requiredIndexCapacity);
-                Array.Resize(ref _indices, _indices.Length * 2);
+                Array.Resize(ref _indices, newSize);
             }
 
             // Optimized index copy

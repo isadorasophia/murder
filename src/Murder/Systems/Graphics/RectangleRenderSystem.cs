@@ -42,6 +42,11 @@ namespace Murder.Systems.Graphics
                     box = new Rectangle(position, Vector2.One * Grid.CellSize);
                 }
 
+                if (alpha <= 0)
+                {
+                    continue;
+                }
+
                 if (rect.Fill)
                 {
                     RenderServices.DrawRectangle(batch, box, rect.Color * alpha, RenderServices.YSort(box.Bottom + rect.SortingOffset));

@@ -10,7 +10,7 @@ namespace Murder.Core.Graphics
 {
     /// <summary>
     /// The color type as described by the engine. Values are represented as <see cref="float"/> from 0 to 1.
-    /// To create a color using 0-255, use <see cref="CreateFrom256(byte,byte,byte,byte)"/>.
+    /// To create a color using 0-255, use <see cref="CreateFrom255(byte,byte,byte,byte)"/>.
     /// </summary>
     public readonly partial struct Color : IEquatable<Color>
     {
@@ -110,7 +110,7 @@ namespace Murder.Core.Graphics
         /// argument is omitted, the value used for the alpha will be 1,
         /// meaning a completely opaque color.
         /// Do note colors in Murder use 0-1 as their range.
-        /// To initialize a color using 0-255, please refer to <see cref="CreateFrom256(byte,byte,byte,byte)"/>.
+        /// To initialize a color using 0-255, please refer to <see cref="CreateFrom255(byte,byte,byte,byte)"/>.
         /// </summary>
         /// <param name="r">Amount of red in the color.</param>
         /// <param name="g">Amount of green in the color.</param>
@@ -140,20 +140,21 @@ namespace Murder.Core.Graphics
         /// <summary>
         /// Creates a color using values from 0 to 255.
         /// </summary>
-        public static Color CreateFrom256(byte r, byte g, byte b) =>
-            new(r / 256f, g / 256f, b / 256f);
+        public static Color CreateFrom255(byte r, byte g, byte b) =>
+            new(r / 255f, g / 255f, b / 255f);
 
 
         /// <summary>
         /// Creates a color using values from 0 to 255.
         /// </summary>
-        public static Color CreateFrom256(byte r, byte g, byte b, byte a) =>
-            new(r / 256f, g / 256f, b / 256f, a / 256f);
+        public static Color CreateFrom255(byte r, byte g, byte b, byte a) =>
+            new(r / 255f, g / 255f, b / 255f, a / 255f);
 
         /// <summary>
         /// Converts the murder color <param ref="c"/> into an XNA color.
         /// </summary>
-        public static implicit operator Microsoft.Xna.Framework.Color(Color c) => new(c.R, c.G, c.B, c.A);
+        /// XNA converts this to byte which will truncate values, so we need to round this properly before sending it with ToByte
+        public static implicit operator Microsoft.Xna.Framework.Color(Color c) => new(ToByte(c.R), ToByte(c.G), ToByte(c.B), ToByte(c.A));
 
         /// <summary>
         /// Converts the XNA color <param ref="c"/> into a murder color.
@@ -168,7 +169,14 @@ namespace Murder.Core.Graphics
         /// <summary>
         /// Converts this color in its unsigned integer representation
         /// </summary>
-        public static explicit operator uint(Color c) { uint ret = (uint)(c.A * 255); ret <<= 8; ret += (uint)(c.B * 255); ret <<= 8; ret += (uint)(c.G * 255); ret <<= 8; ret += (uint)(c.R * 255); return ret; }
+        public static explicit operator uint(Color c)
+        {
+            uint ret = ToByte(c.A);
+            ret <<= 8; ret += ToByte(c.B);
+            ret <<= 8; ret += ToByte(c.G);
+            ret <<= 8; ret += ToByte(c.R);
+            return ret;
+        }
 
         /// <summary>
         /// Multiplies all values of the color by the float <param ref="r"/>
@@ -213,11 +221,10 @@ namespace Murder.Core.Graphics
                 float b = InputServices.ParseFloatSafe(match.Groups["b"].Value);
                 float a = InputServices.ParseFloatSafe(match.Groups["a"].Value);
 
-                Console.WriteLine($"r: {r}, g: {g}, b: {b}, a: {a}");
                 return new Color(r, g, b, a);
             }
 
-            Console.WriteLine("No match found.");
+            GameLogger.Warning($"No color match found for {str}.");
             return Magenta;
         }
 
@@ -289,14 +296,8 @@ namespace Murder.Core.Graphics
             // Create a new Color object with the normalized color values
             return new Color(rf, gf, bf);
         }
-
-        public static string ToHex(Color color)
-        {
-            int r = (int)(color.R * 255);
-            int g = (int)(color.G * 255);
-            int b = (int)(color.B * 255);
-            return $"#{r:X2}{g:X2}{b:X2}";
-        }
+        private static byte ToByte(float v) => (byte)(Math.Clamp(v, 0f, 1f) * 255f + 0.5f);
+        public static string ToHex(Color color) => $"#{ToByte(color.R):X2}{ToByte(color.G):X2}{ToByte(color.B):X2}";
 
         [GeneratedRegex(@"\$?Color\(([\d.]+), ([\d.]+), ([\d.]+), ([\d.]+)\)")]
         private static partial Regex ColorRegex();

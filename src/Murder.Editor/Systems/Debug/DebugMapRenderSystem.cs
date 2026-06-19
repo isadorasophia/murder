@@ -41,7 +41,7 @@ namespace Murder.Editor.Systems
             Map? pathfindMap = context.World.TryGetUnique<PathfindMapComponent>()?.Map;
 
             (int minX, int maxX, int minY, int maxY) = render.Camera.GetSafeGridBounds(map);
-            Color gridColor = Color.CreateFrom256(r: 170, g: 227, b: 12) * .1f;
+            Color gridColor = Color.CreateFrom255(r: 170, g: 227, b: 12) * .1f;
 
             for (int y = minY; y < maxY; y++)
             {
@@ -101,15 +101,15 @@ namespace Murder.Editor.Systems
         {
             if (weight == 1)
             {
-                return Color.CreateFrom256(123, 133, 208);
+                return Color.CreateFrom255(123, 133, 208);
             }
 
             if (weight > 101)
             {
-                return Color.CreateFrom256(248, 91, 131);
+                return Color.CreateFrom255(248, 91, 131);
             }
 
-            return Color.CreateFrom256(255, 159, 255);
+            return Color.CreateFrom255(255, 159, 255);
         }
 
         private bool IsSolid(int mask) =>
