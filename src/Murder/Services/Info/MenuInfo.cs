@@ -288,6 +288,7 @@ namespace Murder.Core.Input
             while (totalAttempts < width)
             {
                 int column = Calculator.WrapAround(startColumn + direction * (totalAttempts + 1), 0, width - 1);
+                totalAttempts++;
 
                 // Did we wrap around?
                 if (column > startColumn && direction < 0)
@@ -316,8 +317,6 @@ namespace Murder.Core.Input
                 {
                     return (nextOption, wrapped);
                 }
-
-                totalAttempts++;
             }
 
             totalAttempts = 0;
