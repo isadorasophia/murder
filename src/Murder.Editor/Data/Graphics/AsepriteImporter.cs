@@ -570,54 +570,24 @@ public partial class Aseprite
         // 0 - NORMAL
         (ref Color dest, Color src, byte opacity) =>
         {
-            // Normalize opacity to a range between 0 and 1 for calculations
-            float normalizedOpacity = opacity / 255f;
-
-            // Calculate the effective alpha (transparency) of the source color,
-            // factoring in the additional opacity level.
-            float srcEffectiveAlpha = src.A / 255f * normalizedOpacity;
-
-            // If the destination is completely transparent,
-            // directly apply the source color modified by its effective alpha.
-            if (dest.A == 0)
+            // src and dest are both already premultiplied (see BytesToPixels). 
+            // Result = Source + Destination * (1 - SourceAlpha)
+            float o = opacity / 255f;
+            float sa = src.A / 255f * o;
+            if (sa <= 0f)
             {
-                //dest.R = (byte)(src.R * srcEffectiveAlpha);
-                //dest.G = (byte)(src.G * srcEffectiveAlpha);
-                //dest.B = (byte)(src.B * srcEffectiveAlpha);
-                dest.R = (byte)(src.R * normalizedOpacity);
-                dest.G = (byte)(src.G * normalizedOpacity);
-                dest.B = (byte)(src.B * normalizedOpacity);
-                dest.A = (byte)(src.A * normalizedOpacity);
+                return; // transparent source do not contribute, skip
             }
-            // If the source is completely transparent or opacity is 0, leave dest as is.
-            else if (src.A == 0 || opacity == 0)
-            {
-                // No operation needed; dest remains unchanged.
-            }
-            else
-            {
-                // For non-transparent blending, calculate the final color.
-                // Pre-multiply source color components by their effective alpha.
-                // EDIT: We no longer pre-multiply
-                // EDIT: We pre-multiply again
-                //float srcPreR = src.R * srcEffectiveAlpha;
-                //float srcPreG = src.G * srcEffectiveAlpha;
-                //float srcPreB = src.B * srcEffectiveAlpha;
-                float srcPreR = src.R;
-                float srcPreG = src.G;
-                float srcPreB = src.B;
 
-                // Normalize destination alpha for calculations.
-                float destNormalizedAlpha = dest.A / 255f;
+            float sr = src.R / 255f * o;
+            float sg = src.G / 255f * o;
+            float sb = src.B / 255f * o;
+            float inv = 1f - sa;
 
-                // Blend each component.
-                dest.R = (byte)((srcPreR + dest.R * destNormalizedAlpha * (1 - srcEffectiveAlpha)) / (srcEffectiveAlpha + destNormalizedAlpha * (1 - srcEffectiveAlpha)));
-                dest.G = (byte)((srcPreG + dest.G * destNormalizedAlpha * (1 - srcEffectiveAlpha)) / (srcEffectiveAlpha + destNormalizedAlpha * (1 - srcEffectiveAlpha)));
-                dest.B = (byte)((srcPreB + dest.B * destNormalizedAlpha * (1 - srcEffectiveAlpha)) / (srcEffectiveAlpha + destNormalizedAlpha * (1 - srcEffectiveAlpha)));
-
-                // Calculate and apply the final alpha.
-                dest.A = (byte)((srcEffectiveAlpha + destNormalizedAlpha * (1 - srcEffectiveAlpha)) * 255);
-            }
+            dest.R = (byte)(MathF.Min(sr + dest.R / 255f * inv, 1f) * 255f + 0.5f);
+            dest.G = (byte)(MathF.Min(sg + dest.G / 255f * inv, 1f) * 255f + 0.5f);
+            dest.B = (byte)(MathF.Min(sb + dest.B / 255f * inv, 1f) * 255f + 0.5f);
+            dest.A = (byte)(MathF.Min(sa + dest.A / 255f * inv, 1f) * 255f + 0.5f);
         }
     };
 
@@ -672,9 +642,9 @@ public partial class Aseprite
         {
             for (int p = 0, b = 0; p < len; p++, b += 4)
             {
-                pixels[p].R = (byte)(bytes[b + 0] * bytes[b + 3] / 255);
-                pixels[p].G = (byte)(bytes[b + 1] * bytes[b + 3] / 255);
-                pixels[p].B = (byte)(bytes[b + 2] * bytes[b + 3] / 255);
+                pixels[p].R = (byte)MUL_UN8(bytes[b + 0], bytes[b + 3]);
+                pixels[p].G = (byte)MUL_UN8(bytes[b + 1], bytes[b + 3]);
+                pixels[p].B = (byte)MUL_UN8(bytes[b + 2], bytes[b + 3]);
                 pixels[p].A = bytes[b + 3];
             }
         }
@@ -682,7 +652,7 @@ public partial class Aseprite
         {
             for (int p = 0, b = 0; p < len; p++, b += 2)
             {
-                pixels[p].R = pixels[p].G = pixels[p].B = (byte)(bytes[b + 0] * bytes[b + 1] / 255);
+                pixels[p].R = pixels[p].G = pixels[p].B = (byte)MUL_UN8(bytes[b + 0], bytes[b + 1]);
                 pixels[p].A = bytes[b + 1];
             }
         }

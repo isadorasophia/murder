@@ -212,6 +212,11 @@ namespace Murder.Core.Geometry
         /// </summary>
         public readonly Vector2 ToVector2() => new(X, Y);
 
+        /// <summary>
+        /// Converts this point into a <see cref="Microsoft.Xna.Framework.Vector2"/> with the same X and Y values.
+        /// </summary>
+        public readonly Microsoft.Xna.Framework.Vector2 ToXnaVector2() => new(X, Y);
+
         /// <inheritdoc cref="Object"/>
         public override string ToString() => (X, Y).ToString();
 

@@ -8,6 +8,7 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Services;
+using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Numerics;
 
@@ -38,7 +39,7 @@ namespace Murder.Systems
             OnModified(world, entities);
         }
 
-        public void OnModified(World world, ImmutableArray<Entity> entities) 
+        public void OnModified(World world, ImmutableArray<Entity> entities)
         {
             _fadeInTime = -1;
             _fadeOutTime = -1;
@@ -130,10 +131,11 @@ namespace Murder.Systems
                 render.Camera.SafeBounds :
                 new Rectangle(Vector2.Zero, render.Camera.SafeBounds.Size);
 
+
             RenderServices.DrawRectangle(
                 render.GetBatch(_targetBatch),
                 area,
-                _color * _currentAlpha,
+                _color * Calculator.Quantize(_currentAlpha, 64),
                 _currentSort);
 
             OnBeforeAlphaUpdate(render, _currentAlpha);
