@@ -294,16 +294,18 @@ namespace Murder.Core.Input
                 {
                     if (flags.HasFlag(GridMenuFlags.ClampLeft))
                     {
-                        return (option, false);
+                        // do not allow clamping, but still allow it to pass over to the next check that skips rows
+                        continue;
                     }
 
                     wrapped = true;
                 }
                 if (column < startColumn && direction > 0)
                 {
+                    // do not allow clamping, but still allow it to pass over to the next check that skips rows
                     if (flags.HasFlag(GridMenuFlags.ClampRight))
                     {
-                        return (option, false);
+                        continue;
                     }
 
                     wrapped = true;
@@ -382,22 +384,26 @@ namespace Murder.Core.Input
             while (totalAttempts < totalRows)
             {
                 int row = Calculator.WrapAround(initialRow + direction * (totalAttempts + 1), 0, totalRows);
+                totalAttempts++;
 
                 // Did we wrap around?
                 if (row > initialRow && direction < 0)
                 {
                     if (flags.HasFlag(GridMenuFlags.ClampTop))
                     {
-                        return (option, false);
+                        // do not allow clamping, but still allow it to pass over to the next check that skips columns
+                        continue;
                     }
 
                     wrapped = true;
                 }
+
                 if (row < initialRow && direction > 0)
                 {
                     if (flags.HasFlag(GridMenuFlags.ClampBottom))
                     {
-                        return (option, false);
+                        // do not allow clamping, but still allow it to pass over to the next check that skips columns
+                        continue;
                     }
 
                     wrapped = true;
@@ -408,8 +414,6 @@ namespace Murder.Core.Input
                 {
                     return (nextOption, wrapped);
                 }
-
-                totalAttempts++;
             }
 
             // then we'll try going to different columns
