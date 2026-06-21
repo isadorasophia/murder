@@ -195,7 +195,7 @@ namespace Murder.Core.Geometry
         /// <summary>
         /// Creates a new <see cref="IntRectangle"/> that is the union of the two given rectangles. The resulting rectangle will be the smallest rectangle that contains both input rectangles.
         /// </summary>
-        internal static IntRectangle Union(IntRectangle startBox, IntRectangle endBox)
+        public static IntRectangle Union(IntRectangle startBox, IntRectangle endBox)
         {
             return new IntRectangle
             {
@@ -205,5 +205,11 @@ namespace Murder.Core.Geometry
                 Height = Math.Max(startBox.Bottom, endBox.Bottom) - Math.Min(startBox.Y, endBox.Y)
             };
         }
+
+        public static IntRectangle FromAbsolute(float left, float top, float right, float bottom)
+        {
+            return new(left, top, right - left, bottom - top);
+        }
+
     }
 }

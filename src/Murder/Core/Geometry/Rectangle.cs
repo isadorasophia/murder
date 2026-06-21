@@ -147,12 +147,12 @@ public struct Rectangle : IEquatable<Rectangle>
     {
         return FromAbsolute(
             Math.Max(a.Left, b.Left),
-            Math.Min(a.Right, b.Right),
             Math.Max(a.Top, b.Top),
+            Math.Min(a.Right, b.Right),
             Math.Min(a.Bottom, b.Bottom));
     }
 
-    private static Rectangle FromAbsolute(float left, float right, float top, float bottom)
+    private static Rectangle FromAbsolute(float left, float top, float right, float bottom)
     {
         return new(left, top, right - left, bottom - top);
     }
@@ -364,8 +364,8 @@ public struct Rectangle : IEquatable<Rectangle>
         float height = absSin * Width + absCos * Height;
 
         return new Rectangle(
-            Center.X - width/2f,
-            Center.Y - height/2f,
+            Center.X - width / 2f,
+            Center.Y - height / 2f,
             width, height);
     }
 }

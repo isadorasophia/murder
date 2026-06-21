@@ -193,7 +193,7 @@ namespace Murder.Editor.Importers
                             name: name,
                             atlasId: atlasId,
                             atlasRectangle: new IntRectangle(node.Bounds.X, node.Bounds.Y, node.Bounds.Width, node.Bounds.Height),
-                            trimArea: node.Texture.TrimArea,
+                            contentOffset: node.Texture.TrimArea.TopLeft,
                             size: node.Texture.SliceSize,
                             atlasIndex: i,
                             atlasWidth: packer.Atlasses[i].Width,

@@ -6,6 +6,7 @@ using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Numerics;
 using System.Xml.Serialization;
 
 namespace Murder.Assets.Graphics;
@@ -23,10 +24,10 @@ public class SpriteAsset : GameAsset, IPreview
     public ImmutableDictionary<string, Animation> Animations { get; private set; } = ImmutableDictionary<string, Animation>.Empty;
 
     [Serialize]
-    public readonly Point Origin = new();
+    public Point Origin { get; private set; }
 
     [Serialize]
-    public readonly Point Size;
+    public Point Size { get; private set; }
 
     [Serialize]
     public readonly Rectangle NineSlice;
@@ -220,10 +221,42 @@ public class SpriteAsset : GameAsset, IPreview
             Rename = true;
         }
 
+        // Let's check for size and/or origin differences.
+        // If any of those differ we need to find the smallest union rectangle that can fit both
+        if (Size != other.Size || Origin != other.Origin)
+        {
+            IntRectangle myRectangle = new(-Origin.X, -Origin.Y, Size.X, Size.Y);
+            IntRectangle otherRectangle = new(-other.Origin.X, -other.Origin.Y, other.Size.X, other.Size.Y);
+            IntRectangle union = IntRectangle.Union(myRectangle, otherRectangle);
+
+            Point newSize = new(union.Width, union.Height);
+            Point newOrigin = new(-union.X, -union.Y);
+
+            Point thisDelta = newOrigin - Origin;
+            Point otherDelta = newOrigin - other.Origin;
+            var offsetBuilder = Frames.ToBuilder();
+
+            for (int i = 0; i < Frames.Length; i++)
+            {
+                Point delta = i < frameOffset ? thisDelta : otherDelta;
+                AtlasCoordinates original = Frames[i];
+
+                offsetBuilder[i] = original with
+                {
+                    Size = newSize,
+                    ContentOffset = new Point(
+                        original.ContentOffset.X + delta.X,
+                        original.ContentOffset.Y + delta.Y)
+                };
+            }
+
+            Frames = offsetBuilder.ToImmutable();
+            Size = newSize;
+            Origin = newOrigin;
+        }
+
         // keep ours, warn on drift.
         // different names are fine
-        WarnIfDifferent(nameof(Origin), Origin, other.Origin);
-        WarnIfDifferent(nameof(Size), Size, other.Size);
         WarnIfDifferent(nameof(NineSlice), NineSlice, other.NineSlice);
     }
 
