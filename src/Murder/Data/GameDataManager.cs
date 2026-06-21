@@ -983,7 +983,7 @@ namespace Murder.Data
                 if (!File.Exists(fullPath))
                 {
                     GameLogger.Error($"Unable to find texture at path: {path}");
-                    throw new FileNotFoundException($"Unable to find texture at path: {path}");
+                    return SharedResources.CreatePixel(Color.Magenta);
                 }
             }
 
