@@ -914,7 +914,7 @@ public static class PhysicsServices
             layer = tileLayer;
             totalMtv += tileMtv;
             hasCollision = true;
-            mtvLength = tileMtv.Length();
+            mtvLength = tileMtv.LengthSquared();
         }
 
         // Check against other entities
