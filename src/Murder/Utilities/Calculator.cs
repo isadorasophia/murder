@@ -1003,7 +1003,7 @@ namespace Murder.Utilities
         /// <param name="value"></param>
         /// <param name="steps"></param>
         /// <returns></returns>
-        internal static float Quantize(float value, int steps)
+        public static float Quantize(float value, int steps)
         {
             return (float)Math.Round(value * steps) / steps;
         }

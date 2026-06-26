@@ -585,6 +585,12 @@ namespace Murder.Editor.CustomEditors
                         createdEntities.Add(copy.Guid);
 
                         int result = AddInstance(copy);
+
+                        if (stage.EditorHook.FocusGroup is not null)
+                        {
+                            MoveEntitiesToGroup(stage.EditorHook.FocusGroup, [result]);
+                        }
+
                         stage.SelectEntity(result, select: true, clear: false);
                     }
 

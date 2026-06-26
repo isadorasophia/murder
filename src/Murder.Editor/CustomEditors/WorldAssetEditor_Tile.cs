@@ -45,7 +45,6 @@ namespace Murder.Editor.CustomEditors
             if (rooms.Count > 0)
             {
                 ImGui.SeparatorText("Rooms");
-
                 foreach (IEntity room in rooms)
                 {
                     if (ImGuiHelpers.DeleteButton($"Delete#{room.Guid}"))
@@ -67,11 +66,6 @@ namespace Murder.Editor.CustomEditors
                     {
                         if (DrawRenameInstanceModal(parent: null, room))
                         {
-                            if (name is not null)
-                            {
-                                room.SetName(name);
-                            }
-
                             ImGui.CloseCurrentPopup();
                         }
 
