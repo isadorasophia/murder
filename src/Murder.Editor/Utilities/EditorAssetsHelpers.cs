@@ -10,6 +10,7 @@ using Murder.Data;
 using Murder.Editor.ImGuiExtended;
 using Murder.Serialization;
 using Murder.Services;
+using Murder.Utilities;
 using System.Numerics;
 
 namespace Murder.Editor.Utilities;
@@ -53,7 +54,7 @@ public static class EditorAssetHelpers
         if (asset.IsStoredInSaveData)
         {
             return string.IsNullOrEmpty(asset.FilePath) ?
-                Game.Data.SaveBasePath : 
+                Game.Data.SaveBasePath :
                 Path.GetDirectoryName(Path.Join(Game.Data.SaveBasePath, asset.FilePath));
         }
 
@@ -343,6 +344,7 @@ public static class EditorAssetHelpers
         return false;
     }
 
+    private static string comboBoxSearch = string.Empty;
     public static bool DrawComboBoxFor(Guid guid, ref string animationId)
     {
         bool modified = false;
@@ -351,16 +353,32 @@ public static class EditorAssetHelpers
         {
             if (ImGui.BeginCombo($"##AnimationID", animationId))
             {
-                foreach (string value in ase.Animations.Keys.Order())
+                var keys = ase.Animations.Keys.Order();
+
+                if (keys.Count() > 10)
                 {
-                    if (string.IsNullOrWhiteSpace(value))
+                    if (ImGui.IsWindowAppearing())
+                    {
+                        comboBoxSearch = string.Empty;
+                        ImGui.SetKeyboardFocusHere();
+                    }
+                    ImGui.InputText("##Filter", ref comboBoxSearch, 256);
+                }
+                else
+                {
+                    comboBoxSearch = string.Empty;
+                }
+
+                foreach (string key in keys)
+                {
+                    if (string.IsNullOrWhiteSpace(key) || !StringHelper.FuzzyMatch(comboBoxSearch, key))
                     {
                         continue;
                     }
 
-                    if (ImGuiHelpers.MenuItem(value))
+                    if (ImGuiHelpers.MenuItem(key))
                     {
-                        animationId = value;
+                        animationId = key;
                         modified = true;
                     }
                 }
