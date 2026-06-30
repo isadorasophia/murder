@@ -13,6 +13,7 @@ public readonly struct OnlyApplyOnRuleComponent : IComponent
     /// </summary>
     public readonly ImmutableArray<CriterionNode> Requirements = [];
     public readonly ImmutableArray<ICondition> Conditions { get; init; } = [];
+    public readonly ImmutableArray<IEntityCondition>? EntityConditions { get; init; } = null;
 
     public readonly IInteractiveComponent? OnFailure { get; init; } = null;
 

@@ -1,12 +1,9 @@
 ﻿using Bang.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Components
 {
+    [RuntimeOnly]
     public readonly struct FlashSpriteComponent : IComponent
     {
         public readonly float DestroyAtTime;

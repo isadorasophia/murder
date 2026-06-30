@@ -1,4 +1,5 @@
 ﻿using Bang;
+using Bang.Entities;
 using Murder.Assets;
 using Murder.Components;
 using Murder.Core;
@@ -112,6 +113,19 @@ public static partial class BlackboardHelpers
         return true;
     }
 
+    public static bool IsSatisfied(World world, Entity target, ImmutableArray<IEntityCondition> conditions)
+    {
+        foreach (IEntityCondition condition in conditions)
+        {
+            if (!condition.IsSatisfiedBy(world, target))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public static bool IsSatisfied(World world, ImmutableArray<ICondition> conditions)
     {
         foreach (ICondition condition in conditions)
@@ -143,8 +157,14 @@ public static partial class BlackboardHelpers
         return false;
     }
 
-    public static bool Match(World world, OnlyApplyOnRuleComponent onlyApplyWhen)
+    public static bool Match(World world, Entity? target, OnlyApplyOnRuleComponent onlyApplyWhen)
     {
+        if (target is not null && onlyApplyWhen.EntityConditions is not null &&
+            !IsSatisfied(world, target, onlyApplyWhen.EntityConditions.Value))
+        {
+            return false;
+        }
+
         return Match(world, onlyApplyWhen.Requirements) && IsSatisfied(world, onlyApplyWhen.Conditions);
     }
 
