@@ -27,6 +27,11 @@ namespace Murder.Components
             }
 
             var newZVelocity = ZVelocity + deltaTime * 600 * multiplier;
+            // Clamp zVeloty to 200
+            if (newZVelocity > 200)
+            {
+                newZVelocity = 200;
+            }
             var newZ = Z - newZVelocity * deltaTime;
             if (newZ < 0)
             {

@@ -28,7 +28,13 @@ namespace Murder.Systems.Physics
                     bounciness *= multiplier;
                 }
 
-                var verticalPosition = e.GetVerticalPosition().UpdatePosition(Game.FixedDeltaTime * gravity, bounciness, multiplier);
+                var verticalPositionComponent = e.GetVerticalPosition();
+                if (e.HasAgent() && verticalPositionComponent.ZVelocity > 100)
+                {
+                    bounciness *= 0.5f;
+                }
+
+                var verticalPosition = verticalPositionComponent.UpdatePosition(Game.FixedDeltaTime * gravity, bounciness, multiplier);
 
                 if (verticalPosition.Z == 0)
                 {
