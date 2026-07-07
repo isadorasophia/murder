@@ -275,7 +275,7 @@ namespace Murder.Systems
                 Rectangle clip = Rectangle.Empty;
                 if (e.TryGetSpriteClippingRect() is SpriteClippingRectComponent spriteClippingRect)
                 {
-                    clip = spriteClippingRect.GetClippingRect(spriteAsset.Size);
+                    clip = spriteClippingRect.GetClippingRect(spriteAsset.Size, spriteAsset.Origin);
                     renderPosition += new Vector2(clip.Left, clip.Top);
                 }
 
@@ -308,7 +308,7 @@ namespace Murder.Systems
                     drawInfo,
                     animationInfo);
 
-                AfterDraw(batch, e, renderPosition, ySortOffsetRaw, drawInfo, animationInfo);
+                AfterDraw(batch, e, renderPosition, ySortOffsetRaw, drawInfo, animationInfo, spriteAsset);
 
                 RenderServices.TriggerEventsIfNeeded(e, spriteAsset.Guid, animationInfo, frameInfo, AnimationEventsTriggerFlag.None);
 
@@ -347,7 +347,8 @@ namespace Murder.Systems
             Vector2 position,
             float ySortOffsetRaw,
             DrawInfo drawInfo,
-            AnimationInfo animationInfo)
+            AnimationInfo animationInfo,
+            SpriteAsset spriteAsset)
         { }
 
         protected virtual void SetParticleWalk(World world, Entity e, bool isWalking)

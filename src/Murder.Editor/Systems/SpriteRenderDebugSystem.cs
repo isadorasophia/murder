@@ -227,7 +227,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
             Rectangle clip = Rectangle.Empty;
             if (e.TryGetSpriteClippingRect() is SpriteClippingRectComponent spriteClippingRect)
             {
-                clip = spriteClippingRect.GetClippingRect(asset.Size);
+                clip = spriteClippingRect.GetClippingRect(asset.Size, asset.Origin);
                 renderPosition += new Vector2(clip.Left, clip.Top);
             }
 

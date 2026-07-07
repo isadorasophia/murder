@@ -35,14 +35,14 @@ public readonly struct SpriteClippingRectComponent : IComponent
         Style = clippingStyle;
     }
 
-    public Rectangle GetClippingRect(Point spriteSize)
+    public Rectangle GetClippingRect(Point spriteSize, Point origin)
     {
         switch (Style)
         {
             case ClippingStyle.GrowFromCenter:
                 {
-                    var centerX = spriteSize.X / 2f;
-                    var centerY = spriteSize.Y / 2f;
+                    var centerX = origin.X;
+                    var centerY = origin.Y;
 
                     // Assuming -1 indicates full extension in the respective direction
                     var left = (Left == -1 ? 0 : centerX - Left);
