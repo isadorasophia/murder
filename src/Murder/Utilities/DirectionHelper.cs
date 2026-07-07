@@ -547,4 +547,22 @@ public static class DirectionHelper
                 throw new Exception("Direction is not suported yet!");
         }
     }
+
+    public static Vector2 Invert(Vector2 value, Orientation orientation)
+    {
+        if (orientation == Orientation.Horizontal)
+        {
+            value.X *= -1;
+        }
+        else if (orientation == Orientation.Vertical)
+        {
+            value.Y *= -1;
+        }
+        else
+        {
+            value *= -1;
+        }
+
+        return value;
+    }
 }
