@@ -81,6 +81,7 @@ namespace Murder.Systems
                     {
                         rotation = particle.CurrentVelocity.Angle();
                     }
+                    rotation += particle.VisualRotation * Calculator.TO_RAD;
 
                     switch (texture.Kind)
                     {

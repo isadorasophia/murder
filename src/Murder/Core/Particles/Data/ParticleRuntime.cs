@@ -20,6 +20,7 @@ namespace Murder.Core.Particles
 
         public Vector2 Gravity;
         public float Attraction;
+        public float VisualRotation;
 
         public Vector2 CurrentVelocity { get; private set; }
 
@@ -55,7 +56,9 @@ namespace Murder.Core.Particles
             float startAcceleration,
             float startFriction,
             float startRotationSpeed,
-            float fromAlpha)
+            float fromAlpha,
+            float visualRotation
+            )
         {
             _startTime = startTime;
             Lifetime = lifetime;
@@ -74,6 +77,7 @@ namespace Murder.Core.Particles
             Attraction = attraction;
 
             _fromAlpha = fromAlpha;
+            VisualRotation = visualRotation;
         }
 
         public void UpdateFromPosition(Vector2 from)

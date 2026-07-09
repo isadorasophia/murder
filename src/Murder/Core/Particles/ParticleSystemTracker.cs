@@ -167,7 +167,8 @@ namespace Murder.Core.Particles
                 Particle.Acceleration.GetRandomValue(_random),
                 Particle.Friction.GetValueAt(0),
                 Particle.RotationSpeed.GetValueAt(0),
-                fromAlpha: Alpha
+                fromAlpha: Alpha,
+                visualRotation: Particle.VisualRotation.GetValueAt(0)
             );
         }
     }

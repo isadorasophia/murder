@@ -47,6 +47,9 @@ public readonly struct Particle
 
     public readonly ParticleValueProperty RotationSpeed = ParticleValueProperty.Empty;
 
+    [Slider(-180, 180)]
+    public readonly ParticleValueProperty VisualRotation = ParticleValueProperty.Empty;
+
     [Tooltip("Rotation when the particle is instantiated.")]
     [Angle]
     public readonly ParticleValueProperty Rotation { get; init; } = ParticleValueProperty.Empty;
