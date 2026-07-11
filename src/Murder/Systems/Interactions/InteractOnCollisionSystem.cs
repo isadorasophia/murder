@@ -26,11 +26,24 @@ public class InteractOnCollisionSystem : IMessagerSystem
             return;
         }
 
-        if (interactorEntity.IsDestroyed ||
-            (!interactorEntity.HasAgent() && (!interactorEntity.TryFetchParent()?.HasAgent() ?? true)) ||
-            interactorEntity.HasIgnoreUntil())
+        if (interactorEntity.IsDestroyed || interactorEntity.HasIgnoreUntil())
         {
             return;
+        }
+
+        if (!interactorEntity.HasAgent())
+        {
+            // if parent has a collider, this will be used to check for collision instead.
+            Entity? parent = interactorEntity.TryFetchParent();
+            if (parent is null || parent.HasCollider())
+            {
+                return;
+            }
+
+            if (!parent.HasAgent())
+            {
+                return;
+            }
         }
 
         Entity interactiveEntity = entity;
@@ -43,6 +56,12 @@ public class InteractOnCollisionSystem : IMessagerSystem
         bool oncePerMap = interactOnCollision.Flags.HasFlag(InteractOnCollisionFlags.OnceEveryLoad);
 
         if (oncePerMap && interactiveEntity.HasInteracted())
+        {
+            return;
+        }
+
+        if (interactiveEntity.TryGetOnlyApplyOnRule() is OnlyApplyOnRuleComponent onlyApplyWhen &&
+            !BlackboardHelpers.Match(world, null, onlyApplyWhen))
         {
             return;
         }
