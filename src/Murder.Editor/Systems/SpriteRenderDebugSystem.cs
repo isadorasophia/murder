@@ -157,7 +157,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
             Batch2D batch = sprite.HasValue ? render.GetBatch(sprite.Value.TargetSpriteBatch) :
                 render.GameplayBatch;
 
-            int ySortOffset = sprite.HasValue ? sprite.Value.YSortOffset : agentSprite!.Value.YSortOffset;
+            float ySortOffset = sprite.HasValue ? sprite.Value.YSortOffset : agentSprite!.Value.YSortOffset;
 
             float rotation = e.GetPosition().Angle;
 
@@ -392,7 +392,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem, IGuiSystem
                 ySortOffsetRaw = agentSprite is not null ? agentSprite.Value.YSortOffset : 0;
             }
 
-            int ySortOffset = sprite.HasValue ? sprite.Value.YSortOffset : agentSprite!.Value.YSortOffset;
+            float ySortOffset = sprite.HasValue ? sprite.Value.YSortOffset : agentSprite!.Value.YSortOffset;
 
             if (hook.CursorWorldPosition is Point cursorPosition)
             {

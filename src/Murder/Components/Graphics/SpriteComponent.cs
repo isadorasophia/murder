@@ -50,7 +50,7 @@ namespace Murder.Components
             return false;
         }
 
-        public readonly int YSortOffset { get; init; } = 0;
+        public readonly float YSortOffset { get; init; } = 0;
 
         public SpriteComponent() { }
 
@@ -66,11 +66,11 @@ namespace Murder.Components
             this(portrait.Sprite, Vector2.Zero, [portrait.AnimationId], 0, false, OutlineStyle.Full, Batches2D.GameplayBatchId)
         { }
 
-        public SpriteComponent(Portrait portrait, int batchId, int yOffset) :
+        public SpriteComponent(Portrait portrait, int batchId, float yOffset) :
             this(portrait.Sprite, Vector2.Zero, [portrait.AnimationId], yOffset, false, OutlineStyle.Full, batchId)
         { }
 
-        public SpriteComponent(Guid guid, Vector2 offset, ImmutableArray<string> id, int ySortOffset, bool rotate, OutlineStyle highlightStyle, int targetSpriteBatch)
+        public SpriteComponent(Guid guid, Vector2 offset, ImmutableArray<string> id, float ySortOffset, bool rotate, OutlineStyle highlightStyle, int targetSpriteBatch)
         {
             AnimationGuid = guid;
             Offset = offset;
@@ -118,7 +118,7 @@ namespace Murder.Components
             TargetSpriteBatch = batch
         };
 
-        public SpriteComponent WithSort(int sort) => this with { YSortOffset = sort };
+        public SpriteComponent WithSort(float sort) => this with { YSortOffset = sort };
 
         public SpriteComponent WithBatch(int batch) => this with { TargetSpriteBatch = batch };
 

@@ -699,7 +699,7 @@ public static class EntityServices
         this Entity e,
         string animation,
         AnimationOverloadProperties properties = AnimationOverloadProperties.Loop | AnimationOverloadProperties.IgnoreFacing,
-        int offset = 0,
+        float offset = 0,
         Guid? customSprite = null)
     {
         PlayAnimationOverload(e, [animation], properties, offset, customSprite);
@@ -709,7 +709,7 @@ public static class EntityServices
         this Entity e,
         ImmutableArray<string> animations,
         AnimationOverloadProperties properties = AnimationOverloadProperties.Loop | AnimationOverloadProperties.IgnoreFacing,
-        int offset = 0,
+        float offset = 0,
         Guid? customSprite = null)
     {
         if (properties.HasFlag(AnimationOverloadProperties.Disappear))
