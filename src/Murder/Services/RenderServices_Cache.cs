@@ -21,4 +21,12 @@ public static partial class RenderServices
             e.SetRenderedSpriteCache(cache);
         }
     }
+
+    public static void FlagRenderedSpriteCacheAsDirty(Entity e)
+    {
+        if (e.TryGetRenderedSpriteCache() is RenderedSpriteCacheComponent component)
+        {
+            component.Ref.Cache = component.Ref.Cache with { IsDirty = true };
+        }
+    }
 }

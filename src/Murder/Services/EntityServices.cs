@@ -291,7 +291,7 @@ public static class EntityServices
             entity.RemoveAnimationStarted();
             entity.RemoveAnimationComplete();
             entity.RemoveAnimationCompleteMessage();
-            entity.RemoveRenderedSpriteCache();
+            RenderServices.FlagRenderedSpriteCacheAsDirty(entity);
 
             if (sprite.IsPlaying(nextAnimations))
             {

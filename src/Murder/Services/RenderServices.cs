@@ -1444,7 +1444,7 @@ public static partial class RenderServices
         RenderedSpriteCacheComponent? previousCache = e.TryGetRenderedSpriteCache();
 
         int previousFrame;
-        if (previousCache is RenderedSpriteCacheComponent cache &&
+        if (previousCache is RenderedSpriteCacheComponent cache && !cache.IsDirty &&
             cache.RenderedSprite == currentAnimationGuid &&
             string.Equals(cache.AnimInfo.Name, animationInfo.Name, StringComparison.Ordinal))
         {

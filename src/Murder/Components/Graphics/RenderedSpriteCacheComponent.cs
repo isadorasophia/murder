@@ -25,6 +25,7 @@ namespace Murder.Components.Graphics
         public AnimationInfo AnimInfo => Ref.Cache.AnimInfo;
         public OutlineStyle Outline => Ref.Cache.Outline;
         public Color Color => Ref.Cache.Color;
+        public bool IsDirty => Ref.Cache.IsDirty;
 
         /// <summary>
         /// The last recorded animation frame. Uses the internal animation frame, not the generic frame index.
@@ -66,6 +67,8 @@ namespace Murder.Components.Graphics
         public AnimationInfo AnimInfo { get; init; }
         public OutlineStyle Outline { get; init; }
         public Color Color { get; init; }
+
+        public bool IsDirty { get; init; }
 
         /// <summary>
         /// The last recorded animation frame. Uses the internal animation frame, not the generic frame index.
