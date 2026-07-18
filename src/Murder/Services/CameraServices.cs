@@ -50,4 +50,19 @@ public static class CameraServices
         var w = (MonoWorld)world;
         w.Camera.Bump(intensity);
     }
+
+    public static void FreeCamera(World world)
+    {
+        Entity camera = world.GetUniqueEntityCameraFollow();
+        ;
+        camera.RemoveIdTarget();
+        camera.SetCameraFollow(new CameraFollowComponent(true, CameraStyle.KeepPosition));
+    }
+
+    public static void ResetCamera(World world)
+    {
+        Entity camera = world.GetUniqueEntityCameraFollow();
+        camera.RemoveIdTarget();
+        camera.SetCameraFollow(new CameraFollowComponent(true));
+    }
 }
