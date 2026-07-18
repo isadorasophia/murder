@@ -62,6 +62,8 @@ namespace Murder.StateMachines
                 Entity.SetDoNotPause();
             }
 
+            int sequence = 1;
+
             while (true)
             {
                 if (_character.NextLine(World, Entity) is not DialogLine dialogLine)
@@ -96,7 +98,7 @@ namespace Murder.StateMachines
 
                 if (dialogLine.Line is Line line)
                 {
-                    LineComponent lineComponent = DialogueServices.CreateLine(line);
+                    LineComponent lineComponent = DialogueServices.CreateLine(line, sequence++);
                     Entity.SetLine(lineComponent);
 
                     if (line.IsText)
@@ -112,7 +114,7 @@ namespace Murder.StateMachines
                 }
                 else if (dialogLine.Choice is ChoiceLine choice)
                 {
-                    ChoiceComponent choiceComponent = new(choice);
+                    ChoiceComponent choiceComponent = new(choice, sequence++);
                     Entity.SetChoice(choiceComponent);
 
                     yield return Wait.NextFrame; // wait until next frame, if the entity still has a PickChoiceMessage

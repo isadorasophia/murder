@@ -11,10 +11,12 @@ namespace Murder.Components
     public readonly struct ChoiceComponent : IComponent
     {
         public readonly ChoiceLine Choice;
+        public readonly int Sequence = 0;
 
-        public ChoiceComponent(ChoiceLine choice)
+        public ChoiceComponent(ChoiceLine choice, int sequence)
         {
             Choice = choice;
+            Sequence = sequence;
         }
     }
 }

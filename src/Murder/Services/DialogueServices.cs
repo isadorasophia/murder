@@ -30,9 +30,9 @@ public static class DialogueServices
         return new CharacterRuntime(result.Value, situation);
     }
 
-    public static LineComponent CreateLine(Line line)
+    public static LineComponent CreateLine(Line line, int sequence)
     {
-        return new(line, Game.NowUnscaled);
+        return new(line, Game.NowUnscaled, sequence);
     }
 
     public static Line[] FetchAllLines(World? world, Entity? target, SituationComponent situation)
