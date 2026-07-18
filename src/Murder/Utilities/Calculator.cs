@@ -1034,6 +1034,27 @@ namespace Murder.Utilities
             return WrapAngle(angle - initialDirection);
         }
 
+        public static bool TriggerInterval(ref float lastEventTime, float interval)
+        {
+            if (Game.Now - lastEventTime >= interval)
+            {
+                lastEventTime = Game.Now;
+                return true;
+            }
+
+            return false;
+        }
+        public static bool TriggerIntervalUnscaled(ref float lastEventTime, float interval)
+        {
+            if (Game.NowUnscaled - lastEventTime >= interval)
+            {
+                lastEventTime = Game.NowUnscaled;
+                return true;
+            }
+
+            return false;
+        }
+
         #endregion
     }
 }
