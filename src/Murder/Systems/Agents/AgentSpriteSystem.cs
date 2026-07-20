@@ -325,7 +325,7 @@ namespace Murder.Systems
                     Outline = OutlineStyle.None,
                     AnimInfo = animationInfo,
                     Sorting = ySort,
-                    LastFrameIndex = frameInfo.InternalFrame,
+                    LastFrameForCurrentAnimation = frameInfo.FrameForCurrentAnimation,
                     SpriteSize = spriteAsset.Size
                 });
 

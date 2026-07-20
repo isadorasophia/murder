@@ -283,4 +283,15 @@ public readonly struct Animation
         nextAnimation = string.Empty;
         return false;
     }
+
+    public int GetFrame(int frame)
+    {
+        if (frame < 0 || frame >= Frames.Length)
+        {
+            GameLogger.Error($"Trying to get frame {frame} from animation which only has {Frames.Length} frames.");
+            return -1;
+        }
+
+        return Frames[frame];
+    }
 }

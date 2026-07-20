@@ -28,9 +28,9 @@ namespace Murder.Components.Graphics
         public bool IsDirty => Ref.Cache.IsDirty;
 
         /// <summary>
-        /// The last recorded animation frame. Uses the internal animation frame, not the generic frame index.
+        /// The last recorded frame for the current animation.
         /// </summary>
-        public int LastFrameIndex => Ref.Cache.LastFrameIndex;
+        public int LastFrameForCurrentAnimation => Ref.Cache.LastFrameForCurrentAnimation;
 
         public Point SpriteSize => Ref.Cache.SpriteSize;
 
@@ -71,9 +71,9 @@ namespace Murder.Components.Graphics
         public bool IsDirty { get; init; }
 
         /// <summary>
-        /// The last recorded animation frame. Uses the internal animation frame, not the generic frame index.
+        /// The last recorded frame for the current animation.
         /// </summary>
-        public int LastFrameIndex { get; init; }
+        public int LastFrameForCurrentAnimation { get; init; }
 
         public Point SpriteSize { get; init; }
     }

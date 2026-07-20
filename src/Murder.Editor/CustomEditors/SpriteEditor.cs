@@ -356,7 +356,7 @@ namespace Murder.Editor.CustomEditors
                     ImGui.SameLine();
 
                     float rate = (info.Hook.Time % selectedAnimation.AnimationDuration) / selectedAnimation.AnimationDuration;
-                    targetAnimationFrame = selectedAnimation.Evaluate(rate * selectedAnimation.AnimationDuration, false).InternalFrame;
+                    targetAnimationFrame = selectedAnimation.Evaluate(rate * selectedAnimation.AnimationDuration, false).FrameForCurrentAnimation;
 
                     DrawHeader(info, targetAnimationFrame, selectedAnimation);
 
@@ -460,7 +460,7 @@ namespace Murder.Editor.CustomEditors
 
                 ImGui.EndChild();
 
-                targetAnimationFrame = _targetFrameForPopup ?? selectedAnimation.Evaluate(mouseRatio * selectedAnimation.AnimationDuration, false).InternalFrame;
+                targetAnimationFrame = _targetFrameForPopup ?? selectedAnimation.Evaluate(mouseRatio * selectedAnimation.AnimationDuration, false).FrameForCurrentAnimation;
 
                 string? selectedMessage = null;
                 selectedAnimation.Events?.TryGetValue(targetAnimationFrame, out selectedMessage);

@@ -286,13 +286,13 @@ public static partial class RenderServices
         Vector3 blend,
         float sort)
     {
-        var frameInfo = new FrameInfo()
+        FrameInfo frameInfo = new()
         {
             Animation = animation,
             Frame = frame
         };
 
-        var image = asset.GetFrame(animation.Frames[frameInfo.Frame]);
+        AtlasCoordinates image = asset.GetFrame(animation.GetFrame(frameInfo.Frame));
         Vector2 offset = (asset.Origin + origin * image.Size).Round();
         Vector2 position = pos.Round();
 
@@ -1448,15 +1448,15 @@ public static partial class RenderServices
             cache.RenderedSprite == currentAnimationGuid &&
             string.Equals(cache.AnimInfo.Name, animationInfo.Name, StringComparison.Ordinal))
         {
-            previousFrame = cache.LastFrameIndex;
+            previousFrame = cache.LastFrameForCurrentAnimation;
         }
         else
         {
-            previousFrame = frameInfo.InternalFrame - 1;
+            previousFrame = frameInfo.FrameForCurrentAnimation - 1;
         }
 
         // Quickly check if we even changed frames, if not, don't bother with events
-        if (frameInfo.InternalFrame != previousFrame)
+        if (frameInfo.FrameForCurrentAnimation != previousFrame)
         {
             Animation currentAnimation = frameInfo.Animation;
 
@@ -1466,7 +1466,7 @@ public static partial class RenderServices
             }
 
             int lastFrame = previousFrame;
-            while (lastFrame != frameInfo.InternalFrame)
+            while (lastFrame != frameInfo.FrameForCurrentAnimation)
             {
                 // Trigger events on the next frame (most likelly the frame just rendered, uunless there was a major slowdown)
 
@@ -1490,7 +1490,7 @@ public static partial class RenderServices
                 else
                 {
                     int next;
-                    if (lastFrame >= frameInfo.InternalFrame && flags.HasFlag(AnimationEventsTriggerFlag.AllowReverse))
+                    if (lastFrame >= frameInfo.FrameForCurrentAnimation && flags.HasFlag(AnimationEventsTriggerFlag.AllowReverse))
                     {
                         next = Math.Max(lastFrame - 1, 0);
                     }
@@ -1525,7 +1525,7 @@ public static partial class RenderServices
     {
         // Check for animation events
         // First, assume that we are starting a new animation
-        int previousFrame = previous?.LastFrameIndex ?? -1;
+        int previousFrame = previous?.LastFrameForCurrentAnimation ?? -1;
 
         // Make sure we didn't change animations
         if (previous is null ||
@@ -1533,11 +1533,11 @@ public static partial class RenderServices
             !string.Equals(previous.Value.AnimInfo.Name, animationInfo.Name, StringComparison.Ordinal))
         {
             // We changed animations, so we need to reset to -1 so we can trigger the first frame event
-            previousFrame = frameInfo.InternalFrame - 1;
+            previousFrame = frameInfo.FrameForCurrentAnimation - 1;
         }
 
         // Quickly check if we even changed frames, if not, don't bother with events
-        if (frameInfo.InternalFrame != previousFrame)
+        if (frameInfo.FrameForCurrentAnimation != previousFrame)
         {
             Animation currentAnimation = frameInfo.Animation;
 
@@ -1547,7 +1547,7 @@ public static partial class RenderServices
             }
 
             int lastFrame = previousFrame;
-            while (lastFrame != frameInfo.InternalFrame)
+            while (lastFrame != frameInfo.FrameForCurrentAnimation)
             {
                 // Trigger events on the next frame (most likelly the frame just rendered, uunless there was a major slowdown)
 

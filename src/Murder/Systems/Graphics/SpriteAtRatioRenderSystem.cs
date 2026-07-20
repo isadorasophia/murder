@@ -63,7 +63,7 @@ public class SpriteAtRatioRenderSystem : IMurderRenderSystem
                 RenderedSprite = s.AnimationGuid,
                 CurrentAnimation = frameInfo.Animation,
                 AnimInfo = animationInfo,
-                LastFrameIndex = frameInfo.InternalFrame
+                LastFrameForCurrentAnimation = frameInfo.FrameForCurrentAnimation
             });
 
             if (frameInfo.Complete)
