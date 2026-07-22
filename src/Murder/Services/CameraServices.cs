@@ -54,7 +54,7 @@ public static class CameraServices
     public static void FreeCamera(World world)
     {
         Entity camera = world.GetUniqueEntityCameraFollow();
-        ;
+
         camera.RemoveIdTarget();
         camera.SetCameraFollow(new CameraFollowComponent(true, CameraStyle.KeepPosition));
     }
