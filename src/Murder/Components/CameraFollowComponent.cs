@@ -2,6 +2,7 @@
 using Bang.Entities;
 using Murder.Attributes;
 using Murder.Core.Geometry;
+using Murder.Utilities.Attributes;
 using System.Text.Json.Serialization;
 
 namespace Murder.Components;
@@ -18,6 +19,7 @@ public enum CameraStyle
 /// Component used by the camera for tracking its target position.
 /// </summary>
 [Unique]
+[DoNotPersistEntityOnSave]
 public readonly struct CameraFollowComponent : IComponent
 {
     public readonly bool Enabled = true;
