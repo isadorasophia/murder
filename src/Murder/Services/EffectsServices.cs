@@ -39,56 +39,6 @@ namespace Murder.Services
             return e;
         }
 
-        /// <summary>
-        /// Add an entity which will apply a "fade-in" effect. Darkening the screen to black.
-        /// </summary>
-        public static Entity? FadeIn(World world, float time, Color color, float sorting = 0, int? targetBatch = null, string? customTexture = null)
-        {
-            if (Game.Instance.IsSkippingDeltaTimeOnUpdate)
-            {
-                return null;
-            }
-
-            Entity e = world.AddEntity();
-            customTexture ??= world.TryGetUniqueCustomFadeScreenStyle()?.CustomFadeImage;
-
-            e.SetFadeScreen(new FadeScreenComponent(FadeType.In, Game.NowUnscaled, time, color, customTexture != null ? Path.Join("images", customTexture) : string.Empty, sorting: sorting)
-                with
-            { TargetBatch = targetBatch });
-
-            return e;
-        }
-
-        /// <summary>
-        /// Add an entity which will apply a "fade-out" effect. Clearing the screen.
-        /// </summary>
-        public static void FadeOut(World world, float duration, Color color, float delay = 0, int bufferDrawFrames = 0)
-        {
-            if (Game.Instance.IsSkippingDeltaTimeOnUpdate)
-            {
-                return;
-            }
-
-            foreach (var old in world.GetEntitiesWith(typeof(FadeScreenComponent)))
-            {
-                old.Destroy();
-            }
-
-            var e = world.AddEntity();
-            string? customTexture = world.TryGetUniqueCustomFadeScreenStyle()?.CustomFadeImage;
-
-            if (bufferDrawFrames > 0)
-            {
-                // With buffer frames we must wait until we get Game.Now otherwise we will get an value
-                // specially at lower frame rates
-                e.SetFadeScreen(new(FadeType.Out, delay, duration, color, customTexture != null ? Path.Join("images", customTexture) : string.Empty, 0, bufferDrawFrames));
-            }
-            else
-            {
-                e.SetFadeScreen(new(FadeType.Out, Game.NowUnscaled + delay, duration, color, customTexture != null ? Path.Join("images", customTexture) : string.Empty, 0, bufferDrawFrames));
-            }
-        }
-
         public static void ApplyHighlight(World world, Entity e, HighlightSpriteComponent highlight)
         {
             if (e.TryGetHighlightOnChildren() is HighlightOnChildrenComponent childrenHighlight)
