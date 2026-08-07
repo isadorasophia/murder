@@ -779,7 +779,7 @@ public class PlayerInput
 
         if (currentInfo.JustMoved)
         {
-            bool isDisabled = selectedOptionIndex < 0 || selectedOptionIndex >= currentInfo.Length || !currentInfo.Options[selectedOptionIndex].Enabled;
+            bool isDisabled = selectedOptionIndex < 0 || selectedOptionIndex >= currentInfo.Length || !currentInfo.Options[selectedOptionIndex].CanHover;
 
             if (!isDisabled)
             {

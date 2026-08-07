@@ -4,7 +4,12 @@
     {
         public readonly string Text { get; init; } = string.Empty;
         public readonly bool Enabled { get; init; } = true;
-        public readonly bool Faded { get; init; } = true;
+        public readonly bool AllowHoverOnDisabled { get; init; } = false;
+
+        /// <summary>
+        /// Whether this option can be hovered.
+        /// </summary>
+        public bool CanHover => Enabled || AllowHoverOnDisabled;
 
         /// <summary>
         /// Length of the text option.

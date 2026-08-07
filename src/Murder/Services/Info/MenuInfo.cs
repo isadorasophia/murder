@@ -185,7 +185,7 @@ namespace Murder.Core.Input
 
         public void Clamp()
         {
-            if (Selection < 0 || Selection >= Length || !Options[Selection].Enabled)
+            if (Selection < 0 || Selection >= Length || !Options[Selection].CanHover)
             {
                 Selection = NextAvailableOption(Selection, direction: 1);
             }
@@ -233,7 +233,7 @@ namespace Murder.Core.Input
                 return false;
             }
 
-            return Options[option].Enabled;
+            return Options[option].CanHover;
         }
 
         /// <param name="option">The currently selected option. If -1, it means that is being initialized.</param>
