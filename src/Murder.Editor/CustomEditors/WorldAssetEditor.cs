@@ -27,14 +27,13 @@ using System.Numerics;
 namespace Murder.Editor.CustomEditors
 {
     [CustomEditorOf(typeof(WorldAsset))]
-    internal partial class WorldAssetEditor : AssetEditor
+    public partial class WorldAssetEditor : AssetEditor
     {
         /// <summary>
         /// Switches the active WorldAssetEditor to the Tilesets tab
         /// </summary>
         public void SwitchToTilesetsTab() => _switchToTilesetsTab = true;
         private bool _switchToTilesetsTab = false;
-
 
         private WorldAsset? _world;
 
@@ -346,6 +345,8 @@ namespace Murder.Editor.CustomEditors
                         {
                             _world?.ClearAllMissingInstances();
                         }
+
+                        modified |= DrawSettingsTabImpl(currentStage);
 
                         ImGui.EndChild();
                         ImGui.PopStyleColor();
@@ -877,6 +878,9 @@ namespace Murder.Editor.CustomEditors
 
             _worldStageInfo.Remove(guid);
         }
+
+
+        protected virtual bool DrawSettingsTabImpl(Stage stage) => false;
 
         private class WorldStageInfo
         {

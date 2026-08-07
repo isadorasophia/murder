@@ -12,7 +12,7 @@ using System.Numerics;
 
 namespace Murder.Editor.CustomEditors
 {
-    internal partial class WorldAssetEditor
+    public partial class WorldAssetEditor
     {
         private float _dockShowEntitiesSize = -1;
         protected virtual bool DrawSoundEditor(Stage stage)

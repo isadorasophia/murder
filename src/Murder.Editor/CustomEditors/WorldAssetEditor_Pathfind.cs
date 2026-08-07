@@ -11,7 +11,7 @@ using System.Diagnostics;
 
 namespace Murder.Editor.CustomEditors;
 
-internal partial class WorldAssetEditor
+public partial class WorldAssetEditor
 {
     protected virtual bool DrawPathfindEditor(Stage stage)
     {

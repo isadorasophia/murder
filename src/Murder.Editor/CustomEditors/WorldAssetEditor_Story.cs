@@ -15,7 +15,7 @@ using System.Numerics;
 
 namespace Murder.Editor.CustomEditors
 {
-    internal partial class WorldAssetEditor
+    public partial class WorldAssetEditor
     {
         protected virtual bool DrawStoryEditor(Stage stage)
         {

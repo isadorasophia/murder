@@ -133,7 +133,13 @@ namespace Murder.Editor.Utilities
                 CustomEditorOfAttribute attribute =
                     (CustomEditorOfAttribute)Attribute.GetCustomAttribute(t, typeof(CustomEditorOfAttribute))!;
 
-                builder.Add(attribute.OfType, (attribute.Priority, t));
+                if (builder.TryGetValue(attribute.OfType, out (int Priority, Type _) previousValue) &&
+                    previousValue.Priority > attribute.Priority)
+                {
+                    continue;
+                }
+
+                builder[attribute.OfType] = (attribute.Priority, t);
             }
 
             return builder.ToImmutable();

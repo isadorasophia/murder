@@ -10,7 +10,7 @@ using Murder.Utilities;
 
 namespace Murder.Editor.CustomEditors
 {
-    internal partial class WorldAssetEditor
+    public partial class WorldAssetEditor
     {
         private string _searchEntityText = string.Empty;
 
