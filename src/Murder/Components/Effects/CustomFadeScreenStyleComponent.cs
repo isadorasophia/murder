@@ -16,11 +16,6 @@ public readonly struct CustomFadeScreenInfo
 
     public Color? Color { get; init; } = null;
 
-    /// <summary>
-    /// Propagated from EventListener.
-    /// </summary>
-    [JsonIgnore]
-    [HideInEditor]
     public SoundEventId? CustomSound { get; init; } = null;
 
     public CustomFadeScreenInfo() { }
