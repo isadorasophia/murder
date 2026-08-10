@@ -1,4 +1,5 @@
 ﻿using Bang.Systems;
+using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets;
 using Murder.Assets.Graphics;
 using Murder.Assets.Localization;
@@ -1085,6 +1086,18 @@ namespace Murder.Data
             }
 
             LoadedAtlasses.Clear();
+        }
+
+        public virtual void OnScreenshotTaken(RenderTarget2D renderTarget, bool takeScreenShotToClipboard)
+        {
+            if (!takeScreenShotToClipboard)
+            {
+                FileManager.SaveScreenshoToPresetFolder(renderTarget);
+            }
+            else
+            {
+                GameLogger.Warning("Taking screenshot to clipboard is not supported without the Murder Editor.");
+            }
         }
     }
 }

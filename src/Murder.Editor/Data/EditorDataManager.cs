@@ -68,7 +68,7 @@ namespace Murder.Editor.Data
         /// </summary>
         internal ImmutableArray<ResourceImporter> AllImporters = ImmutableArray<ResourceImporter>.Empty;
 
-        public EditorDataManager(IMurderGame? game) : base(game, new EditorFileManager()) 
+        public EditorDataManager(IMurderGame? game) : base(game, new EditorFileManager())
         { }
 
         [MemberNotNull(
@@ -768,7 +768,7 @@ namespace Murder.Editor.Data
             }
 
             string binOutputFilePath = FileHelper.GetPath(PackedBinDirectoryPath, StringHelper.FormatSafe(ShaderRelativePath, path));
-            
+
             // NOTE: In Unix systems, absolute paths usually start with a slash:/
             // which causes the fxc compiler to mistakenly recognize the path parameters as fxc options,
             // so I replaced the slash at the beginning of the directory with a backslash
@@ -783,7 +783,7 @@ namespace Murder.Editor.Data
             {
                 paramSourceFile = $"\\{paramSourceFile[1..]}";
             }
-            
+
             string arguments = $"/nologo /T fx_2_0 {paramSourceFile} /Fo {paramBinOutputFilePath}";
 
             // The tool needs that the output directory exists.
@@ -937,6 +937,18 @@ namespace Murder.Editor.Data
             }
 
             _cachedFilteredAssetsWithImplementation.Clear();
+        }
+
+        public override void OnScreenshotTaken(RenderTarget2D renderTarget, bool takeScreenShotToClipboard)
+        {
+            if (!takeScreenShotToClipboard)
+            {
+                FileManager.SaveScreenshoToPresetFolder(renderTarget);
+            }
+            else
+            {
+                GameLogger.Warning("Saving screenshot to clipboard is not implemented yet.");
+            }
         }
 
         public HashSet<string> GetAllAtlases() => _referencedAtlases;

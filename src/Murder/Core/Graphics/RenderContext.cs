@@ -138,7 +138,8 @@ public class RenderContext : IDisposable
 
     protected readonly bool _useDebugBatches;
 
-    private Rectangle? _takeScreenShot;
+    protected Rectangle? _screenshotArea;
+    private bool _takeScreenShotToClipboard = false;
 
     /// <summary>
     /// Countdown of frames until next screenshot.
@@ -420,7 +421,13 @@ public class RenderContext : IDisposable
 
         // Draw all the gameplay graphics to _mainTarget
         GameplayBatch.End();        // <=== Gameplay batch
-        TakeScreenshotIfNecessary(_mainTarget);
+        if (_screenshotArea is Rectangle screenshotArea)
+        {
+            Point position = Camera.WorldToScreenPosition(screenshotArea.TopLeft).Round();
+            Point screenShotSize = new(screenshotArea.Width, screenshotArea.Height);
+
+            TakeScreenshot(_mainTarget, new IntRectangle(position, screenShotSize));
+        }
 
         GameUiBatch.End();          // <=== Ui that follows the camera
 
@@ -510,7 +517,7 @@ public class RenderContext : IDisposable
             _takeGameplayScreenShot--;
             if (_takeGameplayScreenShot == 0)
             {
-                SaveScreenshot(_mainTarget, _mainTarget.Bounds.Size());
+                TakeScreenshot(_mainTarget, _mainTarget.Bounds);
             }
         }
 
@@ -539,32 +546,18 @@ public class RenderContext : IDisposable
         Camera.Unlock();
     }
 
-    protected void TakeScreenshotIfNecessary(RenderTarget2D target)
+    protected void TakeScreenshot(RenderTarget2D target, IntRectangle clippingArea)
     {
-        if (_takeScreenShot is Rectangle screenshotArea)
-        {
-            Vector2 position = (Camera.WorldToScreenPosition(screenshotArea.TopLeft));
-            Point size = new(screenshotArea.Width, screenshotArea.Height);
+        using var screenshot = new RenderTarget2D(_graphicsDevice, clippingArea.Width, clippingArea.Height);
+        _graphicsDevice.SetRenderTarget(screenshot);
 
-            using var screenshot = new RenderTarget2D(_graphicsDevice, size.X, size.Y);
-            _graphicsDevice.SetRenderTarget(screenshot);
+        RenderServices.DrawTextureQuad(target, clippingArea, screenshot.Bounds, Color.White, BlendState.Opaque);
+        Game.Data.OnScreenshotTaken(screenshot, _takeScreenShotToClipboard);
 
-            RenderServices.DrawTextureQuad(target, new Rectangle(position, size * Camera.Zoom), new Rectangle(Vector2.Zero, size), Color.White, BlendState.Opaque);
-            SaveScreenshot(screenshot, screenshotArea.Size.Point());
-            _takeScreenShot = null;
+        _screenshotArea = null;
+        _takeScreenShotToClipboard = false;
 
-            _graphicsDevice.SetRenderTarget(target);
-        }
-    }
-
-    protected void SaveScreenshot(RenderTarget2D screenshot, Point size)
-    {
-        string fileName = $"screenshot-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.png";
-
-        string filePath = Path.Combine(FileHelper.GetScreenshotFolder(), fileName);
-        var stream = File.OpenWrite(filePath);
-        screenshot.SaveAsPng(stream, size.X, size.Y);
-        stream.Close();
+        _graphicsDevice.SetRenderTarget(null);
     }
 
     public virtual bool OnClientWindowChanged(WindowChangeSettings settings)
@@ -665,7 +658,13 @@ public class RenderContext : IDisposable
     /// <param name="cameraRect">Area of the camera to capture.</param>
     public void SaveScreenShotArea(Rectangle cameraRect)
     {
-        _takeScreenShot = cameraRect;
+        _screenshotArea = cameraRect;
+    }
+
+    public void SaveScreenShotAreaToClipboard(Rectangle cameraRect)
+    {
+        _screenshotArea = cameraRect;
+        _takeScreenShotToClipboard = true;
     }
 
     public void SaveGameplayScreenshot()

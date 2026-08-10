@@ -20,6 +20,7 @@ namespace Murder.Editor.Systems.Debug
     {
         private readonly static int _hash = typeof(DebugShowCameraBoundsSystem).GetHashCode();
 
+        private bool _takeScreenshotToClipboard = false;
         private bool _takeScreenshot = false;
         private Point _resolution = Point.Zero;
 
@@ -82,6 +83,12 @@ namespace Murder.Editor.Systems.Debug
                 _takeScreenshot = false;
                 render.SaveScreenShotArea(cameraRect);
             }
+
+            if (_takeScreenshotToClipboard)
+            {
+                _takeScreenshotToClipboard = false;
+                render.SaveScreenShotAreaToClipboard(cameraRect);
+            }
         }
 
         public void DrawGui(RenderContext render, Context context)
@@ -97,7 +104,14 @@ namespace Murder.Editor.Systems.Debug
             {
                 if (info.ScreenshotButtonArea.HasValue)
                 {
-                    if (ImGuiHelpers.Button("Take Screenshot"))
+                    ImGui.SeparatorText("Take Screenshot");
+                    if (ImGuiHelpers.Button("Copy"))
+                    {
+                        editorHook.CursorIsBusy.Add(typeof(DebugShowCameraBoundsSystem));
+                        _takeScreenshotToClipboard = true;
+                    }
+                    ImGui.SameLine();
+                    if (ImGuiHelpers.Button("Save"))
                     {
                         editorHook.CursorIsBusy.Add(typeof(DebugShowCameraBoundsSystem));
                         _takeScreenshot = true;

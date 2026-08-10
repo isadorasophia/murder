@@ -1,4 +1,5 @@
-﻿using Murder.Assets;
+﻿using Microsoft.Xna.Framework.Graphics;
+using Murder.Assets;
 using Murder.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Compression;
@@ -351,4 +352,21 @@ public partial class FileManager
         GameLogger.Error($"Error while deserializing file at: {path}");
         return false;
     }
+
+    public static void SaveScreenshoToPresetFolder(RenderTarget2D screenshot)
+    {
+        string fileName = $"screenshot-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.png";
+        string filePath = Path.Combine(FileHelper.GetScreenshotFolder(), fileName);
+
+        {
+            // This can cause a heavy stutter on large images.
+            using MemoryStream memory = new();
+            screenshot.SaveAsPng(memory, screenshot.Width, screenshot.Height);
+            byte[] bytes = memory.ToArray();
+
+            File.WriteAllBytesAsync(filePath, bytes);
+        }
+
+    }
+
 }
