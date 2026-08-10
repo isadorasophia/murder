@@ -939,15 +939,17 @@ namespace Murder.Editor.Data
             _cachedFilteredAssetsWithImplementation.Clear();
         }
 
-        public override void OnScreenshotTaken(RenderTarget2D renderTarget, bool takeScreenShotToClipboard)
+        public override void RecordScreenshot(Texture2D renderTarget)
         {
-            if (!takeScreenShotToClipboard)
+            switch (ScreenshotMode)
             {
-                FileManager.SaveScreenshoToPresetFolder(renderTarget);
-            }
-            else
-            {
-                GameLogger.Warning("Saving screenshot to clipboard is not implemented yet.");
+                case ScreenshotSupportedModes.CopyToClipboard:
+                    GameLogger.Warning("Saving screenshot to clipboard is not implemented yet!");
+                    break;
+
+                default:
+                    base.RecordScreenshot(renderTarget);
+                    break;
             }
         }
 

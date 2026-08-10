@@ -137,9 +137,7 @@ public class RenderContext : IDisposable
     public Texture2D? ColorGrade;
 
     protected readonly bool _useDebugBatches;
-
-    protected Rectangle? _screenshotArea;
-    private bool _takeScreenShotToClipboard = false;
+    protected Rectangle? _pendingScreenshotAtArea;
 
     /// <summary>
     /// Countdown of frames until next screenshot.
@@ -421,12 +419,12 @@ public class RenderContext : IDisposable
 
         // Draw all the gameplay graphics to _mainTarget
         GameplayBatch.End();        // <=== Gameplay batch
-        if (_screenshotArea is Rectangle screenshotArea)
+        if (_pendingScreenshotAtArea is Rectangle screenshotArea)
         {
             Point position = Camera.WorldToScreenPosition(screenshotArea.TopLeft).Round();
             Point screenShotSize = new(screenshotArea.Width, screenshotArea.Height);
 
-            TakeScreenshot(_mainTarget, new IntRectangle(position, screenShotSize));
+            TakeScreenshot(_mainTarget, new IntRectangle(position, screenShotSize), recoverRenderTargetOnEnd: true);
         }
 
         GameUiBatch.End();          // <=== Ui that follows the camera
@@ -510,16 +508,16 @@ public class RenderContext : IDisposable
         // =======================================================>
         // Time to draw this game to the screen!!
         // =======================================================>
-        _graphicsDevice.SetRenderTarget(null);
-
         if (_takeGameplayScreenShot > 0)
         {
             _takeGameplayScreenShot--;
             if (_takeGameplayScreenShot == 0)
             {
-                TakeScreenshot(_mainTarget, _mainTarget.Bounds);
+                TakeScreenshot(_mainTarget, _mainTarget.Bounds, recoverRenderTargetOnEnd: false);
             }
         }
+
+        _graphicsDevice.SetRenderTarget(null);
 
         if (RenderToScreen)
         {
@@ -546,18 +544,23 @@ public class RenderContext : IDisposable
         Camera.Unlock();
     }
 
-    protected void TakeScreenshot(RenderTarget2D target, IntRectangle clippingArea)
+    /// <summary>
+    /// Take a screenshot from <paramref name="target"/>.
+    /// </summary>
+    /// <param name="target">Current render target that screenshot will be taken.</param>
+    /// <param name="clippingArea">Area which will take effect.</param>
+    /// <param name="recoverRenderTargetOnEnd">Whether <see cref="_graphicsDevice"/> should set the 
+    /// render target to null (false) or <paramref name="target"/> (true).</param>
+    protected void TakeScreenshot(RenderTarget2D target, IntRectangle clippingArea, bool recoverRenderTargetOnEnd)
     {
-        using var screenshot = new RenderTarget2D(_graphicsDevice, clippingArea.Width, clippingArea.Height);
+        using RenderTarget2D screenshot = new(_graphicsDevice, clippingArea.Width, clippingArea.Height);
         _graphicsDevice.SetRenderTarget(screenshot);
 
         RenderServices.DrawTextureQuad(target, clippingArea, screenshot.Bounds, Color.White, BlendState.Opaque);
-        Game.Data.OnScreenshotTaken(screenshot, _takeScreenShotToClipboard);
+        Game.Data.RecordScreenshot(screenshot);
 
-        _screenshotArea = null;
-        _takeScreenShotToClipboard = false;
-
-        _graphicsDevice.SetRenderTarget(null);
+        _graphicsDevice.SetRenderTarget(recoverRenderTargetOnEnd ? target : null);
+        _pendingScreenshotAtArea = null;
     }
 
     public virtual bool OnClientWindowChanged(WindowChangeSettings settings)
@@ -653,18 +656,12 @@ public class RenderContext : IDisposable
     }
 
     /// <summary>
-    /// Saves a screenshot of the specified camera area.
+    /// Record a screenshot capture in the specified area.
     /// </summary>
     /// <param name="cameraRect">Area of the camera to capture.</param>
-    public void SaveScreenShotArea(Rectangle cameraRect)
+    public void TakeScreenshotAtArea(Rectangle cameraRect)
     {
-        _screenshotArea = cameraRect;
-    }
-
-    public void SaveScreenShotAreaToClipboard(Rectangle cameraRect)
-    {
-        _screenshotArea = cameraRect;
-        _takeScreenShotToClipboard = true;
+        _pendingScreenshotAtArea = cameraRect;
     }
 
     public void SaveGameplayScreenshot()

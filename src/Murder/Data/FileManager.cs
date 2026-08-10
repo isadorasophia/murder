@@ -2,6 +2,8 @@
 using Murder.Assets;
 using Murder.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
+using System.IO;
 using System.IO.Compression;
 using System.Text;
 using System.Text.Json;
@@ -352,21 +354,4 @@ public partial class FileManager
         GameLogger.Error($"Error while deserializing file at: {path}");
         return false;
     }
-
-    public static void SaveScreenshoToPresetFolder(RenderTarget2D screenshot)
-    {
-        string fileName = $"screenshot-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.png";
-        string filePath = Path.Combine(FileHelper.GetScreenshotFolder(), fileName);
-
-        {
-            // This can cause a heavy stutter on large images.
-            using MemoryStream memory = new();
-            screenshot.SaveAsPng(memory, screenshot.Width, screenshot.Height);
-            byte[] bytes = memory.ToArray();
-
-            File.WriteAllBytesAsync(filePath, bytes);
-        }
-
-    }
-
 }

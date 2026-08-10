@@ -164,5 +164,10 @@ namespace Murder
         /// Used for reporting bugs and feedback.
         /// </summary>
         public string FeedbackUrl => string.Empty;
+
+        /// <summary>
+        /// Whether the game support recording extra content, such as: screenshots.
+        /// </summary>
+        public bool SupportRecordings => true;
     }
 }

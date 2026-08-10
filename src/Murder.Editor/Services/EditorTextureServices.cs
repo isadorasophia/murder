@@ -34,7 +34,6 @@ internal static class EditorTextureServices
     public static void ConvertPngStreamToQuoiGz(MemoryStream stream, string path)
     {
         using Texture2D texture = Texture2D.FromStream(Architect.GraphicsDevice, stream);
-
         SaveAsQoiGz(texture, path);
     }
 

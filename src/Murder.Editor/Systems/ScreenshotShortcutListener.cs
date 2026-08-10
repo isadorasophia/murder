@@ -9,6 +9,7 @@ using Murder.Serialization;
 using Murder.Utilities;
 using Murder.Services;
 using Murder.Editor.ImGuiExtended;
+using Murder.Data;
 
 namespace Murder.Editor.Systems;
 
@@ -59,6 +60,8 @@ internal class ScreenshotShortcutListener : IMurderRenderSystem, IUpdateSystem, 
             _takeScreenshot = false;
             _screenshotTaken = Game.NowUnscaled;
             _delay = -1;
+
+            Game.Data.ScreenshotMode = ScreenshotSupportedModes.SaveAtPath;
             render.SaveGameplayScreenshot();
 
             if (_takeMultiple > 0)
@@ -120,7 +123,6 @@ internal class ScreenshotShortcutListener : IMurderRenderSystem, IUpdateSystem, 
     {
         if (_delay < 0 && _takeMultiple == 0)
         {
-
             if (_menuDelaySelected)
             {
                 _delay = Game.NowUnscaled + _delayTime * 2;

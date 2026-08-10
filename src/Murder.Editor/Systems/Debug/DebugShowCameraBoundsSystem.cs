@@ -5,6 +5,7 @@ using Murder.Attributes;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
+using Murder.Data;
 using Murder.Editor.Components;
 using Murder.Editor.Core;
 using Murder.Editor.ImGuiExtended;
@@ -18,15 +19,12 @@ namespace Murder.Editor.Systems.Debug
     [EditorSystem]
     public class DebugShowCameraBoundsSystem : IMurderRenderSystem, IUpdateSystem, IGuiSystem
     {
-        private readonly static int _hash = typeof(DebugShowCameraBoundsSystem).GetHashCode();
-
-        private bool _takeScreenshotToClipboard = false;
-        private bool _takeScreenshot = false;
-        private Point _resolution = Point.Zero;
+        private bool _screenshotPending = false;
 
         private Point? _draggingStart = null;
         private Point? _draggingStartSize = null;
         private Point _cameraSize = Point.Zero;
+
         public void Draw(RenderContext render, Context context)
         {
             EditorHook? editorHook = context.World.TryGetUnique<EditorComponent>()?.EditorHook;
@@ -34,6 +32,7 @@ namespace Murder.Editor.Systems.Debug
             {
                 return;
             }
+
             if (_cameraSize == Point.Zero)
             {
                 _cameraSize = new Point(Game.DefaultWidth, Game.DefaultHeight);
@@ -43,8 +42,7 @@ namespace Murder.Editor.Systems.Debug
                 render.Camera.Position.X + render.Camera.HalfWidth - Game.DefaultWidth / 2f + info.Offset.X,
                 render.Camera.Position.Y + render.Camera.Height / 2f - Game.DefaultHeight / 2f + info.Offset.Y,
                 _cameraSize.X,
-                _cameraSize.Y
-                );
+                _cameraSize.Y);
 
             render.GameUiBatch.DrawRectangleOutline(cameraRect + new Point(0, 1), Game.Profile.Theme.Bg, 3, 0.5f);
             render.GameUiBatch.DrawRectangleOutline(cameraRect, Game.Profile.Theme.HighAccent, 2, 0.45f);
@@ -78,22 +76,15 @@ namespace Murder.Editor.Systems.Debug
             info.ScreenshotButtonArea = new Rectangle(cameraRect.BottomRight + new Vector2(-handleSize.Y / 2f), new Vector2(handleSize.Y));
             render.GameUiBatch.DrawRectangle(info.ScreenshotButtonArea.Value, Game.Profile.Theme.HighAccent, 0.45f);
 
-            if (_takeScreenshot)
+            if (_screenshotPending)
             {
-                _takeScreenshot = false;
-                render.SaveScreenShotArea(cameraRect);
-            }
-
-            if (_takeScreenshotToClipboard)
-            {
-                _takeScreenshotToClipboard = false;
-                render.SaveScreenShotAreaToClipboard(cameraRect);
+                _screenshotPending = false;
+                render.TakeScreenshotAtArea(cameraRect);
             }
         }
 
         public void DrawGui(RenderContext render, Context context)
         {
-
             EditorHook? editorHook = context.World.TryGetUnique<EditorComponent>()?.EditorHook;
             if (editorHook is null || editorHook.DrawCameraBounds is not EditorHook.CameraBoundsInfo info)
             {
@@ -108,13 +99,18 @@ namespace Murder.Editor.Systems.Debug
                     if (ImGuiHelpers.Button("Copy"))
                     {
                         editorHook.CursorIsBusy.Add(typeof(DebugShowCameraBoundsSystem));
-                        _takeScreenshotToClipboard = true;
+
+                        _screenshotPending = true;
+                        Game.Data.ScreenshotMode = ScreenshotSupportedModes.CopyToClipboard;
                     }
+
                     ImGui.SameLine();
                     if (ImGuiHelpers.Button("Save"))
                     {
                         editorHook.CursorIsBusy.Add(typeof(DebugShowCameraBoundsSystem));
-                        _takeScreenshot = true;
+
+                        _screenshotPending = true;
+                        Game.Data.ScreenshotMode = ScreenshotSupportedModes.SaveAtPath;
                     }
 
                     if (ImGuiHelpers.Button("Reset Size"))
