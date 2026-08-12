@@ -295,7 +295,7 @@ namespace Murder.Editor
             ImGui.OpenPopup(CreatePopupAssetForType(t, path));
 
             _newAssetName = StringHelper.FormatSafe(
-                Architect.EditorSettings.NewAssetDefaultName,
+                Architect.EditorSettings.NewAssetDefaultName ?? string.Empty,
                 t == typeof(GameAsset) ? "asset" : Prettify.FormatAssetName(t.Name));
         }
 
