@@ -15,7 +15,6 @@ using System.Collections.Immutable;
 
 namespace Murder.Systems;
 
-
 /// <summary>
 /// Generic and all-around tilemap rendering system. Draws all tilesmaps and floor tiles that are visible to the camera.
 /// </summary>
@@ -32,7 +31,6 @@ public class TilemapAndFloorRenderSystem : IMurderRenderSystem
             // Skip drawing on empty.
             return;
         }
-        TilesetAsset[] assets = tilesetComponent.Tilesets.ToAssetArray<TilesetAsset>();
 
         // Iterate over each room.
         foreach (Entity e in context.Entities)
@@ -68,23 +66,27 @@ public class TilemapAndFloorRenderSystem : IMurderRenderSystem
                         x * Grid.CellSize, y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
 
                     bool occluded = false;
-                    for (int i = 0; i < assets.Length; ++i)
+                    for (int i = 0; i < tilesetComponent.Tilesets.Length; ++i)
                     {
-                        var tile = grid.GetTile(context.Entities, i, assets.Length, x - grid.Origin.X, y - grid.Origin.Y);
+                        Guid tilesetGuid = tilesetComponent.Tilesets[i];
+
+                        var tile = 
+                            grid.GetTile(context.Entities, i, tilesetComponent.Tilesets.Length, x - grid.Origin.X, y - grid.Origin.Y);
 
                         // Draw the individual tiles
-                        if (tile.tile >= 0)
+                        if (tile.Tile >= 0)
                         {
-                            var asset = assets[i];
-                            if (asset == null)
+                            if (Game.Data.TryGetAsset<TilesetAsset>(tilesetGuid) is not TilesetAsset asset)
+                            {
                                 continue;
+                            }
 
                             asset.DrawTile(
                             render.GetBatch((int)asset.TargetBatch),
                                 rectangle.X - Grid.HalfCellSize, rectangle.Y - Grid.HalfCellSize,
-                                tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
+                                tile.Tile % 3, Calculator.FloorToInt(tile.Tile / 3f),
                             1f, Color.White,
-                            RenderServices.BLEND_NORMAL, tile.sortAdjust);
+                            RenderServices.BLEND_NORMAL, tile.SortAdjust);
 
                             for (int j = 0; j < asset.AdditionalTiles.Length; j++)
                             {
@@ -93,14 +95,17 @@ public class TilemapAndFloorRenderSystem : IMurderRenderSystem
                                 additionalTile.DrawTile(
                                     render.GetBatch((int)additionalTile.TargetBatch),
                                     rectangle.X - Grid.HalfCellSize, rectangle.Y - Grid.HalfCellSize,
-                                    tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
+                                    tile.Tile % 3, Calculator.FloorToInt(tile.Tile / 3f),
                                     1f, Color.White,
-                                RenderServices.BLEND_NORMAL, tile.sortAdjust);
+                                RenderServices.BLEND_NORMAL, tile.SortAdjust);
                             }
 
                         }
-                        if (tile.occludeGround)
+
+                        if (tile.OccludeGround)
+                        {
                             occluded = true;
+                        }
                     }
 
                     // Debug test for occluded floor

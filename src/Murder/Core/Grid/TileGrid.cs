@@ -45,7 +45,7 @@ namespace Murder.Core
             _gridMap = new int[width * height];
         }
 
-        public (int tile, int sortAdjust, bool occludeGround) GetTile(ImmutableArray<Entity> tileEntities, int index, int totalTilemaps, int x, int y)
+        public (int Tile, int SortAdjust, bool OccludeGround) GetTile(ImmutableArray<Entity> tileEntities, int index, int totalTilemaps, int x, int y)
         {
             if (x < 0 || y < 0 || x > Width || y > Height)
                 return (-1, 0, false);

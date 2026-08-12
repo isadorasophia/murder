@@ -12,7 +12,6 @@ using Murder.Utilities;
 
 namespace Murder.Systems.Graphics;
 
-
 /// <summary>
 /// Draws only the Tilemap and not the floor. Will still draw aditional tiles on floor tiles, like reflections.
 /// </summary>
@@ -46,14 +45,17 @@ public class TilemapNoFloorRenderSystem : IMurderRenderSystem
             }
 
             TileGridComponent gridComponent = e.GetTileGrid();
+
             (int minX, int maxX, int minY, int maxY) = render.Camera.GetSafeGridBounds(gridComponent.Rectangle);
             TileGrid grid = gridComponent.Grid;
 
             for (int i = 0; i < _tilesetAssetsCache.Length; ++i)
             {
-                var asset = _tilesetAssetsCache[i];
-                if (asset == null || (asset.TargetBatch == ((int)Batches2D.FloorBatchId) && asset.AdditionalTiles.Length == 0))
+                TilesetAsset asset = _tilesetAssetsCache[i];
+                if (asset is null || (asset.TargetBatch == ((int)Batches2D.FloorBatchId) && asset.AdditionalTiles.Length == 0))
+                {
                     continue;
+                }
 
                 for (int y = minY; y <= maxY; y++)
                 {
@@ -65,16 +67,16 @@ public class TilemapNoFloorRenderSystem : IMurderRenderSystem
                         var tile = grid.GetTile(context.Entities, i, _tilesetAssetsCache.Length, x - grid.Origin.X, y - grid.Origin.Y);
 
                         // Draw the individual tiles
-                        if (tile.tile >= 0)
+                        if (tile.Tile >= 0)
                         {
                             if (asset.TargetBatch != ((int)Batches2D.FloorBatchId))
                             {
                                 asset.DrawTile(
                                     render.GetBatch((int)asset.TargetBatch),
                                         rectangle.X - Grid.HalfCellSize, rectangle.Y - Grid.HalfCellSize,
-                                        tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
+                                        tile.Tile % 3, Calculator.FloorToInt(tile.Tile / 3f),
                                     1f, Color.White,
-                                    RenderServices.BLEND_NORMAL, tile.sortAdjust);
+                                    RenderServices.BLEND_NORMAL, tile.SortAdjust);
                             }
 
                             for (int j = 0; j < asset.AdditionalTiles.Length; j++)
@@ -84,11 +86,10 @@ public class TilemapNoFloorRenderSystem : IMurderRenderSystem
                                 additionalTile.DrawTile(
                                     render.GetBatch((int)additionalTile.TargetBatch),
                                     rectangle.X - Grid.HalfCellSize, rectangle.Y - Grid.HalfCellSize,
-                                    tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
+                                    tile.Tile % 3, Calculator.FloorToInt(tile.Tile / 3f),
                                     1f, Color.White,
-                                RenderServices.BLEND_NORMAL, tile.sortAdjust - 1);
+                                RenderServices.BLEND_NORMAL, tile.SortAdjust - 1);
                             }
-
                         }
                     }
                 }
