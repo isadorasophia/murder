@@ -152,12 +152,17 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
                     for (int i = 0; i < _tilesetAssetsCache.Length; ++i)
                     {
                         TilesetAsset? tilesetAsset = _tilesetAssetsCache[i];
-                        if (tilesetAsset == null)
+                        if (tilesetAsset is null)
                         {
                             continue;
                         }
 
                         if (tilesetAsset.TargetBatch != Batches2D.FloorBatchId)
+                        {
+                            continue;
+                        }
+
+                        if (!CanRenderTile(tilesetAsset))
                         {
                             continue;
                         }
@@ -239,4 +244,6 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
         _atlas.Cleanup();
         _tilesetAssetsCache = null;
     }
+
+    protected virtual bool CanRenderTile(TilesetAsset tile) => true;
 }
