@@ -33,11 +33,6 @@ namespace Murder.Assets.Graphics
         [Default("Add properties")]
         public readonly ITileProperties? Properties = null;
 
-        /// <summary>
-        /// This is the order (or layer) which this tileset will be drawn into the screen.
-        /// </summary>
-        public readonly int Order = new();
-
         [SpriteBatchReference]
         public int TargetBatch = Batches2D.GameplayBatchId;
 

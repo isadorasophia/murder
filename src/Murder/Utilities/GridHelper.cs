@@ -1,7 +1,10 @@
 ﻿using Bang.Components;
+using Murder.Assets;
+using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
+using Murder.Diagnostics;
 using Murder.Serialization;
 using Murder.Services;
 using System;
@@ -385,6 +388,55 @@ namespace Murder.Utilities
         public static Rectangle ToRectangle(Point grid)
         {
             return new Rectangle(grid.X * Grid.CellSize, grid.Y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
+        }
+
+        public static TilesetAsset?[] ToTilesetArray(this ImmutableArray<Guid> guids)
+        {
+            TilesetAsset?[] assets = new TilesetAsset[guids.Length];
+            for (int i = 0; i < guids.Length; ++i)
+            {
+                if (Game.Data.TryGetAsset<TilesetAsset>(guids[i]) is TilesetAsset asset)
+                {
+                    assets[i] = asset;
+                }
+                else
+                {
+                    GameLogger.Warning($"Unable to fetch valid tileset of {guids[i]}.");
+                }
+            }
+
+            return assets;
+        }
+
+        public static List<int> GetOrderedTilesetIndices(TilesetAsset?[] tiles)
+        {
+            List<int> orderedAssets = new();
+            for (int i = 0; i < tiles.Length; ++i)
+            {
+                if (tiles[i] is null)
+                {
+                    continue;
+                }
+
+                orderedAssets.Add(i);
+            }
+
+            orderedAssets.Sort((a, b) =>
+            {
+                if (a >= tiles.Length || b >= tiles.Length || a < 0 || b < 0) return 0;
+
+                TilesetAsset? asset1 = tiles[a];
+                TilesetAsset? asset2 = tiles[b];
+
+                if (asset1 is null && asset2 is null) return 0;
+                if (asset1 is null) return -1;
+                if (asset2 is null) return 1;
+
+                // flip
+                return asset1.YSortOffset.CompareTo(asset2.YSortOffset);
+            });
+
+            return orderedAssets;
         }
     }
 }

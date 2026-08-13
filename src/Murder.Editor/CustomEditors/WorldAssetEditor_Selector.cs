@@ -617,11 +617,8 @@ namespace Murder.Editor.CustomEditors
                 GameLogger.Warning("Unable to save persistent world info without a valid world.");
                 return;
             }
-            Architect.EditorSettings.WorldAssetInfo[_world.Guid] = new()
-            {
-                HiddenGroups = info.HiddenGroups,
-                LockedGroups = info.SkipGroups
-            };
+
+            Architect.EditorSettings.WorldAssetInfo[_world.Guid] = new(info.HiddenGroups, info.SkipGroups, info.HiddenTiles);
         }
 
         private void SwitchSoundGroupVisibility(string groupName, bool show)

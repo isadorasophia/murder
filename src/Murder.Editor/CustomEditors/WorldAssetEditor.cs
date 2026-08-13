@@ -889,6 +889,8 @@ namespace Murder.Editor.CustomEditors
 
             public HashSet<string> SkipGroups { get; init; } = new();
 
+            public int HiddenTiles = 0;
+
             public string? HideGroupsExceptFor = null;
         }
 

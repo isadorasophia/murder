@@ -13,12 +13,12 @@ using Murder.Utilities;
 namespace Murder.Systems.Graphics;
 
 /// <summary>
-/// Draws only the Tilemap and not the floor. Will still draw aditional tiles on floor tiles, like reflections.
+/// Draws only the Tilemap and not the floor. Will still draw additional tiles on floor tiles, like reflections.
 /// </summary>
 [Filter(filter: ContextAccessorFilter.AnyOf, kind: ContextAccessorKind.Read, typeof(TileGridComponent))]
 public class TilemapNoFloorRenderSystem : IMurderRenderSystem
 {
-    TilesetAsset[]? _tilesetAssetsCache = null;
+    TilesetAsset?[]? _tilesetAssetsCache = null;
 
     public void Draw(RenderContext render, Context context)
     {
@@ -30,7 +30,7 @@ public class TilemapNoFloorRenderSystem : IMurderRenderSystem
 
         if (_tilesetAssetsCache == null)
         {
-            _tilesetAssetsCache = tilesetComponent.Tilesets.ToAssetArray<TilesetAsset>();
+            _tilesetAssetsCache = tilesetComponent.Tilesets.ToTilesetArray();
         }
 
         // Iterate over each room.
@@ -51,8 +51,13 @@ public class TilemapNoFloorRenderSystem : IMurderRenderSystem
 
             for (int i = 0; i < _tilesetAssetsCache.Length; ++i)
             {
-                TilesetAsset asset = _tilesetAssetsCache[i];
+                TilesetAsset? asset = _tilesetAssetsCache[i];
                 if (asset is null || (asset.TargetBatch == ((int)Batches2D.FloorBatchId) && asset.AdditionalTiles.Length == 0))
+                {
+                    continue;
+                }
+
+                if (!CanRenderTile(asset))
                 {
                     continue;
                 }
@@ -97,4 +102,5 @@ public class TilemapNoFloorRenderSystem : IMurderRenderSystem
         }
     }
 
+    protected virtual bool CanRenderTile(TilesetAsset tile) => true;
 }

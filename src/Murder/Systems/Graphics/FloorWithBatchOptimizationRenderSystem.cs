@@ -34,7 +34,7 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
     private static int TileChunkSize => 18;
 
     // Cache
-    private static TilesetAsset[]? _tilesetAssetsCache = null;
+    private static TilesetAsset?[]? _tilesetAssetsCache = null;
 
     private static readonly RuntimeAtlas _atlas;
     private static readonly Dictionary<Point, FloorChunk> _chunks = new();
@@ -58,7 +58,7 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
 
         if (_tilesetAssetsCache == null)
         {
-            _tilesetAssetsCache = tilesetComponent.Tilesets.ToAssetArray<TilesetAsset>();
+            _tilesetAssetsCache = tilesetComponent.Tilesets.ToTilesetArray();
         }
 
         // Loop through all chunks that intersect with the camera bounds

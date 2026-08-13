@@ -52,7 +52,7 @@ namespace Murder.Systems
                 return;
             }
 
-            TilesetAsset[] assets = tilesets.ToAssetArray<TilesetAsset>();
+            TilesetAsset?[] assets = tilesets.ToTilesetArray();
             Map map = mapEntity.GetMap().Map;
 
             for (int i = 0; i < gridEntities.Length; ++i)
@@ -67,8 +67,10 @@ namespace Murder.Systems
             InitializeEmptyTiles(map, gridEntities);
         }
 
-        private void InitializeMap(Map map, TileGrid grid, RoomComponent room, TilesetAsset[] assets)
+        private void InitializeMap(Map map, TileGrid grid, RoomComponent room, TilesetAsset?[] assets)
         {
+            List<int> orderedAssets = GridHelper.GetOrderedTilesetIndices(assets);
+
             for (int y = grid.Origin.Y; y < grid.Height + grid.Origin.Y && y < map.Height; y++)
             {
                 for (int x = grid.Origin.X; x < grid.Width + grid.Origin.X && x < map.Width; x++)
@@ -80,14 +82,18 @@ namespace Murder.Systems
 
                     // For each tile, we will check whether it is a solid or not.
                     // If so, we will check if the given grid has the flag set for that tile.
-                    for (int i = 0; i < assets.Length; i++)
+                    foreach (int index in orderedAssets)
                     {
-                        int mask = i.ToMask();
+                        if (assets[index] is not TilesetAsset asset)
+                        {
+                            continue;
+                        }
+
+                        int mask = index.ToMask();
                         if (grid.HasFlagAtGridPosition(x, y, mask))
                         {
-                            map.SetOccupiedAsStatic(x, y, assets[i].CollisionLayer);
-
-                            InitializeTile(map, x, y, assets[i].Properties);
+                            map.SetOccupiedAsStatic(x, y, asset.CollisionLayer);
+                            InitializeTile(map, x, y, asset.Properties);
                         }
                     }
                 }
