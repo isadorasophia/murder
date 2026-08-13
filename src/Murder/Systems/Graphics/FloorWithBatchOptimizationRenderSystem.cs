@@ -225,20 +225,21 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
         return id;
     }
 
-    public void Exit(Context context)
-    {
-        _chunks.Clear();
-        _atlas.Cleanup();
-        _tilesetAssetsCache = null;
-    }
+    public void OnAdded(World world, ImmutableArray<Entity> entities) { }
 
-    public void OnAdded(World world, ImmutableArray<Entity> entities)
-    { }
-
-    public void OnRemoved(World world, ImmutableArray<Entity> entities)
-    { }
+    public void OnRemoved(World world, ImmutableArray<Entity> entities) { }
 
     public void OnModified(World world, ImmutableArray<Entity> entities)
+    {
+        ClearCache();
+    }
+
+    public void Exit(Context context)
+    {
+        ClearCache();
+    }
+
+    protected void ClearCache()
     {
         _chunks.Clear();
         _atlas.Cleanup();

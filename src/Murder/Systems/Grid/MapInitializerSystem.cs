@@ -77,7 +77,7 @@ namespace Murder.Systems
                 {
                     if (Game.Data.TryGetAsset<FloorAsset>(room.Floor) is FloorAsset floor)
                     {
-                        InitializeTile(map, x, y, floor.Properties);
+                        ApplyPropertyOnTile(map, x, y, floor.Properties, floor.Guid, ysort: 0);
                     }
 
                     // For each tile, we will check whether it is a solid or not.
@@ -93,7 +93,7 @@ namespace Murder.Systems
                         if (grid.HasFlagAtGridPosition(x, y, mask))
                         {
                             map.SetOccupiedAsStatic(x, y, asset.CollisionLayer);
-                            InitializeTile(map, x, y, asset.Properties);
+                            ApplyPropertyOnTile(map, x, y, asset.Properties, asset.Guid, ysort: asset.YSortOffset);
                         }
                     }
                 }
@@ -102,7 +102,16 @@ namespace Murder.Systems
 
         protected virtual void InitializeRoom(Entity e, TileGrid grid, RoomComponent room) { }
 
-        protected virtual void InitializeTile(Map map, int x, int y, ITileProperties? iProperties) { }
+        /// <summary>
+        /// Initialize a tile in the map according to its properties.
+        /// </summary>
+        /// <param name="map">Map instance.</param>
+        /// <param name="x">X coordinate in the grid.</param>
+        /// <param name="y">Y coordinate in the grid.</param>
+        /// <param name="properties">Tile properties.</param>
+        /// <param name="guid">Guid of the floor or tileset asset.</param>
+        /// <param name="ysort">If applicable, the ysort offset that will be rendered.</param>
+        protected virtual void ApplyPropertyOnTile(Map map, int x, int y, ITileProperties? properties, Guid guid, int ysort) { }
 
         private void InitializeEmptyTiles(Map map, ImmutableArray<Entity> grids)
         {
