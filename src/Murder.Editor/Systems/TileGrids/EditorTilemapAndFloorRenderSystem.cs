@@ -3,15 +3,18 @@ using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Microsoft.Xna.Framework.Graphics;
-using Murder.Attributes;
 using Murder.Assets.Graphics;
+using Murder.Attributes;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Editor.Components;
+using Murder.Editor.Utilities;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Diagnostics;
 
 namespace Murder.Systems;
 
@@ -20,7 +23,7 @@ namespace Murder.Systems;
 /// </summary>
 [EditorSystem]
 [Filter(filter: ContextAccessorFilter.AnyOf, kind: ContextAccessorKind.Read, typeof(TileGridComponent))]
-public class TilemapAndFloorRenderSystem : IMurderRenderSystem
+public class EditorTilemapAndFloorRenderSystem : IMurderRenderSystem
 {
     private bool ShowDebugOcclusion => false;
 
@@ -31,6 +34,8 @@ public class TilemapAndFloorRenderSystem : IMurderRenderSystem
             // Skip drawing on empty.
             return;
         }
+
+        EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
 
         // Iterate over each room.
         foreach (Entity e in context.Entities)
@@ -48,7 +53,6 @@ public class TilemapAndFloorRenderSystem : IMurderRenderSystem
             TileGrid grid = gridComponent.Grid;
 
             bool hasFloor = floorAsset.Image.Guid != Guid.Empty;
-
 
             SpriteAsset? floorSpriteAsset = null;
             Texture2D[]? floorSpriteAtlas = null;
@@ -70,9 +74,14 @@ public class TilemapAndFloorRenderSystem : IMurderRenderSystem
                     {
                         Guid tilesetGuid = tilesetComponent.Tilesets[i];
 
-                        var tile = 
-                            grid.GetTile(context.Entities, i, tilesetComponent.Tilesets.Length, x - grid.Origin.X, y - grid.Origin.Y);
+                        var tile = grid.GetTile(
+                            context.Entities, i, tilesetComponent.Tilesets.Length, x - grid.Origin.X, y - grid.Origin.Y);
 
+                        if (hook.HiddenTiles.HasFlag(i.ToMask()))
+                        {
+                            continue;
+                        }
+                        
                         // Draw the individual tiles
                         if (tile.Tile >= 0)
                         {
@@ -82,11 +91,13 @@ public class TilemapAndFloorRenderSystem : IMurderRenderSystem
                             }
 
                             asset.DrawTile(
-                            render.GetBatch((int)asset.TargetBatch),
+                                render.GetBatch(asset.TargetBatch),
                                 rectangle.X - Grid.HalfCellSize, rectangle.Y - Grid.HalfCellSize,
                                 tile.Tile % 3, Calculator.FloorToInt(tile.Tile / 3f),
-                            1f, Color.White,
-                            RenderServices.BLEND_NORMAL, tile.SortAdjust);
+                                1f, 
+                                Color.White,
+                                RenderServices.BLEND_NORMAL, 
+                                tile.SortAdjust);
 
                             for (int j = 0; j < asset.AdditionalTiles.Length; j++)
                             {
@@ -99,7 +110,6 @@ public class TilemapAndFloorRenderSystem : IMurderRenderSystem
                                     1f, Color.White,
                                 RenderServices.BLEND_NORMAL, tile.SortAdjust);
                             }
-
                         }
 
                         if (tile.OccludeGround)

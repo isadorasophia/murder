@@ -612,13 +612,13 @@ namespace Murder.Editor.CustomEditors
 
         private void SavePersistentWorldInfo(WorldStageInfo info)
         {
-            if (_world!.Guid == Guid.Empty)
+            if (_world is null || _world.Guid == Guid.Empty)
             {
                 GameLogger.Warning("Unable to save persistent world info without a valid world.");
                 return;
             }
 
-            Architect.EditorSettings.WorldAssetInfo[_world.Guid] = new(info.HiddenGroups, info.SkipGroups, info.HiddenTiles);
+            Architect.EditorSettings.WorldAssetInfo[_world.Guid] = new(info.HiddenGroups, info.SkipGroups, info.PersistHiddenTiles);
         }
 
         private void SwitchSoundGroupVisibility(string groupName, bool show)

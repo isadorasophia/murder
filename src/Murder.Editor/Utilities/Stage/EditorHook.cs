@@ -60,6 +60,8 @@ namespace Murder.Editor.Utilities
 
         public bool CanSwitchModes = true;
 
+        public int HiddenTiles = 0;
+
         public EditorModes EditorMode = EditorModes.ObjectMode;
         public StageSetting StageSettings = StageSetting.None;
 

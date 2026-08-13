@@ -6,6 +6,7 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
+using Murder.Editor.Assets;
 using Murder.Editor.Components;
 using Murder.Editor.CustomFields;
 using Murder.Editor.ImGuiExtended;
@@ -16,6 +17,7 @@ using Murder.Utilities;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Numerics;
+using static Murder.Editor.Data.Graphics.Aseprite;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -150,14 +152,18 @@ namespace Murder.Editor.CustomEditors
         /// </returns>
         private bool DrawRoomTilesetWithTable(Stage stage, IEntity e)
         {
-            bool modified = false;
+            GameLogger.Verify(_world is not null);
 
+            bool modified = false;
             int currentSelectedTile = stage.EditorHook.CurrentSelectedTile;
 
             TilesetComponent tilesetComponent = (TilesetComponent)e.GetComponent(typeof(TilesetComponent));
+
+            WorldStageInfo info = _worldStageInfo[_world.Guid];
+
             {
                 Vector2 tilesArea = ImGui.GetContentRegionAvail();
-                ImGui.BeginChild("tileset_list", new Vector2(tilesArea.X, 118), ImGuiChildFlags.Border, ImGuiWindowFlags.AlwaysHorizontalScrollbar);
+                ImGui.BeginChild("tileset_list", new Vector2(tilesArea.X, 140), ImGuiChildFlags.Border, ImGuiWindowFlags.HorizontalScrollbar);
                 ImGui.Dummy(new Vector2(0, 2));
                 ImGui.SameLine();
 
@@ -179,6 +185,33 @@ namespace Murder.Editor.CustomEditors
 
                         ImGui.Dummy(new Vector2(1, 0));
 
+                        ImGui.Dummy(new Vector2(18, 0));
+                        ImGui.SameLine();
+
+                        if (info.HiddenTiles is not null)
+                        {
+                            int tileAsMask = i.ToMask();
+                            bool hideTile = info.HiddenTiles.Value.HasFlag(tileAsMask);
+                            if (ImGuiHelpers.Checkbox($"##{i}_tile", ref hideTile))
+                            {
+                                if (!hideTile)
+                                {
+                                    info.HiddenTiles &= ~tileAsMask;
+                                }
+                                else
+                                {
+                                    info.HiddenTiles |= tileAsMask;
+                                }
+
+                                // all right, since we modified, we'll persist this.
+                                info.PersistHiddenTiles = info.HiddenTiles;
+
+                                Stage currentStage = Stages[_world.Guid];
+                                currentStage.EditorHook.HiddenTiles = info.HiddenTiles.Value;
+                            }
+
+                            ImGuiHelpers.HelpTooltip("Hide tile in world");
+                        }
 
                         ImGui.Dummy(new Vector2(1, 0));
                         ImGui.SameLine();
@@ -192,7 +225,7 @@ namespace Murder.Editor.CustomEditors
 
                         ImGui.Dummy(new Vector2(1, 0));
                         ImGui.SameLine();
-                        if (ImGuiHelpers.Button(" ", new Vector2(22, 22)))
+                        if (ImGuiHelpers.Button("", new Vector2(22, 22)))
                         {
                             ImGui.OpenPopup("delete_tile");
                         }
@@ -202,7 +235,7 @@ namespace Murder.Editor.CustomEditors
                             ImGui.OpenPopup("replace_tile");
                         }
                         ImGui.Dummy(new Vector2(1, 0));
-                        
+
                         ImGui.EndGroup();
                         ImGuiHelpers.DrawBorderOnPreviousItem(currentSelectedTile == i? Game.Profile.Theme.White : Game.Profile.Theme.Faded, 2);
 
@@ -254,6 +287,20 @@ namespace Murder.Editor.CustomEditors
             }
 
             return modified;
+        }
+
+        protected virtual int GetDefaultHiddenTiles(ImmutableArray<Guid> tilesets) => 0;
+
+        private void InitializeStageHiddenTiles(Stage stage, WorldStageInfo info)
+        {
+            IList<IEntity> tileset = stage.FindEntitiesWith(typeof(TilesetComponent));
+            if (tileset.Count != 0)
+            {
+                TilesetComponent tilesetComponent = (TilesetComponent)tileset[0].GetComponent(typeof(TilesetComponent));
+
+                info.HiddenTiles ??= GetDefaultHiddenTiles(tilesetComponent.Tilesets);
+                stage.EditorHook.HiddenTiles = info.HiddenTiles.Value;
+            }
         }
 
         /// <summary>
