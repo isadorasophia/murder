@@ -618,7 +618,7 @@ namespace Murder.Editor.CustomEditors
                 return;
             }
 
-            Architect.EditorSettings.WorldAssetInfo[_world.Guid] = new(info.HiddenGroups, info.SkipGroups, info.PersistHiddenTiles);
+            Architect.EditorSettings.WorldAssetInfo[_world.Guid] = new(info.HiddenGroups, info.SkipGroups);
         }
 
         private void SwitchSoundGroupVisibility(string groupName, bool show)

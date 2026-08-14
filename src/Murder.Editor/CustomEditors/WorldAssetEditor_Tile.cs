@@ -203,9 +203,6 @@ namespace Murder.Editor.CustomEditors
                                     info.HiddenTiles |= tileAsMask;
                                 }
 
-                                // all right, since we modified, we'll persist this.
-                                info.PersistHiddenTiles = info.HiddenTiles;
-
                                 Stage currentStage = Stages[_world.Guid];
                                 currentStage.EditorHook.HiddenTiles = info.HiddenTiles.Value;
                             }

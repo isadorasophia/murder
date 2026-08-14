@@ -101,9 +101,7 @@ namespace Murder.Editor.CustomEditors
                 _worldStageInfo[guid] = new()
                 {
                     HiddenGroups = info.HiddenGroups,
-                    SkipGroups = info.LockedGroups,
-                    HiddenTiles = info.HiddenTiles,
-                    PersistHiddenTiles = info.HiddenTiles
+                    SkipGroups = info.LockedGroups
                 };
 
                 foreach (string group in info.LockedGroups)
@@ -894,8 +892,6 @@ namespace Murder.Editor.CustomEditors
             public HashSet<string> SkipGroups { get; init; } = new();
 
             public int? HiddenTiles = null;
-            public int? PersistHiddenTiles = null;
-
             public string? HideGroupsExceptFor = null;
         }
 
