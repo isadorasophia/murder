@@ -2,6 +2,7 @@
 using Bang.Entities;
 using Murder.Assets;
 using Murder.Core.Geometry;
+using Murder.Diagnostics;
 using Murder.Editor.Utilities;
 using Murder.Prefabs;
 using System.Collections.Immutable;
@@ -80,6 +81,26 @@ namespace Murder.Editor.Stages
             return (null, null);
         }
 
+        private int FindRootInstanceId(int instanceEntityId)
+        {
+            int startingEntityId = instanceEntityId;
+
+            // this could be an instance that is the child of a child. if that is the case,
+            // look for the root entity.
+            while (_childEntities.TryGetValue(instanceEntityId, out int parentInstanceId))
+            {
+                instanceEntityId = parentInstanceId;
+
+                if (startingEntityId == parentInstanceId)
+                {
+                    GameLogger.Warning("How do we have a cyclic entity reference?");
+                    break;
+                }
+            }
+
+            return instanceEntityId;
+        }
+
         internal (IEntity parent, Guid childId)? FindChildInstance(int id)
         {
             (Guid? parentGuid, Guid? instanceGuid) = FindInstanceGuid(id);
@@ -91,6 +112,16 @@ namespace Murder.Editor.Stages
             if (!_instanceToWorld.TryGetValue(parentGuid.Value, out int parentId) ||
                 FindInstance(parentId) is not IEntity parent)
             {
+                // this could be a grandchild, so let's look for the root entity instead.
+                if (_childEntities.TryGetValue(id, out parentId))
+                {
+                    int rootParentId = FindRootInstanceId(parentId);
+                    if (FindInstance(rootParentId) is IEntity rootParent)
+                    {
+                        return (rootParent, instanceGuid.Value);
+                    }
+                }
+
                 return null;
             }
 

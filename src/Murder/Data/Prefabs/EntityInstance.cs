@@ -344,27 +344,35 @@ namespace Murder.Prefabs
 
         public virtual bool AddOrReplaceComponentForChild(Guid childGuid, IComponent component)
         {
-            GameLogger.Verify(_children is not null && _children.ContainsKey(childGuid),
-                "Adding component for child that does not exist!?");
-
-            _children[childGuid].AddOrReplaceComponent(component);
+            if (TryGetChild(childGuid, out EntityInstance? child))
+            {
+                child.AddOrReplaceComponent(component);
+            }
+            else
+            {
+                GameLogger.Warning("Adding component for child that does not exist!?");
+            }
 
             return true;
         }
 
         public virtual void RemoveComponentForChild(Guid childGuid, Type t)
         {
-            GameLogger.Verify(_children is not null && _children.ContainsKey(childGuid),
-                "Adding component for child that does not exist!?");
-
-            _children[childGuid].RemoveComponent(t);
+            if (TryGetChild(childGuid, out EntityInstance? child))
+            {
+                child.RemoveComponent(t);
+            }
+            else
+            {
+                GameLogger.Warning("Removing component for child that does not exist!?");
+            }
         }
 
         public virtual bool RevertComponentForChild(Guid childGuid, Type t) => false; // No operation
 
         public virtual bool HasComponentAtChild(Guid childGuid, Type type)
         {
-            if (_children?.TryGetValue(childGuid, out EntityInstance? child) ?? false)
+            if (TryGetChild(childGuid, out EntityInstance? child))
             {
                 return child.HasComponent(type);
             }
