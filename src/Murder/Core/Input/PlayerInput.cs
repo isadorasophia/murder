@@ -788,7 +788,7 @@ public class PlayerInput
         }
 
         selectedOptionY = Calculator.FloorToInt(currentInfo.Selection / (float)width);
-        if (selectedOptionY - currentInfo.Scroll >= maxHeight)
+        if (selectedOptionY - currentInfo.Scroll > maxHeight)
         {
             currentInfo.Scroll++;
         }
