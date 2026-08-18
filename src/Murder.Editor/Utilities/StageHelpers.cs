@@ -1,5 +1,6 @@
 ﻿using Bang.Components;
 using Bang.Interactions;
+using Bang.StateMachines;
 using Bang.Systems;
 using Murder.Assets;
 using Murder.Assets.Graphics;
@@ -478,7 +479,12 @@ public static class StageHelpers
         {
             foreach (string f in fieldsToCheck)
             {
-                FieldInfo? fInfo = t.GetField(f, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+                MemberInfo? fInfo = t.GetField(f, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+                if (fInfo is null)
+                {
+                    fInfo = t.GetProperty(f, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+                }
+
                 if (fInfo is null)
                 {
                     continue;
@@ -492,8 +498,18 @@ public static class StageHelpers
 
                     cToGetField = fInteraction?.GetValue(cToGetField);
                 }
+                else if (tBase.IsGenericType && tBase.GetGenericTypeDefinition() == typeof(StateMachineComponent<>))
+                {
+                    FieldInfo? fInteraction = tBase
+                        .GetField("_routine", BindingFlags.NonPublic | BindingFlags.Instance);
 
-                object? value = fInfo.GetValue(cToGetField);
+                    cToGetField = fInteraction?.GetValue(cToGetField);
+                }
+
+                object? value = fInfo is FieldInfo fieldInfo ?
+                    fieldInfo.GetValue(cToGetField) : fInfo is PropertyInfo propertyInfo ?
+                    propertyInfo.GetValue(cToGetField) : null;
+
                 if (value is Guid spriteGuid)
                 {
                     AddEventsFromSprite(spriteGuid, ref events);

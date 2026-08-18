@@ -801,7 +801,16 @@ namespace Murder.Editor.CustomEditors
                 component = entityInstance.GetComponent(t);
             }
 
-            Stages[_asset.Guid].ReplaceComponentForInstance(parent?.Guid, entityInstance.Guid, component);
+            if (component is null)
+            {
+                // component was simply never here in the first place...?
+                Stages[_asset.Guid].RemoveComponentForInstance(parent?.Guid, entityInstance.Guid, t);
+            }
+            else
+            {
+                Stages[_asset.Guid].ReplaceComponentForInstance(parent?.Guid, entityInstance.Guid, component);
+            }
+
             _asset.FileChanged = true;
         }
 

@@ -145,9 +145,19 @@ namespace Murder.Prefabs
             return Components;
         }
 
-        public virtual IComponent GetComponent(Type componentType)
+        public IComponent? TryGetComponent(Type componentType)
         {
             if (_components.TryGetValue(componentType, out IComponent? component))
+            {
+                return component;
+            }
+
+            return null;
+        }
+
+        public virtual IComponent GetComponent(Type componentType)
+        {
+            if (TryGetComponent(componentType) is IComponent component)
             {
                 return component;
             }

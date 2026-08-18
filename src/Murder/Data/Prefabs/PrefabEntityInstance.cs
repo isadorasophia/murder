@@ -412,7 +412,7 @@ namespace Murder.Prefabs
                 }
 
                 // No components have been overriden, just return the component.
-                return child.GetComponent(t);
+                return child.TryGetComponent(t);
             }
 
             return base.TryGetComponentForChild(guid, t);
