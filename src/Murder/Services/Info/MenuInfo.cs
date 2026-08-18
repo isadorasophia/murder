@@ -541,7 +541,7 @@ namespace Murder.Core.Input
                 Selection = 0;
             }
 
-            if (JustMoved && (Selection >= Options.Length || Options[Selection].Enabled))
+            if (JustMoved && (Selection >= Options.Length || Options[Selection].Enabled || Options[Selection].AllowHoverOnDisabled))
             {
                 _ = SoundServices.Play(Sounds.SelectionChange);
             }
