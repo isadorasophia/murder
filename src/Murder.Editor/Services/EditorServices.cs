@@ -99,7 +99,8 @@ namespace Murder.Editor.Services
 
         public static DragStyle LastDragStyle => _draggingHandle == string.Empty ? DragStyle.None : _draggingStyle;
 
-        public static bool BoxHandle(string id, RenderContext render, Vector2 cursorPosition, IntRectangle rectangle, Color color, out IntRectangle newRectangle, bool glow, out bool hover)
+        public static bool BoxHandle(string id, RenderContext render, Vector2 cursorPosition, bool isCursorPressed, IntRectangle rectangle, 
+            Color color, bool glow, out IntRectangle newRectangle, out bool hover)
         {
             hover = false;
 
@@ -188,7 +189,7 @@ namespace Murder.Editor.Services
             {
                 RenderServices.DrawRectangle(render.DebugBatch, topLeftHandle, Color.Lerp(color, Color.White, 0.5f));
 
-                if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+                if (isCursorPressed)
                 {
                     _draggingHandle = id;
                     _draggingStyle = DragStyle.TopLeft;
@@ -199,7 +200,7 @@ namespace Murder.Editor.Services
             {
                 RenderServices.DrawRectangle(render.DebugBatch, topRightHandle, Color.Lerp(color, Color.White, 0.5f));
 
-                if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+                if (isCursorPressed)
                 {
                     _draggingHandle = id;
                     _draggingStyle = DragStyle.TopRight;
@@ -210,7 +211,7 @@ namespace Murder.Editor.Services
             {
                 RenderServices.DrawRectangle(render.DebugBatch, bottomRightHandle, Color.Lerp(color, Color.White, 0.5f));
 
-                if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+                if (isCursorPressed)
                 {
                     _draggingHandle = id;
                     _draggingStyle = DragStyle.BottomRight;
@@ -221,7 +222,7 @@ namespace Murder.Editor.Services
             {
                 RenderServices.DrawRectangle(render.DebugBatch, bottomLeftHandle, Color.Lerp(color, Color.White, 0.5f));
 
-                if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+                if (isCursorPressed)
                 {
                     _draggingHandle = id;
                     _draggingStyle = DragStyle.BottomLeft;
@@ -232,7 +233,7 @@ namespace Murder.Editor.Services
             {
                 RenderServices.DrawRectangle(render.DebugBatch, topHandle, Color.Lerp(color, Color.White, 0.5f));
 
-                if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+                if (isCursorPressed)
                 {
                     _draggingHandle = id;
                     _draggingStyle = DragStyle.Top;
@@ -243,7 +244,7 @@ namespace Murder.Editor.Services
             {
                 RenderServices.DrawRectangle(render.DebugBatch, rightHandle, Color.Lerp(color, Color.White, 0.5f));
 
-                if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+                if (isCursorPressed)
                 {
                     _draggingHandle = id;
                     _draggingStyle = DragStyle.Right;
@@ -254,7 +255,7 @@ namespace Murder.Editor.Services
             {
                 RenderServices.DrawRectangle(render.DebugBatch, bottomHandle, Color.Lerp(color, Color.White, 0.5f));
 
-                if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+                if (isCursorPressed)
                 {
                     _draggingHandle = id;
                     _draggingStyle = DragStyle.Bottom;
@@ -265,7 +266,7 @@ namespace Murder.Editor.Services
             {
                 RenderServices.DrawRectangle(render.DebugBatch, leftHandle, Color.Lerp(color, Color.White, 0.5f));
 
-                if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+                if (isCursorPressed)
                 {
                     _draggingHandle = id;
                     _draggingStyle = DragStyle.Left;
@@ -276,7 +277,7 @@ namespace Murder.Editor.Services
             {
                 RenderServices.DrawRectangle(render.DebugFxBatch, rectangle, color * .25f);
                 hover = true;
-                if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+                if (isCursorPressed)
                 {
                     _draggingHandle = id;
                     _draggingStyle = DragStyle.Move;

@@ -32,18 +32,49 @@ namespace Murder.Editor.Systems
     [OnlyShowOnDebugView]
     [Filter(kind: ContextAccessorKind.Read, typeof(ColliderComponent), typeof(PositionComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(CutsceneAnchorsComponent))] // Skip cutscenes.
-    public class DebugColliderRenderSystem : IMurderRenderSystem, IGuiSystem
+    public class DebugColliderRenderSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem
     {
         private static int? _wasEditing = null;
-        private readonly static int _hash = typeof(DebugColliderRenderSystem).GetHashCode();
-
         private bool _wasClicking = false;
+        private static bool _pressedMouseButton = false;
 
         private static int _hoveringEntity = -1;
         private static int _hoveringShape = -1;
         private static bool _contextMenuOpened = false;
 
         private static float _lastSpaceBarTime = 0;
+        private static float _hideAll = 0;
+
+        public void Update(Context context)
+        {
+            if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+            {
+                _pressedMouseButton = true;
+            }
+            else
+            {
+                _pressedMouseButton = false;
+            }
+
+            if (Game.Input.Pressed(Keys.Space))
+            {
+                _lastSpaceBarTime = Game.NowUnscaled;
+            }
+            if (Game.Input.Down(Keys.Space))
+            {
+                _hideAll = 1 - Calculator.ClampTime(Game.NowUnscaled - _lastSpaceBarTime, .2f);
+            }
+            else if (Game.Input.Released(Keys.Space))
+            {
+                _lastSpaceBarTime = Game.NowUnscaled;
+                _hideAll = 0;
+            }
+            else
+            {
+                _hideAll = Calculator.ClampTime(Game.NowUnscaled - _lastSpaceBarTime, 0.1f);
+            }
+        }
+
         public void Draw(RenderContext render, Context context)
         {
             DrawImpl(render, context, allowEditingByDefault: false, ref _wasClicking);
@@ -52,36 +83,17 @@ namespace Murder.Editor.Systems
         /// <param name="allowEditingByDefault">Whether we only allow editing if the collider component is open.</param>
         public static void DrawImpl(RenderContext render, Context context, bool allowEditingByDefault, ref bool wasClicking)
         {
-            if (context.World.TryGetUnique<EditorComponent>() is EditorComponent editor)
-            {
-                if (!editor.EditorHook.DrawCollisions)
-                    return;
-            }
-            else
+            if (_hideAll <= 0)
             {
                 return;
             }
 
-            float hideAll;
-            if (Game.Input.Pressed(Keys.Space))
+            if (context.World.TryGetUnique<EditorComponent>() is not EditorComponent editor)
             {
-                _lastSpaceBarTime = Game.NowUnscaled;
-            }
-            if (Game.Input.Down(Keys.Space))
-            {
-                hideAll = 1 - Calculator.ClampTime(Game.NowUnscaled - _lastSpaceBarTime, .2f);
-            }
-            else if (Game.Input.Released(Keys.Space))
-            {
-                _lastSpaceBarTime = Game.NowUnscaled;
-                hideAll = 0;
-            }
-            else
-            {
-                hideAll = Calculator.ClampTime(Game.NowUnscaled - _lastSpaceBarTime, 0.1f);
+                return;
             }
 
-            if (hideAll <= 0)
+            if (!editor.EditorHook.DrawCollisions)
             {
                 return;
             }
@@ -134,8 +146,10 @@ namespace Murder.Editor.Systems
                         render,
                         editor.EditorHook,
                         showHandles,
-                        color * (isSolid ? 1f : 0.5f) * hideAll,
-                        out bool isHoveringShape, out var newShapeResult))
+                        _pressedMouseButton,
+                        color * (isSolid ? 1f : 0.5f) * _hideAll,
+                        out bool isHoveringShape, 
+                        out var newShapeResult))
                     {
                         newShape = newShapeResult;
                         usingCursor = true;
@@ -188,7 +202,6 @@ namespace Murder.Editor.Systems
             }
         }
 
-
         private static bool DrawOriginalHandles(
             IShape shape,
             string id,
@@ -197,6 +210,7 @@ namespace Murder.Editor.Systems
             RenderContext render,
             EditorHook hook,
             bool showHandles,
+            bool isCursorPressed,
             Color color,
             out bool hovered,
             out IShape newShape)
@@ -205,7 +219,9 @@ namespace Murder.Editor.Systems
             hovered = false;
 
             if (hook.CursorWorldPosition is not Point cursorPosition)
+            {
                 return false;
+            }
 
             bool isReadonly = hook.UsingGui;
 
@@ -222,7 +238,6 @@ namespace Murder.Editor.Systems
                     {
                         if (EditorServices.PolyHandle(id, render, globalPosition, scale, cursorPosition, poly, Color.White, color, out var newPolygonResult, out hovered))
                         {
-
                             if (!isReadonly)
                             {
                                 newShape = new PolygonShape(newPolygonResult);
@@ -244,13 +259,20 @@ namespace Murder.Editor.Systems
 
                     if (showHandles)
                     {
-                        if (EditorServices.BoxHandle(id, render,
-                            cursorPosition, box.Rectangle + globalPosition.Point(), color, out IntRectangle newRectangle, false, out hovered))
+                        if (EditorServices.BoxHandle(
+                                id,
+                                render,
+                                cursorPosition,
+                                isCursorPressed,
+                                box.Rectangle + globalPosition.Point(),
+                                color,
+                                false,
+                                out IntRectangle newRectangle, 
+                                out hovered))
                         {
                             if (!isReadonly)
                             {
                                 newShape = new BoxShape(box.Origin, (newRectangle.TopLeft - globalPosition).Point(), newRectangle.Width, newRectangle.Height);
-                                bool hasChanges = !newShape.Equals(shape);
                                 return true;
                             }
                         }
