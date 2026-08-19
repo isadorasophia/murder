@@ -30,6 +30,17 @@ namespace Murder.Utilities
             return positionComponent.GetGlobal();
         }
 
+        public static Vector2 GetCenterPosition(this Entity e)
+        {
+            Vector2 position = e.GetGlobalPosition();
+            if (e.TryGetOverrideCenterOffset() is OverrideCenterOffsetComponent overrideCenter)
+            {
+                position += overrideCenter.Offset;
+            }
+
+            return position;
+        }
+
         public static Vector2? TryGetGlobalPosition(this Entity entity) =>
             entity.GetGlobalPositionIfValid();
 

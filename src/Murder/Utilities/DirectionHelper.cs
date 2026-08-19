@@ -2,6 +2,7 @@
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Graphics;
+using Murder.Diagnostics;
 using Murder.Utilities;
 using System;
 using System.Collections.Immutable;
@@ -418,7 +419,7 @@ public static class DirectionHelper
 
     public static Direction LookAtEntity(Entity e, Entity target)
     {
-        Vector2 direction = target.GetGlobalPosition() - e.GetGlobalPosition();
+        Vector2 direction = target.GetCenterPosition() - e.GetGlobalPosition();
         return FromVector(direction);
     }
 
@@ -544,7 +545,8 @@ public static class DirectionHelper
             case Direction.Up: return -MathF.PI / 2f;
             case Direction.UpRight: return -MathF.PI / 4f;
             default:
-                throw new Exception("Direction is not suported yet!");
+                GameLogger.Error($"Direction {direction} is not supported yet!");
+                return 0;
         }
     }
 
@@ -564,5 +566,19 @@ public static class DirectionHelper
         }
 
         return value;
+    }
+
+    public static bool IsDirectionWith8FacingDirectionWith4(Direction directionWith8, Direction directionWith4)
+    {
+        switch (directionWith4)
+        {
+            case Direction.Right: return directionWith8 == Direction.Right || directionWith8 == Direction.DownRight || directionWith8 == Direction.UpRight;
+            case Direction.Down: return directionWith8 == Direction.Down || directionWith8 == Direction.DownRight || directionWith8 == Direction.DownLeft;
+            case Direction.Left: return directionWith8 == Direction.Left || directionWith8 == Direction.DownLeft || directionWith8 == Direction.UpLeft;
+            case Direction.Up: return directionWith8 == Direction.Up || directionWith8 == Direction.UpLeft || directionWith8 == Direction.UpRight;
+
+            default:
+                return false;
+        }
     }
 }

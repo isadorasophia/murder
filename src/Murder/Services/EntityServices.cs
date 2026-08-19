@@ -203,7 +203,6 @@ public static class EntityServices
         }
     }
 
-
     public static Entity FindRootEntity(Entity e)
     {
         if (e.Parent is null || e.TryFetchParent() is not Entity parent)
@@ -212,6 +211,22 @@ public static class EntityServices
         }
 
         return FindRootEntity(parent);
+    }
+
+    public static Entity FindRootEntityWithSprite(Entity e)
+    {
+        if (e.HasSprite())
+        {
+            return e;
+        }
+
+        // give up!
+        if (e.Parent is null || e.TryFetchParent() is not Entity parent)
+        {
+            return e;
+        }
+
+        return FindRootEntityWithSprite(parent);
     }
 
     public static bool TryPlayAfterWhenDifferent(this Entity e, string id)

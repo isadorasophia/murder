@@ -378,7 +378,15 @@ namespace Murder.Prefabs
             }
         }
 
-        public virtual bool RevertComponentForChild(Guid childGuid, Type t) => false; // No operation
+        public virtual bool RevertComponentForChild(Guid childGuid, Type t)
+        {
+            if (TryGetChild(childGuid, out EntityInstance? child))
+            {
+                return child.RevertComponent(t);
+            }
+
+            return false;
+        }
 
         public virtual bool HasComponentAtChild(Guid childGuid, Type type)
         {

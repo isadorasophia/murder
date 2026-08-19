@@ -43,14 +43,14 @@ namespace Murder.Services
         {
             if (e.TryGetHighlightOnChildren() is HighlightOnChildrenComponent childrenHighlight)
             {
-                Entity root = EntityServices.FindRootEntity(e);
+                Entity target = e.Children.Length > 0 ? e : EntityServices.FindRootEntity(e);
                 if (childrenHighlight.Child is string child)
                 {
-                    root.TryFetchChild(child)?.SetHighlightSprite(highlight);
+                    target.TryFetchChild(child)?.SetHighlightSprite(highlight);
                 }
                 else
                 {
-                    foreach (int childId in root.Children)
+                    foreach (int childId in target.Children)
                     {
                         world.TryGetEntity(childId)?.SetHighlightSprite(highlight);
                     }
@@ -58,15 +58,8 @@ namespace Murder.Services
             }
             else
             {
-                if (!e.HasSprite())
-                {
-                    Entity root = EntityServices.FindRootEntity(e);
-                    root.SetHighlightSprite(highlight);
-                }
-                else
-                {
-                    e.SetHighlightSprite(highlight);
-                }
+                Entity root = EntityServices.FindRootEntityWithSprite(e);
+                root.SetHighlightSprite(highlight);
             }
         }
 
@@ -74,30 +67,23 @@ namespace Murder.Services
         {
             if (e.TryGetHighlightOnChildren() is HighlightOnChildrenComponent childrenHighlight)
             {
-                Entity root = EntityServices.FindRootEntity(e);
+                Entity target = e.Children.Length > 0 ? e : EntityServices.FindRootEntity(e);
                 if (childrenHighlight.Child is string child)
                 {
-                    root.TryFetchChild(child)?.RemoveHighlightSprite();
+                    target.TryFetchChild(child)?.RemoveHighlightSprite();
                 }
                 else
                 {
-                    foreach (int childId in root.Children)
+                    foreach (int childId in target.Children)
                     {
-                        root.TryFetchChild(childId)?.RemoveHighlightSprite();
+                        target.TryFetchChild(childId)?.RemoveHighlightSprite();
                     }
                 }
             }
             else
             {
-                if (!e.HasSprite())
-                {
-                    Entity root = EntityServices.FindRootEntity(e);
-                    root.RemoveHighlightSprite();
-                }
-                else
-                {
-                    e.RemoveHighlightSprite();
-                }
+                Entity root = EntityServices.FindRootEntityWithSprite(e);
+                root.RemoveHighlightSprite();
             }
         }
 
