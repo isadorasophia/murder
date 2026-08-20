@@ -267,7 +267,7 @@ public class PlayerInput
 
             // do not lock based on murder input buttons.
             if (button.UsingMouse &&
-                id != MurderInputButtons.LeftClick && 
+                id != MurderInputButtons.LeftClick &&
                 id != MurderInputButtons.RightClick &&
                 id != MurderInputButtons.MiddleClick)
             {
@@ -318,7 +318,6 @@ public class PlayerInput
     }
 
     public bool Shortcut(Chord chord) => Shortcut(chord.Key, chord.Modifiers);
-
     public bool Shortcut(Keys key, params Keys[] modifiers)
     {
         if (key == Keys.None)

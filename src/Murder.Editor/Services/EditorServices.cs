@@ -28,7 +28,7 @@ namespace Murder.Editor.Services
         private static int _draggingAnchor = -1;
         private static Vector2 _dragOffset;
 
-        public static bool DrawHandle(string id, RenderContext render, Vector2 cursorPosition, Vector2 position, Color color, out Vector2 newPosition)
+        public static bool DrawHandle(string id, RenderContext render, bool isCursorPressed, Vector2 cursorPosition, Vector2 position, Color color, out Vector2 newPosition)
         {
             var circle = new Circle(position.X - 2, position.Y - 2, 3 + 6 * (1 / render.Camera.Zoom));
 
@@ -49,7 +49,7 @@ namespace Murder.Editor.Services
             {
                 RenderServices.DrawRectangle(render.DebugFxBatch, new Rectangle(position - new Vector2(circle.Radius), new Vector2(circle.Radius * 2)), color);
 
-                if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+                if (isCursorPressed)
                 {
                     _draggingHandle = id;
                     _dragOffset = position - cursorPosition;
@@ -63,7 +63,7 @@ namespace Murder.Editor.Services
             newPosition = position;
             return false;
         }
-        public static bool BoxHandle(string id, RenderContext render, Vector2 cursorPosition, Rectangle rectangle, Color color, out Vector2 newPosition)
+        public static bool BoxHandle(string id, RenderContext render, bool isCursorPressed, Vector2 cursorPosition, Rectangle rectangle, Color color, out Vector2 newPosition)
         {
             if (_draggingHandle == id)
             {
@@ -82,7 +82,7 @@ namespace Murder.Editor.Services
             {
                 RenderServices.DrawRectangle(render.DebugFxBatch, rectangle, color);
 
-                if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+                if (isCursorPressed)
                 {
                     _draggingHandle = id;
                     _dragOffset = rectangle.TopLeft - cursorPosition;
@@ -99,7 +99,7 @@ namespace Murder.Editor.Services
 
         public static DragStyle LastDragStyle => _draggingHandle == string.Empty ? DragStyle.None : _draggingStyle;
 
-        public static bool BoxHandle(string id, RenderContext render, Vector2 cursorPosition, bool isCursorPressed, IntRectangle rectangle, 
+        public static bool BoxHandle(string id, RenderContext render, Vector2 cursorPosition, bool isCursorPressed, IntRectangle rectangle,
             Color color, bool glow, out IntRectangle newRectangle, out bool hover)
         {
             hover = false;
@@ -134,7 +134,7 @@ namespace Murder.Editor.Services
                 {
                     target = target.SnapToGridDelta();
                 }
-                
+
                 switch (_draggingStyle)
                 {
                     case DragStyle.Move:
@@ -289,7 +289,7 @@ namespace Murder.Editor.Services
             return false;
         }
 
-        public static bool PolyHandle(string id, RenderContext render, Vector2 basePosition, Vector2 scale, Vector2 cursorPosition, Polygon polygon, Color outline, Color color, out Polygon newPolygon, out bool isShapeHovered)
+        public static bool PolyHandle(string id, RenderContext render, bool isCursorPressed, Vector2 basePosition, Vector2 scale, Vector2 cursorPosition, Polygon polygon, Color outline, Color color, out Polygon newPolygon, out bool isShapeHovered)
         {
             isShapeHovered = false;
             newPolygon = polygon;
@@ -368,7 +368,7 @@ namespace Murder.Editor.Services
                     {
                         RenderServices.DrawRectangle(render.DebugBatch, anchor.AddPosition(basePosition), Color.White, 1f);
 
-                        if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+                        if (isCursorPressed)
                         {
                             _draggingHandle = id;
                             _draggingAnchor = i;
@@ -409,7 +409,7 @@ namespace Murder.Editor.Services
             {
                 RenderServices.DrawPolygon(render.DebugFxBatch, basePosition, polygon.Vertices, new DrawInfo(color * 0.25f, 0.8f));
 
-                if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+                if (isCursorPressed)
                 {
                     _draggingHandle = id;
                     _draggingAnchor = -1;
@@ -452,7 +452,7 @@ namespace Murder.Editor.Services
             return false;
         }
 
-        public static bool DrawPolygonHandles(Polygon polygon, RenderContext render, Vector2 position, Vector2 cursorPosition, string id, Color color, out Polygon result)
+        public static bool DrawPolygonHandles(Polygon polygon, RenderContext render, bool isCursorPressed, Vector2 position, Vector2 cursorPosition, string id, Color color, out Polygon result)
         {
             result = polygon;
             bool modified = false;
@@ -462,7 +462,7 @@ namespace Murder.Editor.Services
                 Vector2 pointA = polygon.Vertices[i];
                 Vector2 pointB = polygon.Vertices[i + 1];
                 RenderServices.DrawLine(render.DebugBatch, pointA + position, pointB + position, color);
-                if (DrawHandle($"{id}_point_{i}", render, cursorPosition, position + pointA, color, out Vector2 newPosition))
+                if (DrawHandle($"{id}_point_{i}", render, isCursorPressed, cursorPosition, position + pointA, color, out Vector2 newPosition))
                 {
                     modified = true;
 
@@ -475,7 +475,7 @@ namespace Murder.Editor.Services
                 var lastVert = polygon.Vertices[polygon.Vertices.Length - 1];
                 RenderServices.DrawLine(render.DebugBatch, lastVert + position, polygon.Vertices[0] + position, color);
 
-                if (DrawHandle($"{id}_point_{polygon.Vertices.Length}", render, cursorPosition, position + lastVert, color, out Vector2 newPosition))
+                if (DrawHandle($"{id}_point_{polygon.Vertices.Length}", render, isCursorPressed, cursorPosition, position + lastVert, color, out Vector2 newPosition))
                 {
                     modified = true;
 

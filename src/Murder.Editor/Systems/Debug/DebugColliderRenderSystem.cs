@@ -36,7 +36,7 @@ namespace Murder.Editor.Systems
     {
         private static int? _wasEditing = null;
         private bool _wasClicking = false;
-        private static bool _pressedMouseButton = false;
+        private static bool _pendingPressedButton = false;
 
         private static int _hoveringEntity = -1;
         private static int _hoveringShape = -1;
@@ -49,11 +49,7 @@ namespace Murder.Editor.Systems
         {
             if (Game.Input.Pressed(MurderInputButtons.LeftClick))
             {
-                _pressedMouseButton = true;
-            }
-            else
-            {
-                _pressedMouseButton = false;
+                _pendingPressedButton = true;
             }
 
             if (Game.Input.Pressed(Keys.Space))
@@ -78,6 +74,9 @@ namespace Murder.Editor.Systems
         public void Draw(RenderContext render, Context context)
         {
             DrawImpl(render, context, allowEditingByDefault: false, ref _wasClicking);
+
+            // clean up afterwards!
+            _pendingPressedButton = false;
         }
 
         /// <param name="allowEditingByDefault">Whether we only allow editing if the collider component is open.</param>
@@ -146,7 +145,7 @@ namespace Murder.Editor.Systems
                         render,
                         editor.EditorHook,
                         showHandles,
-                        _pressedMouseButton,
+                        _pendingPressedButton,
                         color * (isSolid ? 1f : 0.5f) * _hideAll,
                         out bool isHoveringShape, 
                         out var newShapeResult))
@@ -236,7 +235,7 @@ namespace Murder.Editor.Systems
 
                     if (showHandles)
                     {
-                        if (EditorServices.PolyHandle(id, render, globalPosition, scale, cursorPosition, poly, Color.White, color, out var newPolygonResult, out hovered))
+                        if (EditorServices.PolyHandle(id, render, isCursorPressed, globalPosition, scale, cursorPosition, poly, Color.White, color, out var newPolygonResult, out hovered))
                         {
                             if (!isReadonly)
                             {

@@ -42,6 +42,11 @@ namespace Murder.Editor.Systems
                 return;
             }
 
+            if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+            {
+                _pendingPressedButton = true;
+            }
+
             _inputAvailable = true;
 
             if (hook.CursorIsBusy.Count != 0 || hook.UsingGui)
@@ -225,7 +230,7 @@ namespace Murder.Editor.Systems
                         isCursorBusy |= DrawTilePainter(render, editor, e);
                     }
                 }
-                
+
             }
 
             if (!isCursorBusy)
@@ -233,7 +238,7 @@ namespace Murder.Editor.Systems
                 DrawNewRoom(editor);
             }
 
-            return;
+            _pendingPressedButton = false;
         }
 
         private bool DrawResizeBox(RenderContext render, World world, EditorComponent editor, Entity e)
@@ -250,7 +255,7 @@ namespace Murder.Editor.Systems
 
             RenderServices.DrawRectangleOutline(render.DebugBatch, rectangle * Grid.CellSize, color, lineWidth);
             RenderServices.DrawRectangleOutline(render.DebugBatch, (rectangle * Grid.CellSize).Expand(lineWidth), Color.Black * .2f, lineWidth);
-    
+
             if (DrawHandles(render, world, editor, e.EntityId, rectangle, color) is IntRectangle newRectangle)
             {
                 grid.Resize(newRectangle);
@@ -346,7 +351,7 @@ namespace Murder.Editor.Systems
             {
                 // Now, draw the bottom right handle.
                 if (EditorServices.DrawHandle($"offset_{id}_BR", render,
-                    cursorPosition, position: worldBottomRight, color, out Vector2 newWorldBottomRight))
+                    _pendingPressedButton, cursorPosition, position: worldBottomRight, color, out Vector2 newWorldBottomRight))
                 {
                     Point gridDelta = newWorldBottomRight.ToGridPoint() - gridRectangle.BottomRight;
 
@@ -356,7 +361,7 @@ namespace Murder.Editor.Systems
 
                 // We are fancy and also draw the top left handle.
                 if (EditorServices.DrawHandle($"offset_{id}_TL", render,
-                    cursorPosition, position: worldPosition, color, out Vector2 newWorldTopLeft))
+                     _pendingPressedButton, cursorPosition, position: worldPosition, color, out Vector2 newWorldTopLeft))
                 {
                     Point gridDelta = newWorldTopLeft.ToGridPoint() - gridRectangle.TopLeft;
 
@@ -395,6 +400,7 @@ namespace Murder.Editor.Systems
         private float _tweenStart;
         private Rectangle _currentRectDraw;
         private bool _inputAvailable;
+        private bool _pendingPressedButton;
 
         /// <summary>
         /// This is the logic for capturing input for new tiles.
@@ -461,7 +467,7 @@ namespace Murder.Editor.Systems
                 return false;
             }
 
-            return true;        
+            return true;
         }
 
         /// <summary>

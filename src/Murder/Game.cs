@@ -949,7 +949,7 @@ namespace Murder
             {
                 FlushWindow();
             }
-
+            
             bool loading = _preload is not null || !ActiveScene.Loaded;
             if (loading && ActiveScene.RenderContext is RenderContext renderContext)
             {
