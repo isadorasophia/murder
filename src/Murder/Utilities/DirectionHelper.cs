@@ -485,6 +485,14 @@ public static class DirectionHelper
         return direction;
     }
 
+    /// <summary>
+    /// Returns position of <paramref name="to"/> - <paramref name="from"/>.
+    /// </summary>
+    public static Vector2 LookAtEntityToVector(Entity from, Entity to)
+    {
+        return (to.GetGlobalPosition() - from.GetGlobalPosition()).Normalized();
+    }
+
     internal static float SnapTo8Directions(float angle)
     {
         // Convert the angle to a 0-1 range
