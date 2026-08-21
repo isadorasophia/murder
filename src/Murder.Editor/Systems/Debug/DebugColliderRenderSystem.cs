@@ -18,424 +18,427 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Messages;
 using Murder.Editor.Services;
 using Murder.Editor.Utilities;
-using Murder.Helpers;
 using Murder.Services;
 using Murder.Utilities;
-using SkiaSharp;
 using System.Collections.Immutable;
 using System.Numerics;
-using System.Xml.Linq;
 
-namespace Murder.Editor.Systems
+namespace Murder.Editor.Systems;
+
+public abstract class BaseDebugColliderRenderSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem
 {
-    [WorldEditor(startActive: true)]
-    [OnlyShowOnDebugView]
-    [Filter(kind: ContextAccessorKind.Read, typeof(ColliderComponent), typeof(PositionComponent))]
-    [Filter(ContextAccessorFilter.NoneOf, typeof(CutsceneAnchorsComponent))] // Skip cutscenes.
-    public class DebugColliderRenderSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem
+    private int? _wasEditing = null;
+    private bool _wasClicking = false;
+    private bool _pendingPressedButton = false;
+
+    private int _hoveringEntity = -1;
+    private int _hoveringShape = -1;
+    private bool _contextMenuOpened = false;
+
+    private float _lastSpaceBarTime = 0;
+    private float _hideAll = 0;
+
+    public void Update(Context context)
     {
-        private static int? _wasEditing = null;
-        private bool _wasClicking = false;
-        private static bool _pendingPressedButton = false;
-
-        private static int _hoveringEntity = -1;
-        private static int _hoveringShape = -1;
-        private static bool _contextMenuOpened = false;
-
-        private static float _lastSpaceBarTime = 0;
-        private static float _hideAll = 0;
-
-        public void Update(Context context)
+        if (Game.Input.Pressed(MurderInputButtons.LeftClick))
         {
-            if (Game.Input.Pressed(MurderInputButtons.LeftClick))
-            {
-                _pendingPressedButton = true;
-            }
-
-            if (Game.Input.Pressed(Keys.Space))
-            {
-                _lastSpaceBarTime = Game.NowUnscaled;
-            }
-            if (Game.Input.Down(Keys.Space))
-            {
-                _hideAll = 1 - Calculator.ClampTime(Game.NowUnscaled - _lastSpaceBarTime, .2f);
-            }
-            else if (Game.Input.Released(Keys.Space))
-            {
-                _lastSpaceBarTime = Game.NowUnscaled;
-                _hideAll = 0;
-            }
-            else
-            {
-                _hideAll = Calculator.ClampTime(Game.NowUnscaled - _lastSpaceBarTime, 0.1f);
-            }
+            _pendingPressedButton = true;
         }
 
-        public void Draw(RenderContext render, Context context)
+        if (Game.Input.Pressed(Keys.Space))
         {
-            DrawImpl(render, context, allowEditingByDefault: false, ref _wasClicking);
-
-            // clean up afterwards!
-            _pendingPressedButton = false;
+            _lastSpaceBarTime = Game.NowUnscaled;
         }
-
-        /// <param name="allowEditingByDefault">Whether we only allow editing if the collider component is open.</param>
-        public static void DrawImpl(RenderContext render, Context context, bool allowEditingByDefault, ref bool wasClicking)
+        if (Game.Input.Down(Keys.Space))
         {
-            if (_hideAll <= 0)
-            {
-                return;
-            }
-
-            if (context.World.TryGetUnique<EditorComponent>() is not EditorComponent editor)
-            {
-                return;
-            }
-
-            if (!editor.EditorHook.DrawCollisions)
-            {
-                return;
-            }
-
-            bool usingCursor = false;
-            EditorHook hook = editor.EditorHook;
-
-            foreach (Entity e in context.Entities)
-            {
-                if (!e.HasCollider() || !e.HasPosition())
-                {
-                    continue;
-                }
-
-                ColliderComponent collider = e.GetCollider();
-                Vector2 globalPosition = e.GetGlobalPosition();
-                Vector2 scale = e.FetchScale();
-
-                Color color = collider.DebugColor * .6f;
-                ImmutableArray<IShape> newShapes = [];
-
-                bool showHandles = allowEditingByDefault ? true :
-                    (!hook.HideEditIds.Contains(e.EntityId)) &&
-                    (hook.EditorMode == EditorHook.EditorModes.EditMode && (!hook.CanSwitchModes || hook.IsEntitySelectedOrParent(e))) &&
-                    hook.StageSettings.HasFlag(Assets.StageSetting.ShowCollider) &&
-                    (hook.CursorIsBusy.Count == 1 && hook.CursorIsBusy.Contains(typeof(DebugColliderRenderSystem)) || !hook.CursorIsBusy.Any());
-
-                if (!_contextMenuOpened)
-                {
-                    _hoveringEntity = -1;
-                    _hoveringShape = -1;
-                }
-
-                bool isSolid = collider.Layer.HasFlag(CollisionLayersBase.SOLID);
-                for (int shapeIndex = 0; shapeIndex < collider.Shapes.Length; shapeIndex++)
-                {
-                    IShape shape = collider.Shapes[shapeIndex];
-                    IShape? newShape;
-
-                    // Don't draw out of bounds!
-                    if (!shape.GetBoundingBox().AddPosition(globalPosition.Point()).Touches(render.Camera.SafeBounds))
-                        continue;
-
-                    // Draw bounding box
-                    if (DrawOriginalHandles(
-                        shape,
-                        $"offset_{e.EntityId}_{shapeIndex}",
-                        globalPosition,
-                        scale,
-                        render,
-                        editor.EditorHook,
-                        showHandles,
-                        _pendingPressedButton,
-                        color * (isSolid ? 1f : 0.5f) * _hideAll,
-                        out bool isHoveringShape, 
-                        out var newShapeResult))
-                    {
-                        newShape = newShapeResult;
-                        usingCursor = true;
-                    }
-                    else
-                    {
-                        newShape = null;
-                    }
-
-                    if (isHoveringShape && !_contextMenuOpened)
-                    {
-                        _hoveringEntity = e.EntityId;
-                        _hoveringShape = shapeIndex;
-                    }
-
-                    if (newShape is not null)
-                    {
-                        newShapes = collider.Shapes.SetItem(shapeIndex, newShape);
-                        wasClicking = true;
-                    }
-                    else if (wasClicking && !usingCursor)
-                    {
-                        wasClicking = false;
-                    }
-                    else if (allowEditingByDefault)
-                    {
-                        usingCursor = false;
-                    }
-                }
-
-                if (!newShapes.IsDefaultOrEmpty)
-                {
-                    e.SetCollider(new ColliderComponent(newShapes, collider.Layer, collider.DebugColor));
-                    _wasEditing = e.EntityId;
-                }
-                else if (_wasEditing == e.EntityId)
-                {
-                    e.SendMessage(new AssetUpdatedMessage(typeof(ColliderComponent)));
-                    _wasEditing = -1;
-                }
-            }
-
-            if (usingCursor)
-            {
-                editor.EditorHook.CursorIsBusy.Add(typeof(DebugColliderRenderSystem));
-            }
-            else
-            {
-                editor.EditorHook.CursorIsBusy.Remove(typeof(DebugColliderRenderSystem));
-            }
+            _hideAll = 1 - Calculator.ClampTime(Game.NowUnscaled - _lastSpaceBarTime, .2f);
         }
-
-        private static bool DrawOriginalHandles(
-            IShape shape,
-            string id,
-            Vector2 globalPosition,
-            Vector2 scale,
-            RenderContext render,
-            EditorHook hook,
-            bool showHandles,
-            bool isCursorPressed,
-            Color color,
-            out bool hovered,
-            out IShape newShape)
+        else if (Game.Input.Released(Keys.Space))
         {
-            newShape = shape;
-            hovered = false;
-
-            if (hook.CursorWorldPosition is not Point cursorPosition)
-            {
-                return false;
-            }
-
-            bool isReadonly = hook.UsingGui;
-
-            Batch2D batch = render.DebugBatch;
-            color = color * 0.85f;
-            switch (shape)
-            {
-                case PolygonShape polyShape:
-                    var poly = polyShape.Polygon;
-                    if (poly.Vertices.IsDefaultOrEmpty)
-                        return false;
-
-                    if (showHandles)
-                    {
-                        if (EditorServices.PolyHandle(id, render, isCursorPressed, globalPosition, scale, cursorPosition, poly, Color.White, color, out var newPolygonResult, out hovered))
-                        {
-                            if (!isReadonly)
-                            {
-                                newShape = new PolygonShape(newPolygonResult);
-                                return true;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        RenderServices.DrawPoints(batch, globalPosition.Point(), scale, poly.Vertices, color, 1);
-                    }
-                    break;
-
-                case LineShape line:
-                    RenderServices.DrawLine(batch, line.Start + globalPosition, line.End + globalPosition, color);
-                    break;
-                case BoxShape box:
-                    RenderServices.DrawRectangleOutline(batch, box.Rectangle.AddPosition(globalPosition), color);
-
-                    if (showHandles)
-                    {
-                        if (EditorServices.BoxHandle(
-                                id,
-                                render,
-                                cursorPosition,
-                                isCursorPressed,
-                                box.Rectangle + globalPosition.Point(),
-                                color,
-                                false,
-                                out IntRectangle newRectangle, 
-                                out hovered))
-                        {
-                            if (!isReadonly)
-                            {
-                                newShape = new BoxShape(box.Origin, (newRectangle.TopLeft - globalPosition).Point(), newRectangle.Width, newRectangle.Height);
-                                return true;
-                            }
-                        }
-                    }
-                    break;
-                case CircleShape circle:
-                    RenderServices.DrawCircleOutline(batch, circle.Offset + globalPosition, circle.Radius, 24, color);
-                    break;
-
-                case LazyShape lazy:
-                    RenderServices.DrawCircleOutline(batch, lazy.Offset + globalPosition, lazy.Radius, 6, color);
-                    break;
-            }
-
-            return false;
+            _lastSpaceBarTime = Game.NowUnscaled;
+            _hideAll = 0;
         }
-
-        public void DrawGui(RenderContext render, Context context)
+        else
         {
-            DrawGuiImpl(render, context);
-        }
-
-        public static void DrawGuiImpl(RenderContext _, Context context)
-        {
-            EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
-            if (hook.EditorMode != EditorHook.EditorModes.EditMode)
-            {
-                return;
-            }
-
-            if (hook.AllSelectedEntities.FirstOrDefault().Value is not Entity SelectedEntity)
-            {
-                return;
-            }
-
-            if (ImGui.BeginPopupContextItem("GameplayContextMenu", ImGuiPopupFlags.MouseButtonRight | ImGuiPopupFlags.NoReopen))
-            {
-                _contextMenuOpened = true;
-                ImGui.SeparatorText("Colliders");
-
-                if (_hoveringEntity > 0 && context.World.TryGetEntity(_hoveringEntity) is Entity entity)
-                {
-                    ImGui.TextColored(Game.Profile.Theme.Accent, $"Entity {entity.EntityId} Hovered");
-
-                    var shape = entity.GetCollider().Shapes[_hoveringShape];
-
-                    if (ImGuiHelpers.Button($"Delete {shape.GetType().Name}"))
-                    {
-                        entity.SetCollider(entity.GetCollider() with { Shapes = entity.GetCollider().Shapes.RemoveAt(_hoveringShape) });
-                        ImGui.CloseCurrentPopup();
-                    }
-                }
-
-                if (DrawCreateShapeMenu(SelectedEntity, hook))
-                {
-                    ImGui.CloseCurrentPopup();
-                }
-                if (SelectedEntity.Children.Any())
-                {
-                    ImGui.Separator();
-                    ImGui.TextColored(Game.Profile.Theme.Accent, "Children");
-                    foreach (var child in SelectedEntity.FetchChildrenWithNames)
-                    {
-                        if (context.World.TryGetEntity(child.Key) is Entity childEntity)
-                        {
-                            if (childEntity.HasCollider())
-                            {
-                                ImGui.TextColored(Game.Profile.Theme.Faded, child.Value ?? $"Child {child.Key}");
-                                ImGui.SameLine();
-                                if (DrawCreateShapeMenu(childEntity, hook))
-                                {
-                                    ImGui.CloseCurrentPopup();
-                                }
-                            }
-                        }
-                    }
-                }
-
-
-
-                ImGui.EndPopup();
-            }
-            else
-            {
-                _contextMenuOpened = false;
-            }
-        }
-
-        private static Type DrawShapeButtons()
-        {
-            Type? result = null;
-            if (ImGuiHelpers.Button("Box"))
-            {
-                result = typeof(BoxShape);
-            }
-            ImGui.SameLine();
-            if (ImGuiHelpers.Button("Polygon"))
-            {
-                result = typeof(PolygonShape);
-            }
-            ImGui.SameLine();
-            if (ImGuiHelpers.Button("Circle"))
-            {
-                result = typeof(CircleShape);
-            }
-            //ImGui.SameLine();
-            //if (ImGuiHelpers.Button("Line"))
-            //{
-            //    result = typeof(LineShape);
-            //}
-            ImGui.SameLine();
-            if (ImGuiHelpers.Button("Lazy"))
-            {
-                result = typeof(LazyShape);
-            }
-
-            return result!;
-        }
-
-        private static IShape? CreateShapeFromType(Type type, Point offset)
-        {
-            if (type == typeof(BoxShape))
-            {
-                return new BoxShape(Vector2.Zero, offset, 16, 16);
-            }
-            else if (type == typeof(PolygonShape))
-            {
-                return new PolygonShape(Polygon.DIAMOND.AddPosition(offset));
-            }
-            else if (type == typeof(CircleShape))
-            {
-                return new CircleShape(16, offset);
-            }
-            else if (type == typeof(LineShape))
-            {
-                return new LineShape(offset, offset + new Point(32, 32));
-            }
-            else if (type == typeof(LazyShape))
-            {
-                return new LazyShape(16, offset);
-            }
-            return null;
-        }
-
-        private static bool DrawCreateShapeMenu(Entity entity, EditorHook hook)
-        {
-            if (entity.TryGetCollider() is ColliderComponent collider)
-            {
-                if (DrawShapeButtons() is Type shapeType)
-                {
-                    Vector2 position = entity.GetGlobalPosition();
-                    Point offset = (hook.LastCursorWorldPosition - position).Point();
-
-                    if (CreateShapeFromType(shapeType, offset) is IShape newShape)
-                    {
-                        entity.SetCollider(collider with { Shapes = collider.Shapes.Add(newShape) });
-
-                        entity.SendMessage(new AssetUpdatedMessage(typeof(ColliderComponent)));
-                        return true;
-                    }
-                }
-
-            }
-            return false;
+            _hideAll = Calculator.ClampTime(Game.NowUnscaled - _lastSpaceBarTime, 0.1f);
         }
     }
+
+    public void Draw(RenderContext render, Context context)
+    {
+        DrawImpl(render, context, allowEditingByDefault: false, ref _wasClicking);
+    }
+
+    /// <param name="allowEditingByDefault">Whether we only allow editing if the collider component is open.</param>
+    public void DrawImpl(RenderContext render, Context context, bool allowEditingByDefault, ref bool wasClicking)
+    {
+        if (_hideAll <= 0)
+        {
+            _pendingPressedButton = false;
+            return;
+        }
+
+        if (context.World.TryGetUnique<EditorComponent>() is not EditorComponent editor)
+        {
+            _pendingPressedButton = false;
+            return;
+        }
+
+        if (!editor.EditorHook.DrawCollisions)
+        {
+            _pendingPressedButton = false;
+            return;
+        }
+
+        bool usingCursor = false;
+        EditorHook hook = editor.EditorHook;
+
+        foreach (Entity e in context.Entities)
+        {
+            if (!e.HasCollider() || !e.HasPosition())
+            {
+                continue;
+            }
+
+            ColliderComponent collider = e.GetCollider();
+            Vector2 globalPosition = e.GetGlobalPosition();
+            Vector2 scale = e.FetchScale();
+
+            Color color = collider.DebugColor * .6f;
+            ImmutableArray<IShape> newShapes = [];
+
+            bool showHandles = allowEditingByDefault ? true :
+                (!hook.HideEditIds.Contains(e.EntityId)) &&
+                (hook.EditorMode == EditorHook.EditorModes.EditMode && (!hook.CanSwitchModes || hook.IsEntitySelectedOrParent(e))) &&
+                hook.StageSettings.HasFlag(Assets.StageSetting.ShowCollider) &&
+                (hook.CursorIsBusy.Count == 1 && hook.CursorIsBusy.Contains(typeof(DebugColliderRenderSystem)) || !hook.CursorIsBusy.Any());
+
+            if (!_contextMenuOpened)
+            {
+                _hoveringEntity = -1;
+                _hoveringShape = -1;
+            }
+
+            bool isSolid = collider.Layer.HasFlag(CollisionLayersBase.SOLID);
+            for (int shapeIndex = 0; shapeIndex < collider.Shapes.Length; shapeIndex++)
+            {
+                IShape shape = collider.Shapes[shapeIndex];
+                IShape? newShape;
+
+                // Don't draw out of bounds!
+                if (!shape.GetBoundingBox().AddPosition(globalPosition.Point()).Touches(render.Camera.SafeBounds))
+                    continue;
+
+                // Draw bounding box
+                if (DrawOriginalHandles(
+                    shape,
+                    $"offset_{e.EntityId}_{shapeIndex}",
+                    globalPosition,
+                    scale,
+                    render,
+                    editor.EditorHook,
+                    showHandles,
+                    _pendingPressedButton,
+                    color * (isSolid ? 1f : 0.5f) * _hideAll,
+                    out bool isHoveringShape,
+                    out var newShapeResult))
+                {
+                    newShape = newShapeResult;
+                    usingCursor = true;
+                }
+                else
+                {
+                    newShape = null;
+                }
+
+                if (isHoveringShape && !_contextMenuOpened)
+                {
+                    _hoveringEntity = e.EntityId;
+                    _hoveringShape = shapeIndex;
+                }
+
+                if (newShape is not null)
+                {
+                    newShapes = collider.Shapes.SetItem(shapeIndex, newShape);
+                    wasClicking = true;
+                }
+                else if (wasClicking && !usingCursor)
+                {
+                    wasClicking = false;
+                }
+                else if (allowEditingByDefault)
+                {
+                    usingCursor = false;
+                }
+            }
+
+            if (!newShapes.IsDefaultOrEmpty)
+            {
+                e.SetCollider(new ColliderComponent(newShapes, collider.Layer, collider.DebugColor));
+                _wasEditing = e.EntityId;
+            }
+            else if (_wasEditing == e.EntityId)
+            {
+                e.SendMessage(new AssetUpdatedMessage(typeof(ColliderComponent)));
+                _wasEditing = -1;
+            }
+        }
+
+        if (usingCursor)
+        {
+            editor.EditorHook.CursorIsBusy.Add(typeof(DebugColliderRenderSystem));
+        }
+        else
+        {
+            editor.EditorHook.CursorIsBusy.Remove(typeof(DebugColliderRenderSystem));
+        }
+
+        // clean up afterwards!
+        _pendingPressedButton = false;
+    }
+
+    private static bool DrawOriginalHandles(
+        IShape shape,
+        string id,
+        Vector2 globalPosition,
+        Vector2 scale,
+        RenderContext render,
+        EditorHook hook,
+        bool showHandles,
+        bool isCursorPressed,
+        Color color,
+        out bool hovered,
+        out IShape newShape)
+    {
+        newShape = shape;
+        hovered = false;
+
+        if (hook.CursorWorldPosition is not Point cursorPosition)
+        {
+            return false;
+        }
+
+        bool isReadonly = hook.UsingGui;
+
+        Batch2D batch = render.DebugBatch;
+        color = color * 0.85f;
+        switch (shape)
+        {
+            case PolygonShape polyShape:
+                var poly = polyShape.Polygon;
+                if (poly.Vertices.IsDefaultOrEmpty)
+                    return false;
+
+                if (showHandles)
+                {
+                    if (EditorServices.PolyHandle(id, render, isCursorPressed, globalPosition, scale, cursorPosition, poly, Color.White, color, out var newPolygonResult, out hovered))
+                    {
+                        if (!isReadonly)
+                        {
+                            newShape = new PolygonShape(newPolygonResult);
+                            return true;
+                        }
+                    }
+                }
+                else
+                {
+                    RenderServices.DrawPoints(batch, globalPosition.Point(), scale, poly.Vertices, color, 1);
+                }
+                break;
+
+            case LineShape line:
+                RenderServices.DrawLine(batch, line.Start + globalPosition, line.End + globalPosition, color);
+                break;
+            case BoxShape box:
+                RenderServices.DrawRectangleOutline(batch, box.Rectangle.AddPosition(globalPosition), color);
+
+                if (showHandles)
+                {
+                    if (EditorServices.BoxHandle(
+                            id,
+                            render,
+                            cursorPosition,
+                            isCursorPressed,
+                            box.Rectangle + globalPosition.Point(),
+                            color,
+                            false,
+                            out IntRectangle newRectangle,
+                            out hovered))
+                    {
+                        if (!isReadonly)
+                        {
+                            newShape = new BoxShape(box.Origin, (newRectangle.TopLeft - globalPosition).Point(), newRectangle.Width, newRectangle.Height);
+                            return true;
+                        }
+                    }
+                }
+                break;
+            case CircleShape circle:
+                RenderServices.DrawCircleOutline(batch, circle.Offset + globalPosition, circle.Radius, 24, color);
+                break;
+
+            case LazyShape lazy:
+                RenderServices.DrawCircleOutline(batch, lazy.Offset + globalPosition, lazy.Radius, 6, color);
+                break;
+        }
+
+        return false;
+    }
+
+    public void DrawGui(RenderContext render, Context context)
+    {
+        DrawGuiImpl(render, context);
+    }
+
+    public void DrawGuiImpl(RenderContext _, Context context)
+    {
+        EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
+        if (hook.EditorMode != EditorHook.EditorModes.EditMode)
+        {
+            return;
+        }
+
+        if (hook.AllSelectedEntities.FirstOrDefault().Value is not Entity SelectedEntity)
+        {
+            return;
+        }
+
+        if (ImGui.BeginPopupContextItem("GameplayContextMenu", ImGuiPopupFlags.MouseButtonRight | ImGuiPopupFlags.NoReopen))
+        {
+            _contextMenuOpened = true;
+            ImGui.SeparatorText("Colliders");
+
+            if (_hoveringEntity > 0 && context.World.TryGetEntity(_hoveringEntity) is Entity entity)
+            {
+                ImGui.TextColored(Game.Profile.Theme.Accent, $"Entity {entity.EntityId} Hovered");
+
+                var shape = entity.GetCollider().Shapes[_hoveringShape];
+
+                if (ImGuiHelpers.Button($"Delete {shape.GetType().Name}"))
+                {
+                    entity.SetCollider(entity.GetCollider() with { Shapes = entity.GetCollider().Shapes.RemoveAt(_hoveringShape) });
+                    ImGui.CloseCurrentPopup();
+                }
+            }
+
+            if (DrawCreateShapeMenu(SelectedEntity, hook))
+            {
+                ImGui.CloseCurrentPopup();
+            }
+            if (SelectedEntity.Children.Any())
+            {
+                ImGui.Separator();
+                ImGui.TextColored(Game.Profile.Theme.Accent, "Children");
+                foreach (var child in SelectedEntity.FetchChildrenWithNames)
+                {
+                    if (context.World.TryGetEntity(child.Key) is Entity childEntity)
+                    {
+                        if (childEntity.HasCollider())
+                        {
+                            ImGui.TextColored(Game.Profile.Theme.Faded, child.Value ?? $"Child {child.Key}");
+                            ImGui.SameLine();
+                            if (DrawCreateShapeMenu(childEntity, hook))
+                            {
+                                ImGui.CloseCurrentPopup();
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
+            ImGui.EndPopup();
+        }
+        else
+        {
+            _contextMenuOpened = false;
+        }
+    }
+
+    private static Type DrawShapeButtons()
+    {
+        Type? result = null;
+        if (ImGuiHelpers.Button("Box"))
+        {
+            result = typeof(BoxShape);
+        }
+        ImGui.SameLine();
+        if (ImGuiHelpers.Button("Polygon"))
+        {
+            result = typeof(PolygonShape);
+        }
+        ImGui.SameLine();
+        if (ImGuiHelpers.Button("Circle"))
+        {
+            result = typeof(CircleShape);
+        }
+        //ImGui.SameLine();
+        //if (ImGuiHelpers.Button("Line"))
+        //{
+        //    result = typeof(LineShape);
+        //}
+        ImGui.SameLine();
+        if (ImGuiHelpers.Button("Lazy"))
+        {
+            result = typeof(LazyShape);
+        }
+
+        return result!;
+    }
+
+    private static IShape? CreateShapeFromType(Type type, Point offset)
+    {
+        if (type == typeof(BoxShape))
+        {
+            return new BoxShape(Vector2.Zero, offset, 16, 16);
+        }
+        else if (type == typeof(PolygonShape))
+        {
+            return new PolygonShape(Polygon.DIAMOND.AddPosition(offset));
+        }
+        else if (type == typeof(CircleShape))
+        {
+            return new CircleShape(16, offset);
+        }
+        else if (type == typeof(LineShape))
+        {
+            return new LineShape(offset, offset + new Point(32, 32));
+        }
+        else if (type == typeof(LazyShape))
+        {
+            return new LazyShape(16, offset);
+        }
+        return null;
+    }
+
+    private static bool DrawCreateShapeMenu(Entity entity, EditorHook hook)
+    {
+        if (entity.TryGetCollider() is ColliderComponent collider)
+        {
+            if (DrawShapeButtons() is Type shapeType)
+            {
+                Vector2 position = entity.GetGlobalPosition();
+                Point offset = (hook.LastCursorWorldPosition - position).Point();
+
+                if (CreateShapeFromType(shapeType, offset) is IShape newShape)
+                {
+                    entity.SetCollider(collider with { Shapes = collider.Shapes.Add(newShape) });
+
+                    entity.SendMessage(new AssetUpdatedMessage(typeof(ColliderComponent)));
+                    return true;
+                }
+            }
+
+        }
+        return false;
+    }
+}
+
+[WorldEditor(startActive: true)]
+[OnlyShowOnDebugView]
+[Filter(kind: ContextAccessorKind.Read, typeof(ColliderComponent), typeof(PositionComponent))]
+[Filter(ContextAccessorFilter.NoneOf, typeof(CutsceneAnchorsComponent))] // Skip cutscenes.
+public class DebugColliderRenderSystem : BaseDebugColliderRenderSystem
+{
 }

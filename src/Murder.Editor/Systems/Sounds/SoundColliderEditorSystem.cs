@@ -2,42 +2,15 @@
 using Bang.Contexts;
 using Bang.Systems;
 using Murder.Components;
-using Murder.Core.Graphics;
 using Murder.Editor.Attributes;
-using Murder.Editor.Components;
-using Murder.Editor.Core;
-using Murder.Editor.Services;
 
-namespace Murder.Editor.Systems.Sounds
+namespace Murder.Editor.Systems;
+
+[SoundEditor]
+[PrefabEditor]
+[OnlyShowOnDebugView]
+[Filter(typeof(ColliderComponent), typeof(PositionComponent))]
+[Filter(ContextAccessorFilter.AnyOf, typeof(SoundComponent), typeof(SoundParameterComponent))]
+public class SoundColliderEditorSystem : BaseDebugColliderRenderSystem
 {
-    [SoundEditor]
-    [PrefabEditor]
-    [OnlyShowOnDebugView]
-    [Filter(typeof(ColliderComponent), typeof(PositionComponent))]
-    [Filter(ContextAccessorFilter.AnyOf, typeof(SoundComponent), typeof(SoundParameterComponent))]
-    public class SoundColliderEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem
-    {
-        private bool _wasClicking = false;
-
-        public void Update(Context context)
-        {
-            if (EditorServices.LastDragStyle == EditorServices.DragStyle.Move)
-            {
-                if (context.World.TryGetUnique<EditorComponent>() is EditorComponent editor)
-                {
-                    editor.EditorHook.Cursor = CursorStyle.Hand;
-                }
-            }
-        }
-
-        public void Draw(RenderContext render, Context context)
-        {
-            DebugColliderRenderSystem.DrawImpl(render, context, allowEditingByDefault: false, ref _wasClicking);
-        }
-
-        public void DrawGui(RenderContext render, Context context)
-        {
-            DebugColliderRenderSystem.DrawGuiImpl(render, context);
-        }
-    }
 }
