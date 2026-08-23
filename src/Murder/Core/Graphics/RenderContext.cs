@@ -422,9 +422,10 @@ public class RenderContext : IDisposable
         if (_pendingScreenshotAtArea is Rectangle screenshotArea)
         {
             Point position = Camera.WorldToScreenPosition(screenshotArea.TopLeft).Round();
+            float scaleFactor = ((float)_finalTarget.Width / _mainTarget.Width);
             Point screenShotSize = new(screenshotArea.Width, screenshotArea.Height);
 
-            TakeScreenshot(_mainTarget, new IntRectangle(position, screenShotSize), recoverRenderTargetOnEnd: true);
+            TakeScreenshot(_mainTarget, new IntRectangle(position.X, position.Y, screenshotArea.Width, screenshotArea.Height), recoverRenderTargetOnEnd: true);
         }
 
         GameUiBatch.End();          // <=== Ui that follows the camera
@@ -545,21 +546,40 @@ public class RenderContext : IDisposable
     }
 
     /// <summary>
-    /// Take a screenshot from <paramref name="target"/>.
+    /// Take a screenshot from <paramref name="source"/>.
     /// </summary>
-    /// <param name="target">Current render target that screenshot will be taken.</param>
+    /// <param name="source">Current render target that screenshot will be taken from.</param>
     /// <param name="clippingArea">Area which will take effect.</param>
     /// <param name="recoverRenderTargetOnEnd">Whether <see cref="_graphicsDevice"/> should set the 
-    /// render target to null (false) or <paramref name="target"/> (true).</param>
-    protected void TakeScreenshot(RenderTarget2D target, IntRectangle clippingArea, bool recoverRenderTargetOnEnd)
+    /// render target to null (false) or <paramref name="source"/> (true).</param>
+    protected void TakeScreenshot(RenderTarget2D source, IntRectangle clippingArea, bool recoverRenderTargetOnEnd)
     {
-        using RenderTarget2D screenshot = new(_graphicsDevice, clippingArea.Width, clippingArea.Height);
+        float zoom = Math.Max(1f, Camera.Zoom);
+
+        // How many  pixels fit in the requested area.
+        Point outputSize = new Point(Math.Max(1, Calculator.FloorToInt(clippingArea.Width / zoom)), Math.Max(1, Calculator.FloorToInt(clippingArea.Height / zoom)));
+
+        // Snap the source rect;
+        Point sourceSize = new Point(Calculator.RoundToInt(outputSize.X * zoom), Calculator.RoundToInt(outputSize.Y * zoom));
+        Point sourcePosition = new Point(
+            Calculator.RoundToInt(Calculator.FloorToInt(clippingArea.X / zoom) * zoom),
+            Calculator.RoundToInt(Calculator.FloorToInt(clippingArea.Y / zoom) * zoom));
+
+        // Keep it inside the source so we don't get out of bounds
+        sourcePosition.X = Math.Clamp(sourcePosition.X, 0, Math.Max(0, source.Width - sourceSize.X));
+        sourcePosition.Y = Math.Clamp(sourcePosition.Y, 0, Math.Max(0, source.Height - sourceSize.Y));
+
+        IntRectangle sourceArea = new(sourcePosition.X, sourcePosition.Y, sourceSize.X, sourceSize.Y);
+
+        using RenderTarget2D screenshot = new(_graphicsDevice, outputSize.X, outputSize.Y);
         _graphicsDevice.SetRenderTarget(screenshot);
+        _graphicsDevice.Clear(Color.Transparent);
 
-        RenderServices.DrawTextureQuad(target, clippingArea, screenshot.Bounds, Color.White, BlendState.Opaque);
+        RenderServices.DrawTextureQuad(source, sourceArea, screenshot.Bounds,
+            Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
+
         Game.Data.RecordScreenshot(screenshot);
-
-        _graphicsDevice.SetRenderTarget(recoverRenderTargetOnEnd ? target : null);
+        _graphicsDevice.SetRenderTarget(recoverRenderTargetOnEnd ? source : null);
         _pendingScreenshotAtArea = null;
     }
 
