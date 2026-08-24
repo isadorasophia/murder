@@ -136,6 +136,8 @@ namespace Murder.Assets
 
         public virtual bool RevertComponent(Type t) => _entity.RevertComponent(t);
 
+        public IComponent? TryGetComponent(Type t) => _entity.TryGetComponent(t);
+
         public IComponent GetComponent(Type type) => _entity.GetComponent(type);
 
         /// <summary>
