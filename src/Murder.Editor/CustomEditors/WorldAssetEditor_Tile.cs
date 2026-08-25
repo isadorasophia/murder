@@ -51,7 +51,7 @@ namespace Murder.Editor.CustomEditors
                 {
                     if (ImGuiHelpers.DeleteButton($"Delete#{room.Guid}"))
                     {
-                        DeleteEntityWithGroup(room.Guid);
+                        DeleteInstance(parent: null, room.Guid);
                     }
 
                     ImGui.SameLine();
