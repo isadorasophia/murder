@@ -357,7 +357,7 @@ namespace Murder.Editor.Services
                     {
                         RenderServices.DrawRectangle(render.DebugBatch, anchor.AddPosition(basePosition), Calculator.Blink(10, false) ? color : Color.White, 1f);
 
-                        if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+                        if (isCursorPressed)
                         {
                             newPolygon = polygon.RemoveVerticeAt(Calculator.WrapAround(_draggingAnchor + 1, 0, polygon.Vertices.Length - 1));
                             return true;
@@ -398,7 +398,7 @@ namespace Murder.Editor.Services
             {
                 // Create new anchor
                 RenderServices.DrawRectangle(render.DebugBatch, new Rectangle(selectedPoint.Value.X - 1.5f + basePosition.X, selectedPoint.Value.Y - 1.5f + basePosition.Y, 3, 3), Color.White, 1f);
-                if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+                if (isCursorPressed)
                 {
                     newPolygon = polygon.WithNewVerticeAt(_draggingAnchor + 1, cursor);
                     return true;

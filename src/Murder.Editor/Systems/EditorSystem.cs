@@ -8,6 +8,7 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Core.Input;
 using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
@@ -64,10 +65,12 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
 
     public void DrawGui(RenderContext render, Context context)
     {
+        var hook = context.World.GetUnique<EditorComponent>().EditorHook;
+        hook.CursorPressed = false;
+
         if (!render.RenderToScreen)
             return;
 
-        var hook = context.World.GetUnique<EditorComponent>().EditorHook;
 
         ImGui.BeginMainMenuBar();
 
@@ -462,6 +465,11 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
             hook.LastCursorWorldPosition = cursorPosition;
         }
 
+        if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+        {
+            hook.CursorPressed = true;
+        }
+
         if (hook.CanSwitchModes && !hook.UsingGui && Game.Input.Shortcut(Microsoft.Xna.Framework.Input.Keys.Tab))
         {
             if (hook.EditorMode == EditorHook.EditorModes.EditMode)
@@ -484,6 +492,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
         DrawEntityDimensions(render, hook);
     }
+
 
     private static void DrawEntityDimensions(RenderContext render, EditorHook hook)
     {

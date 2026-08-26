@@ -67,6 +67,7 @@ namespace Murder.Editor.Utilities
 
         public bool UsingGui = false;
         public readonly HashSet<Type> CursorIsBusy = new();
+        public bool CursorPressed = false;
         public bool IsPopupOpen = false;
 
         /// <summary>
@@ -286,7 +287,7 @@ namespace Murder.Editor.Utilities
 
         [CollisionLayer]
         public int CurrentPathfindCollisionMask = CollisionLayersBase.BLOCK_VISION | CollisionLayersBase.CARVE;
-        
+
         internal HashSet<int> HideEditIds = new();
 
         /// <summary>
