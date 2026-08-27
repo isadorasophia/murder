@@ -203,17 +203,17 @@ namespace Murder.Core
                 _gridMap[(y * Width) + x] |= value;
             }
 
-            _tiles = ImmutableArray<ImmutableArray<(int tile, int sortAdjust, bool occludeGround)>>.Empty;
+            _tiles = [];
 
             OnModified?.Invoke();
         }
 
         public void Unset(int x, int y, int value)
         {
-            if (x < 0 || y < 0) return;
+            if (x < 0 || y < 0 || (y * Width) + x > _gridMap.Length) return;
 
             _gridMap[(y * Width) + x] &= ~value;
-            _tiles = ImmutableArray<ImmutableArray<(int tile, int sortAdjust, bool occludeGround)>>.Empty;
+            _tiles = [];
 
             OnModified?.Invoke();
         }
@@ -230,7 +230,7 @@ namespace Murder.Core
                     _gridMap[cy * Width + cx] &= ~value;
                 }
             }
-            _tiles = ImmutableArray<ImmutableArray<(int tile, int sortAdjust, bool occludeGround)>>.Empty;
+            _tiles = [];
         }
 
         public void Resize(int width, int height, Point origin)

@@ -186,6 +186,11 @@ namespace Murder.Core
 
         public void SetOccupiedAsStatic(int x, int y, int layer, bool @override = false)
         {
+            if (x < 0 || y < 0 || x > Width || y > Height)
+            {
+                return;
+            }
+
             if (@override)
             {
                 _gridMap[(y * Width) + x].CollisionType &= layer;
@@ -194,6 +199,17 @@ namespace Murder.Core
             {
                 _gridMap[(y * Width) + x].CollisionType |= layer;
             }
+        }
+
+        public void UnsetCollision(int x, int y, int layer)
+        {
+            if (x < 0 || y < 0 || x > Width || y > Height)
+            {
+                return;
+            }
+
+            int position = (y * Width) + x;
+            _gridMap[position].CollisionType &= ~layer;
         }
 
         public void SetOccupied(Point p, int collisionMask, int weight) =>

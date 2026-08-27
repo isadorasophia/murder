@@ -1511,15 +1511,9 @@ public static class PhysicsServices
 
     public static bool ContainsPoint(Entity entity, Point point)
     {
-        if (entity.TryGetComponent<ColliderComponent>() is not ColliderComponent collider)
+        if (entity.TryGetCollider() is not ColliderComponent collider)
         {
             return false;
-        }
-
-        Point position = Point.Zero;
-        if (entity.TryGetComponent<PositionComponent>() is PositionComponent positionComponent)
-        {
-            position = positionComponent.GetGlobal().ToPoint();
         }
 
         if (collider.Shapes.IsDefaultOrEmpty)
@@ -1527,8 +1521,10 @@ public static class PhysicsServices
             return false;
         }
 
-        bool contains = false;
-        foreach (var shape in collider.Shapes)
+        Point position = entity.GetGlobalPosition().ToPoint();
+
+        bool contains;
+        foreach (IShape shape in collider.Shapes)
         {
             switch (shape)
             {
