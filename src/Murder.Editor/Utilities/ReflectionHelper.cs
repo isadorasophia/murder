@@ -124,8 +124,9 @@ namespace Murder.Editor.Utilities
 
             var result = targetFields
                 .Concat(targetProperties)
-                .Where(f => !AttributeExtensions.IsDefined(f, typeof(JsonIgnoreAttribute))
-                    && !AttributeExtensions.IsDefined(f, typeof(HideInEditorAttribute)));
+                .Where(f => AttributeExtensions.IsDefined(f, typeof(ShowInEditorAttribute)) || 
+                            (!AttributeExtensions.IsDefined(f, typeof(JsonIgnoreAttribute)) && 
+                             !AttributeExtensions.IsDefined(f, typeof(HideInEditorAttribute))));
 
             return result ?? [];
         }
