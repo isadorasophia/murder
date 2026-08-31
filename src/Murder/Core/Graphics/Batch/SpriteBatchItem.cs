@@ -123,6 +123,7 @@ public class SpriteBatchItem
     {
         Texture = texture;
         VertexCount = (short)vertices.Length;
+        BlendState = drawInfo.BlendState;
         int triangleCount = VertexCount - 2;
 
         // Make sure we have space
