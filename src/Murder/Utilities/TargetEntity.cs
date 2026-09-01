@@ -8,6 +8,7 @@
         Target,
         CreateNewEntity,
         Child,
-        Player
+        Player,
+        Other
     }
 }
