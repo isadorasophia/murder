@@ -1,9 +1,13 @@
 ﻿using ImGuiNET;
 using Murder.Core.Dialogs;
+using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Editor.CustomEditors;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
+using Murder.Editor.Utilities;
+using System;
+using System.Reflection;
 
 namespace Murder.Editor.CustomFields
 {
@@ -52,10 +56,17 @@ namespace Murder.Editor.CustomFields
             // -- Select action value --
             if (!string.IsNullOrEmpty(action.Fact.Name) && action.Kind != BlackboardActionKind.Toggle)
             {
-                string targetFieldName = GetTargetFieldForFact(action.Fact.Kind);
-                if (DrawValue(ref action, targetFieldName))
+                if (action.Fact.Kind == FactKind.Enum)
                 {
-                    modified = true;
+                    modified = DrawEnumComboForAction(ref action);
+                }
+                else
+                {
+                    string targetFieldName = GetTargetFieldForFact(action.Fact.Kind);
+                    if (DrawValue(ref action, targetFieldName))
+                    {
+                        modified = true;
+                    }
                 }
             }
 
@@ -88,6 +99,21 @@ namespace Murder.Editor.CustomFields
                     GameLogger.Warning("Invalid fact?");
                     return nameof(Criterion.IntValue);
             }
+        }
+
+        private static bool DrawEnumComboForAction(ref DialogAction action)
+        {
+            Type? t = AssetsFilter.FetchTypeForFact(action.Fact.EditorName);
+            FieldInfo? valueField = typeof(DialogAction).GetField(nameof(DialogAction.IntValue));
+            if (t is null || valueField is null)
+            {
+                return false;
+            }
+
+            EditorMember fieldMember = EditorMember.Create(valueField);
+            fieldMember = fieldMember.CreateFrom(t, string.Empty, isReadOnly: false);
+
+            return DrawValue(ref action, fieldMember);
         }
 
         private static bool DrawActionCombo(string id, ref DialogAction action)
@@ -128,6 +154,7 @@ namespace Murder.Editor.CustomFields
                 case FactKind.Bool:
                     return [BlackboardActionKind.Set, BlackboardActionKind.Toggle];
 
+                case FactKind.Enum:
                 case FactKind.Int:
                 case FactKind.Float:
                     return [BlackboardActionKind.Set, BlackboardActionKind.SetMax, BlackboardActionKind.SetMin, BlackboardActionKind.Add, BlackboardActionKind.Minus];

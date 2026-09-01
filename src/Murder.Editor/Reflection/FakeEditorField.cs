@@ -32,6 +32,11 @@ namespace Murder.Editor.Reflection
 
         public override void SetValue(object? obj, object? value)
         {
+            if (_actualType.IsEnum && !_underlyingMember.GetType().IsEnum)
+            {
+                value = Convert.ToInt32(value);
+            }
+
             _underlyingMember.SetValue(obj, value);
         }
 

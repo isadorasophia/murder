@@ -598,6 +598,13 @@ namespace Murder.Core.Dialogs
                 case FactKind.String:
                     tracker.SetString(fact.Blackboard, fact.Name, action.StrValue!, character: Guid);
                     break;
+
+                case FactKind.Enum:
+                    int intForEnum = action.IntValue!.Value;
+
+                    tracker.SetValue(fact.Blackboard, fact.Name, intForEnum, character: Guid);
+                    tracker.OnFieldModifiedByDialogue(world, fact.Blackboard, fact.Name, action.Kind, intForEnum);
+                    break;
             }
 
         }
