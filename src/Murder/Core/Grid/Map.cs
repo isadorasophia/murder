@@ -193,7 +193,7 @@ namespace Murder.Core
 
             if (@override)
             {
-                _gridMap[(y * Width) + x].CollisionType &= layer;
+                _gridMap[(y * Width) + x].CollisionType = layer;
             }
             else
             {

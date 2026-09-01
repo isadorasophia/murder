@@ -147,10 +147,7 @@ namespace Murder.Editor.Utilities
         private static readonly Lazy<ImmutableArray<Type>> _componentTypes = new(() =>
         {
             return ReflectionHelper.GetAllImplementationsOf<IComponent>()
-                .Where(t => !Attribute.IsDefined(t, typeof(HideInEditorAttribute))
-                    && !typeof(IMessage).IsAssignableFrom(t)
-                    && !Attribute.IsDefined(t, typeof(RuntimeOnlyAttribute))
-                    && !Attribute.IsDefined(t, typeof(HideInEditorAttribute)))
+                .Where(t => CanShowTypeOnEditor(t) && !typeof(IMessage).IsAssignableFrom(t))
                 .ToImmutableArray();
         });
 
@@ -159,8 +156,7 @@ namespace Murder.Editor.Utilities
         private static readonly Lazy<ImmutableArray<Type>> _stateMachines = new(() =>
         {
             return ReflectionHelper.GetAllImplementationsOf<StateMachine>()
-                .Where(t => !Attribute.IsDefined(t, typeof(RuntimeOnlyAttribute))
-                    && !Attribute.IsDefined(t, typeof(HideInEditorAttribute)))
+                .Where(t => CanShowTypeOnEditor(t))
                 .ToImmutableArray();
         });
 
@@ -190,6 +186,26 @@ namespace Murder.Editor.Utilities
         {
             return ReflectionHelper.SafeGetAllTypesInAllAssemblies()
                 .Where(type => type.GetInterfaces().Contains(@interface) && !type.IsInterface);
+        }
+
+        private static bool CanShowTypeOnEditor(Type t)
+        {
+            if (Attribute.IsDefined(t, typeof(ShowInEditorAttribute)))
+            {
+                return true;
+            }
+
+            if (Attribute.IsDefined(t, typeof(HideInEditorAttribute)))
+            {
+                return false;
+            }
+
+            if (Attribute.IsDefined(t, typeof(RuntimeOnlyAttribute)))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private static Dictionary<string, Fact>? _blackboards = null;
