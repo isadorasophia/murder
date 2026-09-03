@@ -7,7 +7,8 @@ namespace Murder.Components.Graphics
     {
         public readonly float Alpha = 0.3f;
         public readonly Vector2 Offset = Vector2.Zero;
-        public readonly bool BlockReflection = false;
+
+        public bool BlockReflection { get; init; } = false;
 
         public ReflectionComponent()
         {
