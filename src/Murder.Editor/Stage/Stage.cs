@@ -397,12 +397,18 @@ namespace Murder.Editor.Stages
                 {
                     if (!EditorHook.SelectionBox.IsEmpty)
                     {
-                        ImGui.TextColored(Game.Profile.Theme.White, $"({EditorHook.SelectionBox.X}, {EditorHook.SelectionBox.Y}) ({EditorHook.SelectionBox.Width}, {EditorHook.SelectionBox.Height})");
+                        ImGui.TextColored(Game.Profile.Theme.White, $"({EditorHook.SelectionBox.X:0}, {EditorHook.SelectionBox.Y:0}) ({EditorHook.SelectionBox.Width:0}, {EditorHook.SelectionBox.Height:0})");
                     }
                     else
                     {
                         ImGui.TextColored(Game.Profile.Theme.Faded, $"{EditorHook.CursorWorldPosition}");
                         // ImGui.TextColored(Game.Profile.Theme.Faded, $"{EditorHook.CursorScreenPosition}"); // use this to debug the screen position (useful for dpi)
+                    }
+
+                    if (EditorHook.AllSelectedEntities.Count == 1 && EditorHook.AllSelectedEntities.FirstOrDefault().Value is Entity entity)
+                    {
+                        Vector2 distanceToCursor = (EditorHook.CursorWorldPosition ?? Vector2.Zero) - entity.GetGlobalPosition();
+                        ImGui.TextColored(Game.Profile.Theme.Faded, $"({distanceToCursor.X:0},{distanceToCursor.Y:0})");
                     }
                     ImGui.End();
                 }
