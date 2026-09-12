@@ -383,7 +383,7 @@ public static class EntityServices
     /// <summary>
     /// Plays an animation and loops.
     /// </summary>
-    public static void PlaySpriteAnimationWithOffset(this Entity entity, string animation, int sortOffset)
+    public static void PlaySpriteAnimationWithOffset(this Entity entity, string animation, float sortOffset)
     {
         if (TryPlaySpriteAnimation(entity, animation) is SpriteComponent sprite)
         {
@@ -394,7 +394,7 @@ public static class EntityServices
     /// <summary>
     /// Plays an animation and loops.
     /// </summary>
-    public static void PlaySpriteAnimationWithOffset(this Entity entity, int sortOffset, params string[] nextAnimations)
+    public static void PlaySpriteAnimationWithOffset(this Entity entity, float sortOffset, params string[] nextAnimations)
     {
         if (TryPlaySpriteAnimation(entity, nextAnimations) is SpriteComponent sprite)
         {
