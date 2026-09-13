@@ -1,9 +1,11 @@
 ﻿using Bang;
 using Bang.Entities;
 using Bang.StateMachines;
+using Murder.Components;
 using Murder.Core;
 using Murder.Core.Dialogs;
 using Murder.Diagnostics;
+using Murder.Prefabs;
 using Murder.StateMachines;
 
 namespace Murder.Services;
@@ -120,5 +122,30 @@ public static class CoroutineServices
 
             yield return Wait.NextFrame;
         }
+    }
+
+    /// <summary>
+    /// Run a coroutine tied to this one entity.
+    /// This is helpful when you want to make sure there is no more than one operating at the same time.
+    /// </summary>
+    public static Entity RunActorCoroutine(this World world, Entity e, IEnumerator<Wait> routine, CoroutineFlags flags = CoroutineFlags.None)
+    {
+        if (e.TryFetchChild(".coroutine") is not Entity coroutine)
+        {
+            coroutine = world.AddEntity(new DoNotPersistEntityOnSaveComponent());
+            e.AddChild(coroutine.EntityId, ".coroutine");
+        }
+
+        if (flags.HasFlag(CoroutineFlags.DoNotPause))
+        {
+            e.SetDoNotPause();
+        }
+        else
+        {
+            e.RemoveDoNotPause();
+        }
+
+        e.RunCoroutine(routine);
+        return e;
     }
 }
