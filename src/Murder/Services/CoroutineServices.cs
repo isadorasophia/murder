@@ -56,7 +56,7 @@ public static class CoroutineServices
         return murderWorld.RunCoroutine(WaitAndRun(seconds, action), flags);
     }
 
-    public static Coroutine FireNextFrame(this World world, Action action, CoroutineFlags flags = CoroutineFlags.None) => 
+    public static Coroutine FireNextFrame(this World world, Action action, CoroutineFlags flags = CoroutineFlags.None) =>
         FireAfterFrames(world, 1, action, flags);
 
     public static Coroutine FireAfterFrames(this World world, int frames, Action action, CoroutineFlags flags = CoroutineFlags.None)
@@ -147,5 +147,15 @@ public static class CoroutineServices
 
         e.RunCoroutine(routine);
         return e;
+    }
+
+    public static void StopActorCoroutine(this Entity e)
+    {
+        if (e.TryFetchChild(".coroutine") is not Entity coroutine)
+        {
+            return;
+        }
+
+        coroutine.RemoveStateMachine();
     }
 }
