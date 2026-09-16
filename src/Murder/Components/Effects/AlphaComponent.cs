@@ -1,4 +1,5 @@
 ﻿using Bang.Components;
+using Murder.Attributes;
 
 namespace Murder.Components
 {
@@ -8,6 +9,7 @@ namespace Murder.Components
     
     public readonly struct AlphaComponent : IComponent
     {
+        [Slider(0,1)]
         public readonly float Alpha = 1f;
 
         public AlphaComponent() { }
