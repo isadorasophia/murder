@@ -198,7 +198,7 @@ namespace Murder.Core.Graphics
                 yPosition: -center.Y,
                 zPosition: 0);
 
-            // Now, we will apply the scale operation.
+            // Now, we will apply the rotation operation.
             view *= Matrix.CreateRotationZ(RotationRad);
 
             // And our zoom!
