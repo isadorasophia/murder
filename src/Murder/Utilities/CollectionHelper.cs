@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using Bang.Contexts;
+using System.Text.RegularExpressions;
 
 namespace Murder.Utilities
 {
@@ -54,5 +55,17 @@ namespace Murder.Utilities
 
             return key;
         }
+    }
+
+    /// <summary>
+    /// Helper class for comparing integers in descending order.
+    /// </summary>
+    public class DescendingOrderComparer : IComparer<int>
+    {
+        public static DescendingOrderComparer Default = new();
+
+        private DescendingOrderComparer() { }
+
+        public int Compare(int x, int y) => x.CompareTo(y);
     }
 }
