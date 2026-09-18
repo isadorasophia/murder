@@ -66,6 +66,6 @@ namespace Murder.Utilities
 
         private DescendingOrderComparer() { }
 
-        public int Compare(int x, int y) => x.CompareTo(y);
+        public int Compare(int x, int y) => -x.CompareTo(y);
     }
 }
