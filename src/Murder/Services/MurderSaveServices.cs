@@ -38,6 +38,7 @@ namespace Murder.Services
                     break;
 
                 case FactKind.Int:
+                case FactKind.Enum:
                     tracker.SetInt(fact.Blackboard, fact.Name, action.Kind, action.IntValue!.Value);
                     break;
 
