@@ -156,7 +156,7 @@ namespace Murder.Core.Input
 
         public MenuInfo(IEnumerable<MenuOption> options) : this(options.ToArray()) { }
 
-        public MenuInfo(IEnumerable<MenuOption> options, int startSelectedAt) : this(options.ToArray()) 
+        public MenuInfo(IEnumerable<MenuOption> options, int startSelectedAt) : this(options.ToArray())
         {
             PreviousSelection = startSelectedAt;
             Selection = startSelectedAt;
@@ -371,91 +371,55 @@ namespace Murder.Core.Input
 
         public (int option, bool wrapped) NextAvailableOptionVertical(in int option, int width, int direction, GridMenuFlags flags)
         {
-            // If we didn't find an option in the current column, closest to the current selection,
-            // the first option available in the next row.
-            int initialRow = Calculator.FloorToInt(option / width);
-            int totalRows = Calculator.CeilToInt(Length / width);
-
+            int totalRows = Calculator.CeilToInt(Length / (float)width);
+            int startRow = option / width;
             int column = option % width;
 
-            int totalAttempts = 0;
-            bool wrapped = false;
-            while (totalAttempts < totalRows)
+            for (int step = 1; step < totalRows; step++)
             {
-                int row = Calculator.WrapAround(initialRow + direction * (totalAttempts + 1), 0, totalRows);
-                totalAttempts++;
-
-                // Did we wrap around?
-                if (row > initialRow && direction < 0)
+                // Cyle through the rows in the given direction looking for the next available option in the same column.
+                int row = startRow + direction * step;
+                bool wrapped = row < 0 || row >= totalRows;
+                if (wrapped)
                 {
-                    if (flags.HasFlag(GridMenuFlags.ClampTop))
+                    // Break if we are clamping in the direction we are moving.
+                    if (flags.HasFlag(direction > 0 ? GridMenuFlags.ClampBottom : GridMenuFlags.ClampTop))
                     {
-                        // do not allow clamping, but still allow it to pass over to the next check that skips columns
-                        continue;
+                        break;
                     }
 
-                    wrapped = true;
-                }
-
-                if (row < initialRow && direction > 0)
-                {
-                    if (flags.HasFlag(GridMenuFlags.ClampBottom))
+                    // We wrapedp around, so we can check the adjacent ones
+                    for (int i = 0; i < width; i++)
                     {
-                        // do not allow clamping, but still allow it to pass over to the next check that skips columns
-                        continue;
-                    }
-
-                    wrapped = true;
-                }
-
-                int nextOption = row * width + column;
-                if (nextOption >= 0 && nextOption < Length && IsOptionAvailable(nextOption))
-                {
-                    return (nextOption, wrapped);
-                }
-            }
-
-            // then we'll try going to different columns
-            totalAttempts = 0;
-            while (totalAttempts < totalRows)
-            {
-                int row = Calculator.WrapAround(initialRow + direction * (totalAttempts + 1), 0, totalRows);
-
-                for (int i = 0; i < width; i++)
-                {
-                    int checkCollumn = column - i;
-                    if (checkCollumn >= 0)
-                    {
-                        int nextOption = row * width + checkCollumn;
-                        if (nextOption >= 0 && nextOption < Length)
+                        if (IsAvailableAt(row, column - i, width))
                         {
-                            if (IsOptionAvailable(nextOption))
-                            {
-                                return (nextOption, wrapped);
-                            }
+                            return (row * width + column - i, wrapped);
+                        }
+
+                        if (i > 0 && IsAvailableAt(row, column + i, width))
+                        {
+                            return (row * width + column + i, wrapped);
                         }
                     }
 
-                    checkCollumn = column + i;
-                    if (checkCollumn < width)
+                    row = Calculator.WrapAround(row, 0, totalRows - 1);
+                }
+                else
+                {
+                    // First pass so we only check the same column
+                    if (IsAvailableAt(row, column, width))
                     {
-                        int nextOption = row * width + checkCollumn;
-                        if (nextOption >= 0 && nextOption < Length)
-                        {
-                            if (IsOptionAvailable(nextOption))
-                            {
-                                return (nextOption, wrapped);
-                            }
-                        }
+                        return (row * width + column, wrapped);
                     }
                 }
 
-                totalAttempts++;
             }
 
-            // no option is available, so fallback to horizontal.
-            return NextAvailableOptionHorizontal(in option, width, direction, flags);
+            // We failed! Stay in place
+            return (option, false);
         }
+        private bool IsAvailableAt(int row, int column, int width) =>
+    column >= 0 && column < width && row * width + column < Length && IsOptionAvailable(row * width + column);
 
         /// <summary>
         /// Resets the menu info selector to the first available option.

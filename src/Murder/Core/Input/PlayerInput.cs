@@ -728,38 +728,34 @@ public class PlayerInput
         int overflowY = 0;
 
         int currentWidth = selectedOptionY == height - 1 ? lastRowWidth : width;
-        if (horizontalPressed)
+        int currentSelection = currentInfo.Selection;
+        
+        if (horizontalPressed && horizontalValue != 0)
         {
-            int direction = Math.Sign(horizontalValue);
-            (int newSelectedIndex, bool wrapped) = currentInfo.NextAvailableOptionHorizontal(currentInfo.Selection, width, direction, gridMenuFlags);
-
-            selectedOptionX = newSelectedIndex % width;
-            selectedOptionY = Calculator.FloorToInt(newSelectedIndex / width);
-
-            if (newSelectedIndex == currentInfo.Selection)
+            (int next, _) = currentInfo.NextAvailableOptionHorizontal(currentSelection, width, horizontalValue, gridMenuFlags);
+            if (next == currentSelection)
             {
-                overflowX = direction > 0 ? 1 : -1;
+                overflowX = horizontalValue;
             }
 
+            currentSelection = next;
             lastMoved = Game.NowUnscaled;
         }
 
-        int currentHeight = selectedOptionX >= lastRowWidth ? height - 1 : height;
-        if (verticalPressed)
+        if (verticalPressed && verticalValue != 0)
         {
-            int direction = Math.Sign(verticalValue);
-            (int newSelectedIndex, _) = currentInfo.NextAvailableOptionVertical(currentInfo.Selection, width, Math.Sign(verticalValue), gridMenuFlags);
-
-            selectedOptionX = newSelectedIndex % width;
-            selectedOptionY = Calculator.FloorToInt(newSelectedIndex / width);
-
-            if (newSelectedIndex == currentInfo.Selection)
+            (int next, _) = currentInfo.NextAvailableOptionVertical(currentSelection, width, verticalValue, gridMenuFlags);
+            if (next == currentSelection)
             {
-                overflowY = direction > 0 ? 1 : -1;
+                overflowY = verticalValue;
             }
 
+            currentSelection = next;
             lastMoved = Game.NowUnscaled;
         }
+
+        selectedOptionX = currentSelection % width;
+        selectedOptionY = currentSelection / width;
 
         int selectedOptionIndex = selectedOptionX + selectedOptionY * width;
         int selectedOptionIndexBeforePressed = selectedOptionXBeforePressed + selectedOptionYBeforePressed * width;
@@ -774,7 +770,7 @@ public class PlayerInput
         currentInfo.PreviousSelection = currentInfo.Selection;
 
         currentInfo.LastMoved = lastMoved;
-        currentInfo.LastPressed = lastMoved;
+        currentInfo.LastPressed = lastPressed;
 
         if (currentInfo.JustMoved)
         {

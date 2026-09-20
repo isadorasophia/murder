@@ -1055,6 +1055,29 @@ namespace Murder.Utilities
             return false;
         }
 
+        /// <summary>
+        /// Based on the selected and deselected times, clamps the current time within the duration. -1 means it was never (de)selected.
+        /// </summary>
+        /// <param name="selectedTime">Time of selection. -1 if never selected.</param>
+        /// <param name="deselectedTime">Time of deselection. -1 if never deselected.</param>
+        /// <param name="currentTime">Current time.</param>
+        /// <param name="duration">Duration of the fade</param>
+        /// <returns>The factor between 0 and 1 representing the progress of the fade.</returns>
+        public static float ClampTimeInOut(float selectedTime, float deselectedTime, float currentTime, float duration)
+        {
+            float fadeIn = ClampTime(selectedTime, currentTime, duration);
+            float fadeOut = ClampTime(deselectedTime, currentTime, duration);
+
+            if (selectedTime > deselectedTime)
+            {
+                return 1 - fadeOut * fadeIn;
+            }
+            else
+            {
+                return fadeOut * fadeIn;
+            }
+        }
+
         #endregion
     }
 }
