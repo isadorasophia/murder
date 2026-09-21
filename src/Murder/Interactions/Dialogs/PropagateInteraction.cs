@@ -23,8 +23,8 @@ public readonly struct PropagateInteraction : IInteraction
         switch (Target)
         {
             case TargetEntity.Self:
-                GameLogger.Error($"Unable to send interaction to self: {interacted.EntityId}");
-                return;
+                target = interacted;
+                break;
 
             case TargetEntity.Parent:
                 target = interacted.TryFetchParent();
