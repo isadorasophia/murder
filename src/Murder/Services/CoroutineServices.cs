@@ -138,15 +138,15 @@ public static class CoroutineServices
 
         if (flags.HasFlag(CoroutineFlags.DoNotPause))
         {
-            e.SetDoNotPause();
+            coroutine.SetDoNotPause();
         }
         else
         {
-            e.RemoveDoNotPause();
+            coroutine.RemoveDoNotPause();
         }
 
-        e.RunCoroutine(routine);
-        return e;
+        coroutine.RunCoroutine(routine);
+        return coroutine;
     }
 
     public static void StopActorCoroutine(this Entity e)
