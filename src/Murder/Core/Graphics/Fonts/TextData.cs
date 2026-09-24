@@ -109,7 +109,7 @@ public readonly struct RuntimeTextData
 {
     public readonly string Text = string.Empty;
 
-    private readonly ImmutableDictionary<int, RuntimeLetterProperties>? _letters = null;
+    public readonly ImmutableDictionary<int, RuntimeLetterProperties>? Letters { get; init; } = null;
 
     /// <summary>
     /// Index of the font used to calculate the runtime text data.
@@ -126,8 +126,8 @@ public readonly struct RuntimeTextData
     public RuntimeTextData(string text) =>
         Text = text;
 
-    public RuntimeTextData(string text, ImmutableDictionary<int, RuntimeLetterProperties>? letters) : this(text) => 
-        _letters = letters;
+    public RuntimeTextData(string text, ImmutableDictionary<int, RuntimeLetterProperties>? letters) : this(text) =>
+        Letters = letters;
 
     public bool Empty => string.IsNullOrEmpty(Text);
 
@@ -135,12 +135,12 @@ public readonly struct RuntimeTextData
 
     public RuntimeLetterProperties? TryGetLetterProperty(int index)
     {
-        if (_letters is null)
+        if (Letters is null)
         {
             return null;
         }
 
-        if (!_letters.TryGetValue(index, out RuntimeLetterProperties properties))
+        if (!Letters.TryGetValue(index, out RuntimeLetterProperties properties))
         {
             return null;
         }
