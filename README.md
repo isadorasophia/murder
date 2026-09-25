@@ -53,6 +53,8 @@ We have no plans on officially supporting web or mobile (iOS or Android) for now
 ### Contributing
 This is still super early, but feel free to contact me or [saint11](http://saint11.org/) if you have any suggestions. I am very interested in people trying it out and any feedback you may have!
 
+Pull requests, bug reports and other contributions made with LLM or any generative AI technology will NOT be accepted. I am not in the slight interested in reviewing any non-human code.
+
 ### ✨ Editor examples
 <p align="center">
 <img src="media/screenshot0.png" alt="Murder logo">
