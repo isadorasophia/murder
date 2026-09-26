@@ -59,7 +59,6 @@ namespace Murder.Editor.CustomFields
             ImGui.Dummy(new System.Numerics.Vector2(2, 2));
             for (int index = 0; index < Math.Min(maxLength, elements.Length); index++)
             {
-                
                 ImGui.PushID($"{id}_{index}");
                 element = elements[index];
 
