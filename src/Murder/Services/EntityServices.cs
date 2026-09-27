@@ -11,6 +11,7 @@ using Murder.Core.Graphics;
 using Murder.Core.Physics;
 using Murder.Diagnostics;
 using Murder.Helpers;
+using Murder.Prefabs;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -754,6 +755,8 @@ public static class EntityServices
         e.SetAnimationOverload(overload);
         e.RemoveAnimationComplete();
         e.RemoveAnimationCompleteMessage();
+
+        RenderServices.FlagRenderedSpriteCacheAsDirty(e);
     }
 
     public static void AddVerticalVelocity(Entity entity, float zVelocity)
