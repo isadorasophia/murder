@@ -659,12 +659,10 @@ namespace Murder.Editor.ImGuiExtended
                     _searchBoxSelection = 0;
                 }
 
-                float tween = Calculator.ClampTime(Game.NowUnscaled - _tweenStart, 0.15f);
-
                 pos = new(pos.X, pos.Y + Math.Min(0, ImGui.GetWindowViewport().Size.Y - pos.Y - 400));
                 ImGui.SetWindowPos(pos);
 
-                ImGui.BeginChild("##Searchbox_containter", sizeConfiguration.SearchBoxContainerSize * new Vector2(1, Ease.BackOutSm(tween)), ImGuiChildFlags.Border);
+                ImGui.BeginChild("##Searchbox_containter", sizeConfiguration.SearchBoxContainerSize, ImGuiChildFlags.Border);
                 if (ImGui.IsWindowAppearing())
                 {
                     ImGui.SetKeyboardFocusHere();
