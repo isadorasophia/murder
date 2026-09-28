@@ -4,6 +4,7 @@ using Murder.Core.Graphics;
 using Murder.Editor.Attributes;
 using Murder.Editor.ImGuiExtended;
 using Murder.Helpers;
+using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Numerics;
@@ -49,7 +50,7 @@ public class SpriteFacingComponentEditor : CustomComponent
                 if (ImGuiHelpers.Button("yes"))
                 {
                     fileChanged = true;
-                    sprite = MakeAutomatic(_makeAuto);
+                    sprite = EntityServices.MakeAutomaticSpriteFacing(_makeAuto);
                     ImGui.CloseCurrentPopup();
                 }
                 ImGui.SameLine();
@@ -65,10 +66,8 @@ public class SpriteFacingComponentEditor : CustomComponent
         if (ImGui.BeginTable($"field_{target.GetType().Name}", 2,
             ImGuiTableFlags.SizingFixedSame | ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersInnerH))
         {
-
             ImGui.TableSetupColumn("a", ImGuiTableColumnFlags.WidthFixed, -1, 0);
             ImGui.TableSetupColumn("b", ImGuiTableColumnFlags.WidthStretch, -1, 1);
-
 
             ImGui.TableNextColumn();
 
@@ -148,37 +147,6 @@ public class SpriteFacingComponentEditor : CustomComponent
 
         return fileChanged;
     }
-
-    private SpriteFacingComponent MakeAutomatic(int totalSlices)
-    {
-        var facingInfos = ImmutableArray.CreateBuilder<FacingInfo>(totalSlices);
-        float angleSize = 2 * MathF.PI / totalSlices; // Divide 360 degrees by the number of slices
-
-        for (int i = 0; i < totalSlices - 1; i++)
-        {
-            // Adding default FacingInfo for each slice
-            (string name, bool flip) = DirectionHelper.GetName(i, totalSlices, true);
-            facingInfos.Add(new FacingInfo
-            {
-                AngleSize = angleSize,
-                Suffix = name, // Example suffix, you can customize this
-                Flip = flip // DefaultInitialization flip setting
-            });
-        }
-
-        // Final slice is the default one
-        {
-            (string name, bool flip) = DirectionHelper.GetName(totalSlices - 1, totalSlices, true);
-            return new SpriteFacingComponent
-            {
-                AngleStart = totalSlices > 2 ? (-angleSize / 2f) : 0,
-                DefaultSuffix = name,
-                DefaultFlip = flip,
-                FacingInfo = facingInfos.ToImmutable()
-            };
-        }
-    }
-
 
     private void DrawSelectedSlice(ref bool fileChanged, ref SpriteFacingComponent sprite, uint currentID)
     {

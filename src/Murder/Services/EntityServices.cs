@@ -786,6 +786,36 @@ public static class EntityServices
 
         return animationOverload.CurrentAnimation.StartsWith(animation, StringComparison.InvariantCultureIgnoreCase);
     }
+
+    public static SpriteFacingComponent MakeAutomaticSpriteFacing(int totalSlices)
+    {
+        var facingInfos = ImmutableArray.CreateBuilder<FacingInfo>(totalSlices);
+        float angleSize = 2 * MathF.PI / totalSlices; // Divide 360 degrees by the number of slices
+
+        for (int i = 0; i < totalSlices - 1; i++)
+        {
+            // Adding default FacingInfo for each slice
+            (string name, bool flip) = DirectionHelper.GetName(i, totalSlices, true);
+            facingInfos.Add(new FacingInfo
+            {
+                AngleSize = angleSize,
+                Suffix = name, // Example suffix, you can customize this
+                Flip = flip // DefaultInitialization flip setting
+            });
+        }
+
+        // Final slice is the default one
+        {
+            (string name, bool flip) = DirectionHelper.GetName(totalSlices - 1, totalSlices, true);
+            return new SpriteFacingComponent
+            {
+                AngleStart = totalSlices > 2 ? (-angleSize / 2f) : 0,
+                DefaultSuffix = name,
+                DefaultFlip = flip,
+                FacingInfo = facingInfos.ToImmutable()
+            };
+        }
+    }
 }
 
 [Flags]
