@@ -38,7 +38,7 @@ namespace Murder.Editor.Utilities
         public static string FormatName(string name)
         {
             // Remove underscores.
-            name = Extract(name, new(@"(?<=_)(.*)"));
+            name = Extract(name, new(@"(?<=^_)(.*)"));
 
             // Remove "Guid" from the name.
             name = Extract(name, new(@"(.*)(?=Guid)"));
