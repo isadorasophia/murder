@@ -11,9 +11,8 @@ public readonly struct ActivateOnStartComponent : IComponent
     public readonly ICondition? OnlyWhen = null;
 
     public ActivateOnStartComponent()
-    {
-        
-    }
+    { }
+
     public ActivateOnStartComponent(AfterInteractRule after, bool deactivateInstead)
     {
         After = after;
