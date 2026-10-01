@@ -5,7 +5,7 @@ namespace Murder.Components.Utilities;
 
 public readonly struct ActivateOnStartComponent : IComponent
 {
-    public readonly AfterInteractRule After = AfterInteractRule.Always;
+    public readonly AfterInteractRule After = AfterInteractRule.InteractOnlyOnce;
     public readonly bool DeactivateInstead = false;
 
     public readonly ICondition? OnlyWhen = null;
