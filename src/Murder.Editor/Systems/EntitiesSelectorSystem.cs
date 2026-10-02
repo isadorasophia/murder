@@ -1,4 +1,6 @@
-﻿using Bang.Components;
+﻿using Bang;
+using Bang.Components;
+using Bang.Entities;
 using Bang.Contexts;
 using Bang.Systems;
 using ImGuiNET;
@@ -9,8 +11,10 @@ using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
+using Murder.Prefabs;
 using Murder.Systems;
 using System.Numerics;
+using Murder.Editor.Messages;
 
 namespace Murder.Editor.Systems;
 
@@ -67,6 +71,44 @@ public class EntitiesSelectorSystem : GenericSelectorSystem, IStartupSystem, IUp
                         }
 
                         ImGui.EndMenu();
+                    }
+
+
+                    bool allSelectedEntitiesHaveSprite = true;
+                    foreach (var entity in hook.AllSelectedEntities.Keys)
+                    {
+                        if (!context.World.TryGetEntity(entity)?.HasSprite() ?? true)
+                        {
+                            allSelectedEntitiesHaveSprite = false;
+                            break;
+                        }
+                    }
+                    if (allSelectedEntitiesHaveSprite)
+                    {
+                        if (ImGui.BeginMenu("Change batch..."))
+                        {
+                            for (int i = 0; i < render._spriteBatches.Length; i++)
+                            {
+                                Batch2D? batch = render._spriteBatches[i];
+                                if (batch == null)
+                                {
+                                    continue;
+                                }
+
+                                if (ImGuiHelpers.MenuItem(batch.Name))
+                                {
+                                    foreach (var entityId in hook.AllSelectedEntities.Keys)
+                                    {
+                                        if (context.World.TryGetEntity(entityId) is Entity entity)
+                                        {
+                                            entity.SetSprite(entity.GetSprite() with { TargetSpriteBatch = i });
+                                            entity.SendMessage(new AssetUpdatedMessage(typeof(SpriteComponent)));
+                                        }
+                                    }
+                                }
+                            }
+                            ImGui.EndMenu();
+                        }
                     }
 
                     ImGui.EndPopup();
