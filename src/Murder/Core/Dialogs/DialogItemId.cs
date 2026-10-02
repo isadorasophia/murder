@@ -24,7 +24,8 @@ public readonly record struct DialogueId
 public enum LineInfoProperties
 {
     None = 0,
-    SkipDefaultPortraitSound = 1
+    SkipDefaultPortraitSound = 1,
+    DoNotAllowSkip = 0b10
 }
 
 public readonly struct LineInfo
@@ -45,6 +46,12 @@ public readonly struct LineInfo
     public IComponent? Component { get; init; } = null;
 
     public LineInfoProperties Flags { get; init; } = LineInfoProperties.None;
+
+    public LineFlags? ToLineFlags()
+    {
+        if (Flags.HasFlag(LineInfoProperties.DoNotAllowSkip)) return LineFlags.DoNotAllowSkip;
+        return null;
+    }
 
     public LineInfo() { }
 

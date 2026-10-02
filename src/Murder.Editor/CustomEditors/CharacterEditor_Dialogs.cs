@@ -92,6 +92,32 @@ namespace Murder.Editor.CustomEditors
             return line;
         }
 
+        private Line? ModifyFlagsAt(DialogueId id, int lineIndex, LineFlags? flags)
+        {
+            if (_script is null || !FetchActiveSituation(out Situation? situation))
+            {
+                return null;
+            }
+
+            Dialog dialog = situation.Value.Dialogs[id.DialogId];
+
+            Line line = dialog.Lines[lineIndex].WithFlags(flags);
+            dialog = dialog.WithLineAt(lineIndex, line);
+
+            _script.SetSituation(situation.Value.WithDialogAt(id.DialogId, dialog));
+
+            if (flags is not null && flags.Value.HasFlag(LineFlags.DoNotAllowSkip))
+            {
+                _script.SetEventInfoAt(id, LineInfoProperties.DoNotAllowSkip);
+            }
+            else
+            {
+                _script.UnsetEventInfoAt(id, LineInfoProperties.DoNotAllowSkip);
+            }
+
+            return line;
+        }
+
         private DialogAction? ModifyComponentAt(ScriptInformation info, int actionIndex, IComponent c)
         {
             if (_script is null || !FetchActiveSituation(out Situation? situation))
@@ -420,7 +446,7 @@ namespace Murder.Editor.CustomEditors
                             {
                                 if (ImGuiHelpers.BlueIcon('\uf1da', $"revert_sound_{i}"))
                                 {
-                                    _script.SetEventInfoAt(id, LineInfoProperties.None);
+                                    _script.UnsetEventInfoAt(id, LineInfoProperties.SkipDefaultPortraitSound);
 
                                     // make sure this is no longer valid
                                     line = ModifyEventAt(id, i, @event: null) ?? line;
@@ -482,6 +508,16 @@ namespace Murder.Editor.CustomEditors
                         if (CustomField.DrawValue(ref line, nameof(Line.ActBeforeWith)))
                         {
                             _ = ModifyActionAt(id, i, line.ActBeforeWith) ?? line;
+                        }
+
+                        if (line.ActBeforeWith is null)
+                        {
+                            ImGui.SameLine();
+                        }
+
+                        if (CustomField.DrawValue(ref line, nameof(Line.Flags)))
+                        {
+                            _ = ModifyFlagsAt(id, i, line.Flags) ?? line;
                         }
                     }
                 }

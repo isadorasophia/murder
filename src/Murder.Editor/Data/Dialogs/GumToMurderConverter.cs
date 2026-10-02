@@ -312,7 +312,7 @@ namespace Murder.Editor.Data
                     // We override whatever was set in the dialog.
                     _matchedPortraits.Add(id);
                     return new(eventInfo.Speaker, eventInfo.Portrait, TryGetLocalizedString(eventInfo.Speaker, gumLine.Text), gumLine.Delay, @event) 
-                        { ActBeforeWith = eventInfo.ActionBeforeLine };
+                        { ActBeforeWith = eventInfo.ActionBeforeLine, Flags = eventInfo.ToLineFlags() };
                 }
             }
 

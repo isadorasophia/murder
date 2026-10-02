@@ -4,6 +4,12 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Murder.Core.Dialogs
 {
+    public enum LineFlags
+    {
+        None = 0,
+        DoNotAllowSkip = 0b1
+    }
+
     public readonly struct Line
     {
         [GameAssetId(typeof(SpeakerAsset))]
@@ -33,6 +39,10 @@ namespace Murder.Core.Dialogs
         [Tooltip("Before line is fired...")]
         public readonly DialogAction? ActBeforeWith { get; init; } = null;
 
+        [Default("\uf0ad")]
+        [Tooltip("Line properties...")]
+        public readonly LineFlags? Flags { get; init; } = null;
+
         public Line() { }
 
         public Line(Guid? speaker) => Speaker = speaker;
@@ -55,17 +65,19 @@ namespace Murder.Core.Dialogs
         public Line(Guid? speaker, string? portrait, LocalizedString? text, float? delay, string? @event) : this(speaker) =>
             (Portrait, Text, Delay, Event) = (portrait, text, delay, @event);
 
-        public Line WithText(LocalizedString text) => new(Speaker, Portrait, text, Delay, Event) { ActBeforeWith = ActBeforeWith };
+        public Line WithText(LocalizedString text) => new(Speaker, Portrait, text, Delay, Event) { ActBeforeWith = ActBeforeWith, Flags = Flags };
 
-        public Line WithDelay(float delay) => new(Speaker, Portrait, Text, delay, Event) { ActBeforeWith = ActBeforeWith };
+        public Line WithDelay(float delay) => new(Speaker, Portrait, Text, delay, Event) { ActBeforeWith = ActBeforeWith, Flags = Flags };
 
-        public Line WithSpeaker(Guid speaker) => new(speaker, Portrait, Text, Delay, Event) { ActBeforeWith = ActBeforeWith };
+        public Line WithSpeaker(Guid speaker) => new(speaker, Portrait, Text, Delay, Event) { ActBeforeWith = ActBeforeWith, Flags = Flags };
 
-        public Line WithSpeakerAndPortrait(Guid speaker, string? portrait) => new(speaker, portrait, Text, Delay, Event) { ActBeforeWith = ActBeforeWith };
+        public Line WithSpeakerAndPortrait(Guid speaker, string? portrait) => new(speaker, portrait, Text, Delay, Event) { ActBeforeWith = ActBeforeWith, Flags = Flags };
 
-        public Line WithPortrait(string? portrait) => new(Speaker, portrait, Text, Delay, Event) { ActBeforeWith = ActBeforeWith };
+        public Line WithPortrait(string? portrait) => new(Speaker, portrait, Text, Delay, Event) { ActBeforeWith = ActBeforeWith, Flags = Flags };
 
-        public Line WithEvent(string? @event) => new(Speaker, Portrait, Text, Delay, @event) { ActBeforeWith = ActBeforeWith };
+        public Line WithEvent(string? @event) => new(Speaker, Portrait, Text, Delay, @event) { ActBeforeWith = ActBeforeWith, Flags = Flags };
+
+        public Line WithFlags(LineFlags? flags) => this with { Flags = flags };
 
         [MemberNotNullWhen(true, nameof(Text))]
         public bool IsText => Text is not null;

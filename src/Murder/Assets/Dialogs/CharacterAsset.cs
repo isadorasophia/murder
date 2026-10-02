@@ -161,12 +161,22 @@ public class CharacterAsset : GameAsset
         FileChanged = true;
     }
 
+    public void UnsetEventInfoAt(DialogueId id, LineInfoProperties flags)
+    {
+        int index = GetOrCreateDataAt(id);
+
+        DialogueLineInfo data = _dialogueData[index];
+        _dialogueData = _dialogueData.SetItem(index, data with { Info = data.Info with { Flags = data.Info.Flags & ~flags } });
+
+        FileChanged = true;
+    }
+
     public void SetEventInfoAt(DialogueId id, LineInfoProperties flags)
     {
         int index = GetOrCreateDataAt(id);
 
         DialogueLineInfo data = _dialogueData[index];
-        _dialogueData = _dialogueData.SetItem(index, data with { Info = data.Info with { Flags = flags } });
+        _dialogueData = _dialogueData.SetItem(index, data with { Info = data.Info with { Flags = data.Info.Flags | flags } });
 
         FileChanged = true;
     }
