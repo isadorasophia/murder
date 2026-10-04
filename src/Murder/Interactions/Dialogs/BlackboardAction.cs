@@ -16,16 +16,13 @@ namespace Murder.Interactions
         /// List of requirements which will trigger the interaction.
         /// </summary>
         [ShowInEditor, Tooltip("Rule requirements that need to be matched for the actions/interactions to happen")]
-        private readonly ImmutableArray<CriterionNode> _requirements = ImmutableArray<CriterionNode>.Empty;
+        private readonly ImmutableArray<CriterionNode> _requirements = [];
 
         [ShowInEditor, Tooltip("Blackboard actions that will happen when triggered.")]
-        private readonly ImmutableArray<DialogAction> _actions = ImmutableArray<DialogAction>.Empty;
+        private readonly ImmutableArray<DialogAction> _actions = [];
 
         [ShowInEditor, Tooltip("Interactions that will play when triggered")]
-        public readonly ImmutableArray<IInteractiveComponent> _interactions = ImmutableArray<IInteractiveComponent>.Empty;
-
-        [ShowInEditor, Tooltip("Whether this entity will only be triggered once.")]
-        private readonly bool _triggeredOnlyOnce = false;
+        public readonly ImmutableArray<IInteractiveComponent>? _interactions = null;
 
         public BlackboardAction()
         {
@@ -40,19 +37,17 @@ namespace Murder.Interactions
                 return;
             }
 
-            foreach (var action in _actions)
+            foreach (DialogAction action in _actions)
             {
                 MurderSaveServices.DoAction(tracker, action);
             }
 
-            foreach (IInteractiveComponent interactive in _interactions)
+            if (_interactions is not null)
             {
-                interactive.Interact(world, interactor, interacted);
-            }
-
-            if (_triggeredOnlyOnce)
-            {
-                interacted?.Destroy();
+                foreach (IInteractiveComponent interactive in _interactions.Value)
+                {
+                    interactive.Interact(world, interactor, interacted);
+                }
             }
         }
     }
