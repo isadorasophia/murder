@@ -36,16 +36,16 @@ public static class EntityServices
         return result;
     }
 
-    public static void TurnFaceTowards(this Entity entity, Entity otherEntity, float duration)
+    public static bool TurnFaceTowards(this Entity entity, Entity otherEntity, float duration)
     {
         Direction targetFacing = DirectionHelper.LookAtEntity(entity, otherEntity);
-        TurnFaceTowards(entity, targetFacing, duration);
+        return TurnFaceTowards(entity, targetFacing, duration);
     }
 
-    public static void TurnFaceTowards(this Entity entity, Vector2 goal, float duration)
+    public static bool TurnFaceTowards(this Entity entity, Vector2 goal, float duration)
     {
         Direction targetFacing = DirectionHelper.LookAtPosition(entity, goal);
-        TurnFaceTowards(entity, targetFacing, duration);
+        return TurnFaceTowards(entity, targetFacing, duration);
     }
 
     /// <summary>
@@ -57,21 +57,22 @@ public static class EntityServices
     public static bool IsMoving(Entity e) =>
         e.HasVelocity() || e.HasAgentImpulse() || e.HasMoveTo() || e.HasPathfind() || e.HasMoveToPerfect();
 
-    public static void TurnFaceTowards(this Entity entity, Direction targetDirection, float duration)
+    public static bool TurnFaceTowards(this Entity entity, Direction targetDirection, float duration)
     {
         Direction currentFacing = entity.TryGetFacing()?.Direction ?? Direction.Up;
         if (currentFacing == targetDirection)
         {
-            return;
+            return false;
         }
 
         if (duration == 0)
         {
             entity.SetFacing(targetDirection);
-            return;
+            return true;
         }
 
         entity.SetFacingTurn(Game.Now, Game.Now + duration, currentFacing, targetDirection);
+        return true;
     }
 
     public static void TurnFaceTowards(this Entity entity, Direction fromDirection, Direction targetDirection, float duration)
