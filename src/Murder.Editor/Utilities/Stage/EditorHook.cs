@@ -146,6 +146,11 @@ namespace Murder.Editor.Utilities
 
         public void SelectEntity(Entity e, bool clear)
         {
+            if (!e.IsActive)
+            {
+                return;
+            }
+
             if (_select.ContainsKey(e.EntityId) && _select.Count == 1)
             {
                 // Actually, do nothing.
