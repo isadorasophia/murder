@@ -96,4 +96,21 @@ public static class DebugServices
 #endif
     }
 
+    public static void DrawX(World world, Vector2 position, Color color, float duration = 1 / 30f)
+    {
+#if DEBUG
+        var e = world.AddEntity();
+        var time = Game.NowUnscaled;
+        e.SetCustomDraw((render) =>
+        {
+            if (Game.NowUnscaled - time > duration)
+            {
+                e.Destroy();
+            }
+            float delta = (Game.NowUnscaled - time) / duration;
+            RenderServices.DrawLine(render.DebugBatch, position - new Vector2(5, 5), position + new Vector2(5, 5), color * delta);
+            RenderServices.DrawLine(render.DebugBatch, position - new Vector2(-5, 5), position + new Vector2(-5, 5), color * delta);
+        });
+#endif
+    }
 }
