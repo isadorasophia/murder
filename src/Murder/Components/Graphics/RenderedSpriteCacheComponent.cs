@@ -11,6 +11,8 @@ namespace Murder.Components.Graphics
     [DoNotPersistOnSave]
     public readonly struct RenderedSpriteCacheComponent : IComponent, IModifiableComponent, IDoNotCheckOnReplaceTag
     {
+        public bool SkipNotificationsOnComponent => true;
+
         public readonly RenderedSpriteReference Ref = new();
 
         public Animation CurrentAnimation => Ref.Cache.CurrentAnimation;
