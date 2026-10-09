@@ -440,9 +440,13 @@ namespace Murder.Editor.CustomEditors
                     Vector2 padding = ImGui.GetStyle().FramePadding;
                     float buttonWidth = 18;
 
-                    ImGui.BeginChild($"component_{t.Name}_{componentName}", new Vector2(ImGui.GetContentRegionAvail().X - (
-                        (pasteComponent is not null ? buttonWidth : 0) + buttonWidth), ImGui.GetTextLineHeight() + padding.Y * 2));
-                    bool open = ImGui.TreeNodeEx(componentName, ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.SpanFullWidth);
+                    float rightWidth = buttonWidth * (pasteComponent is not null ? 2 : 1) + padding.X;
+
+                    bool open = ImGui.TreeNodeEx($"{componentName}###component_{t.Name}",
+                        ImGuiTreeNodeFlags.Framed |
+                        ImGuiTreeNodeFlags.SpanAvailWidth |
+                        ImGuiTreeNodeFlags.AllowOverlap |          // AllowItemOverlap on older ImGui.NET
+                        ImGuiTreeNodeFlags.NoTreePushOnOpen);
 
                     if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
                     {
@@ -455,16 +459,8 @@ namespace Murder.Editor.CustomEditors
                             ImGui.SetClipboardText(t.Name);
                         }
                     }
-                    ImGui.EndChild();
 
-                    ImGui.SameLine();
-                    ImGui.SetCursorPosX(ImGui.GetCursorPosX() - padding.X * 3);
-
-                    var dl = ImGui.GetWindowDrawList();
-                    dl.AddRectFilled(
-                        ImGui.GetCursorScreenPos() + new Vector2(-10, 0),
-                        ImGui.GetCursorScreenPos() + new Vector2(buttonWidth * (pasteComponent != null ? 2 : 1) + padding.X, ImGui.GetTextLineHeight() + padding.Y * 2), ImGuiHelpers.MakeColor32(Game.Profile.Theme.BgFaded), 10);
-
+                    ImGui.SameLine(ImGui.GetContentRegionAvail().X - rightWidth);
                     ImGui.PushStyleColor(ImGuiCol.Button, 0);
                     ImGui.PushStyleColor(ImGuiCol.ButtonActive, Game.Profile.Theme.White);
                     ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.Faded);
