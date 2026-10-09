@@ -26,6 +26,29 @@ namespace Murder.Editor.ImGuiExtended
             }
         }
 
+        public TableMultipleColumns(string id, ImGuiTableFlags flags = ImGuiTableFlags.BordersOuter, params (string columnName, int width, ImGuiTableColumnFlags flags)[] widths)
+        {
+            bool dynamicWidth = widths.Any(d => d.width < 0);
+
+            if (ImGui.BeginTable(id, widths.Length, flags,
+                outer_size: dynamicWidth ? System.Numerics.Vector2.Zero : new(widths.Select(t => t.width).Sum(), 0)))
+            {
+                int index = 0;
+
+                foreach ((string columnName, int w, ImGuiTableColumnFlags columnFlags) in widths)
+                {
+                    string label = $"{columnName}##c_{w}";
+                    ImGui.TableSetupColumn(label, columnFlags, w, 0);
+
+                    index++;
+                }
+
+                _opened = true;
+
+                ImGui.TableHeadersRow();
+            }
+        }
+
         /// <summary>
         /// Create a new table with specified width and column flag. The measurements will be scaled to the dpi.
         /// </summary>

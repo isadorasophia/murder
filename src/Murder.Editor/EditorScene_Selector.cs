@@ -36,8 +36,8 @@ namespace Murder.Editor
 
                 foreach (var t in ReflectionHelper.GetAllImplementationsOf<GameAsset>())
                 {
-                    if ((searchForType is null || searchForType.IsAssignableFrom(t)) && 
-                        !t.IsAbstract && 
+                    if ((searchForType is null || searchForType.IsAssignableFrom(t)) &&
+                        !t.IsAbstract &&
                         !Attribute.IsDefined(t, typeof(HideInEditorAttribute)))
                     {
                         assetTypes.Add(t);
@@ -128,7 +128,7 @@ namespace Murder.Editor
         }
 
         private void DrawAssetFolder(string folderName, Vector4 color, Type? createType, IEnumerable<GameAsset> assets, bool unfoldAll) =>
-            DrawAssetFolder(folderName, color, createType, assets, 0, string.Empty, unfoldAll);
+            DrawAssetFolder(folderName, color, createType, assets, 0, string.Empty, unfoldAll, string.Empty);
 
         private Dictionary<string, IEnumerable<(string folder, Vector4 color, Type? createType, List<GameAsset> assets)>>? _folders = null;
 
@@ -139,7 +139,7 @@ namespace Murder.Editor
         /// </summary>
         private bool _clearedFoldersOnSearch = true;
 
-        private void DrawAssetFolder(string folderName, Vector4 color, Type? createType, IEnumerable<GameAsset> assets, int depth, string folderRootPath, bool unfoldAll)
+        private void DrawAssetFolder(string folderName, Vector4 color, Type? createType, IEnumerable<GameAsset> assets, int depth, string folderRootPath, bool unfoldAll, string cacheKey)
         {
             if (folderName.StartsWith(GameDataManager.SKIP_CHAR) || folderName.StartsWith("_"))
             {
@@ -189,7 +189,7 @@ namespace Murder.Editor
                     subfolders =
                         builder.OrderBy(kv => GetFolderPrettyName(kv.Key, out _)).Select(kv => (kv.Key, kv.Value.color, kv.Value.createType, kv.Value.assets));
 
-                    _folders[folderName] = subfolders;
+                    _folders[cacheKey] = subfolders;
                 }
             }
 
@@ -203,10 +203,10 @@ namespace Murder.Editor
 
             string currentDirectoryPath = depth < 2 ? string.Empty : string.IsNullOrEmpty(folderRootPath) ? printName : $"{folderRootPath}/{printName}";
             if (_expandTo.Count > 0 &&
-                _nonAlphaNumeric.Replace(_expandTo[0], "").Equals(_nonAlphaNumeric.Replace(printName,""), StringComparison.InvariantCultureIgnoreCase))
+                _nonAlphaNumeric.Replace(_expandTo[0], "").Equals(_nonAlphaNumeric.Replace(printName, ""), StringComparison.InvariantCultureIgnoreCase))
             {
-                    ImGui.SetNextItemOpen(true);
-                    _expandTo.RemoveAt(0);
+                ImGui.SetNextItemOpen(true);
+                _expandTo.RemoveAt(0);
             }
             else if (_colapseAll)
             {
@@ -215,7 +215,7 @@ namespace Murder.Editor
 
             bool isFolderOpened = string.IsNullOrWhiteSpace(printName) || ImGui.TreeNodeEx(printName,
                 ((unfoldAll && (printName != "Generated")) ? ImGuiTreeNodeFlags.DefaultOpen : ImGuiTreeNodeFlags.None));
-            
+
 
             if (createType is not null && printName != "Generated")
             {
@@ -235,11 +235,11 @@ namespace Murder.Editor
                 {
                     if (folder.StartsWith(GameAsset.SkipDirectoryIconCharacter))
                     {
-                        DrawAssetFolder(folder, folderColor, folderCreateType, folderAssets, depth + 1, currentDirectoryPath, unfoldAll);
+                        DrawAssetFolder(folder, folderColor, folderCreateType, folderAssets, depth + 1, currentDirectoryPath, unfoldAll, $"{cacheKey}/{folder}");
                     }
                     else
                     {
-                        DrawAssetFolder(GetNameWithDirectoryIcon(folder), folderColor, folderCreateType, folderAssets, depth + 1, currentDirectoryPath, unfoldAll);
+                        DrawAssetFolder(GetNameWithDirectoryIcon(folder), folderColor, folderCreateType, folderAssets, depth + 1, currentDirectoryPath, unfoldAll, $"{cacheKey}/{folder}");
                     }
                 }
 
@@ -274,7 +274,7 @@ namespace Murder.Editor
                     "asset (pick one!)" :
                     Prettify.FormatAssetName(type.Name);
 
-                if (ImGui.Selectable($"Create new {name}{(string.IsNullOrEmpty(folderPath) ? "" : $" at {folderPath}")}")) 
+                if (ImGui.Selectable($"Create new {name}{(string.IsNullOrEmpty(folderPath) ? "" : $" at {folderPath}")}"))
                 {
                     shouldOpenPopUp = true;
                 }
@@ -309,7 +309,7 @@ namespace Murder.Editor
             bool isFavourite = Architect.EditorSettings.FavoriteAssets.Contains(asset.Guid);
             if (isFavourite)
             {
-                ImGui.SetCursorPosX(ImGui.GetCursorPosX()- 22);
+                ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 22);
                 ImGui.TextColored(Game.Profile.Theme.Yellow, "\uf005");
                 ImGui.SameLine();
             }
