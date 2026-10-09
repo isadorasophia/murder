@@ -94,6 +94,12 @@ namespace Murder.Systems
                 {
                     accel = speedOverride.Acceleration;
                 }
+
+                if (!speedOverride.AllowAgentSpeedMultipliers)
+                {
+                    // reset any multipliers up to this point.
+                    multiplier = 1;
+                }
             }
 
             Vector2 finalImpulse = impulse.Impulse;
