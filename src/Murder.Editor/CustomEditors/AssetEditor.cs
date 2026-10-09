@@ -42,6 +42,8 @@ namespace Murder.Editor.CustomEditors
         /// </summary>
         private readonly Dictionary<Guid, StageAssetInfo> _stageInfo = new();
 
+        private IComponent? _copiedComponent = null;
+
         public bool ShowColliders
         {
             get => _showColliders;
@@ -428,7 +430,20 @@ namespace Murder.Editor.CustomEditors
                     ImGui.PopStyleVar();
 
                     ImGui.SameLine();
-                    bool open = ImGui.TreeNodeEx(componentName, ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.SpanAvailWidth);
+
+                    IComponent? pasteComponent = null;
+                    if (_copiedComponent is not null && _copiedComponent.GetType() == t)
+                    {
+                        pasteComponent = _copiedComponent;
+                    }
+
+                    Vector2 padding = ImGui.GetStyle().FramePadding;
+                    float buttonWidth = 18;
+
+                    ImGui.BeginChild($"component_{t.Name}_{componentName}", new Vector2(ImGui.GetContentRegionAvail().X - (
+                        (pasteComponent is not null ? buttonWidth : 0) + buttonWidth), ImGui.GetTextLineHeight() + padding.Y * 2));
+                    bool open = ImGui.TreeNodeEx(componentName, ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.SpanFullWidth);
+
                     if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
                     {
                         if (t.GetGenericArguments().Length > 0)
@@ -440,11 +455,31 @@ namespace Murder.Editor.CustomEditors
                             ImGui.SetClipboardText(t.Name);
                         }
                     }
+                    ImGui.EndChild();
 
-                    if (open)
+                    ImGui.SameLine();
+                    ImGui.SetCursorPosX(ImGui.GetCursorPosX() - padding.X * 2);
+                    ImGui.PushStyleColor(ImGuiCol.Button, 0);
+                    ImGui.PushStyleColor(ImGuiCol.ButtonHovered, 0);
+                    ImGui.PushStyleColor(ImGuiCol.ButtonActive, Game.Profile.Theme.BgFaded);
+                    ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
+
+                    if (ImGui.Button($"###copy_{t.Name}", new Vector2(buttonWidth, 0)))
                     {
-                        ImGui.TreePop();
+                        _copiedComponent = SerializationHelper.DeepCopy(c);
                     }
+
+                    if (pasteComponent is not null)
+                    {
+                        ImGui.SameLine();
+                        ImGui.SetCursorPosX(ImGui.GetCursorPosX() - padding.X * 2);
+                        if (ImGui.Button($"###paste_{t.Name}", new Vector2(buttonWidth, 0)))
+                        {
+                            ReplaceComponent(parent, entityInstance, SerializationHelper.DeepCopy(pasteComponent));
+                        }
+                    }
+
+                    ImGui.PopStyleColor(4);
 
 
                     if (open)

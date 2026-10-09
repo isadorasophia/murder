@@ -155,14 +155,15 @@ public class CustomComponent
         }
 
         if (ImGui.BeginTable($"field_{name}", 2,
-                ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersInnerH))
+                ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersInnerH | ImGuiTableFlags.Resizable | ImGuiTableFlags.NoBordersInBodyUntilResize,
+                new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X - 1, 0)))
         {
             float maxColumnWidth = ImGui.GetContentRegionAvail().X;
             float firstColumnWidth = Math.Clamp(maxColumnWidth * 0.3f, 45, 140);
             float secondColumnWidth = maxColumnWidth - firstColumnWidth;
 
             ImGui.TableSetupColumn("a", ImGuiTableColumnFlags.WidthFixed, firstColumnWidth, 0);
-            ImGui.TableSetupColumn("b", ImGuiTableColumnFlags.WidthFixed, secondColumnWidth, 1);
+            ImGui.TableSetupColumn("b", ImGuiTableColumnFlags.WidthStretch | ImGuiTableColumnFlags.NoDirectResize, secondColumnWidth, 1);
 
             fileChanged |= DrawMembersForTarget(target, members, filter);
 
