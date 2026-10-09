@@ -458,11 +458,17 @@ namespace Murder.Editor.CustomEditors
                     ImGui.EndChild();
 
                     ImGui.SameLine();
-                    ImGui.SetCursorPosX(ImGui.GetCursorPosX() - padding.X * 2);
+                    ImGui.SetCursorPosX(ImGui.GetCursorPosX() - padding.X * 3);
+
+                    var dl = ImGui.GetWindowDrawList();
+                    dl.AddRectFilled(
+                        ImGui.GetCursorScreenPos() + new Vector2(-10, 0),
+                        ImGui.GetCursorScreenPos() + new Vector2(buttonWidth * (pasteComponent != null ? 2 : 1) + padding.X, ImGui.GetTextLineHeight() + padding.Y * 2), ImGuiHelpers.MakeColor32(Game.Profile.Theme.BgFaded), 10);
+
                     ImGui.PushStyleColor(ImGuiCol.Button, 0);
-                    ImGui.PushStyleColor(ImGuiCol.ButtonHovered, 0);
-                    ImGui.PushStyleColor(ImGuiCol.ButtonActive, Game.Profile.Theme.BgFaded);
-                    ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
+                    ImGui.PushStyleColor(ImGuiCol.ButtonActive, Game.Profile.Theme.White);
+                    ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.Faded);
+                    ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Bg);
 
                     if (ImGui.Button($"###copy_{t.Name}", new Vector2(buttonWidth, 0)))
                     {
