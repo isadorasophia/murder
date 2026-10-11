@@ -155,6 +155,21 @@ public partial class EditorScene
                 }
             }
         }
+
+        if (Game.Input.Shortcut(Keys.W, InputHelpers.OSActionModifier) ||
+            Game.Input.Shortcut(Keys.W, InputHelpers.OSActionModifier))
+        {
+            if (_selectedAssets.Count > 0)
+            {
+                CloseTab(_selectedAssets[_selectedTab]);
+            }
+        }
+
+        if (Game.Input.Shortcut(Keys.F, InputHelpers.OSActionModifier) ||
+            Game.Input.Shortcut(Keys.F, InputHelpers.OSActionModifier))
+        {
+            _focusOnFind = true;
+        }
     }
 
     private void DrawMainMenuBar()
@@ -196,21 +211,6 @@ public partial class EditorScene
             {
                 ToggleGameLogger();
             }
-        }
-
-        if (Game.Input.Shortcut(Keys.W, InputHelpers.OSActionModifier) ||
-            Game.Input.Shortcut(Keys.W, InputHelpers.OSActionModifier))
-        {
-            if (_selectedAssets.Count > 0)
-            {
-                CloseTab(_selectedAssets[_selectedTab]);
-            }
-        }
-
-        if (Game.Input.Shortcut(Keys.F, InputHelpers.OSActionModifier) ||
-            Game.Input.Shortcut(Keys.F, InputHelpers.OSActionModifier))
-        {
-            _focusOnFind = true;
         }
 
         if (_commandPaletteIsVisible)
