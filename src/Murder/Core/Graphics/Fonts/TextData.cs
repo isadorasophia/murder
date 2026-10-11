@@ -644,8 +644,9 @@ public static partial class TextDataServices
                         // pass on that pause
                         letters[indexForPause + 1] = l with { Pause = l.Pause + 1 };
 
-                        // keep a small pause for ourselves
-                        letters[indexForPause] = l with { Pause = 0, SmallPause = l.SmallPause + 1 }; 
+                        // (removed) keeping a small pause for ourselves
+                        // SmallPause = l.SmallPause + 1 }; 
+                        letters[indexForPause] = l with { Pause = 0 }; 
                     }
                     else if (l.Pause == 0)
                     {
