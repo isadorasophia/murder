@@ -379,7 +379,7 @@ public static partial class RenderServices
                 e.PlaySpriteAnimation(s.NextAnimations.RemoveAt(0));
             }
 
-            e.SendAnimationCompleteMessage(Messages.AnimationCompleteStyle.Single);
+            e.SendAnimationCompleteMessage(AnimationCompleteStyle.Single);
             e.RemoveAnimationComplete();
         }
         else
@@ -387,7 +387,7 @@ public static partial class RenderServices
             if (!e.HasAnimationComplete())
             {
                 e.SetAnimationComplete();
-                e.SendAnimationCompleteMessage(Messages.AnimationCompleteStyle.Sequence);
+                e.SendAnimationCompleteMessage(AnimationCompleteStyle.Sequence);
             }
         }
     }

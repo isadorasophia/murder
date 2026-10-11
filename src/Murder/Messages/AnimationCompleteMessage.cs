@@ -10,7 +10,10 @@ public enum AnimationCompleteStyle
 
 public readonly struct AnimationCompleteMessage : IMessage
 {
-    public readonly AnimationCompleteStyle CompleteStyle;
+    public readonly AnimationCompleteStyle CompleteStyle = AnimationCompleteStyle.Single;
+
+    public AnimationCompleteMessage() { }
+
     public AnimationCompleteMessage(AnimationCompleteStyle style)
     {
         CompleteStyle = style;

@@ -5,29 +5,20 @@ using Bang.Systems;
 using Murder.Components;
 using Murder.Messages;
 using Murder.Services;
-using System.Collections.Immutable;
 
 namespace Murder.Systems.Util
 {
     [Filter(typeof(DestroyOnAnimationCompleteComponent))]
     [Messager(typeof(AnimationCompleteMessage))]
-    [Watch(typeof(AnimationCompleteComponent))]
-    internal class DestroyOnAnimationCompleteSystem : IReactiveSystem, IMessagerSystem
+    internal class DestroyOnAnimationCompleteSystem : IMessagerSystem
     {
-        public void OnAdded(World world, ImmutableArray<Entity> entities)
-        {
-            foreach (Entity e in entities)
-            {
-                Complete(e);
-            }
-        }
-
-        public void OnModified(World world, ImmutableArray<Entity> entities) { }
-
-        public void OnRemoved(World world, ImmutableArray<Entity> entities) { }
-
         public void OnMessage(World world, Entity entity, IMessage message)
         {
+            // This should be message only!
+            // Otherwise, we could be setting a component between draw methods.
+            // Then, the reactive component will be set after a whole update has completed,
+            // in which the animation might have already changed.
+
             AnimationCompleteMessage msg = (AnimationCompleteMessage)message;
             if (msg.CompleteStyle != AnimationCompleteStyle.Sequence)
             {
