@@ -306,7 +306,7 @@ namespace Murder.Editor.Data
             {
                 @event = eventInfo.Event;
 
-                if (eventInfo.Speaker != Guid.Empty || eventInfo.Portrait != null || eventInfo.ActionBeforeLine != null)
+                if (!eventInfo.Empty)
                 {
                     // If this matches, it means that the user previously set the portrait with a custom value.
                     // We override whatever was set in the dialog.

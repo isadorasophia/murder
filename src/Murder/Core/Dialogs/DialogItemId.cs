@@ -55,9 +55,9 @@ public readonly struct LineInfo
 
     public LineInfo() { }
 
-    public bool Empty => Speaker == Guid.Empty && Portrait is null && Event is null && Component is null;
+    public bool Empty => Speaker == Guid.Empty && Portrait is null && Event is null && Component is null && 
+        ActionBeforeLine is null && Flags == LineInfoProperties.None;
 }
-
 public readonly struct DialogueLineInfo
 {
     public readonly DialogueId Id = new();
