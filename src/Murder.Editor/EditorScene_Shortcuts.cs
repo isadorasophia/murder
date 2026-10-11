@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using Murder.Assets;
 using Murder.Core;
+using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Diagnostics;
 using Murder.Editor.ImGuiExtended;
@@ -350,6 +351,7 @@ public partial class EditorScene
     {
         AssetsFilter.RefreshCache();
         ReflectionHelper.ClearCache();
+        TextDataServices.ClearCache();
         // InputServices.ClearCache();
     }
 

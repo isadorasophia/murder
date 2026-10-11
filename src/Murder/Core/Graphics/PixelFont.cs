@@ -1,16 +1,12 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Murder.Assets.Graphics;
-using Murder.Core.Dialogs;
+﻿using Murder.Assets.Graphics;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Murder.Core.Graphics;
 
@@ -255,7 +251,7 @@ public class PixelFontSize
             visibleCharacters: text.Length);
 
     private Point DrawImpl(RuntimeTextData textData, Batch2D spriteBatch, Vector2 position, Vector2 origin, Vector2 scale,
-        float sort, Color color, Color? strokeColor, Color? shadowColor, bool debugBox, int visibleCharacters)
+        float sort, Color color, Color? outlineColor, Color? shadowColor, bool debugBox, int visibleCharacters)
     {
         if (textData.Empty)
         {
@@ -275,6 +271,8 @@ public class PixelFontSize
         Vector2 justified = new(Calculator.RoundToInt((WidthToNextLine(text, 0, true) - 1) * origin.X * scale.X), HeightOf(text) * origin.Y * scale.Y);
 
         Color currentColor = color;
+        Color? currentOutline = outlineColor;
+        Color? currentShadow = shadowColor;
 
         // Index color, which will track the characters without a new line.
         int letterIndex = 0;
@@ -315,6 +313,24 @@ public class PixelFontSize
                 else if (letter.Value.Properties.HasFlag(RuntimeLetterPropertiesFlag.ResetColor))
                 {
                     currentColor = color;
+                }
+
+                if (letter.Value.OutlineColor is Color newOutlineColor)
+                {
+                    currentOutline = newOutlineColor * (currentOutline?.A ?? 1);
+                }
+                else if (letter.Value.Properties.HasFlag(RuntimeLetterPropertiesFlag.ResetOutline))
+                {
+                    currentOutline = outlineColor;
+                }
+
+                if (letter.Value.ShadowColor is Color newShadowColor)
+                {
+                    currentShadow = newShadowColor * (currentShadow?.A ?? 1);
+                }
+                else if (letter.Value.Properties.HasFlag(RuntimeLetterPropertiesFlag.ResetShadow))
+                {
+                    currentShadow = shadowColor;
                 }
             }
 
@@ -393,7 +409,7 @@ public class PixelFontSize
                 var texture = Textures[c.Page];
                 Rectangle glyph = c.Glyph;
 
-                if (glitchAmount != 0 && character != ' ' && !TextDataServices.IsPonctuation(character))
+                if (glitchAmount != 0 && character != ' ' && !TextDataServices.IsPunctuation(character))
                 {
                     float seed = (Game.NowUnscaled) % 64 + i;
                     float glitch = glitchAmount * 0.8f;
@@ -439,28 +455,28 @@ public class PixelFontSize
                 }
 
                 // ==== Draw stroke ====
-                if (strokeColor.HasValue)
+                if (currentOutline.HasValue)
                 {
-                    if (shadowColor.HasValue)
+                    if (currentShadow.HasValue)
                     {
-                        texture.Draw(spriteBatch, pos + new Point(-1, 2) * scale, scale, glyph, shadowColor.Value, ImageFlip.None, sort + 0.0002f, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(0, 2) * scale, scale, glyph, shadowColor.Value, ImageFlip.None, sort + 0.0002f, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(1, 2) * scale, scale, glyph, shadowColor.Value, ImageFlip.None, sort + 0.0002f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(-1, 2) * scale, scale, glyph, currentShadow.Value, ImageFlip.None, sort + 0.0002f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(0, 2) * scale, scale, glyph, currentShadow.Value, ImageFlip.None, sort + 0.0002f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(1, 2) * scale, scale, glyph, currentShadow.Value, ImageFlip.None, sort + 0.0002f, RenderServices.BLEND_NORMAL);
                     }
 
-                    texture.Draw(spriteBatch, pos + new Point(-1, -1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(0, -1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(1, -1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(-1, 0) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(1, 0) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(-1, 1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(0, 1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(1, 1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(-1, -1) * scale, scale, glyph, currentOutline.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(0, -1) * scale, scale, glyph, currentOutline.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(1, -1) * scale, scale, glyph, currentOutline.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(-1, 0) * scale, scale, glyph, currentOutline.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(1, 0) * scale, scale, glyph, currentOutline.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(-1, 1) * scale, scale, glyph, currentOutline.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(0, 1) * scale, scale, glyph, currentOutline.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(1, 1) * scale, scale, glyph, currentOutline.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
                 }
-                else if (shadowColor.HasValue)
+                else if (currentShadow.HasValue)
                 {
                     // Use 0.001f as the sort so draw the shadow under the font.
-                    texture.Draw(spriteBatch, pos + new Point(0, 1), Vector2.One * scale, glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(0, 1), Vector2.One * scale, glyph, currentShadow.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
                 }
 
                 // draw normal character
@@ -566,7 +582,7 @@ public class PixelFontSize
             if (overflow)
             {
                 bool applyLineBreak = true;
-                if (!lineBreakOnSpace && TextDataServices.IsPonctuation(text[cursor]) && maxWidth - offset.X > 2)
+                if (!lineBreakOnSpace && TextDataServices.IsPunctuation(text[cursor]) && maxWidth - offset.X > 2)
                 {
                     // If this is a pontuaction right at the end of the sentence or before a new line,
                     // we should be okay overflowing. It's better than the alternative.

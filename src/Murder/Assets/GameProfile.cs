@@ -7,207 +7,211 @@ using Murder.Core.Graphics;
 using Murder.Data;
 using System.Collections.Immutable;
 
-namespace Murder.Assets
+namespace Murder.Assets;
+
+/// <summary>
+/// Represents the game profile asset containing configuration and resource paths.
+/// </summary>
+public partial class GameProfile : GameAsset
 {
+    public override char Icon => '\uf085';
+    public override bool CanBeRenamed => false;
+    public override bool CanBeDeleted => false;
+    public override bool CanBeCreated => false;
+
+    public override string SaveLocation => string.Empty;
+
+    public override bool StoreInDatabase => false;
+
     /// <summary>
-    /// Represents the game profile asset containing configuration and resource paths.
+    /// Where our atlas .png and .json files are stored.
+    /// Under: 
+    ///   packed/ -> bin/resources/
+    ///     atlas/
     /// </summary>
-    public partial class GameProfile : GameAsset
-    {
-        public override char Icon => '\uf085';
-        public override bool CanBeRenamed => false;
-        public override bool CanBeDeleted => false;
-        public override bool CanBeCreated => false;
+    [HideInEditor]
+    public readonly string AtlasFolderName = "atlas/";
 
-        public override string SaveLocation => string.Empty;
+    /// <summary>
+    /// Where our aseprite contents are stored.
+    /// Under:
+    ///   packed/ -> bin/resources/
+    ///     aseprite/
+    /// </summary>
+    [HideInEditor]
+    public readonly string ContentAsepritePath = "aseprite/";
 
-        public override bool StoreInDatabase => false;
+    /// <summary>
+    /// Where our font contents are stored.
+    /// Under:
+    ///   packed/ -> bin/resources/
+    ///     fonts/
+    /// </summary>
+    [HideInEditor]
+    public readonly string FontPath = "shaders/";
 
-        /// <summary>
-        /// Where our atlas .png and .json files are stored.
-        /// Under: 
-        ///   packed/ -> bin/resources/
-        ///     atlas/
-        /// </summary>
-        [HideInEditor]
-        public readonly string AtlasFolderName = "atlas/";
+    /// <summary>
+    /// Where our sound contents are stored.
+    /// Under:
+    ///   packed/ -> bin/resources/
+    ///     sounds/
+    /// </summary>
+    [HideInEditor]
+    public readonly string SoundsPath = "sounds/";
 
-        /// <summary>
-        /// Where our aseprite contents are stored.
-        /// Under:
-        ///   packed/ -> bin/resources/
-        ///     aseprite/
-        /// </summary>
-        [HideInEditor]
-        public readonly string ContentAsepritePath = "aseprite/";
+    /// <summary>
+    /// Where our video contents are stored.
+    /// Under:
+    ///   packed/ -> bin/resources/
+    ///     video/
+    /// </summary>
+    [HideInEditor]
+    public readonly string VideoPath = "video/";
 
-        /// <summary>
-        /// Where our font contents are stored.
-        /// Under:
-        ///   packed/ -> bin/resources/
-        ///     fonts/
-        /// </summary>
-        [HideInEditor]
-        public readonly string FontPath = "shaders/";
+    /// <summary>
+    /// Where our dialogues contents are stored.
+    /// Under:
+    ///   packed/ -> bin/resources/
+    ///     dialogues/
+    /// </summary>
+    [HideInEditor]
+    public readonly string DialoguesPath = "dialogues/";
 
-        /// <summary>
-        /// Where our sound contents are stored.
-        /// Under:
-        ///   packed/ -> bin/resources/
-        ///     sounds/
-        /// </summary>
-        [HideInEditor]
-        public readonly string SoundsPath = "sounds/";
+    /// <summary>
+    /// Where our localization assets are stored.
+    /// Under:
+    ///   root/resources
+    /// </summary>
+    [HideInEditor]
+    public readonly string LocalizationPath = "loc/";
 
-        /// <summary>
-        /// Where our video contents are stored.
-        /// Under:
-        ///   packed/ -> bin/resources/
-        ///     video/
-        /// </summary>
-        [HideInEditor]
-        public readonly string VideoPath = "video/";
+    /// <summary>
+    /// Where our aseprite contents are stored.
+    /// Under:
+    ///   packed/ -> bin/resources/
+    ///     shaders/
+    /// </summary>
+    [HideInEditor]
+    public readonly string ShadersPath = "shaders/";
 
-        /// <summary>
-        /// Where our dialogues contents are stored.
-        /// Under:
-        ///   packed/ -> bin/resources/
-        ///     dialogues/
-        /// </summary>
-        [HideInEditor]
-        public readonly string DialoguesPath = "dialogues/";
+    /// <summary>
+    /// Where our sound contents are stored.
+    /// Under:
+    ///   packed/ -> bin/resources/
+    ///     fonts/
+    /// </summary>
+    [HideInEditor]
+    public readonly string FontsPath = "fonts/";
 
-        /// <summary>
-        /// Where our localization assets are stored.
-        /// Under:
-        ///   root/resources
-        /// </summary>
-        [HideInEditor]
-        public readonly string LocalizationPath = "loc/";
+    /// <summary>
+    /// Where our high resolution contents are stored.
+    /// Under:
+    ///   packed/ -> bin/resources
+    ///     shaders/
+    /// </summary>
+    [HideInEditor]
+    public readonly string HiResPath = "hires_images/";
 
-        /// <summary>
-        /// Where our aseprite contents are stored.
-        /// Under:
-        ///   packed/ -> bin/resources/
-        ///     shaders/
-        /// </summary>
-        [HideInEditor]
-        public readonly string ShadersPath = "shaders/";
+    /// <summary>
+    /// Root path where our data .json files are stored.
+    /// </summary>
+    public readonly string AssetResourcesPath = "assets/";
 
-        /// <summary>
-        /// Where our sound contents are stored.
-        /// Under:
-        ///   packed/ -> bin/resources/
-        ///     fonts/
-        /// </summary>
-        [HideInEditor]
-        public readonly string FontsPath = "fonts/";
+    /// <summary>
+    /// Where our ecs assets are stored.
+    /// Under:
+    ///   resources/
+    ///     assets/
+    ///       ecs/
+    /// </summary>
+    [HideInEditor]
+    public readonly string ContentECSPath = "ecs/";
 
-        /// <summary>
-        /// Where our high resolution contents are stored.
-        /// Under:
-        ///   packed/ -> bin/resources
-        ///     shaders/
-        /// </summary>
-        [HideInEditor]
-        public readonly string HiResPath = "hires_images/";
+    /// <summary>
+    /// Where our generic assets are stored.
+    /// Under:
+    ///   resources/
+    ///     assets/
+    ///       data/
+    /// </summary>
+    [HideInEditor]
+    public readonly string GenericAssetsPath = "data/";
 
-        /// <summary>
-        /// Root path where our data .json files are stored.
-        /// </summary>
-        public readonly string AssetResourcesPath = "assets/";
+    [Serialize]
+    private readonly bool _scalingFilter = false;
 
-        /// <summary>
-        /// Where our ecs assets are stored.
-        /// Under:
-        ///   resources/
-        ///     assets/
-        ///       ecs/
-        /// </summary>
-        [HideInEditor]
-        public readonly string ContentECSPath = "ecs/";
+    /// <summary>
+    /// Texture scaling smoothing
+    /// </summary>
+    [Tooltip("Texture scaling smoothing")]
+    public bool ScalingFilter => _scalingFilter;
 
-        /// <summary>
-        /// Where our generic assets are stored.
-        /// Under:
-        ///   resources/
-        ///     assets/
-        ///       data/
-        /// </summary>
-        [HideInEditor]
-        public readonly string GenericAssetsPath = "data/";
+    public readonly int TargetFps = 60;
 
-        [Serialize]
-        private readonly bool _scalingFilter = false;
+    /// <summary>
+    /// Turning this off might cause a lot of tearing.
+    /// </summary>
+    public readonly bool IsVSyncEnabled = true;
 
-        /// <summary>
-        /// Texture scaling smoothing
-        /// </summary>
-        [Tooltip("Texture scaling smoothing")]
-        public bool ScalingFilter => _scalingFilter;
+    public readonly float PushAwayInterval = 0.05f;
+    public readonly int DefaultGridCellSize = 24;
 
-        public readonly int TargetFps = 60;
+    [GameAssetId(typeof(WorldAsset))]
+    public readonly Guid StartingScene;
 
-        /// <summary>
-        /// Turning this off might cause a lot of tearing.
-        /// </summary>
-        public readonly bool IsVSyncEnabled = true;
+    /// <summary>
+    /// Whether textures (e.g. fonts) should be preloaded. If true, startup time might be slower but
+    /// actual game will be faster.
+    /// </summary>
+    [Tooltip("Load textures on start, slower startup but no delays in game")]
+    [Serialize]
+    public readonly bool PreloadTextures = true;
 
-        public readonly float PushAwayInterval = 0.05f;
-        public readonly int DefaultGridCellSize = 24;
+    public readonly Theme Theme = new Theme();
 
-        [GameAssetId(typeof(WorldAsset))]
-        public readonly Guid StartingScene;
+    /// <summary>
+    /// Used when using custom style for text.
+    /// </summary>
+    public readonly ImmutableArray<TextTheme> TextThemeProfiles = [];
 
-        /// <summary>
-        /// Whether textures (e.g. fonts) should be preloaded. If true, startup time might be slower but
-        /// actual game will be faster.
-        /// </summary>
-        [Tooltip("Load textures on start, slower startup but no delays in game")]
-        [Serialize]
-        public readonly bool PreloadTextures = true;
+    public readonly EditorAssets EditorAssets = new();
 
-        public readonly Theme Theme = new Theme();
+    /// <summary>
+    /// Background color for the game.
+    /// </summary>
+    public Color BackColor = Color.Black;
 
-        public readonly EditorAssets EditorAssets = new();
+    [SimpleTexture, Serialize]
+    public readonly string DefaultPalette = "images/murder_palette";
 
-        /// <summary>
-        /// Background color for the game.
-        /// </summary>
-        public Color BackColor = Color.Black;
+    /// <summary>
+    /// ID of the default image used when an image is missing.
+    /// </summary>
+    [Tooltip("ID of the default image used when an image is missing.")]
+    [GameAssetId(typeof(SpriteAsset))]
+    public readonly Guid MissingImage = new("485a9a13-e62b-7215-dbc3-9e1df4bcba73");
 
-        [SimpleTexture, Serialize]
-        public readonly string DefaultPalette = "images/murder_palette";
+    /// <summary>
+    /// Dictionary mapping languages to the appropriate localization asset resource IDs.
+    /// </summary>
+    [Tooltip("Dictionary mapping languages to the appropriate localization asset resource IDs.")]
+    [GameAssetId(typeof(LocalizationAsset))]
+    public ImmutableDictionary<LanguageId, Guid> LocalizationResources = ImmutableDictionary<LanguageId, Guid>.Empty;
 
-        /// <summary>
-        /// ID of the default image used when an image is missing.
-        /// </summary>
-        [Tooltip("ID of the default image used when an image is missing.")]
-        [GameAssetId(typeof(SpriteAsset))]
-        public readonly Guid MissingImage = new("485a9a13-e62b-7215-dbc3-9e1df4bcba73");
+    /// <summary>
+    /// Icons used for rendering text in the game.
+    /// </summary>
+    [GameAssetId<TextIconsAsset>]
+    public readonly Guid TextIcons = Guid.Empty;
 
-        /// <summary>
-        /// Dictionary mapping languages to the appropriate localization asset resource IDs.
-        /// </summary>
-        [Tooltip("Dictionary mapping languages to the appropriate localization asset resource IDs.")]
-        [GameAssetId(typeof(LocalizationAsset))]
-        public ImmutableDictionary<LanguageId, Guid> LocalizationResources = ImmutableDictionary<LanguageId, Guid>.Empty;
+    [Tooltip("Aditional collision checks will be done if an entity moves more than X pixels per frame")]
+    public readonly int MinimumVelocityForSweep = 6;
 
-        /// <summary>
-        /// Icons used for rendering text in the game.
-        /// </summary>
-        [GameAssetId<TextIconsAsset>]
-        public readonly Guid TextIcons = Guid.Empty;
+    [GameAssetId<InputGraphicsAsset>]
+    public readonly Guid InputGraphics = Guid.Empty;
 
-        [Tooltip("Aditional collision checks will be done if an entity moves more than X pixels per frame")]
-        public readonly int MinimumVelocityForSweep = 6;
+    [GameAssetId<InputProfileAsset>]
+    public readonly Guid InputProfile = Guid.Empty;
 
-        [GameAssetId<InputGraphicsAsset>]
-        public readonly Guid InputGraphics = Guid.Empty;
-
-        [GameAssetId<InputProfileAsset>]
-        public readonly Guid InputProfile = Guid.Empty;
-
-        public GameProfile() => FilePath = GameDataManager.GameProfileFileName;
-    }
+    public GameProfile() => FilePath = GameDataManager.GameProfileFileName;
 }

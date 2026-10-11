@@ -1,11 +1,11 @@
-﻿using Murder.Utilities;
-using System.Collections.Immutable;
-using System.Text.RegularExpressions;
-using System.Numerics;
-using System.Globalization;
-using System.Text;
-using System.Diagnostics;
+﻿using Murder.Assets;
 using Murder.Services;
+using Murder.Utilities;
+using System;
+using System.Collections.Immutable;
+using System.Numerics;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Murder.Core.Graphics;
 
@@ -31,7 +31,7 @@ public enum RuntimeLetterPropertiesFlag
     DoNotSkipLineEnding = 0b100,
 
     /// <summary>
-    /// Reset any color.
+    /// Reset color property.
     /// </summary>
     ResetColor = 0b1000,
 
@@ -46,9 +46,43 @@ public enum RuntimeLetterPropertiesFlag
     ResetGlitch = 0b100000,
 
     /// <summary>
+    /// Reset outline property.
+    /// </summary>
+    ResetOutline = 0b1000,
+
+    /// <summary>
+    /// Reset shadow property.
+    /// </summary>
+    ResetShadow = 0b1000,
+
+    /// <summary>
+    /// Reset current profile.
+    /// </summary>
+    ResetProfile = 0b1000,
+
+    /// <summary>
     /// Signalizes that a new information was presented with <new>info</new>.
     /// </summary>
     New = 0b1000000
+}
+
+public enum LetterSkipMetadataFlag
+{
+    /// <summary>
+    /// None, letter won't be skipped.
+    /// </summary>
+    None = 0,
+    Pause = 1 << 1,
+    Shake = 1 << 2,
+    Glitch = 1 << 3,
+    Color = 1 << 4,
+    Wave = 1 << 5,
+    Fear = 1 << 6,
+    Speed = 1 << 7,
+    Icon = 1 << 8,
+    New = 1 << 9,
+    Shadow = 1 << 10,
+    Outline = 1 << 11
 }
 
 /// <summary>
@@ -80,6 +114,10 @@ public readonly record struct RuntimeLetterProperties
 
     public Color? Color { get; init; }
 
+    public Color? OutlineColor { get; init; }
+
+    public Color? ShadowColor { get; init; }
+
     public Portrait? Icon { get; init; }
 
     /// <summary>
@@ -96,9 +134,40 @@ public readonly record struct RuntimeLetterProperties
             Shake = Shake != 0 ? Shake : other.Shake,
             Glitch = Glitch != 0 ? Glitch : other.Glitch,
             Color = Color ?? other.Color,
+            OutlineColor = OutlineColor ?? other.OutlineColor,
+            ShadowColor = ShadowColor ?? other.ShadowColor,
             Icon = Icon ?? other.Icon,
             Speed = Speed != 0 ? Speed : other.Speed
         };
+    }
+
+    public RuntimeLetterProperties WithColor(LetterSkipMetadataFlag metadata, Color color)
+    {
+        switch (metadata)
+        {
+            case LetterSkipMetadataFlag.Color:
+                return this with { Color = color };
+
+            case LetterSkipMetadataFlag.Shadow:
+                return this with { ShadowColor = color };
+
+            case LetterSkipMetadataFlag.Outline:
+                return this with { OutlineColor = color };
+        }
+
+        return this;
+    }
+
+    public RuntimeLetterProperties Reset(LetterSkipMetadataFlag metadata)
+    {
+        RuntimeLetterPropertiesFlag resetFlag = metadata switch
+        {
+            LetterSkipMetadataFlag.Shadow => RuntimeLetterPropertiesFlag.ResetShadow,
+            LetterSkipMetadataFlag.Outline => RuntimeLetterPropertiesFlag.ResetOutline,
+            _ => RuntimeLetterPropertiesFlag.ResetColor,
+        };
+
+        return this with { Properties = Properties | resetFlag };
     }
 }
 
@@ -162,23 +231,6 @@ public readonly struct TextSettings
 
 public static partial class TextDataServices
 {
-    private enum LetterSkipMetadataFlag
-    {
-        /// <summary>
-        /// None, letter won't be skipped.
-        /// </summary>
-        None = 0,
-        Pause = 1 << 1,
-        Shake = 1 << 2,
-        Glitch = 1 << 3,
-        Color = 1 << 4,
-        Wave = 1 << 5,
-        Fear = 1 << 6,
-        Speed = 1 << 7,
-        Icon = 1 << 8,
-        New = 1 << 9
-    }
-
     // [Perf] Cache the last strings parsed.
     private static readonly CacheDictionary<RuntimeTextDataKey, RuntimeTextData> _cache = new(64);
 
@@ -220,6 +272,15 @@ public static partial class TextDataServices
         // Look for colors: <c=#fff>text</c>
         MatchCollection matchesForColors = ColorTags().Matches(text);
 
+        // Look for colors: <o=#fff>text</o>
+        MatchCollection matchesForOutline = OutlineTags().Matches(text);
+
+        // Look for colors: <s=#fff>text</s>
+        MatchCollection matchesForShadow = ShadowTags().Matches(text);
+
+        // Look for colors: <t=1>text</t> or <t>text</t>
+        MatchCollection matchesForTextTheme = ThemeTags().Matches(text);
+
         // Look for pause characters: <wave>text</wave>
         MatchCollection matchesForWaves = WaveTags().Matches(text);
 
@@ -238,7 +299,8 @@ public static partial class TextDataServices
         int allocatedLengthForSpecialCharacters = 0;
         if (matchesForPauses.Count != 0 || matchesForShakes.Count != 0 || matchesForColors.Count != 0 ||
             matchesForWaves.Count != 0 || matchesForFear.Count != 0 || matchesForSpeed.Count != 0 || matchesForGlitches.Count != 0 ||
-            matchesForIcons.Count != 0 || matchesForNew.Count != 0)
+            matchesForIcons.Count != 0 || matchesForNew.Count != 0 || matchesForOutline.Count != 0 || matchesForShadow.Count != 0 ||
+            matchesForTextTheme.Count != 0)
         {
             allocatedLengthForSpecialCharacters = text.Length;
         }
@@ -249,259 +311,252 @@ public static partial class TextDataServices
         // Tracks all the letters in rawText which were skipped.
         Span<LetterSkipMetadataFlag> skippedLetters = stackalloc LetterSkipMetadataFlag[allocatedLengthForSpecialCharacters];
 
-        if (matchesForPauses.Count > 0)
+        if (allocatedLengthForSpecialCharacters > 0)
         {
-            // in japanese and chinese, we don't use the ' ' space character, so the pause will apply before showing the next letter.
-            // otherwise, the pause applies before showing the last letter.
-            bool pauseBeforeShowingCharacter = LocalizationServices.IsTextWrapOnlyOnSpace();
-
-            for (int i = 0; i < matchesForPauses.Count; ++i)
+            if (matchesForPauses.Count > 0)
             {
-                Match match = matchesForPauses[i];
+                // in japanese and chinese, we don't use the ' ' space character, so the pause will apply before showing the next letter.
+                // otherwise, the pause applies before showing the last letter.
+                bool pauseBeforeShowingCharacter = LocalizationServices.IsTextWrapOnlyOnSpace();
 
-                // Mark all the characters that matched that they will be skipped.
-                for (int j = 0; j < match.Length; ++j)
+                for (int i = 0; i < matchesForPauses.Count; ++i)
                 {
-                    skippedLetters[match.Index + j] |= LetterSkipMetadataFlag.Pause;
-                }
+                    Match match = matchesForPauses[i];
 
-                // Track that there is a pause at this index.
-                int index = Math.Max(0, match.Index - (pauseBeforeShowingCharacter ? 2 : 1));
-                lettersBuilder[index] = lettersBuilder[index] with { Pause = match.Length };
-            }
-        }
-
-        if (matchesForShakes.Count > 0)
-        {
-            for (int i = 0; i < matchesForShakes.Count; ++i)
-            {
-                Match match = matchesForShakes[i];
-
-                // Mark all the characters that matched that they will be skipped.
-                for (int j = 0; j < match.Length; ++j)
-                {
-                    skippedLetters[match.Index + j] |= LetterSkipMetadataFlag.Shake;
-                }
-
-                int index = Math.Min(lettersBuilder.Length - 1, match.Index + match.Length);
-
-                // TODO: I haven't tested this yet. This might be wrong.
-                float shake = 1;
-                if (match.Groups.Count > 1)
-                {
-                    shake = InputServices.ParseFloatSafe(match.Groups[1].Value);
-                }
-
-                lettersBuilder[index] = lettersBuilder[index] with { Shake = shake };
-            }
-        }
-
-        if (matchesForGlitches.Count > 0)
-        {
-            for (int i = 0; i < matchesForGlitches.Count; ++i)
-            {
-                Match match = matchesForGlitches[i];
-
-                // Mark all the characters that matched that they will be skipped.
-                for (int j = 0; j < match.Length; ++j)
-                {
-                    skippedLetters[match.Index + j] |= LetterSkipMetadataFlag.Glitch;
-                }
-
-                // TODO: I haven't tested this yet. This might be wrong.
-                float glitch = 1;
-                if (match.Groups[3].Length == 0)
-                {
-                    glitch = InputServices.ParseFloatSafe(match.Groups[1].Value);
-
-                    int index = Math.Min(lettersBuilder.Length - 1, match.Index + match.Length);
-                    lettersBuilder[index] = lettersBuilder[index] with { Glitch = glitch };
-                }
-                else
-                {
-                    glitch = InputServices.ParseFloatSafe(match.Groups[2].Value);
-
-                    Group textGroup = match.Groups[3];
-                    for (int j = 0; j < textGroup.Length; ++j)
+                    // Mark all the characters that matched that they will be skipped.
+                    for (int j = 0; j < match.Length; ++j)
                     {
-                        skippedLetters[textGroup.Index + j] &= ~LetterSkipMetadataFlag.Glitch;
+                        skippedLetters[match.Index + j] |= LetterSkipMetadataFlag.Pause;
                     }
 
-                    // Map the start of this current text as the speed switch.
-                    lettersBuilder[match.Index] = lettersBuilder[match.Index] with { Glitch = glitch };
-
-                    RuntimeLetterProperties l = lettersBuilder[match.Index + match.Length - 1];
-                    lettersBuilder[match.Index + match.Length - 1] = lettersBuilder[match.Index + match.Length - 1]
-                        with
-                    { Properties = l.Properties | RuntimeLetterPropertiesFlag.ResetGlitch };
-                }
-            }
-        }
-
-        if (matchesForSpeed.Count > 0)
-        {
-            for (int i = 0; i < matchesForSpeed.Count; ++i)
-            {
-                Match match = matchesForSpeed[i];
-
-                // Mark all the characters that matched that they will be skipped.
-                for (int j = 0; j < match.Length; ++j)
-                {
-                    skippedLetters[match.Index + j] |= LetterSkipMetadataFlag.Speed;
-                }
-
-                float speed = 1;
-
-                if (match.Groups[3].Length == 0)
-                {
-                    int index = Math.Min(lettersBuilder.Length - 1, match.Index + match.Length);
-                    speed = InputServices.ParseFloatSafe(match.Groups[1].Value);
-
-                    lettersBuilder[index] = lettersBuilder[index] with { Speed = speed };
-                }
-                else
-                {
-                    speed = InputServices.ParseFloatSafe(match.Groups[2].Value);
-
-                    Group textGroup = match.Groups[3];
-                    for (int j = 0; j < textGroup.Length; ++j)
-                    {
-                        skippedLetters[textGroup.Index + j] &= ~LetterSkipMetadataFlag.Speed;
-                    }
-
-                    // Map the start of this current text as the speed switch.
-                    lettersBuilder[match.Index] = lettersBuilder[match.Index] with { Speed = speed };
-
-                    RuntimeLetterProperties l = lettersBuilder[match.Index + match.Length - 1];
-                    lettersBuilder[match.Index + match.Length - 1] = lettersBuilder[match.Index + match.Length - 1]
-                        with { Properties = l.Properties | RuntimeLetterPropertiesFlag.ResetSpeed };
-                }
-            }
-        }
-
-        if (matchesForColors.Count > 0)
-        {
-            for (int i = 0; i < matchesForColors.Count; i++)
-            {
-                Match match = matchesForColors[i];
-
-                Color colorForText = Color.FromName(match.Groups[1].Value);
-
-                Group textGroup = match.Groups[2];
-
-                // Mark all the characters that matched that they will be skipped.
-                for (int j = 0; j < match.Length; ++j)
-                {
-                    int index = match.Index + j;
-                    if (index >= textGroup.Index && index < textGroup.Index + textGroup.Length)
-                    {
-                        continue;
-                    }
-
-                    skippedLetters[index] |= LetterSkipMetadataFlag.Color;
-                }
-
-                // Map the start of this current text as the color switch.
-                lettersBuilder[match.Index] = lettersBuilder[match.Index] with { Color = colorForText };
-
-                RuntimeLetterProperties l = lettersBuilder[match.Index + match.Length - 1];
-                lettersBuilder[match.Index + match.Length - 1] = lettersBuilder[match.Index + match.Length - 1] 
-                    with { Properties = l.Properties | RuntimeLetterPropertiesFlag.ResetColor };
-            }
-        }
-
-        if (matchesForWaves.Count > 0)
-        {
-            for (int i = 0; i < matchesForWaves.Count; ++i)
-            {
-                Match match = matchesForWaves[i];
-
-                for (int j = 0; j < match.Length; ++j)
-                {
-                    skippedLetters[match.Index + j] |= LetterSkipMetadataFlag.Wave;
-                }
-
-                Group group = match.Groups[1];
-
-                for (int j = 0; j < group.Length; ++j)
-                {
-                    int index = group.Index + j;
-                    skippedLetters[index] &= ~LetterSkipMetadataFlag.Wave;
-
-                    RuntimeLetterProperties l = lettersBuilder[index];
-                    lettersBuilder[index] = l with { Properties = l.Properties | RuntimeLetterPropertiesFlag.Wave };
-                }
-            }
-        }
-
-        if (matchesForFear.Count > 0)
-        {
-            for (int i = 0; i < matchesForFear.Count; ++i)
-            {
-                Match match = matchesForFear[i];
-
-                for (int j = 0; j < match.Length; ++j)
-                {
-                    skippedLetters[match.Index + j] |= LetterSkipMetadataFlag.Fear;
-                }
-
-                Group group = match.Groups[1];
-
-                for (int j = 0; j < group.Length; ++j)
-                {
-                    int index = group.Index + j;
-                    skippedLetters[index] &= ~LetterSkipMetadataFlag.Fear;
-
-                    RuntimeLetterProperties l = lettersBuilder[index];
-                    lettersBuilder[index] = l with { Properties = l.Properties | RuntimeLetterPropertiesFlag.Fear };
-                }
-            }
-        }
-
-        if (matchesForNew.Count > 0)
-        {
-            for (int i = 0; i < matchesForNew.Count; ++i)
-            {
-                Match match = matchesForNew[i];
-
-                for (int j = 0; j < match.Length; ++j)
-                {
-                    skippedLetters[match.Index + j] |= LetterSkipMetadataFlag.New;
-                }
-
-                Group group = match.Groups[1];
-
-                for (int j = 0; j < group.Length; ++j)
-                {
-                    int index = group.Index + j;
-                    skippedLetters[index] &= ~LetterSkipMetadataFlag.New;
-
-                    RuntimeLetterProperties l = lettersBuilder[index];
-                    lettersBuilder[index] = l with { Properties = l.Properties | RuntimeLetterPropertiesFlag.New };
-                }
-            }
-        }
-
-        if (matchesForIcons.Count > 0)
-        {
-            for (int i = 0; i < matchesForIcons.Count; ++i)
-            {
-                Match match = matchesForIcons[i];
-
-                // BUT leave the first character alone, we'll use that.
-                // Mark all the characters that matched that they will be skipped.
-                for (int j = 1; j < match.Length; ++j)
-                {
-                    skippedLetters[match.Index + j] |= LetterSkipMetadataFlag.Icon;
-                }
-
-                string iconName = match.Groups[1].Value;
-
-                if (MurderFontServices.TryGetIconForText(iconName) is Portrait portrait)
-                {
                     // Track that there is a pause at this index.
-                    int index = Math.Max(0, match.Index);
-                    lettersBuilder[index] = lettersBuilder[index] with { Icon = portrait };
+                    int index = Math.Max(0, match.Index - (pauseBeforeShowingCharacter ? 2 : 1));
+                    lettersBuilder[index] = lettersBuilder[index] with { Pause = match.Length };
+                }
+            }
+
+            if (matchesForShakes.Count > 0)
+            {
+                for (int i = 0; i < matchesForShakes.Count; ++i)
+                {
+                    Match match = matchesForShakes[i];
+
+                    // Mark all the characters that matched that they will be skipped.
+                    for (int j = 0; j < match.Length; ++j)
+                    {
+                        skippedLetters[match.Index + j] |= LetterSkipMetadataFlag.Shake;
+                    }
+
+                    int index = Math.Min(lettersBuilder.Length - 1, match.Index + match.Length);
+
+                    // TODO: I haven't tested this yet. This might be wrong.
+                    float shake = 1;
+                    if (match.Groups.Count > 1)
+                    {
+                        shake = InputServices.ParseFloatSafe(match.Groups[1].Value);
+                    }
+
+                    lettersBuilder[index] = lettersBuilder[index] with { Shake = shake };
+                }
+            }
+
+            if (matchesForGlitches.Count > 0)
+            {
+                for (int i = 0; i < matchesForGlitches.Count; ++i)
+                {
+                    Match match = matchesForGlitches[i];
+
+                    // Mark all the characters that matched that they will be skipped.
+                    for (int j = 0; j < match.Length; ++j)
+                    {
+                        skippedLetters[match.Index + j] |= LetterSkipMetadataFlag.Glitch;
+                    }
+
+                    // TODO: I haven't tested this yet. This might be wrong.
+                    float glitch = 1;
+                    if (match.Groups[3].Length == 0)
+                    {
+                        glitch = InputServices.ParseFloatSafe(match.Groups[1].Value);
+
+                        int index = Math.Min(lettersBuilder.Length - 1, match.Index + match.Length);
+                        lettersBuilder[index] = lettersBuilder[index] with { Glitch = glitch };
+                    }
+                    else
+                    {
+                        glitch = InputServices.ParseFloatSafe(match.Groups[2].Value);
+
+                        Group textGroup = match.Groups[3];
+                        for (int j = 0; j < textGroup.Length; ++j)
+                        {
+                            skippedLetters[textGroup.Index + j] &= ~LetterSkipMetadataFlag.Glitch;
+                        }
+
+                        // Map the start of this current text as the speed switch.
+                        lettersBuilder[match.Index] = lettersBuilder[match.Index] with { Glitch = glitch };
+
+                        RuntimeLetterProperties l = lettersBuilder[match.Index + match.Length - 1];
+                        lettersBuilder[match.Index + match.Length - 1] = lettersBuilder[match.Index + match.Length - 1]
+                            with
+                        { Properties = l.Properties | RuntimeLetterPropertiesFlag.ResetGlitch };
+                    }
+                }
+            }
+
+            if (matchesForSpeed.Count > 0)
+            {
+                for (int i = 0; i < matchesForSpeed.Count; ++i)
+                {
+                    Match match = matchesForSpeed[i];
+
+                    // Mark all the characters that matched that they will be skipped.
+                    for (int j = 0; j < match.Length; ++j)
+                    {
+                        skippedLetters[match.Index + j] |= LetterSkipMetadataFlag.Speed;
+                    }
+
+                    float speed = 1;
+
+                    if (match.Groups[3].Length == 0)
+                    {
+                        int index = Math.Min(lettersBuilder.Length - 1, match.Index + match.Length);
+                        speed = InputServices.ParseFloatSafe(match.Groups[1].Value);
+
+                        lettersBuilder[index] = lettersBuilder[index] with { Speed = speed };
+                    }
+                    else
+                    {
+                        speed = InputServices.ParseFloatSafe(match.Groups[2].Value);
+
+                        Group textGroup = match.Groups[3];
+                        for (int j = 0; j < textGroup.Length; ++j)
+                        {
+                            skippedLetters[textGroup.Index + j] &= ~LetterSkipMetadataFlag.Speed;
+                        }
+
+                        // Map the start of this current text as the speed switch.
+                        lettersBuilder[match.Index] = lettersBuilder[match.Index] with { Speed = speed };
+
+                        RuntimeLetterProperties l = lettersBuilder[match.Index + match.Length - 1];
+                        lettersBuilder[match.Index + match.Length - 1] = lettersBuilder[match.Index + match.Length - 1]
+                            with
+                        { Properties = l.Properties | RuntimeLetterPropertiesFlag.ResetSpeed };
+                    }
+                }
+            }
+
+            if (matchesForColors.Count > 0)
+            {
+                ApplyTaggedProperty(matchesForColors, LetterSkipMetadataFlag.Color, lettersBuilder, skippedLetters);
+            }
+
+            if (matchesForOutline.Count > 0)
+            {
+                ApplyTaggedProperty(matchesForOutline, LetterSkipMetadataFlag.Outline, lettersBuilder, skippedLetters);
+            }
+
+            if (matchesForShadow.Count > 0)
+            {
+                ApplyTaggedProperty(matchesForShadow, LetterSkipMetadataFlag.Shadow, lettersBuilder, skippedLetters);
+            }
+
+            if (matchesForTextTheme.Count > 0)
+            {
+                ApplyTextTheme(matchesForTextTheme, lettersBuilder, skippedLetters);
+            }
+
+            if (matchesForWaves.Count > 0)
+            {
+                for (int i = 0; i < matchesForWaves.Count; ++i)
+                {
+                    Match match = matchesForWaves[i];
+
+                    for (int j = 0; j < match.Length; ++j)
+                    {
+                        skippedLetters[match.Index + j] |= LetterSkipMetadataFlag.Wave;
+                    }
+
+                    Group group = match.Groups[1];
+
+                    for (int j = 0; j < group.Length; ++j)
+                    {
+                        int index = group.Index + j;
+                        skippedLetters[index] &= ~LetterSkipMetadataFlag.Wave;
+
+                        RuntimeLetterProperties l = lettersBuilder[index];
+                        lettersBuilder[index] = l with { Properties = l.Properties | RuntimeLetterPropertiesFlag.Wave };
+                    }
+                }
+            }
+
+            if (matchesForFear.Count > 0)
+            {
+                for (int i = 0; i < matchesForFear.Count; ++i)
+                {
+                    Match match = matchesForFear[i];
+
+                    for (int j = 0; j < match.Length; ++j)
+                    {
+                        skippedLetters[match.Index + j] |= LetterSkipMetadataFlag.Fear;
+                    }
+
+                    Group group = match.Groups[1];
+
+                    for (int j = 0; j < group.Length; ++j)
+                    {
+                        int index = group.Index + j;
+                        skippedLetters[index] &= ~LetterSkipMetadataFlag.Fear;
+
+                        RuntimeLetterProperties l = lettersBuilder[index];
+                        lettersBuilder[index] = l with { Properties = l.Properties | RuntimeLetterPropertiesFlag.Fear };
+                    }
+                }
+            }
+
+            if (matchesForNew.Count > 0)
+            {
+                for (int i = 0; i < matchesForNew.Count; ++i)
+                {
+                    Match match = matchesForNew[i];
+
+                    for (int j = 0; j < match.Length; ++j)
+                    {
+                        skippedLetters[match.Index + j] |= LetterSkipMetadataFlag.New;
+                    }
+
+                    Group group = match.Groups[1];
+
+                    for (int j = 0; j < group.Length; ++j)
+                    {
+                        int index = group.Index + j;
+                        skippedLetters[index] &= ~LetterSkipMetadataFlag.New;
+
+                        RuntimeLetterProperties l = lettersBuilder[index];
+                        lettersBuilder[index] = l with { Properties = l.Properties | RuntimeLetterPropertiesFlag.New };
+                    }
+                }
+            }
+
+            if (matchesForIcons.Count > 0)
+            {
+                for (int i = 0; i < matchesForIcons.Count; ++i)
+                {
+                    Match match = matchesForIcons[i];
+
+                    // BUT leave the first character alone, we'll use that.
+                    // Mark all the characters that matched that they will be skipped.
+                    for (int j = 1; j < match.Length; ++j)
+                    {
+                        skippedLetters[match.Index + j] |= LetterSkipMetadataFlag.Icon;
+                    }
+
+                    string iconName = match.Groups[1].Value;
+
+                    if (MurderFontServices.TryGetIconForText(iconName) is Portrait portrait)
+                    {
+                        // Track that there is a pause at this index.
+                        int index = Math.Max(0, match.Index);
+                        lettersBuilder[index] = lettersBuilder[index] with { Icon = portrait };
+                    }
                 }
             }
         }
@@ -606,8 +661,8 @@ public static partial class TextDataServices
         for (int i = 0; i < parsedText.Length - 1 && indexForPause < parsedText.Length; ++i, ++indexForPause)
         {
             // For now, do this weird heuristic of not applying pause if the last character was uppercase.
-            bool shouldSkipPause = (i > 0 && (char.IsUpper(parsedText[i - 1])) || 
-                IsPonctuationToIgnorePreviousPause(parsedText[i + 1]));
+            bool shouldSkipPause = (i > 0 && char.IsUpper(parsedText[i - 1])) || 
+                IsPunctuationToIgnorePreviousPause(parsedText[i + 1]);
 
             if (shouldSkipPause)
             {
@@ -688,7 +743,110 @@ public static partial class TextDataServices
         return data;
     }
 
-    public static bool IsPonctuation(char c)
+    /// <summary>
+    /// Apply a property that has a value specified, e.g. <c=value></c>.
+    /// </summary>
+    private static void ApplyTaggedProperty(
+        MatchCollection matches,
+        LetterSkipMetadataFlag metadata, 
+        Span<RuntimeLetterProperties> lettersBuilder,
+        Span<LetterSkipMetadataFlag> skippedLetters)
+    {
+        for (int i = 0; i < matches.Count; i++)
+        {
+            Match match = matches[i];
+            Group textGroup = match.Groups[2];
+
+            // Mark all the characters that matched that they will be skipped.
+            for (int j = 0; j < match.Length; ++j)
+            {
+                int index = match.Index + j;
+                if (index >= textGroup.Index && index < textGroup.Index + textGroup.Length)
+                {
+                    continue;
+                }
+
+                skippedLetters[index] |= metadata;
+            }
+
+            // Map the start of this current text as the color switch.
+            Color colorForText = Color.FromName(match.Groups[1].Value);
+
+            lettersBuilder[match.Index] = lettersBuilder[match.Index].WithColor(metadata, colorForText);
+            lettersBuilder[match.Index + match.Length - 1] = lettersBuilder[match.Index + match.Length - 1].Reset(metadata);
+        }
+    }
+
+    /// <summary>
+    /// Apply a property that has a value specified, e.g. <c=value></c>.
+    /// </summary>
+    private static void ApplyTextTheme(
+        MatchCollection matches,
+        Span<RuntimeLetterProperties> lettersBuilder,
+        Span<LetterSkipMetadataFlag> skippedLetters)
+    {
+        ImmutableArray<TextTheme> themes = Game.Profile.TextThemeProfiles;
+        for (int i = 0; i < matches.Count; i++)
+        {
+            Match match = matches[i];
+            Group textGroup = match.Groups[2];
+
+            TextTheme theme;
+            int chosenTheme = match.Groups[1].Length == 0 ? 0 : InputServices.ParseIntSafe(match.Groups[1].Value);
+            if (chosenTheme < 0 || chosenTheme >= themes.Length)
+            {
+                // if there is no theme, still apply the tag to skip it.
+                theme = new();
+            }
+            else
+            {
+                theme = themes[chosenTheme];
+            }
+
+            // Mark all the characters that matched that they will be skipped.
+            for (int j = 0; j < match.Length; ++j)
+            {
+                int index = match.Index + j;
+                if (index >= textGroup.Index && index < textGroup.Index + textGroup.Length)
+                {
+                    continue;
+                }
+
+                // either of them should work here, we just want to tag them to be skipped.
+                skippedLetters[index] |= LetterSkipMetadataFlag.Color;
+            }
+
+            if (theme.Empty)
+            {
+                return;
+            }
+
+            int endIndex = match.Index + match.Length - 1;
+
+            Color? color = theme.Color;
+            if (color is not null)
+            {
+                lettersBuilder[match.Index] = lettersBuilder[match.Index].WithColor(LetterSkipMetadataFlag.Color, color.Value);
+                lettersBuilder[endIndex] = lettersBuilder[endIndex].Reset(LetterSkipMetadataFlag.Color);
+            }
+
+            color = theme.Outline;
+            if (color is not null)
+            {
+                lettersBuilder[match.Index] = lettersBuilder[match.Index].WithColor(LetterSkipMetadataFlag.Outline, color.Value);
+                lettersBuilder[endIndex] = lettersBuilder[endIndex].Reset(LetterSkipMetadataFlag.Outline);
+            }
+
+            color = theme.Shadow;
+            if (color is not null)
+            {
+                lettersBuilder[match.Index] = lettersBuilder[match.Index].WithColor(LetterSkipMetadataFlag.Shadow, color.Value);
+                lettersBuilder[endIndex] = lettersBuilder[endIndex].Reset(LetterSkipMetadataFlag.Shadow);
+            }
+        }
+    }
+
+    public static bool IsPunctuation(char c)
     {
         return c switch
         {
@@ -697,13 +855,21 @@ public static partial class TextDataServices
         };
     }
 
-    public static bool IsPonctuationToIgnorePreviousPause(char c)
+    public static bool IsPunctuationToIgnorePreviousPause(char c)
     {
         return c switch
         {
             '!' or '！' or ':' or '?' or '？' or '\"' => true,
             _ => false,
         };
+    }
+
+    /// <summary>
+    /// Used on editor, mostly.
+    /// </summary>
+    public static void ClearCache()
+    {
+        _cache.Clear();
     }
 
     [GeneratedRegex("(?<!\n)\n(?!\n)")]
@@ -729,6 +895,15 @@ public static partial class TextDataServices
 
     [GeneratedRegex("<c=([^>]+)>(.*?)</c>", RegexOptions.IgnoreCase)]
     private static partial Regex ColorTags();
+
+    [GeneratedRegex("<o=([^>]+)>(.*?)</o>", RegexOptions.IgnoreCase)]
+    private static partial Regex OutlineTags();
+
+    [GeneratedRegex("<s=([^>]+)>(.*?)</s>", RegexOptions.IgnoreCase)]
+    private static partial Regex ShadowTags();
+
+    [GeneratedRegex("<t=([^>]+)>|<t>(.*?)</t>", RegexOptions.IgnoreCase)]
+    private static partial Regex ThemeTags();
 
     [GeneratedRegex("<wave>(.*?)<\\/wave>", RegexOptions.IgnoreCase)]
     private static partial Regex WaveTags();

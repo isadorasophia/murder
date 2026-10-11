@@ -433,7 +433,7 @@ namespace Murder.Data
             if (LoadShader("simple", out result, breakOnFail, forceReload)) ShaderSimple = result;
             if (LoadShader("pixel_art_murder", out result, breakOnFail, forceReload)) ShaderPixel = result;
 
-            if (_game is IShaderProvider { Shaders.Length: > 0 } provider)
+            if (_game is IGraphicsProvider { Shaders.Length: > 0 } provider)
             {
                 CustomGameShaders = new Effect[provider.Shaders.Length];
                 for (int i = 0; i < provider.Shaders.Length; i++)
