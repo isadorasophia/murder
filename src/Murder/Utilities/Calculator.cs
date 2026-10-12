@@ -699,6 +699,26 @@ namespace Murder.Utilities
                 : current + (target - current) * (1 - float.Exp2(-deltaTime / halfLife));
         }
 
+        /// <summary>
+        /// Converts a retention factor (fraction of the remaining distance left after <paramref name="duration"/>)
+        /// into a half-life that can be used by <see cref="LerpSmooth(float, float, float, float)"/>.
+        /// </summary>
+        /// <param name="retention">Fraction left after <paramref name="duration"/>, for example 0.1f is 90% of the way there.</param>
+        /// <param name="duration">Time over which <paramref name="retention"/> applies. Usually you want this to be DeltaTime.</param>
+        public static float HalfLifeFromRetention(float retention, float duration = 1f)
+        {
+            if (retention <= 0f) return 0f;                       // snaps instantly
+            if (retention >= 1f) return float.PositiveInfinity;   // never moves
+            return duration * MathF.Log(2) / -MathF.Log(retention);
+        }
+        
+        /// <summary>
+        /// Converts a per-step lerp amount (as in Lerp(current, target, t) called every step)
+        /// into an equivalent half-life.
+        /// </summary>
+        public static float HalfLifeFromLerpAmount(float lerpAmount, float stepDuration)
+            => HalfLifeFromRetention(1f - lerpAmount, stepDuration);
+
         public static int FloorToInt(float v) => (int)MathF.Floor(v);
 
         public static int CeilToInt(float v) => (int)MathF.Ceiling(v);
