@@ -17,6 +17,7 @@ namespace Murder.Components;
 public readonly struct IdTargetCollectionComponent : IComponent
 {
     public readonly ImmutableDictionary<string, int> Targets;
+
     public IdTargetCollectionComponent(ImmutableDictionary<string, int> targets)
     {
         Targets = targets;

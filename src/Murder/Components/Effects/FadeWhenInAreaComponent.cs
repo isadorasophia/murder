@@ -5,7 +5,7 @@ using System.Collections.Immutable;
 namespace Murder.Components;
 
 /// <summary>
-/// For now, this is only supported for aseprite components.
+/// Whether alpha should be applied when in area.
 /// </summary>
 [Requires(typeof(ColliderComponent))]
 public readonly struct FadeWhenInAreaComponent : IComponent
@@ -23,6 +23,26 @@ public readonly struct FadeWhenInAreaComponent : IComponent
     [Target]
     public readonly ImmutableArray<string> AppliesTo = ImmutableArray<string>.Empty;
 
+    /// <summary>
+    /// Applicable when broadcasting that visibility was toggled (with <see cref="HiddenStatusComponent"/>).
+    /// </summary>
+    [Target]
+    public readonly TargetCollectionInfo? BroadcastTo = null;
+
     public readonly bool FadeChildren = false;
+
     public FadeWhenInAreaComponent() { }
+}
+
+public readonly struct TargetCollectionInfo
+{
+    [Target]
+    public readonly ImmutableArray<string> Targets = [];
+
+    /// <summary>
+    /// Name of children that will be propagated from each target.
+    /// </summary>
+    public readonly string? PropagateToChildren = null;
+
+    public TargetCollectionInfo() { }
 }

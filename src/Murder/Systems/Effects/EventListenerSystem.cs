@@ -9,6 +9,7 @@ using Murder.Components;
 using Murder.Core.Graphics;
 using Murder.Core.Sounds;
 using Murder.Diagnostics;
+using Murder.Prefabs;
 using Murder.Services;
 using System.Collections.Immutable;
 
@@ -38,12 +39,6 @@ public class EventListenerSystem : IMessagerSystem
 
         bool alwaysPlay = entity.HasPlayEvenOffScreen() || entity.HasUi() || entity.HasCutsceneAnchors();
         bool canPlay = alwaysPlay || CanPlayFromEntity(world, entity);
-
-        if (!alwaysPlay && canPlay && entity.TryGetAlpha()?.Alpha == 0)
-        {
-            // don't play events for invisible entities!
-            canPlay = false;
-        }
 
         // this is sort of wrong right now. we should find a better threshold and propagation from parent.
         if (!alwaysPlay && canPlay && entity.TryFetchParent()?.TryGetAlpha()?.Alpha < .25f)
@@ -96,6 +91,18 @@ public class EventListenerSystem : IMessagerSystem
     /// </summary>
     protected virtual bool CanPlayFromEntity(World world, Entity e)
     {
+        if (e.TryGetAlpha()?.Alpha is float alpha && alpha == 0)
+        {
+            // don't play events for invisible entities!
+            return false;
+        }
+
+        if (e.TryGetFadeTransition()?.TargetAlpha == 0 && e.HasMuteEventsOnAnyAlpha())
+        {
+            // if we're targeting alpha 0 instead, ignore any sounds if our threshold is minimum.
+            return false;
+        }
+
         return e.IsInCamera(world);
     }
 
