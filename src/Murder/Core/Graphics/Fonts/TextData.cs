@@ -789,10 +789,11 @@ public static partial class TextDataServices
         for (int i = 0; i < matches.Count; i++)
         {
             Match match = matches[i];
-            Group textGroup = match.Groups[2];
+
+            bool hasSpecifiedTheme = match.Groups[1].Length > 0;
 
             TextTheme theme;
-            int chosenTheme = match.Groups[1].Length == 0 ? 0 : InputServices.ParseIntSafe(match.Groups[1].Value);
+            int chosenTheme = !hasSpecifiedTheme ? 0 : InputServices.ParseIntSafe(match.Groups[1].Value);
             if (chosenTheme < 0 || chosenTheme >= themes.Length)
             {
                 // if there is no theme, still apply the tag to skip it.
@@ -802,6 +803,10 @@ public static partial class TextDataServices
             {
                 theme = themes[chosenTheme];
             }
+
+            // <t=([^>]+)>(.*?)</t>|<t>(.*?)</t>
+            //    ^ group 1 ^ group 2   ^ group 3
+            Group textGroup = match.Groups[hasSpecifiedTheme ? 2 : 3];
 
             // Mark all the characters that matched that they will be skipped.
             for (int j = 0; j < match.Length; ++j)
@@ -902,7 +907,7 @@ public static partial class TextDataServices
     [GeneratedRegex("<s=([^>]+)>(.*?)</s>", RegexOptions.IgnoreCase)]
     private static partial Regex ShadowTags();
 
-    [GeneratedRegex("<t=([^>]+)>|<t>(.*?)</t>", RegexOptions.IgnoreCase)]
+    [GeneratedRegex("<t=([^>]+)>(.*?)</t>|<t>(.*?)</t>", RegexOptions.IgnoreCase)]
     private static partial Regex ThemeTags();
 
     [GeneratedRegex("<wave>(.*?)<\\/wave>", RegexOptions.IgnoreCase)]
