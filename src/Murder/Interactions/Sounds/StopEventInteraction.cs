@@ -11,15 +11,15 @@ namespace Murder.Interactions
     [CustomName($"\uf2a2 {nameof(StopEventInteraction)}")]
     public readonly struct StopEventInteraction : IInteraction
     {
-        public readonly bool FadeOut = true;
+        public readonly bool FadeOut { get; init; } = true;
 
         [Default("Stop specific...")]
-        public readonly SoundEventId? Event = null;
+        public readonly SoundEventId? Event { get; init; } = null;
 
         [Tooltip("Only used if event is not specified and it should be applied to the layer instead")]
-        public readonly SoundLayer? TargetLayer = null;
+        public readonly SoundLayer? TargetLayer { get; init; } = null;
 
-        public readonly PlayEventSettings Settings = PlayEventSettings.None;
+        public readonly PlayEventSettings Settings { get; init; } = PlayEventSettings.None;
 
         public StopEventInteraction() { }
 

@@ -19,11 +19,11 @@ public enum PlayEventSettings
 [CustomName($"\uf2a2 {nameof(PlayEventInteraction)}")]
 public readonly struct PlayEventInteraction : IInteraction
 {
-    public readonly SoundEventId? Event = null;
+    public readonly SoundEventId? Event { get; init; } = null;
 
-    public readonly SoundProperties Properties = SoundProperties.Persist;
-    public readonly SoundLayer Layer = SoundLayer.Ambience;
-    public readonly PlayEventSettings Settings = PlayEventSettings.None;
+    public readonly SoundProperties Properties { get; init; } = SoundProperties.Persist;
+    public readonly SoundLayer Layer { get; init; } = SoundLayer.Ambience;
+    public readonly PlayEventSettings Settings { get; init; } = PlayEventSettings.None;
 
     public PlayEventInteraction() { }
 

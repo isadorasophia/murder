@@ -9,6 +9,7 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Physics;
+using Murder.Core.Sounds;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
@@ -40,10 +41,10 @@ namespace Murder.Editor.Systems.Sounds
                     CreateSoundShape(hook, cursorWorldPosition);
                 }
 
-                if (ImGui.Selectable("\uf2a2 Play event while on world"))
+                if (ImGui.Selectable("\uf001 Play music on area"))
                 {
                     Point cursorWorldPosition = hook.LastCursorWorldPosition;
-                    CreateNewOnStartOnEndEventArea(hook, cursorWorldPosition);
+                    CreateNewPlayMusicOnArea(hook, cursorWorldPosition);
                 }
 
                 if (ImGui.Selectable("\uf2a2 Trigger when entering or exiting area"))
@@ -58,11 +59,11 @@ namespace Murder.Editor.Systems.Sounds
                     CreateAmbienceArea(hook, cursorWorldPosition);
                 }
 
-                if (ImGui.Selectable("\uf70c Set parameter when entering area"))
-                {
-                    Point cursorWorldPosition = hook.LastCursorWorldPosition;
-                    CreateNewSoundTriggerArea(hook, cursorWorldPosition);
-                }
+                //if (ImGui.Selectable("\uf70c Set parameter when entering area"))
+                //{
+                //    Point cursorWorldPosition = hook.LastCursorWorldPosition;
+                //    CreateNewSoundTriggerArea(hook, cursorWorldPosition);
+                //}
 
                 if (ImGui.Selectable("\uf70c Set parameter when entering or exiting area"))
                 {
@@ -158,6 +159,24 @@ namespace Murder.Editor.Systems.Sounds
                 ],
                 /* group */ "Sounds",
                 /* name */ "Event while on world");
+        }
+
+        private void CreateNewPlayMusicOnArea(EditorHook hook, Vector2 position)
+        {
+            hook.AddEntityWithStage?.Invoke(
+                [
+                    new PositionComponent(position),
+                    new SoundParameterComponent(),
+                    new ColliderComponent(
+                        shape: new BoxShape(Vector2.Zero, Point.Zero, width: Grid.CellSize * 2, height: Grid.CellSize * 2),
+                        layer: CollisionLayersBase.TRIGGER,
+                        color: new Color(104 / 255f, 234 / 255f, 137 / 255f)),
+                    new OnEnterOnExitComponent(
+                        new InteractiveComponent<PlayEventInteraction>(new PlayEventInteraction() with { Properties = SoundProperties.Persist | SoundProperties.SkipIfAlreadyPlaying, Layer = SoundLayer.Music, Settings = PlayEventSettings.IgnoreEntitySource }),
+                        new InteractiveComponent<StopEventInteraction>(new StopEventInteraction() with { Settings = PlayEventSettings.IgnoreEntitySource }))
+                ],
+                /* group */ "Sounds",
+                /* name */ "Music area");
         }
 
         private void CreateNewOnEnterOnExitPlayEventArea(EditorHook hook, Vector2 position)
