@@ -398,7 +398,7 @@ namespace Murder.Editor.Stages
                         // ImGui.TextColored(Game.Profile.Theme.Faded, $"{EditorHook.CursorScreenPosition}"); // use this to debug the screen position (useful for dpi)
                     }
 
-                    if (EditorHook.AllSelectedEntities.Count == 1 && EditorHook.AllSelectedEntities.FirstOrDefault().Value is Entity entity)
+                    if (EditorHook.AllSelectedEntities.Count == 1 && EditorHook.AllSelectedEntities.FirstOrDefault().Value is Entity entity && entity.HasPosition())
                     {
                         Vector2 distanceToCursor = (EditorHook.CursorWorldPosition ?? Vector2.Zero) - entity.GetGlobalPosition();
                         ImGui.TextColored(Game.Profile.Theme.Faded, $"({distanceToCursor.X:0},{distanceToCursor.Y:0})");
