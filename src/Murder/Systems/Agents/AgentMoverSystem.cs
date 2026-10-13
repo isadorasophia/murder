@@ -19,7 +19,7 @@ namespace Murder.Systems
     /// System that looks for AgentImpulse systems and translated them into 'Velocity' for the physics system.
     /// </summary>
     [Filter(typeof(AgentComponent), typeof(AgentImpulseComponent))]
-    [Filter(ContextAccessorFilter.NoneOf, typeof(DisableAgentComponent), typeof(AgentPauseComponent), typeof(AgentPauseRuntimeComponent))]
+    [Filter(ContextAccessorFilter.NoneOf, typeof(DisableAgentComponent), typeof(AgentPauseComponent), typeof(AgentPauseRuntimeComponent), typeof(KnockbackComponent))]
     internal class AgentMoverSystem : IFixedUpdateSystem
     {
         public void FixedUpdate(Context context)    

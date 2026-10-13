@@ -1,5 +1,7 @@
 ﻿using Bang.Components;
+using Murder.Attributes;
 using Murder.Helpers;
+using Murder.Utilities.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +16,12 @@ namespace Murder.Components.Agents;
 /// This component is not to be added or remove or modified in any way except by the AgentCleanupSystem
 /// For performance reasons we disabled watching this component
 /// </summary>
-public readonly struct AgentWalkingComponent : IComponent, IDoNotCheckOnReplaceTag
+[RuntimeOnly, DoNotPersistOnSave]
+public readonly struct AgentWalkingComponent : IComponent//, IDoNotCheckOnReplaceTag
 {
     public readonly Vector2 Impulse;
     public readonly Direction Direction;
-    public bool SkipNotificationsOnComponent => true;
+    //public bool SkipNotificationsOnComponent => true;
 
     public AgentWalkingComponent(Vector2 impulse)
     {

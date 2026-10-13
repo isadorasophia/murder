@@ -9,7 +9,7 @@ namespace Murder.Utilities
         public static Vector2 Center { get; } = new(0.5f, 0.5f);
         public static Vector2 Down { get; } = new(0, 1);
         public static Vector2 Up { get; } = new(0, -1);
-        public static Vector2 Right { get; } = new(1,0);
+        public static Vector2 Right { get; } = new(1, 0);
         public static Vector2 Left { get; } = new(-1, 0);
         public static Vector2 Max(this Vector2 first, Vector2 second) => new Vector2(Math.Max(first.X, second.X), Math.Max(first.Y, second.Y));
         public static Vector2 Min(this Vector2 first, Vector2 second) => new Vector2(Math.Min(first.X, second.X), Math.Min(first.X, second.Y));
@@ -24,7 +24,7 @@ namespace Murder.Utilities
             new((float)Calculator.LerpSnap(origin.X, target.X, factor, threshold),
                 (float)Calculator.LerpSnap(origin.Y, target.Y, factor, threshold));
 
-        public static Vector2 Project (Vector2 vector, Vector2 onNormal)
+        public static Vector2 Project(Vector2 vector, Vector2 onNormal)
         {
             float dot = Vector2.Dot(vector, onNormal);
             float sqr = onNormal.LengthSquared();
