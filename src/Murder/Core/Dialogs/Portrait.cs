@@ -22,11 +22,12 @@ public readonly struct Portrait : IEquatable<Portrait>
     {
         get
         {
-            if (Game.Data.TryGetAsset<SpriteAsset>(Sprite) is SpriteAsset sprite)
+            if (Game.Data.TryGetAsset<SpriteAsset>(Sprite) is SpriteAsset sprite &&
+                sprite.Animations.ContainsKey(AnimationId))
             {
-                if (sprite.Animations.ContainsKey(AnimationId))
-                    return true;
+                return true;
             }
+
             return false;
         }
     }
