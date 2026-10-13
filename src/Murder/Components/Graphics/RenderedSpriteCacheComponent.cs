@@ -9,10 +9,8 @@ namespace Murder.Components.Graphics
 {
     [RuntimeOnly]
     [DoNotPersistOnSave]
-    public readonly struct RenderedSpriteCacheComponent : IComponent, IModifiableComponent, IDoNotCheckOnReplaceTag
+    public readonly struct RenderedSpriteCacheComponent : IComponent, IModifiableComponent, IDoNotTrackMeTag
     {
-        public bool SkipNotificationsOnComponent => true;
-
         public readonly RenderedSpriteReference Ref = new();
 
         public Animation CurrentAnimation => Ref.Cache.CurrentAnimation;

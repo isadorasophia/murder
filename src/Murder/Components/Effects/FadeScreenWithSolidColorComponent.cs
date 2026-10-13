@@ -7,8 +7,6 @@ namespace Murder.Components;
 [DoNotPersistOnSave]
 public readonly struct FadeScreenWithSolidColorComponent : IComponent, IDoNotCheckOnReplaceTag
 {
-    public bool SkipNotificationsOnComponent => false;
-
     public readonly Color Color;
     public readonly FadeType FadeType;
 
