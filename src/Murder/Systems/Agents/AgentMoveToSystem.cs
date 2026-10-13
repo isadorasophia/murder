@@ -14,9 +14,9 @@ namespace Murder.Systems.Agents
     [Filter(typeof(PositionComponent))]
     [Filter(ContextAccessorFilter.AnyOf, typeof(MoveToComponent), typeof(MoveToTargetComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(AgentPauseComponent), typeof(AgentPauseRuntimeComponent))]
-    public class AgentMoveToSystem : IUpdateSystem
+    public class AgentMoveToSystem : IFixedUpdateSystem
     {
-        public void Update(Context context)
+        public void FixedUpdate(Context context)
         {
             foreach (Entity e in context.Entities)
             {

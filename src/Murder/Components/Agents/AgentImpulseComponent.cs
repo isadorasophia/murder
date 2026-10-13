@@ -19,6 +19,10 @@ namespace Murder.Components
         IgnoreFacing = 0x10
     }
 
+    /// <summary>
+    /// Impulse is used as an "intention of moving" an Agent.
+    /// Impulse only reliably lives between updates/fixed updates and can't be fetched during Render
+    /// </summary>
     public readonly struct AgentImpulseComponent : IComponent
     {
         public readonly Vector2 Impulse;

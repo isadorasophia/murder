@@ -20,42 +20,42 @@ namespace Murder.Systems
     /// </summary>
     [Filter(typeof(AgentComponent), typeof(AgentImpulseComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(DisableAgentComponent), typeof(AgentPauseComponent), typeof(AgentPauseRuntimeComponent))]
-    internal class AgentMoverSystem : IUpdateSystem
+    internal class AgentMoverSystem : IFixedUpdateSystem
     {
-        public void Update(Context context)
+        public void FixedUpdate(Context context)    
         {
-            ImpulseToVelocity(context.Entities);
+            foreach (var e in context.Entities)
+            {
+                ImpulseToVelocity(e);
+            }
         }
 
-        public void ImpulseToVelocity(ImmutableArray<Entity> entities)
+        public void ImpulseToVelocity(Entity e)
         {
-            foreach (var e in entities)
+            var agent = e.GetAgent();
+            var impulse = e.GetAgentImpulse();
+
+            if (!e.HasStrafing() &&
+                !e.HasFacingTurn() &&
+                impulse.Impulse != Vector2.Zero &&
+                impulse.Direction != null &&
+                !impulse.Flags.HasFlag(AgentImpulseFlags.IgnoreFacing))
             {
-                var agent = e.GetAgent();
-                var impulse = e.GetAgentImpulse();
-
-                if (!e.HasStrafing() &&
-                    !e.HasFacingTurn() &&
-                    impulse.Impulse != Vector2.Zero &&
-                    impulse.Direction != null &&
-                    !impulse.Flags.HasFlag(AgentImpulseFlags.IgnoreFacing))
-                {
-                    e.SetFacing(impulse.Impulse.Angle());
-                }
-
-                if (!impulse.Impulse.HasValue())
-                {
-                    continue;
-                }
-
-                Vector2 startVelocity = e.TryGetVelocity()?.Velocity ?? Vector2.Zero;
-
-                // Use friction on any axis that's not receiving impulse or is receiving it in an oposing direction
-                Vector2 result = GetVelocity(e, agent, impulse, startVelocity);
-
-                e.RemoveFriction();     // Remove friction to move
-                e.SetVelocity(result); // Turn impulse into velocity
+                e.SetFacing(impulse.Impulse.Angle());
             }
+
+            if (!impulse.Impulse.HasValue())
+            {
+                return;
+            }
+
+            Vector2 startVelocity = e.TryGetVelocity()?.Velocity ?? Vector2.Zero;
+
+            // Use friction on any axis that's not receiving impulse or is receiving it in an oposing direction
+            Vector2 result = GetVelocity(e, agent, impulse, startVelocity);
+
+            e.RemoveFriction();     // Remove friction to move
+            e.SetVelocity(result); // Turn impulse into velocity
         }
 
         private static Vector2 GetVelocity(Entity entity, AgentComponent agent, AgentImpulseComponent impulse, in Vector2 currentVelocity)
