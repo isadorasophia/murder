@@ -744,7 +744,7 @@ public static partial class TextDataServices
     }
 
     /// <summary>
-    /// Apply a property that has a value specified, e.g. <c=value></c>.
+    /// Apply a property that has a value specified, e.g. &lt;c=#fff&gt;a&lt;/c&gt;.
     /// </summary>
     private static void ApplyTaggedProperty(
         MatchCollection matches,
@@ -778,7 +778,7 @@ public static partial class TextDataServices
     }
 
     /// <summary>
-    /// Apply a property that has a value specified, e.g. <c=value></c>.
+    /// Apply a property that has a value specified, e.g. &lt;t&gt;a&lt;/t&gt; or &lt;t=0&gt;a&lt;/t&gt;.
     /// </summary>
     private static void ApplyTextTheme(
         MatchCollection matches,
