@@ -1,5 +1,7 @@
 ﻿using Bang.Components;
+using Murder.Attributes;
 using Murder.Helpers;
+using Murder.Utilities.Attributes;
 using System.Numerics;
 
 namespace Murder.Components
@@ -23,7 +25,8 @@ namespace Murder.Components
     /// Impulse is used as an "intention of moving" an Agent.
     /// Impulse only reliably lives between updates/fixed updates and can't be fetched during Render
     /// </summary>
-    public readonly struct AgentImpulseComponent : IComponent
+    [RuntimeOnly, DoNotPersistOnSave]
+    public readonly struct AgentImpulseComponent : IComponent//, IDoNotCheckOnReplaceTag
     {
         public readonly Vector2 Impulse;
 
@@ -33,6 +36,8 @@ namespace Murder.Components
         /// Whether this should be cleared on the end of every frame.
         /// </summary>
         public readonly AgentImpulseFlags Flags = AgentImpulseFlags.None;
+
+        //public bool SkipNotificationsOnComponent => true;
 
         public AgentImpulseComponent(Vector2 impulse, Direction? direction, AgentImpulseFlags flags)
         {
