@@ -44,7 +44,16 @@ namespace Murder.Core
         /// </summary>
         public readonly Point Origin;
 
+        /// <summary>
+        /// The full width of the map, from 0 to the rightmost tile.
+        /// You might want to subtract <see cref="Origin"/> from this value to get the actual width of the map.
+        /// </summary>
         public readonly int Width;
+
+        /// <summary>
+        /// the full height of the map, from 0 to the bottommost tile.
+        /// You might want to subtract <see cref="Origin"/> from this value to get the actual height of the map.
+        /// </summary>
         public readonly int Height;
 
         [JsonConstructor]
