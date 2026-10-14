@@ -55,9 +55,7 @@ public static class EntityServices
     /// We can't rely on impulse.
     /// </remarks>
     public static bool IsMoving(Entity e) =>
-        e.HasAgentWalking();
-        // Legacy, we shouldn't need to check for these anymore
-        // e.HasVelocity() || e.HasAgentImpulse() || e.HasMoveTo() || e.HasPathfind() || e.HasMoveToPerfect();
+         e.HasVelocity() || e.HasAgentImpulse() || e.HasMoveTo() || e.HasPathfind() || e.HasMoveToPerfect();
 
     public static bool TurnFaceTowards(this Entity entity, Direction targetDirection, float duration)
     {

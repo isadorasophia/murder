@@ -9,7 +9,7 @@ using System.Numerics;
 namespace Murder.Systems
 {
     [Filter(typeof(AgentComponent))]
-    [Filter(ContextAccessorFilter.AnyOf, typeof(VelocityComponent), typeof(AgentImpulseComponent))]
+    [Filter(ContextAccessorFilter.AnyOf, typeof(VelocityComponent), typeof(AgentImpulseComponent), typeof(AgentWalkingComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(DisableAgentComponent))]
     public class AgentCleanupSystem : IFixedUpdateSystem
     {
@@ -28,12 +28,12 @@ namespace Murder.Systems
 
                 if (!inKnockback && !(impulse?.Impulse.HasValue() ?? false))
                 {
-                        e.SetFriction(agent.Friction);
+                    e.SetFriction(agent.Friction);
                 }
 
                 if (!inKnockback && impulse?.Impulse is Vector2 intent && intent.HasValue())
                 {
-                    e.SetAgentWalking(intent);
+                    //e.SetAgentWalking(intent);
                 }
                 else
                 {

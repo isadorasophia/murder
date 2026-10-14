@@ -56,6 +56,7 @@ namespace Murder.Systems
 
             e.RemoveFriction();     // Remove friction to move
             e.SetVelocity(result); // Turn impulse into velocity
+            e.SetAgentWalking(impulse.Impulse);
         }
 
         private static Vector2 GetVelocity(Entity entity, AgentComponent agent, AgentImpulseComponent impulse, in Vector2 currentVelocity)
