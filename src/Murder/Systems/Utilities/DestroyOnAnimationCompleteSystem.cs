@@ -20,7 +20,7 @@ namespace Murder.Systems.Util
             // in which the animation might have already changed.
 
             AnimationCompleteMessage msg = (AnimationCompleteMessage)message;
-            if (msg.CompleteStyle != AnimationCompleteStyle.Single)
+            if (msg.CompleteStyle != AnimationCompleteStyle.Sequence)
             {
                 return;
             }

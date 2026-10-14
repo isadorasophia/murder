@@ -409,7 +409,7 @@ public static partial class RenderServices
             e.SetAnimationComplete();
         }
 
-        e.SendAnimationCompleteMessage();
+        e.SendAnimationCompleteMessage(AnimationCompleteStyle.Sequence);
     }
 
     public static (SpriteAsset asset, string animation)? FetchPortraitAsSprite(Portrait portrait)
