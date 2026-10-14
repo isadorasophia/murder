@@ -35,7 +35,7 @@ namespace Murder.Systems
                 {
                     e.SetAgentWalking(intent);
                 }
-                else if (e.HasAgentWalking())
+                else
                 {
                     e.RemoveAgentWalking();
                 }
