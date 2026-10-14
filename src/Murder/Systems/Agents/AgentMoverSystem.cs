@@ -20,9 +20,9 @@ namespace Murder.Systems
     /// </summary>
     [Filter(typeof(AgentComponent), typeof(AgentImpulseComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(DisableAgentComponent), typeof(AgentPauseComponent), typeof(AgentPauseRuntimeComponent), typeof(KnockbackComponent))]
-    internal class AgentMoverSystem : IFixedUpdateSystem
+    internal class AgentMoverSystem : IUpdateSystem
     {
-        public void FixedUpdate(Context context)    
+        public void Update(Context context)    
         {
             foreach (var e in context.Entities)
             {
@@ -56,7 +56,6 @@ namespace Murder.Systems
 
             e.RemoveFriction();     // Remove friction to move
             e.SetVelocity(result); // Turn impulse into velocity
-            e.SetAgentWalking(impulse.Impulse);
         }
 
         private static Vector2 GetVelocity(Entity entity, AgentComponent agent, AgentImpulseComponent impulse, in Vector2 currentVelocity)
@@ -131,7 +130,7 @@ namespace Murder.Systems
                 targetVelocity = targetVelocity.Normalized() * clampMagnetude;
             }
 
-            return Calculator.Approach(newVelocity, targetVelocity, accel * multiplier * Game.FixedDeltaTime);
+            return Calculator.Approach(newVelocity, targetVelocity, accel * multiplier * Game.DeltaTime);
         }
     }
 

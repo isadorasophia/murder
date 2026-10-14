@@ -16,10 +16,25 @@ namespace Murder.Systems;
 /// </summary>
 [Filter(typeof(AgentComponent), typeof(AgentImpulseComponent))]
 [Filter(ContextAccessorFilter.NoneOf, typeof(DisableAgentComponent))]
-public class AgentImpulseClearSystem : IUpdateSystem
+public class AgentImpulseClearSystem : IUpdateSystem, IFixedUpdateSystem
 {
+    private bool _fixedTickSinceClear = false;
+
+    public void FixedUpdate(Context context)
+    {
+        _fixedTickSinceClear = true;
+    }
+
     public void Update(Context context)
     {
+        if (!_fixedTickSinceClear)
+        {
+            // No tick has seen the current impulses yet; keep them.
+            return;
+        }
+
+        _fixedTickSinceClear = false;
+
         foreach (Entity e in context.Entities)
         {
             if (!e.GetAgentImpulse().Flags.HasFlag(AgentImpulseFlags.DoNotClear))
@@ -31,7 +46,7 @@ public class AgentImpulseClearSystem : IUpdateSystem
 }
 
 [Filter(typeof(AgentComponent))]
-[Filter(ContextAccessorFilter.AnyOf, typeof(VelocityComponent), typeof(AgentImpulseComponent), typeof(AgentWalkingComponent))]
+[Filter(ContextAccessorFilter.AnyOf, typeof(VelocityComponent), typeof(AgentImpulseComponent))]
 [Filter(ContextAccessorFilter.NoneOf, typeof(DisableAgentComponent))]
 public class AgentCleanupSystem : IFixedUpdateSystem
 {
@@ -39,23 +54,16 @@ public class AgentCleanupSystem : IFixedUpdateSystem
     {
         foreach (var e in context.Entities)
         {
-            var agent = e.GetAgent();
             AgentImpulseComponent? impulse = e.TryGetAgentImpulse();
-            bool inKnockback = e.HasKnockback();
 
-            if (!inKnockback && !(impulse?.Impulse.HasValue() ?? false))
+            bool movedByIntent = !e.HasKnockback() &&
+                                 !e.HasAgentPause() &&
+                                 !e.HasAgentPauseRuntime() &&
+                                 (impulse?.Impulse.HasValue() ?? false);
+
+            if (!e.HasKnockback() && !movedByIntent)
             {
-                e.SetFriction(agent.Friction);
-            }
-
-            bool movedByIntent = !inKnockback &&
-                     !e.HasAgentPause() &&
-                     !e.HasAgentPauseRuntime() &&
-                     (impulse?.Impulse.HasValue() ?? false);
-
-            if (!movedByIntent && e.HasAgentWalking())
-            {
-                e.RemoveAgentWalking();
+                e.SetFriction(e.GetAgent().Friction);
             }
         }
     }

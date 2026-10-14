@@ -51,7 +51,7 @@ namespace Murder.Systems
                 }
 
                 FacingComponent facing = e.GetFacing();
-                bool isMoving = e.HasAgentWalking();
+                bool isMoving = e.HasAgentImpulse();
 
                 float start = NoiseHelper.Value1D(e.EntityId * 10) * 5f;
                 var prefix = sprite.IdlePrefix;
