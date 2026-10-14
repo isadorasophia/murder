@@ -153,14 +153,17 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                     int hitId = -1;
                     int hitLayer = -1;
 
-                    bool Step(Vector2 moveToPosition)
+                    bool Step(Vector2 from, Vector2 moveToPosition)
                     {
+                        Vector2 intended = moveToPosition;
                         Vector2 pushout = Vector2.Zero;
+
                         // If the velocity is low, we can just check the full velocity.
-                        while (PhysicsServices.GetFirstMtvAt(map, collider.Value, startPosition, moveToPosition, _cachedCandidates, mask, out int id, out int layer, out pushout)
+                        while (
+                            PhysicsServices.GetFirstMtvAt(map, collider.Value, from, moveToPosition, _cachedCandidates, mask, out int id, out int layer, out pushout)
                             && exhaustCounter-- > 0)
                         {
-                            moveToPosition = moveToPosition - pushout;
+                            moveToPosition -= pushout;
                             _hitCounter.Add(id);
                             hitLayer = layer;
                             hitId = id;
@@ -201,7 +204,7 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                             else
                             {
                                 // Slide the speed accordingly
-                                Vector2 translationVector = startPosition + velocity - moveToPosition;
+                                Vector2 translationVector = intended - moveToPosition;
                                 Vector2 edgePerpendicularToMTV = new Vector2(-translationVector.Y, translationVector.X);
                                 Vector2 normalizedEdge = edgePerpendicularToMTV.Normalized();
                                 float dotProduct = Vector2.Dot(currentVelocity, normalizedEdge);
@@ -213,36 +216,30 @@ public class SATPhysicsSystem : IFixedUpdateSystem
                     }
 
                     float velocityLength = velocity.Length();
+                    Vector2 currentPos = startPosition;
+                    bool fail = false;
+
                     if (velocityLength > minStepSize)
                     {
-                        // If the velocity is too high, we need to split it up into smaller steps.
-                        bool fail = false;
-                        Vector2 currentPos = startPosition;
-                        for (int i = 0; i < velocityLength; i += minStepSize)
-                        {
-                            Vector2 step = velocity.Normalized() * minStepSize;
-                            Vector2 targetPosition = startPosition + step;
+                        Vector2 stepVector = velocity / velocityLength * minStepSize;
+                        float travelled = minStepSize;
 
-                            if (Step(targetPosition))
+                        while (travelled < velocityLength)
+                        {
+                            if (Step(currentPos, currentPos + stepVector))
                             {
                                 fail = true;
                                 break;
                             }
 
                             currentPos = e.GetGlobalPosition();
-                        }
-
-                        if (!fail)
-                        {
-                            Vector2 targetPosition = startPosition + velocity;
-                            Step(targetPosition);
+                            travelled += minStepSize;
                         }
                     }
-                    else
-                    {
-                        Vector2 targetPosition = startPosition + velocity;
 
-                        Step(targetPosition);
+                    if (!fail)
+                    {
+                        Step(currentPos, startPosition + velocity);
                     }
 
                 }

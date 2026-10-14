@@ -76,7 +76,7 @@ namespace Murder.Systems
                 }
 
                 entity.RemoveRoute();
-                entity.SetFriction(0.25f);
+                //entity.SetFriction(0.25f); // Why was this here? It's not the PathfindSystem's responsibility to set friction
             }
         }
 

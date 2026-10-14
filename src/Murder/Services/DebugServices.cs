@@ -1,6 +1,7 @@
 ﻿using Bang;
 using Bang.Entities;
 using Microsoft.Xna.Framework.Graphics;
+using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
@@ -60,6 +61,16 @@ public static class DebugServices
         });
 #endif
     }
+    public static void DrawLine(Vector2 start, Vector2 end, Color color, float duration = 1 / 30f)
+    {
+#if DEBUG
+
+        if (Game.Instance.ActiveScene is Scene scene && scene.World is World world)
+        {
+            DrawLine(world, start, end, color, duration);
+        }
+#endif
+    }
 
     public static void DrawLine(World world, Vector2 start, Vector2 end, Color color, float duration = 1 / 30f)
     {
@@ -73,7 +84,7 @@ public static class DebugServices
             {
                 e.Destroy();
             }
-            float delta = (Game.NowUnscaled - time) / duration;
+            float delta = 1 - (Game.NowUnscaled - time) / duration;
             RenderServices.DrawLine(render.DebugBatch, start, end, color * delta);
         });
 #endif

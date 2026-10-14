@@ -9,6 +9,7 @@ using System.Numerics;
 namespace Murder.Systems
 {
     [Filter(typeof(VelocityComponent), typeof(FrictionComponent))]
+    [Filter(ContextAccessorFilter.NoneOf, typeof(KnockbackComponent))]
     internal class FrictionSystem : IFixedUpdateSystem
     {
         public void FixedUpdate(Context context)

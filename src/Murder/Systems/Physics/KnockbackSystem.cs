@@ -2,6 +2,7 @@
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components.Agents;
+using Murder.Services;
 using Murder.Utilities;
 using System;
 using System.Collections.Generic;

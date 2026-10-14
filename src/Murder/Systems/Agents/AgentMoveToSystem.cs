@@ -3,6 +3,7 @@ using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
+using Murder.Components.Agents;
 using Murder.Utilities;
 using System.Numerics;
 
@@ -13,7 +14,7 @@ namespace Murder.Systems.Agents
     /// </summary>
     [Filter(typeof(PositionComponent))]
     [Filter(ContextAccessorFilter.AnyOf, typeof(MoveToComponent), typeof(MoveToTargetComponent))]
-    [Filter(ContextAccessorFilter.NoneOf, typeof(AgentPauseComponent), typeof(AgentPauseRuntimeComponent))]
+    [Filter(ContextAccessorFilter.NoneOf, typeof(AgentPauseComponent), typeof(AgentPauseRuntimeComponent), typeof(KnockbackComponent))]
     public class AgentMoveToSystem : IFixedUpdateSystem
     {
         public void FixedUpdate(Context context)

@@ -11,7 +11,7 @@ namespace Murder.Components.Agents;
 /// For performance reasons we disabled watching this component
 /// </summary>
 [RuntimeOnly]
-public readonly struct AgentWalkingComponent : IComponent
+public readonly struct AgentWalkingComponent : IComponent, IDoNotCheckOnReplaceTag, IDoNotTrackMeTag
 {
     public readonly Vector2 Impulse;
     public readonly Direction Direction;

@@ -9,7 +9,7 @@ using System.Numerics;
 namespace Murder.Systems
 {
     [Filter(typeof(AgentComponent))]
-    [Filter(ContextAccessorFilter.AnyOf, typeof(VelocityComponent), typeof(AgentImpulseComponent), typeof(AgentWalkingComponent))]
+    [Filter(ContextAccessorFilter.AnyOf, typeof(VelocityComponent), typeof(AgentImpulseComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(DisableAgentComponent))]
     public class AgentCleanupSystem : IFixedUpdateSystem
     {
@@ -23,24 +23,17 @@ namespace Murder.Systems
             foreach (var e in context.Entities)
             {
                 var agent = e.GetAgent();
-
                 AgentImpulseComponent? impulse = e.TryGetAgentImpulse();
+                bool inKnockback = e.HasKnockback();
 
-                bool requiresFriction = impulse?.Impulse.HasValue() ?? false;
-                if (impulse?.Impulse.LengthSquared() > agent.Speed * agent.Speed)
+                if (!inKnockback && !(impulse?.Impulse.HasValue() ?? false))
                 {
-                    requiresFriction = true;
+                        e.SetFriction(agent.Friction);
                 }
 
-                if (!requiresFriction) // Cleanup the impulse
+                if (!inKnockback && impulse?.Impulse is Vector2 intent && intent.HasValue())
                 {
-                    // Set the friction if there is no impulse
-                    e.SetFriction(agent.Friction);
-                }
-
-                if (impulse?.Impulse is Vector2 intent && intent.HasValue())
-                {
-                    e.SetAgentWalking(new AgentWalkingComponent(intent));
+                    e.SetAgentWalking(intent);
                 }
                 else if (e.HasAgentWalking())
                 {
@@ -49,7 +42,6 @@ namespace Murder.Systems
 
                 if (impulse is not null && !impulse.Value.Flags.HasFlag(AgentImpulseFlags.DoNotClear))
                 {
-
                     e.RemoveAgentImpulse();
                 }
             }

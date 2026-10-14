@@ -361,7 +361,7 @@ namespace Murder.Systems
             }
             else
             {
-                walk?.SetParticleSystem();
+                walk?.SetDisableParticleSystem();
             }
         }
     }
