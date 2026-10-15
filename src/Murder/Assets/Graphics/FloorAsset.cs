@@ -1,6 +1,7 @@
 ﻿using Murder.Attributes;
 using Murder.Core;
 using Murder.Utilities;
+using System.Text.Json.Serialization;
 
 namespace Murder.Assets.Graphics
 {
@@ -22,5 +23,13 @@ namespace Murder.Assets.Graphics
         public readonly ITileProperties? Properties = null;
 
         public FloorAsset() { }
+
+        [JsonConstructor]
+        public FloorAsset(AssetRef<SpriteAsset> image, bool alwaysDraw, ITileProperties? properties)
+        {
+            Image = image;
+            AlwaysDraw = alwaysDraw;
+            Properties = properties;
+        }
     }
 }
