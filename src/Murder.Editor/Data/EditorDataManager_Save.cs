@@ -259,6 +259,24 @@ public partial class EditorDataManager
                     _saveAssetsForEditor[packedAsset.Guid] = new(slot, asset);
                 }
 
+                // TODO: Temporarily here while we're porting old saves
+                //if (_saveAssetsForEditor[packedAsset.Guid].Asset is SavedWorld savedWorld &&
+                //    savedWorld.WorldGuid == Guid.Empty)
+                //{
+                //    foreach ((Guid worldGuid, Guid savedAssetGuid) in _activeSaveData.SavedWorlds)
+                //    {
+                //        if (savedAssetGuid == packedAsset.Guid)
+                //        {
+                //            // opsie... let's do this in secret, I really don't wanna make this not readonly just for a workaround.
+                //            FieldInfo? worldReferenceGuid = typeof(SavedWorld).GetField("_worldReferenceGuid", BindingFlags.NonPublic | BindingFlags.Instance);
+                //            if (worldReferenceGuid is not null)
+                //            {
+                //                worldReferenceGuid.SetValue(savedWorld, worldGuid);
+                //            }
+                //        }
+                //    }
+                //}
+
                 _currentSaveAssets[packedAsset.Guid] = _saveAssetsForEditor[packedAsset.Guid].Asset;
             }
 
