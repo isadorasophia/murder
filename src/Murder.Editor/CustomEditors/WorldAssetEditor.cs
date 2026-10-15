@@ -376,6 +376,25 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
+        public override void DrawTopBar()
+        {
+            GameLogger.Verify(Stages.ContainsKey(_asset!.Guid));
+
+            base.DrawTopBar();
+            ImGui.SameLine();
+
+            if (ImGuiHelpers.Button("Show All"))
+            {
+                Stage currentStage = Stages[_asset.Guid];
+                currentStage.ActivateAllInstances();
+
+                // communicate something is weird, even if nothing changed.
+                _asset.FileChanged = true;
+            }
+
+            ImGuiHelpers.HelpTooltip("Show all entities without changing asset");
+        }
+
         private void DrawInstanceWindow(uint dockId, Stage stage, EntityInstance instance, int selected = -1)
         {
             GameLogger.Verify(_asset is not null);

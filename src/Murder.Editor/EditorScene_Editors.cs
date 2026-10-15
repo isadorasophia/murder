@@ -336,17 +336,6 @@ namespace Murder.Editor
                 if (customEditor.Editor is WorldAssetEditor worldEditor)
                 {
                     ImGui.SameLine();
-
-                    // Implement??
-                    //bool showDeactivated = false;
-                    //if (ImGuiHelpers.Checkbox($"\uf6e2", ref showDeactivated))
-                    //{
-
-                    //}
-
-                    //ImGui.SetItemTooltip($"{(showDeactivated ? "Show" : "Hide")} deactivated entities");
-
-                    ImGui.SameLine();
                     if (ImGuiHelpers.Button("Reset Camera") || Game.Input.Shortcut(Keys.F12))
                     {
                         worldEditor.ResetCamera();

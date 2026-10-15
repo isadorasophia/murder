@@ -110,6 +110,7 @@ namespace Murder.Editor.CustomEditors
         {
             GameLogger.Verify(_savedWorld is not null);
 
+            base.DrawTopBar();
             ImGui.SameLine();
 
             if (Game.Data.PendingSave is not null && Game.Data.PendingSave?.IsCompleted is false)

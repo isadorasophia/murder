@@ -377,6 +377,15 @@ namespace Murder.Editor.Stages
             return true;
         }
 
+        public void ActivateAllInstances()
+        {
+            ImmutableArray<Entity> deactivatedEntities = _world.GetAllDeactivatedEntities();
+            foreach (Entity e in deactivatedEntities)
+            {
+                e.Activate();
+            }
+        }
+
         private Entity? FindEntity(Guid? parentGuid, Guid instanceGuid)
         {
             int entityId;

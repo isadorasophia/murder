@@ -649,6 +649,7 @@ namespace Murder.Editor.CustomEditors
 
             SavePersistentWorldInfo(info);
         }
+
         private void SwitchGroupVisibility(string groupName, bool show)
         {
             GameLogger.Verify(_world is not null);
