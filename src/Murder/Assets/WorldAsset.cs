@@ -155,7 +155,9 @@ namespace Murder.Assets
         /// <param name="startingSystems">List of default starting assets, if any. This will be used for diagnostics systems, for example.</param>
         public MonoWorld CreateInstanceFromSave(SavedWorld savedInstance, Camera2D camera, ImmutableArray<(Type, bool)> startingSystems)
         {
-            MonoWorld world = CreateInstance(camera, savedInstance.FetchInstances(), startingSystems, CreateWorldFlags.None);
+            CreateWorldFlags flags = savedInstance.IsProcessingPending ? CreateWorldFlags.FirstTimeLoaded : CreateWorldFlags.None;
+
+            MonoWorld world = CreateInstance(camera, savedInstance.EntityInstances, startingSystems, flags);
             world.NextEligibleEntityId = savedInstance.NextEligibleEntityId;
 
             return world;

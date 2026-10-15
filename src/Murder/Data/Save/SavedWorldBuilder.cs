@@ -6,6 +6,7 @@ using Murder.Attributes;
 using Murder.Components;
 using Murder.Core.Graphics;
 using Murder.Prefabs;
+using Murder.Services;
 using Murder.Utilities;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
@@ -18,54 +19,70 @@ namespace Murder.Save
     internal class SavedWorldBuilder
     {
         private readonly World _world;
+        private readonly ImmutableArray<EntityInstance>.Builder _builder;
 
-        private readonly Dictionary<int, EntityInstance> _worldEntities = new();
+        private readonly Dictionary<int, EntityInstance> _worldEntities = [];
 
         /// <summary>
         /// Keeps track of all the children which have been added into their parents.
         /// </summary>
-        private readonly HashSet<int> _allChildrenEntities = new();
+        private readonly HashSet<int> _allChildrenEntities = [];
 
         /// <summary>
         /// Speed things up by keeping track of entities which will be skipped.
         /// </summary>
-        private readonly HashSet<int> _skipEntities = new();
+        private readonly HashSet<int> _skipEntities = [];
+
+        private ImmutableDictionary<int, Guid>? _cachedWorldIdToGuid = null;
 
         private bool HasGenerated => _worldEntities.Count != 0;
 
-        internal SavedWorldBuilder(World world) => _world = world;
+        internal SavedWorldBuilder(World world)
+        {
+            _world = world;
+            _builder = ImmutableArray.CreateBuilder<EntityInstance>();
+        }
 
-        internal async ValueTask<SavedWorld> CreateAsync(ImmutableArray<Entity> entities)
+        internal async ValueTask<SavedWorldData> CreateAsync(ImmutableArray<Entity> entities)
         {
             if (HasGenerated)
             {
                 return ToSavedWorld();
             }
 
-            Task convertAllEntities = Task.Run(() =>
-            {
-                foreach (Entity e in entities)
-                {
-                    if (TryConvertToInstance(e) is EntityInstance instance)
-                    {
-                        _worldEntities[e.EntityId] = instance;
-                    }
-                }
-            });
+            Task convertAllEntities = Task.Run(() => ConvertAllEntities(entities));
 
             await convertAllEntities;
-
             return ToSavedWorld();
         }
 
-        private SavedWorld ToSavedWorld() => 
-            new(_worldEntities.Values.ToImmutableDictionary(e => e.Guid, e => e), _world.NextEligibleEntityId);
+        private SavedWorldData ToSavedWorld() => new(_builder.ToImmutable(), _world.NextEligibleEntityId);
+
+        private void ConvertAllEntities(ImmutableArray<Entity> entities)
+        {
+            foreach (Entity e in entities)
+            {
+                if (TryConvertToInstance(e) is EntityInstance instance)
+                {
+                    _worldEntities[e.EntityId] = instance;
+                }
+            }
+
+            // at the end, append entities that are still around, *in order*.
+            foreach (Entity e in entities)
+            {
+                if (!_worldEntities.TryGetValue(e.EntityId, out EntityInstance? instance))
+                {
+                    continue;
+                }
+
+                _builder.Add(instance);
+            }
+        }
 
         /// <summary>
         /// Convert this entity to a an instance which has not been placed in the world.
         /// </summary>
-        /// <param name="e"></param>
-        /// <returns></returns>
         private EntityInstance? TryConvertToInstance(Entity? e)
         {
             if (e is null || e.IsDestroyed || _allChildrenEntities.Contains(e.EntityId) || _skipEntities.Contains(e.EntityId))
@@ -73,19 +90,7 @@ namespace Murder.Save
                 return null;
             }
 
-            EntityInstance instance = new EntityInstance();
-
-            // TODO: This was previously fetching the prefab entity for *performance* reasons.
-            // However, that might complicate stuff with children and removing components of the prefab.
-            // So let's deal with that later... if needed...
-            //if (e.TryGetComponent<PrefabRefComponent>() is PrefabRefComponent asset)
-            //{
-            //    // We will not track the instance children since these were already placed into the world.
-            //    instance = PrefabEntityInstance.CreateChildrenlessInstance(asset.AssetGuid);
-
-            //    // We no longer need this.
-            //    e.RemoveComponent<PrefabRefComponent>();
-            //}
+            EntityInstance instance = new(name: null, TryFetchGuidForEntityId(e.EntityId));
 
             InstancePersistKind kind = FilterComponents(ref instance, e);
             if (!kind.HasFlag(InstancePersistKind.All))
@@ -249,6 +254,21 @@ namespace Murder.Save
             }
 
             return instance.IsEmpty ? InstancePersistKind.NoPersist : InstancePersistKind.All;
+        }
+
+        private Guid? TryFetchGuidForEntityId(int entityId)
+        {
+            if (_cachedWorldIdToGuid is null)
+            {
+                _cachedWorldIdToGuid = _world.TryGetUniqueInstanceToEntityLookup()?.EntitiesToInstances ?? ImmutableDictionary<int, Guid>.Empty;
+            }
+
+            if (_cachedWorldIdToGuid.TryGetValue(entityId, out Guid entityGuid))
+            {
+                return entityGuid;
+            }
+
+            return null;
         }
     }
 }

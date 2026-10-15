@@ -28,7 +28,7 @@ namespace Murder.Editor.Systems
             if (guid == Guid.Empty)
             {
                 // Deactivate itself if this not belongs to a world asset.
-                context.World.DeactivateSystem<EditorStartOnCursorSystem>();
+                context.World.DeactivateSystem<EditorStartOnCursorWithCutsceneSystem>();
                 return;
             }
 

@@ -20,6 +20,8 @@ public abstract class CustomEditor : IDisposable
 
     public abstract void DrawEditor();
 
+    public virtual void DrawTopBar() { }
+
     /// <summary>
     /// Reload all active editors.
     /// </summary>

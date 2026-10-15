@@ -59,9 +59,9 @@ namespace Murder.Editor
 
         private void UpdateSelectedEditor()
         {
-            if (_selectedTab != Guid.Empty && Game.Data.TryGetAsset<GameAsset>(_selectedTab) is GameAsset asset)
+            if (_selectedTab != Guid.Empty)
             {
-                UpdateSelectedAsset(asset);
+                UpdateSelectedAsset();
             }
 
             _lastActiveEditorInstance?.Editor.UpdateEditor();
@@ -117,11 +117,12 @@ namespace Murder.Editor
             }
         }
 
-        private void UpdateSelectedAsset(GameAsset asset)
+        private void UpdateSelectedAsset()
         {
             CustomEditor? editor = _lastActiveEditorInstance?.Editor;
+            GameAsset? asset = editor?.Target as GameAsset;
 
-            if (asset.CanBeSaved && Architect.Input.Shortcut(Keys.S, InputHelpers.OSActionModifier))
+            if (asset is not null && asset.CanBeSaved && Architect.Input.Shortcut(Keys.S, InputHelpers.OSActionModifier))
             {
                 editor?.PrepareForSaveAsset();
 
@@ -169,8 +170,9 @@ namespace Murder.Editor
                         Architect.EditorSettings.FavoriteAsset(asset.Guid);
                     }
                 }
+
                 ImGui.PopStyleColor(4);
-                ImGuiHelpers.HelpTooltip("Favourite asset");
+                ImGuiHelpers.HelpTooltip("Favorite asset");
                 ImGui.SameLine();
 
                 if (asset.FileChanged)
@@ -179,7 +181,12 @@ namespace Murder.Editor
                     ImGui.SameLine();
                 }
 
-                if (string.IsNullOrWhiteSpace(asset.FilePath))
+                if (asset.IsStoredInSaveData)
+                {
+                    int slot = Architect.EditorData.GetSlotForSaveAsset(asset.Guid);
+                    ImGui.TextColored(Game.Profile.Theme.Faded, $"(FROM SAVE {slot})");
+                }
+                else if (string.IsNullOrWhiteSpace(asset.FilePath))
                 {
                     ImGui.TextColored(Microsoft.Xna.Framework.Color.DarkRed.ToSysVector4(), $"(FILE NOT SAVED)");
                 }
@@ -223,6 +230,9 @@ namespace Murder.Editor
                 ImGui.PopStyleColor(4);
                 ImGuiHelpers.HelpTooltip("Show all references to this asset");
 
+                ImGui.SameLine();
+
+                customEditor?.Editor.DrawTopBar();
                 ImGui.SameLine();
 
                 if (asset.CanBeSaved && (ImGuiHelpers.Button("Save Asset")))
@@ -288,7 +298,7 @@ namespace Murder.Editor
                 }
 
                 ImGui.SameLine();
-                if (ImGuiHelpers.Button("Discard Changes"))
+                if (ImGuiHelpers.ColoredButton("Discard Changes"))
                 {
                     ImGui.OpenPopup("Discard?");
                 }
@@ -326,12 +336,15 @@ namespace Murder.Editor
                 if (customEditor.Editor is WorldAssetEditor worldEditor)
                 {
                     ImGui.SameLine();
-                    bool showDeactivated = false;
-                    if (ImGuiHelpers.Checkbox($"\uf6e2", ref showDeactivated))
-                    {
 
-                    }
-                    ImGui.SetItemTooltip($"{(showDeactivated ? "Show" : "Hide")} deactivated entities");
+                    // Implement??
+                    //bool showDeactivated = false;
+                    //if (ImGuiHelpers.Checkbox($"\uf6e2", ref showDeactivated))
+                    //{
+
+                    //}
+
+                    //ImGui.SetItemTooltip($"{(showDeactivated ? "Show" : "Hide")} deactivated entities");
 
                     ImGui.SameLine();
                     if (ImGuiHelpers.Button("Reset Camera") || Game.Input.Shortcut(Keys.F12))

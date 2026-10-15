@@ -99,10 +99,31 @@ public class WorldProcessor
         PostProcessEntitiesFirstTimeImpl(world, instancesToEntities);
 
         // Keep track of the instances <-> entity map in order to do further processing.
-        world.AddEntity(new InstanceToEntityLookupComponent(instancesToEntities));
+
+        // if this was loaded from a previously saved world, we might persist the lookup from the last run.
+        if (world.TryGetUniqueEntityInstanceToEntityLookup() is not Entity instanceToEntityLookupEntity)
+        {
+            world.AddEntity(new InstanceToEntityLookupComponent(instancesToEntities));
+        }
+        else
+        {
+            InstanceToEntityLookupComponent previousLookup = instanceToEntityLookupEntity.GetInstanceToEntityLookup();
+            foreach ((Guid g, int _) in previousLookup.InstancesToEntities)
+            {
+                if (!instancesToEntities.ContainsKey(g))
+                {
+                    // this reference no longer exists in the world, but we should track that it was there at some point.
+                    instancesToEntities[g] = -1;
+                }
+            }
+
+            instanceToEntityLookupEntity.SetInstanceToEntityLookup(new InstanceToEntityLookupComponent(instancesToEntities));
+        }
     }
 
     protected virtual void PostProcessEntitiesFirstTimeImpl(World world, Dictionary<Guid, int> instancesToEntities)
     {
     }
+
+    public virtual void UpdateFromAsset(SavedWorld savedWorld) { }
 }

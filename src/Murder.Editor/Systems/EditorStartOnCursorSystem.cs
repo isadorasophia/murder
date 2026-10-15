@@ -24,7 +24,7 @@ namespace Murder.Editor.Systems
     [OnlyShowOnDebugView]
     [DoNotPause]
     [Filter(ContextAccessorFilter.None)]
-    public class EditorStartOnCursorSystem : IStartupSystem, IUpdateSystem, IMurderRenderSystem
+    public class EditorStartOnCursorSystem : IUpdateSystem, IMurderRenderSystem
     {
         private bool _pressedControl = false;
 
@@ -44,16 +44,6 @@ namespace Murder.Editor.Systems
         private (Guid Guid, string Name)[]? _saveStateInfo = null;
 
         private string _newSaveFilter = string.Empty;
-
-        public void Start(Context context)
-        {
-            Guid guid = context.World.Guid();
-            if (guid == Guid.Empty)
-            {
-                // Deactivate itself if this not belongs to a world asset.
-                context.World.DeactivateSystem<EditorStartOnCursorSystem>();
-            }
-        }
 
         public void Update(Context context)
         {

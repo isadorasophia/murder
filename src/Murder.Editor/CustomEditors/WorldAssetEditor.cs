@@ -49,7 +49,10 @@ namespace Murder.Editor.CustomEditors
 
         protected virtual ImmutableArray<Guid> Instances => _world?.Instances ?? ImmutableArray<Guid>.Empty;
 
-        protected virtual bool ShouldDrawSystems => true;
+        /// <summary>
+        /// Whether this supports advanced editing (groups, sound, story).
+        /// </summary>
+        protected virtual bool SupportsAdvancedEditing => true;
 
         /// <summary>
         /// Keep track of the information of the world for this particular stage per asset.
@@ -222,7 +225,7 @@ namespace Murder.Editor.CustomEditors
                         ImGui.EndTabItem();
                     }
 
-                    if (ShouldDrawSystems)
+                    if (SupportsAdvancedEditing)
                     {
                         if (ImGui.BeginTabItem($"{Icons.System} Systems"))
                         {
@@ -236,127 +239,127 @@ namespace Murder.Editor.CustomEditors
 
                             ImGui.EndTabItem();
                         }
-                    }
 
-                    bool always = true;
-                    if (ImGui.BeginTabItem($"{Icons.Tiles} Tiles", ref always, _switchToTilesetsTab ? ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None))
-                    {
-                        _switchToTilesetsTab = false;
-                        ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
-                        ImGui.BeginChild("tile_editor_child", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
-
-                        DeactivateAndActivateSystemsForTab(currentStage, WorldTab.Tiles);
-                        modified |= DrawTileEditor(currentStage);
-
-                        ImGui.EndChild();
-                        ImGui.PopStyleColor();
-
-                        ImGui.EndTabItem();
-                    }
-
-                    if (ImGui.BeginTabItem($"{Icons.Map} Pathfind"))
-                    {
-                        ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
-                        ImGui.BeginChild("pathfind_editor_child", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
-
-                        DeactivateAndActivateSystemsForTab(currentStage, WorldTab.Pathfind);
-                        modified |= DrawPathfindEditor(currentStage);
-
-                        ImGui.EndChild();
-                        ImGui.PopStyleColor();
-
-                        ImGui.EndTabItem();
-                    }
-
-                    if (ImGui.BeginTabItem($"{Icons.Cutscene} Story"))
-                    {
-                        ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
-                        ImGui.BeginChild("cutscene_editor_child", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
-
-                        DeactivateAndActivateSystemsForTab(currentStage, WorldTab.Story);
-                        modified |= DrawStoryEditor(currentStage);
-
-                        ImGui.EndChild();
-                        ImGui.PopStyleColor();
-
-                        ImGui.EndTabItem();
-                    }
-
-                    if (ImGui.BeginTabItem($"{Icons.Sound} Sounds"))
-                    {
-                        ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
-                        ImGui.BeginChild("sound_editor_child", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
-
-                        DeactivateAndActivateSystemsForTab(currentStage, WorldTab.Sound);
-                        modified |= DrawSoundEditor(currentStage);
-
-                        ImGui.EndChild();
-                        ImGui.PopStyleColor();
-
-                        ImGui.EndTabItem();
-                    }
-                    else
-                    {
-                        currentStage.ActivateSystemsWith(enable: false, typeof(SoundEditorAttribute));
-                    }
-
-                    if (ImGui.BeginTabItem($"{Icons.Settings} Settings"))
-                    {
-                        ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
-                        ImGui.BeginChild("cutscene_editor_child", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
-
-                        ImGuiHelpers.ColorIcon('\uf57e', Game.Profile.Theme.Accent);
-                        ImGuiHelpers.HelpTooltip("Display name of the world");
-                        ImGui.SameLine();
-
-                        modified |= CustomField.DrawValueWithId(ref _asset, nameof(WorldAsset.LocalizedWorldName));
-
-                        ImGuiHelpers.ColorIcon('\uf0dc', Game.Profile.Theme.Accent);
-                        ImGuiHelpers.HelpTooltip("Order which this world should be displayed");
-                        ImGui.SameLine();
-
-                        modified |= CustomField.DrawValueWithId(ref _asset, nameof(WorldAsset.Order));
-
-                        ImGuiHelpers.ColorIcon('\uf024', Game.Profile.Theme.Accent);
-                        ImGuiHelpers.HelpTooltip("Flags associated with this world");
-                        ImGui.SameLine();
-
-                        modified |= CustomField.DrawValueWithId(ref _asset, nameof(WorldAsset.Flags));
-
-                        ImGuiHelpers.ColorIcon('\uf008', Game.Profile.Theme.Accent);
-                        ImGuiHelpers.HelpTooltip("Atlas which should be loaded with this map");
-                        ImGui.SameLine();
-
-                        modified |= CustomField.DrawValueWithId(ref _asset, nameof(WorldAsset.ReferencedAtlas));
-
-                        ImGuiHelpers.ColorIcon('\uf0d1', Game.Profile.Theme.Accent);
-                        ImGuiHelpers.HelpTooltip("Move entities in the map");
-                        ImGui.SameLine();
-
-                        ImGui.DragInt2("##MoveRoom", ref _moveRoomAmount[0], 1);
-                        ImGui.SameLine();
-                        if (ImGuiHelpers.Button("Move whole map"))
+                        bool always = true;
+                        if (ImGui.BeginTabItem($"{Icons.Tiles} Tiles", ref always, _switchToTilesetsTab ? ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None))
                         {
-                            MoveMap(currentStage, new(_moveRoomAmount[0], _moveRoomAmount[1]));
+                            _switchToTilesetsTab = false;
+                            ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
+                            ImGui.BeginChild("tile_editor_child", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
+
+                            DeactivateAndActivateSystemsForTab(currentStage, WorldTab.Tiles);
+                            modified |= DrawTileEditor(currentStage);
+
+                            ImGui.EndChild();
+                            ImGui.PopStyleColor();
+
+                            ImGui.EndTabItem();
                         }
 
-                        ImGuiHelpers.ColorIcon('\uf0ad', Game.Profile.Theme.Accent);
-                        ImGui.SameLine();
-
-                        if (ImGuiHelpers.Button("Clear missing entities..."))
+                        if (ImGui.BeginTabItem($"{Icons.Map} Pathfind"))
                         {
-                            _world?.ClearAllMissingInstances();
+                            ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
+                            ImGui.BeginChild("pathfind_editor_child", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
+
+                            DeactivateAndActivateSystemsForTab(currentStage, WorldTab.Pathfind);
+                            modified |= DrawPathfindEditor(currentStage);
+
+                            ImGui.EndChild();
+                            ImGui.PopStyleColor();
+
+                            ImGui.EndTabItem();
                         }
 
-                        modified |= DrawSettingsTabImpl(currentStage);
+                        if (ImGui.BeginTabItem($"{Icons.Cutscene} Story"))
+                        {
+                            ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
+                            ImGui.BeginChild("cutscene_editor_child", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
 
-                        ImGui.EndChild();
-                        ImGui.PopStyleColor();
+                            DeactivateAndActivateSystemsForTab(currentStage, WorldTab.Story);
+                            modified |= DrawStoryEditor(currentStage);
 
-                        ImGui.EndTabItem();
+                            ImGui.EndChild();
+                            ImGui.PopStyleColor();
+
+                            ImGui.EndTabItem();
+                        }
+
+                        if (ImGui.BeginTabItem($"{Icons.Sound} Sounds"))
+                        {
+                            ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
+                            ImGui.BeginChild("sound_editor_child", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
+
+                            DeactivateAndActivateSystemsForTab(currentStage, WorldTab.Sound);
+                            modified |= DrawSoundEditor(currentStage);
+
+                            ImGui.EndChild();
+                            ImGui.PopStyleColor();
+
+                            ImGui.EndTabItem();
+                        }
+                        else
+                        {
+                            currentStage.ActivateSystemsWith(enable: false, typeof(SoundEditorAttribute));
+                        }
+
+                        if (ImGui.BeginTabItem($"{Icons.Settings} Settings"))
+                        {
+                            ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
+                            ImGui.BeginChild("cutscene_editor_child", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
+
+                            ImGuiHelpers.ColorIcon('\uf57e', Game.Profile.Theme.Accent);
+                            ImGuiHelpers.HelpTooltip("Display name of the world");
+                            ImGui.SameLine();
+
+                            modified |= CustomField.DrawValueWithId(ref _asset, nameof(WorldAsset.LocalizedWorldName));
+
+                            ImGuiHelpers.ColorIcon('\uf0dc', Game.Profile.Theme.Accent);
+                            ImGuiHelpers.HelpTooltip("Order which this world should be displayed");
+                            ImGui.SameLine();
+
+                            modified |= CustomField.DrawValueWithId(ref _asset, nameof(WorldAsset.Order));
+
+                            ImGuiHelpers.ColorIcon('\uf024', Game.Profile.Theme.Accent);
+                            ImGuiHelpers.HelpTooltip("Flags associated with this world");
+                            ImGui.SameLine();
+
+                            modified |= CustomField.DrawValueWithId(ref _asset, nameof(WorldAsset.Flags));
+
+                            ImGuiHelpers.ColorIcon('\uf008', Game.Profile.Theme.Accent);
+                            ImGuiHelpers.HelpTooltip("Atlas which should be loaded with this map");
+                            ImGui.SameLine();
+
+                            modified |= CustomField.DrawValueWithId(ref _asset, nameof(WorldAsset.ReferencedAtlas));
+
+                            ImGuiHelpers.ColorIcon('\uf0d1', Game.Profile.Theme.Accent);
+                            ImGuiHelpers.HelpTooltip("Move entities in the map");
+                            ImGui.SameLine();
+
+                            ImGui.DragInt2("##MoveRoom", ref _moveRoomAmount[0], 1);
+                            ImGui.SameLine();
+                            if (ImGuiHelpers.Button("Move whole map"))
+                            {
+                                MoveMap(currentStage, new(_moveRoomAmount[0], _moveRoomAmount[1]));
+                            }
+
+                            ImGuiHelpers.ColorIcon('\uf0ad', Game.Profile.Theme.Accent);
+                            ImGui.SameLine();
+
+                            if (ImGuiHelpers.Button("Clear missing entities..."))
+                            {
+                                _world?.ClearAllMissingInstances();
+                            }
+
+                            modified |= DrawSettingsTabImpl(currentStage);
+
+                            ImGui.EndChild();
+                            ImGui.PopStyleColor();
+
+                            ImGui.EndTabItem();
+                        }
+
+                        ImGui.EndTabBar();
                     }
-
-                    ImGui.EndTabBar();
                 }
 
                 ImGui.TableNextColumn();
@@ -610,7 +613,7 @@ namespace Murder.Editor.CustomEditors
 
         protected virtual void DeleteEntityFromWorld(int id)
         {
-            GameLogger.Verify(_world is not null && _asset is not null && Stages.ContainsKey(_asset.Guid));
+            GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
 
             _asset.FileChanged = true;
 
@@ -895,7 +898,18 @@ namespace Murder.Editor.CustomEditors
             public string? HideGroupsExceptFor = null;
         }
 
-        private enum WorldTab
+        protected WorldTab _previousActiveTab = WorldTab.None;
+
+        private readonly static Dictionary<WorldTab, Type> _tabToAttributeToDeactivate = new()
+        {
+            { WorldTab.World, typeof(WorldEditorAttribute) },
+            { WorldTab.Tiles, typeof(TileEditorAttribute) },
+            { WorldTab.Pathfind, typeof(PathfindEditorAttribute) },
+            { WorldTab.Story, typeof(StoryEditorAttribute) },
+            { WorldTab.Sound, typeof(SoundEditorAttribute) }
+        };
+
+        protected enum WorldTab
         {
             None = 0,
             World = 1,
@@ -907,18 +921,7 @@ namespace Murder.Editor.CustomEditors
             Settings = 7
         }
 
-        private WorldTab _previousActiveTab = WorldTab.World;
-
-        private readonly static Dictionary<WorldTab, Type> _tabToAttributeToDeactivate = new()
-        {
-            { WorldTab.World, typeof(WorldEditorAttribute) },
-            { WorldTab.Tiles, typeof(TileEditorAttribute) },
-            { WorldTab.Pathfind, typeof(PathfindEditorAttribute) },
-            { WorldTab.Story, typeof(StoryEditorAttribute) },
-            { WorldTab.Sound, typeof(SoundEditorAttribute) }
-        };
-
-        private void DeactivateAndActivateSystemsForTab(Stage stage, WorldTab activeTab)
+        protected void DeactivateAndActivateSystemsForTab(Stage stage, WorldTab activeTab)
         {
             if (_previousActiveTab == activeTab)
             {

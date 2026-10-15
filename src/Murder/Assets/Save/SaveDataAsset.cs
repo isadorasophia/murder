@@ -180,14 +180,16 @@ namespace Murder.Assets
                     {
                         await pendingOperation;
 
-                        SavedWorld state = await SavedWorld.CreateAsync(world, entitiesOnSaveRequested);
-                        Game.Data.AddAssetForCurrentSave(state);
+                        SavedWorldData data = await SavedWorldData.CreateAsync(world, entitiesOnSaveRequested);
+
+                        SavedWorld stateAsset = new(world.WorldAssetGuid, data);
+                        Game.Data.AddAssetForCurrentSave(stateAsset);
 
                         // Replace and delete the instance it has just replaced.
                         SavedWorlds.TryGetValue(world.WorldAssetGuid, out Guid previousState);
                         Game.Data.RemoveAssetForCurrentSave(previousState);
 
-                        SavedWorlds = SavedWorlds.SetItem(world.WorldAssetGuid, state.Guid);
+                        SavedWorlds = SavedWorlds.SetItem(world.WorldAssetGuid, stateAsset.Guid);
 
                         GameLogger.Log($"Finished persisting world {world.WorldAssetGuid}");
                     }

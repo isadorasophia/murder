@@ -664,6 +664,12 @@ namespace Murder.Editor
 
         private void DiscardAsset(GameAsset asset)
         {
+            if (asset.IsSavePacked)
+            {
+                Architect.EditorData.ResetSaveAsset(asset);
+                return;
+            }
+
             var relativePath = asset.GetRelativePath();
             var newAsset = Game.Data.TryLoadAsset(
                 FileHelper.GetPath(asset.GetEditorAssetPath()!),

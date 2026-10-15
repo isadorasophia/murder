@@ -16,15 +16,10 @@ using Murder.Editor.Systems;
 using Murder.Editor.Systems.Debug;
 using Murder.Editor.Utilities;
 using Murder.Serialization;
-using Murder.Services;
-using Murder.Systems;
-using Murder.Systems.Graphics;
 using Murder.Utilities;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using static Murder.Editor.Data.Graphics.FontLookup;
@@ -45,9 +40,6 @@ namespace Murder.Editor.Data
         public ImmutableArray<string> AvailableUniqueTextures = [];
 
         public HashSet<string>? AvailableAtlases = null;
-
-        private readonly Dictionary<Guid, GameAsset> _saveAssetsForEditor = new();
-        public ImmutableArray<GameAsset> GetAllSaveAssets() => _saveAssetsForEditor.Values.ToImmutableArray();
 
         private string? _packedSourceDirectoryPath;
         public string PackedSourceDirectoryPath => _packedSourceDirectoryPath!;
@@ -308,136 +300,6 @@ namespace Murder.Editor.Data
             _ = LoadAllSaveAssets();
         }
 
-        private async Task LoadAllSaveAssets()
-        {
-            _saveAssetsForEditor.Clear();
-
-            await Task.Yield();
-
-            using PerfTimeRecorder recorder = new("Loading Saves (for editor)");
-
-            SaveDataTracker tracker = Tracker;
-            foreach ((int slot, SaveDataInfo save) in tracker.Data)
-            {
-                string saveDataPath = SaveDataInfo.GetFullPackedSavePath(slot);
-                string saveDataAssetsPath = SaveDataInfo.GetFullPackedAssetsSavePath(slot);
-                if (!File.Exists(saveDataPath) || !File.Exists(saveDataAssetsPath))
-                {
-                    continue;
-                }
-
-                if (save.Version < Game.Data.CurrentGameVersion)
-                {
-                    GameLogger.Warning($"Skipping loading save {save.Name} due to older version ({save.Version}).");
-                    continue;
-                }
-
-                PackedSaveData? packedData = FileManager.UnpackContent<PackedSaveData>(saveDataPath);
-                PackedSaveAssetsData? packedAssetsData = FileManager.UnpackContent<PackedSaveAssetsData>(saveDataAssetsPath);
-                if (packedData is null || packedAssetsData is null)
-                {
-                    continue;
-                }
-
-                _saveAssetsForEditor[packedData.Data.Guid] = packedData.Data;
-
-                foreach (GameAsset asset in packedAssetsData.Assets)
-                {
-                    _saveAssetsForEditor[asset.Guid] = asset;
-                }
-            }
-        }
-
-        public override void DeleteAllSaves()
-        {
-            _saveAssetsForEditor.Clear();
-
-            base.DeleteAllSaves();
-        }
-
-        /// <summary>
-        /// This is somewhat of an odd method. This mocks packaging the save file in order to save
-        /// an asset that has been edited through the editor.
-        /// </summary>
-        /// <param name="asset">Target asset to be saved (or deleted).</param>
-        public async ValueTask SerializeSaveForAssetAsync(GameAsset asset)
-        {
-            if (PendingSave is not null && !PendingSave.Value.IsCompleted)
-            {
-                // Save is already in progress.
-                return;
-            }
-
-            SaveDataTracker tracker = Tracker;
-            foreach ((int slot, SaveDataInfo save) in tracker.Data)
-            {
-                string saveDataPath = SaveDataInfo.GetFullPackedSavePath(slot);
-                string saveDataAssetsPath = SaveDataInfo.GetFullPackedAssetsSavePath(slot);
-                if (!File.Exists(saveDataPath) || !File.Exists(saveDataAssetsPath))
-                {
-                    continue;
-                }
-
-                PackedSaveData? packedData = FileManager.UnpackContent<PackedSaveData>(saveDataPath);
-                PackedSaveAssetsData? packedAssetsData = FileManager.UnpackContent<PackedSaveAssetsData>(saveDataAssetsPath);
-                if (packedData is null || packedAssetsData is null)
-                {
-                    continue;
-                }
-
-                bool match = false;
-                if (asset.Guid == packedData.Data.Guid)
-                {
-                    match = true;
-
-                    if (asset.TaggedForDeletion)
-                    {
-                        GameLogger.Warning("Unable to delete the root save data. At least, this was not implemented yet.");
-                    }
-                }
-
-                // Override the save slot, which came from the editor data.
-                _runtimeSaveSlots[slot] = save;
-
-                if (!_saveAssetsForEditor.TryGetValue(packedData.Data.Guid, out GameAsset? packedSaveData))
-                {
-                    GameLogger.Error($"Why has save slot {slot} not loaded in the editor?");
-                    continue;
-                }
-
-                _activeSaveData = (SaveData)packedSaveData;
-                _currentSaveAssets.Clear();
-
-                foreach (GameAsset packedAsset in packedAssetsData.Assets)
-                {
-                    if (packedAsset.Guid == asset.Guid)
-                    {
-                        match = true;
-                    }
-
-                    if (asset.TaggedForDeletion)
-                    {
-                        _saveAssetsForEditor.Remove(asset.Guid);
-                        continue;
-                    }
-
-                    _currentSaveAssets.TryAdd(packedAsset.Guid, _saveAssetsForEditor[packedAsset.Guid]);
-                }
-
-                if (match)
-                {
-                    PendingSave = SerializeSaveAsync(overridePath: null);
-                    await PendingSave.Value;
-
-                    asset.FileChanged = false;
-                    break;
-                }
-            }
-
-            _activeSaveData = null;
-            _currentSaveAssets.Clear();
-        }
-
         private void LoadEditorSettings()
         {
             string editorSettingsPath = Path.Join(SaveBasePath, EditorSettingsFileName);
@@ -501,11 +363,10 @@ namespace Murder.Editor.Data
                 base.RemoveAsset(t, assetGuid);
                 SaveAsset(asset);
             }
-            else if (_saveAssetsForEditor.TryGetValue(assetGuid, out GameAsset? saveAsset))
+            else if (_saveAssetsForEditor.TryGetValue(assetGuid, out SaveDataAssetInfo saveDataInfo))
             {
-                saveAsset.TaggedForDeletion = true;
-
-                SaveAsset(saveAsset);
+                saveDataInfo.Asset.TaggedForDeletion = true;
+                SaveAsset(saveDataInfo.Asset);
             }
 
             _cachedFilteredAssetsWithImplementation.Clear();
@@ -954,5 +815,13 @@ namespace Murder.Editor.Data
         }
 
         public HashSet<string> GetAllAtlases() => _referencedAtlases;
+
+        private readonly struct SaveDataAssetInfo
+        {
+            public readonly int SaveSlot;
+            public readonly GameAsset Asset;
+
+            public SaveDataAssetInfo(int saveSlot, GameAsset asset) => (SaveSlot, Asset) = (saveSlot, asset);
+        }
     }
 }

@@ -555,6 +555,28 @@ public static class ImGuiHelpers
         return result;
     }
 
+    public static bool ColoredButton(string text)
+    {
+        Vector4 textColor = Game.Profile.Theme.White;
+        Vector4 backgroundColor = Game.Profile.Theme.Faded;
+
+        ImGui.PushStyleColor(ImGuiCol.Text, textColor);
+
+        ImGui.PushStyleColor(ImGuiCol.Button, backgroundColor);
+        ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.Red);
+        ImGui.PushStyleColor(ImGuiCol.ButtonActive, Game.Profile.Theme.Selected);
+
+        bool result = ImGuiHelpers.Button(text);
+
+        ImGui.PopStyleColor();
+        ImGui.PopStyleColor();
+        ImGui.PopStyleColor();
+
+        ImGui.PopStyleColor();
+
+        return result;
+    }
+
     public static bool ColoredIconButton(char icon, string id, bool isActive)
     {
         Vector4 textColor = Game.Profile.Theme.White;
