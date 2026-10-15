@@ -257,8 +257,9 @@ public partial class EditorDataManager
                 if (packedAsset.Guid == asset.Guid)
                 {
                     _saveAssetsForEditor[packedAsset.Guid] = new(slot, asset);
-                    _currentSaveAssets[packedAsset.Guid] = asset;
                 }
+
+                _currentSaveAssets[packedAsset.Guid] = _saveAssetsForEditor[packedAsset.Guid].Asset;
             }
 
             _cachedSaveAssets = null;
