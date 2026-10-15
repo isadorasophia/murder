@@ -120,7 +120,7 @@ namespace Murder.Editor
         private void UpdateSelectedAsset()
         {
             CustomEditor? editor = _lastActiveEditorInstance?.Editor;
-            GameAsset? asset = editor?.Target as GameAsset;
+            GameAsset? asset = editor?.Target as GameAsset ?? Game.Data.TryGetAsset<GameAsset>(_selectedTab);
 
             if (asset is not null && asset.CanBeSaved && Architect.Input.Shortcut(Keys.S, InputHelpers.OSActionModifier))
             {
