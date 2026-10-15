@@ -232,9 +232,6 @@ namespace Murder.Editor
 
                 ImGui.SameLine();
 
-                customEditor?.Editor.DrawTopBar();
-                ImGui.SameLine();
-
                 if (asset.CanBeSaved && (ImGuiHelpers.Button("Save Asset")))
                 {
                     customEditor?.Editor.PrepareForSaveAsset();
@@ -296,6 +293,9 @@ namespace Murder.Editor
                         EditorFileManager.OpenFolder(outputPath);
                     }
                 }
+
+                customEditor?.Editor.DrawTopBar();
+                ImGui.SameLine();
 
                 ImGui.SameLine();
                 if (ImGuiHelpers.ColoredButton("Discard Changes"))
