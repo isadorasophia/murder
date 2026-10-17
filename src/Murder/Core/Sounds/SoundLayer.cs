@@ -6,5 +6,6 @@ public enum SoundLayer
     Sfx,
     Music,
     Ambience,
-    Snapshot
+    Snapshot,
+    MusicSecondary
 }
