@@ -2,6 +2,7 @@
 using Murder.Assets.Graphics;
 using Murder.Attributes;
 using System.Collections.Immutable;
+using System.Text.Json.Serialization;
 
 namespace Murder.Components
 {
@@ -17,6 +18,7 @@ namespace Murder.Components
 
         public TilesetComponent() { }
 
+        [JsonConstructor]
         public TilesetComponent(ImmutableArray<Guid> tilesets)
         {
             Tilesets = tilesets;
