@@ -120,6 +120,8 @@ namespace Murder.Core.Sounds
 
         public float GetGlobalParameter(ParameterId parameter);
 
+        public float GetLocalParameter(SoundEventId instance, int entityId, ParameterId parameter);
+
         public void SetVolume(SoundLayer layer, float volume, float fireAfter);
 
         public bool Resume(SoundLayer layer);

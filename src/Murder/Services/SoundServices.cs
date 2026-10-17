@@ -4,6 +4,7 @@ using Murder.Components;
 using Murder.Core.Sounds;
 using Murder.Diagnostics;
 using Murder.Helpers;
+using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Numerics;
 using System.Reflection.Metadata;
@@ -134,6 +135,11 @@ public static class SoundServices
         }
     }
 
+    public static float GetLocalParameter(SoundEventId instance, int entityId, ParameterId parameter)
+    {
+        return Game.Sound.GetLocalParameter(instance, entityId, parameter);
+    }
+
     public static float GetGlobalParameter(ParameterId id)
     {
         return Game.Sound.GetGlobalParameter(id);
@@ -224,11 +230,8 @@ public static class SoundServices
             return null;
         }
 
-        Entity root = EntityServices.FindRootEntity(target);
-        if (root.TryGetPosition() is PositionComponent transform)
-        {
-            attributes.Position = new Vector3(transform.Vector2.X, transform.Vector2.Y, z: 0);
-        }
+        Vector2 position = target.GetCenterPosition();
+        attributes.Position = new Vector3(position.X, position.Y, z: 0);
 
         if (target.TryGetFacing()?.Direction is Direction direction)
         {

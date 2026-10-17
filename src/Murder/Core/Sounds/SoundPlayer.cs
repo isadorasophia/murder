@@ -39,15 +39,13 @@ namespace Murder.Core.Sounds
 
         public bool Pause(SoundLayer layer) => false;
 
-        public void SetParameter(SoundEventId instance, ParameterId parameter, float value)
-        {
-        }
+        public void SetParameter(SoundEventId instance, ParameterId parameter, float value) { }
 
-        public void SetGlobalParameter(ParameterId parameter, float value)
-        {
-        }
+        public void SetGlobalParameter(ParameterId parameter, float value) { }
 
         public float GetGlobalParameter(ParameterId _) => 0;
+
+        public float GetLocalParameter(SoundEventId eventId, int entityId, ParameterId parameterId) => 0;
 
         public ImmutableDictionary<string, List<string>> FetchAllBanks() => ImmutableDictionary<string, List<string>>.Empty;
 
