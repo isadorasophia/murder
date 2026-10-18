@@ -57,6 +57,12 @@ public static class SoundServices
             return default;
         }
 
+        if (target is not null && !target.HasPosition())
+        {
+            // do not bother tracking entities without position.
+            target = null;
+        }
+
         SoundSpatialAttributes? attributes = GetSpatialAttributes(target);
         return Play(id, layer, properties, attributes, target?.EntityId ?? -1, parameter);
     }
@@ -225,7 +231,7 @@ public static class SoundServices
     public static SoundSpatialAttributes? GetSpatialAttributes(Entity? target)
     {
         SoundSpatialAttributes attributes = new();
-        if (target is null)
+        if (target is null || !target.HasPosition())
         {
             return null;
         }
