@@ -151,6 +151,11 @@ public partial class MonoWorld : World
     internal bool StopCoroutine(Coroutine coroutine)
     {
         int index = coroutine.Index;
+        if (index < 0)
+        {
+            // invalid one
+            return false;
+        }
 
         if (index >= _effectEntities.Count)
         {
