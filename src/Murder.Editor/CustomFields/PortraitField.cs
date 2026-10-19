@@ -34,7 +34,7 @@ public class PortraitField : CustomField
 
     private static bool _pressed = false;
 
-    public static bool DrawPortrait(string id, Vector2 size, ref Portrait portrait, string description)
+    public static bool DrawPortrait(string id, Vector2 size, ref Portrait portrait, string description, bool canModify = true)
     {
         if (Game.Data.TryGetAsset<SpriteAsset>(portrait.Sprite) is not SpriteAsset aseprite)
         {
@@ -46,16 +46,21 @@ public class PortraitField : CustomField
                 aseprite, id, portrait.AnimationId, size, pressed: _pressed);
         }
 
-        ImGuiHelpers.HelpTooltip($"Modify or add a {description}.");
-
-        string popupName = $"##{id}_portrait";
-
-        if (_pressed)
+        if (canModify)
         {
-            ImGui.OpenPopup(popupName);
+            ImGuiHelpers.HelpTooltip($"Modify or add a {description}.");
+
+            string popupName = $"##{id}_portrait";
+
+            if (_pressed)
+            {
+                ImGui.OpenPopup(popupName);
+            }
+
+            return DrawReplacePortraitPopup(id, popupName, ref portrait);
         }
 
-        return DrawReplacePortraitPopup(id, popupName, ref portrait);
+        return false;
     }
 
     private static bool DrawReplacePortraitPopup(string id, string popupName, ref Portrait portrait)

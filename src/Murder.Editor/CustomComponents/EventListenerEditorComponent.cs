@@ -15,7 +15,7 @@ using System.Reflection;
 namespace Murder.Editor.CustomComponents
 {
     [CustomComponentOf(typeof(EventListenerEditorComponent))]
-    internal class EventListenerEditor : CustomComponent
+    public class EventListenerEditor : CustomComponent
     {
         private static string _eventInput = string.Empty;
         private static string _searchField = string.Empty;
