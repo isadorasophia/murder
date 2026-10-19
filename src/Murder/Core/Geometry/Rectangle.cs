@@ -368,4 +368,17 @@ public struct Rectangle : IEquatable<Rectangle>
             Center.Y - height / 2f,
             width, height);
     }
+
+    /// <summary>
+    /// Returns the closest point to <paramref name="point"/> that lies inside or on the edge of this rectangle.
+    /// If the point is already inside we return itself
+    /// </summary>
+    public Vector2 ClosestPoint(Vector2 point)
+    {
+        return new Vector2(
+            Math.Max(Left, Math.Min(point.X, Right)),
+            Math.Max(Top, Math.Min(point.Y, Bottom)));
+    }
+
+    public Vector2 ClosestPoint(Point point) => ClosestPoint(new Vector2(point.X, point.Y));
 }

@@ -211,5 +211,17 @@ namespace Murder.Core.Geometry
             return new(left, top, right - left, bottom - top);
         }
 
+        /// <summary>
+        /// Returns the closest point to <paramref name="point"/> that lies inside or on the edge of this rectangle.
+        /// If the point is already inside we return itself
+        /// </summary>
+        public Point ClosestPoint(Vector2 point)
+        {
+            return new Point(
+                Math.Max(Left, Math.Min(Calculator.RoundToInt(point.X), Right)),
+                Math.Max(Top, Math.Min(Calculator.RoundToInt(point.Y), Bottom)));
+        }
+
+        public Point ClosestPoint(Point point) => ClosestPoint(new Vector2(point.X, point.Y));
     }
 }
