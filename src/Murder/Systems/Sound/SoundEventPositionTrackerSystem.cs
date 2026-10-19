@@ -14,7 +14,14 @@ namespace Murder.Systems.Sound
             foreach (Entity e in context.Entities)
             {
                 SoundEventPositionTrackerComponent tracker = e.GetSoundEventPositionTracker();
-                SoundServices.TrackEventSourcePosition(tracker.Sound, e);
+                if (tracker.Properties == SoundEventPositionTrackerProperties.FollowListenerPosition)
+                {
+                    Game.Sound.UpdateEvent(tracker.Sound, e.EntityId, Game.Sound.LastListenerPosition);
+                }
+                else
+                {
+                    SoundServices.TrackEventSourcePosition(tracker.Sound, e);
+                }
             }
         }
     }
