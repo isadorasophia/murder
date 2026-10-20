@@ -4,6 +4,7 @@ using Murder.Diagnostics;
 using System.Collections.Immutable;
 using System.IO.Compression;
 using System.Reflection;
+using System.Text.Json;
 
 namespace Murder.Editor.Data;
 
@@ -161,7 +162,18 @@ public partial class EditorDataManager
             }
 
             PackedSaveData? packedData = FileManager.UnpackContent<PackedSaveData>(saveDataPath);
-            PackedSaveAssetsData? packedAssetsData = FileManager.UnpackContent<PackedSaveAssetsData>(saveDataAssetsPath);
+            PackedSaveAssetsData? packedAssetsData = null;
+
+            try
+            {
+                packedAssetsData = FileManager.UnpackContent<PackedSaveAssetsData>(saveDataAssetsPath);
+            }
+            catch (JsonException)
+            {
+                await ConvertSave(save, saveDataAssetsPath);
+                packedAssetsData = FileManager.UnpackContent<PackedSaveAssetsData>(saveDataAssetsPath);
+            }
+
             if (packedData is null || packedAssetsData is null)
             {
                 continue;
@@ -177,6 +189,8 @@ public partial class EditorDataManager
 
         _cachedSaveAssets = null;
     }
+
+    private Task ConvertSave(SaveDataInfo info, string path) => _game?.ConvertSave(info, path) ?? Task.CompletedTask;
 
     public override void DeleteAllSaves()
     {

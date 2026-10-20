@@ -67,6 +67,23 @@ public partial class FileManager
         return data;
     }
 
+    /// <summary>
+    /// Unpack content from a zip format to json string.
+    /// </summary>
+    public string UnpackContentToJson(string path)
+    {
+        using FileStream stream = File.OpenRead(path);
+        using GZipStream gzipStream = new(stream, CompressionMode.Decompress);
+
+        using StreamReader reader = new(gzipStream);
+        string content = reader.ReadToEnd();
+
+        gzipStream.Close();
+        stream.Close();
+
+        return content;
+    }
+
     public void SaveText(in string fullpath, in string content)
     {
         GameLogger.Verify(Path.IsPathRooted(fullpath));

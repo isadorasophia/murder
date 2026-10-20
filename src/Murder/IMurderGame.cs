@@ -78,6 +78,11 @@ namespace Murder
         public SaveDataInfo CreateSaveDataInfo(float version, string name) => new(version, name);
 
         /// <summary>
+        /// Deals with converting save files from a previous version.
+        /// </summary>
+        public Task ConvertSave(SaveDataInfo info, string saveFilePath) => Task.CompletedTask;
+
+        /// <summary>
         /// Creates the client custom sound player.
         /// </summary>
         public ISoundPlayer CreateSoundPlayer() => new SoundPlayer();

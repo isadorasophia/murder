@@ -152,38 +152,6 @@ public static class DialogueServices
         return character.HasContentOnNextDialogueLine(world, e, checkForNewContentOnly: false);
     }
 
-    public static void SetOverrideSituation(this Entity e, SituationOrigin origin, SituationComponent situation)
-    {
-        if (e.TryGetOverrideSituation() is not OverrideSituationComponent existingSituation)
-        {
-            var builder = ImmutableDictionary.CreateBuilder<SituationOrigin, SituationComponent>();
-            builder[origin] = situation;
-
-            e.SetOverrideSituation(builder.ToImmutable());
-            return;
-        }
-
-        e.SetOverrideSituation(existingSituation.WithSituation(origin, situation));
-    }
-
-    public static void RemoveOverrideSituation(this Entity e, SituationOrigin origin)
-    {
-        if (e.TryGetOverrideSituation() is not OverrideSituationComponent existingSituation)
-        {
-            return;
-        }
-
-        existingSituation = existingSituation.WithoutSituation(origin);
-        if (existingSituation.IsEmpty)
-        {
-            e.RemoveOverrideSituation();
-        }
-        else
-        {
-            e.SetOverrideSituation(existingSituation);
-        }
-    }
-
     public static string GetPortraitName(SpeakerAsset speaker, string? portrait, string? fallback = null)
     {
         if (portrait is not null)
