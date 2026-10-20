@@ -170,7 +170,7 @@ namespace Murder.Core.Dialogs
                         Line line = dialog.Lines[_activeLine];
 
                         TrackInteracted();
-                        DoActiveLineSounds(line);
+                        DoActiveLineSounds(world, line);
                         DoActionsBeforeActiveLine(world, target, line);
 
                         _activeLine++;
@@ -446,7 +446,7 @@ namespace Murder.Core.Dialogs
             ImmutableArray<int> choices = ActiveSituation.Edges[_currentDialog.Value].Dialogs;
 
             Line choiceLine = ActiveSituation.Dialogs[choices[choice]].Lines[0];
-            DoActiveLineSounds(choiceLine);
+            DoActiveLineSounds(world, choiceLine);
 
             // Go to the choice made by the player.
             _currentDialog = choices[choice];
@@ -493,7 +493,7 @@ namespace Murder.Core.Dialogs
             return false;
         }
 
-        private bool DoActiveLineSounds(Line line)
+        private bool DoActiveLineSounds(World? world, Line line)
         {
             SoundEventId? sound = FindSoundForActiveLine(line);
             if (sound is null)
@@ -501,7 +501,17 @@ namespace Murder.Core.Dialogs
                 return false;
             }
 
-            _ = SoundServices.PlayFromListenerPosition(sound.Value);
+
+            if (world is not null)
+            {
+                // make a small delay so it catches up
+                world.FireAfter(.1f, () => { SoundServices.PlayFromListenerPosition(sound.Value); });
+            }
+            else
+            {
+                _ = SoundServices.PlayFromListenerPosition(sound.Value);
+            }
+
             return true;
         }
 
