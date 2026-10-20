@@ -7,7 +7,8 @@ namespace Murder.Components.Sound
     public enum SoundEventPositionTrackerProperties
     {
         None = 0,
-        FollowListenerPosition = 1
+        FollowListenerPosition = 1,
+        FollowShapeDistance = 2
     }
 
     /// <summary>

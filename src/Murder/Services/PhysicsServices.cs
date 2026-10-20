@@ -1924,4 +1924,38 @@ public static class PhysicsServices
         Vector2 velocity = entity.TryGetVelocity()?.Velocity ?? Vector2.Zero;
         entity.SetVelocity(velocity + addVelocity);
     }
+
+    public static Vector2 ClosestPointTo(Entity shapeEntity, Vector2 position)
+    {
+        if (shapeEntity.TryGetCollider() is not ColliderComponent collider)
+        {
+            return position;
+        }
+
+        Vector2 shapePosition = shapeEntity.GetGlobalPosition();
+
+        float minimumLength = float.MaxValue;
+        Vector2 closestPoint = position;
+
+        foreach (IShape shape in collider.Shapes)
+        {
+            Rectangle box = shape.GetBoundingBox().AddPosition(shapePosition);
+            Vector2 closerPoint = box.ClosestPoint(position);
+
+            float delta = (position - closerPoint).Length();
+            if (delta < minimumLength)
+            {
+                minimumLength = delta;
+                closestPoint = closerPoint;
+            }
+
+            if (delta == 0)
+            {
+                // we're inside, that's it!
+                break;
+            }
+        }
+
+        return closestPoint;
+    }
 }
