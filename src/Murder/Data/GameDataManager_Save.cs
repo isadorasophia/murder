@@ -623,13 +623,20 @@ namespace Murder.Data
 
         public virtual void DeleteAllSaves()
         {
-            UnloadActiveSave();
+            try
+            {
+                File.Delete(Path.Join(SaveBasePath, SaveDataTracker.Name));
+                FileManager.DeleteContent(SaveBasePath, deleteRootFiles: false);
 
-            _runtimeSaveSlots.Clear();
-            _tracker = null;
+                UnloadActiveSave();
 
-            File.Delete(Path.Join(SaveBasePath, SaveDataTracker.Name));
-            FileManager.DeleteContent(SaveBasePath, deleteRootFiles: false);
+                _runtimeSaveSlots.Clear();
+                _tracker = null;
+            }
+            catch
+            {
+                GameLogger.Error("Unable to delete all saves! Is file in use?");
+            }
         }
 
         public virtual async Task<bool> DeleteSaveAt(int slot)
