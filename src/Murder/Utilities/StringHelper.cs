@@ -267,5 +267,10 @@ namespace Murder.Utilities
                 return toFormat;
             }
         }
+
+        public static string GetPlusMinusDecimal(float value)
+        {
+            return $"{(value < 0 ? "" : "+")}{value:0.##}";
+        }
     }
 }
