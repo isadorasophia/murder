@@ -93,8 +93,8 @@ public static partial class RenderServices
             }
             else
             {
-                currentColor = style.Shadow;
-                currentShadow = null;
+                currentColor = style.DisabledColor ?? style.Shadow;
+                currentShadow = style.DisabledShadowColor;
             }
 
             Point textSize = DrawText(batch, style.Font, label ?? string.Empty, labelPosition, new DrawInfo(sort)

@@ -19,6 +19,12 @@ public readonly struct DrawMenuStyle
     [PaletteColor]
     public Color Shadow { get; init; } = Color.Black;
 
+    [PaletteColor]
+    public Color? DisabledColor { get; init; } = null;
+
+    [PaletteColor]
+    public Color? DisabledShadowColor { get; init; } = null;
+
     public EaseKind Ease { get; init; }
     public float SelectorMoveTime { get; init; }
 
