@@ -711,7 +711,7 @@ namespace Murder.Utilities
             if (retention >= 1f) return float.PositiveInfinity;   // never moves
             return duration * MathF.Log(2) / -MathF.Log(retention);
         }
-        
+
         /// <summary>
         /// Converts a per-step lerp amount (as in Lerp(current, target, t) called every step)
         /// into an equivalent half-life.
@@ -1097,6 +1097,21 @@ namespace Murder.Utilities
                 return fadeOut * fadeIn;
             }
         }
+
+        /// <summary>Always in [0, length] for positive length.</summary>
+        public static float Mod(float x, float length) => x - MathF.Floor(x / length) * length;
+
+        public static int Mod(int x, int length)
+        {
+            int r = x % length;
+            return r < 0 ? r + length : r;
+        }
+
+        /// <summary>
+        /// Rising sawtooth, from 0 to 1 over <paramref name="period"/>.
+        /// Use a negative <paramref name="time"/>for a falling sawtooth (same [0, 1) range).
+        /// </summary>
+        public static float Saw(float time, float period) => Mod(time, period) / period;
 
         #endregion
     }
