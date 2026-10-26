@@ -155,6 +155,57 @@ public static partial class RenderServices
         Batch2D batch,
         AtlasCoordinates texture,
         Rectangle area,
+        Point offset,
+        float sort)
+    {
+        int texWidth = texture.Size.X;
+        int texHeight = texture.Size.Y;
+        if (texWidth <= 0 || texHeight <= 0)
+            return;
+
+        int areaLeft = Calculator.RoundToInt(area.X);
+        int areaTop = Calculator.RoundToInt(area.Y);
+        int areaRight = Calculator.RoundToInt(area.Right);
+        int areaBottom = Calculator.RoundToInt(area.Bottom);
+
+        // Wrap the offset into [0, texSize] so we start at most one tile before the area.
+        int shiftX = Calculator.Mod(offset.X, texWidth);
+        int shiftY = Calculator.Mod(offset.Y, texHeight);
+        int startX = areaLeft + shiftX - (shiftX > 0 ? texWidth : 0);
+        int startY = areaTop + shiftY - (shiftY > 0 ? texHeight : 0);
+
+        for (int x = startX; x < areaRight; x += texWidth)
+        {
+            int cutLeft = Math.Max(0, areaLeft - x);
+            int cutRight = Math.Max(0, x + texWidth - areaRight);
+            int width = texWidth - cutLeft - cutRight;
+            if (width <= 0)
+            {
+                continue;
+            }
+
+            for (int y = startY; y < areaBottom; y += texHeight)
+            {
+                int cutTop = Math.Max(0, areaTop - y);
+                int cutBottom = Math.Max(0, y + texHeight - areaBottom);
+                int height = texHeight - cutTop - cutBottom;
+                if (height <= 0)
+                    continue;
+
+                texture.Draw(
+                    batch,
+                    new Vector2(x + cutLeft, y + cutTop),
+                    new Rectangle(cutLeft, cutTop, width, height),
+                    Color.White, Vector2.One, 0, Vector2.Zero, ImageFlip.None,
+                    RenderServices.BLEND_NORMAL, MurderBlendState.AlphaBlend, sort);
+            }
+        }
+    }
+    public static void DrawRepeating
+        (
+        Batch2D batch,
+        AtlasCoordinates texture,
+        Rectangle area,
         float sort)
     {
         int texWidth = texture.Size.X;
@@ -1516,7 +1567,7 @@ public static partial class RenderServices
         }
         return false;
     }
-    
+
     public static string? CheckForEvents(
         RenderedSpriteCache? previous,
         Guid currentAnimationGuid,
