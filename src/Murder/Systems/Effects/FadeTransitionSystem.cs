@@ -49,7 +49,13 @@ namespace Murder.Systems
                     continue;
                 }
 
-                if (fade.Duration + fade.StartTime < Game.Now)
+                float percentage = Calculator.Clamp01((Game.Now - fade.StartTime) / fade.Duration);
+                if (Game.Instance.IsSkippingDeltaTimeOnUpdate)
+                {
+                    percentage = 1;
+                }
+
+                if (percentage >= 1)
                 {
                     if (fade.DestroyEntityOnEnd)
                     {
@@ -61,9 +67,7 @@ namespace Murder.Systems
                     }
                 }
 
-                float percentage = Calculator.Clamp01((Game.Now - fade.StartTime) / fade.Duration);
                 float alpha = Calculator.Lerp(fade.StartAlpha, fade.TargetAlpha, Ease.CubeOut(percentage));
-
                 e.SetAlpha(alpha);
             }
         }
