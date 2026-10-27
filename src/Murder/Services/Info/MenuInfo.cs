@@ -183,6 +183,16 @@ namespace Murder.Core.Input
             Selection = startSelectedAt;
         }
 
+        public MenuOption GetSelectedOption()
+        {
+            if (Selection < 0 || Selection >= Length)
+            {
+                return new();
+            }
+
+            return Options[Selection];
+        }
+
         public void Clamp()
         {
             if (Selection < 0 || Selection >= Length || !Options[Selection].CanHover)
