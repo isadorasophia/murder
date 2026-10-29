@@ -1,6 +1,7 @@
 ﻿using Bang;
 using Bang.Entities;
 using Bang.Interactions;
+using Murder.Components;
 using Murder.Core.Sounds;
 using Murder.Services;
 using Murder.Utilities.Attributes;
@@ -64,6 +65,14 @@ public readonly struct PlayEventInteraction : IInteraction
         }
         else
         {
+            if (world.TryGetUniqueBlockPlayEvents() is BlockPlayEventsComponent blockPlayEvents)
+            {
+                if (blockPlayEvents.Layer is null || blockPlayEvents.Layer == Layer)
+                {
+                    return;
+                }
+            }
+
             if (entityId == -1)
             {
                 _ = SoundServices.Play(Event.Value, Layer, properties);
