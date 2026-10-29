@@ -52,7 +52,7 @@ public static class SoundServices
         SoundProperties properties,
         ParameterValue? parameter)
     {
-        if (id.IsGuidEmpty || Game.Instance.IsSkippingDeltaTimeOnUpdate)
+        if (id.IsGuidEmpty)
         {
             return default;
         }
@@ -105,9 +105,14 @@ public static class SoundServices
         ParameterValue? parameter = null,
         FireAndPersistInfo? fireAndPersist = null)
     {
-        if (id.IsGuidEmpty || Game.Instance.IsSkippingDeltaTimeOnUpdate)
+        if (id.IsGuidEmpty)
         {
             // Do not play sounds if we are currently skipping... I think?
+            return;
+        }
+
+        if (Game.Instance.IsSkippingDeltaTimeOnUpdate && !properties.HasFlag(SoundProperties.Persist))
+        {
             return;
         }
 
