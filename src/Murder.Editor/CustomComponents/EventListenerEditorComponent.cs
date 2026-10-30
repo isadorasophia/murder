@@ -40,9 +40,14 @@ namespace Murder.Editor.CustomComponents
         {
             bool fileChanged = false;
 
-            ImmutableArray<SpriteEventInfo> events = eventNames is null || eventNames.Count == 0 ?
-                listener.Events :
-                eventNames.Select(e => new SpriteEventInfo(e)).ToImmutableArray();
+            var builder = ImmutableArray.CreateBuilder<SpriteEventInfo>();
+            if (eventNames is not null)
+            {
+                foreach (string name in eventNames)
+                {
+                    builder.Add(new SpriteEventInfo(name));
+                }
+            }
 
             // ======
             // Initialize according to the sprite events.
@@ -52,7 +57,7 @@ namespace Murder.Editor.CustomComponents
                 Dictionary<string, int> trackedEvents = [];
                 for (int i = 0; i < eventNames.Count; ++i)
                 {
-                    SpriteEventInfo @event = events[i];
+                    SpriteEventInfo @event = builder[i];
 
                     trackedEvents[@event.Id] = i;
                 }
@@ -61,13 +66,17 @@ namespace Murder.Editor.CustomComponents
                 {
                     if (trackedEvents.TryGetValue(info.Id, out int index))
                     {
-                        events = events.SetItem(index, info);
+                        builder[index] = info;
                         continue;
                     }
 
-                    events = events.Add(info);
+                    builder.Add(info);
                 }
+
+                builder.Sort((a, b) => a.Id.CompareTo(b.Id));
             }
+
+            ImmutableArray<SpriteEventInfo> events = builder.ToImmutable();
 
             // ======
             // Add new event.
