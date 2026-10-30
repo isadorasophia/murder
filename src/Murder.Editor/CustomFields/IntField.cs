@@ -38,7 +38,14 @@ namespace Murder.Editor.CustomFields
                 return DrawFontSelector(member, ref modified, ref number);
             }
 
-            modified = ImGui.InputInt("", ref number, 1);
+            if (member.IsReadOnly)
+            {
+                ImGui.Text($"{number}");
+            }
+            else
+            {
+                modified = ImGui.InputInt("", ref number, 1);
+            }
 
             return (modified, number);
         }
