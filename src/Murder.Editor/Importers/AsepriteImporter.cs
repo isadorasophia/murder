@@ -228,10 +228,11 @@ namespace Murder.Editor.Importers
                     // instead of creating a separate sprite file, merge with an existing one.
                     if (Game.Data.TryGetAsset<SpriteAsset>(targetAsset.Guid) is SpriteAsset previousSprite)
                     {
-                        if (!skipLoadingWarnings)
-                        {
-                            GameLogger.Log($"Found a duplicated slice at {asset.Name}, attempting to merge.");
-                        }
+                        // We should only log on failure
+                        //if (!skipLoadingWarnings)
+                        //{
+                        //    GameLogger.Log($"Found a duplicated slice at {asset.Name}, attempting to merge.");
+                        //}
 
                         // allow overwriting on merge when this came from the preload images, since this was already loaded
                         // before the atlas building took place.
