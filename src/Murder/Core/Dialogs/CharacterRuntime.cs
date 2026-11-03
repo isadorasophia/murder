@@ -505,7 +505,7 @@ namespace Murder.Core.Dialogs
             if (world is not null)
             {
                 // make a small delay so it catches up
-                world.FireAfter(.1f, () => { SoundServices.PlayFromListenerPosition(sound.Value); });
+                world.FireAfter(.1f, () => { SoundServices.PlayFromListenerPosition(sound.Value); }, CoroutineFlags.DoNotPause);
             }
             else
             {
