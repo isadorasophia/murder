@@ -3,6 +3,7 @@ using Bang.Components;
 using Bang.Entities;
 using Bang.Interactions;
 using Murder.Attributes;
+using Murder.Components;
 using Murder.Diagnostics;
 using Murder.Services;
 using Murder.Utilities.Attributes;
@@ -27,8 +28,10 @@ namespace Murder.Interactions
         [Target]
         public readonly string? Target = null;
 
+        public readonly RemoveStyle? RemoveWith = null;
+
         [Tooltip("Useful to filter out reactive systems")]
-        public readonly ImmutableArray<IComponent> AddComponentsBeforeRemoving = ImmutableArray<IComponent>.Empty;
+        public readonly ImmutableArray<IComponent>? AddComponentsBeforeRemoving = null;
         
         public RemoveEntityOnInteraction() { }
 
@@ -89,12 +92,25 @@ namespace Murder.Interactions
 
             if (target != null)
             {
-                foreach (var component in AddComponentsBeforeRemoving)
+                if (AddComponentsBeforeRemoving is not null)
                 {
-                    target.AddComponent(component, component.GetType());
+                    foreach (IComponent component in AddComponentsBeforeRemoving)
+                    {
+                        target.AddComponent(component, component.GetType());
+                    }
                 }
+                
+                RemoveStyle style = RemoveWith ?? RemoveStyle.Destroy;
+                switch (style)
+                {
+                    case RemoveStyle.Deactivate:
+                        target.Deactivate();
+                        break;
 
-                target.Destroy();
+                    default:
+                        target.Destroy();
+                        break;
+                }
             }
         }
     }

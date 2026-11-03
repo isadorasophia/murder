@@ -1,12 +1,9 @@
 ﻿using Bang;
 using Bang.Contexts;
 using Bang.Entities;
-using Bang.Interactions;
 using Bang.Systems;
 using Murder.Assets;
 using Murder.Components;
-using Murder.Interactions;
-using Murder.Messages;
 using Murder.Save;
 using Murder.Services;
 using Murder.Utilities;
@@ -18,6 +15,8 @@ namespace Murder.Systems.Utilities
     [Watch(typeof(RuleWatcherComponent))]
     internal class DestroyOnBlackboardConditionSystem : IReactiveSystem
     {
+        private int _contextDestroyOnBlackboardCondition = -1;
+
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
             CheckRules(world);
@@ -28,11 +27,16 @@ namespace Murder.Systems.Utilities
             SaveData save = MurderSaveServices.CreateOrGetSave();
             BlackboardTracker tracker = save.BlackboardTracker;
 
+            if (_contextDestroyOnBlackboardCondition == -1)
+            {
+                _contextDestroyOnBlackboardCondition = world.GetOrCreateContextIdFrom(ContextAccessorFilter.AllOf, typeof(DestroyOnBlackboardConditionComponent));
+            }
+
             // Fetch all entities which might be affected by a rule change.
-            ImmutableArray<Entity> interactives = world.GetEntitiesWith(typeof(DestroyOnBlackboardConditionComponent));
+            ImmutableArray<Entity> interactives = world.GetEntitiesFrom(_contextDestroyOnBlackboardCondition);
             foreach (Entity e in interactives)
             {
-                if (e.IsDestroyed)
+                if (!e.IsActive)
                 {
                     continue;
                 }
@@ -41,10 +45,19 @@ namespace Murder.Systems.Utilities
                 DestroyOnBlackboardConditionComponent ruleComponent = e.GetDestroyOnBlackboardCondition();
 
                 bool matched = BlackboardHelpers.Match(world, tracker, ruleComponent.Rules);
-
                 if (matched)
                 {
-                    e.Destroy();
+                    RemoveStyle style = ruleComponent.RemoveWith ?? RemoveStyle.Destroy;
+                    switch (style)
+                    {
+                        case RemoveStyle.Deactivate:
+                            e.Deactivate();
+                            break;
+
+                        default:
+                            e.Destroy();
+                            break;
+                    }
                 }
             }
         }

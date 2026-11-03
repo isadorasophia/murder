@@ -14,13 +14,16 @@ namespace Murder.Components
         [ShowInEditor, Tooltip("List of rules for destroying this object.")]
         public readonly ImmutableArray<CriterionNode> Rules = ImmutableArray<CriterionNode>.Empty;
 
+        public readonly RemoveStyle? RemoveWith = null;
+
         public DestroyOnBlackboardConditionComponent()
         {
         }
 
-        public DestroyOnBlackboardConditionComponent(CriterionNode node)
+        public DestroyOnBlackboardConditionComponent(CriterionNode node, RemoveStyle removeWith)
         {
             Rules = [node];
+            RemoveWith = removeWith;
         }
     }
 }
