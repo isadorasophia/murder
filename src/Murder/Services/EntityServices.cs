@@ -610,6 +610,16 @@ public static class EntityServices
         return null;
     }
 
+    public static Entity? FetchTarget(this Entity e, World world)
+    {
+        if (e.TryGetIdTarget()?.Target is int targetId)
+        {
+            return world.TryGetEntity(targetId);
+        }
+
+        return null;
+    }
+
     /// <summary>
     /// Return target of entity with <paramref name="name"/>.
     /// This will first check for a target id. If none, it will check for a target
