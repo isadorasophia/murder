@@ -12,7 +12,6 @@ using Murder.Utilities;
 using System.Collections.Immutable;
 using System.IO;
 using System.Numerics;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Murder.Editor
 {
