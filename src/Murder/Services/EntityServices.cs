@@ -760,7 +760,7 @@ public static class EntityServices
                         ImageFlip.Horizontal : ImageFlip.None,
                 SupportedDirections = properties.HasFlag(AnimationOverloadProperties.LockTo4Directions) ?
                         4 : null,
-                SupportedOrientation = properties.HasFlag(AnimationOverloadProperties.LockHorizontal) ? Orientation.Horizontal : 
+                SupportedOrientation = properties.HasFlag(AnimationOverloadProperties.LockHorizontal) ? Orientation.Horizontal :
                     properties.HasFlag(AnimationOverloadProperties.LockVertical) ? Orientation.Vertical : null
             };
         e.SetAnimationOverload(overload);
@@ -784,7 +784,7 @@ public static class EntityServices
 
     public static bool IsAnimatingStartingWith(this Entity e, string animation)
     {
-        if (e.TryGetSprite()?.CurrentAnimation is string currentAnimation && 
+        if (e.TryGetSprite()?.CurrentAnimation is string currentAnimation &&
             currentAnimation.StartsWith(animation, StringComparison.InvariantCultureIgnoreCase))
         {
             return true;
@@ -825,6 +825,34 @@ public static class EntityServices
                 DefaultFlip = flip,
                 FacingInfo = facingInfos.ToImmutable()
             };
+        }
+    }
+
+    public static Entity? ChooseTargetEntity(World world, Entity interactor, Entity? interacted, TargetEntity target)
+    {
+        switch (target)
+        {
+            case TargetEntity.Self:
+                return interacted;
+            case TargetEntity.Parent:
+                return interacted?.TryFetchParent() ?? interacted;
+            case TargetEntity.Interactor:
+                return interactor;
+            case TargetEntity.Target:
+                return interacted?.FetchTarget(world);
+            case TargetEntity.CreateNewEntity:
+                Entity e = world.AddEntity();
+                return e;
+            case TargetEntity.Child:
+                return world.TryGetEntity(interacted?.Children.FirstOrDefault() ?? -1);
+            case TargetEntity.Player:
+                // return world.TryGetUniqueEntity<PlayerComponent>();
+                GameLogger.Warning("PlayerComponent not implemented by Murder");
+                return null;
+
+            case TargetEntity.Other:
+            default:
+                return null;
         }
     }
 }
