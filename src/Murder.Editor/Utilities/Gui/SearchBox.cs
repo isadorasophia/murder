@@ -437,6 +437,7 @@ namespace Murder.Editor.ImGuiExtended
         }
 
         private static float _tweenStart = 0;
+        private static bool _selectSearchField = false;
         public static bool Search<T>(
             string id,
             SearchBoxSettings<T> settings,
@@ -452,6 +453,8 @@ namespace Murder.Editor.ImGuiExtended
             bool clicked = false;
             bool isUnfolded = flags.HasFlag(SearchBoxFlags.Unfolded);
             ImGui.PushStyleVar(ImGuiStyleVar.ChildRounding, 12);
+
+            bool hasSoundPreview = typeof(T) == typeof(SoundEventId);
 
             // No selector for unfolded search
             if (!isUnfolded)
@@ -663,9 +666,10 @@ namespace Murder.Editor.ImGuiExtended
                 ImGui.SetWindowPos(pos);
 
                 ImGui.BeginChild("##Searchbox_containter", sizeConfiguration.SearchBoxContainerSize, ImGuiChildFlags.Border);
-                if (ImGui.IsWindowAppearing())
+                if (ImGui.IsWindowAppearing() || _selectSearchField)
                 {
                     ImGui.SetKeyboardFocusHere();
+                    _selectSearchField = false;
                 }
                 ImGui.SetNextItemWidth(-1);
                 bool enterPressed = ImGui.InputText("##ComboWithFilter_inputText", ref _tempSearchText, 256, ImGuiInputTextFlags.EnterReturnsTrue);
@@ -730,6 +734,22 @@ namespace Murder.Editor.ImGuiExtended
                     {
                         bool item_selected = count++ == _searchBoxSelection;
                         ImGui.PushID("comboItem" + name);
+
+                        if (hasSoundPreview)
+                        {
+                            ImGui.PushStyleColor(ImGuiCol.Button, 0);
+                            if (ImGui.Button("", new Vector2(22, 18)))
+                            {
+                                _selectSearchField = true;
+                                if (asset is SoundEventId soundEvent)
+                                {
+                                    EditorSoundServices.Play(soundEvent);
+                                }
+                            }
+                            ImGui.PopStyleColor(2);
+                            ImGui.SameLine(22);
+                        }
+
                         if (ImGui.Selectable(name, item_selected) || (enterPressed && item_selected))
                         {
                             EditorCosmetics.Play("submenu-back");

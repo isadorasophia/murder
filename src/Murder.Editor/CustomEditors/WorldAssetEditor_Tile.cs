@@ -164,8 +164,8 @@ namespace Murder.Editor.CustomEditors
             {
                 Vector2 tilesArea = ImGui.GetContentRegionAvail();
                 ImGui.BeginChild("tileset_list", new Vector2(tilesArea.X, 140), ImGuiChildFlags.Border, ImGuiWindowFlags.HorizontalScrollbar);
-                ImGui.Dummy(new Vector2(0, 2));
-                ImGui.SameLine();
+                //ImGui.Dummy(new Vector2(0, 2));
+                //ImGui.SameLine();
 
                 for (int i = 0; i < tilesetComponent.Tilesets.Length; ++i)
                 {
@@ -182,8 +182,6 @@ namespace Murder.Editor.CustomEditors
                         int buttonSize = 46;
 
                         ImGui.BeginGroup();
-
-                        ImGui.Dummy(new Vector2(1, 0));
 
                         ImGui.Dummy(new Vector2(18, 0));
                         ImGui.SameLine();
