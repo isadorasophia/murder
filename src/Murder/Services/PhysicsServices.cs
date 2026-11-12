@@ -119,15 +119,15 @@ public static class PhysicsServices
     /// </summary>
     public static IntRectangle GetColliderBoundingBox(this Entity target)
     {
-        if (!target.HasCollider() || !target.HasPosition())
+        Point position = target.GetGlobalPosition().Point();
+
+        if (!target.HasCollider())
         {
-            return IntRectangle.Empty;
+            return new(position, Point.Zero);
         }
 
         ColliderComponent collider = target.GetCollider();
-        Vector2 position = target.GetGlobalPosition();
-
-        return collider.GetBoundingBox(position.Point(), target.FetchScale());
+        return collider.GetBoundingBox(position, target.FetchScale());
     }
 
     public readonly struct RaycastHit
