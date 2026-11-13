@@ -1,4 +1,5 @@
-﻿using Bang.Components;
+﻿using Bang;
+using Bang.Components;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using Murder.Assets;
@@ -1308,6 +1309,19 @@ namespace Murder.Editor.CustomEditors
         }
 
         protected virtual void DrawRevisionButtonsForInstance(Guid instanceGuid) { }
+
+        protected void OnInstanceRevisionNotesModified(RevisionNotesTrackerAsset tracker, Guid instanceGuid, RevisionNotes notes)
+        {
+            GameLogger.Verify(_asset is not null);
+
+            WorldRevisionNotes ownerNotes = tracker.GetOrCreateRevisionNotesForOwner(_asset.Guid);
+            ownerNotes.ModifyNotes(instanceGuid, notes);
+
+            tracker.FileChanged = true;
+
+            _asset.TrackAssetOnSave(tracker.Guid);
+            _asset.FileChanged = true;
+        }
 
         private class StageAssetInfo
         {

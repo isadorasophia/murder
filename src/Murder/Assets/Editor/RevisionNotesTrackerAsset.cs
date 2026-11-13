@@ -222,8 +222,9 @@ public class RevisionNotesTrackerAsset : GameAsset
             if (Game.Data.TryGetAsset<WorldAsset>(worldGuid) is WorldAsset worldAsset)
             {
                 WorldNotes[i].ClearMissingReferences(worldAsset);
-                removeWorldNotes = WorldNotes[i].Empty;
             }
+
+            removeWorldNotes = WorldNotes[i].Empty;
 
             if (removeWorldNotes)
             {

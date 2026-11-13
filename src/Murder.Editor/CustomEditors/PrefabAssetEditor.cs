@@ -5,11 +5,13 @@ using Murder.Assets;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Editor;
+using Murder.Editor.Assets;
 using Murder.Editor.Attributes;
 using Murder.Editor.CustomComponents;
 using Murder.Editor.CustomDiagnostics;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
+using Murder.Editor.Services;
 using Murder.Editor.Stages;
 using Murder.Editor.Utilities;
 using Murder.Prefabs;
@@ -160,6 +162,25 @@ namespace Murder.Editor.CustomEditors
             }
 
             return isValid;
+        }
+
+        protected override void DrawRevisionButtonsForInstance(Guid instanceGuid)
+        {
+            GameLogger.Verify(_asset is not null);
+
+            if (EditorServices.TryGetRevisionFlagsTracker() is not RevisionNotesTrackerAsset notesTracker)
+            {
+                return;
+            }
+
+            // workaround for prefabs, support as long as it's empty.
+            instanceGuid = Guid.Empty;
+
+            RevisionNotes revisionNotes = notesTracker.TryGetRevisionNotesForInstance(_asset.Guid, instanceGuid) ?? new(instanceGuid);
+            if (ImGuiHelpers.DrawRevisionButtonsForAsset(ref revisionNotes))
+            {
+                OnInstanceRevisionNotesModified(notesTracker, instanceGuid, revisionNotes);
+            }
         }
     }
 }
