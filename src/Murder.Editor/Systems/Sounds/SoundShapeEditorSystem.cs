@@ -26,6 +26,7 @@ public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSy
     private bool _isEditMode = false;
     private bool _isPlaying = false;
 
+    private bool _cursorPressed = false;
     public SoundShapeEditorSystem()
     {
     }
@@ -56,6 +57,11 @@ public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSy
         if (!_isEditMode)
         {
             OnToggledMode(true);
+        }
+
+        if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+        {
+            _cursorPressed = true;
         }
 
         if (Game.Input.PressedAndConsume(MurderInputButtons.Submit))
@@ -169,7 +175,7 @@ public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSy
 
                         RenderServices.DrawLine(render.DebugBatch, cursorPosition, position + soundShape.Points.LastOrDefault(), Color.Gray, 0.5f);
 
-                        if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+                        if (_cursorPressed)
                         {
                             e.SetSoundShape(soundShape with { Points = soundShape.Points.Add(cursorPosition - position) });
                             e.SendMessage(new AssetUpdatedMessage(typeof(SoundShapeComponent)));
@@ -195,7 +201,7 @@ public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSy
                     {
                         RenderServices.DrawRectangleOutline(render.DebugBatch, IntRectangle.CenterRectangle(closestPoint, 10, 10), Color.Red);
 
-                        if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+                        if (_cursorPressed)
                         {
                             e.SetSoundShape(soundShape with { Points = soundShape.Points.RemoveAt(Math.Min(soundShape.Points.Length - 1, soundPosition.ClosestIndex)) });
                             e.SendMessage(new AssetUpdatedMessage(typeof(SoundShapeComponent)));
@@ -207,7 +213,7 @@ public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSy
                         RenderServices.DrawRectangleOutline(render.DebugBatch, IntRectangle.CenterRectangle(snapPoint, 8, 8), Color.Yellow);
 
                         // Start dragging if the left click is pressed
-                        if (_dragging is null && Game.Input.Pressed(MurderInputButtons.LeftClick))
+                        if (_dragging is null && _cursorPressed)
                         {
                             _dragging = (id: e.EntityId, index: soundPosition.ClosestIndex);
                         }
@@ -231,6 +237,8 @@ public class SoundShapeEditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSy
                 }
             }
         }
+
+        _cursorPressed = false;
     }
 
     public void DrawGui(RenderContext render, Context context)

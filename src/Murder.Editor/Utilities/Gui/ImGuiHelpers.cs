@@ -1514,7 +1514,7 @@ public static class ImGuiHelpers
             }
 
             string text = revision.Notes;
-            if (ImGui.InputTextMultiline("##notes", ref text, 1024, new Vector2(-1, 80)))
+            if (ImGui.InputTextMultiline("##notes", ref text, 1024, new Vector2(240, 80)))
             {
                 revision = revision with { Notes = text };
                 modified = true;
