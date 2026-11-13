@@ -4,8 +4,11 @@ using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Editor.Components;
 using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Services;
 using Murder.Editor.Stages;
+using Murder.Editor.Utilities.Serialization;
 using Murder.Prefabs;
+using Road.Editor;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
@@ -63,6 +66,26 @@ namespace Murder.Editor.CustomEditors
                     DrawEntityList(group: null, Instances);
 
                     ImGui.TreePop();
+                }
+
+                if (TreeEntityGroupNode("Flagged", Game.Profile.Theme.Yellow, icon: '\uf071', flags: ImGuiTreeNodeFlags.DefaultOpen))
+                {
+                    var revisionTracker = EditorServices.TryGetRevisionFlagsTracker();
+                    if (revisionTracker != null)
+                    {
+                        for (int i = 0; i < Instances.Length; i++)
+                        {
+                            Guid entityGuid = Instances[i];
+
+                            RevisionNotes reference = revisionTracker.FetchRevisionFor(entityGuid);
+                            if ((reference.Flags != Road.Editor.EditorRevisionFlags.None))
+                            {
+                                ImGuiHelpers.RevisionFlagsText(reference);
+                                ImGui.SameLine();
+                                DrawEntity(null, i, entityGuid);
+                            }
+                        }
+                    }
                 }
             }
             ImGui.EndChild();
@@ -335,66 +358,74 @@ namespace Murder.Editor.CustomEditors
                     continue;
                 }
 
-                // Check if we should show this entity.
-                EntityInstance? instance = TryFindInstance(entity);
-                string? name = instance?.Name;
-
-                // Filter entities if "Search..." has been used.
-                if (!string.IsNullOrEmpty(_searchInstanceText) && instance is not null && name is not null)
+                if (DrawEntity(group, i, entity))
                 {
-                    bool matchName = name.Contains(_searchInstanceText, StringComparison.OrdinalIgnoreCase);
-                    bool matchComponent = instance.Components.Any(
-                        c => c.GetType().Name.Contains(_searchInstanceText, StringComparison.OrdinalIgnoreCase));
-
-                    if (!matchName && !matchComponent)
-                    {
-                        continue;
-                    }
+                    totalEntities++;
                 }
-
-                if (ImGuiHelpers.DeleteButton($"Delete_{entity}"))
-                {
-                    DeleteInstance(parent: null, entity);
-
-                    continue;
-                }
-
-                ImGui.SameLine();
-
-                ImGui.PushID($"Entity_bar_{entity}");
-
-                bool isSelected = Stages[_asset.Guid].IsSelected(entity);
-
-                if (ImGui.Selectable(name ?? "<?>", isSelected))
-                {
-                    _selecting = Stages[_asset.Guid].SelectEntity(entity, select: true, clear: true);
-                    if (_selecting is -1)
-                    {
-                        // Unable to find the entity. This probably means that it has been deactivated.
-                        _selectedAsset = entity;
-                    }
-                    else
-                    {
-                        _selectedAsset = null;
-                    }
-                }
-
-                DragDrop<Guid>.DragDropSource("drag_instance", name ?? "instance", entity);
-
-                ImGui.PopID();
-
-                if (DragDrop<Guid>.DragDropTarget($"drag_instance", out Guid draggedId))
-                {
-                    _world?.MoveToGroup(group, draggedId, i);
-                }
-
-                totalEntities++;
             }
 
             if (group is not null)
             {
                 _entitiesPerGroup[group] = totalEntities;
             }
+        }
+
+        private bool DrawEntity(string? group, int i, Guid entity)
+        {
+            // Check if we should show this entity.
+            EntityInstance? instance = TryFindInstance(entity);
+            string? name = instance?.Name;
+
+            // Filter entities if "Search..." has been used.
+            if (!string.IsNullOrEmpty(_searchInstanceText) && instance is not null && name is not null)
+            {
+                bool matchName = name.Contains(_searchInstanceText, StringComparison.OrdinalIgnoreCase);
+                bool matchComponent = instance.Components.Any(
+                    c => c.GetType().Name.Contains(_searchInstanceText, StringComparison.OrdinalIgnoreCase));
+
+                if (!matchName && !matchComponent)
+                {
+                    return false;
+                }
+            }
+
+            if (ImGuiHelpers.DeleteButton($"Delete_{entity}"))
+            {
+                DeleteInstance(parent: null, entity);
+
+                return false;
+            }
+
+            ImGui.SameLine();
+
+            ImGui.PushID($"Entity_bar_{entity}");
+
+            bool isSelected = Stages[_asset.Guid].IsSelected(entity);
+
+            if (ImGui.Selectable(name ?? "<?>", isSelected))
+            {
+                _selecting = Stages[_asset.Guid].SelectEntity(entity, select: true, clear: true);
+                if (_selecting is -1)
+                {
+                    // Unable to find the entity. This probably means that it has been deactivated.
+                    _selectedAsset = entity;
+                }
+                else
+                {
+                    _selectedAsset = null;
+                }
+            }
+
+            DragDrop<Guid>.DragDropSource("drag_instance", name ?? "instance", entity);
+
+            ImGui.PopID();
+
+            if (DragDrop<Guid>.DragDropTarget($"drag_instance", out Guid draggedId))
+            {
+                _world?.MoveToGroup(group, draggedId, i);
+            }
+
+            return true;
         }
 
         private string _groupName = "";

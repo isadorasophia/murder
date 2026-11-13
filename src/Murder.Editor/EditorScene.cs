@@ -9,9 +9,11 @@ using Murder.Diagnostics;
 using Murder.Editor.CustomEditors;
 using Murder.Editor.Data;
 using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using Murder.Serialization;
 using Murder.Utilities;
+using Road.Editor;
 using System.Collections.Immutable;
 using System.Numerics;
 
@@ -509,6 +511,34 @@ namespace Murder.Editor
                             DrawAssetInList(asset, Architect.Profile.Theme.Yellow, asset.Name);
                         }
                         ImGui.TreePop();
+                    }
+                    if (EditorServices.TryGetRevisionFlagsTracker() is RevisionNotesTrackerAsset tracker && tracker.HasAny())
+                    {
+                        ImGui.TextColored(Architect.Profile.Theme.Red, "\uf024");
+                        ImGui.SameLine();
+
+                        if (ImGui.TreeNode("Flagged"))
+                        {
+                            foreach (var assetNote in tracker.Notes)
+                            {
+                                if (Architect.EditorData.TryGetAsset(assetNote.Entity) is GameAsset asset)
+                                {
+                                    ImGuiHelpers.RevisionFlagsText(assetNote);
+                                    ImGui.SameLine();
+                                    DrawAssetInList(asset, Architect.Profile.Theme.White, asset.Name);
+                                }
+                                else if (assetNote.IsAsset)
+                                {
+                                    ImGui.TextColored(Architect.Profile.Theme.Yellow, $"Missing Asset: {assetNote.Entity}");
+                                    ImGui.SameLine();
+                                    if (ImGuiHelpers.DeleteButton(assetNote.Entity.ToString() + "_delete"))
+                                    {
+                                        tracker.RemoveEntity(assetNote.Entity);
+                                    }
+                                }
+                            }
+                            ImGui.TreePop();
+                        }
                     }
                     ImGui.EndGroup();
 

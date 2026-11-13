@@ -339,6 +339,8 @@ namespace Murder.Editor.CustomEditors
                     ImGui.PopStyleVar();
                 }
 
+                ImGuiHelpers.RevisionFlagsButton(entityInstance.Guid, _asset is not WorldAsset);
+
                 ImGui.SameLine();
                 ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 100);
                 ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);

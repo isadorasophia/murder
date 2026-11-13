@@ -14,6 +14,7 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
 using Murder.Services;
 using Murder.Utilities;
+using Road.Editor;
 using System.Numerics;
 
 namespace Murder.Editor.Stages
@@ -73,6 +74,8 @@ namespace Murder.Editor.Stages
             EditorHook.ShowDebug = true;
             EditorHook.GetEntityIdForGuid = GetEntityIdForGuid;
             EditorHook.GetNameForEntityId = GetNameForEntityId;
+            EditorHook.GetFlagsForEntity = GetFlagsForEntity;
+
             EditorHook.EnableSelectChildren = type.HasFlag(StageType.EnableSelectChildren);
 
             if (guid is not null &&
@@ -83,6 +86,16 @@ namespace Murder.Editor.Stages
             }
 
             _world.AddEntity(editorComponent);
+        }
+
+        private EditorRevisionFlags GetFlagsForEntity(int entityId, RevisionNotesTrackerAsset trackerAsset)
+        {
+            if (_worldToInstance.TryGetValue(entityId, out Guid guid))
+            {
+                return trackerAsset.FetchFlagsForEntity(guid);
+            }
+
+            return EditorRevisionFlags.None;
         }
 
         private void InitializeDrawAndWorld()

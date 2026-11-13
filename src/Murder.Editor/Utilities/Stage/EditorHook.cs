@@ -11,6 +11,7 @@ using Murder.Editor.Assets;
 using Murder.Editor.Core;
 using Murder.Prefabs;
 using Murder.Utilities.Attributes;
+using Road.Editor;
 using System.Collections.Immutable;
 using System.Numerics;
 
@@ -57,6 +58,7 @@ namespace Murder.Editor.Utilities
 
         public Func<Guid, int>? GetEntityIdForGuid;
         public Func<int, string?>? GetNameForEntityId;
+        public Func<int, RevisionNotesTrackerAsset, EditorRevisionFlags>? GetFlagsForEntity;
 
         public bool CanSwitchModes = true;
 

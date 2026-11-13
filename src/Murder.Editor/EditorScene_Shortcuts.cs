@@ -94,14 +94,19 @@ public partial class EditorScene
                 new ActionShortcut("Refresh Window", Keys.F4, RefreshEditorWindow),
                 new ActionShortcut("Run Diagnostics", new Chord(Keys.D, InputHelpers.OSActionModifier, Keys.LeftShift), RunDiagnostics),
                 new ActionShortcut("Run All Diagnostics", new Chord(Keys.S, InputHelpers.OSActionModifier, Keys.LeftShift), RunAllDiagnostics),
-                new ActionShortcut("Command Palette", new Chord(Keys.A, InputHelpers.OSActionModifier, Keys.LeftShift), ToggleCommandPalette)
+                new ActionShortcut("Command Palette", new Chord(Keys.A, InputHelpers.OSActionModifier, Keys.LeftShift), ToggleCommandPalette),
+                new ActionShortcut("Cear all revision flags", Chord.None, ClearRevisionTracker),
             ],
             [ShortcutGroup.Publish] =
             [
                 new ActionShortcut("Ready to ship!", new Chord(Keys.P, InputHelpers.OSActionModifier, Keys.Enter), PackAssetsToPublishedGame)
             ]
         }.ToImmutableDictionary();
-
+    private void ClearRevisionTracker()
+    {
+        var tracker = EditorServices.TryGetRevisionFlagsTracker();
+        tracker?.Clear();
+    }
     private void ToggleCommandPalette()
     {
         _commandPaletteIsVisible = !_commandPaletteIsVisible;

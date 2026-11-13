@@ -2,7 +2,9 @@
 using Murder.Assets;
 using Murder.Core.Graphics;
 using Murder.Editor.Reflection;
+using Murder.Editor.Services;
 using Murder.Utilities;
+using Road.Editor;
 using System;
 using System.Collections.Immutable;
 using System.Numerics;
@@ -1324,5 +1326,136 @@ public static class ImGuiHelpers
         }
 
         return false;
+    }
+
+    public static bool ToggleButton(string label, ref bool state)
+    {
+        ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 8);
+        if (state)
+        {
+            ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.HighAccent);
+            ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Accent);
+        }
+        else
+        {
+            ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.Selected);
+            ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Faded);
+
+        }
+        bool pressed = false;
+        if (ImGui.Button(label))
+        {
+            pressed = true;
+        }
+        ImGui.PopStyleColor(2);
+        ImGui.PopStyleVar();
+
+        return pressed;
+    }
+    public static void RevisionFlagsText(RevisionNotes notes)
+    {
+        EditorRevisionFlags flags = notes.Flags;
+        if (flags != EditorRevisionFlags.None)
+        {
+            ImGui.TextColored(Game.Profile.Theme.Red, $"{(flags.HasFlag(EditorRevisionFlags.Music) ? "\uf001" : "")}{(flags.HasFlag(EditorRevisionFlags.Art) ? "\uf1c5" : "")}{(flags.HasFlag(EditorRevisionFlags.Code) ? "\uf121" : "")}{(flags.HasFlag(EditorRevisionFlags.Design) ? "\uf568" : "")}{(flags.HasFlag(EditorRevisionFlags.Bug) ? "\uf188" : "")}");
+        }
+        if (!string.IsNullOrEmpty(notes.Notes))
+        {
+            if (flags != EditorRevisionFlags.None)
+            {
+                ImGui.SameLine();
+            }
+            ImGui.TextColored(Game.Profile.Theme.Faded, "\uf303");
+            ImGuiHelpers.HelpTooltip(notes.Notes);
+        }
+    }
+    public static void RevisionFlagsButton(Guid? entity, bool isAsset)
+    {
+        var tracker = EditorServices.TryGetRevisionFlagsTracker();
+        if (tracker == null)
+        {
+            return;
+        }
+
+        if (entity == null)
+        {
+            return;
+        }
+
+        ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 8);
+        ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.Selected);
+
+        RevisionNotes revision = entity.HasValue ? tracker.FetchRevisionFor(entity.Value) : default;
+        EditorRevisionFlags flags = revision.Flags;
+        string notes = revision.Notes;
+        bool music = flags.HasFlag(EditorRevisionFlags.Music);
+        bool art = flags.HasFlag(EditorRevisionFlags.Art);
+        bool code = flags.HasFlag(EditorRevisionFlags.Code);
+        bool design = flags.HasFlag(EditorRevisionFlags.Design);
+        bool bug = flags.HasFlag(EditorRevisionFlags.Bug);
+        bool isFlagged = music | art | code | design | bug;
+        if (isFlagged)
+        {
+            ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Red);
+        }
+        else
+        {
+            ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Faded);
+        }
+
+        ImGui.SameLine();
+        if (ImGui.Button("\uf024"))
+        {
+            ImGui.OpenPopup("flags");
+        }
+        ImGuiHelpers.HelpTooltip("Flag for revision");
+        ImGui.PopStyleColor(2);
+        ImGui.PopStyleVar();
+
+        if (isFlagged || !string.IsNullOrEmpty(notes))
+        {
+            ImGui.SameLine();
+            RevisionFlagsText(revision);
+        }
+
+        if (ImGui.BeginPopup("flags"))
+        {
+            if (ImGuiHelpers.ToggleButton("\uf001", ref music))
+            {
+                tracker.SetFlagForEntity(entity.Value, flags ^ EditorRevisionFlags.Music, isAsset);
+            }
+
+            ImGui.SameLine();
+            if (ImGuiHelpers.ToggleButton("\uf1c5", ref art))
+            {
+                tracker.SetFlagForEntity(entity.Value, flags ^ EditorRevisionFlags.Art, isAsset);
+            }
+
+            ImGui.SameLine();
+            if (ImGuiHelpers.ToggleButton("\uf121", ref code))
+            {
+                tracker.SetFlagForEntity(entity.Value, flags ^ EditorRevisionFlags.Code, isAsset);
+            }
+
+            ImGui.SameLine();
+            if (ImGuiHelpers.ToggleButton("\uf568", ref design))
+            {
+                tracker.SetFlagForEntity(entity.Value, flags ^ EditorRevisionFlags.Design, isAsset);
+            }
+
+            ImGui.SameLine();
+            if (ImGuiHelpers.ToggleButton("\uf188", ref bug))
+            {
+                tracker.SetFlagForEntity(entity.Value, flags ^ EditorRevisionFlags.Bug, isAsset);
+            }
+
+            string text = tracker.FetchTextForEntity(entity.Value);
+            if (ImGui.InputTextMultiline("##notes", ref text, 1024, new Vector2(-1, 80)))
+            {
+                tracker.SetTextForEntity(entity.Value, text, isAsset);
+            }
+
+            ImGui.EndPopup();
+        }
     }
 }
