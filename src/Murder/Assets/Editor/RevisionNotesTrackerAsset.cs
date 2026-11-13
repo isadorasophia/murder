@@ -51,6 +51,8 @@ public class WorldRevisionNotes
 
     private Dictionary<Guid, RevisionNotes>? _notesCache = null;
 
+    private int _lengthWithFlaggedNotes = 0;
+
     [JsonConstructor]
     public WorldRevisionNotes(Guid guid)
     {
@@ -101,10 +103,16 @@ public class WorldRevisionNotes
     private void BuildCache()
     {
         _notesCache = [];
+        _lengthWithFlaggedNotes = 0;
 
         foreach (RevisionNotes note in _notes)
         {
             _notesCache[note.Guid] = note;
+
+            if (note.Flags != EditorRevisionFlags.None)
+            {
+                _lengthWithFlaggedNotes++;
+            }
         }
     }
 
@@ -131,11 +139,23 @@ public class WorldRevisionNotes
     private void ClearCache()
     {
         _notesCache = null;
+        _lengthWithFlaggedNotes = 0;
     }
 
     public bool Empty => _notes.Count == 0;
 
-    public int Length => _notes.Count;
+    public int FlaggedNotes 
+    {
+        get
+        {
+            if (_notesCache is null)
+            {
+                BuildCache();
+            }
+
+            return _lengthWithFlaggedNotes;
+        }
+    }
 }
 
 [HideInEditor] // This is created by the engine and should never be actually exposed to the UI.
@@ -150,6 +170,8 @@ public class RevisionNotesTrackerAsset : GameAsset
     public ImmutableArray<WorldRevisionNotes> WorldNotes { get; private set; } = [];
 
     private Dictionary<Guid, WorldRevisionNotes>? _worldNotesCache = null;
+
+    private int _lengthWithFlaggedNotes = 0;
 
     public RevisionNotesTrackerAsset() { }
 
@@ -227,10 +249,25 @@ public class RevisionNotesTrackerAsset : GameAsset
     private void BuildCache()
     {
         _worldNotesCache = [];
+        _lengthWithFlaggedNotes = 0;
 
         foreach (WorldRevisionNotes note in WorldNotes)
         {
             _worldNotesCache[note.Guid] = note;
+            _lengthWithFlaggedNotes += note.FlaggedNotes;
+        }
+    }
+
+    public int FlaggedNotes
+    {
+        get
+        {
+            if (_worldNotesCache is null)
+            {
+                BuildCache();
+            }
+
+            return _lengthWithFlaggedNotes;
         }
     }
 
@@ -238,12 +275,13 @@ public class RevisionNotesTrackerAsset : GameAsset
     {
         base.OnModified();
 
-        ClearCache();
         ClearMissingReferences();
+        ClearCache();
     }
 
     private void ClearCache()
     {
         _worldNotesCache = null;
+        _lengthWithFlaggedNotes = 0;
     }
 }

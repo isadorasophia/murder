@@ -1427,6 +1427,8 @@ public static class ImGuiHelpers
 
             ImGui.TextColored(Game.Profile.Theme.Faded, "\uf303");
             HelpTooltip(notes.Notes);
+
+            ImGui.SameLine();
         }
 
         return modified;

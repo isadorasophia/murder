@@ -501,7 +501,7 @@ namespace Murder.Editor
                 RevisionNotesTrackerAsset? tracker = EditorServices.TryGetRevisionFlagsTracker();
 
                 bool hasAnyFavorite = Architect.EditorSettings.FavoriteAssets.Count > 0;
-                bool hasAnyFlagged = tracker is not null && tracker.WorldNotes.Length > 0;
+                bool hasAnyFlagged = tracker is not null && tracker.FlaggedNotes > 0;
 
                 if (hasAnyFavorite || hasAnyFlagged)
                 {
@@ -528,13 +528,18 @@ namespace Murder.Editor
                         ImGui.TextColored(Architect.Profile.Theme.Red, "\uf024");
                         ImGui.SameLine();
 
-                        if (ImGui.TreeNode($"Flagged ({tracker.WorldNotes.Length})"))
+                        if (ImGui.TreeNode($"Flagged ({tracker.FlaggedNotes})"))
                         {
                             foreach (WorldRevisionNotes worldNode in tracker.WorldNotes)
                             {
+                                if (worldNode.FlaggedNotes == 0)
+                                {
+                                    continue;
+                                }
+
                                 if (Architect.EditorData.TryGetAsset(worldNode.Guid) is GameAsset asset)
                                 {
-                                    ImGui.TextColored(Architect.Profile.Theme.Red, $"({worldNode.Length})");
+                                    ImGui.TextColored(Architect.Profile.Theme.Red, $"({worldNode.FlaggedNotes})");
                                     ImGui.SameLine();
 
                                     DrawAssetInList(asset, Architect.Profile.Theme.White, asset.Name);

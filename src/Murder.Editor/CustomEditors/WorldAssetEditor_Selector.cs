@@ -68,8 +68,8 @@ namespace Murder.Editor.CustomEditors
 
                 if (EditorServices.TryGetRevisionFlagsTracker() is RevisionNotesTrackerAsset tracker && 
                     tracker.TryGetRevisionNotesForOwner(_asset.Guid) is WorldRevisionNotes notes && 
-                    !notes.Empty &&
-                    TreeEntityGroupNode($"Flagged ({notes.Length})", Game.Profile.Theme.Red, icon: '\uf024', flags: ImGuiTreeNodeFlags.None))
+                    notes.FlaggedNotes > 0 &&
+                    TreeEntityGroupNode($"Flagged ({notes.FlaggedNotes})", Game.Profile.Theme.Red, icon: '\uf024', flags: ImGuiTreeNodeFlags.None))
                 {
                     for (int i = 0; i < Instances.Length; i++)
                     {
