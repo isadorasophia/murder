@@ -6,14 +6,13 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Data;
 using Murder.Diagnostics;
+using Murder.Editor.Assets;
 using Murder.Editor.CustomEditors;
-using Murder.Editor.Data;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using Murder.Serialization;
 using Murder.Utilities;
-using Road.Editor;
 using System.Collections.Immutable;
 using System.Numerics;
 
@@ -498,50 +497,55 @@ namespace Murder.Editor
                 ImGui.SameLine();
 
                 ImGui.BeginGroup();
-                if (Architect.EditorSettings.FavoriteAssets.Any())
+
+                RevisionNotesTrackerAsset? tracker = EditorServices.TryGetRevisionFlagsTracker();
+
+                bool hasAnyFavorite = Architect.EditorSettings.FavoriteAssets.Count > 0;
+                bool hasAnyFlagged = tracker is not null && tracker.WorldNotes.Length > 0;
+
+                if (hasAnyFavorite || hasAnyFlagged)
                 {
                     ImGui.BeginGroup();
 
-                    ImGui.TextColored(Architect.Profile.Theme.Yellow, "\uf005");
-                    ImGui.SameLine();
-                    if (ImGui.TreeNode("Favourites"))
+                    if (hasAnyFavorite)
                     {
-                        foreach (var asset in Architect.EditorSettings.CachedFavoriteAssets)
+                        ImGui.TextColored(Architect.Profile.Theme.Yellow, "\uf005");
+                        ImGui.SameLine();
+
+                        if (ImGui.TreeNode("Favorites"))
                         {
-                            DrawAssetInList(asset, Architect.Profile.Theme.Yellow, asset.Name);
+                            foreach (var asset in Architect.EditorSettings.CachedFavoriteAssets)
+                            {
+                                DrawAssetInList(asset, Architect.Profile.Theme.Yellow, asset.Name);
+                            }
+
+                            ImGui.TreePop();
                         }
-                        ImGui.TreePop();
                     }
-                    if (EditorServices.TryGetRevisionFlagsTracker() is RevisionNotesTrackerAsset tracker && tracker.HasAny())
+
+                    if (tracker is not null && hasAnyFlagged)
                     {
                         ImGui.TextColored(Architect.Profile.Theme.Red, "\uf024");
                         ImGui.SameLine();
 
-                        if (ImGui.TreeNode("Flagged"))
+                        if (ImGui.TreeNode($"Flagged ({tracker.WorldNotes.Length})"))
                         {
-                            foreach (var assetNote in tracker.Notes)
+                            foreach (WorldRevisionNotes worldNode in tracker.WorldNotes)
                             {
-                                if (Architect.EditorData.TryGetAsset(assetNote.Entity) is GameAsset asset)
+                                if (Architect.EditorData.TryGetAsset(worldNode.Guid) is GameAsset asset)
                                 {
-                                    ImGuiHelpers.RevisionFlagsText(assetNote);
+                                    ImGui.TextColored(Architect.Profile.Theme.Red, $"({worldNode.Length})");
                                     ImGui.SameLine();
+
                                     DrawAssetInList(asset, Architect.Profile.Theme.White, asset.Name);
                                 }
-                                else if (assetNote.IsAsset)
-                                {
-                                    ImGui.TextColored(Architect.Profile.Theme.Yellow, $"Missing Asset: {assetNote.Entity}");
-                                    ImGui.SameLine();
-                                    if (ImGuiHelpers.DeleteButton(assetNote.Entity.ToString() + "_delete"))
-                                    {
-                                        tracker.RemoveEntity(assetNote.Entity);
-                                    }
-                                }
                             }
+
                             ImGui.TreePop();
                         }
                     }
-                    ImGui.EndGroup();
 
+                    ImGui.EndGroup();
                     ImGui.Separator();
                 }
 

@@ -10,6 +10,7 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
+using Murder.Editor.Assets;
 using Murder.Editor.Components;
 using Murder.Editor.Core;
 using Murder.Editor.ImGuiExtended;
@@ -919,8 +920,6 @@ public class GenericSelectorSystem
             return;
         }
 
-        var flagTracker = EditorServices.TryGetRevisionFlagsTracker();
-
         foreach (Entity e in entities)
         {
             if (!e.HasPosition()) continue;
@@ -1015,15 +1014,12 @@ public class GenericSelectorSystem
                 RenderServices.DrawTriangle(render.DebugBatch, position, 3, 0, new DrawInfo(Color.Lerp(Game.Profile.Theme.Accent, Color.Gray, 0.5f * Calculator.Sine01(Game.NowUnscaled + position.X)), 0));
             }
 
-
-            if (flagTracker != null)
+            EditorRevisionFlags selectedEntityFlags = hook.GetFlagsForEntity?.Invoke(e.EntityId) ?? EditorRevisionFlags.None;
+            if (selectedEntityFlags != EditorRevisionFlags.None)
             {
-                if ((hook.GetFlagsForEntity?.Invoke(e.EntityId, flagTracker) ?? Road.Editor.EditorRevisionFlags.None) != Road.Editor.EditorRevisionFlags.None)
-                {
-                    float bounce = Ease.BounceIn(Math.Abs(MathF.Sin(Game.Now))) * 8;
-                    RenderServices.DrawTriangle(render.DebugFxBatch, position + new Vector2(0, -10 - bounce), 8, MathF.PI, new DrawInfo(hideAll * Game.Profile.Theme.Red * 0.6f, 0));
-                    RenderServices.DrawRectangle(render.DebugFxBatch, new Rectangle(position.X - 3, position.Y - 24 - bounce, 6, 10), Game.Profile.Theme.Red * 0.6f, 0);
-                }
+                float bounce = Ease.BounceIn(Math.Abs(MathF.Sin(Game.Now))) * 8;
+                RenderServices.DrawTriangle(render.DebugFxBatch, position + new Vector2(0, -10 - bounce), 8, MathF.PI, new DrawInfo(hideAll * Game.Profile.Theme.Red * 0.6f, 0));
+                RenderServices.DrawRectangle(render.DebugFxBatch, new Rectangle(position.X - 3, position.Y - 24 - bounce, 6, 10), Game.Profile.Theme.Red * 0.6f, 0);
             }
         }
 

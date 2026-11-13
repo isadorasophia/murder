@@ -5,6 +5,7 @@ using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Diagnostics;
+using Murder.Editor.Assets;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Services;
 using Murder.Editor.Utilities;
@@ -95,21 +96,23 @@ public partial class EditorScene
                 new ActionShortcut("Run Diagnostics", new Chord(Keys.D, InputHelpers.OSActionModifier, Keys.LeftShift), RunDiagnostics),
                 new ActionShortcut("Run All Diagnostics", new Chord(Keys.S, InputHelpers.OSActionModifier, Keys.LeftShift), RunAllDiagnostics),
                 new ActionShortcut("Command Palette", new Chord(Keys.A, InputHelpers.OSActionModifier, Keys.LeftShift), ToggleCommandPalette),
-                new ActionShortcut("Cear all revision flags", Chord.None, ClearRevisionTracker),
+                new ActionShortcut("Clear Missing Revision Notes", Chord.None, ClearRevisionTracker),
             ],
             [ShortcutGroup.Publish] =
             [
                 new ActionShortcut("Ready to ship!", new Chord(Keys.P, InputHelpers.OSActionModifier, Keys.Enter), PackAssetsToPublishedGame)
             ]
         }.ToImmutableDictionary();
-    private void ClearRevisionTracker()
-    {
-        var tracker = EditorServices.TryGetRevisionFlagsTracker();
-        tracker?.Clear();
-    }
+
     private void ToggleCommandPalette()
     {
         _commandPaletteIsVisible = !_commandPaletteIsVisible;
+    }
+
+    private void ClearRevisionTracker()
+    {
+        RevisionNotesTrackerAsset? tracker = EditorServices.TryGetRevisionFlagsTracker();
+        tracker?.ClearMissingReferences();
     }
 
     private void ToggleHotReloadLocalization(bool value)

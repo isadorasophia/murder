@@ -1,15 +1,12 @@
 ﻿using ImGuiNET;
 using Murder.Assets;
 using Murder.Core.Graphics;
-using Murder.Editor.Reflection;
+using Murder.Editor.Assets;
 using Murder.Editor.Services;
 using Murder.Utilities;
-using Road.Editor;
-using System;
 using System.Collections.Immutable;
 using System.Numerics;
 using System.Text;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Murder.Editor.ImGuiExtended;
 
@@ -1352,47 +1349,46 @@ public static class ImGuiHelpers
 
         return pressed;
     }
-    public static void RevisionFlagsText(RevisionNotes notes)
+
+    public static void DisplayRevisionFlagsText(RevisionNotes notes)
     {
         EditorRevisionFlags flags = notes.Flags;
+
         if (flags != EditorRevisionFlags.None)
         {
-            ImGui.TextColored(Game.Profile.Theme.Red, $"{(flags.HasFlag(EditorRevisionFlags.Music) ? "\uf001" : "")}{(flags.HasFlag(EditorRevisionFlags.Art) ? "\uf1c5" : "")}{(flags.HasFlag(EditorRevisionFlags.Code) ? "\uf121" : "")}{(flags.HasFlag(EditorRevisionFlags.Design) ? "\uf568" : "")}{(flags.HasFlag(EditorRevisionFlags.Bug) ? "\uf188" : "")}");
+            ImGui.TextColored(Game.Profile.Theme.Red, 
+                $"{(flags.HasFlag(EditorRevisionFlags.Music) ? "\uf001" : "")}{(flags.HasFlag(EditorRevisionFlags.Art) ? "\uf1c5" : "")}{(flags.HasFlag(EditorRevisionFlags.Code) ? "\uf121" : "")}{(flags.HasFlag(EditorRevisionFlags.Design) ? "\uf568" : "")}{(flags.HasFlag(EditorRevisionFlags.Bug) ? "\uf188" : "")}");
         }
+
         if (!string.IsNullOrEmpty(notes.Notes))
         {
             if (flags != EditorRevisionFlags.None)
             {
                 ImGui.SameLine();
             }
+
             ImGui.TextColored(Game.Profile.Theme.Faded, "\uf303");
             ImGuiHelpers.HelpTooltip(notes.Notes);
         }
     }
-    public static void RevisionFlagsButton(Guid? entity, bool isAsset)
+
+    public static bool DrawRevisionButtonsForAsset(RevisionNotesTrackerAsset tracker, Guid ownerGuid, Guid instanceGuid)
     {
-        var tracker = EditorServices.TryGetRevisionFlagsTracker();
-        if (tracker == null)
-        {
-            return;
-        }
-
-        if (entity == null)
-        {
-            return;
-        }
-
         ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 8);
         ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.Selected);
 
-        RevisionNotes revision = entity.HasValue ? tracker.FetchRevisionFor(entity.Value) : default;
+        WorldRevisionNotes? ownerNotes = tracker.TryGetRevisionNotesForOwner(ownerGuid);
+        RevisionNotes revision = ownerNotes?.TryGetNotesForInstance(instanceGuid) ?? new(instanceGuid);
+
         EditorRevisionFlags flags = revision.Flags;
+
         string notes = revision.Notes;
         bool music = flags.HasFlag(EditorRevisionFlags.Music);
         bool art = flags.HasFlag(EditorRevisionFlags.Art);
         bool code = flags.HasFlag(EditorRevisionFlags.Code);
         bool design = flags.HasFlag(EditorRevisionFlags.Design);
         bool bug = flags.HasFlag(EditorRevisionFlags.Bug);
+
         bool isFlagged = music | art | code | design | bug;
         if (isFlagged)
         {
@@ -1404,58 +1400,78 @@ public static class ImGuiHelpers
         }
 
         ImGui.SameLine();
+
         if (ImGui.Button("\uf024"))
         {
             ImGui.OpenPopup("flags");
         }
-        ImGuiHelpers.HelpTooltip("Flag for revision");
+
+        HelpTooltip("Flag for revision...");
         ImGui.PopStyleColor(2);
         ImGui.PopStyleVar();
 
         if (isFlagged || !string.IsNullOrEmpty(notes))
         {
             ImGui.SameLine();
-            RevisionFlagsText(revision);
+            DisplayRevisionFlagsText(revision);
         }
+
+        bool modified = false;
 
         if (ImGui.BeginPopup("flags"))
         {
-            if (ImGuiHelpers.ToggleButton("\uf001", ref music))
+            if (ToggleButton("\uf001", ref music))
             {
-                tracker.SetFlagForEntity(entity.Value, flags ^ EditorRevisionFlags.Music, isAsset);
+                revision = revision with { Flags = flags ^ EditorRevisionFlags.Music };
+                modified = true;
             }
 
             ImGui.SameLine();
-            if (ImGuiHelpers.ToggleButton("\uf1c5", ref art))
+            if (ToggleButton("\uf1c5", ref art))
             {
-                tracker.SetFlagForEntity(entity.Value, flags ^ EditorRevisionFlags.Art, isAsset);
+                revision = revision with { Flags = flags ^ EditorRevisionFlags.Art };
+                modified = true;
             }
 
             ImGui.SameLine();
-            if (ImGuiHelpers.ToggleButton("\uf121", ref code))
+            if (ToggleButton("\uf121", ref code))
             {
-                tracker.SetFlagForEntity(entity.Value, flags ^ EditorRevisionFlags.Code, isAsset);
+                revision = revision with { Flags = flags ^ EditorRevisionFlags.Code };
+                modified = true;
             }
 
             ImGui.SameLine();
-            if (ImGuiHelpers.ToggleButton("\uf568", ref design))
+            if (ToggleButton("\uf568", ref design))
             {
-                tracker.SetFlagForEntity(entity.Value, flags ^ EditorRevisionFlags.Design, isAsset);
+                revision = revision with { Flags = flags ^ EditorRevisionFlags.Design };
+                modified = true;
             }
 
             ImGui.SameLine();
-            if (ImGuiHelpers.ToggleButton("\uf188", ref bug))
+            if (ToggleButton("\uf188", ref bug))
             {
-                tracker.SetFlagForEntity(entity.Value, flags ^ EditorRevisionFlags.Bug, isAsset);
+                revision = revision with { Flags = flags ^ EditorRevisionFlags.Bug };
+                modified = true;
             }
 
-            string text = tracker.FetchTextForEntity(entity.Value);
+            string text = revision.Notes;
             if (ImGui.InputTextMultiline("##notes", ref text, 1024, new Vector2(-1, 80)))
             {
-                tracker.SetTextForEntity(entity.Value, text, isAsset);
+                revision = revision with { Notes = text };
+                modified = true;
             }
 
             ImGui.EndPopup();
         }
+
+        if (modified)
+        {
+            ownerNotes ??= tracker.GetOrCreateRevisionNotesForOwner(ownerGuid);
+            ownerNotes.ModifyNotes(instanceGuid, revision);
+
+            tracker.OnModified(ownerGuid);
+        }
+
+        return modified;
     }
 }

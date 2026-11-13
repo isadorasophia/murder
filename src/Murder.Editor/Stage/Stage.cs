@@ -11,10 +11,10 @@ using Murder.Diagnostics;
 using Murder.Editor.Assets;
 using Murder.Editor.Components;
 using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using Murder.Services;
 using Murder.Utilities;
-using Road.Editor;
 using System.Numerics;
 
 namespace Murder.Editor.Stages
@@ -88,14 +88,16 @@ namespace Murder.Editor.Stages
             _world.AddEntity(editorComponent);
         }
 
-        private EditorRevisionFlags GetFlagsForEntity(int entityId, RevisionNotesTrackerAsset trackerAsset)
+        private EditorRevisionFlags GetFlagsForEntity(int entityId)
         {
-            if (_worldToInstance.TryGetValue(entityId, out Guid guid))
+            if (EditorServices.TryGetRevisionFlagsTracker() is not RevisionNotesTrackerAsset tracker ||
+                !_worldToInstance.TryGetValue(entityId, out Guid instanceGuid) ||
+                tracker.TryGetRevisionNotesForInstance(_world.Guid(), instanceGuid) is not RevisionNotes notes)
             {
-                return trackerAsset.FetchFlagsForEntity(guid);
+                return EditorRevisionFlags.None;
             }
 
-            return EditorRevisionFlags.None;
+            return notes.Flags;
         }
 
         private void InitializeDrawAndWorld()

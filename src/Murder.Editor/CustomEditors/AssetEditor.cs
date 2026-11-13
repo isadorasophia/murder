@@ -1,26 +1,21 @@
 ﻿using Bang.Components;
-using Bang.Contexts;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using Murder.Assets;
 using Murder.Components;
-using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Editor.Assets;
 using Murder.Editor.Components;
 using Murder.Editor.Core;
 using Murder.Editor.CustomComponents;
-using Murder.Editor.CustomDiagnostics;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Stages;
 using Murder.Editor.Utilities;
 using Murder.Prefabs;
 using Murder.Utilities;
 using Murder.Utilities.Attributes;
-using System;
 using System.Collections.Immutable;
-using System.Drawing;
 using System.Numerics;
 
 namespace Murder.Editor.CustomEditors
@@ -339,7 +334,7 @@ namespace Murder.Editor.CustomEditors
                     ImGui.PopStyleVar();
                 }
 
-                ImGuiHelpers.RevisionFlagsButton(entityInstance.Guid, _asset is not WorldAsset);
+                DrawRevisionButtonsForInstance(entityInstance.Guid);
 
                 ImGui.SameLine();
                 ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 100);
@@ -1311,6 +1306,8 @@ namespace Murder.Editor.CustomEditors
 
             Architect.Undo.Track(new UndoableAction(@do, WrappedUndo, addedAt: Game.NowUnscaled));
         }
+
+        protected virtual void DrawRevisionButtonsForInstance(Guid instanceGuid) { }
 
         private class StageAssetInfo
         {

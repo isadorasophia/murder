@@ -2,15 +2,13 @@
 using Microsoft.Xna.Framework.Input;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
+using Murder.Editor.Assets;
 using Murder.Editor.Components;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Services;
 using Murder.Editor.Stages;
-using Murder.Editor.Utilities.Serialization;
 using Murder.Prefabs;
-using Road.Editor;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Numerics;
 
 namespace Murder.Editor.CustomEditors
@@ -61,33 +59,36 @@ namespace Murder.Editor.CustomEditors
 
                 DrawEntityGroups(stage);
 
-                if (TreeEntityGroupNode("Other Entities", Game.Profile.Theme.White, icon: '\uf500', flags: ImGuiTreeNodeFlags.DefaultOpen))
+                if (TreeEntityGroupNode("Other Entities", Game.Profile.Theme.White, icon: '\uf500', flags: ImGuiTreeNodeFlags.None))
                 {
                     DrawEntityList(group: null, Instances);
 
                     ImGui.TreePop();
                 }
 
-                if (TreeEntityGroupNode("Flagged", Game.Profile.Theme.Yellow, icon: '\uf071', flags: ImGuiTreeNodeFlags.DefaultOpen))
+                if (EditorServices.TryGetRevisionFlagsTracker() is RevisionNotesTrackerAsset tracker && 
+                    tracker.TryGetRevisionNotesForOwner(_asset.Guid) is WorldRevisionNotes notes && 
+                    !notes.Empty &&
+                    TreeEntityGroupNode($"Flagged ({notes.Length})", Game.Profile.Theme.Red, icon: '\uf024', flags: ImGuiTreeNodeFlags.None))
                 {
-                    var revisionTracker = EditorServices.TryGetRevisionFlagsTracker();
-                    if (revisionTracker != null)
+                    for (int i = 0; i < Instances.Length; i++)
                     {
-                        for (int i = 0; i < Instances.Length; i++)
-                        {
-                            Guid entityGuid = Instances[i];
+                        Guid entityGuid = Instances[i];
 
-                            RevisionNotes reference = revisionTracker.FetchRevisionFor(entityGuid);
-                            if ((reference.Flags != Road.Editor.EditorRevisionFlags.None))
-                            {
-                                ImGuiHelpers.RevisionFlagsText(reference);
-                                ImGui.SameLine();
-                                DrawEntity(null, i, entityGuid);
-                            }
+                        RevisionNotes reference = 
+                            tracker.TryGetRevisionNotesForInstance(_asset.Guid, entityGuid) ?? new();
+
+                        if (reference.Flags != EditorRevisionFlags.None)
+                        {
+                            ImGuiHelpers.DisplayRevisionFlagsText(reference);
+
+                            ImGui.SameLine();
+                            DrawEntity(null, i, entityGuid);
                         }
                     }
                 }
             }
+
             ImGui.EndChild();
         }
 
@@ -372,6 +373,8 @@ namespace Murder.Editor.CustomEditors
 
         private bool DrawEntity(string? group, int i, Guid entity)
         {
+            GameLogger.Verify(_asset is not null);
+
             // Check if we should show this entity.
             EntityInstance? instance = TryFindInstance(entity);
             string? name = instance?.Name;
@@ -708,6 +711,20 @@ namespace Murder.Editor.CustomEditors
             }
 
             SavePersistentWorldInfo(info);
+        }
+
+        protected override void DrawRevisionButtonsForInstance(Guid instanceGuid)
+        {
+            GameLogger.Verify(_world is not null);
+
+            if (EditorServices.TryGetRevisionFlagsTracker() is RevisionNotesTrackerAsset notesTracker &&
+                ImGuiHelpers.DrawRevisionButtonsForAsset(notesTracker, _world.Guid, instanceGuid))
+            {
+                notesTracker.FileChanged = true;
+
+                _world.TrackAssetOnSave(notesTracker.Guid);
+                _world.FileChanged = true;
+            }
         }
     }
 }
