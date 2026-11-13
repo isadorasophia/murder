@@ -73,17 +73,18 @@ namespace Murder.Editor.CustomEditors
                 {
                     for (int i = 0; i < Instances.Length; i++)
                     {
-                        Guid entityGuid = Instances[i];
+                        Guid instanceGuid = Instances[i];
+                        RevisionNotes revisionNotes = 
+                            tracker.TryGetRevisionNotesForInstance(_asset.Guid, instanceGuid) ?? new();
 
-                        RevisionNotes reference = 
-                            tracker.TryGetRevisionNotesForInstance(_asset.Guid, entityGuid) ?? new();
-
-                        if (reference.Flags != EditorRevisionFlags.None)
+                        if (revisionNotes.Flags != EditorRevisionFlags.None)
                         {
-                            ImGuiHelpers.DisplayRevisionFlagsText(reference);
+                            if (ImGuiHelpers.DrawRevisionFlagsAndText(ref revisionNotes))
+                            {
+                                OnInstanceRevisionNotesModified(tracker, instanceGuid, revisionNotes);
+                            }
 
-                            ImGui.SameLine();
-                            DrawEntity(null, i, entityGuid);
+                            DrawEntity(null, i, instanceGuid);
                         }
                     }
                 }
@@ -712,19 +713,36 @@ namespace Murder.Editor.CustomEditors
 
             SavePersistentWorldInfo(info);
         }
-
+        
         protected override void DrawRevisionButtonsForInstance(Guid instanceGuid)
         {
             GameLogger.Verify(_world is not null);
 
-            if (EditorServices.TryGetRevisionFlagsTracker() is RevisionNotesTrackerAsset notesTracker &&
-                ImGuiHelpers.DrawRevisionButtonsForAsset(notesTracker, _world.Guid, instanceGuid))
+            if (EditorServices.TryGetRevisionFlagsTracker() is not RevisionNotesTrackerAsset notesTracker)
             {
-                notesTracker.FileChanged = true;
-
-                _world.TrackAssetOnSave(notesTracker.Guid);
-                _world.FileChanged = true;
+                return;
             }
+
+            RevisionNotes revisionNotes = notesTracker.TryGetRevisionNotesForInstance(_world.Guid, instanceGuid) ?? 
+                new(instanceGuid);
+
+            if (ImGuiHelpers.DrawRevisionButtonsForAsset(ref revisionNotes))
+            {
+                OnInstanceRevisionNotesModified(notesTracker, instanceGuid, revisionNotes);
+            }
+        }
+
+        private void OnInstanceRevisionNotesModified(RevisionNotesTrackerAsset tracker, Guid instanceGuid, RevisionNotes notes)
+        {
+            GameLogger.Verify(_world is not null);
+
+            WorldRevisionNotes ownerNotes = tracker.GetOrCreateRevisionNotesForOwner(_world.Guid);
+            ownerNotes.ModifyNotes(instanceGuid, notes);
+
+            tracker.FileChanged = true;
+
+            _world.TrackAssetOnSave(tracker.Guid);
+            _world.FileChanged = true;
         }
     }
 }

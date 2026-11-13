@@ -5,6 +5,7 @@ using Murder.Attributes;
 using Murder.Data;
 using Murder.Diagnostics;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
@@ -34,17 +35,6 @@ public readonly struct RevisionNotes
     public RevisionNotes(Guid guid)
     {
         Guid = guid;
-    }
-
-    public RevisionNotes(Guid guid, EditorRevisionFlags flags) : this(guid)
-    {
-        Flags = flags;
-    }
-
-    public RevisionNotes(Guid guid, EditorRevisionFlags flags, string notes) : this(guid)
-    {
-        Flags = flags;
-        Notes = notes;
     }
 
     public bool Empty => Flags == EditorRevisionFlags.None && string.IsNullOrEmpty(Notes);
@@ -233,11 +223,6 @@ public class RevisionNotesTrackerAsset : GameAsset
         GameLogger.Log($"\uf00c Successfully checked for revision notes!");
     }
 
-    public void OnModified(Guid ownerGuid)
-    {
-        ClearMissingReferences();
-    }
-
     [MemberNotNull(nameof(_worldNotesCache))]
     private void BuildCache()
     {
@@ -252,7 +237,9 @@ public class RevisionNotesTrackerAsset : GameAsset
     protected override void OnModified()
     {
         base.OnModified();
+
         ClearCache();
+        ClearMissingReferences();
     }
 
     private void ClearCache()

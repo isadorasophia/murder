@@ -1350,15 +1350,73 @@ public static class ImGuiHelpers
         return pressed;
     }
 
-    public static void DisplayRevisionFlagsText(RevisionNotes notes)
+    public static bool DrawRevisionFlagsAndText(ref RevisionNotes notes)
     {
+        bool modified = false;
+
         EditorRevisionFlags flags = notes.Flags;
 
-        if (flags != EditorRevisionFlags.None)
+        ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Red);
+        ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Bg);
+        ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.Bg);
+        ImGui.PushStyleColor(ImGuiCol.ButtonActive, Game.Profile.Theme.Bg);
+
+        if (flags.HasFlag(EditorRevisionFlags.Music))
         {
-            ImGui.TextColored(Game.Profile.Theme.Red, 
-                $"{(flags.HasFlag(EditorRevisionFlags.Music) ? "\uf001" : "")}{(flags.HasFlag(EditorRevisionFlags.Art) ? "\uf1c5" : "")}{(flags.HasFlag(EditorRevisionFlags.Code) ? "\uf121" : "")}{(flags.HasFlag(EditorRevisionFlags.Design) ? "\uf568" : "")}{(flags.HasFlag(EditorRevisionFlags.Bug) ? "\uf188" : "")}");
+            if (Button("\uf001"))
+            {
+                notes = notes with { Flags = flags ^ EditorRevisionFlags.Music };
+                modified = true;
+            }
+
+            ImGui.SameLine();
         }
+
+        if (flags.HasFlag(EditorRevisionFlags.Art))
+        {
+            if (Button("\uf1c5"))
+            {
+                notes = notes with { Flags = flags ^ EditorRevisionFlags.Art };
+                modified = true;
+            }
+
+            ImGui.SameLine();
+        }
+
+        if (flags.HasFlag(EditorRevisionFlags.Code))
+        {
+            if (Button("\uf121"))
+            {
+                notes = notes with { Flags = flags ^ EditorRevisionFlags.Code };
+                modified = true;
+            }
+
+            ImGui.SameLine();
+        }
+
+        if (flags.HasFlag(EditorRevisionFlags.Design))
+        {
+            if (Button("\uf568"))
+            {
+                notes = notes with { Flags = flags ^ EditorRevisionFlags.Design };
+                modified = true;
+            }
+
+            ImGui.SameLine();
+        }
+
+        if (flags.HasFlag(EditorRevisionFlags.Bug))
+        {
+            if (Button("\uf188"))
+            {
+                notes = notes with { Flags = flags ^ EditorRevisionFlags.Bug };
+                modified = true;
+            }
+
+            ImGui.SameLine();
+        }
+
+        ImGui.PopStyleColor(4);
 
         if (!string.IsNullOrEmpty(notes.Notes))
         {
@@ -1368,17 +1426,16 @@ public static class ImGuiHelpers
             }
 
             ImGui.TextColored(Game.Profile.Theme.Faded, "\uf303");
-            ImGuiHelpers.HelpTooltip(notes.Notes);
+            HelpTooltip(notes.Notes);
         }
+
+        return modified;
     }
 
-    public static bool DrawRevisionButtonsForAsset(RevisionNotesTrackerAsset tracker, Guid ownerGuid, Guid instanceGuid)
+    public static bool DrawRevisionButtonsForAsset(ref RevisionNotes revision)
     {
         ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 8);
         ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.Selected);
-
-        WorldRevisionNotes? ownerNotes = tracker.TryGetRevisionNotesForOwner(ownerGuid);
-        RevisionNotes revision = ownerNotes?.TryGetNotesForInstance(instanceGuid) ?? new(instanceGuid);
 
         EditorRevisionFlags flags = revision.Flags;
 
@@ -1410,13 +1467,13 @@ public static class ImGuiHelpers
         ImGui.PopStyleColor(2);
         ImGui.PopStyleVar();
 
+        bool modified = false;
+
         if (isFlagged || !string.IsNullOrEmpty(notes))
         {
             ImGui.SameLine();
-            DisplayRevisionFlagsText(revision);
+            modified |= DrawRevisionFlagsAndText(ref revision);
         }
-
-        bool modified = false;
 
         if (ImGui.BeginPopup("flags"))
         {
@@ -1462,14 +1519,6 @@ public static class ImGuiHelpers
             }
 
             ImGui.EndPopup();
-        }
-
-        if (modified)
-        {
-            ownerNotes ??= tracker.GetOrCreateRevisionNotesForOwner(ownerGuid);
-            ownerNotes.ModifyNotes(instanceGuid, revision);
-
-            tracker.OnModified(ownerGuid);
         }
 
         return modified;
