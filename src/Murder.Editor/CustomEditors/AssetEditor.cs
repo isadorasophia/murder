@@ -11,6 +11,7 @@ using Murder.Editor.Components;
 using Murder.Editor.Core;
 using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Services;
 using Murder.Editor.Stages;
 using Murder.Editor.Utilities;
 using Murder.Prefabs;
@@ -1308,7 +1309,21 @@ namespace Murder.Editor.CustomEditors
             Architect.Undo.Track(new UndoableAction(@do, WrappedUndo, addedAt: Game.NowUnscaled));
         }
 
-        protected virtual void DrawRevisionButtonsForInstance(Guid instanceGuid) { }
+        protected virtual void DrawRevisionButtonsForInstance(Guid instanceGuid)
+        {
+            GameLogger.Verify(_asset is not null);
+
+            if (EditorServices.TryGetRevisionFlagsTracker() is not RevisionNotesTrackerAsset notesTracker)
+            {
+                return;
+            }
+
+            RevisionNotes revisionNotes = notesTracker.TryGetRevisionNotesForInstance(_asset.Guid, instanceGuid) ?? new(instanceGuid);
+            if (ImGuiHelpers.DrawRevisionButtonsForAsset(ref revisionNotes))
+            {
+                OnInstanceRevisionNotesModified(notesTracker, instanceGuid, revisionNotes);
+            }
+        }
 
         protected void OnInstanceRevisionNotesModified(RevisionNotesTrackerAsset tracker, Guid instanceGuid, RevisionNotes notes)
         {

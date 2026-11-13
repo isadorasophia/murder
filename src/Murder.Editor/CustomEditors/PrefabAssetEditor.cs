@@ -166,21 +166,8 @@ namespace Murder.Editor.CustomEditors
 
         protected override void DrawRevisionButtonsForInstance(Guid instanceGuid)
         {
-            GameLogger.Verify(_asset is not null);
-
-            if (EditorServices.TryGetRevisionFlagsTracker() is not RevisionNotesTrackerAsset notesTracker)
-            {
-                return;
-            }
-
             // workaround for prefabs, support as long as it's empty.
-            instanceGuid = Guid.Empty;
-
-            RevisionNotes revisionNotes = notesTracker.TryGetRevisionNotesForInstance(_asset.Guid, instanceGuid) ?? new(instanceGuid);
-            if (ImGuiHelpers.DrawRevisionButtonsForAsset(ref revisionNotes))
-            {
-                OnInstanceRevisionNotesModified(notesTracker, instanceGuid, revisionNotes);
-            }
+            base.DrawRevisionButtonsForInstance(Guid.Empty);
         }
     }
 }
