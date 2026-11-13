@@ -2,6 +2,7 @@
 using Bang.Entities;
 using Murder.Assets.Graphics;
 using Murder.Components;
+using Murder.Components.Graphics;
 using Murder.Core.Geometry;
 using Murder.Utilities;
 using System.Diagnostics;
@@ -180,6 +181,10 @@ namespace Murder.Core.Particles
                 int entityId = _indexToEntityId[i];
                 Entity entity = world.GetEntity(entityId);
                 Vector2 position = entity.TryGetGlobalPosition() ?? Vector2.Zero;
+                if (entity.TryGetParallax() is ParallaxComponent parallax)
+                {
+                    position = position + cameraArea.TopLeft * (1 - parallax.Factor);
+                }
                 _poolTrackers[i].Step(_activeParticleSystems.Contains(entityId), position, entity.HasAlwaysInCamera() ? null : cameraArea, entityId);
             }
         }
