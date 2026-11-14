@@ -503,7 +503,7 @@ namespace Murder.Editor
                 bool hasAnyFavorite = Architect.EditorSettings.FavoriteAssets.Count > 0;
                 bool hasAnyFlagged = tracker is not null && tracker.FlaggedNotes > 0;
 
-                if (hasAnyFavorite || hasAnyFlagged)
+                if (string.IsNullOrEmpty(_searchAssetText) && (hasAnyFavorite || hasAnyFlagged))
                 {
                     ImGui.BeginGroup();
 
