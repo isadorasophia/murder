@@ -42,13 +42,20 @@ public class InteractOnRuleMatchSystem : IStartupSystem, IReactiveSystem
         }
     }
 
+    private int _contextId = -1;
+
     private void CheckAndTriggerRules(World world, bool modified)
     {
         SaveData save = MurderSaveServices.CreateOrGetSave();
         BlackboardTracker tracker = save.BlackboardTracker;
 
+        if (_contextId == -1)
+        {
+            _contextId = world.GetOrCreateContextIdFrom(ContextAccessorFilter.AllOf, typeof(InteractOnRuleMatchComponent));
+        }
+
         // Fetch all entities which might be affected by a rule change.
-        ImmutableArray<Entity> interactives = world.GetEntitiesWith(typeof(InteractOnRuleMatchComponent));
+        ImmutableArray<Entity> interactives = world.GetEntitiesFrom(_contextId);
         foreach (Entity e in interactives)
         {
             if (e.IsDestroyed)
