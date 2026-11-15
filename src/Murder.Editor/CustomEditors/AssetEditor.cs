@@ -336,7 +336,11 @@ namespace Murder.Editor.CustomEditors
                     ImGui.PopStyleVar();
                 }
 
-                DrawRevisionButtonsForInstance(entityInstance.Guid);
+                // we do not support children entities yet
+                if (parent is null)
+                {
+                    DrawRevisionButtonsForInstance(entityInstance.Guid);
+                }
 
                 ImGui.SameLine();
                 ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 100);
