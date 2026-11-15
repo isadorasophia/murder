@@ -93,7 +93,11 @@ namespace Murder.Core.Dialogs
             return _currentDialog != 0 && _currentDialog != null;
         }
 
-        public bool HasContentOnNextDialogueLine(World world, Entity? target, bool checkForNewContentOnly)
+        /// <summary>
+        /// Return the total playcount that a dialogue has iterated.
+        /// If no dialogue is found, return -1.
+        /// </summary>
+        public int CheckPlayCountOnDialogue(World world, Entity? target)
         {
             // Are we in the initial state? If so, calculate the next outcome.
             if (_currentDialog == 0)
@@ -103,13 +107,13 @@ namespace Murder.Core.Dialogs
 
             if (!HasNext(world, target))
             {
-                return false;
+                return -1;
             }
 
             Dialog d = ActiveSituation.Dialogs[_currentDialog.Value];
             if (d.Lines.Length == 0 && d.IsExit)
             {
-                return false;
+                return -1;
             }
 
             while (true)
@@ -121,20 +125,35 @@ namespace Murder.Core.Dialogs
 
                 if (!TryMatchNextDialog(world, track: false, target))
                 {
-                    return false;
+                    return -1;
                 }
 
                 d = ActiveSituation.Dialogs[_currentDialog.Value];
             }
 
-            if (checkForNewContentOnly)
+            if (d.Lines.Length == 0)
             {
-                BlackboardTracker tracker = Game.Data.ActiveSaveData.BlackboardTracker;
-
-                return tracker.PlayCount(Guid, _currentSituation, _currentDialog.Value) == 0;
+                return -1;
             }
 
-            return d.Lines.Length > 0;
+            BlackboardTracker tracker = Game.Data.ActiveSaveData.BlackboardTracker;
+            return tracker.PlayCount(Guid, _currentSituation, _currentDialog.Value);
+        }
+
+        public bool HasContentOnNextDialogueLine(World world, Entity? target, bool checkForNewContentOnly)
+        {
+            int playcount = CheckPlayCountOnDialogue(world, target);
+            if (playcount == -1)
+            {
+                return false;
+            }
+
+            if (checkForNewContentOnly)
+            {
+                return playcount == 0;
+            }
+
+            return true;
         }
 
         public DialogLine? NextLine(World? world, Entity? target = null)
