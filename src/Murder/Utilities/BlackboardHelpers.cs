@@ -165,7 +165,12 @@ public static partial class BlackboardHelpers
             return false;
         }
 
-        return Match(world, onlyApplyWhen.Requirements) && IsSatisfied(world, onlyApplyWhen.Conditions);
+        if (onlyApplyWhen.Conditions is not null && IsSatisfied(world, onlyApplyWhen.Conditions.Value))
+        {
+            return false;
+        }
+
+        return Match(world, onlyApplyWhen.Requirements);
     }
 
     [GeneratedRegex("{([^}]+)}")]

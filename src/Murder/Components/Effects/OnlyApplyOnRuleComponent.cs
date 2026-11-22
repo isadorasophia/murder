@@ -12,7 +12,7 @@ public readonly struct OnlyApplyOnRuleComponent : IComponent
     /// List of requirements which will trigger the interactive component within the same entity.
     /// </summary>
     public readonly ImmutableArray<CriterionNode> Requirements = [];
-    public readonly ImmutableArray<ICondition> Conditions { get; init; } = [];
+    public readonly ImmutableArray<ICondition>? Conditions { get; init; } = null;
     public readonly ImmutableArray<IEntityCondition>? EntityConditions { get; init; } = null;
 
     public readonly IInteractiveComponent? OnFailure { get; init; } = null;
