@@ -165,7 +165,7 @@ public static partial class BlackboardHelpers
             return false;
         }
 
-        if (onlyApplyWhen.Conditions is not null && IsSatisfied(world, onlyApplyWhen.Conditions.Value))
+        if (onlyApplyWhen.Conditions is not null && !IsSatisfied(world, onlyApplyWhen.Conditions.Value))
         {
             return false;
         }
