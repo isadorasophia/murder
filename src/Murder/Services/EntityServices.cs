@@ -574,7 +574,7 @@ public static class EntityServices
             return true;
         }
 
-        Vector2 p = e.GetGlobalPosition();
+        Vector2 p = e.GetCenterPosition();
         return ((MonoWorld)world).Camera.Bounds.Contains(p);
     }
 
