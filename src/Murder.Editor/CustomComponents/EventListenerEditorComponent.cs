@@ -52,29 +52,29 @@ namespace Murder.Editor.CustomComponents
             // ======
             // Initialize according to the sprite events.
             // ======
+            Dictionary<string, int> trackedEvents = [];
             if (eventNames is not null && eventNames.Count > 0)
             {
-                Dictionary<string, int> trackedEvents = [];
                 for (int i = 0; i < eventNames.Count; ++i)
                 {
                     SpriteEventInfo @event = builder[i];
 
                     trackedEvents[@event.Id] = i;
                 }
+            }
 
-                foreach (SpriteEventInfo info in listener.Events)
+            foreach (SpriteEventInfo info in listener.Events)
+            {
+                if (trackedEvents.TryGetValue(info.Id, out int index))
                 {
-                    if (trackedEvents.TryGetValue(info.Id, out int index))
-                    {
-                        builder[index] = info;
-                        continue;
-                    }
-
-                    builder.Add(info);
+                    builder[index] = info;
+                    continue;
                 }
 
-                builder.Sort((a, b) => a.Id.CompareTo(b.Id));
+                builder.Add(info);
             }
+
+            builder.Sort((a, b) => a.Id.CompareTo(b.Id));
 
             ImmutableArray<SpriteEventInfo> events = builder.ToImmutable();
 

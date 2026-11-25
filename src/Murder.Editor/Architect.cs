@@ -300,6 +300,7 @@ namespace Murder.Editor
             }
             else
             {
+                ResumeDeltaTimeOnUpdate();
                 _isPlayingGame = false;
             }
 
