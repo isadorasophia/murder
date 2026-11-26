@@ -36,13 +36,6 @@ public enum DirectionFlags
 
 public static class DirectionHelper
 {
-    public static Direction Rotate90Degrees(this Direction direction)
-    {
-        int newDirection = (int)direction + 2;
-        return (Direction)newDirection;
-    }
-
-
     public static bool IsOpposed(Direction direction, Direction other)
     {
         float dotProduct = Vector2.Dot(direction.ToVector(), other.ToVector());
@@ -224,54 +217,43 @@ public static class DirectionHelper
         }
     }
 
-    public static Direction Random()
-    {
-        Random random = new Random();
-        switch (random.Next(8))
-        {
-            case 0: return Direction.Up;
-            case 1: return Direction.Down;
-            case 2: return Direction.Left;
-            case 3: return Direction.Right;
-            case 4: return Direction.UpLeft;
-            case 5: return Direction.UpRight;
-            case 6: return Direction.DownLeft;
-            case 7: return Direction.DownRight;
-            default:
-                throw new Exception("This can't happen!");
-        }
-    }
+    public static Direction Random() => (Direction)Game.Random.Next(8);
+    public static Direction RandomCardinal() => (Direction)(Game.Random.Next(4) * 2);
 
-    public static Direction RandomCardinal()
+    /// <summary>
+    /// Inverts a direction, making it point in the opposite direction. For example, Right becomes Left, Up becomes Down, etc.
+    /// </summary>
+    // public static Direction Flip(Direction direction)=> (Direction)((((int)direction + 4) & 7));
+    public static Direction Flip(this Direction direction) => direction switch
     {
-        Random random = new Random();
-        switch (random.Next(4))
-        {
-            case 0: return Direction.Up;
-            case 1: return Direction.Down;
-            case 2: return Direction.Left;
-            case 3: return Direction.Right;
-            default:
-                throw new Exception("This can't happen!");
-        }
-    }
+        Direction.Right => Direction.Left,
+        Direction.DownRight => Direction.UpLeft,
+        Direction.Down => Direction.Up,
+        Direction.DownLeft => Direction.UpRight,
+        Direction.Left => Direction.Right,
+        Direction.UpLeft => Direction.DownRight,
+        Direction.Up => Direction.Down,
+        Direction.UpRight => Direction.DownLeft,
+        _ => throw new ArgumentOutOfRangeException(nameof(direction))
+    };
 
-    public static Direction Flip(Direction d)
+    /// <summary>
+    /// Rotates a direction 90 deg, wrapping around
+    /// </summary>
+    //public static Direction Rotate90Degrees(this Direction direction) => (Direction)(((int)direction + 2) & 7);
+    public static Direction Rotate90Degrees(this Direction direction) => direction switch
     {
-        switch (d)
-        {
-            case Direction.Down: return Direction.Up;
-            case Direction.Up: return Direction.Down;
-            case Direction.Right: return Direction.Left;
-            case Direction.Left: return Direction.Right;
-            case Direction.UpLeft: return Direction.DownRight;
-            case Direction.DownRight: return Direction.UpLeft;
-            case Direction.UpRight: return Direction.DownLeft;
-            case Direction.DownLeft: return Direction.UpRight;
-        }
+        Direction.Right => Direction.Down,
+        Direction.DownRight => Direction.DownLeft,
+        Direction.Down => Direction.Left,
+        Direction.DownLeft => Direction.UpLeft,
+        Direction.Left => Direction.Up,
+        Direction.UpLeft => Direction.UpRight,
+        Direction.Up => Direction.Right,
+        Direction.UpRight => Direction.DownRight,
+        _ => throw new ArgumentOutOfRangeException(nameof(direction))
+    };
 
-        return d;
-    }
     /// <summary>
     /// Converts an angle (in radians) to a Direction enum.
     /// </summary>
@@ -317,18 +299,6 @@ public static class DirectionHelper
         return (Direction)quadra;
     }
 
-    public static Direction FromVectorCardinal(Vector2 vector)
-    {
-        float angle = MathF.Atan2(vector.Y, vector.X);
-        int quadra = Calculator.RoundToInt(4 * angle / (2 * MathF.PI) + 4) % 4;
-        switch (quadra)
-        {
-            case 0: return Direction.Right;
-            case 1: return Direction.Down;
-            case 2: return Direction.Left;
-            default: return Direction.Up;
-        }
-    }
 
     public static Direction FromVectorWithHorizontal(Vector2 vector)
     {
@@ -356,66 +326,38 @@ public static class DirectionHelper
         }
     }
 
-    public static Vector2 ToVector(this Direction direction)
-    {
-        switch (direction)
-        {
-            case Direction.Right:
-                return new Vector2(1, 0);
-            case Direction.DownRight:
-                return new Vector2(1, 1);
-            case Direction.Down:
-                return new Vector2(0, 1);
-            case Direction.DownLeft:
-                return new Vector2(-1, 1);
-            case Direction.Left:
-                return new Vector2(-1, 0);
-            case Direction.UpLeft:
-                return new Vector2(-1, -1);
-            case Direction.Up:
-                return new Vector2(0, -1);
-            case Direction.UpRight:
-                return new Vector2(1, -1);
-            default:
-                float angle = direction.ToAngle();
-                return new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
-        }
-    }
+    private const float InvSqrt2 = 0.7071067812f; // = 1 / sqrt(2)
 
-    public static Direction Reverse(this Direction direction)
+    public static Vector2 ToVector(this Direction direction) => direction switch
     {
-        return FromVector(direction.ToVector().Reverse());
-    }
+        Direction.Right => new(1, 0),
+        Direction.DownRight => new(InvSqrt2, InvSqrt2),
+        Direction.Down => new(0, 1),
+        Direction.DownLeft => new(-InvSqrt2, InvSqrt2),
+        Direction.Left => new(-1, 0),
+        Direction.UpLeft => new(-InvSqrt2, -InvSqrt2),
+        Direction.Up => new(0, -1),
+        Direction.UpRight => new(InvSqrt2, -InvSqrt2),
+        _ => throw new ArgumentOutOfRangeException(nameof(direction))
+    };
 
-    public static ImageFlip GetFlippedHorizontal(this Direction direction)
-    {
-        var vector = ToVector(direction);
-        // Added a small threshold to avoid flipping when the vector is very close to 0
-        var horizontalFlags = (vector.X < 0 && MathF.Abs(vector.X) > 0.01f) ? ImageFlip.Horizontal : ImageFlip.None;
-        return horizontalFlags;
-    }
+
+public static ImageFlip GetFlippedHorizontal(this Direction direction) =>
+    direction.IsFlipped() ? ImageFlip.Horizontal : ImageFlip.None;
+
 
     public static ImageFlip GetFlipped(this Direction direction)
     {
-        var vector = ToVector(direction);
-        // Added a small threshold to avoid flipping when the vector is very close to 0
-        var horizontalFlags = (vector.X < 0 && MathF.Abs(vector.X) > 0.01f) ? ImageFlip.Horizontal : ImageFlip.None;
-        var verticalFlags = (vector.Y < 0 && MathF.Abs(vector.Y) > 0.01f) ? ImageFlip.Vertical : ImageFlip.None;
-        return horizontalFlags | verticalFlags;
+        ImageFlip flip = direction.GetFlippedHorizontal();
+        if (direction is Direction.UpLeft or Direction.Up or Direction.UpRight)
+            flip |= ImageFlip.Vertical;
+        return flip;
     }
 
-    public static bool Flipped(this Direction direction)
-    {
-        var x = ToVector(direction).X;
-        if (x < 0)
-            return true;
-        else
-            return false;
-    }
-    public static Direction Invert(this Direction direction)
-    {
-        return DirectionHelper.FromAngle(direction.ToAngle() + MathF.PI);
-    }
+    /// <summary>
+    /// returns true if the direction is flipped horizontally, false otherwise.
+    /// </summary>
+    public static bool IsFlipped(this Direction direction) => direction is Direction.DownLeft or Direction.Left or Direction.UpLeft;
 
     public static Direction LookAtEntity(Entity e, Entity target)
     {
