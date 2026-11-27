@@ -10,7 +10,7 @@ namespace Murder.Editor.CustomFields
     [CustomFieldOf(typeof(Dictionary<,>), priority: -1)]
     [CustomFieldOf(typeof(ImmutableDictionary<,>), priority: -1)]
     [CustomFieldOf(typeof(ComplexDictionary<,>), priority: -1)]
-    internal class DictionaryGenericField<T, V> : DictionaryField<T, V> where T : notnull
+    internal class DictionaryGenericField<T, V> : DictionaryField<T, V> where T : notnull where V : new()
     {
         private (T Key, V Value) _new = default!;
 
@@ -33,7 +33,7 @@ namespace Murder.Editor.CustomFields
                 else if (ImGuiHelpers.Button("Create"))
                 {
                     ImGui.CloseCurrentPopup();
-                    element = (_new.Key, default!);
+                    element = (_new.Key, new V());
 
                     ImGui.EndPopup();
                     return true;
@@ -42,7 +42,7 @@ namespace Murder.Editor.CustomFields
                 ImGui.EndPopup();
             }
 
-            element = (default!, default!);
+            element = (default!, new V());
             return false;
         }
 
